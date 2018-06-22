@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CPL.Domain\CPL.Domain.csproj" />
+    <ProjectReference Include="..\CPL.Mapping\CPL.Mapping.csproj" />
+  </ItemGroup>
+
+</Project>
