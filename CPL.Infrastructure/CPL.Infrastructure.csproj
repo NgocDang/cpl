@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommonServiceLocator" Version="2.0.3" />
+    <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="1.1.15" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CPL.Domain\CPL.Domain.csproj" />
     <ProjectReference Include="..\CPL.Mapping\CPL.Mapping.csproj" />
   </ItemGroup>
