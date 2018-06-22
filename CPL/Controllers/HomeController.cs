@@ -5,28 +5,64 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CPL.Models;
+using CPL.Misc;
+using CPL.Misc.Enums;
+using CPL.Core.Interfaces;
+using AutoMapper;
+using CPL.Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace CPL.Controllers
 {
+    [Permission(EnumRole.Guest)]
     public class HomeController : Controller
     {
+        private readonly ILangService _langService;
+        private readonly IMapper _mapper;
+        private readonly IViewRenderService _viewRenderService;
+        private readonly IUnitOfWorkAsync _unitOfWork;
+        private readonly ISettingService _settingService;
+
+        private readonly ITeamService _teamService;
+        private readonly ITemplateService _templateService;
+
+        public HomeController(
+            ILangService langService,
+            IMapper mapper,
+            IViewRenderService viewRenderService,
+            IUnitOfWorkAsync unitOfWork,
+            ISettingService settingService,
+            ITeamService teamService,
+            ITemplateService templateService)
+        {
+            this._langService = langService;
+            this._mapper = mapper;
+            this._viewRenderService = viewRenderService;
+            this._settingService = settingService;
+            this._unitOfWork = unitOfWork;
+            this._teamService = teamService;
+            this._templateService = templateService;
+        }
+
         public IActionResult Index()
         {
-            return View();
-        }
+            if (!HttpContext.Session.GetInt32("LangId").HasValue)
+                HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
+            var viewModel = new HomeViewModel();
 
-            return View();
-        }
+            //Team section
+            viewModel.Teams = _teamService.Queryable()
+                .Select(x => Mapper.Map<TeamViewModel>(x)).ToList();
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
+            //Languages
+            viewModel.Langs = _langService.Queryable()
+                .Select(x => Mapper.Map<LangViewModel>(x))
+                .ToList();
 
-            return View();
+            viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
+
+            return View(viewModel);
         }
 
         public IActionResult Error()

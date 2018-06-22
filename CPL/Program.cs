@@ -20,6 +20,7 @@ namespace CPL
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseSetting("detailErrors", "true")
                 .Build();
     }
 }
