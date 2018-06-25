@@ -17,10 +17,32 @@ namespace CPL.Mapping
             // Table & Column Mappings
             builder.ToTable("SysUser");
             builder.Property(t => t.Id).HasColumnName("Id");
-            builder.Property(t => t.Name).HasColumnName("Name");
             builder.Property(t => t.IsAdmin).HasColumnName("IsAdmin");
             builder.Property(t => t.Email).HasColumnName("Email");
             builder.Property(t => t.Password).HasColumnName("Password");
+            builder.Property(t => t.FirstName).HasColumnName("FirstName");
+            builder.Property(t => t.LastName).HasColumnName("LastName");
+            builder.Property(t => t.Address).HasColumnName("Address");
+            builder.Property(t => t.ETHWalletAddress).HasColumnName("ETHWalletAddress");
+            builder.Property(t => t.BTCWalletAddress).HasColumnName("BTCWalletAddress");
+            builder.Property(t => t.ETHHDWalletAddress).HasColumnName("ETHHDWalletAddress");
+            builder.Property(t => t.ETHHDWalletAddressIndex).HasColumnName("ETHHDWalletAddressIndex");
+            builder.Property(t => t.BTCHDWalletAddress).HasColumnName("BTCHDWalletAddress");
+            builder.Property(t => t.BTCHDWalletAddressIndex).HasColumnName("BTCHDWalletAddressIndex");
+            builder.Property(t => t.Mobile).HasColumnName("Mobile");
+            builder.Property(t => t.ResetPasswordDate).HasColumnName("ResetPasswordDate");
+            builder.Property(t => t.ResetPasswordToken).HasColumnName("ResetPasswordToken");
+            builder.Property(t => t.ActivateToken).HasColumnName("ActivateToken");
+            builder.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
+            builder.Property(t => t.KYCVerified).HasColumnName("KYCVerified");
+            builder.Property(t => t.KYCCreatedDate).HasColumnName("KYCCreatedDate");
+            builder.Property(t => t.FrontSide).HasColumnName("FrontSide");
+            builder.Property(t => t.BackSide).HasColumnName("BackSide");
+            builder.Property(t => t.DOB).HasColumnName("DOB");
+            builder.Property(t => t.IsDeleted).HasColumnName("IsDeleted");
+            builder.Property(t => t.BTCWallet).HasColumnName("BTCWallet");
+            builder.Property(t => t.ETHWallet).HasColumnName("ETHWallet");
+            builder.Property(t => t.TokenWallet).HasColumnName("TokenWallet");
         }
     }
 }
