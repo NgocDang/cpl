@@ -21,4 +21,18 @@
     <ProjectReference Include="..\CPL.Infrastructure\CPL.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Authentication\" />
+    <Folder Include="Views\Shared\Components\DashboardFooter\" />
+    <Folder Include="Views\Shared\Components\DashboardHeader\" />
+    <Folder Include="Views\Shared\Components\DashboardNavbar\" />
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Shared\_DashboardLayout.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

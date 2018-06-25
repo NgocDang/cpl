@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Misc.Utils
 {
-    public static class SessionExtensions
+    public static class SessionExtension
     {
         public static void SetObjectAsJson(this ISession session, string key, object value)
         {

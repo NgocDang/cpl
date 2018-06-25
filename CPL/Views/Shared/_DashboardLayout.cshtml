@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, user-scalable=yes, shrink-to-fit=no" name="viewport">
+    <title>@ViewData["Title"] - @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="~/css/dashboard/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/dashboard.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/demo.css" rel="stylesheet" />
+    @RenderSection("Style", required: false)
+</head>
+<body class="sidebar-mini">
+    <div class="wrapper ">
+        @await Component.InvokeAsync("DashboardSidebar")
+
+        <div class="main-panel">
+            @await Component.InvokeAsync("DashboardSidebar")
+            @await Component.InvokeAsync("DashboardHeader")
+            @RenderBody()
+            @await Component.InvokeAsync("DashboardFooter")
+        </div>
+
+       
+       
+    </div>
+    @Html.Hidden("LangId", Context.Session.GetInt32("LangId").Value)
+
+    @RenderSection("Scripts", required: false)
+    <div id="modal"></div>
+</body>
+</html>
