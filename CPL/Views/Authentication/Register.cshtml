@@ -129,8 +129,8 @@
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AlreadyHaveAccount") <a asp-controller="Authentication" asp-action="LogIn">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHere")</a> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToLogIn")
                             </div>
                             @*<div class="mt-1 text-white text-center">
-                            @Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResendActivateCodeLinkDesc"))
-                        </div>*@
+                                    @Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResendActivateCodeLinkDesc"))
+                                </div>*@
                         </div>
                     </div>
                 </div>
@@ -176,6 +176,6 @@
     <!-- Forms Validations Plugin -->
     <script src="~/js/dashboard/plugins/jquery.validate.min.js"></script>
     <!-- Sharrre libray -->
-    <script src="~/js/cpl.register.js"></script>
+    <script src="~/js/dashboard/cpl.register.js"></script>
 </body>
 </html>
