@@ -1,0 +1,181 @@
+﻿@model AccountRegistrationModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="~/images/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")
+    </title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="~/css/dashboard/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/now-ui-dashboard.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/demo.css" rel="stylesheet" />
+    <style type="text/css">
+        .btn-warning:hover, .btn-warning:not([disabled]):not(.disabled).active, .btn-warning:not([disabled]):not(.disabled):active, .show > .btn-warning.dropdown-toggle {
+            color: #fff;
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .invalid-feedback-login {
+            margin-top: .5rem !important;
+        }
+    </style>
+</head>
+<body class=" sidebar-mini ">
+    <nav class="navbar navbar-expand-lg navbar-transparent  navbar-absolute bg-primary fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-wrapper">
+                <div class="navbar-toggle">
+                    <button type="button" class="navbar-toggler">
+                        <span class="navbar-toggler-bar bar1"></span>
+                        <span class="navbar-toggler-bar bar2"></span>
+                        <span class="navbar-toggler-bar bar3"></span>
+                    </button>
+                </div>
+                <a class="navbar-brand" href="#pablo">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-bar navbar-kebab"></span>
+                <span class="navbar-toggler-bar navbar-kebab"></span>
+                <span class="navbar-toggler-bar navbar-kebab"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navigation">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a asp-controller="Dashboard" asp-action="Index" class="nav-link">
+                            <i class="now-ui-icons design_app"></i>
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a asp-controller="Authentication" asp-action="Register" class="nav-link">
+                            <i class="now-ui-icons tech_mobile"></i>
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a asp-controller="Authentication" asp-action="Login" class="nav-link">
+                            <i class="now-ui-icons users_circle-08"></i>
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="wrapper wrapper-full-page ">
+        <div class="full-page register-page section-image" filter-color="black" data-image="/images/register-background.jpg">
+            <div class="content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5 ml-auto mr-auto">
+                            <div class="card card-register card-plain">
+                                <div class="card-header text-center">
+                                    <div class="logo-container">
+                                        <img src="~/images/logo_white.png" alt="">
+                                    </div>
+                                    <h4 class="card-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</h4>
+                                </div>
+                                <form id="form-register" method="POST" action="#" class="needs-validation" novalidate="">
+                                    <div class="card-body">
+                                        <p id="register-message" class="text-center text-light">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AccountInfoRequired")</p>
+                                        <div class="form-group has-label">
+                                            <label class="text-light" for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+
+                                            <input id="Email" type="email" class="form-control" required name="Email" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")...">
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
+                                            </div>
+                                        </div>
+                                        <div class="form-group has-label">
+                                            <label class="text-light d-block" for="Password">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
+                                            <input id="Password" type="password" class="form-control" required name="Password" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")...">
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
+                                            </div>
+                                        </div>
+                                        <div class="form-group has-label">
+                                            <label class="text-light d-block" for="PasswordConfirm">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordConfirm")</label>
+                                            <input id="PasswordConfirm" type="password" class="form-control" required name="PasswordConfirm" equalTo="#Password" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordConfirm")...">
+                                            <div id="password-confirm-message" class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MismatchPassword")
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
+                                            </div>
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <button type="submit" id="btn-register" class="btn btn-primary btn-round btn-lg">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")
+                                            </button>
+                                        </div>
+                                        @Html.HiddenFor(x => x.IsIntroducedById)
+                                        @Html.HiddenFor(x => x.AgencyToken)
+                                    </div>
+                                </form>
+
+                            </div>
+                            <div class="mt-3 text-white text-center">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AlreadyHaveAccount") <a asp-controller="Authentication" asp-action="LogIn">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHere")</a> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToLogIn")
+                            </div>
+                            @*<div class="mt-1 text-white text-center">
+                            @Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResendActivateCodeLinkDesc"))
+                        </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <nav>
+                        <ul>
+                            <li>
+                                <a asp-controller="Dashboard" asp-action="Index">
+                                    <i class="now-ui-icons design_app"></i>
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Authentication" asp-action="Register">
+                                    <i class="now-ui-icons tech_mobile"></i>
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Authentication" asp-action="Login">
+                                    <i class="now-ui-icons users_circle-08"></i>
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="copyright">
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copyright") &copy;  @DateTime.Now.Year
+                    </div>
+                </div>
+            </footer>
+            <div class="full-page-background" style="background-image: url(/images/register-background.jpg) "></div>
+        </div>
+    </div>
+    <script src="~/js/dashboard/jquery.min.js"></script>
+    <script src="~/js/dashboard/popper.min.js"></script>
+    <script src="~/js/dashboard/bootstrap.min.js"></script>
+    <script src="~/js/dashboard/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <!--  Notifications Plugin    -->
+    <script src="~/js/dashboard/plugins/bootstrap-notify.js"></script>
+    <!-- Forms Validations Plugin -->
+    <script src="~/js/dashboard/plugins/jquery.validate.min.js"></script>
+    <!-- Sharrre libray -->
+    <script src="~/js/cpl.register.js"></script>
+</body>
+</html>
