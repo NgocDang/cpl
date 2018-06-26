@@ -36,24 +36,60 @@
             width: 100%;
         }
 
+            .g-recaptcha > div, .g-recaptcha > div>div>iframe {
+                width: 100% !important;
+            }
+
         .logo {
             text-align: center;
         }
     </style>
 
     <style>
-@@media screen and (max-width: 455px){ #rc-imageselect, .g-recaptcha { transform:scale(0.5); -webkit-transform:scale(0.5 ); transform-origin:0 0; -webkit-transform-origin:0 0; }}    </style>
-
-    @*<script>
-        var width = $('.g-recaptcha').parent().width();
-        if (width < 302) {
-            var scale = width / 302;
-            $('.g-recaptcha').css('transform', 'scale(' + scale + ')');
-            $('.g-recaptcha').css('-webkit-transform', 'scale(' + scale + ')');
-            $('.g-recaptcha').css('transform-origin', '0 0');
-            $('.g-recaptcha').css('-webkit-transform-origin', '0 0');
+        /*@@media(max-width: 390px) {
+            .g-recaptcha {
+                margin: 1px;
+            }
+        }*/
+        /*@@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+            #rc-imageselect, .g-recaptcha {
+                transform: scale(0.1);
+                -webkit-transform: scale(0.1);
+                transform-origin: 0 0;
+                -webkit-transform-origin: 0 0;
+            }
+        }*/
+        /*@@media screen and (max-height: 575px) {
+            #rc-imageselect, .g-recaptcha {
+                transform: scale(0.77);
+                -webkit-transform: scale(0.77);
+                transform-origin: 0 0;
+                -webkit-transform-origin: 0 0;
+            }
         }
-    </script>*@
+        @@media (max-height: 768px) {
+            #rc-imageselect, .g-recaptcha {
+                transform: scale(0.55);
+                -webkit-transform: scale(0.55);
+                transform-origin: 0 0;
+                -webkit-transform-origin: 0 0;
+            }
+        }*/
+    </style>
+    <script>
+        //$(window).resize(function () {
+        //    var recaptcha = $(".g-recaptcha");
+        //    if (recaptcha.css('margin') == '1px') {
+        //        var newScaleFactor = recaptcha.parent().innerWidth() / 304;
+        //        recaptcha.css('transform', 'scale(' + newScaleFactor + ')');
+        //        recaptcha.css('transform-origin', '0 0');
+        //    }
+        //    else {
+        //        recaptcha.css('transform', 'scale(1)');
+        //        recaptcha.css('transform-origin', '0 0');
+        //    }
+        //});
+    </script>
 
     <!-- Init ReCaptcha V2 -->
     <script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
@@ -121,7 +157,7 @@
             <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
             <div class="content">
                 <div class="container">
-                    <div class="col-md-4 ml-auto mr-auto">
+                    <div class="col-md-6 ml-auto mr-auto">
                         <div class="card card-login card-plain">
                             <div class="card-header">
                                 <div class="logo">
