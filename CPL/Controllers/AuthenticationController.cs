@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using CPL.Common.Enums;
 using CPL.Core.Interfaces;
+using CPL.Domain;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
 using CPL.Misc.Enums;
@@ -73,6 +75,52 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
 
+        public ActionResult Register(int? id, string token)
+        {
+            EnsureLoggedOut();
+
+            var viewModel = new AccountRegistrationModel();
+            //viewModel.Status = EnumAccountStatus.UNREGISTERED;
+            viewModel.Langs = _langService.Queryable()
+                .Select(x => Mapper.Map<LangViewModel>(x))
+                .ToList();
+            if (HttpContext.Session.GetInt32("LangId").HasValue)
+                viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
+            else
+                viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Register(AccountRegistrationModel viewModel)
+        {
+            //// Ensure we have a valid viewModel to work with
+            //if (ModelState.IsValid)
+            //{
+            //    if (_sysUserService.Queryable().Any(x => x.Email == viewModel.Email && x.IsDeleted == false))
+            //    {
+            //        return new JsonResult(new { success = false, name = "email", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExistingEmail") });
+            //    }
+
+            //    //Get Agency for later update
+            //    var isAccountActivationEnable = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value);
+            //    var latestAddressIndex = _sysUserService.Queryable().LastOrDefault().ETHHDWalletAddressIndex;
+            //    // Try to create a user with the given identity
+            //    var user = new SysUser
+            //    {
+            //        Email = viewModel.Email,
+            //        Password = viewModel.Password.ToBCrypt(),
+            //        CreatedDate = DateTime.Now,
+            //        IsAdmin = false,
+            //        ActivateToken = isAccountActivationEnable ? Guid.NewGuid().ToString() : null,
+            //    };
+
+            //    _sysUserService.Insert(user);
+            //    _unitOfWork.SaveChanges();
+            //}
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
 
         public IActionResult LogOut()
         {
