@@ -11,6 +11,8 @@ using CPL.Core.Interfaces;
 using AutoMapper;
 using CPL.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
+using System.Net.Mail;
+using System.Net;
 
 namespace CPL.Controllers
 {
