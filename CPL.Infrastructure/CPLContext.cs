@@ -24,6 +24,10 @@ namespace CPL.Infrastructure
         public DbSet<LangMsgDetail> LangMsgDetail { get; set; }
         public DbSet<Team> Team { get; set; }
         public DbSet<Notification> Notification { get; set; }
+        public DbSet<CoinTransaction> CoinTransaction { get; set; }
+        public DbSet<Game> Game { get; set; }
+        public DbSet<GameHistory> GameHistory { get; set; }
+        public DbSet<Rate> Rate { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +40,11 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new LangMsgDetailMap());
             modelBuilder.ApplyConfiguration(new TeamMap());
             modelBuilder.ApplyConfiguration(new NotificationMap());
+
+            modelBuilder.ApplyConfiguration(new CoinTransactionMap());
+            modelBuilder.ApplyConfiguration(new GameMap());
+            modelBuilder.ApplyConfiguration(new GameHistoryMap());
+            modelBuilder.ApplyConfiguration(new RateMap());
 
             base.OnModelCreating(modelBuilder);
         }
