@@ -1,0 +1,8 @@
+﻿@model DashboardFooterViewModel
+<footer class="footer">
+    <div class="container-fluid">
+        <div class="copyright">
+            &copy; @DateTime.Now.Year, @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenTeam").
+        </div>
+    </div>
+</footer>
