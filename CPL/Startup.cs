@@ -102,7 +102,9 @@ namespace CPL
 
         private void LoadWCF()
         {
-
+            var authentication = new AuthenticationService.AuthenticationClient().AuthenticateAsync();
+            authentication.Wait();
+            Authentication.Token = authentication.Result.Token;
         }
 
         private void LoadLangDetail(IServiceProvider serviceProvider)

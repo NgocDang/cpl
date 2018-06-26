@@ -45,10 +45,10 @@
                             if (data.activated) { // Account activation is disabled
                                 window.location.href = data.url;
                             } else {
-                                $("#register-message").html(data.message);
-                                $("#line-support").show();
-                                $("#register-message").addClass("text-muted").removeClass("invalid-feedback").show();
+                                $("#register-thankyou").html(data.message);
+                                $("#register-thankyou").show();
                                 $("#form-register").hide();
+                                toastr.success(data.message, 'Success!');
                             }
                         } else {
                             if (data.name == "email") {

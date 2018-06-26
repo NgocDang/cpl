@@ -24,6 +24,9 @@ namespace CPL.Common.Enums
             public static string IsOnMaintenanceSetting = "IsOnMaintenance";
         }
 
+        // Social Url
+        public static string FacebookUrl = "FacebookUrl";
+
         //BWallet
         public static string BTCMnemonic = "clinic length diary episode fan hope initial broccoli anger happy exile aunt"; // Already changed diff with NAM
 

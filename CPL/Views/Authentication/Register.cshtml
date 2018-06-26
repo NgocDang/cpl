@@ -18,6 +18,7 @@
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link href="~/css/dashboard/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/dashboard/dashboard.min.css" rel="stylesheet" />
+    <link href="~/js/dashboard/plugins/toastr/toastr.css" rel="stylesheet" />
     <link href="~/css/dashboard/demo.css" rel="stylesheet" />
     <style type="text/css">
         .btn-warning:hover, .btn-warning:not([disabled]):not(.disabled).active, .btn-warning:not([disabled]):not(.disabled):active, .show > .btn-warning.dropdown-toggle {
@@ -42,7 +43,7 @@
                         <span class="navbar-toggler-bar bar3"></span>
                     </button>
                 </div>
-                <a class="navbar-brand" href="#pablo">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</a>
+                <a class="navbar-brand" >@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</a>
             </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -119,18 +120,18 @@
                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")
                                             </button>
                                         </div>
-                                        @Html.HiddenFor(x => x.IsIntroducedById)
-                                        @Html.HiddenFor(x => x.AgencyToken)
                                     </div>
                                 </form>
 
+                            </div>
+                            <div id="register-thankyou" class="mt-1 text-light text-center">
                             </div>
                             <div class="mt-3 text-white text-center">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AlreadyHaveAccount") <a asp-controller="Authentication" asp-action="LogIn">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHere")</a> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToLogIn")
                             </div>
                             @*<div class="mt-1 text-white text-center">
-                                    @Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResendActivateCodeLinkDesc"))
-                                </div>*@
+            @Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResendActivateCodeLinkDesc"))
+        </div>*@
                         </div>
                     </div>
                 </div>
@@ -175,6 +176,7 @@
     <script src="~/js/dashboard/plugins/bootstrap-notify.js"></script>
     <!-- Forms Validations Plugin -->
     <script src="~/js/dashboard/plugins/jquery.validate.min.js"></script>
+    <script src="~/js/dashboard/plugins/toastr/toastr.min.js"></script>
     <!-- Sharrre libray -->
     <script src="~/js/dashboard/cpl.register.js"></script>
 </body>

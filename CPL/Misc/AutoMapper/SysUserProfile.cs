@@ -14,6 +14,8 @@ namespace CPL.Misc.MapperCreate
         {
             CreateMap<SysUser, SysUserViewModel>();
             CreateMap<SysUserViewModel, SysUser>();
+            CreateMap<SysUser, ActivateEmailTemplateViewModel>();
+            CreateMap<SysUser, MemberEmailTemplateViewModel>();
         }
     }
 }
