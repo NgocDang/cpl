@@ -77,7 +77,6 @@ namespace CPL.Models
 
         public IList<LangViewModel> Langs { get; set; }
         public LangViewModel Lang { get; set; }
-        public string HowToRegisterVideoURL { get; set; }
 
     }
 

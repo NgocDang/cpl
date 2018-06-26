@@ -6,6 +6,11 @@ namespace CPL.Common.Enums
 {
     public class CPLConstant
     {
+        //Authentication
+        public static string ActivateExpiredInDays = "ActivateExpiredInDays";
+        public static string ResetPasswordExpiredInDays = "ResetPasswordExpiredInDays";
+        public static string IsAccountActivationEnable = "IsAccountActivationEnable";
+
         //Two-factor authentication
         public static string AppName = "CPL";
         public static string TwoFactorAuthenticationSecretKey = "FamHopper";
