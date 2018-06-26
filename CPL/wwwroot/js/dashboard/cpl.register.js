@@ -41,14 +41,15 @@
                         PasswordConfirm: $("#PasswordConfirm").val(),
                     },
                     success: function (data) {
+                        debugger;
                         if (data.success) {
                             if (data.activated) { // Account activation is disabled
                                 window.location.href = data.url;
                             } else {
                                 $("#register-message").html(data.message);
-                                $("#line-support").show();
                                 $("#register-message").addClass("text-muted").removeClass("invalid-feedback").show();
                                 $("#form-register").hide();
+                                toastr.success(data.message, 'Success!');
                             }
                         } else {
                             if (data.name == "email") {

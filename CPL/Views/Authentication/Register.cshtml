@@ -18,6 +18,7 @@
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link href="~/css/dashboard/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/dashboard/dashboard.min.css" rel="stylesheet" />
+    <link href="~/js/dashboard/plugins/toastr/build/toastr.css" rel="stylesheet" />
     <link href="~/css/dashboard/demo.css" rel="stylesheet" />
     <style type="text/css">
         .btn-warning:hover, .btn-warning:not([disabled]):not(.disabled).active, .btn-warning:not([disabled]):not(.disabled):active, .show > .btn-warning.dropdown-toggle {
@@ -119,8 +120,6 @@
                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")
                                             </button>
                                         </div>
-                                        @Html.HiddenFor(x => x.IsIntroducedById)
-                                        @Html.HiddenFor(x => x.AgencyToken)
                                     </div>
                                 </form>
 
@@ -175,6 +174,7 @@
     <script src="~/js/dashboard/plugins/bootstrap-notify.js"></script>
     <!-- Forms Validations Plugin -->
     <script src="~/js/dashboard/plugins/jquery.validate.min.js"></script>
+    <script src="~/js/dashboard/plugins/toastr/build/toastr.min.js"></script>
     <!-- Sharrre libray -->
     <script src="~/js/dashboard/cpl.register.js"></script>
 </body>
