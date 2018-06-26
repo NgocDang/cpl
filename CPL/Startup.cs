@@ -64,7 +64,11 @@ namespace CPL
                 .AddTransient<ILangMsgDetailService, LangMsgDetailService>()
                 .AddTransient<ITeamService, TeamService>()
                 .AddTransient<INotificationService, NotificationService>()
-                .AddTransient<IViewRenderService, ViewRenderService>();
+                .AddTransient<IViewRenderService, ViewRenderService>()
+                .AddTransient<ICoinTransactionService, CoinTransactionService>()
+                .AddTransient<IGameService, GameService>()
+                .AddTransient<IGameHistoryService, GameHistoryService>()
+                .AddTransient<IRateService, RateService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
