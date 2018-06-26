@@ -39,8 +39,6 @@
                         Email: $("#Email").val(),
                         Password: $("#Password").val(),
                         PasswordConfirm: $("#PasswordConfirm").val(),
-                        IsIntroducedById: $("#IsIntroducedById").val(),
-                        AgencyToken: $("#AgencyToken").val()
                     },
                     success: function (data) {
                         if (data.success) {
@@ -51,7 +49,6 @@
                                 $("#line-support").show();
                                 $("#register-message").addClass("text-muted").removeClass("invalid-feedback").show();
                                 $("#form-register").hide();
-                                $("#line-support-bottom").hide();
                             }
                         } else {
                             if (data.name == "email") {

@@ -77,7 +77,6 @@ namespace CPL.Controllers
 
         public ActionResult Register(int? id, string token)
         {
-            bool redirect = false;
             EnsureLoggedOut();
 
             var viewModel = new AccountRegistrationModel();
@@ -89,11 +88,6 @@ namespace CPL.Controllers
                 viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
             else
                 viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
-
-            if (redirect)
-            {
-                return RedirectToAction("Index", "Home");
-            }
 
             return View(viewModel);
         }
