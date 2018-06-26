@@ -18,9 +18,7 @@
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <link href="~/css/dashboard/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/dashboard/dashboard.min.css" rel="stylesheet" />
-    <link href="~/css/dashboard/now-ui-dashboard.min.css" rel="stylesheet" />
     <link href="~/css/dashboard/demo.css" rel="stylesheet" />
-    <link href="~/css/dashboard/custom.css" rel="stylesheet" />
 
     <style type="text/css">
         .btn-warning:hover, .btn-warning:not([disabled]):not(.disabled).active, .btn-warning:not([disabled]):not(.disabled):active, .show > .btn-warning.dropdown-toggle {
@@ -32,30 +30,44 @@
         .box-captcha {
             margin: 0 auto;
         }
+
         .g-recaptcha {
             padding: 0 5px 0;
+            width: 100%;
         }
 
+        .logo {
+            text-align: center;
+        }
     </style>
+
+    <style>
+@@media screen and (max-width: 455px){ #rc-imageselect, .g-recaptcha { transform:scale(0.5); -webkit-transform:scale(0.5 ); transform-origin:0 0; -webkit-transform-origin:0 0; }}    </style>
+
+    @*<script>
+        var width = $('.g-recaptcha').parent().width();
+        if (width < 302) {
+            var scale = width / 302;
+            $('.g-recaptcha').css('transform', 'scale(' + scale + ')');
+            $('.g-recaptcha').css('-webkit-transform', 'scale(' + scale + ')');
+            $('.g-recaptcha').css('transform-origin', '0 0');
+            $('.g-recaptcha').css('-webkit-transform-origin', '0 0');
+        }
+    </script>*@
 
     <!-- Init ReCaptcha V2 -->
     <script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
 
     <script type="text/javascript">
-            // Ham kiem tra RECAPTCHAV2
-            var checkValidReCaptchaV2 = function () {
-                @*// Khong dung ReCaptcha Google
-                var isLocalhost = '@isLocalhost';
-                if (isLocalhost === 'True')
-                    return true;*@
-                var v = grecaptcha.getResponse();
-                if (v === '') {
-                    return false;
-                }
-                else {
-                    return true;
-                }
+        var checkValidReCaptchaV2 = function () {
+            var v = grecaptcha.getResponse();
+            if (v === '') {
+                return false;
             }
+            else {
+                return true;
+            }
+        }
     </script>
     <!-- end Init ReCaptcha V2 -->
 
@@ -71,7 +83,7 @@
                         <span class="navbar-toggler-bar bar3"></span>
                     </button>
                 </div>
-                <a class="navbar-brand" href="#pablo">Login Page</a>
+                <a class="navbar-brand" href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</a>
             </div>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,21 +95,21 @@
             <div class="collapse navbar-collapse justify-content-end" id="navigation">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a href="~/Dashboard/Index" class="nav-link">
-                            <i class="fa fa-home fa-fw" aria-hidden="true"></i>
-                            Home
+                        <a asp-controller="Dashboard" asp-action="Index" class="nav-link">
+                            <i class="now-ui-icons design_app"></i>
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")
                         </a>
                     </li>
-                    <li class="nav-item ">
-                        <a href="~/Authentication/Register" class="nav-link">
+                    <li class="nav-item">
+                        <a asp-controller="Authentication" asp-action="Register" class="nav-link">
                             <i class="now-ui-icons tech_mobile"></i>
-                            Register
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")
                         </a>
                     </li>
-                    <li class="nav-item  active ">
+                    <li class="nav-item active">
                         <a href="#" class="nav-link">
                             <i class="now-ui-icons users_circle-08"></i>
-                            Login
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")
                         </a>
                     </li>
                 </ul>
@@ -111,8 +123,8 @@
                 <div class="container">
                     <div class="col-md-4 ml-auto mr-auto">
                         <div class="card card-login card-plain">
-                            <div class="card-header ">
-                                <div class="logo-container">
+                            <div class="card-header">
+                                <div class="logo">
                                     <img src="~/images/logo_white.png" alt="">
                                 </div>
                             </div>
@@ -123,7 +135,6 @@
                                         <div class="input-group no-border form-control-lg has-label">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                    <i class="now-ui-icons users_circle-08"></i>
                                                 </div>
                                             </div>
                                             <input id="Email" class="form-control" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")..." name="email" type="email" tabindex="1" required autofocus />
@@ -136,15 +147,14 @@
                                         <label for="Password" class="d-block">
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")
                                             @*<div class="float-right">
-                    <a asp-controller="Authentication" asp-action="ForgotPassword">
-                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ForgotPassword")
-                    </a>
-                </div>*@
+                                                    <a asp-controller="Authentication" asp-action="ForgotPassword">
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ForgotPassword")
+                                                    </a>
+                                                </div>*@
                                         </label>
                                         <div class="input-group no-border form-control-lg">
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">
-                                                    <i class="now-ui-icons text_caps-small"></i>
                                                 </div>
                                             </div>
                                             <input id="Password" class="form-control" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")..." name="password" type="password" tabindex="2" required />
@@ -183,11 +193,34 @@
 
             <footer class="footer">
                 <div class="container-fluid">
+                    <nav>
+                        <ul>
+                            <li>
+                                <a asp-controller="Dashboard" asp-action="Index">
+                                    <i class="now-ui-icons design_app"></i>
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Authentication" asp-action="Register">
+                                    <i class="now-ui-icons tech_mobile"></i>
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Authentication" asp-action="Login">
+                                    <i class="now-ui-icons users_circle-08"></i>
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                     <div class="copyright">
                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copyright") &copy;  @DateTime.Now.Year
                     </div>
                 </div>
             </footer>
+
             <div class="full-page-background" style="background-image: url(/images/login-background.jpg) "></div>
         </div>
     </div>
@@ -195,7 +228,6 @@
     <script src="~/js/dashboard/jquery.min.js"></script>
     <script src="~/js/dashboard/popper.min.js"></script>
     <script src="~/js/dashboard/bootstrap.min.js"></script>
-    @*<script src="~/js/dashboard/plugins/perfect-scrollbar.jquery.min.js"></script>*@
     <!-- Place this tag in your head or just before your close body tag. -->
     <script src="~/js/dashboard/buttons.js"></script>
     <!--  Notifications Plugin    -->
@@ -203,13 +235,6 @@
     <!-- Forms Validations Plugin -->
     <script src="~/js/dashboard/plugins/jquery.validate.min.js"></script>
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="~/js/dashboard/login.js"></script>
-    <script src="~/js/dashboard/now-ui-dashboard.min.js"></script>
-    <script src="~/js/dashboard/plugins/perfect-scrollbar.jquery.min.js"></script>
-
-    <script src="~/js/dashboard/jquery.sharrre.js"></script>
-    <script src="~/js/dashboard/demo.js"></script>
-    <script src="~/js/dashboard/scripts.js"></script>
-    <script src="~/js/dashboard/custom.js"></script>
+    <script src="~/js/dashboard/cpl.login.js"></script>
 </body>
 </html>
