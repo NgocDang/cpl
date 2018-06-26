@@ -36,6 +36,6 @@ namespace CPL.Domain
         public decimal TokenWallet { get; set; }
 
         public virtual ICollection<CoinTransaction> CoinTransactions { get; set; }
-        public virtual ICollection<GameHistory> GameHistorys { get; set; }
+        public virtual ICollection<GameHistory> GameHistories { get; set; }
     }
 }

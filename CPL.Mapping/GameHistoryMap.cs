@@ -21,7 +21,7 @@ namespace CPL.Mapping
             builder.Property(t => t.SysUserId).HasColumnName("SysUserId");
             builder.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
             builder.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
-            builder.Property(t => t.Money).HasColumnName("Money");
+            builder.Property(t => t.Amount).HasColumnName("Amount");
             builder.Property(t => t.Result).HasColumnName("Result");
             builder.Property(t => t.Bonus).HasColumnName("Bonus");
 
@@ -31,7 +31,7 @@ namespace CPL.Mapping
             .HasForeignKey(x => x.GameId);
 
             builder.HasOne(x => x.SysUser)
-            .WithMany(x => x.GameHistorys)
+            .WithMany(x => x.GameHistories)
             .HasForeignKey(x => x.SysUserId);
         }
     }
