@@ -9552,7 +9552,7 @@ img {
     width: 260px;
     left: 0;
     z-index: 9999;
-    box-shadow: 0 2px 22px 0 rgba(0,0,0,.2),0 2px 30px 0 rgba(0,0,0,.35)
+    box-shadow: 0 2px 22px 0 rgba(0,0,0,.1),0 2px 30px 0 rgba(0,0,0,.1)
 }
 
     .off-canvas-sidebar .sidebar-wrapper, .sidebar .sidebar-wrapper {
