@@ -45,52 +45,6 @@
         }
     </style>
 
-    <style>
-        /*@@media(max-width: 390px) {
-            .g-recaptcha {
-                margin: 1px;
-            }
-        }*/
-        /*@@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-            #rc-imageselect, .g-recaptcha {
-                transform: scale(0.1);
-                -webkit-transform: scale(0.1);
-                transform-origin: 0 0;
-                -webkit-transform-origin: 0 0;
-            }
-        }*/
-        /*@@media screen and (max-height: 575px) {
-            #rc-imageselect, .g-recaptcha {
-                transform: scale(0.77);
-                -webkit-transform: scale(0.77);
-                transform-origin: 0 0;
-                -webkit-transform-origin: 0 0;
-            }
-        }
-        @@media (max-height: 768px) {
-            #rc-imageselect, .g-recaptcha {
-                transform: scale(0.55);
-                -webkit-transform: scale(0.55);
-                transform-origin: 0 0;
-                -webkit-transform-origin: 0 0;
-            }
-        }*/
-    </style>
-    <script>
-        //$(window).resize(function () {
-        //    var recaptcha = $(".g-recaptcha");
-        //    if (recaptcha.css('margin') == '1px') {
-        //        var newScaleFactor = recaptcha.parent().innerWidth() / 304;
-        //        recaptcha.css('transform', 'scale(' + newScaleFactor + ')');
-        //        recaptcha.css('transform-origin', '0 0');
-        //    }
-        //    else {
-        //        recaptcha.css('transform', 'scale(1)');
-        //        recaptcha.css('transform-origin', '0 0');
-        //    }
-        //});
-    </script>
-
     <!-- Init ReCaptcha V2 -->
     <script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
 
@@ -168,39 +122,25 @@
                                 <div class="card-body ">
                                     <div class="form-group has-label">
                                         <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
-                                        <div class="input-group no-border form-control-lg has-label">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">
-                                                </div>
-                                            </div>
-                                            <input id="Email" class="form-control" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")..." name="email" type="email" tabindex="1" required autofocus />
-                                            <div class="invalid-feedback invalid-feedback-login">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
-                                            </div>
+                                        <input id="Email" class="form-control" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")..." name="email" type="email" tabindex="1" required autofocus />
+                                        <div class="invalid-feedback invalid-feedback-login">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
                                         </div>
                                     </div>
                                     <div class="form-group has-label">
                                         <label for="Password" class="d-block">
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")
-                                            @*<div class="float-right">
-                                                    <a asp-controller="Authentication" asp-action="ForgotPassword">
-                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ForgotPassword")
-                                                    </a>
-                                                </div>*@
                                         </label>
-                                        <div class="input-group no-border form-control-lg">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">
-                                                </div>
-                                            </div>
                                             <input id="Password" class="form-control" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")..." name="password" type="password" tabindex="2" required />
                                             <div class="invalid-feedback invalid-feedback-login">
                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
                                             </div>
-                                        </div>
                                     </div>
 
                                     <div class="form-group">
+                                        <label for="Password" class="d-block">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Capcha")
+                                        </label>
                                         <div class="box-captcha">
                                             <div class="g-recaptcha" data-sitekey="6LcmwmAUAAAAAOaDjdjGVgSHYj9fzZH-1-U8Ffd4"></div>
                                         </div>
