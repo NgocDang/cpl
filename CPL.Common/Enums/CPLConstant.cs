@@ -6,6 +6,11 @@ namespace CPL.Common.Enums
 {
     public class CPLConstant
     {
+        //Authentication
+        public static string ActivateExpiredInDays = "ActivateExpiredInDays";
+        public static string ResetPasswordExpiredInDays = "ResetPasswordExpiredInDays";
+        public static string IsAccountActivationEnable = "IsAccountActivationEnable";
+
         //Two-factor authentication
         public static string AppName = "CPL";
         public static string TwoFactorAuthenticationSecretKey = "FamHopper";
@@ -18,6 +23,9 @@ namespace CPL.Common.Enums
             public static string MaintenanceAllowedIp { get; set; } = "14.161.32.23" + MaintenanceAllowedIpDelimiter + "::1";
             public static string IsOnMaintenanceSetting = "IsOnMaintenance";
         }
+
+        // Social Url
+        public static string FacebookUrl = "FacebookUrl";
 
         //BWallet
         public static string BTCMnemonic = "clinic length diary episode fan hope initial broccoli anger happy exile aunt"; // Already changed diff with NAM
