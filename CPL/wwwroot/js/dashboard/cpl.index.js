@@ -1,6 +1,6 @@
 ﻿var Index = {
     init: function () {
-        Highcharts.chart('chart', {
+        Highcharts.chart('line-chart', {
             chart: {
                 type: 'spline'
             },
@@ -51,7 +51,8 @@
                     [Date.UTC(1970, 11, 6), 0.25],
                     [Date.UTC(1970, 11, 20), 1.41],
                     [Date.UTC(1970, 11, 25), 1.64]
-                ]
+                ],
+                color: '#f96332'
             }, {
                 name: "Monthly Deposits",
                 data: [
@@ -60,7 +61,8 @@
                     [Date.UTC(1970, 10, 20), 0.25],
                     [Date.UTC(1970, 10, 25), 0.23],
                     [Date.UTC(1970, 10, 30), 0.39]
-                ]
+                ],
+                color: '#0000fd'
             }, {
                 name: "Bonus",
                 data: [
@@ -69,7 +71,52 @@
                     [Date.UTC(1970, 10, 7), 0.17],
                     [Date.UTC(1970, 10, 10), 0.1],
                     [Date.UTC(1970, 11, 10), 0.1]
-                ]
+                ],
+                color: '#1eaf1e'
+            }]
+        });
+
+        Highcharts.chart('pie-chart', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Holding Percentage'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: 'Balance',
+                colorByPoint: true,
+                data: [{
+                    name: 'CPL',
+                    y: 61.41,
+                    sliced: true,
+                    selected: true,
+                    color: '#f96332'
+                }, {
+                    name: 'BTC',
+                    y: 11.84,
+                    color: '#f7931a'
+                }, {
+                    name: 'ETH',
+                    y: 10.85,
+                    color: '#828384'
+                }]
             }]
         });
 
@@ -88,6 +135,11 @@
                 },
             },
         });
+
+        $("#btn-wallet").on("click", function () {
+            $("#pie-chart-card").show();
+            $("#line-chart-card").hide();
+        })
     }
 }
 

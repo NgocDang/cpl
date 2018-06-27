@@ -2,27 +2,46 @@
     Layout = "_DashboardLayout";
 }
 
-<style>
-    input::-webkit-input-placeholder {
-        text-align: center;
-    }
+@section styles{
+    <style>
+        .text-center {
+            text-align: center;
+        }
 
-    input:-moz-placeholder {
-        text-align: center;
-    }
+        .card-img-top {
+            width: 100%;
+        }
+        /*Call to Action*/
 
-    input::-moz-placeholder {
-        text-align: center;
-    }
+        .header-line {
+            height: 1px;
+            width: 100%;
+            content: '';
+            display: block;
+            background: #dee2e6;
+        }
 
-    input:-ms-input-placeholder {
-        text-align: center;
-    }
-</style>
+        /*Utility Class*/
+        .text-white {
+            color: white;
+        }
+
+        .no-margin {
+            margin: 0;
+        }
+
+        .no-margin-top {
+            margin-top: 0;
+        }
+
+        .pad-right {
+            margin-right: 0.5em;
+        }
+    </style>
+}
 
 @model DashboardViewModel
 <div class="content">
-
     <div class="card card-stats col-md-12">
         <div class="card-body">
             <div class="row">
@@ -68,44 +87,45 @@
 
     <div class="row">
         <div class="col-sm-6">
-            <div class="card">
+            <div class="card cta cta--featured" style="height: 26rem;">
+                <h4 class="card-title no-margin-top text-center" style="padding-top:1rem; padding-bottom:0.5rem">Wallet Balance</h4>
+                <span class="header-line gradient-color-1" style="margin-bottom: 1.5rem"></span>
                 <div class="card-body">
-                    <div class="col-md-12 mr-left ml-left">
-                        <div class="input-group mb-3 col-sm-12">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline;" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalBalance")</span>
-                            </div>
-                            <input type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
+                    <div class="input-group mb-3 col-sm-12">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline; background-color:#f96332; color:#fff;font-size:20px" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalBalance")</span>
                         </div>
+                        <input type="text" style="color:#fff;background-color:#f96332;text-align:center;font-size:20px" disabled class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
+                    </div>
 
-                        <div class="input-group mb-3 col-sm-12">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline;" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</span>
-                            </div>
-                            <input type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
+                    <div class="input-group mb-3 col-sm-12">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline; background-color:#fff;color:#808080;font-size:14px" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</span>
                         </div>
+                        <input type="text" disabled style="text-align:center;font-size:14px;color:#808080;background-color:#fff" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
+                    </div>
 
-                        <div class="input-group mb-3 col-sm-12">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline;" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span>
-                            </div>
-                            <input type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
+                    <div class="input-group mb-3 col-sm-12">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline; background-color:#fff; color:#808080;font-size:14px" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span>
                         </div>
+                        <input type="text" disabled style="text-align:center;font-size:14px;color:#808080;background-color:#fff" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
+                    </div>
 
-                        <div class="input-group mb-3 col-sm-12">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline;" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</span>
-                            </div>
-                            <input type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
+                    <div class="input-group mb-3 col-sm-12">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline; background-color:#fff; color:#808080;font-size:14px" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</span>
                         </div>
+                        <input type="text" disabled style="text-align:center;font-size:14px;color:#808080;background-color:#fff" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
-            <div class="card">
+        <div class="col-sm-6" id ="pie-chart-card" style="display: none;">
+            <div class="card" style="height: 26rem;">
                 <div class="card-body">
                     <div class="col-md-12 mr-left ml-left">
+                        <div id="pie-chart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
                     </div>
                 </div>
             </div>
@@ -113,9 +133,9 @@
     </div>
 
 
-    <div class="card">
+    <div class="card" id="line-chart-card">
         <div class="card-body">
-            <div id="chart" class="col-12" style="height: 400px; margin: 0 auto"></div>
+            <div id="line-chart" class="col-12" style="height: 400px; margin: 0 auto"></div>
         </div>
     </div>
 
@@ -161,11 +181,13 @@
     </div>
 </div>
 
-@section Scripts
+@section scripts
     {
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="~/js/dashboard/plugins/highcharts.js"></script>
     <script src="~/js/dashboard/plugins/series-label.js"></script>
     <script src="~/js/dashboard/plugins/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="~/js/dashboard/plugins/jquery.dataTables.min.js"></script>
     <script src="~/js/dashboard/cpl.index.js"></script>
 }
