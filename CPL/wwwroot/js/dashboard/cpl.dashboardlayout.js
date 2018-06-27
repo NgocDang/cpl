@@ -63,7 +63,9 @@
                 }, 1000);
             });
         });
-
+    },
+    logout: function () {
+        window.location.href = '/Authentication/Logout/';
     }
 };
 
