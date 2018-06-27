@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using AutoMapper;
 using CPL.Common.Enums;
@@ -89,20 +90,34 @@ namespace CPL
 
             LoadLangDetail(serviceProvider);
             LoadSetting(serviceProvider);
-            LoadWCF();
+            LoadWCF(serviceProvider);
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Authentication}/{action=LogIn}/{id?}");
             });
             app.UseMvcWithDefaultRoute();
         }
 
-        private void LoadWCF()
+        private void LoadWCF(IServiceProvider serviceProvider)
         {
-            var authentication = new AuthenticationService.AuthenticationClient().AuthenticateAsync();
+            // Load URL Endpoint
+            var serviceEndpoint = ((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.ServiceEndpoint).Value;
+
+            // Set endpoint address
+            // Authentication Service
+            ServiceClient.AuthenticationClient = new AuthenticationService.AuthenticationClient();
+            ServiceClient.AuthenticationClient.Endpoint.Address = new EndpointAddress(new Uri(serviceEndpoint + CPLConstant.AuthenticationServiceEndpoint));
+
+            // Email Service
+            ServiceClient.EmailClient = new EmailService.EmailClient();
+            ServiceClient.EmailClient.Endpoint.Address = new EndpointAddress(new Uri(serviceEndpoint + CPLConstant.EmailServiceEndpoint));
+
+            // Load Wcf
+            // Authentication
+            var authentication = ServiceClient.AuthenticationClient.AuthenticateAsync();
             authentication.Wait();
             Authentication.Token = authentication.Result.Token;
         }

@@ -9,4 +9,10 @@ namespace CPL.Misc
     {
         public static string Token { get; set; }
     }
+
+    public static class ServiceClient
+    {
+        public static AuthenticationService.AuthenticationClient AuthenticationClient { get; set; }
+        public static EmailService.EmailClient EmailClient { get; set; }
+    }
 }
