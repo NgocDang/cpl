@@ -1,11 +1,11 @@
-﻿using CPL.Common.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace CPL.Domain
+namespace CPL.Models
 {
-    public class SysUser : Entity
+    public class EditAccountViewModel
     {
         public int Id { get; set; }
         public bool IsAdmin { get; set; }
@@ -29,14 +29,10 @@ namespace CPL.Domain
         public DateTime? KYCCreatedDate { get; set; }
         public string FrontSide { get; set; }
         public string BackSide { get; set; }
-        public bool? Gender { get; set; }
         public DateTime? DOB { get; set; }
         public bool IsDeleted { get; set; }
         public decimal BTCWallet { get; set; }
         public decimal ETHWallet { get; set; }
         public decimal TokenWallet { get; set; }
-
-        public virtual ICollection<CoinTransaction> CoinTransactions { get; set; }
-        public virtual ICollection<GameHistory> GameHistories { get; set; }
     }
 }

@@ -52,8 +52,8 @@
                         <i class="now-ui-icons users_single-02"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit")</a>
-                        <a class="dropdown-item" href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialsEdit")</a>
+                        <a class="dropdown-item" asp-controller="Profile" asp-action="EditAccount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit")</a>
+                        <a class="dropdown-item" asp-controller="Profile" asp-action="EditCredentials"href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialsEdit")</a>
                         <a class="dropdown-item" href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
                     </div>
                 </li>
