@@ -25,54 +25,158 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <div class="row py-4">
-                    <div class="col-lg-4 col-md-4 col-sm-4">
-                        <button id="btn-wallet" class="btn btn-primary btn-lg btn-block">
-                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Wallet")
-                        </button>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4">
-                        <button id="btn-depo-withdr" class="btn btn-primary btn-lg btn-block">
-                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DepoAndWithdr")
-                        </button>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4">
-                        <button id="btn-wallet" class="btn btn-primary btn-lg btn-block">
-                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")
-                        </button>
+
+                <div class="card card-stats col-md-12">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="statistics">
+                                    <div class="info">
+                                        <div class="icon icon-primary">
+                                            <i class="now-ui-icons shopping_credit-card"></i>
+                                        </div>
+                                        <button id="btn-wallet" class="btn btn-primary btn-md btn-round col-md-11">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Wallet")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="statistics">
+                                    <div class="info">
+                                        <div class="icon icon-success">
+                                            <i class="now-ui-icons business_money-coins"></i>
+                                        </div>
+                                        <button id="btn-depo-withdr" class="btn btn-primary btn-md btn-round col-md-11">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DepoAndWithdr")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="statistics">
+                                    <div class="info">
+                                        <div class="icon icon-info">
+                                            <i class="now-ui-icons loader_refresh"></i>
+                                        </div>
+                                        <button id="btn-wallet" class="btn btn-primary btn-md btn-round col-md-11">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="container">
-                    <div class="input-group input-group-lg col-lg-12 col-md-12 col-sm-12">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-lg">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalBalance")</span>
-                        </div>
-                        <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")" disabled>
-                    </div>
 
-                    <div class="input-group mb-3 col-lg-12 col-md-12 col-sm-12">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</span>
-                        </div>
-                        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")" disabled>
-                    </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="col-md-12 mr-left ml-left">
+                                    <div class="input-group mb-3 col-sm-12">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline;" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalBalance")</span>
+                                        </div>
+                                        <input type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
+                                    </div>
 
-                    <div class="input-group mb-3 col-lg-12 col-md-12 col-sm-12">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span>
-                        </div>
-                        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")" disabled>
-                    </div>
+                                    <div class="input-group mb-3 col-sm-12">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline;" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</span>
+                                        </div>
+                                        <input type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
+                                    </div>
 
-                    <div class="input-group mb-3 col-lg-12 col-md-12 col-sm-12">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</span>
-                        </div>
-                        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")" disabled>
-                    </div>
+                                    <div class="input-group mb-3 col-sm-12">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline;" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span>
+                                        </div>
+                                        <input type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
+                                    </div>
 
+                                    <div class="input-group mb-3 col-sm-12">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" style="padding-right:18px;width: 120px;display: inline;" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</span>
+                                        </div>
+                                        <input type="text" readonly class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="col-md-12 mr-left ml-left">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div id="chart" class="col-12" style="height: 400px; margin: 0 auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div id="datatable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="dt-history" class="table table-striped table-bordered dataTable dtr-inline" cellspacing="0" width="100%" role="grid" aria-describedby="datatable_info" style="width: 100%;">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Date")</th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Time")</th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameType")</th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win")</th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Loss")</th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr role="row" class="odd">
+                                        <td tabindex="0" class="">Airi Satou</td>
+                                        <td>Accountant</td>
+                                        <td class="sorting_1">Tokyo</td>
+                                        <td>33</td>
+                                        <td>12</td>
+                                        <td>123</td>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td tabindex="0" class="">Airi Satou</td>
+                                        <td>Accountant</td>
+                                        <td class="sorting_1">Tokyo</td>
+                                        <td>33</td>
+                                        <td>12</td>
+                                        <td>123</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
+
+@section Scripts
+    {
+    <script src="~/js/dashboard/plugins/highcharts.js"></script>
+    <script src="~/js/dashboard/plugins/series-label.js"></script>
+    <script src="~/js/dashboard/plugins/exporting.js"></script>
+    <script src="~/js/dashboard/plugins/jquery.dataTables.min.js"></script>
+    <script src="~/js/dashboard/cpl.index.js"></script>
+}
