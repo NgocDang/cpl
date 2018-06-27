@@ -38,5 +38,10 @@ namespace CPL.Common.Enums
 
         //ETN duration in second
         public static int DurationInSecond = 1200;
+
+        //FHCore service endpoint
+        public static string ServiceEndpoint = "ServiceEndPointUrl";
+        public static string AuthenticationServiceEndpoint = "Security/Authentication.svc";
+        public static string EmailServiceEndpoint = "Message/Email.svc";
     }
 }

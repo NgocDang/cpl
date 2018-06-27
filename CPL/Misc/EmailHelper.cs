@@ -10,7 +10,7 @@ namespace CPL.Misc
     {
         public static bool Send(TemplateViewModel template, string toEmails, string ccEmails = "", string bccEmails = "", bool isBulked = false)
         {
-            var enqueueResult = new EmailService.EmailClient().EnqueueAsync(Authentication.Token, template.Subject, template.Body, toEmails, ccEmails, bccEmails, isBulked);
+            var enqueueResult = ServiceClient.EmailClient.EnqueueAsync(Authentication.Token, template.Subject, template.Body, toEmails, ccEmails, bccEmails, isBulked);
             enqueueResult.Wait();
             return enqueueResult.Result.Status.Code == 0;
         }
