@@ -69,9 +69,6 @@ namespace CPL.Models
         [Compare("Password")]
         public string PasswordConfirm { get; set; }
 
-        public int? IsIntroducedById { get; set; }
-        public bool IsAgencyAffiliate { get; set; }
-        public string AgencyToken { get; set; }
         public EnumAccountStatus Status { get; set; }
         public string Message { get; set; }
 
