@@ -144,5 +144,5 @@
 }
 
 $(document).ready(function () {
-    Index.init();
+    Dashboard.init();
 });

@@ -18,7 +18,7 @@
             var b = "fire-modal-" + f;
             c(this).off("click").on("click", function () {
                 var d = '   <div class="modal modal-mini modal-primary ' + (1 == a.animation ? " fade" : "") + '" tabindex="-1" role="dialog" id="' + b + '">       <div class="modal-dialog ' + a.size + (a.center ? " modal-dialog-centered" : "") + '" role="document">         <div class="modal-content">  ' +
-                    (1 == a.header ? '<div class="modal-header justify-content-center"><div class="modal-profile"><i class="now-ui-icons users_circle-08"></i></div></div>' : "") + '         <div class="modal-body text-center">  ' + a.body + "         </div>  " + (0 < a.buttons.length ? '         <div class="modal-footer">           </div>  ' : "") + "       </div>       </div>    </div>  ";
+                    (1 == a.header ? '<div class="modal-header justify-content-center"><div class="modal-profile"><i class="now-ui-icons media-1_button-power"></i></div></div>' : "") + '         <div class="modal-body text-center">  ' + a.body + "         </div>  " + (0 < a.buttons.length ? '         <div class="modal-footer">           </div>  ' : "") + "       </div>       </div>    </div>  ";
                 d = c(d).modal(a.modal);
                 var e;
                 a.buttons.forEach(function (a) {
