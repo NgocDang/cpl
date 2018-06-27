@@ -27,21 +27,21 @@
         </div>
         <ul class="nav">
             <li class="active">
-                <a href="#" >
+                <a asp-controller="Dashboard" asp-action="Index">
                     <i class="now-ui-icons design_app"></i>
-                    <p>Dashboard</p>
+                    <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</p>
                 </a>
             </li>
-            <li  class="active">
-                <a href="#">
+            <li class="active">
+                <a asp-controller="Profile" asp-action="EditAccount">
                     <i class="now-ui-icons users_single-02"></i>
-                    <p>Edit profile</p>
+                    <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit")</p>
                 </a>
             </li>
-            <li  class="active">
-                <a href="#">
+            <li class="active">
+                <a asp-controller="Profile" asp-action="EditCredentials">
                     <i class="now-ui-icons objects_key-25"></i>
-                    <p>Edit credentials</p>
+                    <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialsEdit")</p>
                 </a>
             </li>
         </ul>

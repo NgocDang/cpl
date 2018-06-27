@@ -13,7 +13,7 @@ namespace CPL.Models
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Address { get; set; }
+        public string StreetAddress { get; set; }
         public string ETHWalletAddress { get; set; }
         public int BTCHDWalletAddressIndex { get; set; }
         public string BTCWalletAddress { get; set; }
@@ -29,6 +29,10 @@ namespace CPL.Models
         public DateTime? KYCCreatedDate { get; set; }
         public string FrontSide { get; set; }
         public string BackSide { get; set; }
+        public bool? Gender { get; set; }
+        public string PostalCode { get; set; }
+        public string Country { get; set; }
+        public string City { get; set; }
         public DateTime? DOB { get; set; }
         public bool IsDeleted { get; set; }
         public decimal BTCWallet { get; set; }
