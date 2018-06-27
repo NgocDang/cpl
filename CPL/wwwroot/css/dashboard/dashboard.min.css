@@ -12341,3 +12341,60 @@ img {
         padding-right: 15px !important
     }
 }
+
+@media screen and (max-width: 1024px) {
+    .g-recaptcha {
+        transform: scale(0.8);
+        -webkit-transform: scale(0.8);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .g-recaptcha {
+        transform: scale(0.53);
+        -webkit-transform: scale(0.53);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .g-recaptcha {
+        transform: scale(1.121);
+        -webkit-transform: scale(1.121);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+@media screen and (max-width: 375px) {
+    .g-recaptcha {
+        transform: scale(0.97);
+        -webkit-transform: scale(0.97);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .g-recaptcha {
+        transform: scale(0.94);
+        -webkit-transform: scale(0.94);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .g-recaptcha {
+        transform: scale(0.8);
+        -webkit-transform: scale(0.8);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+.box-captcha {
+    padding: 10px
+}

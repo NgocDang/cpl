@@ -23,7 +23,14 @@
             } else {
                 $("#password-confirm-message").hide();
             }
-
+            if (grecaptcha.getResponse() == '') {
+                $("#captcha-message").html($('#captchaMessage').val());
+                $("#captcha-message").addClass("invalid-feedback").show();
+                return false;
+            }
+            else {
+                $("#captcha-message").hide();
+            }
             if (isFormValid && isPasswordValid) {
                 $("#register-error").hide();
                 $("#register-message").hide();
@@ -67,6 +74,7 @@
             }
             return false;
         });
+        
     }
 };
 

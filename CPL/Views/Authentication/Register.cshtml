@@ -43,7 +43,7 @@
                         <span class="navbar-toggler-bar bar3"></span>
                     </button>
                 </div>
-                <a class="navbar-brand" >@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</a>
+                <a class="navbar-brand">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</a>
             </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -115,6 +115,16 @@
                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
                                             </div>
                                         </div>
+                                        <div class="form-group">
+                                            @*<label for="Captcha" class="text-light d-block">
+            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Captcha")
+        </label>*@
+                                            <div class="box-captcha">
+                                                <div class="g-recaptcha" data-sitekey="6LcmwmAUAAAAAOaDjdjGVgSHYj9fzZH-1-U8Ffd4"></div>
+                                            </div>
+                                            <div id="captcha-message">
+                                            </div>
+                                        </div>
                                         <div class="form-group text-center mt-4">
                                             <button type="submit" id="btn-register" class="btn btn-primary btn-round btn-block">
                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")
@@ -130,8 +140,8 @@
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AlreadyHaveAccount") <a asp-controller="Authentication" asp-action="LogIn">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHere")</a> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToLogIn")
                             </div>
                             @*<div class="mt-1 text-white text-center">
-            @Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResendActivateCodeLinkDesc"))
-        </div>*@
+                            @Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResendActivateCodeLinkDesc"))
+                        </div>*@
                         </div>
                     </div>
                 </div>
@@ -166,6 +176,7 @@
                 </div>
             </footer>
             <div class="full-page-background" style="background-image: url(/images/register-background.jpg) "></div>
+            <input type="hidden" name="captchaMessage" id="captchaMessage" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CaptchaMessage")" />
         </div>
     </div>
     <script src="~/js/dashboard/jquery.min.js"></script>
@@ -179,5 +190,7 @@
     <script src="~/js/dashboard/plugins/toastr/toastr.min.js"></script>
     <!-- Sharrre libray -->
     <script src="~/js/dashboard/cpl.register.js"></script>
+    <!-- Init ReCaptcha V2 -->
+    <script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
 </body>
 </html>
