@@ -17,7 +17,7 @@ namespace CPL.Domain
         public string Status { get; set; }
         public decimal? TokenAmount { get; set; }
         public float? Rate { get; set; }
-        public string Type { get; set; }
+        public int Type { get; set; }
         public string TxId { get; set; }
 
         public virtual SysUser SysUser { get; set; }
