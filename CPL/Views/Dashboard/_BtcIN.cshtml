@@ -1,0 +1,24 @@
+﻿<style>
+    /*.qrCode{
+        margin: 10%;
+    }*/
+</style>
+<div class="col-sm-12">
+        <div class="input-group mb-3 col-sm-12">
+            <div class="input-group-prepend">
+                <span class="input-group-text balance-card" style="background-color:#f96332; color:#fff;font-size:20px" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</span>
+            </div>
+            <span style="color:#fff;background-color:#f96332;font-size:20px" class="form-control balance-card" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")
+            </span>
+        </div>
+        <div class="col-md-12">
+                    <h4 class="card-title">BTC Address</h4>
+                    <div class="form-group">
+                        <input readonly="" value="17PJZ2uLiR2TMVv18MzsjRRswfRSLkSNBe"  style="width:70%;display:inline-block" type="text" class="form-control">
+                        <button class="btn btn-fill btn-primary">Copy</button>
+                        <img class="col-md-2 text-center qrCode" src="https://blockchain.info/qr?data=bitcoin:17PJZ2uLiR2TMVv18MzsjRRswfRSLkSNBe" />
+                    </div>
+                </div>
+            </div>
+</div>

@@ -78,4 +78,24 @@
     text-align: center;
 }
 /* End Dashboard*/
+/* Start DepositesAndWithdrawlPactialView*/
+.nav-itemCus {
+    padding-bottom: 20px;
+    margin: auto;
+}
+
+.nav-linkCus {
+    width: 160px;
+    text-align: center;
+    margin-right: 40px !important;
+}
+
+.cardButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 5px;
+}
+/* End DepositesAndWithdrawlPactialView*/
 

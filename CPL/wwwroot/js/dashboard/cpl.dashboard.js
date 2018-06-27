@@ -137,9 +137,35 @@
         });
 
         $("#btn-wallet").on("click", function () {
+            $("#walletView").show();
+            $("#depositeWithdrawalView").hide();
             $("#pie-chart-card").show();
             $("#line-chart-card").hide();
         })
+
+        $("#btn-depo-withdr").on("click", function () {
+            $("#walletView").hide();
+            $("#depositeWithdrawalView").show();
+
+            $.ajax({
+                url: "/Dashboard/DepositeAndWithdrawal/",
+                type: "GET",
+                beforeSend: function () {
+                    $("#btn-depo-withdr").attr("disabled", true);
+                    $("#btn-depo-withdr").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-depo-withdr").text());
+                },
+                data: {
+                },
+                success: function (data) {
+                    $("#depositeWithdrawalView").html(data);
+                },
+                complete: function (data) {
+                    $("#btn-depo-withdr").attr("disabled", false);
+                    $("#btn-depo-withdr").html($("#btn-depo-withdr").text());
+                }
+            });
+        })
+        return false;
     }
 }
 

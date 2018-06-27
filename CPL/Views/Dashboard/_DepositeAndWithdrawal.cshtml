@@ -1,0 +1,44 @@
+﻿@*<div class="col-md-6 ml-auto mr-auto">*@
+    <div class="card-body ">
+        <div class="cardButton">
+            <ul class="nav nav-pills nav-pills-primary" role="tablist">
+                <li class="nav-item nav-itemCus">
+                    <a class="nav-link active show nav-linkCus" data-toggle="tab" href="#btcIn" role="tablist">
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "btcIn")
+                    </a>
+                </li>
+                <li class="nav-item nav-itemCus">
+                    <a class="nav-link nav-linkCus" data-toggle="tab" href="#btcOut" role="tablist">
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "btcOut")
+                    </a>
+                </li>
+                <li class="nav-item nav-itemCus">
+                    <a class="nav-link nav-linkCus" data-toggle="tab" href="#ethIn" role="tablist">
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ethIn")
+                    </a>
+                </li>
+                <li class="nav-item nav-itemCus">
+                    <a class="nav-link nav-linkCus" data-toggle="tab" href="#ethOut" role="tablist">
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ethOut")
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content tab-space">
+            <div class="tab-pane active show" id="btcIn">
+                @await Html.PartialAsync("_BtcIn")
+            </div>
+            <div class="tab-pane" id="btcOut">
+                Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas.
+                <br><br>Dramatically maintain clicks-and-mortar solutions without functional solutions.
+            </div>
+            <div class="tab-pane" id="ethIn">
+                Completely synergize resource taxing relationships via premier niche markets. Professionally cultivate one-to-one customer service with robust ideas.
+                <br><br>Dynamically innovate resource-leveling customer service for state of the art customer service.
+            </div>
+            <div class="tab-pane" id="ethOut">
+                abc
+            </div>
+        </div>
+    </div>
+
