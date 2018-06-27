@@ -57,8 +57,7 @@ namespace CPL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _sysUserService.Queryable()
-                                .FirstOrDefault(x => x.Email == viewModel.Email && x.IsDeleted == false);
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email && x.IsDeleted == false);
 
                 if (user != null && BCrypt.Net.BCrypt.Verify(viewModel.Password, user.Password))
                 {
