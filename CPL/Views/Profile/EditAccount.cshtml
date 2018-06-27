@@ -5,117 +5,93 @@
 <div class="content">
     <div class="row">
         <div class="col-md-12">
-            <div class="card ">
-                <div class="card-header ">
-                    <h4 class="card-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit")</h4>
-                </div>
-                <div class="card-body ">
-                    <form method="get" action="/" class="form-horizontal">
+            <form id="form-edit-account" class="form-horizontal" action="#" method="POST">
+                <div class="card ">
+                    <div class="card-header ">
+                        <h4 class="card-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit")</h4>
+                    </div>
+                    <div class="card-body ">
                         <div class="row">
-                            <label class="col-sm-2 col-form-label">With help</label>
-                            <div class="col-sm-10">
+                            <label class="col-sm-2 col-form-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</label>
+                            <div class="col-sm-5">
                                 <div class="form-group">
-                                    <input type="text" class="form-control">
-                                    <span class="form-text">A block of help text that breaks onto a new line.</span>
+                                    <input class="form-control" type="text" name="FirstName" required value="@Model.FirstName" />
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="LastName" required value="@Model.LastName"  />
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-2 col-form-label">Password</label>
-                            <div class="col-sm-10">
-                                <div class="form-group">
-                                    <input type="password" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label class="col-sm-2 col-form-label">Placeholder</label>
-                            <div class="col-sm-10">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="placeholder">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label class="col-sm-2 col-form-label">Disabled</label>
-                            <div class="col-sm-10">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" value="Disabled input here.." disabled="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label class="col-sm-2 col-form-label">Static control</label>
-                            <div class="col-sm-10">
-                                <div class="form-group">
-                                    <p class="form-control-static">hello@creative-tim.com</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label class="col-sm-2 col-form-label">Checkboxes and radios</label>
+                            <label class="col-sm-2 col-form-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Gender")</label>
                             <div class="col-sm-10 checkbox-radios">
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox">
-                                        <span class="form-check-sign"></span>
-                                        First Checkbox
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox">
-                                        <span class="form-check-sign"></span>
-                                        Second Checkbox
-                                    </label>
-                                </div>
                                 <div class="form-check form-check-radio">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked="">
+                                        <input class="form-check-input" type="radio" name="GenderGroup" id="male" value="1" checked="">
                                         <span class="form-check-sign"></span>
-                                        First Radio
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Male")
                                     </label>
                                 </div>
+
                                 <div class="form-check form-check-radio">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                                        <input class="form-check-input" type="radio" name="GenderGroup" id="female" value="0">
                                         <span class="form-check-sign"></span>
-                                        Second Radio
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Female")
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-2 col-form-label">Inline checkboxes</label>
-                            <div class="col-sm-10">
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox">
-                                        <span class="form-check-sign"></span>
-                                        a
-                                    </label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox">
-                                        <span class="form-check-sign"></span>
-                                        b
-                                    </label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox">
-                                        <span class="form-check-sign"></span>
-                                        c
-                                    </label>
+                            <label class="col-sm-2 col-form-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DOB")</label>
+                            <div class="col-sm-7">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="number" number="true" />
                                 </div>
                             </div>
+                            <label class="col-sm-3 label-on-right"><code>number="true"</code></label>
                         </div>
-                    </form>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Url</label>
+                            <div class="col-sm-7">
+                                <div class="form-group">
+                                    <input class="form-control"
+                                           type="text"
+                                           name="url"
+                                           url="true" />
+                                </div>
+                            </div>
+                            <label class="col-sm-3 label-on-right"><code>url="true"</code></label>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Equal to</label>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <input class="form-control"
+                                           id="idSource"
+                                           type="text"
+                                           placeholder="#idSource" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <input class="form-control"
+                                           id="idDestination"
+                                           type="text"
+                                           placeholder="#idDestination"
+                                           equalTo="#idSource" />
+                                </div>
+                            </div>
+                            <label class="col-sm-4 label-on-right"><code>equalTo="#idSource"</code></label>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="submit" class="btn btn-primary">Validate Inputs</button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
-   
 </div>
-  
