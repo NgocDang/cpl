@@ -18,7 +18,7 @@
             var isFormValid = $("#form-log-in")[0].checkValidity();
             $("#form-log-in").addClass('was-validated');
             if (!checkValidReCaptchaV2()) {
-                $(".login-error").html('Please check the RECAPTCHA');
+                $(".login-error").html($('#captchaMessage').val());
                 $(".login-error").show();
                 return false;
             }
@@ -39,23 +39,23 @@
                     },
                     success: function (data) {
                         if (data.success) {
-                            if (data.twofactor) {
-                                $("#log-in").hide();
-                                $("#two-factor").show();
-                            } else {
+                            //if (data.twofactor) {
+                            //    $("#log-in").hide();
+                            //    $("#two-factor").show();
+                            //} else {
                                 window.location.replace(data.url);
-                            }
+                            //}
                         } else {
-                            if (data.name == "mobile-verify") {
-                                $("#mobile-verify-message").html(data.message);
-                                $("#mobile-verify-message").removeClass("text-muted").addClass("invalid-feedback").show();
-                                $("#Id").val(data.id);
-                                $("#log-in").hide();
-                                $("#mobile-verify").show();
-                            } else {
-                                $(".login-error").html(data.message);
-                                $(".login-error").show();
-                            }
+                            //if (data.name == "mobile-verify") {
+                            //    $("#mobile-verify-message").html(data.message);
+                            //    $("#mobile-verify-message").removeClass("text-muted").addClass("invalid-feedback").show();
+                            //    $("#Id").val(data.id);
+                            //    $("#log-in").hide();
+                            //    $("#mobile-verify").show();
+                            //} else {
+                            $(".login-error").html(data.message);
+                            $(".login-error").show();
+                            //}
                         }
                     },
                     complete: function (data) {
@@ -67,6 +67,17 @@
             }
             return false;
         });
+
+        var checkValidReCaptchaV2 = function () {
+            var v = grecaptcha.getResponse();
+            if (v === '') {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
     }
 };
 

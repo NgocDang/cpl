@@ -45,22 +45,6 @@
         }
     </style>
 
-    <!-- Init ReCaptcha V2 -->
-    <script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
-
-    <script type="text/javascript">
-        var checkValidReCaptchaV2 = function () {
-            var v = grecaptcha.getResponse();
-            if (v === '') {
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
-    </script>
-    <!-- end Init ReCaptcha V2 -->
-
 </head>
 <body class=" sidebar-mini ">
     <nav class="navbar navbar-expand-lg navbar-transparent  navbar-absolute bg-primary fixed-top">
@@ -131,15 +115,15 @@
                                         <label for="Password" class="d-block">
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")
                                         </label>
-                                            <input id="Password" class="form-control" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")..." name="password" type="password" tabindex="2" required />
-                                            <div class="invalid-feedback invalid-feedback-login">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
-                                            </div>
+                                        <input id="Password" class="form-control" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")..." name="password" type="password" tabindex="2" required />
+                                        <div class="invalid-feedback invalid-feedback-login">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
+                                        </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="Password" class="d-block">
-                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Capcha")
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Captcha")
                                         </label>
                                         <div class="box-captcha">
                                             <div class="g-recaptcha" data-sitekey="6LcmwmAUAAAAAOaDjdjGVgSHYj9fzZH-1-U8Ffd4"></div>
@@ -198,9 +182,12 @@
             </footer>
 
             <div class="full-page-background" style="background-image: url(/images/login-background.jpg) "></div>
+            <input type="hidden" name="captchaMessage" id="captchaMessage" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CaptchaMessage")" />
         </div>
     </div>
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <!-- Init ReCaptcha V2 -->
+    <script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
+    <!-- end Init ReCaptcha V2 -->
     <script src="~/js/dashboard/jquery.min.js"></script>
     <script src="~/js/dashboard/popper.min.js"></script>
     <script src="~/js/dashboard/bootstrap.min.js"></script>
