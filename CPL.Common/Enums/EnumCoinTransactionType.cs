@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CPL.Common.Enums
 {
-    public enum EnumCoinTransaction
+    public enum EnumCoinTransactionType
     {
         DEPOSIT_BTC = 1,
         DEPOSIT_ETH = 2,
