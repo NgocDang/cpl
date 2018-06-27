@@ -10,13 +10,13 @@ $(function () {
             body: b[1],
             buttons: [{
                 text: "Yes",
-                "class": "btn btn-sm btn-primary",
+                "class": "btn btn-link btn-neutral",
                 handler: function () {
                     eval(d.data("confirm-yes"))
                 }
             }, {
                 text: "No",
-                "class": "btn btn-sm btn-secondary",
+                    "class": "btn btn-link btn-neutral",
                 handler: function (a) {
                     $.destroyModal(a)
                 }
