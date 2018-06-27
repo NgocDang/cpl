@@ -117,12 +117,12 @@
                         <table id="dt-history" class="table table-striped table-bordered dataTable dtr-inline" cellspacing="0" width="100%" role="grid" aria-describedby="datatable_info" style="width: 100%;">
                             <thead>
                                 <tr role="row">
-                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Date")</th>
-                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Time")</th>
-                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameType")</th>
-                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win")</th>
-                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Loss")</th>
-                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" style="width: 334px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Date")</th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Time")</th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameType")</th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win")</th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Loss")</th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -156,7 +156,7 @@
     <script src="~/js/dashboard/plugins/highcharts.js"></script>
     <script src="~/js/dashboard/plugins/series-label.js"></script>
     <script src="~/js/dashboard/plugins/exporting.js"></script>
-    <script src="~/js/dashboard/export-data.js"></script>
+    <script src="~/js/dashboard/plugins/export-data.js"></script>
     <script src="~/js/dashboard/plugins/jquery.dataTables.min.js"></script>
     <script src="~/js/dashboard/cpl.dashboard.js"></script>
 }
