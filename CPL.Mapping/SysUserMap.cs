@@ -40,9 +40,9 @@ namespace CPL.Mapping
             builder.Property(t => t.BackSide).HasColumnName("BackSide");
             builder.Property(t => t.DOB).HasColumnName("DOB");
             builder.Property(t => t.IsDeleted).HasColumnName("IsDeleted");
-            builder.Property(t => t.BTCWallet).HasColumnName("BTCWallet");
-            builder.Property(t => t.ETHWallet).HasColumnName("ETHWallet");
-            builder.Property(t => t.TokenWallet).HasColumnName("TokenWallet");
+            builder.Property(t => t.BTCAmount).HasColumnName("BTCAmount");
+            builder.Property(t => t.ETHAmount).HasColumnName("ETHAmount");
+            builder.Property(t => t.TokenAmount).HasColumnName("TokenAmount");
         }
     }
 }
