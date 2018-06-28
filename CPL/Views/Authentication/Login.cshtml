@@ -131,7 +131,9 @@
                                 <div class="card-footer ">
                                     <div class="text-white text-center mt-4">
                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoAccount")
-                                        <a asp-controller="Authentication" asp-action="Register" class="btn btn-warning btn-round btn-block" tabindex="4" style="margin-top:15px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreateAccount")</a>
+                                        <a asp-controller="Authentication" asp-action="Register" class="btn btn-round btn-block" tabindex="4" style="margin-top:15px;">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreateAccount")
+                                        </a>
                                     </div>
                                 </div>
                             </div>

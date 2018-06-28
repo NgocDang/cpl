@@ -10,10 +10,10 @@
                 <div class="col-md-4">
                     <div class="statistics">
                         <div class="info">
-                            <div class="icon icon-primary">
+                            <div class="icon">
                                 <i class="now-ui-icons shopping_credit-card"></i>
                             </div>
-                            <button id="btn-wallet" class="btn btn-primary btn-md btn-round col-md-11">
+                            <button id="btn-wallet" class="btn btn-md btn-round col-md-11">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Wallet")
                             </button>
                         </div>
@@ -22,10 +22,10 @@
                 <div class="col-md-4">
                     <div class="statistics">
                         <div class="info">
-                            <div class="icon icon-success">
+                            <div class="icon">
                                 <i class="now-ui-icons business_money-coins"></i>
                             </div>
-                            <button id="btn-depo-withdr" class="btn btn-primary btn-md btn-round col-md-11">
+                            <button id="btn-depo-withdr" class="btn btn-md btn-round col-md-11">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DepositAndWithdraw")
                             </button>
                         </div>
@@ -34,10 +34,10 @@
                 <div class="col-md-4">
                     <div class="statistics">
                         <div class="info">
-                            <div class="icon icon-info">
+                            <div class="icon">
                                 <i class="now-ui-icons loader_refresh"></i>
                             </div>
-                            <button id="btn-wallet" class="btn btn-primary btn-md btn-round col-md-11">
+                            <button id="btn-exchange" class="btn btn-md btn-round col-md-11">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")
                             </button>
                         </div>
@@ -55,9 +55,9 @@
                 <div class="card-body">
                     <div class="input-group mb-3 col-sm-12">
                         <div class="input-group-prepend">
-                            <span class="input-group-text balance-card" style="background-color:#f96332; color:#fff;font-size:20px" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</span>
+                            <span class="input-group-text balance-card" style="background-color:#4267b2; color:#fff;font-size:20px" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</span>
                         </div>
-                        <span style="color:#fff;background-color:#f96332;font-size:20px" class="form-control balance-card" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                        <span style="color:#fff;background-color:#4267b2;font-size:20px" class="form-control balance-card" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")
                         </span>
                     </div>

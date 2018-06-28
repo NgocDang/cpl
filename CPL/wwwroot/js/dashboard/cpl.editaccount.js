@@ -71,6 +71,53 @@
                 });
             }
         });
+
+        $("#btn-save-account").on("click", function () {
+            var isFormValid = $("#form-profile")[0].checkValidity();
+            $("#form-edit-account").addClass('was-validated');
+            var isMobileValid = $("#Mobile").intlTelInput("isValidNumber");
+            if (!isMobileValid) {
+                $("#Mobile").addClass("border-danger");
+                $("#Mobile").closest(".form-group").find(".invalid-feedback").show();
+            } else {
+                $("#Mobile").removeClass("border-danger");
+                $("#Mobile").closest(".form-group").find(".invalid-feedback").hide();
+            }
+            var isDOBValid = moment($("#DOB").val()).isValid();
+            if (isFormValid && isMobileValid && isDOBValid) {
+                $.ajax({
+                    url: "/Profile/EditAccount/",
+                    type: "POST",
+                    beforeSend: function () {
+                        $("#btn-save-account").attr("disabled", true);
+                        $("#btn-save-account").html("<i class='fa fa-spinner fa-spin'></i> <i class='far fa-save'></i> " + $("#btn-save-account").text());
+                    },
+                    data: {
+                        FirstName: $("#FirstName").val(),
+                        LastName: $("#LastName").val(),
+                        Gender: $('#Male').is(':checked'),
+                        DOB: moment(),
+                        PostalCode: $("#PostalCode").val(),
+                        Country: $("#Country").val(),
+                        City: $("#City").val(),
+                        StreetAddress: $("#StreetAddress").val(),
+                        Mobile: $("#Mobile").intlTelInput("getNumber")
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message, 'Success!');
+                        } else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $("#btn-profile-update").attr("disabled", false);
+                        $("#btn-profile-update").html("<i class='far fa-save'></i> " + $("#btn-profile-update").text());
+                    }
+                });
+            }
+            return false;
+        });
     }
 };
 

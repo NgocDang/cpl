@@ -33,7 +33,7 @@
                             <div class="col-sm-1 checkbox-radios">
                                 <div class="form-check form-check-radio">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="GenderGroup" id="male" value="1" checked="">
+                                        <input class="form-check-input" type="radio" name="GenderGroup" id="Male" value="1" checked="">
                                         <span class="form-check-sign"></span>
                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Male")
                                     </label>
@@ -42,7 +42,7 @@
                             <div class="col-sm-1 checkbox-radios">
                                 <div class="form-check form-check-radio">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="GenderGroup" id="female" value="0">
+                                        <input class="form-check-input" type="radio" name="GenderGroup" id="Female" value="0">
                                         <span class="form-check-sign"></span>
                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Female")
                                     </label>
@@ -349,7 +349,7 @@
                             <label class="col-sm-2 col-form-label text-right">&nbsp;</label>
                             <div class="col-sm-12 col-md-3">
                                 <div class="form-group">
-                                    <button type="button" id="btn-save-account" class="btn btn-primary btn-round"><i class="far fa-save"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
+                                    <button type="button" id="btn-save-account" class="btn btn-primary btn-round"><i class="far fa-save"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
                                 </div>
                             </div>
                         </div>

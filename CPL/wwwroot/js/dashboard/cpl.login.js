@@ -60,7 +60,7 @@
                     },
                     complete: function (data) {
                         $("#btn-log-in").attr("disabled", false);
-                        $("#btn-log-in").html($("#btn-log-in").text());
+                        $("#btn-log-in").html($("#btn-log-in").text().trim());
                     }
 
                 });
