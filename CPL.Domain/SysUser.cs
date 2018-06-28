@@ -31,9 +31,9 @@ namespace CPL.Domain
         public string BackSide { get; set; }
         public DateTime? DOB { get; set; }
         public bool IsDeleted { get; set; }
-        public decimal BTCWallet { get; set; }
-        public decimal ETHWallet { get; set; }
-        public decimal TokenWallet { get; set; }
+        public decimal BTCAmount { get; set; }
+        public decimal ETHAmount { get; set; }
+        public decimal TokenAmount { get; set; }
 
         public virtual ICollection<CoinTransaction> CoinTransactions { get; set; }
         public virtual ICollection<GameHistory> GameHistories { get; set; }
