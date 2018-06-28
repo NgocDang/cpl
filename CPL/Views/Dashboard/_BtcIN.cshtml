@@ -1,24 +1,22 @@
-﻿<style>
-    /*.qrCode{
-        margin: 10%;
-    }*/
-</style>
-<div class="col-sm-12">
-        <div class="input-group mb-3 col-sm-12">
+﻿<div class="col-sm-7 cusCenter">
+    <div class="">
+        <div class="input-group mb-3 col-sm-6 cusCenter">
             <div class="input-group-prepend">
-                <span class="input-group-text balance-card" style="background-color:#f96332; color:#fff;font-size:20px" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</span>
+                <span class="input-group-text balance-card" style="background-color:#f96332; color:#fff;font-size:20px" id="inputGroup-sizing-default">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </span>
             </div>
-            <span style="color:#fff;background-color:#f96332;font-size:20px" class="form-control balance-card" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")
+            <span style="color:#fff;background-color:#f96332;font-size:20px; text-align: right" class="form-control balance-card" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+               999999999 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")
             </span>
         </div>
-        <div class="col-md-12">
-                    <h4 class="card-title">BTC Address</h4>
-                    <div class="form-group">
-                        <input readonly="" value="17PJZ2uLiR2TMVv18MzsjRRswfRSLkSNBe"  style="width:70%;display:inline-block" type="text" class="form-control">
-                        <button class="btn btn-fill btn-primary">Copy</button>
-                        <img class="col-md-2 text-center qrCode" src="https://blockchain.info/qr?data=bitcoin:17PJZ2uLiR2TMVv18MzsjRRswfRSLkSNBe" />
-                    </div>
-                </div>
-            </div>
+        <div class="form-group frm-btcIn">
+            <fieldset class="fld-Set">
+                <legend>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BtcAddress")</legend>
+                <img class="col-md-3 qrCode" src="https://blockchain.info/qr?data=bitcoin:17PJZ2uLiR2TMVv18MzsjRRswfRSLkSNBe" />
+                <input readonly id="BTCAddress" value="17PJZ2uLiR2TMVv18MzsjRRswfRSLkSNBe" type="text" class="form-control address cusTop" name="BTCAddress">
+                <button class="btn btn-fill btn-primary btn-copy" data-clipboard-target="#BTCAddress">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
+            </fieldset>
+            <div class="col-md-10 cusCenter txt-desc">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BtcInDesc")</div>
+        </div>
+    </div>
+    @Html.Hidden("CopiedText", "CopiedSuccessfully")
 </div>

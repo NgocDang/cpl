@@ -1,4 +1,4 @@
-﻿var Dashboard= {
+﻿var Dashboard = {
     init: function () {
         Highcharts.chart('line-chart', {
             chart: {
@@ -158,6 +158,8 @@
                 },
                 success: function (data) {
                     $("#depositeWithdrawalView").html(data);
+                    Dashboard.bindCopy();
+                    Dashboard.bindBtcOut();
                 },
                 complete: function (data) {
                     $("#btn-depo-withdr").attr("disabled", false);
@@ -166,7 +168,36 @@
             });
         })
         return false;
-    }
+    },
+    bindCopy: function () {
+        if ($(".btn-copy").length > 0) {
+            var clipboard = new ClipboardJS('.btn-copy');
+            clipboard.on('success', function (e) {
+                toastr.success($("#CopiedText").val());
+            });
+        }
+    },
+    bindBtcOut: function () {
+        $("#txt-btcOut").on("click", function () {
+            $.ajax({
+                url: "/Dashboard/WithdrawBTC/",
+                type: "GET",
+                beforeSend: function () {
+                    //$("#txt-btcOut").attr("disabled", true);
+                    //$("#txt-btcOut").html("<i class='fa fa-spinner fa-spin'></i> " + $("#txt-btcOut").text());
+                },
+                data: {
+                },
+                success: function (data) {
+                    $("#btcOutView").html(data);
+                },
+                complete: function (data) {
+                    $("#txt-btcOut").attr("disabled", false);
+                    $("#txt-btcOut").html($("#txt-btcOut").text());
+                }
+            });
+        })
+    },
 }
 
 $(document).ready(function () {
