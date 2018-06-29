@@ -52,10 +52,10 @@ namespace CPL.Controllers
 
         public IActionResult Index()
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == 20/*HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id*/);
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
             var viewModel = Mapper.Map<DashboardViewModel>(user);
             decimal coinRate = CoinExchangeExtension.CoinExchanging();
-            var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenrate").Value;
+            var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value;
             viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
             return View(viewModel);
         }
@@ -74,21 +74,27 @@ namespace CPL.Controllers
         [HttpPost]
         public IActionResult GetDataPieChart()
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == 20/*HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id*/);
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
             var viewModel = Mapper.Map<DashboardViewModel>(user);
             decimal coinRate = CoinExchangeExtension.CoinExchanging();
-            var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenrate").Value;
+            var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value;
             viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
-
-            var CPLPercentage = user.TokenAmount / 1000000 / viewModel.TotalBalance * 100;
-            var ETHPercentage = user.ETHAmount * coinRate / viewModel.TotalBalance * 100;
-            var BTCPercentage = user.BTCAmount / viewModel.TotalBalance * 100;
 
             // Holding Percentage
             viewModel.HoldingPercentage = new HoldingPercentageViewModel();
-            viewModel.HoldingPercentage.CPLPercentage = CPLPercentage;
-            viewModel.HoldingPercentage.ETHPercentage = ETHPercentage;
-            viewModel.HoldingPercentage.BTCPercentage = BTCPercentage;
+
+            if (user.TokenAmount > 0)
+            {
+                viewModel.HoldingPercentage.CPLPercentage = user.TokenAmount / decimal.Parse(tokenRate) / viewModel.TotalBalance * 100;
+            }
+            if (user.TokenAmount > 0)
+            {
+                viewModel.HoldingPercentage.ETHPercentage = user.ETHAmount * coinRate / viewModel.TotalBalance * 100;
+            }
+            if (user.BTCAmount > 0)
+            {
+                viewModel.HoldingPercentage.BTCPercentage = user.BTCAmount / viewModel.TotalBalance * 100;
+            }
 
             var mess = JsonConvert.SerializeObject(viewModel.HoldingPercentage, Formatting.Indented);
             return new JsonResult(new { success = true, message = mess });
@@ -97,7 +103,7 @@ namespace CPL.Controllers
         [HttpPost]
         public IActionResult GetDataLineChart()
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == 20/*HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id*/);
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
             var viewModel = Mapper.Map<DashboardViewModel>(user);
 
             viewModel.MonthlyInvest = _gameHistoryService.Queryable()
