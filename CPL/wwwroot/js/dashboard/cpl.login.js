@@ -9,7 +9,7 @@
                 return false;
             }
 
-            if (true) {
+            if (isFormValid) {
                 $("#login-error").hide();
                 $.ajax({
                     url: "/Authentication/LogIn/",
