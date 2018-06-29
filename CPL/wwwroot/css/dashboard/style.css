@@ -25,6 +25,102 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     display:none;
 }
 
+.form-label-group input:not(:placeholder-shown) ~ label.error {
+    text-align: right;
+    color: #FF4961;
+}
+
+#account-login .card-account-left {
+    background: -webkit-gradient(linear, left top, right top, from(#266db9), to(#153b71));
+    background: -webkit-linear-gradient(left, #266db9, #153b71);
+    background: -moz-linear-gradient(left, #266db9, #153b71);
+    background: -o-linear-gradient(left, #266db9, #153b71);
+    background: linear-gradient(90deg, #266db9, #153b71);
+    border-radius: 5px 0 0 5px;
+}
+
+    #account-login .card-account-left .card-account-img {
+        position: relative;
+        top: -webkit-calc(200px - 125px);
+        top: -moz-calc(200px - 125px);
+        top: calc(200px - 125px);
+    }
+
+#account-login .card-account-right {
+    border-radius: 0 5px 5px 0;
+}
+
+@media screen and (max-width: 2560px) {
+    .g-recaptcha {
+        transform: scale(1.05);
+        -webkit-transform: scale(1.05);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .g-recaptcha {
+        transform: scale(0.8);
+        -webkit-transform: scale(0.8);
+        transform: scale(0.85);
+        -webkit-transform: scale(0.85);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+
+@media screen and (max-width: 768px) {
+    .g-recaptcha {
+        transform: scale(0.53);
+        -webkit-transform: scale(0.53);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .g-recaptcha {
+        transform: scale(1.121);
+        -webkit-transform: scale(1.121);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    .g-recaptcha {
+        transform: scale(0.97);
+        -webkit-transform: scale(0.97);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .g-recaptcha {
+        transform: scale(0.94);
+        -webkit-transform: scale(0.94);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .g-recaptcha {
+        transform: scale(0.8);
+        -webkit-transform: scale(0.8);
+        transform-origin: 0 0;
+        -webkit-transform-origin: 0 0;
+    }
+}
+
+.box-captcha {
+    padding: 10px;
+}
+}
+
 .dataTables_info, .dataTables_paginate {
     padding-top: 1rem;
     padding-bottom: 1.5rem;
