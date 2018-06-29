@@ -25,7 +25,7 @@ namespace CPL.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-
+        private readonly ISysUserService _sysUserService;
         private readonly ITemplateService _templateService;
 
         public ProfileController(
@@ -34,6 +34,7 @@ namespace CPL.Controllers
             IViewRenderService viewRenderService,
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
+            ISysUserService sysUserService,
             ITeamService teamService,
             ITemplateService templateService)
         {
@@ -41,6 +42,7 @@ namespace CPL.Controllers
             this._mapper = mapper;
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
+            this._sysUserService = sysUserService;
             this._unitOfWork = unitOfWork;
             this._templateService = templateService;
         }
@@ -49,6 +51,30 @@ namespace CPL.Controllers
         {
             var viewModel = Mapper.Map<EditAccountViewModel>(HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser"));
             return View("EditAccount", viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult EditAccount(EditAccountViewModel viewModel)
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
+            if (user != null)
+            {
+                user.FirstName = viewModel.FirstName;
+                user.LastName = viewModel.LastName;
+                user.Gender = viewModel.Gender;
+                user.DOB = viewModel.DOB;
+                user.PostalCode = viewModel.PostalCode;
+                user.Country = viewModel.Country;
+                user.City = viewModel.City;
+                user.StreetAddress = viewModel.StreetAddress;
+                user.Mobile = viewModel.Mobile;
+                HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated") });
+            }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
     }
 }

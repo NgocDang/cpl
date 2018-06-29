@@ -73,16 +73,8 @@
         });
 
         $("#btn-save-account").on("click", function () {
-            var isFormValid = $("#form-profile")[0].checkValidity();
-            $("#form-edit-account").addClass('was-validated');
+            var isFormValid = $("#form-edit-account").valid();
             var isMobileValid = $("#Mobile").intlTelInput("isValidNumber");
-            if (!isMobileValid) {
-                $("#Mobile").addClass("border-danger");
-                $("#Mobile").closest(".form-group").find(".invalid-feedback").show();
-            } else {
-                $("#Mobile").removeClass("border-danger");
-                $("#Mobile").closest(".form-group").find(".invalid-feedback").hide();
-            }
             var isDOBValid = moment($("#DOB").val()).isValid();
             if (isFormValid && isMobileValid && isDOBValid) {
                 $.ajax({
@@ -124,4 +116,5 @@
 
 $(document).ready(function () {
     EditAccount.init();
+    DashboardLayout.setFormValidate("#form-edit-account");
 });

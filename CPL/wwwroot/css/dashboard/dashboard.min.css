@@ -5554,7 +5554,8 @@ a.fc-more {
 
 .has-danger:after {
     content: "\ea53";
-    color: #ff3636
+    color: #ff3636;
+    bottom: 30px;
 }
 
 .has-danger.form-check .form-check-label {
@@ -12402,4 +12403,8 @@ img {
         transform-origin: 0 0;
         -webkit-transform-origin: 0 0;
     }
+}
+
+.has-danger .invalid-feedback {
+    display: block;
 }

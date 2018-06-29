@@ -15,8 +15,7 @@
         });
 
         $("#btn-log-in").on("click", function () {
-            var isFormValid = $("#form-log-in")[0].checkValidity();
-            $("#form-log-in").addClass('was-validated');
+            var isFormValid = $("#form-log-in").valid();
             if (!checkValidReCaptchaV2()) {
                 $(".login-error").html($('#captchaMessage').val());
                 $(".login-error").show();

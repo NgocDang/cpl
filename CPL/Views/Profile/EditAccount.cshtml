@@ -19,12 +19,19 @@
                             <label class="col-sm-2 col-form-label text-right">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</label>
                             <div class="col-sm-12 col-md-3">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName") ..." name="FirstName" required value="@Model.FirstName" />
+                                    <input class="form-control" type="text" value="@Model.FirstName" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName") ..." name="FirstName" required value="@Model.FirstName" />
+                                    <div class="invalid-feedback">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstNameRequired")
+                                    </div>
                                 </div>
                             </div>
+                            
                             <div class="col-sm-12 col-md-3">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName") ..." name="LastName" required value="@Model.LastName" />
+                                    <input class="form-control" type="text" value="@Model.LastName" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName") ..." name="LastName" required value="@Model.LastName" />
+                                    <div class="invalid-feedback">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastNameRequired")
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -60,12 +67,18 @@
                             <div class="col-sm-1 mb-2">
                                 <select name="Day" id="Day" class="selectpicker" required data-size="7" data-style="btn btn-round" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Day")"></select>
                             </div>
+                            <div class="invalid-feedback">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidDOB")
+                            </div>
                         </div>
                         <div class="row">
                             <label class="col-sm-2 col-form-label text-right">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PostalCode")</label>
                             <div class="col-sm-2">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="PostalCode" id="PostalCode" />
+                                    <input class="form-control" type="text" name="PostalCode" value="@Model.PostalCode" required id="PostalCode" />
+                                    <div class="invalid-feedback">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PostalCodeRequired")
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -320,10 +333,16 @@
                                     <option value="ZM">Zambia</option>
                                     <option value="ZW">Zimbabwe</option>
                                 </select>
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CountryRequired")
+                                </div>
                             </div>
                             <div class="col-sm-2 mb-2">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "City") ..." name="City" id="City" />
+                                    <input class="form-control" type="text" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "City") ..." required name="City" id="City" />
+                                    <div class="invalid-feedback">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CityRequired")
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -331,7 +350,10 @@
                             <label class="col-sm-2 col-form-label">&nbsp;</label>
                             <div class="col-sm-5 mb-2">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StreetAddress") ..." name="StreetAddress" id="StreetAddress" />
+                                    <input class="form-control" type="text" value="@Model.StreetAddress" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StreetAddress") ..." name="StreetAddress" id="StreetAddress" />
+                                    <div class="invalid-feedback">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StreetAddressRequired")
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -339,7 +361,10 @@
                             <label class="col-sm-2 col-form-label text-right">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Mobile")</label>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="Mobile" id="Mobile" />
+                                    <input class="form-control" type="text" name="Mobile" number="true" required id="Mobile" />
+                                    <div class="invalid-feedback">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileRequired")
+                                    </div>
                                 </div>
                             </div>
                         </div>

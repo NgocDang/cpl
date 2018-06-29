@@ -23,3 +23,15 @@ insert into LangDetail values (1, 'Address', 'Address');
 insert into LangDetail values (1, 'PostalCode', 'Postal code');
 insert into LangDetail values (1, 'Mobile', 'Mobile');
 insert into LangDetail values (1, 'Save', 'Save');
+insert into LangDetail values (1, 'NonExistingAccount', 'Non-existing account');
+insert into LangDetail values (1, 'PersonalInfoUpdated', 'Your account profile is updated!');
+
+insert into LangDetail values (1, 'FirstNameRequired', 'Please fill in first name');
+insert into LangDetail values (1, 'LastNameRequired', 'Please fill in last name');
+insert into LangDetail values (1, 'StreetAddressRequired', 'Please fill in street address');
+insert into LangDetail values (1, 'CountryRequired', 'Please fill in country');
+insert into LangDetail values (1, 'CityRequired', 'Please fill in city');
+insert into LangDetail values (1, 'StreetAddress', 'Please fill in street address');
+insert into LangDetail values (1, 'PostalCodeRequired', 'Please fill in postal code');
+insert into LangDetail values (1, 'MobileRequired', 'Please fill in mobile number');
+insert into LangDetail values (1, 'InvalidDOB', 'Date of birth is invalid');
