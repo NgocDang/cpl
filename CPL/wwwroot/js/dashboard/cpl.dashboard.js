@@ -137,15 +137,15 @@
         });
 
         $("#btn-wallet").on("click", function () {
-            $("#walletView").show();
-            $("#depositeWithdrawalView").hide();
+            $("#wallet-view").show();
+            $("#deposite-withdrawal-view").hide();
             $("#pie-chart-card").show();
             $("#line-chart-card").hide();
         })
 
         $("#btn-depo-withdr").on("click", function () {
-            $("#walletView").hide();
-            $("#depositeWithdrawalView").show();
+            $("#wallet-view").hide();
+            $("#deposite-withdrawal-view").show();
 
             $.ajax({
                 url: "/Dashboard/DepositeAndWithdrawal/",
@@ -157,7 +157,7 @@
                 data: {
                 },
                 success: function (data) {
-                    $("#depositeWithdrawalView").html(data);
+                    $("#deposite-withdrawal-view").html(data);
                     Dashboard.bindCopy();
                     Dashboard.bindBtcOut();
                 },
