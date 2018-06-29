@@ -24,3 +24,32 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 .owl-dots {
     display:none;
 }
+
+.dataTables_info, .dataTables_paginate {
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
+}
+
+.dataTables_length, .dataTables_filter {
+    padding-top: 1.5rem;
+}
+
+    .dataTables_filter .form-control, .dataTables_length .form-control {
+        border: 1px solid #E3EBF3;
+    }
+
+.table td, .table th {
+    border-top:none;
+}
+
+.page-item.disabled .page-link {
+    border-color: #E3EBF3;
+}
+
+table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
+    font-size:1rem;
+}
+
+table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_desc_disabled:before {
+    font-size: 1rem;
+}
