@@ -33,7 +33,7 @@
                                     <div class="row">
                                         <div class="col-md-8 col-12">
                                             <p><strong>Your balance:</strong></p>
-                                            <h1>3,458.88 BTC</h1>
+                                            <h1>@Model.TotalBalance BTC</h1>
                                             <p class="mb-0">Bonus <strong>+30%</strong> expires in 21 days.</p>
                                         </div>
                                         <div class="col-md-4 col-12 text-center text-md-right">
@@ -56,7 +56,7 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <p><strong>Balance:</strong></p>
-                                                    <h1>3,12302</h1>
+                                                    <h1>@Model.BTCAmount</h1>
                                                     <p class="mb-0">Increase <strong>+10%</strong></p>
                                                 </div>
                                             </div>
@@ -74,7 +74,7 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <p><strong>Balance:</strong></p>
-                                                    <h1>90,74801</h1>
+                                                    <h1>@Model.ETHAmount</h1>
                                                     <p class="mb-0">View <strong>transactions</strong></p>
                                                 </div>
                                             </div>
@@ -128,7 +128,7 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <p><strong>Balance:</strong></p>
-                                                    <h1>7.921.120,129</h1>
+                                                    <h1>@Model.TokenAmount</h1>
                                                     <p class="mb-0">Check <strong>game history</strong></p>
                                                 </div>
                                             </div>
@@ -142,36 +142,18 @@
             </div>
             <div class="row match-height">
                 <div class="col-xl-8 col-12">
-                    <div class="card card-transparent">
-                        <div class="card-header card-header-transparent py-20">
-                            <div class="btn-group dropdown">
-                                <h6>ICO Token (Supply & Demand)</h6>
-                            </div>
+                    <h6 class="my-2">Bet Statistic Chart</h6>
+                    <div class="card pull-up">
+                        <div class="card-body">
+                            <div id="bet-statistic-chart" class="height-300"></div>
                         </div>
-                        <div id="ico-token-supply-demand-chart" class="height-300"></div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-12">
-                    <div class="card card-transparent">
-                        <div class="card-header card-header-transparent">
-                            <h6 class="card-title">Token distribution</h6>
-                        </div>
-                        <div class="card-content">
-                            <div id="token-distribution-chart" class="height-200 donut donutShadow"></div>
-                            <div class="card-body">
-                                <div class="row mx-0">
-                                    <ul class="token-distribution-list col-md-6 mb-0">
-                                        <li class="crowd-sale">Crowd sale <span class="float-right text-muted">41%</span></li>
-                                        <li class="team">Team <span class="float-right text-muted">18%</span></li>
-                                        <li class="advisors">Advisors <span class="float-right text-muted">15%</span></li>
-                                    </ul>
-                                    <ul class="token-distribution-list col-md-6 mb-0">
-                                        <li class="project-reserve">Project <span class="float-right text-muted">10%</span></li>
-                                        <li class="master-nodes">Master nodes <span class="float-right text-muted">8%</span></li>
-                                        <li class="program">Program <span class="float-right text-muted">8%</span></li>
-                                    </ul>
-                                </div>
-                            </div>
+                <div class="col-xl-4 col-12">
+                    <h6 class="my-2">Holding Percentage</h6>
+                    <div class="card pull-up">
+                        <div class="card-body">
+                            <div id="holding-percentage-chart" class="height-300"></div>
                         </div>
                     </div>
                 </div>
@@ -274,5 +256,9 @@
 @section scripts
     {
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/highcharts.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/series-label.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/exporting.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
     <script src="~/js/dashboard/cpl.dashboard.js"></script>
 }

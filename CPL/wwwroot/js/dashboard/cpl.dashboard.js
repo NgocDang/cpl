@@ -25,149 +25,6 @@
             autoplayHoverPause: true
         })
 
-        Highcharts.chart('line-chart', {
-            chart: {
-                type: 'spline'
-            },
-            title: {
-                //text: 'Snow depth at Vikjafjellet, Norway'
-            },
-            subtitle: {
-                //text: 'Irregular time data in Highcharts JS'
-            },
-            xAxis: {
-                type: 'datetime',
-                dateTimeLabelFormats: { // don't display the dummy year
-                    month: '%e. %b',
-                    year: '%b'
-                },
-                title: {
-                    text: 'Date'
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Snow depth (m)'
-                },
-                min: 0
-            },
-            tooltip: {
-                headerFormat: '<b>{series.name}</b><br>',
-                pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
-            },
-
-            plotOptions: {
-                spline: {
-                    marker: {
-                        enabled: true
-                    }
-                }
-            },
-
-            colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
-
-            // Define the data points. All series have a dummy year
-            // of 1970/71 in order to be compared on the same x axis. Note
-            // that in JavaScript, months start at 0 for January, 1 for February etc.
-            series: [{
-                name: "Asset Changes",
-                data: [
-                    [Date.UTC(1970, 10, 25), 0],
-                    [Date.UTC(1970, 11, 6), 0.25],
-                    [Date.UTC(1970, 11, 20), 1.41],
-                    [Date.UTC(1970, 11, 25), 1.64]
-                ],
-                color: '#4267b2'
-            }, {
-                name: "Monthly Deposits",
-                data: [
-                    [Date.UTC(1970, 10, 9), 0],
-                    [Date.UTC(1970, 10, 15), 0.23],
-                    [Date.UTC(1970, 10, 20), 0.25],
-                    [Date.UTC(1970, 10, 25), 0.23],
-                    [Date.UTC(1970, 10, 30), 0.39]
-                ],
-                color: '#0000fd'
-            }, {
-                name: "Bonus",
-                data: [
-                    [Date.UTC(1970, 9, 15), 0],
-                    [Date.UTC(1970, 9, 31), 0.09],
-                    [Date.UTC(1970, 10, 7), 0.17],
-                    [Date.UTC(1970, 10, 10), 0.1],
-                    [Date.UTC(1970, 11, 10), 0.1]
-                ],
-                color: '#1eaf1e'
-            }]
-        });
-
-        Highcharts.chart('pie-chart', {
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie'
-            },
-            title: {
-                text: 'Holding Percentage'
-            },
-            tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: false
-                    },
-                    showInLegend: true
-                }
-            },
-            series: [{
-                name: 'Balance',
-                colorByPoint: true,
-                data: [{
-                    name: 'CPL',
-                    y: 61.41,
-                    sliced: true,
-                    selected: true,
-                    color: '#4267b2'
-                }, {
-                    name: 'BTC',
-                    y: 11.84,
-                    color: '#f7931a'
-                }, {
-                    name: 'ETH',
-                    y: 10.85,
-                    color: '#828384'
-                }]
-            }]
-        });
-
-        $('#dt-history').DataTable({
-            "pagingType": "full_numbers",
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            responsive: true,
-            language: {
-                search: "_INPUT_",
-                searchPlaceholder: "Search records",
-                oPaginate: {
-                    sFirst: "<<",
-                    sLast: ">>",
-                    sNext: ">",
-                    sPrevious: "<"
-                },
-            },
-        });
-
-        $("#btn-wallet").on("click", function () {
-            $("#wallet-view").show();
-            $("#deposite-withdrawal-view").hide();
-            $("#pie-chart-card").show();
-            $("#line-chart-card").hide();
-        })
-
         $("#btn-depo-withdr").on("click", function () {
             $("#wallet-view").hide();
             $("#deposite-withdrawal-view").show();
@@ -192,6 +49,150 @@
                 }
             });
         })
+
+        $.ajax({
+            url: '/Dashboard/GetDataPieChart',
+            type: "POST",
+            data: {},
+            success: function (data) {
+                if (data.success) {
+                    var a = data.message;
+                    Highcharts.chart('holding-percentage-chart', {
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false,
+                            type: 'pie'
+                        },
+                        title: {
+                            text: 'Holding Percentage'
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: true
+                            }
+                        },
+                        series: [{
+                            name: 'Balance',
+                            colorByPoint: true,
+                            data: [{
+                                name: 'CPL',
+                                y: JSON.parse(a).CPLPercentage,
+                                sliced: true,
+                                selected: true,
+                                color: '#4267b2'
+                            }, {
+                                name: 'BTC',
+                                y: JSON.parse(a).BTCPercentage,
+                                color: '#f7931a'
+                            }, {
+                                name: 'ETH',
+                                y: JSON.parse(a).ETHPercentage,
+                                color: '#828384'
+                            }]
+                        }]
+                    });
+                }
+            }
+        })
+
+        $.ajax({
+            url: '/Dashboard/GetDataLineChart',
+            type: "POST",
+            chartData: {},
+            success: function (chartData) {
+                if (chartData.success) {
+                    var a = chartData.message;
+
+                    options = {
+                        chart: {
+                            type: 'spline'
+                        },
+                        title: {
+                            text: 'Snow depth at Vikjafjellet, Norway'
+                        },
+                        subtitle: {
+                            text: 'Irregular time data in Highcharts JS'
+                        },
+                        xAxis: {
+                            type: 'datetime',
+                            dateTimeLabelFormats: { // don't display the dummy year
+                                month: '%e. %b',
+                                year: '%b'
+                            },
+                            title: {
+                                text: 'Date'
+                            }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Snow depth (m)'
+                            },
+                        },
+                        tooltip: {
+                            headerFormat: '<b>{series.name}</b><br>',
+                            pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+                        },
+
+                        plotOptions: {
+                            spline: {
+                                marker: {
+                                    enabled: true
+                                }
+                            }
+                        },
+
+                        series: []
+
+                    };
+
+                    var asset = { data: [], name: 'Asset Changes', color: '#28b3fe' };
+                    var invest = { data: [], name: 'Monthly Invests', color: '#a858fe' };
+                    var prize = { data: [], name: 'Prizes', color: '#60e1e3' };
+
+                    $.each(JSON.parse(a).AssetChange, function (index, value) {
+                        date = new Date(value.Date);
+                        now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+                        val = value.Amount;
+                        asset.data.push([now_utc, val]);
+                    });
+                    asset.data.sort();
+
+                    $.each(JSON.parse(a).MonthlyInvest, function (index, value) {
+                        date = new Date(value.Date);
+                        now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+                        val = value.Amount;
+
+                        invest.data.push([now_utc, val]);
+                    });
+                    invest.data.sort();
+
+                    $.each(JSON.parse(a).BonusChange, function (index, value) {
+                        date = new Date(value.Date);
+                        now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+                        val = value.Amount;
+
+                        prize.data.push([now_utc, val]);
+                    });
+                    prize.data.sort();
+
+                    // Push the completed series
+                    options.series.push(asset, invest, prize);
+
+                    // Create the plot
+                    new Highcharts.Chart("bet-statistic-chart", options);
+                }
+            }
+        })
+
         return false;
     },
     bindCopy: function () {
@@ -222,6 +223,153 @@
                 }
             });
         })
+    },
+
+    requestPieData: function () {
+        $.ajax({
+            url: '/Dashboard/GetDataPieChart',
+            type: "POST",
+            data: {},
+            success: function (data) {
+                if (data.success) {
+                    var a = data.message;
+                    Highcharts.chart('pie-chart', {
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false,
+                            type: 'pie'
+                        },
+                        title: {
+                            text: 'Holding Percentage'
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: true
+                            }
+                        },
+                        series: [{
+                            name: 'Balance',
+                            colorByPoint: true,
+                            data: [{
+                                name: 'CPL',
+                                y: JSON.parse(a).CPLPercentage,
+                                sliced: true,
+                                selected: true,
+                                color: '#f96332'
+                            }, {
+                                name: 'BTC',
+                                y: JSON.parse(a).BTCPercentage,
+                                color: '#f7931a'
+                            }, {
+                                name: 'ETH',
+                                y: JSON.parse(a).ETHPercentage,
+                                color: '#828384'
+                            }]
+                        }]
+                    });
+                }
+            }
+        });
+    },
+
+    requestLineData: function () {
+        $.ajax({
+            url: '/Dashboard/GetDataLineChart',
+            type: "POST",
+            chartData: {},
+            success: function (chartData) {
+                if (chartData.success) {
+                    var a = chartData.message;
+
+                    options = {
+                        chart: {
+                            type: 'spline'
+                        },
+                        title: {
+                            text: 'Snow depth at Vikjafjellet, Norway'
+                        },
+                        subtitle: {
+                            text: 'Irregular time data in Highcharts JS'
+                        },
+                        xAxis: {
+                            type: 'datetime',
+                            dateTimeLabelFormats: { // don't display the dummy year
+                                month: '%e. %b',
+                                year: '%b'
+                            },
+                            title: {
+                                text: 'Date'
+                            }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Snow depth (m)'
+                            },
+                        },
+                        tooltip: {
+                            headerFormat: '<b>{series.name}</b><br>',
+                            pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+                        },
+
+                        plotOptions: {
+                            spline: {
+                                marker: {
+                                    enabled: true
+                                }
+                            }
+                        },
+
+                        series: []
+
+                    };
+
+                    var asset = { data: [], name: 'Asset Changes', color: '#f96332' };
+                    var invest = { data: [], name: 'Monthly Invests', color: '#0000fd' };
+                    var prize = { data: [], name: 'Prizes', color: '#1eaf1e' };
+
+                    $.each(JSON.parse(a).AssetChange, function (index, value) {
+                        date = new Date(value.Date);
+                        now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+                        val = value.Amount;
+                        asset.data.push([now_utc, val]);
+                    });
+                    asset.data.sort();
+
+                    $.each(JSON.parse(a).MonthlyInvest, function (index, value) {
+                        date = new Date(value.Date);
+                        now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+                        val = value.Amount;
+
+                        invest.data.push([now_utc, val]);
+                    });
+                    invest.data.sort();
+
+                    $.each(JSON.parse(a).BonusChange, function (index, value) {
+                        date = new Date(value.Date);
+                        now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+                        val = value.Amount;
+
+                        prize.data.push([now_utc, val]);
+                    });
+                    prize.data.sort();
+
+                    // Push the completed series
+                    options.series.push(asset, invest, prize);
+
+                    // Create the plot
+                    new Highcharts.Chart("line-chart-card", options);
+                }
+            }
+        });
     },
 }
 
