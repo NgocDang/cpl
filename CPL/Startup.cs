@@ -129,6 +129,7 @@ namespace CPL
 
         private void LoadSetting(IServiceProvider serviceProvider)
         {
+            
             CPLConstant.Maintenance.IsOnMaintenance = bool.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.Maintenance.IsOnMaintenanceSetting).Value);
         }
     }
