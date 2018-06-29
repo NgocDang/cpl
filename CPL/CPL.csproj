@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\fonts\" />
+    <Folder Include="wwwroot\css\fonts\line-awesome\fonts\" />
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
