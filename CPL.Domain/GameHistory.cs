@@ -15,6 +15,7 @@ namespace CPL.Domain
         public decimal Amount { get; set; }
         public bool? Result { get; set; }
         public decimal? Award { get; set; }
+        //public string GameType { get; set; }
 
         public virtual Game Game { get; set; }
         public virtual SysUser SysUser { get; set; }

@@ -12,12 +12,13 @@ namespace CPL.Models
         public decimal Amount { get; set; }
         public bool? Result { get; set; }
         public decimal Balance { get; set; }
-        public decimal? Bonus { get; set; }
+        public decimal? Award { get; set; }
 
+        public string GameType { get; set; }
         public string CreatedDateInString { get; set; }
         public string CreatedTimeInString { get; set; }
         public string AmountInString { get; set; }
-        public string BonusInString { get; set; }
+        public string AwardInString { get; set; }
         public string BalanceInString { get; set; }
     }
 }

@@ -27,8 +27,8 @@ namespace CPL.Mapping
 
             //Relationship
             builder.HasOne(x => x.Game)
-            .WithMany(x => x.GameHistories)
-            .HasForeignKey(x => x.GameId);
+                .WithMany(x => x.GameHistories)
+                .HasForeignKey(x => x.GameId);
 
             builder.HasOne(x => x.SysUser)
             .WithMany(x => x.GameHistories)
