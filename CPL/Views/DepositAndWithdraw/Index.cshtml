@@ -5,6 +5,7 @@
 
 @section styles
     {
+    <link href="~/css/dashboard/wallet.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
@@ -22,137 +23,135 @@
                 </div>
             </div>
         </div>
-        <div class="content-body">
-            <div id="wallet">
-                <div class="wallet-table-th d-none d-md-block">
+        <div class="content-detached content-left">
+            <div class="content-body">
+                <div id="wallet">
+                    <div class="wallet-table-th d-none d-md-block">
+                        <div class="row">
+                            <div class="col-md-6 col-12 py-1">
+                                <p class="mt-0 text-capitalize">Cryptocurrency</p>
+                            </div>
+                            <div class="col-md-2 col-12 py-1 text-center">
+                                <p class="mt-0 text-capitalize">Available</p>
+                            </div>
+                            <div class="col-md-4 col-12 py-1 text-center">
+                                <p class="mt-0 text-capitalize">Transect</p>
+                            </div>
+                        </div>
+                    </div>
+                    <section class="card pull-up">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-6 col-12 py-1">
+                                            <div class="media">
+                                                <i class="cc BTC mr-2 font-large-2"></i>
+                                                <div class="media-body">
+                                                    <h5 class="mt-0 text-capitalize">Bitcoin</h5>
+                                                    <p class="text-muted mb-0 font-small-3 wallet-address">0xd38d9eeb5b9617d758cee2c683e1d385637635e9</p>
+                                                    <button type="button" class="btn btn-warning round mr-1 mt-1">Copy</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-12 py-1 text-center">
+                                            <img src="https://pixinvent.com/demo/crypto-ico-admin/app-assets/images/icons/sample-qr.png">
+                                        </div>
+                                        <div class="col-md-2 col-12 py-1 text-center">
+                                            <h6>0.019842 BTC</h6>
+                                            <p class="text-muted mb-0 font-small-3">~ $2650.78</p>
+                                        </div>
+
+                                        <div class="col-md-2 col-12 py-1 text-center">
+                                            <a href="#" class="line-height-3">Withdraw</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="card pull-up">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-6 col-12 py-1">
+                                            <div class="media">
+                                                <i class="cc ETH mr-2 font-large-2 accent-3"></i>
+                                                <div class="media-body">
+                                                    <h5 class="mt-0 text-capitalize">Ethereum</h5>
+                                                    <p class="text-muted mb-0 font-small-3 wallet-address">0xd38d9eeb5b9617d758cee2c683e1d385637635e9</p>
+                                                    <button type="button" class="btn btn-warning round mr-1 mt-1">Copy</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-12 py-1 text-center">
+                                            <h6>0.6789842 ETH</h6>
+                                            <p class="text-muted mb-0 font-small-3">~ $650.78</p>
+                                        </div>
+                                        <div class="col-md-2 col-12 py-1 text-center">
+                                            <a href="#" class="line-height-3">Deposit</a>
+                                        </div>
+                                        <div class="col-md-2 col-12 py-1 text-center">
+                                            <a href="#" class="line-height-3">Withdraw</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-detached sidebar-right">
+            <div class="sidebar">
+                <div id="wallet-sidebar" class="sidebar-content">
                     <div class="row">
-                        <div class="col-md-6 col-12 py-1">
-                            <p class="mt-0 text-capitalize">Cryptocurrency</p>
+                        <p class="py-1 text-capitalize col-12">Your balance</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title text-center">CPL Token</h6>
                         </div>
-                        <div class="col-md-2 col-12 py-1 text-center">
-                            <p class="mt-0 text-capitalize">Available</p>
-                        </div>
-                        <div class="col-md-4 col-12 py-1 text-center">
-                            <p class="mt-0 text-capitalize">Transect</p>
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+
+                                <div class="text-center row clearfix mb-2">
+                                    <div class="col-12">
+                                        <i class="icon-layers font-large-3 bg-warning bg-glow white rounded-circle p-3 d-inline-block"></i>
+                                    </div>
+                                </div>
+                                <h3 class="text-center">3,458.88 CPL</h3>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-de mb-0">
+                                    <tbody>
+                                        <tr>
+                                            <td>CPL Token</td>
+                                            <td><i class="icon-layers"></i> 3,258 CPL</td>
+                                        </tr>
+                                        <tr>
+                                            <td>CPL Referral</td>
+                                            <td><i class="icon-layers"></i> 200.88 CPL</td>
+                                        </tr>
+                                        <tr>
+                                            <td>CPL Price</td>
+                                            <td><i class="cc BTC-alt"></i> 0.0001 BTC</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Raised BTC</td>
+                                            <td><i class="cc BTC-alt"></i> 2154 BTC</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Raised USD</td>
+                                            <td><i class="la la-dollar"></i> 4.52 M</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <section class="card pull-up">
-                    <div class="card-content">
-                        <div class="card-body">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-md-6 col-12 py-1">
-                                        <div class="media">
-                                            <i class="cc BTC mr-2 font-large-2 warning"></i>
-                                            <div class="media-body">
-                                                <h5 class="mt-0 text-capitalize">Bitcoin</h5>
-                                                <p class="text-muted mb-0 font-small-3 wallet-address">0xd38d9eeb5b9617d758cee2c683e1d385637635e9</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <h6>0.019842 BTC</h6>
-                                        <p class="text-muted mb-0 font-small-3">~ $2650.78</p>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <a href="#" class="line-height-3">Deposit</a>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <a href="#" class="line-height-3">Withdraw</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section class="card pull-up">
-                    <div class="card-content">
-                        <div class="card-body">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-md-6 col-12 py-1">
-                                        <div class="media">
-                                            <i class="cc ETH mr-2 font-large-2 blue accent-3"></i>
-                                            <div class="media-body">
-                                                <h5 class="mt-0 text-capitalize">Ethereum</h5>
-                                                <p class="text-muted mb-0 font-small-3 wallet-address">0xd38d9eeb5b9617d758cee2c683e1d385637635e9</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <h6>0.6789842 ETH</h6>
-                                        <p class="text-muted mb-0 font-small-3">~ $650.78</p>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <a href="#" class="line-height-3">Deposit</a>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <a href="#" class="line-height-3">Withdraw</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section class="card pull-up">
-                    <div class="card-content">
-                        <div class="card-body">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-md-6 col-12 py-1">
-                                        <div class="media">
-                                            <i class="cc USDT-alt mr-2 font-large-2 teal lighten-2"></i>
-                                            <div class="media-body">
-                                                <h5 class="mt-0 text-capitalize">TetherUSD</h5>
-                                                <p class="text-muted mb-0 font-small-3 wallet-address">0xd38d9eeb5b9617d758cee2c683e1d385637635e9</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <h6>0 USDT</h6>
-                                        <p class="text-muted mb-0 font-small-3">~ $0</p>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <a href="#" class="line-height-3">Deposit</a>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <a href="#" class="line-height-3">Withdraw</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section class="card pull-up">
-                    <div class="card-content">
-                        <div class="card-body">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-md-6 col-12 py-1">
-                                        <div class="media">
-                                            <i class="la la-dollar mr-2 bg-primary white bg-lighten-2 rounded-circle"></i>
-                                            <div class="media-body">
-                                                <h5 class="mt-0 text-capitalize">USD</h5>
-                                                <p class="text-muted mb-0 font-small-3 wallet-address">Fiat currencies</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <h6>1500 USD</h6>
-                                        <p class="text-muted mb-0 font-small-3">~ $1500</p>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <a href="#" class="line-height-3">Deposit</a>
-                                    </div>
-                                    <div class="col-md-2 col-12 py-1 text-center">
-                                        <a href="#" class="line-height-3">Withdraw</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
             </div>
         </div>
     </div>
