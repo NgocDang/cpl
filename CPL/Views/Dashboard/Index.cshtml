@@ -1,15 +1,30 @@
 ﻿@{
     Layout = "_DashboardLayout";
 }
-
 @model DashboardViewModel
+
+@section styles
+    {
+    <link href="~/css/dashboard/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/plugins/owl-carousel/owl.theme.default.min.css" rel="stylesheet" />
+}
+
 <div class="app-content content">
     <div class="content-wrapper">
         <div class="content-header row">
+            <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block">Dashboard</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="btn-group float-md-right top-1"><a class="btn-gradient-secondary btn-sm white" href="wallet.html">Exchange</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-secondary btn-sm white" href="wallet.html">Deposit & Withdraw</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-secondary btn-sm white" href="wallet.html">Wallet</a></div>
+
+                </div>
+            </div>
         </div>
         <div class="content-body">
             <div class="row">
-                <div class="col-md-5 col-12">
+                <div class="col-md-6 col-12">
                     <h6 class="my-2">All asset in BTC</h6>
                     <div class="card pull-up">
                         <div class="card-content">
@@ -30,53 +45,93 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-12">
-                    <h6 class="my-2">BTC Amount</h6>
-                    <div class="card pull-up">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="col-12">
-                                    <div class="row">
+                <div class="col-md-6">
+                    <div class="owl-carousel owl-theme">
+                        <div class="item">
+                            <h6 class="my-2">BTC Amount</h6>
+                            <div class="card pull-up">
+                                <div class="card-content">
+                                    <div class="card-body">
                                         <div class="col-12">
-                                            <p><strong>Balance:</strong></p>
-                                            <h1>3,12302</h1>
-                                            <p class="mb-0">Increase <strong>+10%</strong></p>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p><strong>Balance:</strong></p>
+                                                    <h1>3,12302</h1>
+                                                    <p class="mb-0">Increase <strong>+10%</strong></p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-2 col-12">
-                    <h6 class="my-2">ETH Amount</h6>
-                    <div class="card pull-up">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="col-12">
-                                    <div class="row">
+                        <div class="item">
+                            <h6 class="my-2">ETH Amount</h6>
+                            <div class="card pull-up">
+                                <div class="card-content">
+                                    <div class="card-body">
                                         <div class="col-12">
-                                            <p><strong>Balance:</strong></p>
-                                            <h1>90,74801</h1>
-                                            <p class="mb-0">Increase <strong>+10%</strong></p>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p><strong>Balance:</strong></p>
+                                                    <h1>90,74801</h1>
+                                                    <p class="mb-0">View <strong>transactions</strong></p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-12">
-                    <h6 class="my-2">CPL Amount</h6>
-                    <div class="card pull-up">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="col-12">
-                                    <div class="row">
+                        <div class="item">
+                            <h6 class="my-2">LTH Amount</h6>
+                            <div class="card pull-up">
+                                <div class="card-content">
+                                    <div class="card-body">
                                         <div class="col-12">
-                                            <p><strong>Balance:</strong></p>
-                                            <h1>897.921.120,129</h1>
-                                            <p class="mb-0">Increase <strong>+10%</strong></p>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p><strong>Balance:</strong></p>
+                                                    <h1>12,3456</h1>
+                                                    <p class="mb-0">Buy <strong>more</strong></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <h6 class="my-2">ABC Amount</h6>
+                            <div class="card pull-up">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p><strong>Balance:</strong></p>
+                                                    <h1>931.231,66</h1>
+                                                    <p class="mb-0">On <strong>exchange</strong></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <h6 class="my-2">CPL Amount</h6>
+                            <div class="card pull-up">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p><strong>Balance:</strong></p>
+                                                    <h1>7.921.120,129</h1>
+                                                    <p class="mb-0">Check <strong>game history</strong></p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -91,4 +146,6 @@
 
 @section scripts
     {
+    <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
+    <script src="~/js/dashboard/cpl.dashboard.js"></script>
 }
