@@ -16,12 +16,11 @@
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block">Dashboard</h3>
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
                 <div class="row breadcrumbs-top d-inline-block">
-                    <div class="btn-group float-md-right top-1"><a class="btn-gradient-secondary btn-sm white" href="wallet.html">Exchange</a></div>
-                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-secondary btn-sm white" href="wallet.html">Deposit & Withdraw</a></div>
-                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-primary btn-sm white" href="wallet.html">Wallet</a></div>
-
+                    <div class="btn-group float-md-right top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="Exchange" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="DepositAndWithdraw" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DepositAndWithdraw")</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-primary btn-sm white" asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Wallet")</a></div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,168 @@
+﻿@{
+    Layout = "_DashboardLayout";
+}
+@model DepositAndWithdrawViewModel
+
+@section styles
+    {
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
+}
+
+<div class="app-content content">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="btn-group float-md-right top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="Exchange" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-primary btn-sm white" asp-controller="DepositAndWithdraw" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DepositAndWithdraw")</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Wallet")</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <div id="wallet">
+                <div class="wallet-table-th d-none d-md-block">
+                    <div class="row">
+                        <div class="col-md-6 col-12 py-1">
+                            <p class="mt-0 text-capitalize">Cryptocurrency</p>
+                        </div>
+                        <div class="col-md-2 col-12 py-1 text-center">
+                            <p class="mt-0 text-capitalize">Available</p>
+                        </div>
+                        <div class="col-md-4 col-12 py-1 text-center">
+                            <p class="mt-0 text-capitalize">Transect</p>
+                        </div>
+                    </div>
+                </div>
+                <section class="card pull-up">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-6 col-12 py-1">
+                                        <div class="media">
+                                            <i class="cc BTC mr-2 font-large-2 warning"></i>
+                                            <div class="media-body">
+                                                <h5 class="mt-0 text-capitalize">Bitcoin</h5>
+                                                <p class="text-muted mb-0 font-small-3 wallet-address">0xd38d9eeb5b9617d758cee2c683e1d385637635e9</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <h6>0.019842 BTC</h6>
+                                        <p class="text-muted mb-0 font-small-3">~ $2650.78</p>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <a href="#" class="line-height-3">Deposit</a>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <a href="#" class="line-height-3">Withdraw</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="card pull-up">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-6 col-12 py-1">
+                                        <div class="media">
+                                            <i class="cc ETH mr-2 font-large-2 blue accent-3"></i>
+                                            <div class="media-body">
+                                                <h5 class="mt-0 text-capitalize">Ethereum</h5>
+                                                <p class="text-muted mb-0 font-small-3 wallet-address">0xd38d9eeb5b9617d758cee2c683e1d385637635e9</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <h6>0.6789842 ETH</h6>
+                                        <p class="text-muted mb-0 font-small-3">~ $650.78</p>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <a href="#" class="line-height-3">Deposit</a>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <a href="#" class="line-height-3">Withdraw</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="card pull-up">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-6 col-12 py-1">
+                                        <div class="media">
+                                            <i class="cc USDT-alt mr-2 font-large-2 teal lighten-2"></i>
+                                            <div class="media-body">
+                                                <h5 class="mt-0 text-capitalize">TetherUSD</h5>
+                                                <p class="text-muted mb-0 font-small-3 wallet-address">0xd38d9eeb5b9617d758cee2c683e1d385637635e9</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <h6>0 USDT</h6>
+                                        <p class="text-muted mb-0 font-small-3">~ $0</p>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <a href="#" class="line-height-3">Deposit</a>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <a href="#" class="line-height-3">Withdraw</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="card pull-up">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-6 col-12 py-1">
+                                        <div class="media">
+                                            <i class="la la-dollar mr-2 bg-primary white bg-lighten-2 rounded-circle"></i>
+                                            <div class="media-body">
+                                                <h5 class="mt-0 text-capitalize">USD</h5>
+                                                <p class="text-muted mb-0 font-small-3 wallet-address">Fiat currencies</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <h6>1500 USD</h6>
+                                        <p class="text-muted mb-0 font-small-3">~ $1500</p>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <a href="#" class="line-height-3">Deposit</a>
+                                    </div>
+                                    <div class="col-md-2 col-12 py-1 text-center">
+                                        <a href="#" class="line-height-3">Withdraw</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
+    <script src="~/js/dashboard/cpl.dashboard.js"></script>
+}

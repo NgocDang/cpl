@@ -2,8 +2,6 @@
 using CPL.Core.Interfaces;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
-using CPL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Controllers
 {
-    public class DashboardController : Controller
+    public class DepositAndWithdrawController : Controller
     {
         private readonly ILangService _langService;
         private readonly IMapper _mapper;
@@ -23,7 +21,7 @@ namespace CPL.Controllers
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
 
-        public DashboardController(
+        public DepositAndWithdrawController(
             ILangService langService,
             IMapper mapper,
             IViewRenderService viewRenderService,
@@ -45,17 +43,5 @@ namespace CPL.Controllers
         {
             return View();
         }
-
-        public IActionResult DepositeAndWithdrawal()
-        {
-            var viewModel = new DepositAndWithdrawViewModel();
-            return View(viewModel);
-        }
-
-        public IActionResult WithdrawBTC()
-        {
-            return PartialView("_BtcOut");
-        }
-
     }
 }
