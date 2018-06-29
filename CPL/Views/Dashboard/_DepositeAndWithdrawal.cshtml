@@ -1,0 +1,45 @@
+﻿<div class="row row-centered">
+    <div class="card-body col-centered">
+        <div class="cardButton col-md-12 col-centered">
+            <ul class="nav nav-pills nav-pills-primary" role="tablist">
+                <li class="nav-item nav-itemCus">
+                    <a id="txt-btcIn" class="nav-link active show nav-linkCus" data-toggle="tab" href="#btcIn" role="tablist">
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "btcIn")
+                    </a>
+                </li>
+                <li class="nav-item nav-itemCus">
+                    <a id="txt-btcOut" class="nav-link nav-linkCus" data-toggle="tab" href="#btcOut" role="tablist">
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "btcOut")
+                    </a>
+                </li>
+                <li class="nav-item nav-itemCus">
+                    <a class="nav-link nav-linkCus" data-toggle="tab" href="#ethIn" role="tablist">
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ethIn")
+                    </a>
+                </li>
+                <li class="nav-item nav-itemCus">
+                    <a class="nav-link nav-linkCus" data-toggle="tab" href="#ethOut" role="tablist">
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ethOut")
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content tab-space cusCenter">
+            <div class="tab-pane active show" id="btcIn">
+                <div class="row">
+                    @await Html.PartialAsync("_BtcIn")
+                </div>
+            </div>
+            <div class="tab-pane" id="btcOut">
+                <div class="row" id="btcOutView"></div>
+            </div>
+            <div class="tab-pane" id="ethIn">
+                Completely synergize resource taxing relationships via premier niche markets. Professionally cultivate one-to-one customer service with robust ideas.
+                <br><br>Dynamically innovate resource-leveling customer service for state of the art customer service.
+            </div>
+            <div class="tab-pane" id="ethOut">
+                abc
+            </div>
+        </div>
+    </div>
+</div>

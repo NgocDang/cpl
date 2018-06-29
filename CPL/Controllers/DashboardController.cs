@@ -43,5 +43,16 @@ namespace CPL.Controllers
         {
             return View();
         }
+
+        public IActionResult DepositeAndWithdrawal()
+        {
+            return PartialView("_DepositeAndWithdrawal");
+        }
+
+        public IActionResult WithdrawBTC()
+        {
+            return PartialView("_BtcOut");
+        }
+
     }
 }

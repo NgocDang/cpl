@@ -1,4 +1,4 @@
-﻿var Dashboard= {
+﻿var Dashboard = {
     init: function () {
         Highcharts.chart('line-chart', {
             chart: {
@@ -137,10 +137,67 @@
         });
 
         $("#btn-wallet").on("click", function () {
+            $("#wallet-view").show();
+            $("#deposite-withdrawal-view").hide();
             $("#pie-chart-card").show();
             $("#line-chart-card").hide();
         })
-    }
+
+        $("#btn-depo-withdr").on("click", function () {
+            $("#wallet-view").hide();
+            $("#deposite-withdrawal-view").show();
+
+            $.ajax({
+                url: "/Dashboard/DepositeAndWithdrawal/",
+                type: "GET",
+                beforeSend: function () {
+                    $("#btn-depo-withdr").attr("disabled", true);
+                    $("#btn-depo-withdr").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-depo-withdr").text());
+                },
+                data: {
+                },
+                success: function (data) {
+                    $("#deposite-withdrawal-view").html(data);
+                    Dashboard.bindCopy();
+                    Dashboard.bindBtcOut();
+                },
+                complete: function (data) {
+                    $("#btn-depo-withdr").attr("disabled", false);
+                    $("#btn-depo-withdr").html($("#btn-depo-withdr").text());
+                }
+            });
+        })
+        return false;
+    },
+    bindCopy: function () {
+        if ($(".btn-copy").length > 0) {
+            var clipboard = new ClipboardJS('.btn-copy');
+            clipboard.on('success', function (e) {
+                toastr.success($("#CopiedText").val());
+            });
+        }
+    },
+    bindBtcOut: function () {
+        $("#txt-btcOut").on("click", function () {
+            $.ajax({
+                url: "/Dashboard/WithdrawBTC/",
+                type: "GET",
+                beforeSend: function () {
+                    //$("#txt-btcOut").attr("disabled", true);
+                    //$("#txt-btcOut").html("<i class='fa fa-spinner fa-spin'></i> " + $("#txt-btcOut").text());
+                },
+                data: {
+                },
+                success: function (data) {
+                    $("#btcOutView").html(data);
+                },
+                complete: function (data) {
+                    $("#txt-btcOut").attr("disabled", false);
+                    $("#txt-btcOut").html($("#txt-btcOut").text());
+                }
+            });
+        })
+    },
 }
 
 $(document).ready(function () {

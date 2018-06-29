@@ -78,4 +78,62 @@
     text-align: center;
 }
 /* End Dashboard*/
+/* Start DepositesAndWithdrawlPactialView*/
+.nav-itemCus {
+    padding-bottom: 20px;
+    margin: auto;
+}
+
+.nav-linkCus {
+    width: 160px;
+    text-align: center;
+    margin-right: 40px !important;
+}
+
+.cardButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 5px;
+}
+
+.qrCode {
+    float: right;
+    padding: 0;
+}
+
+.address {
+    width: 60%;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.cusCenter {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cusTop {
+    margin-top: 10%;
+}
+
+.frm-btcIn{
+    margin-top: 30px;
+}
+
+.fld-Set {
+    border-color: #f96332 !important;
+    border: solid;
+    padding: 2%;
+}
+
+legend {
+    width: auto;
+}
+
+.txt-desc {
+    margin-top: 10px;
+}
+/* End DepositesAndWithdrawlPactialView*/
 
