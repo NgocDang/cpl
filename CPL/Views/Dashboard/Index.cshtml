@@ -7,18 +7,20 @@
     {
     <link href="~/css/dashboard/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/css/dashboard/plugins/owl-carousel/owl.theme.default.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
 }
 
 <div class="app-content content">
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block">Dashboard</h3>
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
                 <div class="row breadcrumbs-top d-inline-block">
-                    <div class="btn-group float-md-right top-1"><a class="btn-gradient-secondary btn-sm white" href="wallet.html">Exchange</a></div>
-                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-secondary btn-sm white" href="wallet.html">Deposit & Withdraw</a></div>
-                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-primary btn-sm white" href="wallet.html">Wallet</a></div>
-
+                    <div class="btn-group float-md-right top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="Exchange" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="DepositAndWithdraw" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DepositAndWithdraw")</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-primary btn-sm white" asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Wallet")</a></div>
                 </div>
             </div>
         </div>
@@ -163,8 +165,8 @@
                     <h6 class="my-2">Recent Transactions</h6>
                     <div class="card">
                         <div class="card-content">
-                            <div class="table-responsive">
-                                <table id="recent-orders" class="table table-hover table-xl mb-0">
+                            <div class="">
+                                <table id="dt-history" class="table responsive table-hover table-xl mb-0">
                                     <thead>
                                         <tr>
                                             <th class="border-top-0">Status</th>
@@ -255,6 +257,9 @@
 
 @section scripts
     {
+    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/highcharts.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/series-label.js"></script>

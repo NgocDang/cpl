@@ -1,5 +1,7 @@
 ﻿var Dashboard = {
     init: function () {
+        $('#dt-history').DataTable();
+
         $('.owl-carousel').owlCarousel({
             loop: true,
             margin: 15,

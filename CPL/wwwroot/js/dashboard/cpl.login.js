@@ -1,23 +1,8 @@
 ﻿var LogIn = {
     init: function () {
         $("#form-log-in").validate();
-
-        //{
-        //    highlight: function (element) {
-        //        $(element).closest('.form-group').removeClass('has-success').addClass('has-danger');
-        //        $(element).closest('.form-check').removeClass('has-success').addClass('has-danger');
-        //    },
-        //    success: function (element) {
-        //        $(element).closest('.form-group').removeClass('has-danger').addClass('has-success');
-        //        $(element).closest('.form-check').removeClass('has-danger').addClass('has-success');
-        //    },
-        //    errorPlacement: function (error, element) {
-        //        $(element).append(error);
-        //    },
-        //}
-
         $("#btn-log-in").on("click", function () {
-            var isFormValid = $("#form-log-in").Isvalid();
+            var isFormValid = $("#form-log-in").valid();
             if (!checkValidReCaptchaV2()) {
                 $(".login-error").html($('#captchaMessage').val());
                 $(".login-error").show();

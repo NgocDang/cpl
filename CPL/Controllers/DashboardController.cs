@@ -62,7 +62,8 @@ namespace CPL.Controllers
 
         public IActionResult DepositeAndWithdrawal()
         {
-            return PartialView("_DepositeAndWithdrawal");
+            var viewModel = new DepositAndWithdrawViewModel();
+            return View(viewModel);
         }
 
         public IActionResult WithdrawBTC()
