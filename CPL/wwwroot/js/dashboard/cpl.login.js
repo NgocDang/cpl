@@ -1,6 +1,8 @@
 ﻿var LogIn = {
     init: function () {
-        //$("#form-log-in").validate({
+        $("#form-log-in").validate();
+
+        //{
         //    highlight: function (element) {
         //        $(element).closest('.form-group').removeClass('has-success').addClass('has-danger');
         //        $(element).closest('.form-check').removeClass('has-success').addClass('has-danger');
@@ -12,17 +14,17 @@
         //    errorPlacement: function (error, element) {
         //        $(element).append(error);
         //    },
-        //});
+        //}
 
         $("#btn-log-in").on("click", function () {
-            //var isFormValid = $("#form-log-in").valid();
+            var isFormValid = $("#form-log-in").Isvalid();
             if (!checkValidReCaptchaV2()) {
                 $(".login-error").html($('#captchaMessage').val());
                 $(".login-error").show();
                 return false;
             }
 
-            if (isFormValid) {
+            if (true) {
                 $("#login-error").hide();
                 $.ajax({
                     url: "/Authentication/LogIn/",
