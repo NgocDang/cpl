@@ -1,8 +1,9 @@
 ﻿@model DashboardFooterViewModel
-<footer class="footer">
-    <div class="container-fluid">
-        <div class="copyright">
-            &copy; @DateTime.Now.Year, @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenTeam").
-        </div>
-    </div>
+<footer class="footer footer-static footer-transparent">
+    <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
+        <span class="float-md-left d-block d-md-inline-block">
+            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copyright")  &copy; @DateTime.Now.Year
+            <a class="text-bold-800 grey darken-2" asp-controller="Home" asp-action="Index" target="_blank">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol") </a>
+        </span>
+    </p>
 </footer>
