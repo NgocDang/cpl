@@ -52,10 +52,10 @@
                         <i class="now-ui-icons users_single-02"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item has-icon" href="#">
+                        <a class="dropdown-item has-icon" asp-controller="Profile" asp-action="EditAccount">
                             <i class="far fa-user"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit")
                         </a>
-                        <a class="dropdown-item has-icon" href="#">
+                        <a class="dropdown-item has-icon" asp-controller="Profile" asp-action="EditCredentials">
                             <i class="far fa-address-card"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialsEdit")
                         </a>
                         <a class="dropdown-item has-icon" data-confirm="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")|@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ConfirmLogOut")" data-confirm-yes="DashboardLayout.logout();">

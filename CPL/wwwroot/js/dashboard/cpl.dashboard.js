@@ -52,7 +52,7 @@
                     [Date.UTC(1970, 11, 20), 1.41],
                     [Date.UTC(1970, 11, 25), 1.64]
                 ],
-                color: '#f96332'
+                color: '#4267b2'
             }, {
                 name: "Monthly Deposits",
                 data: [
@@ -107,7 +107,7 @@
                     y: 61.41,
                     sliced: true,
                     selected: true,
-                    color: '#f96332'
+                    color: '#4267b2'
                 }, {
                     name: 'BTC',
                     y: 11.84,

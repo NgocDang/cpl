@@ -15,8 +15,7 @@
         });
 
         $("#btn-register").on("click", function () {
-            var isFormValid = $("#form-register")[0].checkValidity();
-            $("#form-register").addClass('was-validated');
+            var isFormValid = $("#form-register").valid();
             var isPasswordValid = $("#Password").val() == $("#PasswordConfirm").val();
             if (!isPasswordValid) {
                 $("#password-confirm-message").show();

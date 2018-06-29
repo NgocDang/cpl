@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CPL.Controllers
 {
+    [Permission(EnumRole.Guest)]
     public class AuthenticationController : Controller
     {
         private readonly ILangService _langService;

@@ -15,8 +15,7 @@
         });
 
         $("#btn-log-in").on("click", function () {
-            var isFormValid = $("#form-log-in")[0].checkValidity();
-            $("#form-log-in").addClass('was-validated');
+            var isFormValid = $("#form-log-in").valid();
             if (!checkValidReCaptchaV2()) {
                 $(".login-error").html($('#captchaMessage').val());
                 $(".login-error").show();
@@ -60,7 +59,7 @@
                     },
                     complete: function (data) {
                         $("#btn-log-in").attr("disabled", false);
-                        $("#btn-log-in").html($("#btn-log-in").text());
+                        $("#btn-log-in").html($("#btn-log-in").text().trim());
                     }
 
                 });
