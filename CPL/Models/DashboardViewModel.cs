@@ -7,17 +7,14 @@ namespace CPL.Models
 {
     public class DashboardViewModel
     {
-        public double TotalBalance { get; set; }
-        public double CPLBalanc { get; set; }
-        public double BTCBalance { get; set; }
-        public double ETHBalance { get; set; }
-        public DateTime Date { get; set; }
-        public DateTime Time { get; set; }
-        public string GameType { get; set; }
-        public double Amount { get; set; }
-        public bool Win { get; set; }
-        public bool Loss { get; set; }
-        public double Balance { get; set; }
-        public double Bonus { get; set; }
+        public decimal TotalBalance { get; set; }
+        public decimal ETHAmount { get; set; }
+        public decimal BTCAmount { get; set; }
+        public decimal TokenAmount { get; set; }
+        public HoldingPercentageViewModel HoldingPercentage { get; set; }
+        public List<WalletChangeViewModel> AssetChange { get; set; }
+        public List<WalletChangeViewModel> MonthlyInvest { get; set; }
+        public List<WalletChangeViewModel> BonusChange { get; set; }
+        public List<GameHistoryViewModel> GameHistories { get; set; }
     }
 }

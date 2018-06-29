@@ -23,7 +23,7 @@ namespace CPL.Mapping
             builder.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
             builder.Property(t => t.Amount).HasColumnName("Amount");
             builder.Property(t => t.Result).HasColumnName("Result");
-            builder.Property(t => t.Bonus).HasColumnName("Bonus");
+            builder.Property(t => t.Award).HasColumnName("Award");
 
             //Relationship
             builder.HasOne(x => x.Game)

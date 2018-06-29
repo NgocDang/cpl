@@ -2,12 +2,16 @@
 using CPL.Core.Interfaces;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
+using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CPL.Controllers
@@ -19,9 +23,10 @@ namespace CPL.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-
+        private readonly IGameHistoryService _gameHistoryService;
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
+        private readonly ISysUserService _sysUserService;
 
         public DashboardController(
             ILangService langService,
@@ -30,7 +35,9 @@ namespace CPL.Controllers
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
             ITeamService teamService,
-            ITemplateService templateService)
+            ITemplateService templateService,
+            ISysUserService sysUserService,
+            IGameHistoryService gameHistoryService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -39,11 +46,18 @@ namespace CPL.Controllers
             this._unitOfWork = unitOfWork;
             this._teamService = teamService;
             this._templateService = templateService;
+            this._sysUserService = sysUserService;
+            this._gameHistoryService = gameHistoryService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == 20/*HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id*/);
+            var viewModel = Mapper.Map<DashboardViewModel>(user);
+            decimal coinRate = CoinExchangeExtension.CoinExchanging();
+            var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenrate").Value;
+            viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
+            return View(viewModel);
         }
 
         public IActionResult DepositeAndWithdrawal()
@@ -55,6 +69,61 @@ namespace CPL.Controllers
         public IActionResult WithdrawBTC()
         {
             return PartialView("_BtcOut");
+        }
+
+        [HttpPost]
+        public IActionResult GetDataPieChart()
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == 20/*HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id*/);
+            var viewModel = Mapper.Map<DashboardViewModel>(user);
+            decimal coinRate = CoinExchangeExtension.CoinExchanging();
+            var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenrate").Value;
+            viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
+
+            var CPLPercentage = user.TokenAmount / 1000000 / viewModel.TotalBalance * 100;
+            var ETHPercentage = user.ETHAmount * coinRate / viewModel.TotalBalance * 100;
+            var BTCPercentage = user.BTCAmount / viewModel.TotalBalance * 100;
+
+            // Holding Percentage
+            viewModel.HoldingPercentage = new HoldingPercentageViewModel();
+            viewModel.HoldingPercentage.CPLPercentage = CPLPercentage;
+            viewModel.HoldingPercentage.ETHPercentage = ETHPercentage;
+            viewModel.HoldingPercentage.BTCPercentage = BTCPercentage;
+
+            var mess = JsonConvert.SerializeObject(viewModel.HoldingPercentage, Formatting.Indented);
+            return new JsonResult(new { success = true, message = mess });
+        }
+
+        [HttpPost]
+        public IActionResult GetDataLineChart()
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == 20/*HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id*/);
+            var viewModel = Mapper.Map<DashboardViewModel>(user);
+
+            viewModel.MonthlyInvest = _gameHistoryService.Queryable()
+                        .Where(x => x.SysUserId == user.Id)
+                        .GroupBy(x => x.CreatedDate.Day)
+                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Amount) })
+                        .ToList();
+            viewModel.MonthlyInvest.Reverse();
+
+            viewModel.AssetChange = _gameHistoryService.Queryable()
+                        .Where(x => x.SysUserId == user.Id && x.Result.HasValue)
+                        .GroupBy(x => x.CreatedDate.Day)
+                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => (x.Award.Value - x.Amount)) })
+                        .ToList();
+            viewModel.AssetChange.Reverse();
+
+            viewModel.BonusChange = _gameHistoryService.Queryable()
+                        .Where(x => x.SysUserId == user.Id && x.Result.HasValue)
+                        .GroupBy(x => x.CreatedDate.Day)
+                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Award.Value) })
+                        .ToList();
+            viewModel.BonusChange.Reverse();
+
+
+            var mess = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
+            return new JsonResult(new { success = true, message = mess });
         }
 
     }
