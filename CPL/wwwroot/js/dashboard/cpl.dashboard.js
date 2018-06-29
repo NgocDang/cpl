@@ -1,5 +1,7 @@
 ﻿var Dashboard = {
     init: function () {
+        $('#dt-history').DataTable();
+
         $('.owl-carousel').owlCarousel({
             loop: true,
             margin: 15,
@@ -145,21 +147,7 @@
             }]
         });
 
-        $('#dt-history').DataTable({
-            "pagingType": "full_numbers",
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            responsive: true,
-            language: {
-                search: "_INPUT_",
-                searchPlaceholder: "Search records",
-                oPaginate: {
-                    sFirst: "<<",
-                    sLast: ">>",
-                    sNext: ">",
-                    sPrevious: "<"
-                },
-            },
-        });
+        
 
         $("#btn-wallet").on("click", function () {
             $("#wallet-view").show();

@@ -119,7 +119,6 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 .box-captcha {
     padding: 10px;
 }
-}
 
 .dataTables_info, .dataTables_paginate {
     padding-top: 1rem;
@@ -148,4 +147,12 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 
 table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_desc_disabled:before {
     font-size: 1rem;
+}
+
+table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:before {
+    top:18px;
+}
+
+table.dataTable {
+    width:100% !important;
 }

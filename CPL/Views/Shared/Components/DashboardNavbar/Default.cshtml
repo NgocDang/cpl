@@ -23,7 +23,7 @@
                         <li class="dropdown dropdown-notification nav-item">
                             <a class="nav-link nav-link-label" href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Home")</a>
                         </li>
-                        <li class="dropdown dropdown-notification nav-item">
+                        @*<li class="dropdown dropdown-notification nav-item">
                             <a class="nav-link nav-link-label" href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AboutUs")</a>
                         </li>
                         <li class="dropdown dropdown-notification nav-item">
@@ -37,11 +37,13 @@
                         </li>
                         <li class="dropdown dropdown-notification nav-item">
                             <a class="nav-link nav-link-label" href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</a>
-                        </li>
-                        @*<li class="dropdown dropdown-language nav-item">
-                            <a class="dropdown-toggle nav-link" id="dropdown-flag" href="index.html#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flag-icon flag-icon-gb"></i><span class="selected-language"></span></a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown-flag"><a class="dropdown-item" href="index.html#"><i class="flag-icon flag-icon-gb"></i></a><a class="dropdown-item" href="index.html#"><i class="flag-icon flag-icon-fr"></i></a><a class="dropdown-item" href="index.html#"><i class="flag-icon flag-icon-cn"></i></a><a class="dropdown-item" href="index.html#"><i class="flag-icon flag-icon-de"></i></a></div>
                         </li>*@
+                       <li class="dropdown dropdown-language nav-item">
+                            <a class="dropdown-toggle nav-link" id="dropdown-flag" href="index.html#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flag-icon flag-icon-gb"></i><span class="selected-language"></span></a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown-flag">
+                                <a class="dropdown-item" href="index.html#"><i class="flag-icon flag-icon-gb"></i> English</a>
+                            </div>
+                        </li>
                         <li class="dropdown dropdown-user nav-item">
                             <a class="dropdown-toggle nav-link dropdown-user-link" href="index.html#" data-toggle="dropdown">
                                 <span class="avatar avatar-online"><img src="~/images/avatar-1.jpeg" alt="avatar"></span>
