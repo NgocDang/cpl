@@ -1,15 +1,30 @@
 ﻿@{
     Layout = "_DashboardLayout";
 }
-
 @model DashboardViewModel
+
+@section styles
+    {
+    <link href="~/css/dashboard/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/plugins/owl-carousel/owl.theme.default.min.css" rel="stylesheet" />
+}
+
 <div class="app-content content">
     <div class="content-wrapper">
         <div class="content-header row">
+            <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block">Dashboard</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="btn-group float-md-right top-1"><a class="btn-gradient-secondary btn-sm white" href="wallet.html">Exchange</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-secondary btn-sm white" href="wallet.html">Deposit & Withdraw</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-primary btn-sm white" href="wallet.html">Wallet</a></div>
+
+                </div>
+            </div>
         </div>
         <div class="content-body">
             <div class="row">
-                <div class="col-md-5 col-12">
+                <div class="col-md-6 col-12">
                     <h6 class="my-2">All asset in BTC</h6>
                     <div class="card pull-up">
                         <div class="card-content">
@@ -22,7 +37,7 @@
                                             <p class="mb-0">Bonus <strong>+30%</strong> expires in 21 days.</p>
                                         </div>
                                         <div class="col-md-4 col-12 text-center text-md-right">
-                                            <button type="button" class="btn-gradient-secondary mt-2">Withdraw <i class="la la-angle-right"></i></button>
+                                            <button type="button" class="btn-gradient-secondary mt-2">Play game <i class="la la-angle-right"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -30,17 +45,93 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-12">
-                    <h6 class="my-2">BTC Amount</h6>
-                    <div class="card pull-up">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="col-12">
-                                    <div class="row">
+                <div class="col-md-6">
+                    <div class="owl-carousel owl-theme">
+                        <div class="item">
+                            <h6 class="my-2">BTC Amount</h6>
+                            <div class="card pull-up">
+                                <div class="card-content">
+                                    <div class="card-body">
                                         <div class="col-12">
-                                            <p><strong>Balance:</strong></p>
-                                            <h1>3,12302</h1>
-                                            <p class="mb-0">Increase <strong>+10%</strong></p>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p><strong>Balance:</strong></p>
+                                                    <h1>3,12302</h1>
+                                                    <p class="mb-0">Increase <strong>+10%</strong></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <h6 class="my-2">ETH Amount</h6>
+                            <div class="card pull-up">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p><strong>Balance:</strong></p>
+                                                    <h1>90,74801</h1>
+                                                    <p class="mb-0">View <strong>transactions</strong></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <h6 class="my-2">LTH Amount</h6>
+                            <div class="card pull-up">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p><strong>Balance:</strong></p>
+                                                    <h1>12,3456</h1>
+                                                    <p class="mb-0">Buy <strong>more</strong></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <h6 class="my-2">ABC Amount</h6>
+                            <div class="card pull-up">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p><strong>Balance:</strong></p>
+                                                    <h1>931.231,66</h1>
+                                                    <p class="mb-0">On <strong>exchange</strong></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <h6 class="my-2">CPL Amount</h6>
+                            <div class="card pull-up">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p><strong>Balance:</strong></p>
+                                                    <h1>7.921.120,129</h1>
+                                                    <p class="mb-0">Check <strong>game history</strong></p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -48,38 +139,129 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-12">
-                    <h6 class="my-2">ETH Amount</h6>
-                    <div class="card pull-up">
+            </div>
+            <div class="row match-height">
+                <div class="col-xl-8 col-12">
+                    <div class="card card-transparent">
+                        <div class="card-header card-header-transparent py-20">
+                            <div class="btn-group dropdown">
+                                <h6>ICO Token (Supply & Demand)</h6>
+                            </div>
+                        </div>
+                        <div id="ico-token-supply-demand-chart" class="height-300"></div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-12">
+                    <div class="card card-transparent">
+                        <div class="card-header card-header-transparent">
+                            <h6 class="card-title">Token distribution</h6>
+                        </div>
                         <div class="card-content">
+                            <div id="token-distribution-chart" class="height-200 donut donutShadow"></div>
                             <div class="card-body">
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <p><strong>Balance:</strong></p>
-                                            <h1>90,74801</h1>
-                                            <p class="mb-0">Increase <strong>+10%</strong></p>
-                                        </div>
-                                    </div>
+                                <div class="row mx-0">
+                                    <ul class="token-distribution-list col-md-6 mb-0">
+                                        <li class="crowd-sale">Crowd sale <span class="float-right text-muted">41%</span></li>
+                                        <li class="team">Team <span class="float-right text-muted">18%</span></li>
+                                        <li class="advisors">Advisors <span class="float-right text-muted">15%</span></li>
+                                    </ul>
+                                    <ul class="token-distribution-list col-md-6 mb-0">
+                                        <li class="project-reserve">Project <span class="float-right text-muted">10%</span></li>
+                                        <li class="master-nodes">Master nodes <span class="float-right text-muted">8%</span></li>
+                                        <li class="program">Program <span class="float-right text-muted">8%</span></li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-12">
-                    <h6 class="my-2">CPL Amount</h6>
-                    <div class="card pull-up">
+            </div>
+            <div class="row">
+                <div id="recent-transactions" class="col-12">
+                    <h6 class="my-2">Recent Transactions</h6>
+                    <div class="card">
                         <div class="card-content">
-                            <div class="card-body">
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <p><strong>Balance:</strong></p>
-                                            <h1>897.921.120,129</h1>
-                                            <p class="mb-0">Increase <strong>+10%</strong></p>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="table-responsive">
+                                <table id="recent-orders" class="table table-hover table-xl mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-top-0">Status</th>
+                                            <th class="border-top-0">Date</th>
+                                            <th class="border-top-0">Amount</th>
+                                            <th class="border-top-0">Currency</th>
+                                            <th class="border-top-0">Currency</th>
+                                            <th class="border-top-0">Tokens (CIC)</th>
+                                            <th class="border-top-0">Details</th>
+                                            <th class="border-top-0"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-truncate"><i class="la la-dot-circle-o success font-medium-1 mr-1"></i> Paid</td>
+                                            <td class="text-truncate"><a href="#">2018-01-03</a></td>
+                                            <td class="text-truncate">
+                                                <a href="#" class="mb-0 btn-sm btn btn-outline-success round">Deposit</a>
+                                            </td>
+                                            <td class="text-truncate p-1">5.34111</td>
+                                            <td>
+                                                <i class="cc ETH-alt"></i> ETH
+                                            </td>
+                                            <td>-</td>
+                                            <td class="text-truncate">Deposit to your Balance</td>
+                                            <td><i class="la la-thumbs-up warning float-right"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-truncate"><i class="la la-dot-circle-o success font-medium-1 mr-1"></i> Paid</td>
+                                            <td class="text-truncate"><a href="#">2018-01-03</a></td>
+                                            <td class="text-truncate">
+                                                <a href="#" class="mb-0 btn-sm btn btn-outline-success round">Deposit</a>
+                                            </td>
+                                            <td class="text-truncate p-1">5.34111</td>
+                                            <td>
+                                                <i class="cc ETH-alt"></i> ETH
+                                            </td>
+                                            <td>3,258</td>
+                                            <td class="text-truncate">Tokens Purchase</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-truncate"><i class="la la-dot-circle-o warning font-medium-1 mr-1"></i> in Process</td>
+                                            <td class="text-truncate"><a href="#">2018-01-21</a></td>
+                                            <td class="text-truncate">
+                                                <a href="#" class="mb-0 btn-sm btn btn-outline-warning round">Referral</a>
+                                            </td>
+                                            <td class="text-truncate p-1">-</td>
+                                            <td>-</td>
+                                            <td>200.88</td>
+                                            <td class="text-truncate">Referral Promo Bonus</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-truncate"><i class="la la-dot-circle-o danger font-medium-1 mr-1"></i> Pending</td>
+                                            <td class="text-truncate"><a href="#">2018-01-25</a></td>
+                                            <td class="text-truncate">
+                                                <a href="#" class="mb-0 btn-sm btn btn-outline-danger round">Withdrawal</a>
+                                            </td>
+                                            <td class="text-truncate p-1">-</td>
+                                            <td>-</td>
+                                            <td>-3,458.88</td>
+                                            <td class="text-truncate">Tokens withdrawn</td>
+                                            <td><i class="la la-dollar warning float-right"></i></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-truncate"><i class="la la-dot-circle-o success font-medium-1 mr-1"></i> Paid</td>
+                                            <td class="text-truncate"><a href="#">2018-01-28</a></td>
+                                            <td class="text-truncate">
+                                                <a href="#" class="mb-0 btn-sm btn btn-outline-danger round">Deposit</a>
+                                            </td>
+                                            <td class="text-truncate p-1">0.8791</td>
+                                            <td><i class="cc BTC-alt"></i> BTC</td>
+                                            <td>--</td>
+                                            <td class="text-truncate">Deposit to your Balance</td>
+                                            <td><i class="la la-thumbs-up warning float-right"></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -91,4 +273,6 @@
 
 @section scripts
     {
+    <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
+    <script src="~/js/dashboard/cpl.dashboard.js"></script>
 }
