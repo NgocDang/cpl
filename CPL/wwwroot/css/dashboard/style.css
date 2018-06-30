@@ -157,3 +157,89 @@ table.dataTable {
 .txt-welcome {
     padding-bottom: 20px;
 }
+
+#btc-card {
+    background: linear-gradient(#193E8E,#130E3B) !important;
+    color: #fff
+}
+
+    #btc-card:before {
+        position: absolute;
+        font-family: 'Font Awesome 5 Brands';
+        top: 10px;
+        right: 20px;
+        content: "\f15a";
+        font-size: 3rem;
+    }
+
+    #btc-card h1 {
+        color: #fff
+    }
+
+#eth-card {
+    background: linear-gradient(#193E8E,#130E3B) !important;
+    color: #fff
+}
+
+    #eth-card:before {
+        position: absolute;
+        font-family: 'Font Awesome 5 Brands';
+        top: 10px;
+        right: 20px;
+        content: "\f42e";
+        font-size: 3rem;
+    }
+
+    #eth-card h1 {
+        color: #fff
+    }
+
+#cpl-card {
+    background: linear-gradient(#193E8E,#130E3B) !important;
+    color: #fff
+}
+
+    #cpl-card:before {
+        position: absolute;
+        top: 35px;
+        right: 30px;
+        content: url(../../images/icons/cpl_icon_white_58x58.svg);
+        transform: scale(2.7);
+    }
+
+    #cpl-card h1 {
+        color: #fff
+    }
+
+.cpl-token-grey-sm {
+
+}
+
+    .cpl-token-grey-sm:before {
+        position: relative;
+        content: url(../../images/icons/cpl_icon_grey_58x58.svg);
+        transform: scale(0.9);
+        top: 2px;
+        display: inline-block;
+    }
+
+.cpl-token-white-sm {
+}
+
+    .cpl-token-white-sm:before {
+        position: relative;
+        content: url(../../images/icons/cpl_icon_white_58x58.svg);
+        transform: scale(0.9);
+        top: 2px;
+        display: inline-block;
+    }
+
+.cpl-token-balance:before {
+    position: relative;
+    content: url(../../images/icons/cpl_icon_white_58x58.svg);
+    transform: scale(5);
+    top: -65px;
+    right:5px;
+    display: block;
+    width: 85px;
+}

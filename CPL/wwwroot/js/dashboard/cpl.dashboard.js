@@ -31,7 +31,7 @@
                 {
                     "data": "Amount",
                     "render": function (data, type, full, meta) {
-                        return full.amountInString;
+                        return "<i class='cpl-token-grey-sm'></i> " + full.amountInString;
                     }
                 },
                 {

@@ -15,7 +15,7 @@
 <div class="app-content content">
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
+            <div class="content-header-left col-md-12 col-12 mb-3 breadcrumb-new">
                 <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="btn-group float-md-right top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="Exchange" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</a></div>
@@ -53,7 +53,7 @@
                             <h6 class="my-2">BTC Amount</h6>
                             <div class="card pull-up">
                                 <div class="card-content">
-                                    <div class="card-body">
+                                    <div class="card-body" id="btc-card">
                                         <div class="col-12">
                                             <div class="row">
                                                 <div class="col-12">
@@ -71,7 +71,7 @@
                             <h6 class="my-2">ETH Amount</h6>
                             <div class="card pull-up">
                                 <div class="card-content">
-                                    <div class="card-body">
+                                    <div class="card-body" id="eth-card">
                                         <div class="col-12">
                                             <div class="row">
                                                 <div class="col-12">
@@ -86,51 +86,15 @@
                             </div>
                         </div>
                         <div class="item">
-                            <h6 class="my-2">LTH Amount</h6>
-                            <div class="card pull-up">
-                                <div class="card-content">
-                                    <div class="card-body">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <p><strong>Balance:</strong></p>
-                                                    <h1>12,3456</h1>
-                                                    <p class="mb-0">Buy <strong>more</strong></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <h6 class="my-2">ABC Amount</h6>
-                            <div class="card pull-up">
-                                <div class="card-content">
-                                    <div class="card-body">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <p><strong>Balance:</strong></p>
-                                                    <h1>931.231,66</h1>
-                                                    <p class="mb-0">On <strong>exchange</strong></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
                             <h6 class="my-2">CPL Amount</h6>
                             <div class="card pull-up">
                                 <div class="card-content">
-                                    <div class="card-body">
+                                    <div class="card-body" id="cpl-card">
                                         <div class="col-12">
                                             <div class="row">
                                                 <div class="col-12">
                                                     <p><strong>Balance:</strong></p>
-                                                    <h1>@Model.TokenAmount.ToString("#,##0.########")   </h1>
+                                                    <h1>@Model.TokenAmount.ToString("#,##0.########")</h1>
                                                     <p class="mb-0">Check <strong>game history</strong></p>
                                                 </div>
                                             </div>
