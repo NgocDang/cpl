@@ -4,12 +4,15 @@ using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
 using CPL.Misc.Utils;
 using CPL.Models;
+using MessagingToolkit.QRCode.Codec;
+using MessagingToolkit.QRCode.Codec.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -189,7 +192,7 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _gameHistoryService.Query()
-                        .Include(x=>x.Game)
+                        .Include(x => x.Game)
                         .Select()
                         .AsQueryable()
                         .Where(x => x.SysUserId == user.Id)
@@ -202,7 +205,7 @@ namespace CPL.Controllers
                         .Count();
 
                 return _gameHistoryService.Query()
-                        .Include(x=>x.Game)
+                        .Include(x => x.Game)
                         .Select()
                         .AsQueryable()
                         .Where(x => x.SysUserId == user.Id)
@@ -214,5 +217,17 @@ namespace CPL.Controllers
                         .ToList();
             }
         }
+
+        public string GetAddressFromImage()
+        {
+            Bitmap image1 = (Bitmap)Image.FromFile(@"D:\DamTran\Image\qr.png", true);
+
+            QRCodeDecoder decoder = new QRCodeDecoder();
+            string test = decoder.Decode(new QRCodeBitmapImage(image1));
+
+            return test;
+
+        }
+
     }
 }
