@@ -167,5 +167,4 @@
 
 $(document).ready(function () {
     EditAccount.init();
-    //DashboardLayout.setFormValidate("#form-edit-account");
 });
