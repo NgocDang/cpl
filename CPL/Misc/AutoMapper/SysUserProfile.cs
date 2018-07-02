@@ -18,6 +18,7 @@ namespace CPL.Misc.MapperCreate
 
             CreateMap<SysUserViewModel, SysUser>();
             CreateMap<SysUserViewModel, EditAccountViewModel>();
+            CreateMap<SysUserViewModel, DashboardNavbarViewModel>();
 
             CreateMap<SysUser, DashboardViewModel>();
             CreateMap<SysUser, HoldingPercentageViewModel>();

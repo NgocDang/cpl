@@ -51,16 +51,10 @@
                                             <fieldset class="form-label-group">
                                                 <input id="Email" class="form-control" name="Email" type="email" tabindex="1" autofocus required />
                                                 <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
-                                                <div class="invalid-feedback">
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
-                                                </div>
                                             </fieldset>
                                             <fieldset class="form-label-group">
                                                 <input type="password" name="Password" id="Password" class="form-control" tabindex="2" required />
                                                 <label for="Password">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
-                                                <div class="invalid-feedback">
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
-                                                </div>
                                             </fieldset>
                                             <fieldset class="form-label-group">
                                                 <input type="password" name="PasswordConfirm" id="PasswordConfirm" class="form-control" tabindex="3" required />
