@@ -268,54 +268,89 @@
             $("#ico-token").val($("#available-bct").text());
         });
 
-        $("#btn-qrcode").on("click", function () {
-            $("#fileQrcode").click();
-            var fsFileUpload = $("#fileQrcode").get(0);
-            var fsFiles = fsFileUpload.files;
-            var formData = new FormData();
-            for (var i = 0; i < fsFiles.length; i++) {
-                formData.append("fileQrcode", fsFiles[i]);
-            }
-
-            $.ajax({
-                url: "/Dashboard/GetAddressFromImage/",
-                type: "POST",
-                processData: false,
-                contentType: false,
-                data: formData,
-                success: function (data) {
-                    if (data.success) {
-                        toastr.success(data.message, 'Success!');
-                    } else {
-                        toastr.error(data.message, 'Error!');
+        $("#btc-withdraw").on("click", function () {
+            var isFormValid = $("#form-withdraw-btc").checkValidity();
+            if (isFormValid) {
+                $.ajax({
+                    url: "/DepositAndWithdraw/DepositeAndWithdrawBTC/",
+                    type: "POST",
+                    data: {
+                        BtcAmount: $("#btc-amount").val(),
+                        BtcAddress: $("#btc-address").val(),
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            //toastr.success(data.message, 'Success!');
+                            $("#btc-address-error").hide();
+                            $("#btc-amount-error").hide();
+                        } else {
+                            if (data.name === "btc-wallet") {
+                                $("#btc-address-error").hide();
+                                $("#btc-amount-error").text(data.message);
+                            } else if (data.name === "btc-amount") {
+                                $("#btc-amount-error").hide();
+                                $("#btc-address-error").text(data.message);
+                            }
+                        }
+                    },
+                    complete: function (data) {
+                        //$("#btn-affiliate-update").attr("disabled", false);
+                        //$("#btn-affiliate-update").html($("#btn-affiliate-update").text());
                     }
-                }
-            });
+                });
+            }
+            return false;
         });
 
-        $("#form-withdraw-btc").on("change", "#fileQrcode", function () {
-            var fsFileUpload = $("#fileQrcode").get(0);
-            var fsFiles = fsFileUpload.files;
-            var formData = new FormData();
-            for (var i = 0; i < fsFiles.length; i++) {
-                formData.append("fileQrcode", fsFiles[i]);
-            }
 
-            $.ajax({
-                url: "/Dashboard/GetAddressFromImage/",
-                type: "POST",
-                processData: false,
-                contentType: false,
-                data: formData,
-                success: function (data) {
-                    if (data.success) {
-                        toastr.success(data.message, 'Success!');
-                    } else {
-                        toastr.error(data.message, 'Error!');
-                    }
-                }
-            });
-        });
+        //$("#btn-qrcode").on("click", function () {
+        //    $("#fileQrcode").click();
+        //    var fsFileUpload = $("#fileQrcode").get(0);
+        //    var fsFiles = fsFileUpload.files;
+        //    var formData = new FormData();
+        //    for (var i = 0; i < fsFiles.length; i++) {
+        //        formData.append("fileQrcode", fsFiles[i]);
+        //    }
+
+        //    $.ajax({
+        //        url: "/Dashboard/GetAddressFromImage/",
+        //        type: "POST",
+        //        processData: false,
+        //        contentType: false,
+        //        data: formData,
+        //        success: function (data) {
+        //            if (data.success) {
+        //                toastr.success(data.message, 'Success!');
+        //            } else {
+        //                toastr.error(data.message, 'Error!');
+        //            }
+        //        }
+        //    });
+        //});
+
+        //$("#form-withdraw-btc").on("change", "#fileQrcode", function () {
+        //    var fsFileUpload = $("#fileQrcode").get(0);
+        //    var fsFiles = fsFileUpload.files;
+        //    var formData = new FormData();
+        //    for (var i = 0; i < fsFiles.length; i++) {
+        //        formData.append("fileQrcode", fsFiles[i]);
+        //    }
+
+        //    $.ajax({
+        //        url: "/Dashboard/GetAddressFromImage/",
+        //        type: "POST",
+        //        processData: false,
+        //        contentType: false,
+        //        data: formData,
+        //        success: function (data) {
+        //            if (data.success) {
+        //                toastr.success(data.message, 'Success!');
+        //            } else {
+        //                toastr.error(data.message, 'Error!');
+        //            }
+        //        }
+        //    });
+        //});
 
 
 
