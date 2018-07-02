@@ -260,6 +260,65 @@
             });
         }
 
+        $("#txt-withdraw-btc").on("click",function () {
+            $("#panel-withdraw-btc").slideToggle("slow");
+        });
+
+        $("#btn-max-btc").on("click", function () {
+            $("#ico-token").val($("#available-bct").text());
+        });
+
+        $("#btn-qrcode").on("click", function () {
+            $("#fileQrcode").click();
+            var fsFileUpload = $("#fileQrcode").get(0);
+            var fsFiles = fsFileUpload.files;
+            var formData = new FormData();
+            for (var i = 0; i < fsFiles.length; i++) {
+                formData.append("fileQrcode", fsFiles[i]);
+            }
+
+            $.ajax({
+                url: "/Dashboard/GetAddressFromImage/",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message, 'Success!');
+                    } else {
+                        toastr.error(data.message, 'Error!');
+                    }
+                }
+            });
+        });
+
+        $("#form-withdraw-btc").on("change", "#fileQrcode", function () {
+            var fsFileUpload = $("#fileQrcode").get(0);
+            var fsFiles = fsFileUpload.files;
+            var formData = new FormData();
+            for (var i = 0; i < fsFiles.length; i++) {
+                formData.append("fileQrcode", fsFiles[i]);
+            }
+
+            $.ajax({
+                url: "/Dashboard/GetAddressFromImage/",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message, 'Success!');
+                    } else {
+                        toastr.error(data.message, 'Error!');
+                    }
+                }
+            });
+        });
+
+
+
         return false;
     },
     //bindCopy: function () {
