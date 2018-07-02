@@ -154,8 +154,40 @@
                                                 <img class="img-fluid" src="https://pixinvent.com/demo/crypto-ico-admin/app-assets/images/icons/sample-qr.png">
                                             </div>
                                             <div class="col-md-2 col-12 pt-1 text-center">
-                                                <a href="#">Withdraw</a>
+                                                <a id="txt-withdraw-eth" href="#">Withdraw</a>
                                             </div>
+                                            <div id="panel-withdraw-eth">
+                                                <hr>
+                                                <p class="mt-2">You are about to withdraw <span class="text-bold-700 text-uppercase mb-0">BTC</span> from your account</p>
+
+                                                <form id="form-withdraw-btc" class="form-horizontal form-purchase-token row">
+                                                    <div class="col-lg-2 col-md-3 col-sm-12 col-12">
+                                                        <fieldset class="form-label-group mb-0">
+                                                            <input type="number" class="form-control" id="btc-amount" value="0" required="" autofocus="" min="0" max="@Model.BtcAmount" step="any">
+                                                            <p id="btc-amount-error"></p>
+                                                            <label for="ico-token">Amount</label>
+                                                        </fieldset>
+                                                        <button type="button" id="btn-max-btc" class="btn btn-sm round mr-1 mt-1"><i class="fas fa-angle-double-up"></i> Max</button>
+                                                    </div>
+                                                    <div class="col-lg-1 col-md-1 col-sm-12 col-12 mb-1 text-center">
+                                                        <span class="la la-arrow-right"></span>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                        <fieldset class="form-label-group mb-0">
+                                                            <input type="text" class="form-control" id="btc-address" value="0XD38D9EEB5B9617D758CEE2C683E1D385637635E9" required="" autofocus="">
+                                                            <label for="wallet-address">Address</label>
+                                                            <p id="btc-address-error"></p>
+                                                        </fieldset>
+                                                        <button type="button" id="btn-qrcode" class="btn btn-sm round mr-1 mt-1"><i class="fas fa-qrcode"></i> QR Code</button>
+                                                        @*<input type="file" id="fileQrcode">*@
+                                                        @*<label id=selected>Nothing selected</label>*@
+                                                    </div>
+                                                    <div class="col-lg-2 col-md-2 col-12 text-center">
+                                                        <button type="submit" class="btn-gradient-secondary" id="btc-withdraw">Withdraw</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

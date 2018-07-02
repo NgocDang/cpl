@@ -47,6 +47,11 @@
                     //$("#btn-affiliate-update").html($("#btn-affiliate-update").text());
                 }
             });
+
+            $("#txt-withdraw-eth").on("click", function () {
+                $("#panel-withdraw-eth").slideToggle("slow");
+            });
+
             return false;
         });
     }
