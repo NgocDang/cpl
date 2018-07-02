@@ -980,3 +980,6 @@ select.bs-select-hidden, select.selectpicker {
     padding-bottom: calc(var(--input-padding-y)/ 3);
 }
 
+.height-70 {
+    height: 70px !important;
+}
