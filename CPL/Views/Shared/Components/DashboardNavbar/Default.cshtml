@@ -30,7 +30,7 @@
                                 <a class="dropdown-item" asp-controller="Profile" asp-action="EditAccount"><i class="ft-award"></i> @Model.FirstName @Model.LastName</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" asp-controller="Profile" asp-action="EditAccount"><i class="ft-user"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit")</a>
-                                <a class="dropdown-item" asp-controller="Profile" asp-action="EditCredentials"><i class="ft-check-square"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialsEdit")</a>
+                                <a class="dropdown-item" asp-controller="Profile" asp-action="EditCredential"><i class="ft-check-square"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" data-confirm="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")|@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ConfirmLogOut")" data-confirm-yes="DashboardLayout.logout();"><i class="ft-power"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
                             </div>
