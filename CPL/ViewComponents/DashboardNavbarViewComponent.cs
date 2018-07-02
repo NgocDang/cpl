@@ -1,4 +1,5 @@
 ﻿using CPL.Core.Interfaces;
+using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,8 +20,8 @@ namespace CPL.ViewComponents
 
         public IViewComponentResult Invoke()
         {
-            var viewModel = new DashboardNavbarViewModel();
-            return View(viewModel);
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            return View(AutoMapper.Mapper.Map< DashboardNavbarViewModel>(user));
         }
     }
 }
