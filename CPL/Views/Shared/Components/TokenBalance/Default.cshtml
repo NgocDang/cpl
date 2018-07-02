@@ -1,0 +1,39 @@
+﻿@model TokenBalanceViewModel
+
+
+<div class="row">
+    <p class="pt-1 text-capitalize col-12">Your balance</p>
+</div>
+<div class="card pull-up">
+    <div class="card-header">
+        <h6 class="card-title text-center">CPL Token</h6>
+    </div>
+    <div class="card-content collapse show">
+        <div class="card-body">
+            <div class="text-center row clearfix mb-2">
+                <div class="col-12">
+                    <i class="cpl-token-balance font-large-3 bg-warning bg-glow white rounded-circle p-3 d-inline-block"></i>
+                </div>
+            </div>
+            <h3 class="text-center">@Model.TokenAmount CPL</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-de mb-0">
+                <tbody>
+                    <tr>
+                        <td>CPL Token</td>
+                        <td><i class='cpl-token-grey-sm'></i> 3,258 CPL</td>
+                    </tr>
+                    <tr>
+                        <td>CPL Referral</td>
+                        <td><i class='cpl-token-grey-sm'></i> 200.88 CPL</td>
+                    </tr>
+                    <tr>
+                        <td>CPL Price</td>
+                        <td><i class="cc BTC-alt"></i> 0.0001 BTC</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
