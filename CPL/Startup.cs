@@ -47,6 +47,7 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<LangMsgDetail>, Repository<LangMsgDetail>>()
                 .AddScoped<IRepositoryAsync<Team>, Repository<Team>>()
                 .AddScoped<IRepositoryAsync<GameHistory>, Repository<GameHistory>>()
+                .AddScoped<IRepositoryAsync<CoinTransaction>, Repository<CoinTransaction>>()
 
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();

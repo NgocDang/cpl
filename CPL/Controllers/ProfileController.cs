@@ -26,6 +26,8 @@ namespace CPL.Controllers
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
         private readonly ISysUserService _sysUserService;
+        private readonly IGameHistoryService _gameHistoryService;
+        private readonly ICoinTransactionService _coinTransactionService;
         private readonly ITemplateService _templateService;
 
         public ProfileController(
@@ -35,6 +37,8 @@ namespace CPL.Controllers
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
             ISysUserService sysUserService,
+            ICoinTransactionService coinTransactionService,
+            IGameHistoryService gameHistoryService,
             ITeamService teamService,
             ITemplateService templateService)
         {
@@ -42,6 +46,8 @@ namespace CPL.Controllers
             this._mapper = mapper;
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
+            this._coinTransactionService = coinTransactionService;
+            this._gameHistoryService = gameHistoryService;
             this._sysUserService = sysUserService;
             this._unitOfWork = unitOfWork;
             this._templateService = templateService;
@@ -50,6 +56,8 @@ namespace CPL.Controllers
         public IActionResult EditAccount()
         {
             var viewModel = Mapper.Map<EditAccountViewModel>(HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser"));
+            viewModel.NumberOfGameHistories = _gameHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
+            viewModel.NumberOfTransactions = _coinTransactionService.Queryable().Count(x => x.SysUserId == viewModel.Id);
             return View("EditAccount", viewModel);
         }
 

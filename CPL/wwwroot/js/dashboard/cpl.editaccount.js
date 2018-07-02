@@ -1,15 +1,30 @@
 ﻿var EditAccount = {
     init: function () {
+        // Initiate country
+        if ($("#Country").data("value") != "") {
+            $("#Country option[value=" + $("#Country").data("value") + "]").attr("selected", "selected");
+            $("#Country").selectpicker('refresh');
+        }
+
         // Initiate date of birth 
         var year = moment().year();
-        for (i = year; i >= year-100; i--) {
-            $("#Year").append($('<option></option>').val(i).html(i));
+        for (i = year; i >= year - 100; i--) {
+            if ($("#DOB").val() != "" && moment($("#DOB").val()).year() == i) 
+                $("#Year").append($("<option selected='selected'></option>").val(i).html(i));
+            else 
+                $("#Year").append($("<option></option>").val(i).html(i));
         }
         for (i = 1; i <= 12; i++) {
-            $("#Month").append($('<option></option>').val(i).html(i));
+            if ($("#DOB").val() != "" && moment($("#DOB").val()).month() + 1 == i)
+                $("#Month").append($("<option selected='selected'></option>").val(i).html(i));
+            else
+                $("#Month").append($("<option></option>").val(i).html(i));
         }
         for (i = 1; i <= 31; i++) {
-            $("#Day").append($('<option></option>').val(i).html(i));
+            if ($("#DOB").val() != "" && moment($("#DOB").val()).date() == i)
+                $("#Day").append($("<option selected='selected'></option>").val(i).html(i));
+            else
+                $("#Day").append($("<option></option>").val(i).html(i));
         }
 
         $("#Year").on("change", function () {
@@ -72,11 +87,47 @@
             }
         });
 
+        $("#PostalCode").on("blur", function () {
+            $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address=" + $("#PostalCode").val())
+                .done(function (data) {
+                    debugger;
+                    if (data.status == "OK") {
+                        var country = data.results[0].address_components[data.results[0].address_components.length - 1].short_name;
+                        $("#Country option").removeAttr("selected");
+                        $("#Country option[value=" + country + "]").attr("selected", "selected");
+                        $("#Country").selectpicker('refresh');
+
+                        var city = data.results[0].address_components[data.results[0].address_components.length - 2].long_name;
+                        $("#City").val(city);
+                    }
+                });
+        });
+
         $("#btn-save-account").on("click", function () {
             var isFormValid = $("#form-edit-account").valid();
+
+            //Validate for Mobile
             var isMobileValid = $("#Mobile").intlTelInput("isValidNumber");
-            var isDOBValid = moment($("#DOB").val()).isValid();
-            if (isFormValid && isMobileValid && isDOBValid) {
+            if (isMobileValid)
+                $("#mobile-msg").hide();
+            else
+                $("#mobile-msg").show();
+
+            //Validate for DOB
+            var isDOBValid = $("#Year").val() != "" && $("#Month").val() != "" && $("#Day").val() != "" && moment().date($("#Day").val()).month($("#Month").val()-1).year($("#Year").val()).isValid();
+            if (isDOBValid)
+                $("#dob-msg").hide();
+            else
+                $("#dob-msg").show();
+
+            //Validate for Country
+            var isCountryValid = $("#Country").val() != "";
+            if (isCountryValid)
+                $("#country-msg").hide();
+            else
+                $("#country-msg").show();
+
+            if (isFormValid && isMobileValid && isDOBValid && isCountryValid) {
                 $.ajax({
                     url: "/Profile/EditAccount/",
                     type: "POST",
@@ -88,7 +139,7 @@
                         FirstName: $("#FirstName").val(),
                         LastName: $("#LastName").val(),
                         Gender: $('#Male').is(':checked'),
-                        DOB: moment(),
+                        DOB: moment().date($("#Day").val()).month($("#Month").val()-1).year($("#Year").val()).format("YYYY-MM-DD"),
                         PostalCode: $("#PostalCode").val(),
                         Country: $("#Country").val(),
                         City: $("#City").val(),
@@ -103,8 +154,8 @@
                         }
                     },
                     complete: function (data) {
-                        $("#btn-profile-update").attr("disabled", false);
-                        $("#btn-profile-update").html("<i class='far fa-save'></i> " + $("#btn-profile-update").text());
+                        $("#btn-save-account").attr("disabled", false);
+                        $("#btn-save-account").html("<i class='far fa-save'></i> " + $("#btn-save-account").text());
                     }
                 });
             }
@@ -116,5 +167,5 @@
 
 $(document).ready(function () {
     EditAccount.init();
-    DashboardLayout.setFormValidate("#form-edit-account");
+    //DashboardLayout.setFormValidate("#form-edit-account");
 });

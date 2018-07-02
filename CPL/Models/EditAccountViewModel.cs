@@ -17,5 +17,8 @@ namespace CPL.Models
         public string Country { get; set; }
         public string City { get; set; }
         public DateTime? DOB { get; set; }
+
+        public int NumberOfTransactions { get; set; }
+        public int NumberOfGameHistories { get; set; }
     }
 }
