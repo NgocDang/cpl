@@ -47,33 +47,48 @@ namespace CPL.Controllers
 
         public IActionResult Index()
         {
-            //var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
-            //DepositAndWithdrawViewModel model = new DepositAndWithdrawViewModel();
-            return View();
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
+            var model = new DepositAndWithdrawViewModel
+            {
+                BtcAmount = user.BTCAmount,
+                BtcAddress = user.BTCHDWalletAddress,
+                EthAmount = user.ETHAmount,
+                EthAdderss = user.ETHHDWalletAddress
+            };
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult DepositeWithdrawBTC(DepositAndWithdrawViewModel viewModel)
+        public IActionResult DoDepositeWithdrawBTC(DepositAndWithdrawViewModel viewModel)
         {
-            //Validate ETH wallet address
-            //if (string.IsNullOrEmpty(viewModel.EthAdderss) || (!string.IsNullOrEmpty(viewModel.EthAdderss) && !ValidateAddressHelper.IsValidETHAddress(viewModel.EthAdderss)))
-            //    return new JsonResult(new { success = false, name = "eth-wallet", message = "Invalid ETH wallet address. Please try another." });
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
+            // Validate max BTC Amount
+            if (viewModel.BtcAmount > user.BTCAmount)
+                return new JsonResult(new { success = false, name = "btc-amount", message = "Insufficient money. Please try another." });
 
             //Validate BTC wallet address
             if (string.IsNullOrEmpty(viewModel.BtcAddress) || (!string.IsNullOrEmpty(viewModel.BtcAddress) && !ValidateAddressHelper.IsValidBTCAddress(viewModel.BtcAddress)))
                 return new JsonResult(new { success = false, name = "btc-wallet", message = "Invalid BTC wallet address. Please try another." });
 
+            return new JsonResult(new { success = true, message = "success" });
+        }
+
+        [HttpPost]
+        public IActionResult DoDepositeWithdrawETH(DepositAndWithdrawViewModel viewModel)
+        {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
             // Validate max BTC Amount
-            //if (viewModel.EthAmount > user.ETHAmount)
-            //    return new JsonResult(new { success = false, name = "eth-amount", message = "Insufficient money. Please try another." });
+            if (viewModel.EthAmount > user.ETHAmount)
+                return new JsonResult(new { success = false, name = "eth-amount", message = "Insufficient money. Please try another." });
 
-            // Validate max BTC Amount
-            if (viewModel.BtcAmount > user.BTCAmount)
-                return new JsonResult(new { success = false, name = "btc-amount", message = "Insufficient money. Please try another." });
+            //Validate ETH wallet address
+            if (string.IsNullOrEmpty(viewModel.EthAdderss) || (!string.IsNullOrEmpty(viewModel.EthAdderss) && !ValidateAddressHelper.IsValidETHAddress(viewModel.EthAdderss)))
+                return new JsonResult(new { success = false, name = "eth-wallet", message = "Invalid ETH wallet address. Please try another." });
 
             return new JsonResult(new { success = true, message = "success" });
         }
+
+
 
     }
 }
