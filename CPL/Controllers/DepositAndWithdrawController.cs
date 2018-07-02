@@ -59,7 +59,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult DoDepositeWithdrawBTC(DepositAndWithdrawViewModel viewModel)
+        public IActionResult DoDepositeWithdrawBTC(WithdrawBtcViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
             // Validate max BTC Amount
@@ -74,7 +74,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult DoDepositeWithdrawETH(DepositAndWithdrawViewModel viewModel)
+        public IActionResult DoDepositeWithdrawETH(WithdrawEthViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
             // Validate max BTC Amount
@@ -87,8 +87,5 @@ namespace CPL.Controllers
 
             return new JsonResult(new { success = true, message = "success" });
         }
-
-
-
     }
 }
