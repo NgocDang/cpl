@@ -73,7 +73,7 @@
                                             <div class="media">
                                                 <div class="media-body">
                                                     <h5 class="mt-0 text-capitalize">Bitcoin</h5>
-                                                    <p id="BTCAddress" class="text-muted mb-0 font-small-3 wallet-address">0xd38d9eeb5b9617d758cee2c683e1d385637635e9</p>
+                                                    <p id="BTCAddress" class="text-muted mb-0 font-small-3 wallet-address">@Model.BtcAddress</p>
                                                     <button type="button" class="btn btn-sm round mr-1 mt-1 btn-copy" data-clipboard-target="#BTCAddress"><i class="fas fa-copy"></i> Copy</button>
                                                 </div>
                                             </div>
@@ -84,7 +84,7 @@
                                             <p class="text-muted mb-0 font-small-3">~ $2650.78</p>
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <img class="img-fluid p-2" src="https://blockchain.info/qr?data=bitcoin:17PJZ2uLiR2TMVv18MzsjRRswfRSLkSNBe">
+                                            <img class="img-fluid p-2" src=@Model.BtcQrCodeImage>
                                         </div>
 
                                         <div class="col-md-2 col-12 pt-1 text-center">
@@ -109,7 +109,7 @@
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
                                                 <fieldset class="form-label-group mb-0">
-                                                    <input type="text" class="form-control" id="btc-address" name="btc-address" value="0XD38D9EEB5B9617D758CEE2C683E1D385637635E9" required="" autofocus="">
+                                                    <input type="text" class="form-control" id="btc-address" name="btc-address" required="" autofocus="">
                                                     <label for="btc-address">Address</label>
                                                 </fieldset>
                                                 <p id="btc-address-error" class="text-danger"></p>
@@ -151,7 +151,7 @@
                                             <p class="text-muted mb-0 font-small-3">~ $650.78</p>
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <img class="img-fluid" src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=0x8CCF9C4a7674D5784831b5E1237d9eC9Dddf9d7F&choe=UTF-8">
+                                            <img class="img-fluid" src=@Model.EthQrCodeImage>
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
                                             <a id="txt-withdraw-eth" href="#">Withdraw</a>
@@ -175,7 +175,7 @@
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
                                                 <fieldset class="form-label-group mb-0">
-                                                    <input type="text" class="form-control" id="eth-address" value="0XD38D9EEB5B9617D758CEE2C683E1D385637635E9" required="" autofocus="">
+                                                    <input type="text" class="form-control" id="eth-address" required="" autofocus="">
                                                     <label for="wallet-address">Address</label>
                                                     <p id="eth-address-error" class="text-danger"></p>
                                                 </fieldset>

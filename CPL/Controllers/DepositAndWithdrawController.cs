@@ -53,7 +53,9 @@ namespace CPL.Controllers
                 BtcAmount = user.BTCAmount,
                 BtcAddress = user.BTCHDWalletAddress,
                 EthAmount = user.ETHAmount,
-                EthAddress = user.ETHHDWalletAddress
+                EthAddress = user.ETHHDWalletAddress,
+                BtcQrCodeImage = $"https://blockchain.info/qr?data=bitcoin:{user.BTCHDWalletAddress}",
+                EthQrCodeImage = $"https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl={user.ETHHDWalletAddress}&choe=UTF-8"
             };
             return View(model);
         }

@@ -8,5 +8,7 @@ namespace CPL.Models
         public decimal EthAmount { get; set; }
         public string BtcAddress { get; set; }
         public string EthAddress { get; set; }
+        public string BtcQrCodeImage { get; set; }
+        public string EthQrCodeImage { get; set; }
     }
 }
