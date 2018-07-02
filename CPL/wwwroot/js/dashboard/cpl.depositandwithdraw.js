@@ -9,10 +9,20 @@
 
         $("#txt-withdraw-btc").on("click", function () {
             $("#panel-withdraw-btc").slideToggle("slow");
+            $("#panel-withdraw-eth").slideUp("slow");
+        });
+
+        $("#txt-withdraw-eth").on("click", function () {
+            $("#panel-withdraw-eth").slideToggle("slow");
+            $("#panel-withdraw-btc").slideUp("slow");
         });
 
         $("#btn-max-btc").on("click", function () {
             $("#btc-amount").val($("#available-bct").text());
+        });
+
+        $("#btn-max-eth").on("click", function () {
+            $("#eth-amount").val($("#available-eth").text());
         });
 
         $("#btc-withdraw").on("click", function () {
@@ -26,9 +36,9 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        toastr.success(data.message, 'Success!');
                         $("#btc-address-error").hide();
                         $("#btc-amount-error").hide();
+                        toastr.success(data.message, 'Success!');
                     } else {
                         if (data.name === "btc-wallet") {
                             $("#btc-amount-error").hide();
@@ -43,17 +53,45 @@
                     }
                 },
                 complete: function (data) {
-                    //$("#btn-affiliate-update").attr("disabled", false);
-                    //$("#btn-affiliate-update").html($("#btn-affiliate-update").text());
                 }
             });
-
-            $("#txt-withdraw-eth").on("click", function () {
-                $("#panel-withdraw-eth").slideToggle("slow");
-            });
-
             return false;
         });
+
+        $("#eth-withdraw").on("click", function () {
+            $("#form-withdraw-eth").valid();
+            $.ajax({
+                url: "/DepositAndWithdraw/DoDepositeWithdrawETH/",
+                type: "POST",
+                data: {
+                    EthAmount: $("#eth-amount").val(),
+                    EthAddress: $("#eth-address").val(),
+                },
+                success: function (data) {
+                    if (data.success) {
+                        $("#eth-address-error").hide();
+                        $("#eth-amount-error").hide();
+                        toastr.success(data.message, 'Success!');
+                    } else {
+                        if (data.name === "eth-wallet") {
+                            $("#eth-amount-error").hide();
+                            $("#eth-address-error").show();
+                            $("#eth-address-error").text(data.message);
+                        }
+                        if (data.name === "eth-amount") {
+                            $("#eth-address-error").hide();
+                            $("#eth-amount-error").show();
+                            $("#eth-amount-error").text(data.message);
+                        }
+                    }
+                },
+                complete: function (data) {
+                }
+            });
+            return false;
+        });
+
+
     }
 }
 

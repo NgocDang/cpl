@@ -53,7 +53,7 @@ namespace CPL.Controllers
                 BtcAmount = user.BTCAmount,
                 BtcAddress = user.BTCHDWalletAddress,
                 EthAmount = user.ETHAmount,
-                EthAdderss = user.ETHHDWalletAddress
+                EthAddress = user.ETHHDWalletAddress
             };
             return View(model);
         }
@@ -82,7 +82,7 @@ namespace CPL.Controllers
                 return new JsonResult(new { success = false, name = "eth-amount", message = "Insufficient money. Please try another." });
 
             //Validate ETH wallet address
-            if (string.IsNullOrEmpty(viewModel.EthAdderss) || (!string.IsNullOrEmpty(viewModel.EthAdderss) && !ValidateAddressHelper.IsValidETHAddress(viewModel.EthAdderss)))
+            if (string.IsNullOrEmpty(viewModel.EthAddress) || (!string.IsNullOrEmpty(viewModel.EthAddress) && !ValidateAddressHelper.IsValidETHAddress(viewModel.EthAddress)))
                 return new JsonResult(new { success = false, name = "eth-wallet", message = "Invalid ETH wallet address. Please try another." });
 
             return new JsonResult(new { success = true, message = "success" });

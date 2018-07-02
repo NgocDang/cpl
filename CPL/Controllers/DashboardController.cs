@@ -218,16 +218,16 @@ namespace CPL.Controllers
             }
         }
 
-        public string GetAddressFromImage()
-        {
-            Bitmap image1 = (Bitmap)Image.FromFile(@"D:\DamTran\Image\qr.png", true);
+        //public string GetAddressFromImage()
+        //{
+        //    Bitmap image1 = (Bitmap)Image.FromFile(@"D:\DamTran\Image\qr.png", true);
 
-            QRCodeDecoder decoder = new QRCodeDecoder();
-            string test = decoder.Decode(new QRCodeBitmapImage(image1));
+        //    QRCodeDecoder decoder = new QRCodeDecoder();
+        //    string test = decoder.Decode(new QRCodeBitmapImage(image1));
 
-            return test;
+        //    return test;
 
-        }
+        //}
 
     }
 }

@@ -7,6 +7,6 @@ namespace CPL.Models
         public decimal BtcAmount { get; set; }
         public decimal EthAmount { get; set; }
         public string BtcAddress { get; set; }
-        public string EthAdderss { get; set; }
+        public string EthAddress { get; set; }
     }
 }
