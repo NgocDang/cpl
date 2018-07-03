@@ -76,7 +76,7 @@
                                                     </div>
                                                     <div class="col-md-6 col-12 float-sm-left text-center text-sm-right"><a href="account-login.html#" class="card-link">Forgot Password?</a></div>
                                                 </div>*@
-                                            <button type="submit" id="btn-log-in" class="btn-gradient-primary btn-block my-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</button>
+                                            <button type="submit" id="btn-log-in" class="btn btn-gradient-primary btn-block my-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</button>
                                             <p class="text-center"><a asp-controller="Authentication" asp-action="Register" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</a></p>
                                         </form>
                                     </div>

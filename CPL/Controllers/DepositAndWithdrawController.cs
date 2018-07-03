@@ -2,6 +2,7 @@
 using CPL.Core.Interfaces;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
+using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,7 @@ using System.Linq;
 
 namespace CPL.Controllers
 {
+    [Permission(EnumRole.User)]
     public class DepositAndWithdrawController : Controller
     {
         private readonly ILangService _langService;

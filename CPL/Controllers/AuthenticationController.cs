@@ -115,6 +115,11 @@ namespace CPL.Controllers
                     CreatedDate = DateTime.Now,
                     IsAdmin = false,
                     ActivateToken = isAccountActivationEnable ? Guid.NewGuid().ToString() : null,
+                    BTCHDWalletAddress = "1P8qwzdXgXBTyZPPXxsZPxTDmuimtTGj4d",
+                    BTCAmount = 10,
+                    ETHHDWalletAddress = "0xEbf7aEa65944A953C27643160797a90176e6f03f",
+                    ETHAmount = 100,
+                    TokenAmount = 10000000
                 };
 
                 _sysUserService.Insert(user);
