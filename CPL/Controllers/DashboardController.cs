@@ -7,12 +7,8 @@ using CPL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace CPL.Controllers
 {
@@ -60,7 +56,7 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
-        public IActionResult DepositeAndWithdrawal()
+        public IActionResult DepositAndWithdrawal()
         {
             var viewModel = new DepositAndWithdrawViewModel();
             return View(viewModel);
@@ -195,7 +191,7 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _gameHistoryService.Query()
-                        .Include(x=>x.Game)
+                        .Include(x => x.Game)
                         .Select()
                         .AsQueryable()
                         .Where(x => x.SysUserId == user.Id)
@@ -208,7 +204,7 @@ namespace CPL.Controllers
                         .Count();
 
                 return _gameHistoryService.Query()
-                        .Include(x=>x.Game)
+                        .Include(x => x.Game)
                         .Select()
                         .AsQueryable()
                         .Where(x => x.SysUserId == user.Id)

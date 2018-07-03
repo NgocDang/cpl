@@ -18,6 +18,10 @@ namespace CPL.Misc.MapperCreate
 
             CreateMap<SysUserViewModel, SysUser>();
             CreateMap<SysUserViewModel, EditAccountViewModel>();
+            CreateMap<SysUserViewModel, EditCredentialViewModel>()
+                .ForMember(dest => dest.CurrentEmail, opt => opt.MapFrom(src => src.Email));
+
+            CreateMap<SysUserViewModel, DashboardNavbarViewModel>();
 
             CreateMap<SysUser, DashboardViewModel>();
             CreateMap<SysUser, HoldingPercentageViewModel>();

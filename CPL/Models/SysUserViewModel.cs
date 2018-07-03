@@ -35,8 +35,8 @@ namespace CPL.Models
         public string City { get; set; }
         public DateTime? DOB { get; set; }
         public bool IsDeleted { get; set; }
-        public decimal BTCWallet { get; set; }
-        public decimal ETHWallet { get; set; }
-        public decimal TokenWallet { get; set; }
+        public decimal BTCAmount { get; set; }
+        public decimal ETHAmount { get; set; }
+        public decimal TokenAmount { get; set; }
     }
 }

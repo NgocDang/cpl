@@ -1,65 +1,6 @@
 ﻿var Dashboard = {
     init: function () {
-        $('#dt-history').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "autoWidth": false,
-            "ajax": {
-                url: "/Dashboard/SearchGameHistory",
-                type: 'POST'
-            },
-            //"language": DTLang.getLang(),
-            "columns": [
-                {
-                    "data": "CreatedDateInString",
-                    "render": function (data, type, full, meta) {
-                        return full.createdDateInString;
-                    }
-                },
-                {
-                    "data": "CreatedTimeInString",
-                    "render": function (data, type, full, meta) {
-                        return full.createdTimeInString;
-                    }
-                },
-                {
-                    "data": "GameType",
-                    "render": function (data, type, full, meta) {
-                        return full.gameType;
-                    }
-                },
-                {
-                    "data": "Amount",
-                    "render": function (data, type, full, meta) {
-                        return "<i class='cpl-token-grey-sm'></i> " + full.amountInString;
-                    }
-                },
-                {
-                    "data": "Result",
-                    "render": function (data, type, full, meta) {
-                        if (full.result == "1") {
-                            return "<div class='badge badge-success'>Win</div>";
-                        } else if (full.result == "0")
-                            return "<div class='badge badge-danger'>Lose</div>";
-                        else
-                            return "";
-                    }
-                },
-                {
-                    "data": "AwardInString",
-                    "render": function (data, type, full, meta) {
-                        return full.awardInString;
-                    }
-                },
-                {
-                    "data": "BalanceInString",
-                    "render": function (data, type, full, meta) {
-                        return full.balanceInString;
-                    }
-                }
-            ],
-        });
-
+        Dashboard.loadHistoryDatatable();
         $('.owl-carousel').owlCarousel({
             loop: true,
             margin: 15,
@@ -258,8 +199,6 @@
                 }
             }
         })
-
-        return false;
     },
     bindCopy: function () {
         if ($(".btn-copy").length > 0) {
@@ -290,6 +229,67 @@
             });
         })
     },
+    loadHistoryDatatable: function () {
+        $('#dt-history').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                url: "/Dashboard/SearchGameHistory",
+                type: 'POST'
+            },
+            //"language": DTLang.getLang(),
+            "columns": [
+                {
+                    "data": "CreatedDateInString",
+                    "render": function (data, type, full, meta) {
+                        return full.createdDateInString;
+                    }
+                },
+                {
+                    "data": "CreatedTimeInString",
+                    "render": function (data, type, full, meta) {
+                        return full.createdTimeInString;
+                    }
+                },
+                {
+                    "data": "GameType",
+                    "render": function (data, type, full, meta) {
+                        return full.gameType;
+                    }
+                },
+                {
+                    "data": "Amount",
+                    "render": function (data, type, full, meta) {
+                        return "<i class='cpl-token-grey-sm'></i> " + full.amountInString;
+                    }
+                },
+                {
+                    "data": "Result",
+                    "render": function (data, type, full, meta) {
+                        if (full.result == "1") {
+                            return "<div class='badge badge-success'>Win</div>";
+                        } else if (full.result == "0")
+                            return "<div class='badge badge-danger'>Lose</div>";
+                        else
+                            return "";
+                    }
+                },
+                {
+                    "data": "AwardInString",
+                    "render": function (data, type, full, meta) {
+                        return full.awardInString;
+                    }
+                },
+                {
+                    "data": "BalanceInString",
+                    "render": function (data, type, full, meta) {
+                        return full.balanceInString;
+                    }
+                }
+            ],
+        });
+    }
 }
 
 $(document).ready(function () {

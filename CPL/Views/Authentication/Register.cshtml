@@ -51,21 +51,18 @@
                                             <fieldset class="form-label-group">
                                                 <input id="Email" class="form-control" name="Email" type="email" tabindex="1" autofocus required />
                                                 <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
-                                                <div class="invalid-feedback">
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
+                                                <div id="email-msg" class="invalid-feedback">
+                                                    Existing email
                                                 </div>
                                             </fieldset>
                                             <fieldset class="form-label-group">
                                                 <input type="password" name="Password" id="Password" class="form-control" tabindex="2" required />
                                                 <label for="Password">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
-                                                <div class="invalid-feedback">
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
-                                                </div>
                                             </fieldset>
                                             <fieldset class="form-label-group">
                                                 <input type="password" name="PasswordConfirm" id="PasswordConfirm" class="form-control" tabindex="3" required />
-                                                <label for="PasswordConfirm">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
-                                                <div id="password-confirm-message" class="invalid-feedback">
+                                                <label for="PasswordConfirm">Confirm password</label>
+                                                <div id="password-confirm-msg" class="invalid-feedback">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MismatchPassword")
                                                 </div>
                                             </fieldset>
@@ -77,18 +74,9 @@
                                                     <div class="g-recaptcha" data-sitekey="6LcmwmAUAAAAAOaDjdjGVgSHYj9fzZH-1-U8Ffd4"></div>
                                                 </div>
                                             </div>
-                                            <div class="invalid-feedback invalid-feedback-login login-error">
+                                            <div class="invalid-feedback" id="register-msg">
                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidEmailPassword")
                                             </div>
-                                            @*<div class="form-group row">
-                                                    <div class="col-md-6 col-12 text-center text-sm-left">
-                                                        <fieldset>
-                                                            <input type="checkbox" id="remember-me" class="chk-remember">
-                                                            <label for="remember-me"> Remember</label>
-                                                        </fieldset>
-                                                    </div>
-                                                    <div class="col-md-6 col-12 float-sm-left text-center text-sm-right"><a href="account-login.html#" class="card-link">Forgot Password?</a></div>
-                                                </div>*@
                                             <button type="submit" id="btn-register" class="btn-gradient-primary btn-block my-1">Register</button>
                                             <p class="text-center">
                                                 <a asp-controller="Authentication" asp-action="Login" class="card-link">
@@ -96,8 +84,6 @@
                                                 </a>
                                             </p>
                                         </form>
-                                        <div id="register-thankyou" class="mt-1 text-center">
-                                        </div>
                                     </div>
                                 </div>
                             </div>
