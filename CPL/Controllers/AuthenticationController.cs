@@ -175,6 +175,11 @@ namespace CPL.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult GetConfirm()
+        {
+            return PartialView("_LogoutConfirm");
+        }
+
         private IActionResult RedirectToLocal(string returnUrl = "")
         {
             if (!string.IsNullOrWhiteSpace(returnUrl))
