@@ -1,65 +1,6 @@
 ﻿var Dashboard = {
     init: function () {
-        $('#dt-history').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "autoWidth": false,
-            "ajax": {
-                url: "/Dashboard/SearchGameHistory",
-                type: 'POST'
-            },
-            //"language": DTLang.getLang(),
-            "columns": [
-                {
-                    "data": "CreatedDateInString",
-                    "render": function (data, type, full, meta) {
-                        return full.createdDateInString;
-                    }
-                },
-                {
-                    "data": "CreatedTimeInString",
-                    "render": function (data, type, full, meta) {
-                        return full.createdTimeInString;
-                    }
-                },
-                {
-                    "data": "GameType",
-                    "render": function (data, type, full, meta) {
-                        return full.gameType;
-                    }
-                },
-                {
-                    "data": "Amount",
-                    "render": function (data, type, full, meta) {
-                        return "<i class='cpl-token-grey-sm'></i> " + full.amountInString;
-                    }
-                },
-                {
-                    "data": "Result",
-                    "render": function (data, type, full, meta) {
-                        if (full.result == "1") {
-                            return "<div class='badge badge-success'>Win</div>";
-                        } else if (full.result == "0")
-                            return "<div class='badge badge-danger'>Lose</div>";
-                        else
-                            return "";
-                    }
-                },
-                {
-                    "data": "AwardInString",
-                    "render": function (data, type, full, meta) {
-                        return full.awardInString;
-                    }
-                },
-                {
-                    "data": "BalanceInString",
-                    "render": function (data, type, full, meta) {
-                        return full.balanceInString;
-                    }
-                }
-            ],
-        });
-
+        Dashboard.loadHistoryDatatable();
         $('.owl-carousel').owlCarousel({
             loop: true,
             margin: 15,
@@ -83,6 +24,31 @@
             autoplay: true,
             autoplayTimeout: 3000,
             autoplayHoverPause: true
+        })
+
+        $("#btn-depo-withdr").on("click", function () {
+            $("#wallet-view").hide();
+            $("#deposite-withdrawal-view").show();
+
+            $.ajax({
+                url: "/Dashboard/DepositeAndWithdrawal/",
+                type: "GET",
+                beforeSend: function () {
+                    $("#btn-depo-withdr").attr("disabled", true);
+                    $("#btn-depo-withdr").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-depo-withdr").text());
+                },
+                data: {
+                },
+                success: function (data) {
+                    $("#deposite-withdrawal-view").html(data);
+                    Dashboard.bindCopy();
+                    Dashboard.bindBtcOut();
+                },
+                complete: function (data) {
+                    $("#btn-depo-withdr").attr("disabled", false);
+                    $("#btn-depo-withdr").html($("#btn-depo-withdr").text());
+                }
+            });
         })
 
         $.ajax({
@@ -226,6 +192,96 @@
                     new Highcharts.Chart("bet-statistic-chart", options);
                 }
             }
+        })
+    },
+    bindCopy: function () {
+        if ($(".btn-copy").length > 0) {
+            var clipboard = new ClipboardJS('.btn-copy');
+            clipboard.on('success', function (e) {
+                toastr.success($("#CopiedText").val());
+            });
+        }
+    },
+    bindBtcOut: function () {
+        $("#txt-btcOut").on("click", function () {
+            $.ajax({
+                url: "/Dashboard/WithdrawBTC/",
+                type: "GET",
+                beforeSend: function () {
+                    //$("#txt-btcOut").attr("disabled", true);
+                    //$("#txt-btcOut").html("<i class='fa fa-spinner fa-spin'></i> " + $("#txt-btcOut").text());
+                },
+                data: {
+                },
+                success: function (data) {
+                    $("#btcOutView").html(data);
+                },
+                complete: function (data) {
+                    $("#txt-btcOut").attr("disabled", false);
+                    $("#txt-btcOut").html($("#txt-btcOut").text());
+                }
+            });
+        })
+    },
+    loadHistoryDatatable: function () {
+        $('#dt-history').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                url: "/Dashboard/SearchGameHistory",
+                type: 'POST'
+            },
+            //"language": DTLang.getLang(),
+            "columns": [
+                {
+                    "data": "CreatedDateInString",
+                    "render": function (data, type, full, meta) {
+                        return full.createdDateInString;
+                    }
+                },
+                {
+                    "data": "CreatedTimeInString",
+                    "render": function (data, type, full, meta) {
+                        return full.createdTimeInString;
+                    }
+                },
+                {
+                    "data": "GameType",
+                    "render": function (data, type, full, meta) {
+                        return full.gameType;
+                    }
+                },
+                {
+                    "data": "Amount",
+                    "render": function (data, type, full, meta) {
+                        return "<i class='cpl-token-grey-sm'></i> " + full.amountInString;
+                    }
+                },
+                {
+                    "data": "Result",
+                    "render": function (data, type, full, meta) {
+                        if (full.result == "1") {
+                            return "<div class='badge badge-success'>Win</div>";
+                        } else if (full.result == "0")
+                            return "<div class='badge badge-danger'>Lose</div>";
+                        else
+                            return "";
+                    }
+                },
+                {
+                    "data": "AwardInString",
+                    "render": function (data, type, full, meta) {
+                        return full.awardInString;
+                    }
+                },
+                {
+                    "data": "BalanceInString",
+                    "render": function (data, type, full, meta) {
+                        return full.balanceInString;
+                    }
+                }
+            ],
         });
     }
 }
