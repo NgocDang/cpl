@@ -47,23 +47,15 @@ namespace CPL.Controllers
 
         public IActionResult Index()
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
-            var model = new DepositAndWithdrawViewModel
-            {
-                BtcAmount = user.BTCAmount,
-                BtcAddress = user.BTCHDWalletAddress,
-                EthAmount = user.ETHAmount,
-                EthAddress = user.ETHHDWalletAddress,
-                BtcQrCodeImage = $"https://blockchain.info/qr?data=bitcoin:{user.BTCHDWalletAddress}",
-                EthQrCodeImage = $"https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl={user.ETHHDWalletAddress}&choe=UTF-8"
-            };
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+            var model = Mapper.Map<DepositAndWithdrawViewModel>(user);
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult DoDepositeWithdrawBTC(WithdrawBtcViewModel viewModel)
+        public IActionResult DoDepositWithdrawBTC(WithdrawBtcViewModel viewModel)
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             // Validate max BTC Amount
             if (viewModel.BtcAmount > user.BTCAmount)
                 return new JsonResult(new { success = false, name = "btc-amount", message = "Insufficient money. Please try another." });
@@ -76,9 +68,9 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult DoDepositeWithdrawETH(WithdrawEthViewModel viewModel)
+        public IActionResult DoDepositWithdrawETH(WithdrawEthViewModel viewModel)
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             // Validate max BTC Amount
             if (viewModel.EthAmount > user.ETHAmount)
                 return new JsonResult(new { success = false, name = "eth-amount", message = "Insufficient money. Please try another." });

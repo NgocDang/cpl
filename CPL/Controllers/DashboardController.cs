@@ -56,7 +56,7 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
-        public IActionResult DepositeAndWithdrawal()
+        public IActionResult DepositAndWithdrawal()
         {
             var viewModel = new DepositAndWithdrawViewModel();
             return View(viewModel);

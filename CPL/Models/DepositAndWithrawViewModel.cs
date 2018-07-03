@@ -4,11 +4,11 @@ namespace CPL.Models
 {
     public class DepositAndWithdrawViewModel
     {
-        public decimal BtcAmount { get; set; }
-        public decimal EthAmount { get; set; }
-        public string BtcAddress { get; set; }
-        public string EthAddress { get; set; }
-        public string BtcQrCodeImage { get; set; }
-        public string EthQrCodeImage { get; set; }
+        public decimal BTCAmount { get; set; }
+        public decimal ETHAmount { get; set; }
+        public string BTCHDWalletAddress { get; set; }
+        public string ETHHDWalletAddress { get; set; }
+        public string BTCQrCodeImage { get; set; }
+        public string ETHQrCodeImage { get; set; }
     }
 }
