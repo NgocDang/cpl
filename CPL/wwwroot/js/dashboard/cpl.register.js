@@ -1,34 +1,32 @@
 ﻿var Register = {
     init: function () {
-        $("#form-register").validate();
-
+        Register.bindRegister();
+    },
+    bindRegister: function () {
         $("#btn-register").on("click", function () {
             var isFormValid = $("#form-register").valid();
             var isPasswordValid = $("#Password").val() == $("#PasswordConfirm").val();
             if (!isPasswordValid) {
-                $("#password-confirm-message").show();
+                $("#password-confirm-msg").show();
             } else {
-                $("#password-confirm-message").hide();
+                $("#password-confirm-msg").hide();
             }
             if (grecaptcha.getResponse() == '') {
-                $(".login-error").html($('#captchaMessage').val());
-                $(".login-error").addClass("invalid-feedback").show();
+                $("#register-msg").html($('#captchaMessage').val());
+                $("#register-msg").show();
                 return false;
             }
-            else {
-                $(".login-error").hide();
-            }
+
             if (isFormValid && isPasswordValid) {
-                $("#register-error").hide();
-                //$("#register-message").hide();
-                $("#Email").removeClass("border-danger");
+                $("#register-msg").hide();
+                $("#email-msg").hide();
                 $.ajax({
                     url: "/Authentication/Register/",
                     type: "POST",
-                    //beforeSend: function () {
-                    //    $("#btn-register").attr("disabled", true);
-                    //    $("#btn-register").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-register").text());
-                    //},
+                    beforeSend: function () {
+                        $("#btn-register").attr("disabled", true);
+                        $("#btn-register").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-register").text());
+                    },
                     data: {
                         Email: $("#Email").val(),
                         Password: $("#Password").val(),
@@ -40,18 +38,16 @@
                                 toastr.success(data.message, 'Success!');
                                 window.location.href = data.url;
                             } else {
-                                $("#register-thankyou").html(data.message);
-                                $("#register-thankyou").show();
                                 $("#form-register").hide();
                                 toastr.success(data.message, 'Success!');
                             }
                         } else {
-                            if (data.name == "email") {
-                                $("#Email").addClass("border-danger");
-                            }
+                            if (data.name == "email")
+                                $("#email-msg").html(data.message).show();
+                            else
+                                $("#register-message").html(data.message).show();
+
                             toastr.error(data.message, 'Error!');
-                            $("#register-message").html(data.message);
-                            $("#register-message").removeClass("text-muted").addClass("invalid-feedback").show();
                         }
                     },
                     complete: function (data) {
@@ -62,7 +58,6 @@
             }
             return false;
         });
-        
     }
 };
 
