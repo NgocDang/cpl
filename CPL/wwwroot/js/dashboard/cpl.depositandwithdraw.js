@@ -51,13 +51,13 @@
                     } else {
                         if (data.name === "wallet") {
                             $(_this).parents("form").find(".amount-error").hide();
-                            $(_this).parents("form").find(".address-error").html(data.message);
                             $(_this).parents("form").find(".address-error").show();
+                            $(_this).parents("form").find(".address-error").html(data.message);
                         }
                         if (data.name === "amount") {
                             $(_this).parents("form").find(".address-error").hide();
-                            $(_this).parents("form").find(".amount-error").show();
                             $(_this).parents("form").find(".amount-error").html(data.message);
+                            $(_this).parents("form").find(".amount-error").show();
                         }
                     }
                 },
