@@ -17,7 +17,7 @@ using CPL.Misc.Utils;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.Guest)]
+    [Permission(EnumRole.User)]
     public class ProfileController : Controller
     {
         private readonly ILangService _langService;
