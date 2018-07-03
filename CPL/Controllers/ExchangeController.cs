@@ -85,7 +85,7 @@ namespace CPL.Controllers
                     _unitOfWork.SaveChanges();
                     return new JsonResult(new { success = true, message = "Success!" });
                 }
-                else if (viewModel.FromAmount <= user.TokenAmount)
+                else if (viewModel.FromCurrency == EnumCurrency.CPL.ToString() && viewModel.FromAmount <= user.TokenAmount)
                 {
                     if (viewModel.ToCurrency == EnumCurrency.BTC.ToString())
                     {
