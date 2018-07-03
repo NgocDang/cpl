@@ -32,21 +32,21 @@
                 type: "POST",
                 data: {
                     BtcAmount: $("#btc-amount").val(),
-                    BtcAddress: $("#btc-address").val(),
+                    BtcAddress: $("#address-btc").val(),
                 },
                 success: function (data) {
                     if (data.success) {
-                        $("#btc-address-error").hide();
+                        $("#error-address-btc").hide();
                         $("#btc-amount-error").hide();
                         toastr.success(data.message, 'Success!');
                     } else {
                         if (data.name === "btc-wallet") {
                             $("#btc-amount-error").hide();
-                            $("#btc-address-error").show();
-                            $("#btc-address-error").text(data.message);
+                            $("#error-address-btc").show();
+                            $("#error-address-btc").text(data.message);
                         }
                         if (data.name === "btc-amount") {
-                            $("#btc-address-error").hide();
+                            $("#error-address-btc").hide();
                             $("#btc-amount-error").show();
                             $("#btc-amount-error").text(data.message);
                         }
