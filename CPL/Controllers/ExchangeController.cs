@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
@@ -66,36 +67,40 @@ namespace CPL.Controllers
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
             {
-                if (viewModel.FromCurrency == "BTC" && viewModel.FromAmount <= user.BTCAmount)
+                if (viewModel.FromCurrency == EnumCurrency.BTC.ToString() && viewModel.FromAmount <= user.BTCAmount)
                 {
                     user.BTCAmount -= viewModel.FromAmount;
-                    user.TokenAmount += viewModel.ToAmount;
+                    var tokenAmount = viewModel.FromAmount * viewModel.BTCTokenRate;
+                    user.TokenAmount += tokenAmount;
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
                     return new JsonResult(new { success = true, message = "Success!" });
                 }
-                else if (viewModel.FromCurrency == "ETH" && viewModel.FromAmount <= user.ETHAmount)
+                else if (viewModel.FromCurrency == EnumCurrency.ETH.ToString() && viewModel.FromAmount <= user.ETHAmount)
                 {
                     user.ETHAmount -= viewModel.FromAmount;
-                    user.TokenAmount += viewModel.ToAmount;
+                    var tokenAmount = viewModel.FromAmount * viewModel.ETHBTCRate * viewModel.BTCTokenRate;
+                    user.TokenAmount += tokenAmount;
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
                     return new JsonResult(new { success = true, message = "Success!" });
                 }
                 else if (viewModel.FromAmount <= user.TokenAmount)
                 {
-                    if (viewModel.ToCurrency == "BTC")
+                    if (viewModel.ToCurrency == EnumCurrency.BTC.ToString())
                     {
-                        user.BTCAmount += viewModel.ToAmount;
                         user.TokenAmount -= viewModel.FromAmount;
+                        var currencyAmount = viewModel.FromAmount / viewModel.BTCTokenRate;
+                        user.BTCAmount += currencyAmount;
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
                         return new JsonResult(new { success = true, message = "Success!" });
                     }
                     else
                     {
-                        user.ETHAmount += viewModel.ToAmount;
                         user.TokenAmount -= viewModel.FromAmount;
+                        var currencyAmount = (viewModel.FromAmount / viewModel.BTCTokenRate) / viewModel.ETHBTCRate;
+                        user.ETHAmount += currencyAmount;
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
                         return new JsonResult(new { success = true, message = "Success!" });
