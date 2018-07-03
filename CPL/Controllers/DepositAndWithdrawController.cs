@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
@@ -56,7 +57,7 @@ namespace CPL.Controllers
         public IActionResult DoDepositWithdraw(WithdrawViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
-            if (viewModel.Currency == "BTC")
+            if (viewModel.Currency == EnumCurrency.BTC.ToString())
             {
                 // Validate max BTC Amount
                 if (viewModel.Amount > user.BTCAmount)
@@ -65,34 +66,44 @@ namespace CPL.Controllers
                 //Validate BTC wallet address
                 if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidBTCAddress(viewModel.Address)))
                     return new JsonResult(new { success = false, name = "wallet", message = "Invalid BTC wallet address. Please try another." });
+
+                // Save to DB
+                user.BTCAmount -= viewModel.Amount;
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
             }
-            else if (viewModel.Currency == "ETH")
+            else if (viewModel.Currency == EnumCurrency.ETH.ToString())
             {
-                // Validate max BTC Amount
+                // Validate max ETH Amount
                 if (viewModel.Amount > user.ETHAmount)
                     return new JsonResult(new { success = false, name = "amount", message = "Insufficient money. Please try another." });
 
                 //Validate ETH wallet address
                 if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidETHAddress(viewModel.Address)))
                     return new JsonResult(new { success = false, name = "wallet", message = "Invalid ETH wallet address. Please try another." });
+
+                // Save to DB
+                user.ETHAmount -= viewModel.Amount;
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
             }
 
             return new JsonResult(new { success = true, message = "success" });
         }
 
         [HttpPost]
-        public string DecodeQR(IFormFile formFile)
+        public IActionResult DecodeQR(DecodeQrViewModel viewModel)
         {
-            System.DrawingCore.Bitmap bitmap = new System.DrawingCore.Bitmap(@"D:\DamTran\Image\qr.png");
+            System.DrawingCore.Bitmap bitmap = new System.DrawingCore.Bitmap(viewModel.FormFile.OpenReadStream());
             try
             {
                 BarcodeReader reader = new BarcodeReader { AutoRotate = true, TryInverted = true };
-                Result result = reader.Decode(bitmap);
-                return result.Text;
+                string qrcode = reader.Decode(bitmap).Text;
+                return new JsonResult(new { success = true, address = qrcode });
             }
             catch
             {
-                return "Cannot decode the QR code";
+                return new JsonResult(new { success = false });
             }
         }
     }

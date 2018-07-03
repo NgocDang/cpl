@@ -4,27 +4,7 @@
         DepositAndWithdraw.bindWithdraw();
         DepositAndWithdraw.bindMax();
         DepositAndWithdraw.bindDoWithdraw();
-
-        $(".btn-qrcode").on("click", function () {
-            $(".file-qrcode").click();
-        });
-
-        $(".file-qrcode").on("change", function () {
-            $.ajax({
-                url: "/DepositAndWithdraw/DecodeQR/",
-                type: "POST",
-                data: {
-                    formFile: $(".file-qrcode").get(0)
-                },
-                success: function (data) {
-                    }
-                },
-                complete: function (data) {
-                }
-            });
-            return false;
-        });
-
+        DepositAndWithdraw.bindReadQrCode();
     },
     bindCopy: function () {
         if ($(".btn-copy").length > 0) {
@@ -37,10 +17,10 @@
     bindWithdraw: function () {
         $(".btn-withdraw").on("click", function () {
             if ($(this).parents("section").find(".panel-withdraw:visible").length) {
-                $(this).parents("section").find(".panel-withdraw").slideUp("slow");
+                $(this).parents("section").find(".panel-withdraw").slideUp();
             } else {
-                $(".panel-withdraw").slideUp("slow");
-                $(this).parents("section").find(".panel-withdraw").slideToggle("slow");
+                $(".panel-withdraw").slideUp();
+                $(this).parents("section").find(".panel-withdraw").slideToggle();
             }
         });
     },
@@ -80,10 +60,39 @@
                             $(_this).parents("form").find(".amount-error").show();
                         }
                     }
-                },
-                complete: function (data) {
                 }
             });
+            return false;
+        });
+    },
+    bindReadQrCode: function () {
+        $(".btn-qrcode").on("click", function () {
+            $(this).parents("form").find(".file-qrcode").click();
+        });
+        $(".file-qrcode").change(function () {
+            var _this = this;
+            var image = $(_this).parents("form").find(".file-qrcode")[0].files[0];
+            if (image.size > 0) {
+                var formData = new FormData();
+                formData.append('FormFile', image);
+                $.ajax({
+                    url: "/DepositAndWithdraw/DecodeQR/",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function (data) {
+                        if (data.success) {
+                            $(_this).parents("form").find(".address-value").val(data.address);
+                            toastr.success('Success!');
+                        } else {
+                            toastr.error('Error!');
+                        }
+                    },
+                    complete: function (data) {
+                    }
+                })
+            };
             return false;
         });
     }
