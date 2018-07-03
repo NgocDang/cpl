@@ -2,20 +2,18 @@
 using CPL.Core.Interfaces;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
+using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace CPL.Controllers
 {
+    [Permission(EnumRole.User)]
     public class DashboardController : Controller
     {
         private readonly ILangService _langService;
@@ -60,7 +58,7 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
-        public IActionResult DepositeAndWithdrawal()
+        public IActionResult DepositAndWithdrawal()
         {
             var viewModel = new DepositAndWithdrawViewModel();
             return View(viewModel);
@@ -189,7 +187,7 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _gameHistoryService.Query()
-                        .Include(x=>x.Game)
+                        .Include(x => x.Game)
                         .Select()
                         .AsQueryable()
                         .Where(x => x.SysUserId == user.Id)
@@ -202,7 +200,7 @@ namespace CPL.Controllers
                         .Count();
 
                 return _gameHistoryService.Query()
-                        .Include(x=>x.Game)
+                        .Include(x => x.Game)
                         .Select()
                         .AsQueryable()
                         .Where(x => x.SysUserId == user.Id)

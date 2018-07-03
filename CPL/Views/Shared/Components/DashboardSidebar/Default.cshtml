@@ -4,16 +4,16 @@
         <a class="navigation-brand d-none d-md-block d-lg-block d-xl-block" href="index.html"><img class="brand-logo" alt="crypto ico admin logo" src="~/images/logo_white.png" /></a>
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             <li class="active">
-                <a asp-controller="Dashboard" asp-action="Index"><i class="icon-grid"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
+                <a asp-controller="Dashboard" asp-action="Index"><i class="icon-grid"></i><span class="menu-title" data-i18n="">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</span></a>
             </li>
             <li class="nav-item">
-                <a href="#"><i class="icon-user-following"></i><span class="menu-title" data-i18n="">Profile</span></a>
+                <a href="#"><i class="icon-user-following"></i><span class="menu-title" data-i18n="">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</span></a>
                 <ul class="menu-content">
                     <li>
-                        <a class="menu-item" asp-controller="Profile" asp-action="EditAccount">Edit Account</a>
+                        <a class="menu-item" asp-controller="Profile" asp-action="EditAccount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditAccount")</a>
                     </li>
                     <li>
-                        <a class="menu-item" asp-controller="Profile" asp-action="EditCredential">Edit Credential</a>
+                        <a class="menu-item" asp-controller="Profile" asp-action="EditCredential">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
                     </li>
                 </ul>
             </li>
