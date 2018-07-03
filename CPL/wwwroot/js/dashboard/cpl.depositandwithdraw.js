@@ -1,87 +1,63 @@
 ﻿var DepositAndWithdraw = {
     init: function () {
+        DepositAndWithdraw.bindCopy();
+        DepositAndWithdraw.bindWithdraw();
+        DepositAndWithdraw.bindMax();
+        DepositAndWithdraw.bindDoWithdraw();
+
+    },
+    bindCopy: function () {
         if ($(".btn-copy").length > 0) {
             var clipboard = new ClipboardJS('.btn-copy');
             clipboard.on('success', function (e) {
                 toastr.success($("#CopiedText").val());
             });
         }
-
-        $("#btn-withdraw-btc").on("click", function () {
-            $("#panel-withdraw-btc").slideToggle("slow");
-            $("#panel-withdraw-eth").slideUp("slow");
+    },
+    bindWithdraw: function () {
+        $(".btn-withdraw").on("click", function () {
+            if ($(this).parents("section").find(".panel-withdraw:visible").length) {
+                $(this).parents("section").find(".panel-withdraw").slideUp("slow");
+            } else {
+                $(".panel-withdraw").slideUp("slow");
+                $(this).parents("section").find(".panel-withdraw").slideToggle("slow");
+            }
         });
-
-        $("#btn-withdraw-eth").on("click", function () {
-            $("#panel-withdraw-eth").slideToggle("slow");
-            $("#panel-withdraw-btc").slideUp("slow");
+    },
+    bindMax: function () {
+        $(".btn-max").on("click", function () {
+            if ($(this).parents("form").find("input.max-amount").length) {
+                $(this).parents("form").find(".amount-value").val($(this).parents("form").find(".max-amount").val());
+            }
         });
-
-        $("#btn-max-btc").on("click", function () {
-            $("#btc-amount").val($("#available-bct").text());
-        });
-
-        $("#btn-max-eth").on("click", function () {
-            $("#eth-amount").val($("#available-eth").text());
-        });
-
-        $("#btc-withdraw").on("click", function () {
-            $("#form-withdraw-btc").valid();
+    },
+    bindDoWithdraw: function () {
+        $(".btn-do-withdraw").on("click", function () {
+            $(this).parents("form").valid();
+            var _this = this;
             $.ajax({
-                url: "/DepositAndWithdraw/DoDepositWithdrawBTC/",
+                url: "/DepositAndWithdraw/DoDepositWithdraw/",
                 type: "POST",
                 data: {
-                    BtcAmount: $("#btc-amount").val(),
-                    BtcAddress: $("#address-btc").val(),
+                    Currency: $(_this).parents("form").find(".currency").val(),
+                    Amount: $(_this).parents("form").find(".amount-value").val(),
+                    Address: $(_this).parents("form").find(".address-value").val(),
                 },
                 success: function (data) {
                     if (data.success) {
-                        $("#error-address-btc").hide();
-                        $("#btc-amount-error").hide();
+                        $(_this).parents("form").find(".address-error").hide();
+                        $(_this).parents("form").find(".amount-error").hide();
                         toastr.success(data.message, 'Success!');
                     } else {
-                        if (data.name === "btc-wallet") {
-                            $("#btc-amount-error").hide();
-                            $("#error-address-btc").show();
-                            $("#error-address-btc").text(data.message);
+                        if (data.name === "wallet") {
+                            $(_this).parents("form").find(".amount-error").hide();
+                            $(_this).parents("form").find(".address-error").html(data.message);
+                            $(_this).parents("form").find(".address-error").show();
                         }
-                        if (data.name === "btc-amount") {
-                            $("#error-address-btc").hide();
-                            $("#btc-amount-error").show();
-                            $("#btc-amount-error").text(data.message);
-                        }
-                    }
-                },
-                complete: function (data) {
-                }
-            });
-            return false;
-        });
-
-        $("#eth-withdraw").on("click", function () {
-            $("#form-withdraw-eth").valid();
-            $.ajax({
-                url: "/DepositAndWithdraw/DoDepositWithdrawETH/",
-                type: "POST",
-                data: {
-                    EthAmount: $("#eth-amount").val(),
-                    EthAddress: $("#eth-address").val(),
-                },
-                success: function (data) {
-                    if (data.success) {
-                        $("#error-address-eth").hide();
-                        $("#error-amount-eth").hide();
-                        toastr.success(data.message, 'Success!');
-                    } else {
-                        if (data.name === "eth-wallet") {
-                            $("#error-amount-eth").hide();
-                            $("#error-address-eth").show();
-                            $("#error-address-eth").text(data.message);
-                        }
-                        if (data.name === "eth-amount") {
-                            $("#error-address-eth").hide();
-                            $("#error-amount-eth").show();
-                            $("#error-amount-eth").text(data.message);
+                        if (data.name === "amount") {
+                            $(_this).parents("form").find(".address-error").hide();
+                            $(_this).parents("form").find(".amount-error").show();
+                            $(_this).parents("form").find(".amount-error").html(data.message);
                         }
                     }
                 },
