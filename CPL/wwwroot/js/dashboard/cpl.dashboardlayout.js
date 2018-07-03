@@ -11,7 +11,7 @@
                 type: "GET",
                 success: function (data) {
                     $("#modal").html(data);
-                    $("#exchange").modal("show");
+                    $("#logout").modal("show");
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
