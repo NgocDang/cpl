@@ -50,7 +50,7 @@
                 <div class="col-md-6">
                     <div class="owl-carousel owl-theme">
                         <div class="item">
-                            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol") Amount</h6>
+                            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</h6>
                             <div class="card pull-up">
                                 <div class="card-content">
                                     <div class="card-body" id="btc-card">
