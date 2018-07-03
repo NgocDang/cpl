@@ -8,6 +8,7 @@ using CPL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using ZXing;
 
 namespace CPL.Controllers
 {
@@ -77,6 +78,22 @@ namespace CPL.Controllers
             }
 
             return new JsonResult(new { success = true, message = "success" });
+        }
+
+        [HttpPost]
+        public string DecodeQR(IFormFile formFile)
+        {
+            System.DrawingCore.Bitmap bitmap = new System.DrawingCore.Bitmap(@"D:\DamTran\Image\qr.png");
+            try
+            {
+                BarcodeReader reader = new BarcodeReader { AutoRotate = true, TryInverted = true };
+                Result result = reader.Decode(bitmap);
+                return result.Text;
+            }
+            catch
+            {
+                return "Cannot decode the QR code";
+            }
         }
     }
 }

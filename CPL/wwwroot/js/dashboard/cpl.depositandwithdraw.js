@@ -5,6 +5,26 @@
         DepositAndWithdraw.bindMax();
         DepositAndWithdraw.bindDoWithdraw();
 
+        $(".btn-qrcode").on("click", function () {
+            $(".file-qrcode").click();
+        });
+
+        $(".file-qrcode").on("change", function () {
+            $.ajax({
+                url: "/DepositAndWithdraw/DecodeQR/",
+                type: "POST",
+                data: {
+                    formFile: $(".file-qrcode").get(0)
+                },
+                success: function (data) {
+                    }
+                },
+                complete: function (data) {
+                }
+            });
+            return false;
+        });
+
     },
     bindCopy: function () {
         if ($(".btn-copy").length > 0) {
