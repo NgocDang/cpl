@@ -85,8 +85,6 @@
                         FromAmount: $(_this).parents("section").find(".from-amount").val(),
                         ToCurrency: $(_this).parents("section").find(".to-currency").val(),
                         ToAmount: $(_this).parents("section").find(".to-amount").val(),
-                        BTCTokenRate: $(".btc-token-rate").val(),
-                        ETHBTCRate: $(".eth-btc-rate").val()
                     },
                     success: function (data) {
                         $("#modal").html(data);
@@ -117,8 +115,6 @@
                     FromAmount: $(_this).parents("#modal").find("#FromAmount").val(),
                     ToCurrency: $(_this).parents("#modal").find("#ToCurrency").val(),
                     ToAmount: $(_this).parents("#modal").find("#ToAmount").val(),
-                    BTCTokenRate: $(".btc-token-rate").val(),
-                    ETHBTCRate: $(".eth-btc-rate").val()
                 },
                 success: function (data) {
                     if (data.success) {

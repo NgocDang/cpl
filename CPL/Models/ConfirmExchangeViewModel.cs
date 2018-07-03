@@ -12,7 +12,5 @@ namespace CPL.Models
         public decimal FromAmount { get; set; }
         public string ToCurrency { get; set; }
         public decimal ToAmount { get; set; }
-        public decimal BTCTokenRate { get; set; }
-        public decimal ETHBTCRate { get; set; }
     }
 }

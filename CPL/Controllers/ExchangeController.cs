@@ -70,7 +70,7 @@ namespace CPL.Controllers
                 if (viewModel.FromCurrency == EnumCurrency.BTC.ToString() && viewModel.FromAmount <= user.BTCAmount)
                 {
                     user.BTCAmount -= viewModel.FromAmount;
-                    var tokenAmount = viewModel.FromAmount * viewModel.BTCTokenRate;
+                    var tokenAmount = viewModel.FromAmount * decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
                     user.TokenAmount += tokenAmount;
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
@@ -79,7 +79,7 @@ namespace CPL.Controllers
                 else if (viewModel.FromCurrency == EnumCurrency.ETH.ToString() && viewModel.FromAmount <= user.ETHAmount)
                 {
                     user.ETHAmount -= viewModel.FromAmount;
-                    var tokenAmount = viewModel.FromAmount * viewModel.ETHBTCRate * viewModel.BTCTokenRate;
+                    var tokenAmount = viewModel.FromAmount * CoinExchangeExtension.CoinExchanging() * decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
                     user.TokenAmount += tokenAmount;
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
@@ -90,7 +90,7 @@ namespace CPL.Controllers
                     if (viewModel.ToCurrency == EnumCurrency.BTC.ToString())
                     {
                         user.TokenAmount -= viewModel.FromAmount;
-                        var currencyAmount = viewModel.FromAmount / viewModel.BTCTokenRate;
+                        var currencyAmount = viewModel.FromAmount / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
                         user.BTCAmount += currencyAmount;
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
@@ -99,7 +99,7 @@ namespace CPL.Controllers
                     else
                     {
                         user.TokenAmount -= viewModel.FromAmount;
-                        var currencyAmount = (viewModel.FromAmount / viewModel.BTCTokenRate) / viewModel.ETHBTCRate;
+                        var currencyAmount = (viewModel.FromAmount / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value)) / CoinExchangeExtension.CoinExchanging();
                         user.ETHAmount += currencyAmount;
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
