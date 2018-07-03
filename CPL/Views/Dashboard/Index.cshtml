@@ -27,19 +27,19 @@
         <div class="content-body">
             <div class="row">
                 <div class="col-md-6 col-12">
-                    <h6 class="my-2">All asset in BTC</h6>
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllAsset") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
                     <div class="card pull-up">
                         <div class="card-content">
                             <div class="card-body">
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-md-8 col-12">
-                                            <p><strong>Your balance:</strong></p>
-                                            <h1>@Model.TotalBalance.ToString("#,##0.########") BTC</h1>
-                                            <p class="mb-0">Bonus <strong>+30%</strong> expires in 21 days.</p>
+                                            <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
+                                            <h1>@Model.TotalBalance.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h1>
+                                            <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bonus") <strong>+30%</strong> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ExpireIn") 21 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Days").</p>
                                         </div>
                                         <div class="col-md-4 col-12 text-center text-md-right">
-                                            <button type="button" class="btn-gradient-secondary mt-2">Play game <i class="la la-angle-right"></i></button>
+                                            <button type="button" class="btn-gradient-secondary mt-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PlayGame") <i class="la la-angle-right"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -50,16 +50,16 @@
                 <div class="col-md-6">
                     <div class="owl-carousel owl-theme">
                         <div class="item">
-                            <h6 class="my-2">BTC Amount</h6>
+                            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol") Amount</h6>
                             <div class="card pull-up">
                                 <div class="card-content">
                                     <div class="card-body" id="btc-card">
                                         <div class="col-12">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <p><strong>Balance:</strong></p>
+                                                    <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
                                                     <h1>@Model.BTCAmount.ToString("#,##0.########")</h1>
-                                                    <p class="mb-0">Increase <strong>+10%</strong></p>
+                                                    <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Increase") <strong>+10%</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -68,16 +68,16 @@
                             </div>
                         </div>
                         <div class="item">
-                            <h6 class="my-2">ETH Amount</h6>
+                            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</h6>
                             <div class="card pull-up">
                                 <div class="card-content">
                                     <div class="card-body" id="eth-card">
                                         <div class="col-12">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <p><strong>Balance:</strong></p>
+                                                    <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
                                                     <h1>@Model.ETHAmount.ToString("#,##0.########")</h1>
-                                                    <p class="mb-0">View <strong>transactions</strong></p>
+                                                    <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View") <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transactions")</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -86,16 +86,16 @@
                             </div>
                         </div>
                         <div class="item">
-                            <h6 class="my-2">CPL Amount</h6>
+                            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</h6>
                             <div class="card pull-up">
                                 <div class="card-content">
                                     <div class="card-body" id="cpl-card">
                                         <div class="col-12">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <p><strong>Balance:</strong></p>
+                                                    <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
                                                     <h1>@Model.TokenAmount.ToString("#,##0.########")</h1>
-                                                    <p class="mb-0">Check <strong>game history</strong></p>
+                                                    <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Check") <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameHistory")</strong></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -108,7 +108,7 @@
             </div>
             <div class="row match-height">
                 <div class="col-xl-8 col-12">
-                    <h6 class="my-2">Bet Statistic Chart</h6>
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BetStatisticChart")</h6>
                     <div class="card pull-up">
                         <div class="card-body">
                             <div id="bet-statistic-chart" class="height-300"></div>
@@ -116,7 +116,7 @@
                     </div>
                 </div>
                 <div class="col-xl-4 col-12">
-                    <h6 class="my-2">Holding Percentage</h6>
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HoldingPercentage")</h6>
                     <div class="card pull-up">
                         <div class="card-body">
                             <div id="holding-percentage-chart" class="height-300"></div>
@@ -126,20 +126,20 @@
             </div>
             <div class="row">
                 <div id="recent-transactions" class="col-12">
-                    <h6 class="my-2">Recent Transactions</h6>
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TransactionHistory")</h6>
                     <div class="card pull-up">
                         <div class="card-content">
                             <div class="">
                                 <table id="dt-history" class="table responsive table-hover table-xl mb-0">
                                     <thead>
                                         <tr>
-                                            <th class="border-top-0">Date</th>
-                                            <th class="border-top-0">Time</th>
-                                            <th class="border-top-0">GameType</th>
-                                            <th class="border-top-0">Amount</th>
-                                            <th class="border-top-0">Result</th>
-                                            <th class="border-top-0">Award</th>
-                                            <th class="border-top-0">Balance</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Date")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Time")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameType")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</th>
                                         </tr>
                                     </thead>
                                 </table>
