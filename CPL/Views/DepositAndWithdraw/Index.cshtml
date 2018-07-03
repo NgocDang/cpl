@@ -73,48 +73,54 @@
                                             <div class="media">
                                                 <div class="media-body">
                                                     <h5 class="mt-0 text-capitalize">Bitcoin</h5>
-                                                    <p class="text-muted mb-0 font-small-3 wallet-address">0xd38d9eeb5b9617d758cee2c683e1d385637635e9</p>
-                                                    <button type="button" class="btn btn-sm round mr-1 mt-1"><i class="fas fa-copy"></i> Copy</button>
+                                                    <p id="BTCAddress" class="text-muted mb-0 font-small-3 wallet-address">@Model.BTCHDWalletAddress</p>
+                                                    <button type="button" class="btn btn-sm round mr-1 mt-1 btn-copy" data-clipboard-target="#BTCAddress"><i class="fas fa-copy"></i> Copy</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <h6>0.019842 BTC</h6>
+                                            <h6>@Model.BTCAmount BTC</h6>
                                             <p class="text-muted mb-0 font-small-3">~ $2650.78</p>
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <img class="img-fluid" src="https://pixinvent.com/demo/crypto-ico-admin/app-assets/images/icons/sample-qr.png">
+                                            <img class="img-fluid p-2" src=@Model.BTCQrCodeImage>
                                         </div>
 
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <a href="#">Withdraw</a>
+                                            <button class="mb-0 btn-sm btn btn-outline-danger round btn-withdraw">Withdraw</button>
                                         </div>
                                     </div>
-                                    <hr>
-                                    <p class="mt-2">You are about to withdraw <span class="text-bold-700 text-uppercase mb-0">BTC</span> from your account</p>
+                                    <div class="panel-withdraw" style="display:none">
+                                        <hr>
+                                        <p class="mt-2">You are about to withdraw <span class="text-bold-700 text-uppercase mb-0">BTC</span> from your account</p>
 
-                                    <form class="form-horizontal form-purchase-token row" action="buy-ico.html">
-                                        <div class="col-lg-2 col-md-3 col-sm-12 col-12">
-                                            <fieldset class="form-label-group mb-0">
-                                                <input type="text" class="form-control" id="ico-token" value="5000" required="" autofocus="">
-                                                <label for="ico-token">Amount</label>
-                                            </fieldset>
-                                            <button type="button" class="btn btn-sm round mr-1 mt-1"><i class="fas fa-angle-double-up"></i> Max</button>
-                                        </div>
-                                        <div class="col-lg-1 col-md-1 col-sm-12 col-12 mb-1 text-center">
-                                            <span class="la la-arrow-right"></span>
-                                        </div>
-                                        <div class="col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
-                                            <fieldset class="form-label-group mb-0">
-                                                <input type="text" class="form-control" id="wallet-address" value="0XD38D9EEB5B9617D758CEE2C683E1D385637635E9" required="" autofocus="">
-                                                <label for="wallet-address">Address</label>
-                                            </fieldset>
-                                            <button type="button" class="btn btn-sm round mr-1 mt-1"><i class="fas fa-qrcode"></i> QR Code</button>
-                                        </div>
-                                        <div class="col-lg-2 col-md-2 col-12 text-center">
-                                            <button type="submit" class="btn-gradient-secondary">Withdraw</button>
-                                        </div>
-                                    </form>
+                                        <form class="form-horizontal form-purchase-token row form-withdraw">
+                                            <div class="col-lg-4 col-md-3 col-sm-12 col-12">
+                                                <fieldset class="form-label-group mb-0">
+                                                    <input type="number" name="btc-amount" class="form-control amount-value" value="0" required="" autofocus="" min="0" max="@Model.BTCAmount" step="any">
+                                                    <label for="btc-amount">Amount</label>
+                                                </fieldset>
+                                                <div class="invalid-feedback amount-error"></div>
+                                                <button type="button" class="btn btn-sm round mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> Max</button>
+                                                <input type="hidden" value="@Model.BTCAmount" class="max-amount" />
+                                            </div>
+                                            <div class="col-lg-1 col-md-1 col-sm-12 col-12 mb-1 text-center">
+                                                <span class="la la-arrow-right"></span>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                <fieldset class="form-label-group mb-0">
+                                                    <input type="text" class="form-control address-value" name="address-btc" required="" autofocus="">
+                                                    <label for="address-btc">Address</label>
+                                                </fieldset>
+                                                <div class="invalid-feedback address-error"></div>
+                                                <button type="button" id="btn-qrcode" class="btn btn-sm round mr-1 mt-1"><i class="fas fa-qrcode"></i> QR Code</button>
+                                            </div>
+                                            <div class="col-lg-2 col-md-2 col-12 text-center">
+                                                <button type="submit" class="btn btn-gradient-secondary btn-do-withdraw">Withdraw</button>
+                                            </div>
+                                            <input type="hidden" class="currency" value="BTC" />
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -133,21 +139,52 @@
                                             <div class="media">
                                                 <div class="media-body">
                                                     <h5 class="mt-0 text-capitalize">Ethereum</h5>
-                                                    <p class="text-muted mb-0 font-small-3 wallet-address">0xd38d9eeb5b9617d758cee2c683e1d385637635e9</p>
-                                                    <button type="button" class="btn btn-sm round mr-1 mt-1"><i class="fas fa-copy"></i> Copy</button>
+                                                    <p id="ETHAddress" class="text-muted mb-0 font-small-3 wallet-address">@Model.ETHHDWalletAddress</p>
+                                                    <button type="button" class="btn btn-sm round mr-1 mt-1 btn-copy" data-clipboard-target="#ETHAddress"><i class="fas fa-copy"></i> Copy</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <h6>0.6789842 ETH</h6>
+                                            <h6>@Model.ETHAmount ETH</h6>
                                             <p class="text-muted mb-0 font-small-3">~ $650.78</p>
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <img class="img-fluid" src="https://pixinvent.com/demo/crypto-ico-admin/app-assets/images/icons/sample-qr.png">
+                                            <img class="img-fluid" src=@Model.ETHQrCodeImage>
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <a href="#">Withdraw</a>
+                                            <button class="mb-0 btn-sm btn btn-outline-danger round btn-withdraw">Withdraw</button>
                                         </div>
+                                    </div>
+                                    <div class="panel-withdraw" style="display:none">
+                                        <hr>
+                                        <p class="mt-2">You are about to withdraw <span class="text-bold-700 text-uppercase mb-0">ETH</span> from your account</p>
+
+                                        <form class="form-horizontal form-purchase-token row form-withdraw">
+                                            <div class="col-lg-4 col-md-3 col-sm-12 col-12">
+                                                <fieldset class="form-label-group mb-0">
+                                                    <input type="number" name="amount-eth" class="form-control amount-value" value="0" required="" autofocus="" min="0" max="@Model.ETHAmount" step="any">
+                                                    <label for="amount-eth">Amount</label>
+                                                </fieldset>
+                                                <div class="invalid-feedback error-amount"></div>
+                                                <button type="button" class="btn btn-sm round mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> Max</button>
+                                                <input type="hidden" value="@Model.ETHAmount" class="max-amount" />
+                                            </div>
+                                            <div class="col-lg-1 col-md-1 col-sm-12 col-12 mb-1 text-center">
+                                                <span class="la la-arrow-right"></span>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                                <fieldset class="form-label-group mb-0">
+                                                    <input type="text" class="form-control address-value" name="eth-address" required="" autofocus="">
+                                                    <label for="eth-address">Address</label>
+                                                </fieldset>
+                                                <div class="invalid-feedback address-error"></div>
+                                                <button type="button" id="btn-qrcode" class="btn btn-sm round mr-1 mt-1"><i class="fas fa-qrcode"></i> QR Code</button>
+                                            </div>
+                                            <div class="col-lg-2 col-md-2 col-12 text-center">
+                                                <button type="submit" class="btn btn-gradient-secondary btn-do-withdraw">Withdraw</button>
+                                            </div>
+                                            <input type="hidden" class="currency" value="ETH"/>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -207,6 +244,7 @@
             </div>
         </div>
     </div>
+    @Html.Hidden("CopiedText", "Copied Successfully")
 </div>
 
 @section scripts
@@ -215,4 +253,6 @@
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
+    <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
+    <script src="~/js/dashboard/cpl.depositandwithdraw.js"></script>
 }
