@@ -57,7 +57,7 @@ namespace CPL.Controllers
 
         public IActionResult GetConfirm(ConfirmExchangeViewModel viewModel)
         {
-            return PartialView("_Confirm",viewModel);
+            return PartialView("_Confirm", viewModel);
         }
 
         [HttpPost]
@@ -66,7 +66,7 @@ namespace CPL.Controllers
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
             {
-                if (viewModel.FromCurrency == "BTC")
+                if (viewModel.FromCurrency == "BTC" && viewModel.FromAmount <= user.BTCAmount)
                 {
                     user.BTCAmount -= viewModel.FromAmount;
                     user.TokenAmount += viewModel.ToAmount;
@@ -74,7 +74,7 @@ namespace CPL.Controllers
                     _unitOfWork.SaveChanges();
                     return new JsonResult(new { success = true, message = "Success!" });
                 }
-                else if (viewModel.FromCurrency == "ETH")
+                else if (viewModel.FromCurrency == "ETH" && viewModel.FromAmount <= user.ETHAmount)
                 {
                     user.ETHAmount -= viewModel.FromAmount;
                     user.TokenAmount += viewModel.ToAmount;
@@ -82,7 +82,7 @@ namespace CPL.Controllers
                     _unitOfWork.SaveChanges();
                     return new JsonResult(new { success = true, message = "Success!" });
                 }
-                else
+                else if (viewModel.FromAmount <= user.TokenAmount)
                 {
                     if (viewModel.ToCurrency == "BTC")
                     {
@@ -101,9 +101,11 @@ namespace CPL.Controllers
                         return new JsonResult(new { success = true, message = "Success!" });
                     }
                 }
+                else
+                    return new JsonResult(new { success = false, message = "Insufficient funds!" });
             }
             else
-                return new JsonResult(new { success = true, message = "Success" });
+                return new JsonResult(new { success = false, message = "Error!" });
         }
     }
 }

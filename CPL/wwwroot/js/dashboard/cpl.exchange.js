@@ -111,10 +111,10 @@
                     $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
                 },
                 data: {
-                    FromCurrency: $(_this).parents("form").find("#FromCurrency").val(),
-                    FromAmount: $(_this).parents("form").find("#FromAmount").val(),
-                    ToCurrency: $(_this).parents("form").find("#ToCurrency").val(),
-                    ToAmount: $(_this).parents("form").find("#ToAmount").val()
+                    FromCurrency: $(_this).parents("#modal").find("#FromCurrency").val(),
+                    FromAmount: $(_this).parents("#modal").find("#FromAmount").val(),
+                    ToCurrency: $(_this).parents("#modal").find("#ToCurrency").val(),
+                    ToAmount: $(_this).parents("#modal").find("#ToAmount").val()
                 },
                 success: function (data) {
                     if (data.success) {
