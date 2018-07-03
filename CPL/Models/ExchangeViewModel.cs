@@ -10,5 +10,7 @@ namespace CPL.Models
         public decimal ETHAmount { get; set; }
         public decimal BTCAmount { get; set; }
         public decimal TokenAmount { get; set; }
+        public decimal BTCToTokenrate { get; set; }
+        public decimal ETHToBTCRate { get; set; }
     }
 }

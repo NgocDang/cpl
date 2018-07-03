@@ -1,4 +1,4 @@
-﻿var Dashboard = {
+﻿var Exchange = {
     init: function () {
         $('section').on('click', '.btn-swap', function () {
             //Swap label
@@ -17,51 +17,124 @@
                 var value = section.find(".from-amount").siblings(".max-amount").val();
                 section.find(".from-amount").siblings(".max-amount").val(section.find(".to-amount").siblings(".max-amount").val());
                 section.find(".to-amount").siblings(".max-amount").val(value);
+
+                //Swap currency
+                var currency = section.find(".from-amount").siblings(".from-currency").val();
+                section.find(".from-amount").siblings(".from-currency").val(section.find(".to-amount").siblings(".to-currency").val());
+                section.find(".to-amount").siblings(".to-currency").val(currency);
             }
-        })
+        });
 
         $('section').on('click', '.btn-max', function () {
             //Swap label
             if ($(this).parents("section").length > 0) {
                 var section = $(this).parents("section");
                 //var label = section.find((".from-amount").val);
-                section.find(".from-amount").val(section.find(".from-amount").siblings(".max-amount").val());
+                section.find(".from-amount").val(section.find(".from-amount").siblings(".max-amount").val()).trigger('change');
             }
-        })
+        });
 
-        return false;
+        $('section').on('change paste keyup input', '.from-amount', function () {
+            if ($(this).parents("section").length > 0) {
+                var section = $(this).parents("section");
+                if (parseFloat(section.find(".from-amount").val()) > 0) {
+                    var fromCurrency = section.find(".from-amount").siblings(".from-currency").val();
+                    section.find(".invalid-amount").hide()
+                    if (fromCurrency == "BTC") {
+                        section.find(".to-amount").val(parseFloat(section.find(".from-amount").val()) * $(".btc-token-rate").val());
+                    }
+                    else if (fromCurrency == "ETH") {
+                        var btcAmount = parseFloat(section.find(".from-amount").val()) * $(".eth-btc-rate").val();
+                        section.find(".to-amount").val(btcAmount * $(".btc-token-rate").val());
+                    }
+                    else {
+                        var toCurrency = section.find(".to-amount").siblings(".to-currency").val()
+                        if (toCurrency == "BTC") {
+                            section.find(".to-amount").val(parseFloat(section.find(".from-amount").val()) / $(".btc-token-rate").val());
+                        }
+                        else if (toCurrency == "ETH") {
+                            var btcAmount = parseFloat(section.find(".from-amount").val()) / $(".btc-token-rate").val();
+                            section.find(".to-amount").val(parseFloat(btcAmount / $(".eth-btc-rate").val()));
+                        }
+                    }
+                }
+                else {
+                    $(this).parents("section").find(".invalid-amount").show();
+                    $(this).parents("section").find(".to-amount").val(null);
+                }
+            }
+        });
+
+        Exchange.bindNext();
+        Exchange.bindConfirmExchange();
     },
-    bindCopy: function () {
-        if ($(".btn-copy").length > 0) {
-            var clipboard = new ClipboardJS('.btn-copy');
-            clipboard.on('success', function (e) {
-                toastr.success($("#CopiedText").val());
-            });
-        }
+    bindNext: function () {
+        $('section').on('click', '.btn-next', function () {
+            var _this = this;
+            if (parseFloat($(_this).parents("section").find(".from-amount").val()) > 0 && parseFloat($(_this).parents("section").find(".from-amount").val()) <= parseFloat($(_this).parents("section").find(".from-amount").siblings(".max-amount").val())) {
+                $(_this).parents("section").find(".invalid-amount").hide();
+                $.ajax({
+                    url: "/Exchange/GetConfirm/",
+                    type: "GET",
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
+                    },
+                    data: {
+                        FromCurrency: $(_this).parents("section").find(".from-currency").val(),
+                        FromAmount: $(_this).parents("section").find(".from-amount").val(),
+                        ToCurrency: $(_this).parents("section").find(".to-currency").val(),
+                        ToAmount: $(_this).parents("section").find(".to-amount").val()
+                    },
+                    success: function (data) {
+                        $("#modal").html(data);
+                        $("#exchange").modal("show");
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text());
+                    }
+                });
+            }
+            else
+                $(_this).parents("section").find(".invalid-amount").show();
+        })
     },
-    bindBtcOut: function () {
-        $("#txt-btcOut").on("click", function () {
+    bindConfirmExchange: function () {
+        $('#modal').on('click', '#btn-confirm-exchange', function () {
+            var _this = this;
             $.ajax({
-                url: "/Dashboard/WithdrawBTC/",
-                type: "GET",
+                url: "/Exchange/Confirm/",
+                type: "POST",
                 beforeSend: function () {
-                    //$("#txt-btcOut").attr("disabled", true);
-                    //$("#txt-btcOut").html("<i class='fa fa-spinner fa-spin'></i> " + $("#txt-btcOut").text());
+                    $(_this).attr("disabled", true);
+                    $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
                 },
                 data: {
+                    FromCurrency: $(_this).parents("form").find("#FromCurrency").val(),
+                    FromAmount: $(_this).parents("form").find("#FromAmount").val(),
+                    ToCurrency: $(_this).parents("form").find("#ToCurrency").val(),
+                    ToAmount: $(_this).parents("form").find("#ToAmount").val()
                 },
                 success: function (data) {
-                    $("#btcOutView").html(data);
+                    if (data.success) {
+                        $("#exchange").modal("hide");
+                        //alert("Success!");
+                        toastr.success(data.message, "Success!");
+                    } else {
+                        //alert("Error!");
+                        toastr.error(data.message, "Error!");
+                    }
                 },
                 complete: function (data) {
-                    $("#txt-btcOut").attr("disabled", false);
-                    $("#txt-btcOut").html($("#txt-btcOut").text());
+                    $(_this).attr("disabled", false);
+                    $(_this).html($(_this).text());
                 }
             });
         })
-    },
+    }
 }
 
 $(document).ready(function () {
-    Dashboard.init();
+    Exchange.init();
 });

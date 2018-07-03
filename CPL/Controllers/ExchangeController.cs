@@ -48,9 +48,62 @@ namespace CPL.Controllers
 
         public IActionResult Index()
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             var viewModel = Mapper.Map<ExchangeViewModel>(user);
+            viewModel.ETHToBTCRate = CoinExchangeExtension.CoinExchanging();
+            viewModel.BTCToTokenrate = decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
             return View(viewModel);
+        }
+
+        public IActionResult GetConfirm(ConfirmExchangeViewModel viewModel)
+        {
+            return PartialView("_Confirm",viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Confirm(ConfirmExchangeViewModel viewModel)
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+            if (user != null)
+            {
+                if (viewModel.FromCurrency == "BTC")
+                {
+                    user.BTCAmount -= viewModel.FromAmount;
+                    user.TokenAmount += viewModel.ToAmount;
+                    _sysUserService.Update(user);
+                    _unitOfWork.SaveChanges();
+                    return new JsonResult(new { success = true, message = "Success!" });
+                }
+                else if (viewModel.FromCurrency == "ETH")
+                {
+                    user.ETHAmount -= viewModel.FromAmount;
+                    user.TokenAmount += viewModel.ToAmount;
+                    _sysUserService.Update(user);
+                    _unitOfWork.SaveChanges();
+                    return new JsonResult(new { success = true, message = "Success!" });
+                }
+                else
+                {
+                    if (viewModel.ToCurrency == "BTC")
+                    {
+                        user.BTCAmount += viewModel.ToAmount;
+                        user.TokenAmount -= viewModel.FromAmount;
+                        _sysUserService.Update(user);
+                        _unitOfWork.SaveChanges();
+                        return new JsonResult(new { success = true, message = "Success!" });
+                    }
+                    else
+                    {
+                        user.ETHAmount += viewModel.ToAmount;
+                        user.TokenAmount -= viewModel.FromAmount;
+                        _sysUserService.Update(user);
+                        _unitOfWork.SaveChanges();
+                        return new JsonResult(new { success = true, message = "Success!" });
+                    }
+                }
+            }
+            else
+                return new JsonResult(new { success = true, message = "Success" });
         }
     }
 }
