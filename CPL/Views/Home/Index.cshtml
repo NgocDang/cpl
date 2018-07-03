@@ -2,17 +2,201 @@
 @{
     Layout = null;
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <title>CPL</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" crossorigin="anonymous">
+    <link href="~/css/home/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/home/ladda-themeless.min.css" rel="stylesheet" />
+    <link href="~/css/home/style.css" rel="stylesheet" />
+    <link href="~/css/home/style-dev.css" rel="stylesheet" />
+    <link href="~/css/home/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/css/home/plugins/owl-carousel/owl.theme.default.min.css" rel="stylesheet" />
+</head>
+<body class="drawer drawer--right">
+    <button type="button" class="drawer-toggle drawer-hamburger">
+        <span class="drawer-hamburger-icon"></span>
+    </button>
+    <nav class="drawer-nav" role="navigation">
+        <div class="drawer-menu menu_1 cf">
+            <p class="item_btn items">
+                <a href="/info/introduction">
+                    <button class="btn btn_yellow first_btn shadow ef_btn op">
+                        <i>
+                            <img src="img/icon/icon-beginner_1.png" alt="">
+                        </i>
+                        <span>aa</span>
+                    </button>
+                </a>
+                <a href="/entry/mail">
+                    <button class="btn btn_red shadow ef_btn">
+                        <span>bbb</span>
+                    </button>
+                </a>
+            </p>
+            <p class="login">
+                <a href="/login">
+                    <span>ccc</span>
+                </a>
+            </p>
+            <p class="drawer-title">
+                dddd
+            </p>
+            <ul class="drawer-menu_list cf">
+                <li class="about">
+                    <a href="/info/about">
+                        <span>eee</span>
+                    </a>
+                </li>
+                <li class="schedule">
+                    <a href="/schedule/">
+                        <span>ffff</span>
+                    </a>
+                </li>
+                <li class="result">
+                    <a href="/result/">
+                        <span>ggg</span>
+                    </a>
+                </li>
+                <li class="faq">
+                    <a href="/faq/">
+                        <span>hhhhh</span>
+                    </a>
+                </li>
+                <li class="winner">
+                    <a href="/impressions/">
+                        <span>iiiii</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <header class="t-header_top cf" role="banner">
+        <div class="t-inner cf">
+            <div class="right_block cf">
+                <div class="t-item">
+                    <a href="#" class="btn btn-sm btn-header-icon"><i class="fab fa-facebook-square"></i></a>
+                </div>
+                <div class="t-item">
+                    <a href="#" class="btn btn-sm btn-header-icon"><i class="fab fa-google-plus-g"></i></a>
+                </div>
+                <div class="t-item">
+                    <a href="#" class="btn btn-sm btn-header-icon"><i class="fab fa-twitter"></i></a>
+                </div>
+                <div class="t-item">
+                    <a asp-controller="Authentication" asp-action="Register" class="btn btn-sm btn-danger btn-header-action"><i class="fas fa-user"></i> REGISTER</a>
+                </div>
+                <div class="t-item">
+                    <a asp-controller="Authentication" asp-action="Log in" class="btn btn-sm btn-danger btn-header-action"><i class="fas fa-sign-in-alt"></i> LOG IN</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- /header -->
+    <div class="t-header_primary cf">
+        <div class="t-inner cf">
+            <div class="logo">
+                <a asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.png" class="img-fluid logo-image"/>
+                </a>
+            </div>
+            <nav class="t-nav cf">
+                <ul class="cf">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Service overview</a></li>
+                    <li><a href="#">Purchase method</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Books</a></li>
+                    <li><a href="#">Newspaper</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!-- contents -->
+    <main class="m-main" role="main">
+        <div class="top_visual cf">
+            <div class="owlSlider">
+                <div class="owlSlider-item owlSlider-item0">
+                    <a href="#" target="_blank"><img src="~/images/slider/slider_1.jpg" class="img-fluid" /></a>
+                </div>
+                <div class="owlSlider-item owlSlider-item1">
+                    <a href="#" target="_blank"><img src="~/images/slider/slider_2.jpg" class="img-fluid" /></a>
+                </div>
+                <div class="owlSlider-item owlSlider-item2">
+                    <a href="#" target="_blank"><img src="~/images/slider/slider_3.jpg" class="img-fluid" /></a>
+                </div>
+            </div>
+        </div>
 
-<div>
-    <p>Current Lang : @Model.Lang.Name</p> <br />
-    <p>All language support</p>
-    @foreach (var lang in Model.Langs)
-    {
-        <p>@lang.Name</p>
-    }
-    @foreach (var member in Model.Teams)
-    {
-        <p>Member: @member.Name</p>
-    }
+        <section class="t-contents_2 cf">
+            <div class="inner cf">
+                <div class="row">
+                    <div class="col-md-5 col-sm-12 margin-auto">
+                        <div class="card">
+                            <img class="card-img-top" src="~/images/lottery_game.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <form class="row">
+                                    <div class="col-8" style="padding-right:0px;">
+                                        <input type="number" class="form-control" aria-describedby="emailHelp" placeholder="CPL amount">
+                                    </div>
+                                    <div class="col-4">
+                                        <button class="btn btn-danger btn-card">Buy</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-sm-12 margin-auto">
+                        <div class="card">
+                            <img class="card-img-top" src="~/images/prediction_game.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <button class="btn btn-danger btn-card"><i class="fas fa-chart-line"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-</div>
+    <footer class="g-footer cf" role="contentinfo">
+        <div class="inner cf">
+            <ul class="footer_nav cf">
+                <li>
+                    <a href="/info/company">
+                        <span>aaa</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="inner cf">
+            <ul class="footer_nav cf">
+                <li>
+                    <a href="/info/company">
+                        <span>bbb</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="~/js/home/jquery-3.2.1.min.js"></script>
+    <script src="~/js/home/popper.min.js"></script>
+    <script src="~/js/home/bootstrap.min.js"></script>
+    <script src="~/js/home/drawer.min.js"></script>
+    <script src="~/js/home/plugins/owl-carousel/owl.carousel.js"></script>
+    <script src="~/js/home/cpl.home.js"></script>
+
+    @*<script src="js/plugin/scroll/smooth-scroll.min.js?v=20180613"></script>
+    <script src="js/plugin/iscroll/iscroll.min.js?v=20180613"></script>
+    <script src="ladda/spin.min.js?v=20180613"></script>
+    <script src="ladda/ladda.min.js?v=20180613"></script>
+    <script src="js/common.js?v=20180613"></script>
+    <script src="js/script.js?v=20180613"></script>*@
+</body>
+</html>
