@@ -13,6 +13,7 @@ using CPL.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Net.Mail;
 using System.Net;
+using CPL.Common.Enums;
 
 namespace CPL.Controllers
 {
@@ -50,21 +51,22 @@ namespace CPL.Controllers
         {
             if (!HttpContext.Session.GetInt32("LangId").HasValue)
                 HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
-
             var viewModel = new HomeViewModel();
-
-            //Team section
-            viewModel.Teams = _teamService.Queryable()
-                .Select(x => Mapper.Map<TeamViewModel>(x)).ToList();
-
-            //Languages
-            viewModel.Langs = _langService.Queryable()
-                .Select(x => Mapper.Map<LangViewModel>(x))
-                .ToList();
-
-            viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Contact(ContactViewModel viewModel)
+        {
+            var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Contact.ToString());
+            var contactEmailTemplateViewModel = new ContactEmailTemplateViewModel();
+            contactEmailTemplateViewModel.Name = viewModel.Name;
+            contactEmailTemplateViewModel.Message = viewModel.Message;
+            contactEmailTemplateViewModel.Email = viewModel.Email;
+            contactEmailTemplateViewModel.Subject = template.Subject;
+            template.Body = _viewRenderService.RenderToStringAsync("/Views/Home/_ContactEmailTemplate.cshtml", contactEmailTemplateViewModel).Result;
+            EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), CPLConstant.AdminEmail);
+            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactEmailSent") });
         }
 
         public IActionResult Error()

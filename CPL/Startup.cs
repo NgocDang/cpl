@@ -98,7 +98,7 @@ namespace CPL
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Authentication}/{action=LogIn}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
             app.UseMvcWithDefaultRoute();
         }

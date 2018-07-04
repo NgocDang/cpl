@@ -135,11 +135,11 @@
         <div class="sidebar-detached sidebar-right">
             <div class="sidebar">
                 <div id="wallet-sidebar" class="sidebar-content">
-                    @await Component.InvokeAsync("TokenBalance")
-                    <div class="card pull-up">
-                        @await Component.InvokeAsync("TokenCalculator")
+                    <div class="row">
+                        <p class="pt-1 text-capitalize col-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</p>
                     </div>
-
+                    @await Component.InvokeAsync("TokenBalance")
+                    @await Component.InvokeAsync("TokenCalculator")
                 </div>
             </div>
         </div>
