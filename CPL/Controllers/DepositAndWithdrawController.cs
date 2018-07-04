@@ -88,7 +88,7 @@ namespace CPL.Controllers
                 _unitOfWork.SaveChanges();
             }
 
-            return new JsonResult(new { success = true, message = "Success!" });
+            return new JsonResult(new { success = true, message = "Withdraw successfully!" });
         }
 
         [HttpPost]
@@ -99,7 +99,7 @@ namespace CPL.Controllers
             {
                 BarcodeReader reader = new BarcodeReader { AutoRotate = true, TryInverted = true };
                 string qrcode = reader.Decode(bitmap).Text;
-                return new JsonResult(new { success = true, address = qrcode, message = "Success!" });
+                return new JsonResult(new { success = true, address = qrcode, message = "Generate qrcode successfully!" });
             }
             catch
             {
