@@ -61,11 +61,11 @@ namespace CPL.Controllers
             {
                 // Validate max BTC Amount
                 if (viewModel.Amount > user.BTCAmount)
-                    return new JsonResult(new { success = false, name = "amount", message = "Insufficient money. Please try another." });
+                    return new JsonResult(new { success = false, name = "amount", message = "Insufficient funds. Please try another!" });
 
                 //Validate BTC wallet address
                 if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidBTCAddress(viewModel.Address)))
-                    return new JsonResult(new { success = false, name = "wallet", message = "Invalid BTC wallet address. Please try another." });
+                    return new JsonResult(new { success = false, name = "wallet", message = "Invalid BTC wallet address. Please try another!" });
 
                 // Save to DB
                 user.BTCAmount -= viewModel.Amount;
@@ -76,11 +76,11 @@ namespace CPL.Controllers
             {
                 // Validate max ETH Amount
                 if (viewModel.Amount > user.ETHAmount)
-                    return new JsonResult(new { success = false, name = "amount", message = "Insufficient money. Please try another." });
+                    return new JsonResult(new { success = false, name = "amount", message = "Insufficient funds. Please try another!" });
 
                 //Validate ETH wallet address
                 if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidETHAddress(viewModel.Address)))
-                    return new JsonResult(new { success = false, name = "wallet", message = "Invalid ETH wallet address. Please try another." });
+                    return new JsonResult(new { success = false, name = "wallet", message = "Invalid ETH wallet address. Please try another!" });
 
                 // Save to DB
                 user.ETHAmount -= viewModel.Amount;
@@ -88,7 +88,7 @@ namespace CPL.Controllers
                 _unitOfWork.SaveChanges();
             }
 
-            return new JsonResult(new { success = true, message = "success" });
+            return new JsonResult(new { success = true, message = "Success!" });
         }
 
         [HttpPost]
