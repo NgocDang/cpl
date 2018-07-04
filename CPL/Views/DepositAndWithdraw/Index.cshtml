@@ -64,7 +64,7 @@
                             <div class="card-body">
                                 <div class="col-12">
                                     <div class="row">
-                                        <div class="col-md-2 col-12 pt-1">
+                                        <div class="col-md-2 col-12 pt-1 mt-2">
                                             <div class="media">
                                                 <i class="cc BTC mr-2 warning font-large-3"></i>
                                             </div>
@@ -72,22 +72,22 @@
                                         <div class="col-md-4 col-12 pt-1">
                                             <div class="media">
                                                 <div class="media-body">
-                                                    <h5 class="mt-0 text-capitalize">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCName")</h5>
+                                                    <h5 class="mt-2 text-capitalize">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCName")</h5>
                                                     <p id="BTCAddress" class="text-muted mb-0 font-small-3 wallet-address">@Model.BTCHDWalletAddress</p>
                                                     <button type="button" class="btn btn-sm round mr-1 mt-1 btn-copy" data-clipboard-target="#BTCAddress"><i class="fas fa-copy"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <h6>@Model.BTCAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
-                                            <p class="text-muted mb-0 font-small-3">~ $2650.78</p>
+                                            <h6 class="mt-2">@Model.BTCAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
+                                            @*<p class="text-muted mb-0 font-small-3">~ $2650.78</p>*@
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
                                             <img class="img-fluid" src=@Model.BTCQrCodeImage>
                                         </div>
 
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <button class="mb-0 btn-sm btn btn-outline-danger round btn-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</button>
+                                            <button class="mb-0 btn-sm btn btn-outline-danger round btn-withdraw mt-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</button>
                                         </div>
                                     </div>
                                     <div class="panel-withdraw" style="display:none">
@@ -131,7 +131,7 @@
                             <div class="card-body">
                                 <div class="col-12">
                                     <div class="row">
-                                        <div class="col-md-2 col-12 pt-1">
+                                        <div class="col-md-2 col-12 pt-1 mt-2">
                                             <div class="media">
                                                 <i class="cc ETH mr-2 font-large-3"></i>
                                             </div>
@@ -139,21 +139,21 @@
                                         <div class="col-md-4 col-12 pt-1">
                                             <div class="media">
                                                 <div class="media-body">
-                                                    <h5 class="mt-0 text-capitalize">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHName")</h5>
+                                                    <h5 class="mt-2 text-capitalize">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHName")</h5>
                                                     <p id="ETHAddress" class="text-muted mb-0 font-small-3 wallet-address">@Model.ETHHDWalletAddress</p>
                                                     <button type="button" class="btn btn-sm round mr-1 mt-1 btn-copy" data-clipboard-target="#ETHAddress"><i class="fas fa-copy"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <h6>@Model.ETHAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</h6>
-                                            <p class="text-muted mb-0 font-small-3">~ $650.78</p>
+                                            <h6 class="mt-2">@Model.ETHAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</h6>
+                                            @*<p class="text-muted mb-0 font-small-3">~ $650.78</p>*@
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
                                             <img class="img-fluid" src=@Model.ETHQrCodeImage>
                                         </div>
                                         <div class="col-md-2 col-12 pt-1 text-center">
-                                            <button class="mb-0 btn-sm btn btn-outline-danger round btn-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</button>
+                                            <button class="mb-0 btn-sm btn btn-outline-danger round btn-withdraw mt-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</button>
                                         </div>
                                     </div>
                                     <div class="panel-withdraw" style="display:none">
