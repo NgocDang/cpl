@@ -25,13 +25,13 @@
                     type: "POST",
                     beforeSend: function () {
                         $("#btn-register").attr("disabled", true);
-                        $("#btn-register").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-register").text());
+                        $("#btn-register").html("<i class='fa fa-spinner fa-spin'></i><i class='far fa-registered'></i> " + $("#btn-register").text());
                     },
                     data: {
                         Email: $("#Email").val(),
                         Password: $("#Password").val(),
                         PasswordConfirm: $("#PasswordConfirm").val(),
-                    },
+                    },  
                     success: function (data) {
                         if (data.success) {
                             if (data.activated) { // Account activation is disabled
@@ -52,7 +52,7 @@
                     },
                     complete: function (data) {
                         $("#btn-register").attr("disabled", false);
-                        $("#btn-register").html($("#btn-register").text());
+                        $("#btn-register").html("<i class='far fa-registered'></i> "+ $("#btn-register").text());
                     }
                 });
             }

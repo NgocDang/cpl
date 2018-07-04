@@ -1,7 +1,7 @@
 ﻿@model DashboardSidebarViewModel
 <div class="main-menu menu-fixed menu-dark menu-bg-default rounded menu-accordion menu-shadow">
     <div class="main-menu-content">
-        <a class="navigation-brand d-none d-md-block d-lg-block d-xl-block" href="index.html"><img class="brand-logo" alt="crypto ico admin logo" src="~/images/logo_white.png" /></a>
+        <a asp-controller="Home" asp-action="Index" class="navigation-brand d-none d-md-block d-lg-block d-xl-block"><img class="brand-logo" alt="crypto ico admin logo" src="~/images/logo_white.png" /></a>
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             <li class="active">
                 <a asp-controller="Dashboard" asp-action="Index"><i class="icon-grid"></i><span class="menu-title" data-i18n="">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</span></a>

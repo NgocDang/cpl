@@ -22,6 +22,7 @@
     <link href="~/css/dashboard/vertical-compact-menu.min.css" rel="stylesheet" />
     <link href="~/css/dashboard/plugins/cryptocoins/cryptocoins.css" rel="stylesheet" />
     <link href="~/css/dashboard/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" crossorigin="anonymous">
 </head>
 
 <body class="vertical-layout vertical-compact-menu 1-column  bg-full-screen-image menu-expanded blank-page blank-page" data-open="click" data-menu="vertical-compact-menu" data-col="1-column">
@@ -75,7 +76,7 @@
                                                     </div>
                                                     <div class="col-md-6 col-12 float-sm-left text-center text-sm-right"><a href="account-login.html#" class="card-link">Forgot Password?</a></div>
                                                 </div>*@
-                                            <button type="submit" id="btn-log-in" class="btn btn-gradient-primary btn-block my-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</button>
+                                            <button type="submit" id="btn-log-in" class="btn btn-gradient-primary btn-block my-1"><i class="fas fa-sign-in-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</button>
                                             <p class="text-center"><a asp-controller="Authentication" asp-action="Register" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</a></p>
                                         </form>
                                     </div>

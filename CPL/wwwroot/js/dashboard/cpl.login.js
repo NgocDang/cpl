@@ -16,7 +16,7 @@
                     type: "POST",
                     beforeSend: function () {
                         $("#btn-log-in").attr("disabled", true);
-                        $("#btn-log-in").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-log-in").text());
+                        $("#btn-log-in").html("<i class='fa fa-spinner fa-spin'></i> <i class='fas fa-sign-in-alt'></i> " + $("#btn-log-in").text());
                     },
                     data: {
                         Email: $("#Email").val(),
@@ -46,7 +46,7 @@
                     },
                     complete: function (data) {
                         $("#btn-log-in").attr("disabled", false);
-                        $("#btn-log-in").html($("#btn-log-in").text().trim());
+                        $("#btn-log-in").html("<i class='fas fa-sign-in-alt'></i> " + $("#btn-log-in").text().trim());
                     }
 
                 });
