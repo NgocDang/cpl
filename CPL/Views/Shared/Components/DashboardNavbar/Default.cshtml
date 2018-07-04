@@ -24,7 +24,7 @@
                         <li class="dropdown dropdown-user nav-item">
                             <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown" aria-expanded="false">
                                 <span class="avatar avatar-online"><img src="~/images/avatar-1.jpeg" alt="avatar"></span>
-                                <span class="mr-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")<span class="user-name text-bold-700">3,458.88</span></span>
+                                <span class="mr-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")<span class="user-name text-bold-700">@Model.TokenAmount.ToString("#,##0.#####")</span></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item" asp-controller="Profile" asp-action="EditAccount"><i class="ft-award"></i> @Model.FirstName @Model.LastName</a>
