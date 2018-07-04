@@ -1,0 +1,56 @@
+﻿@model TokenCalculatorViewModel
+
+<div class="card-header">
+    <h6 class="card-title text-center">Calculator</h6>
+</div>
+<div class="card-content collapse show">
+    <div class="card-body">
+        <form class="form form-horizontal">
+            <div class="form-body token-calculator">
+                <div class="form-group row">
+                    <fieldset class="col-12">
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="btc-amount" placeholder="BTC" min="0" aria-describedby="basic-addon4">
+                            <input type="hidden" value="@Model.BTCToTokenRate" class="btc-token-rate" />
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon4"><i class="cc BTC-alt"></i></span>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-group row">
+                    <fieldset class="col-12">
+                        <p class="mb-0">+</p>
+                    </fieldset>
+                </div>
+                <div class="form-group row">
+                    <fieldset class="col-12">
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="eth-amount" placeholder="ETH" min="0" aria-describedby="basic-addon4">
+                            <input type="hidden" value="@Model.ETHToTokenRate" class="eth-token-rate" />
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon4"><i class="cc ETH-alt"></i></span>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-group row">
+                    <fieldset class="col-12">
+                        <p class="mb-0">=</p>
+                    </fieldset>
+                </div>
+                <div class="form-group row">
+                    <fieldset class="col-12">
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="token-amount" placeholder="CPL" min="0" aria-describedby="basic-addon4" readonly>
+                            <div class="invalid-feedback invalid-eth-amount">Invalid amount</div>
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon4"><i class="cpl-token-grey-sm"></i></span>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
