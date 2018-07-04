@@ -113,7 +113,8 @@
                                                     <label for="address-btc">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</label>
                                                 </fieldset>
                                                 <div class="invalid-feedback address-error"></div>
-                                                <button type="button" id="btn-qrcode" class="btn btn-sm round mr-1 mt-1"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
+                                                <button type="button" class="btn btn-sm round mr-1 mt-1 btn-qrcode"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
+                                                <input type="file" class="file-qrcode" hidden/>
                                             </div>
                                             <div class="col-lg-2 col-md-2 col-12 text-center">
                                                 <button type="submit" class="btn btn-gradient-secondary btn-do-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</button>
@@ -165,7 +166,7 @@
                                                     <input type="number" name="amount-eth" class="form-control amount-value" value="0" required="" autofocus="" min="0" max="@Model.ETHAmount" step="any">
                                                     <label for="amount-eth">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
                                                 </fieldset>
-                                                <div class="invalid-feedback error-amount"></div>
+                                                <div class="invalid-feedback amount-error"></div>
                                                 <button type="button" class="btn btn-sm round mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
                                                 <input type="hidden" value="@Model.ETHAmount" class="max-amount" />
                                             </div>
@@ -178,7 +179,8 @@
                                                     <label for="eth-address">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</label>
                                                 </fieldset>
                                                 <div class="invalid-feedback address-error"></div>
-                                                <button type="button" id="btn-qrcode" class="btn btn-sm round mr-1 mt-1"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
+                                                <button type="button" class="btn btn-sm round mr-1 mt-1 btn-qrcode"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
+                                                <input type="file" class="file-qrcode" hidden />
                                             </div>
                                             <div class="col-lg-2 col-md-2 col-12 text-center">
                                                 <button type="submit" class="btn btn-gradient-secondary btn-do-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</button>
