@@ -52,7 +52,7 @@
                     },
                     complete: function (data) {
                         $("#btn-register").attr("disabled", false);
-                        $("#btn-register").html($("#btn-register").text());
+                        $("#btn-register").html("<i class='fa fa-registered'></i> "+ $("#btn-register").text());
                     }
                 });
             }

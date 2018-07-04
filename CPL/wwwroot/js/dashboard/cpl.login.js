@@ -46,7 +46,7 @@
                     },
                     complete: function (data) {
                         $("#btn-log-in").attr("disabled", false);
-                        $("#btn-log-in").html($("#btn-log-in").text().trim());
+                        $("#btn-log-in").html("<i class='fa fa-sign-in'></i> " + $("#btn-log-in").text().trim());
                     }
 
                 });
