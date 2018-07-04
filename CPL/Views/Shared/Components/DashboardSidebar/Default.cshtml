@@ -10,10 +10,10 @@
                 <a href="#"><i class="icon-user-following"></i><span class="menu-title" data-i18n="">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</span></a>
                 <ul class="menu-content">
                     <li>
-                        <a class="menu-item" asp-controller="Profile" asp-action="EditAccount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditAccount")</a>
+                        <a class="menu-item" asp-controller="Profile" asp-action="EditAccount"><i class="ft-user"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditAccount")</a>
                     </li>
                     <li>
-                        <a class="menu-item" asp-controller="Profile" asp-action="EditCredential">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
+                        <a class="menu-item" asp-controller="Profile" asp-action="EditCredential"><i class="ft-check-square"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
                     </li>
                 </ul>
             </li>

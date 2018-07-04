@@ -8,6 +8,7 @@ using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using ZXing;
 
@@ -61,11 +62,11 @@ namespace CPL.Controllers
             {
                 // Validate max BTC Amount
                 if (viewModel.Amount > user.BTCAmount)
-                    return new JsonResult(new { success = false, name = "amount", message = "Insufficient funds. Please try another!" });
+                    return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
 
                 //Validate BTC wallet address
                 if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidBTCAddress(viewModel.Address)))
-                    return new JsonResult(new { success = false, name = "wallet", message = "Invalid BTC wallet address. Please try another!" });
+                    return new JsonResult(new { success = false, name = "wallet", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidBTCAddress") });
 
                 // Save to DB
                 user.BTCAmount -= viewModel.Amount;
@@ -76,11 +77,11 @@ namespace CPL.Controllers
             {
                 // Validate max ETH Amount
                 if (viewModel.Amount > user.ETHAmount)
-                    return new JsonResult(new { success = false, name = "amount", message = "Insufficient funds. Please try another!" });
+                    return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
 
                 //Validate ETH wallet address
                 if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidETHAddress(viewModel.Address)))
-                    return new JsonResult(new { success = false, name = "wallet", message = "Invalid ETH wallet address. Please try another!" });
+                    return new JsonResult(new { success = false, name = "wallet", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidETHAddress") });
 
                 // Save to DB
                 user.ETHAmount -= viewModel.Amount;
@@ -88,7 +89,7 @@ namespace CPL.Controllers
                 _unitOfWork.SaveChanges();
             }
 
-            return new JsonResult(new { success = true, message = "Withdraw successfully!" });
+            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
         }
 
         [HttpPost]
@@ -99,11 +100,11 @@ namespace CPL.Controllers
             {
                 BarcodeReader reader = new BarcodeReader { AutoRotate = true, TryInverted = true };
                 string qrcode = reader.Decode(bitmap).Text;
-                return new JsonResult(new { success = true, address = qrcode, message = "Generate qrcode successfully!" });
+                return new JsonResult(new { success = true, address = qrcode, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "GeneratedQRCodeSuccessfully") });
             }
-            catch
+            catch (Exception ex)
             {
-                return new JsonResult(new { success = false });
+                return new JsonResult(new { success = false, message = ex.Message });
             }
         }
     }

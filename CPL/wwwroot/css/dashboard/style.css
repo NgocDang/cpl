@@ -11,7 +11,6 @@ PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
 
 .top-1 {
-    top: 1.5rem;
     padding-left: 1rem;
     padding-bottom: 0.5rem;
 }
@@ -982,4 +981,12 @@ select.bs-select-hidden, select.selectpicker {
 
 .height-70 {
     height: 70px !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid #e5e6e6;
+}
+
+.modal-footer {
+    border-top: 1px solid #e5e6e6;
 }

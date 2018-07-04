@@ -6,6 +6,7 @@ using CPL.Misc;
 using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -73,7 +74,7 @@ namespace CPL.Controllers
                     user.TokenAmount += tokenAmount;
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true, message = "Success!" });
+                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully") });
                 }
                 else if (viewModel.FromCurrency == EnumCurrency.ETH.ToString() && viewModel.FromAmount <= user.ETHAmount)
                 {
@@ -93,7 +94,7 @@ namespace CPL.Controllers
                         user.BTCAmount += currencyAmount;
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
-                        return new JsonResult(new { success = true, message = "Success!" });
+                        return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully") });
                     }
                     else
                     {
@@ -102,14 +103,14 @@ namespace CPL.Controllers
                         user.ETHAmount += currencyAmount;
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
-                        return new JsonResult(new { success = true, message = "Success!" });
+                        return new JsonResult(new { success = true,message =  LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully") });
                     }
                 }
                 else
-                    return new JsonResult(new { success = false, message = "Insufficient funds!" });
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
             }
             else
-                return new JsonResult(new { success = false, message = "Error!" });
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
     }
 }
