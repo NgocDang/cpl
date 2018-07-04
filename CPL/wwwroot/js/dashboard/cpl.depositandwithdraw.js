@@ -86,6 +86,7 @@
                             $(_this).parents("form").find(".address-value").val(data.address);
                             toastr.success(data.message);
                         } else {
+                            $(_this).parents("form").find(".address-value").val("");
                             toastr.error('Error!');
                         }
                     },
