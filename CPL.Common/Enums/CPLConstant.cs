@@ -13,7 +13,10 @@ namespace CPL.Common.Enums
 
         //Two-factor authentication
         public static string AppName = "CPL";
-        public static string TwoFactorAuthenticationSecretKey = "FamHopper";
+        public static string TwoFactorAuthenticationSecretKey = "CPLFamHopper";
+
+        //Notification
+        public static string AdminEmail = "info.cplcoin@gmail.com";
 
         // Maintenance
         public struct Maintenance

@@ -2,6 +2,15 @@
     init: function () {
         Home.loadSlider();
         Home.loadDrawer();
+        Home.bindContact();
+    },
+    bindContact: function () {
+        $("#form-contact").on("click", ".btn-send-message", function (){
+            var isFormValid = $("#form-contact").valid();
+            if (isFormValid) {
+
+            }
+        });
     },
     loadDrawer: function() {
         $('.drawer').drawer({

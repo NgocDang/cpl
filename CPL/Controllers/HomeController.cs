@@ -50,21 +50,15 @@ namespace CPL.Controllers
         {
             if (!HttpContext.Session.GetInt32("LangId").HasValue)
                 HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
-
             var viewModel = new HomeViewModel();
-
-            //Team section
-            viewModel.Teams = _teamService.Queryable()
-                .Select(x => Mapper.Map<TeamViewModel>(x)).ToList();
-
-            //Languages
-            viewModel.Langs = _langService.Queryable()
-                .Select(x => Mapper.Map<LangViewModel>(x))
-                .ToList();
-
-            viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult SendMessage(ContactViewModel viewModel)
+        {
+            //EmailHelper.Send(new TemplateViewModel { Body = viewModel.Message, Name = viewModel.Name, Subject = })
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
 
         public IActionResult Error()
