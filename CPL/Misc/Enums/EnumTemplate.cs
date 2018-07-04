@@ -13,6 +13,6 @@ namespace CPL.Misc.Enums
         Member,
         KYCVerify,
         AffiliateVerify,
-        ContactUs
+        Contact
     }
 }

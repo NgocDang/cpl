@@ -8,7 +8,29 @@
         $("#form-contact").on("click", ".btn-send-message", function (){
             var isFormValid = $("#form-contact").valid();
             if (isFormValid) {
-
+                $.ajax({
+                    url: "/Home/Contact/",
+                    type: "POST",
+                    beforeSend: function () {
+                        $(".btn-send-message").attr("disabled", true);
+                        $(".btn-send-message").html("<i class='fa fa-spinner fa-spin'></i> " + $(".btn-send-message").text());
+                    },
+                    data: {
+                        Name: $("#Name").val(),
+                        Email: $("#Email").val(),
+                        Message: $("#Message").val()
+                    },
+                    success: function (data) {
+                        if (data.success)
+                            toastr.success(data.message);
+                        else
+                            toastr.error(data.message);
+                    },
+                    complete: function (data) {
+                        $(".btn-send-message").attr("disabled", false);
+                        $(".btn-send-message").html($(".btn-send-message").text());
+                    }
+                });
             }
         });
     },
