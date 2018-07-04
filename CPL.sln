@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPL", "CPL\CPL.csproj", "{E245BB6F-8CBA-423C-A755-85B8DAA0D8B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CPL", "CPL\CPL.csproj", "{E245BB6F-8CBA-423C-A755-85B8DAA0D8B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPL.Common", "CPL.Common\CPL.Common.csproj", "{A975FC05-4332-4B2A-AE13-8AA3374BD7AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CPL.Common", "CPL.Common\CPL.Common.csproj", "{A975FC05-4332-4B2A-AE13-8AA3374BD7AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPL.Core", "CPL.Core\CPL.Core.csproj", "{7DE96C77-062F-4C57-8133-57EA90BCA49D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CPL.Core", "CPL.Core\CPL.Core.csproj", "{7DE96C77-062F-4C57-8133-57EA90BCA49D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPL.Domain", "CPL.Domain\CPL.Domain.csproj", "{B923F0FF-BE85-4A4E-A520-12A2235D81CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CPL.Domain", "CPL.Domain\CPL.Domain.csproj", "{B923F0FF-BE85-4A4E-A520-12A2235D81CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPL.Infrastructure", "CPL.Infrastructure\CPL.Infrastructure.csproj", "{9B5E4EC1-0422-4C16-A45A-7E76E1055A04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CPL.Infrastructure", "CPL.Infrastructure\CPL.Infrastructure.csproj", "{9B5E4EC1-0422-4C16-A45A-7E76E1055A04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPL.Mapping", "CPL.Mapping\CPL.Mapping.csproj", "{5ADCD4E5-C24B-4705-B2CC-35530B0C62F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CPL.Mapping", "CPL.Mapping\CPL.Mapping.csproj", "{5ADCD4E5-C24B-4705-B2CC-35530B0C62F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -9,6 +9,6 @@ namespace CPL.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string TokenAmount { get; set; }
+        public decimal TokenAmount { get; set; }
     }
 }

@@ -4,7 +4,7 @@
             <div class="navbar-header d-md-none">
                 <ul class="nav navbar-nav flex-row">
                     <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="index.html#"><i class="ft-menu font-large-1"></i></a></li>
-                    <li class="nav-item d-md-none"><a class="navbar-brand" href="index.html"><img class="brand-logo d-none d-md-block" alt="crypto ico admin logo" src="~/images/logo_white.png"><img class="brand-logo d-sm-block d-md-none" alt="crypto ico admin logo sm" src="~/images/logo_white.png"></a></li>
+                    <li class="nav-item d-md-none"><a class="navbar-brand" href="index.html"><img class="brand-logo d-none d-md-block" alt="crypto ico admin logo" src="~/images/logo_white.png"><img class="brand-logo d-sm-block d-md-none" alt="crypto ico admin logo sm" src="~/images/logo.png"></a></li>
                     <li class="nav-item d-md-none"><a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i class="la la-ellipsis-v"></i></a></li>
                 </ul>
             </div>
@@ -15,16 +15,16 @@
                     </ul>
                     <ul class="nav navbar-nav float-right">
                         <li class="dropdown dropdown-language nav-item">
-                            <a class="dropdown-toggle nav-link" id="dropdown-flag" href="index.html#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flag-icon flag-icon-gb"></i><span class="selected-language"></span></a>
+                            <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flag-icon flag-icon-gb"></i><span class="selected-language"></span></a>
                             <div class="dropdown-menu" aria-labelledby="dropdown-flag">
                                 <a class="dropdown-item" href="#"><i class="flag-icon flag-icon-gb"></i> English</a>
                             </div>
                         </li>
                         <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" asp-controller="Dashboard" asp-action="Index"><i class="ficon icon-wallet"></i></a></li>
                         <li class="dropdown dropdown-user nav-item">
-                            <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+                            <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown" aria-expanded="false">
                                 <span class="avatar avatar-online"><img src="~/images/avatar-1.jpeg" alt="avatar"></span>
-                                <span class="mr-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")<span class="user-name text-bold-700">3,458.88</span></span>
+                                <span class="mr-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")<span class="user-name text-bold-700">@Model.TokenAmount.ToString("#,##0.#####")</span></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item" asp-controller="Profile" asp-action="EditAccount"><i class="ft-award"></i> @Model.FirstName @Model.LastName</a>
