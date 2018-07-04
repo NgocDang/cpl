@@ -17,16 +17,16 @@
             <div class="content-header-left col-md-12 col-12 mb-3 breadcrumb-new">
                 <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
                 <div class="row breadcrumbs-top d-inline-block">
-                    <div class="btn-group float-md-right top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="Exchange" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</a></div>
-                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-primary btn-sm white" asp-controller="DepositAndWithdraw" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DepositAndWithdraw")</a></div>
-                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Wallet")</a></div>
+                    <div class="btn-group float-md-right top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="Exchange" asp-action="Index"><i class="fa fa-exchange-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-primary btn-sm white" asp-controller="DepositAndWithdraw" asp-action="Index"><i class="fa fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DepositAndWithdraw")</a></div>
+                    <div class="btn-group float-md-right pr-1 top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="Dashboard" asp-action="Index"><i class="ficon icon-wallet"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Wallet")</a></div>
                 </div>
             </div>
         </div>
         <div class="content-body">
             <div class="row">
                 <div class="col-12">
-                    <section class="card pull-up">
+                    <section class="card">
                         <div class="card-content">
                             <div class="card-body">
                                 <div class="row">
@@ -117,7 +117,7 @@
                                                 <input type="file" class="file-qrcode" hidden/>
                                             </div>
                                             <div class="col-lg-2 col-md-2 col-12 text-center">
-                                                <button type="submit" class="btn btn-gradient-secondary btn-do-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</button>
+                                                <button type="submit" class="btn btn-gradient-secondary btn-do-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw") <i class="la la-angle-right"></i></button>
                                             </div>
                                             <input type="hidden" class="currency" value="BTC" />
                                         </form>
@@ -183,7 +183,7 @@
                                                 <input type="file" class="file-qrcode" hidden />
                                             </div>
                                             <div class="col-lg-2 col-md-2 col-12 text-center">
-                                                <button type="submit" class="btn btn-gradient-secondary btn-do-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</button>
+                                                <button type="submit" class="btn btn-gradient-secondary btn-do-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw") <i class="la la-angle-right"></i></button>
                                             </div>
                                             <input type="hidden" class="currency" value="ETH"/>
                                         </form>
@@ -198,50 +198,7 @@
         <div class="sidebar-detached sidebar-right">
             <div class="sidebar">
                 <div id="wallet-sidebar" class="sidebar-content">
-                    <div class="row">
-                        <p class="pt-1 text-capitalize col-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</p>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="card-title text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenName")</h6>
-                        </div>
-                        <div class="card-content collapse show">
-                            <div class="card-body">
-                                <div class="text-center row clearfix mb-2">
-                                    <div class="col-12">
-                                        <i class="cpl-token-balance font-large-3 bg-warning bg-glow white rounded-circle p-3 d-inline-block"></i>
-                                    </div>
-                                </div>
-                                <h3 class="text-center">3,458.88 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h3>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-de mb-0">
-                                    <tbody>
-                                        <tr>
-                                            <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenName")</td>
-                                            <td><i class='cpl-token-grey-sm'></i> 3,258 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</td>
-                                        </tr>
-                                        <tr>
-                                            <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenReferral")</td>
-                                            <td><i class='cpl-token-grey-sm'></i> 200.88 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</td>
-                                        </tr>
-                                        <tr>
-                                            <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenPrice")</td>
-                                            <td><i class="cc BTC-alt"></i> 0.0001 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</td>
-                                        </tr>
-                                        <tr>
-                                            <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Raised") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</td>
-                                            <td><i class="cc BTC-alt"></i> 2154 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</td>
-                                        </tr>
-                                        <tr>
-                                            <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Raised") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "USDSymbol")</td>
-                                            <td><i class="la la-dollar"></i> 4.52</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    @await Component.InvokeAsync("TokenBalance")
                 </div>
             </div>
         </div>
