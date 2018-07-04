@@ -5,12 +5,12 @@
         <div class="modal-content">
             <form id="form-exchange" method="POST" action="#" class="needs-validation" novalidate="">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirm</h5>
+                    <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="Name">Please confirm the transaction!</label>
+                        <label for="Name">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ConfirmExchangeWarning")</label>
                     </div>
                     <div class="card-body">
                         <form class="form-horizontal form-purchase-token" action="buy-ico.html">
@@ -35,8 +35,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btn-confirm-exchange" class="btn btn-sm btn-primary">Confirm</button>
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="btn-confirm-exchange" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yes")</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
                 </div>
                 @Html.HiddenFor(x => x.FromAmount)
                 @Html.HiddenFor(x => x.FromCurrency)
