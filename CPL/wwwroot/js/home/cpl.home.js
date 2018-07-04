@@ -1,6 +1,24 @@
 ﻿var Home = {
     init: function () {
         Home.loadSlider();
+        Home.loadDrawer();
+    },
+    loadDrawer: function() {
+        $('.drawer').drawer({
+            class: {
+                nav: 'drawer-nav',
+                toggle: 'drawer-toggle',
+                overlay: 'drawer-overlay',
+                open: 'drawer-open',
+                close: 'drawer-close',
+                dropdown: 'drawer-dropdown'
+            },
+            iscroll: {
+                mouseWheel: true,
+                preventDefault: false
+            },
+            showOverlay: true
+        });
     },
     loadSlider: function () {
         $('.owlSlider').addClass('owl-carousel')
@@ -32,7 +50,7 @@
         $('.owlSlider').on('initialized.owl.carousel resized.owl.carousel', function (event) {
             if ($('.owlSlider').length) {
                 var screenWidth = Home.screenWidth();
-                var slider_items = slider.find('a');
+                var slider_items = $('.owlSlider').find('a');
                 $.each(slider_items, function (i, v) {
                     var slider_item = $(this).data('medium');
                     if (screenWidth > 767) {

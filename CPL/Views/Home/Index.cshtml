@@ -19,61 +19,24 @@
     <link href="~/css/home/plugins/owl-carousel/owl.theme.default.min.css" rel="stylesheet" />
 </head>
 <body class="drawer drawer--right">
-    <button type="button" class="drawer-toggle drawer-hamburger">
-        <span class="drawer-hamburger-icon"></span>
-    </button>
     <nav class="drawer-nav" role="navigation">
         <div class="drawer-menu menu_1 cf">
-            <p class="item_btn items">
-                <a href="/info/introduction">
-                    <button class="btn btn_yellow first_btn shadow ef_btn op">
-                        <i>
-                            <img src="img/icon/icon-beginner_1.png" alt="">
-                        </i>
-                        <span>aa</span>
-                    </button>
+            <div class="item_btn items">
+                <a class="btn btn-warning btn-sm btn-drawer" asp-controller="Authentication" asp-action="Register">
+                    Register
                 </a>
-                <a href="/entry/mail">
-                    <button class="btn btn_red shadow ef_btn">
-                        <span>bbb</span>
-                    </button>
+                &nbsp;
+                <a class="btn btn-danger btn-sm btn-drawer" asp-controller="Authentication" asp-action="LogIn">
+                    Log in
                 </a>
-            </p>
-            <p class="login">
-                <a href="/login">
-                    <span>ccc</span>
-                </a>
-            </p>
-            <p class="drawer-title">
-                dddd
-            </p>
-            <ul class="drawer-menu_list cf">
-                <li class="about">
-                    <a href="/info/about">
-                        <span>eee</span>
-                    </a>
-                </li>
-                <li class="schedule">
-                    <a href="/schedule/">
-                        <span>ffff</span>
-                    </a>
-                </li>
-                <li class="result">
-                    <a href="/result/">
-                        <span>ggg</span>
-                    </a>
-                </li>
-                <li class="faq">
-                    <a href="/faq/">
-                        <span>hhhhh</span>
-                    </a>
-                </li>
-                <li class="winner">
-                    <a href="/impressions/">
-                        <span>iiiii</span>
-                    </a>
-                </li>
-            </ul>
+            </div>
+            <div class="drawer-sub-menu"><a href="#"> Home</a></div>
+            <div class="drawer-sub-menu"><a href="#"> About</a></div>
+            <div class="drawer-sub-menu"><a href="#"> Service overview</a></div>
+            <div class="drawer-sub-menu"><a href="#"> Purchase method</a></div>
+            <div class="drawer-sub-menu"><a href="#"> FAQ</a></div>
+            <div class="drawer-sub-menu"><a href="#"> Books</a></div>
+            <div class="drawer-sub-menu"><a href="#"> Newspaper</a></div>
         </div>
     </nav>
     <header class="t-header_top cf" role="banner">
@@ -89,10 +52,10 @@
                     <a href="#" class="btn btn-sm btn-header-icon"><i class="fab fa-twitter"></i></a>
                 </div>
                 <div class="t-item">
-                    <a asp-controller="Authentication" asp-action="Register" class="btn btn-sm btn-danger btn-header-action"><i class="fas fa-user"></i> REGISTER</a>
+                    <a asp-controller="Authentication" asp-action="Register" class="btn btn-sm btn-danger btn-header-action"><i class="fas fa-user"></i> Register</a>
                 </div>
                 <div class="t-item">
-                    <a asp-controller="Authentication" asp-action="Log in" class="btn btn-sm btn-danger btn-header-action"><i class="fas fa-sign-in-alt"></i> LOG IN</a>
+                    <a asp-controller="Authentication" asp-action="LogIn" class="btn btn-sm btn-danger btn-header-action"><i class="fas fa-sign-in-alt"></i> Log in</a>
                 </div>
             </div>
         </div>
@@ -102,9 +65,12 @@
         <div class="t-inner cf">
             <div class="logo">
                 <a asp-controller="Home" asp-action="Index">
-                    <img src="~/images/logo.png" class="img-fluid logo-image"/>
+                    <img src="~/images/logo.png" class="img-fluid logo-image" />
                 </a>
             </div>
+            <button type="button" class="drawer-toggle drawer-hamburger">
+                <span class="drawer-hamburger-icon"></span>
+            </button>
             <nav class="t-nav cf">
                 <ul class="cf">
                     <li><a href="#">Home</a></li>
@@ -452,28 +418,76 @@
                 </div>
             </div>
         </section>
+
+        <section class="t-contents_2 cf contact">
+            <div class="inner cf">
+                <h1 class="ttl_top">
+                    Contact us
+                </h1>
+                <p class="text_top">
+                    Lorem Ipsum is not simply random text it has roots in a piece of classical.
+                </p>
+                <div class="row pt-3">
+                    <div class="col-sm-12 margin-auto text-left">
+                        <form id="form-contact">
+                            <div class="form-group">
+                                <label for="Name">Name</label>
+                                <input type="text" name="Name" class="form-control" id="Name" required placeholder="Enter name">
+                            </div>
+                            <div class="form-group">
+                                <label for="Email">Email</label>
+                                <input type="email" class="form-control" id="Email" required placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label for="Message">Message</label>
+                                <textarea class="form-control" id="Message" name="Message" required placeholder="Enter message" rows="3"></textarea>
+                            </div>
+
+                            <button type="button" class="btn btn-danger btn-send-message margin-auto mt-5">Send message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <footer class="g-footer cf" role="contentinfo">
-        <div class="inner cf">
-            <ul class="footer_nav cf">
-                <li>
-                    <a href="/info/company">
-                        <span>aaa</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div class="inner cf">
-            <ul class="footer_nav cf">
-                <li>
-                    <a href="/info/company">
-                        <span>bbb</span>
-                    </a>
-                </li>
-            </ul>
+    <footer>
+        <div class="row">
+            <div class="col-md-3 text-left pb-4">
+                <img src="~/images/logo_white.png" style="padding-left:1em;" class="img-fluid" />
+            </div>
+            <div class="col-md-2 text-left pb-2">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Service overview</a></li>
+                    <li><a href="#">Purchase method</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2 text-left pb-2">
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Books</a></li>
+                    <li><a href="#">Newspaper</a></li>
+                </ul>
+            </div>
+            <div class="col-md-5 text-center pb-2">
+                <a asp-controller="Authentication" asp-action="Register" class="btn btn-danger btn-register">Register</a> &nbsp;
+                <a asp-controller="Authentication" asp-action="LogIn" class="btn btn-log-in">Log in</a> <br /><br />
+                Follow us on &nbsp;
+                <a href="#" class="btn btn-sm btn-footer-icon"><i class="fab fa-facebook-square"></i></a> &nbsp;
+                <a href="#" class="btn btn-sm btn-footer-icon"><i class="fab fa-google-plus-g"></i></a> &nbsp;
+                <a href="#" class="btn btn-sm btn-footer-icon"><i class="fab fa-twitter"></i></a>
+            </div>
         </div>
     </footer>
+    <div class="section-bottom">
+        <div class="row">
+            <div class="col-md-12">
+                Copyright @DateTime.Now.Year <b>CryptoLot</b> &nbsp; - &nbsp; <a href="#">Terms of service</a> |  <a href="#">Privacy policy</a>
+            </div>
+        </div>
+    </div>
 
     <script src="~/js/home/jquery-3.2.1.min.js"></script>
     <script src="~/js/home/popper.min.js"></script>
@@ -482,11 +496,7 @@
     <script src="~/js/home/plugins/owl-carousel/owl.carousel.js"></script>
     <script src="~/js/home/cpl.home.js"></script>
 
-    @*<script src="js/plugin/scroll/smooth-scroll.min.js?v=20180613"></script>
-    <script src="js/plugin/iscroll/iscroll.min.js?v=20180613"></script>
-    <script src="ladda/spin.min.js?v=20180613"></script>
-    <script src="ladda/ladda.min.js?v=20180613"></script>
-    <script src="js/common.js?v=20180613"></script>
-    <script src="js/script.js?v=20180613"></script>*@
+    <script src="~/js/home/plugins/scroll/smooth-scroll.min.js"></script>
+    <script src="~/js/home/plugins/iscroll/iscroll.min.js"></script>
 </body>
 </html>
