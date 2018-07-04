@@ -2457,6 +2457,7 @@ hr.line_1 {
   .top_visual {
     position: relative;
     padding: 0 0 16px 0;
+    margin-top:65px;
   }
   .top_visual_line {
     display: none;
