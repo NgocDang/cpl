@@ -84,7 +84,7 @@
                     success: function (data) {
                         if (data.success) {
                             $(_this).parents("form").find(".address-value").val(data.address);
-                            toastr.success('Success!');
+                            toastr.success(data.message);
                         } else {
                             toastr.error('Error!');
                         }

@@ -99,7 +99,7 @@ namespace CPL.Controllers
             {
                 BarcodeReader reader = new BarcodeReader { AutoRotate = true, TryInverted = true };
                 string qrcode = reader.Decode(bitmap).Text;
-                return new JsonResult(new { success = true, address = qrcode });
+                return new JsonResult(new { success = true, address = qrcode, message = "Success!" });
             }
             catch
             {
