@@ -64,6 +64,12 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
+        public IActionResult Exchange()
+        {
+            var viewModel = new ExchangeViewModel();
+            return View(viewModel);
+        }
+
         public IActionResult WithdrawBTC()
         {
             return PartialView("_BtcOut");

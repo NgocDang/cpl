@@ -66,10 +66,13 @@
                             type: 'pie'
                         },
                         title: {
-                            text: 'Holding Percentage'
+                            text: null
                         },
                         tooltip: {
                             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        },
+                        exporting: {
+                            enabled: false
                         },
                         plotOptions: {
                             pie: {
@@ -118,10 +121,13 @@
                             type: 'spline'
                         },
                         title: {
-                            text: 'Snow depth at Vikjafjellet, Norway'
+                            text: null
                         },
                         subtitle: {
-                            text: 'Irregular time data in Highcharts JS'
+                            text: null
+                        },
+                        exporting: {
+                            enabled: false
                         },
                         xAxis: {
                             type: 'datetime',
@@ -135,7 +141,7 @@
                         },
                         yAxis: {
                             title: {
-                                text: 'Snow depth (m)'
+                                text: ''
                             },
                         },
                         tooltip: {
@@ -155,9 +161,9 @@
 
                     };
 
-                    var asset = { data: [], name: 'Asset Changes', color: '#28b3fe' };
-                    var invest = { data: [], name: 'Monthly Invests', color: '#a858fe' };
-                    var prize = { data: [], name: 'Prizes', color: '#60e1e3' };
+                    var asset = { data: [], name: 'Asset Changes', color: '#4267b2' };
+                    var invest = { data: [], name: 'Monthly Invests', color: '#f7931a' };
+                    var prize = { data: [], name: 'Prizes', color: '#828384' };
 
                     $.each(JSON.parse(a).AssetChange, function (index, value) {
                         date = new Date(value.Date);
