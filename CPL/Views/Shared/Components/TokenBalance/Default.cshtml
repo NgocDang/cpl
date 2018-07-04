@@ -1,10 +1,6 @@
 ﻿@model TokenBalanceViewModel
 
-
-<div class="row">
-    <p class="pt-1 text-capitalize col-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</p>
-</div>
-<div class="card pull-up">
+<div class="card">
     <div class="card-header">
         <h6 class="card-title text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenName")</h6>
     </div>
