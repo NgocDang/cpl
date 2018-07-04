@@ -28,7 +28,7 @@ namespace CPL.ViewComponents
         public IViewComponentResult Invoke()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
-            var viewModel = Mapper.Map<TokenCalculatorViewModel>(user);
+            var viewModel = new TokenCalculatorViewModel(); ;
             var ethToBTCRate = CoinExchangeExtension.CoinExchanging();
             viewModel.ETHToTokenRate = (decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value)) * ethToBTCRate;
             viewModel.BTCToTokenRate = 1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
