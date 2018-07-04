@@ -21,15 +21,15 @@
             <table class="table table-de mb-0">
                 <tbody>
                     <tr>
-                        <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</td>
+                        <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</td>
                         <td><i class='cpl-token-grey-sm'></i> @Model.TokenAmount.ToString("#,##0.########")</td>
                     </tr>
                     <tr>
-                        <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Price")</td>
+                        <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice")</td>
                         <td><i class='cc BTC-alt'></i> @Model.BTCToTokenRate.ToString("#,##0.########")</td>
                     </tr>
                     <tr>
-                        <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Price")</td>
+                        <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToETHPrice")</td>
                         <td><i class="cc ETH-alt"></i> @Model.ETHToTokenRate.ToString("#,##0.########")</td>
                     </tr>
                 </tbody>

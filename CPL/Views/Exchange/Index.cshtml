@@ -135,55 +135,9 @@
         <div class="sidebar-detached sidebar-right">
             <div class="sidebar">
                 <div id="wallet-sidebar" class="sidebar-content">
-                    @await  Component.InvokeAsync("TokenBalance")
-
+                    @await Component.InvokeAsync("TokenBalance")
                     <div class="card pull-up">
-                        <div class="card-header">
-                            <h6 class="card-title text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Calculator")</h6>
-                        </div>
-                        <div class="card-content collapse show">
-                            <div class="card-body">
-                                <form class="form form-horizontal">
-                                    <div class="form-body">
-                                        <div class="form-group row">
-                                            <fieldset class="col-12">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="ETH" aria-describedby="basic-addon4">
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text" id="basic-addon4"><i class="cc ETH-alt"></i></span>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                        <div class="form-group row">
-                                            <fieldset class="col-12">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="BTC" aria-describedby="basic-addon4">
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text" id="basic-addon4"><i class="cc BTC-alt"></i></span>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                        <div class="form-group row">
-                                            <fieldset class="col-12">
-                                                <p class="mb-0">=</p>
-                                            </fieldset>
-                                        </div>
-                                        <div class="form-group row">
-                                            <fieldset class="col-12">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" placeholder="CIC" aria-describedby="basic-addon4">
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text" id="basic-addon4"><i class="icon-layers"></i></span>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                        @await Component.InvokeAsync("TokenCalculator")
                     </div>
 
                 </div>
@@ -199,4 +153,5 @@
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
+    <script src="~/js/dashboard/cpl.tokencalculator.js"></script>
 }
