@@ -48,6 +48,7 @@
                         $(_this).parents("form").find(".address-error").hide();
                         $(_this).parents("form").find(".amount-error").hide();
                         toastr.success(data.message, 'Success!');
+                        DepositAndWithdraw.bindLoadViewComponent();
                     } else {
                         if (data.name === "wallet") {
                             $(_this).parents("form").find(".amount-error").hide();
@@ -96,6 +97,20 @@
             };
             return false;
         });
+    },
+    bindLoadViewComponent: function () {
+        $.ajax({
+            url: "/DepositAndWithdraw/LoadDepositWithdrawViewComponent/",
+            type: "GET",
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#dipositwithdraw-content").html(data);
+            },
+            complete: function (data) {
+                DepositAndWithdraw.init();
+            }
+        })
     }
 }
 

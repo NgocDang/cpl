@@ -49,9 +49,7 @@ namespace CPL.Controllers
 
         public IActionResult Index()
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
-            var model = Mapper.Map<DepositAndWithdrawViewModel>(user);
-            return View(model);
+            return View();
         }
 
         [HttpPost]
@@ -106,6 +104,11 @@ namespace CPL.Controllers
             {
                 return new JsonResult(new { success = false, message = ex.Message });
             }
+        }
+
+        public IActionResult LoadDepositWithdrawViewComponent()
+        {
+            return ViewComponent("DepositWithdraw");
         }
     }
 }
