@@ -146,7 +146,7 @@
                         },
                         tooltip: {
                             headerFormat: '<b>{series.name}</b><br>',
-                            pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+                            pointFormat: '{point.x:%e. %b}: {point.y:.2f} CPL'
                         },
 
                         plotOptions: {
