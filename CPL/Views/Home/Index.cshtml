@@ -11,6 +11,7 @@
     <title>CPL</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" crossorigin="anonymous">
     <link href="~/css/home/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/home/stroke.css" rel="stylesheet" />
     <link href="~/css/home/ladda-themeless.min.css" rel="stylesheet" />
     <link href="~/css/home/style.css" rel="stylesheet" />
     <link href="~/css/home/style-dev.css" rel="stylesheet" />
@@ -136,9 +137,12 @@
         <section class="t-contents_2 cf">
             <div class="inner cf">
                 <div class="row">
-                    <div class="col-md-5 col-sm-12 margin-auto">
+                    <div class="col-md-4 col-sm-12 margin-auto pb-3">
                         <div class="card">
                             <img class="card-img-top" src="~/images/lottery_game.jpg" alt="Card image cap">
+                            <div class="card-img-overlay">
+                                <h5 class="card-title">Lottery</h5>
+                            </div>
                             <div class="card-body">
                                 <form class="row">
                                     <div class="col-8" style="padding-right:0px;">
@@ -151,11 +155,297 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5 col-sm-12 margin-auto">
+                    <div class="col-md-4 col-sm-12 margin-auto pb-3">
                         <div class="card">
                             <img class="card-img-top" src="~/images/prediction_game.jpg" alt="Card image cap">
+                            <div class="card-img-overlay">
+                                <h5 class="card-title">Prediction</h5>
+                            </div>
                             <div class="card-body">
                                 <button class="btn btn-danger btn-card"><i class="fas fa-chart-line"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="t-contents_2 cf section-outline">
+            <div class="inner cf">
+                <div class="row">
+                    <div class="col-md-5 col-sm-12 margin-auto" style="text-align:left;">
+                        <div class="section-content">
+                            <h3 class="section-outline-title">Outline</h3>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                            <p>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-sm-12 margin-auto">
+                        <div class="section-content">
+                            <img class="img-fluid section-content-img" src="~/images/home_desktop.png">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="t-flow_1 cf">
+            <div class="inner cf">
+                <h1 class="ttl_top">
+                    4 Steps to win
+                </h1>
+                <p class="text_top">
+                    It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+                </p>
+                <ul class="flow_step_list cf">
+                    <li>
+                        <div class="item-header">Step 1</div>
+                        <div class="item">
+                            <div class="thumbnail">
+                                <img src="~/images/step-1.svg" alt="" height="90">
+                            </div>
+                            <dl>
+                                <dt>
+                                    <span>Registration</span>
+                                </dt>
+                                <dd>
+                                    <p class="text">You can register in 30 seconds</p>
+                                    <div class="item_btn">
+                                        <a asp-controller="Authentication" asp-action="Register" class="btn btn-danger btn-block">Register</a>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                        <i class="flaticon stroke right-1 arrow_icon"></i>
+                    </li>
+                    <li>
+                        <div class="item-header">Step 2</div>
+                        <div class="item">
+                            <div class="thumbnail">
+                                <img src="~/images/step-2.svg" alt="" height="90">
+                            </div>
+                            <dl>
+                                <dt>
+                                    <span>Deposit</span>
+                                </dt>
+                                <dd>
+                                    <p class="text">Deposit currency in CPL token</p>
+                                </dd>
+                            </dl>
+                        </div>
+                        <i class="flaticon stroke right-1 arrow_icon"></i>
+                    </li>
+                    <li>
+                        <div class="item-header">Step 3</div>
+                        <div class="item">
+                            <div class="thumbnail">
+                                <img src="~/images/step-3.svg" alt="" height="90">
+                            </div>
+                            <dl>
+                                <dt>
+                                    <span>Play game</span>
+                                </dt>
+                                <dd>
+                                    <p class="text">Choose any game that suits you</p>
+                                    <div class="item_btn">
+                                        <a href="#" class="btn btn-danger btn-block">Play now</a>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                        <i class="flaticon stroke right-1 arrow_icon"></i>
+                    </li>
+                    <li>
+                        <div class="item-header">Step 4</div>
+                        <div class="item">
+                            <div class="thumbnail">
+                                <img src="~/images/step-4.svg" alt="" height="90">
+                            </div>
+                            <dl>
+                                <dt>
+                                    <span>Winning</span>
+                                </dt>
+                                <dd>
+                                    <p class="text">With this, you will be a millionare</p>
+                                </dd>
+                            </dl>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="t-contents_2 cf section-rate">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 margin-auto section-rate-half text-right rate">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12"></div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="section-content">
+                                <img src="~/images/rate.svg" class="img-fluid" />
+                                <h3 class="section-rate-title">90%</h3>
+                                <p>Lorem Ipsum is simply dummy text of the printing </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12 margin-auto section-rate-half text-left billionare">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="section-content">
+                                <img src="~/images/billionare.svg" class="img-fluid" height="100" />
+                                <h3 class="section-rate-title">100 million</h3>
+                                <p>When an unknown printer took a galley of type.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="t-contents_2 cf faq">
+            <div class="inner cf">
+                <h1 class="ttl_top">
+                    FAQ
+                </h1>
+                <p class="text_top">
+                    It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+                </p>
+                <div class="row pt-3">
+                    <div class="col-md-6 col-sm-12 margin-auto section-rate-half text-right rate">
+                        <div class="panel-group panel-group-custom panel-group-corporate" id="faq-left" role="tablist" aria-multiselectable="false">
+                            <!-- Bootstrap panel-->
+                            <div class="panel panel-custom panel-corporate">
+                                <div class="panel-heading" id="accordion1Heading1" role="tab">
+                                    <div class="panel-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#faq-left" href="#faq-1" aria-controls="faq-1" aria-expanded="false" class="collapsed">
+                                            What are the advantages of purchasing your template?
+                                            <div class="panel-arrow"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="panel-collapse collapse" id="faq-1" role="tabpanel" aria-labelledby="accordion1Heading1" aria-expanded="false" style="height: 0px;">
+                                    <div class="panel-body">
+                                        <p>The major advantage is price: You get a high quality design for just $20-$70. You don’t have to hire a web designer or web design studio. Second advantage is time frame: It usually takes 5-15 days for a good designer to produce a web page of such quality.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bootstrap panel-->
+                            <div class="panel panel-custom panel-corporate">
+                                <div class="panel-heading" id="accordion1Heading2" role="tab">
+                                    <div class="panel-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#faq-left" href="#faq-2" aria-controls="faq-2" aria-expanded="false">
+                                            What do I receive when I order this  template?
+                                            <div class="panel-arrow"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="panel-collapse collapse" id="faq-2" role="tabpanel" aria-labelledby="accordion1Heading2" aria-expanded="false">
+                                    <div class="panel-body">
+                                        <p>After you complete the payment via our secure form you will receive the instructions for downloading the product. The source files in the download package can vary based on the type of the product you have purchased.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bootstrap panel-->
+                            <div class="panel panel-custom panel-corporate">
+                                <div class="panel-heading" id="accordion1Heading3" role="tab">
+                                    <div class="panel-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#faq-left" href="#faq-3" aria-controls="faq-3" aria-expanded="false">
+                                            What am I allowed to do with the template?
+                                            <div class="panel-arrow"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="panel-collapse collapse" id="faq-3" role="tabpanel" aria-labelledby="accordion1Heading3" aria-expanded="false">
+                                    <div class="panel-body">
+                                        <p>You may build a website using the template in any way you like. You may not resell or redistribute templates (like we do); claim intellectual or exclusive ownership to any of our products, modified or unmodified. All products are property of content providing companies and individuals. You are also not allowed to make more than one project using the same template (you have to purchase the same template once more in order to make another project with the same design).</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bootstrap panel-->
+                            <div class="panel panel-custom panel-corporate">
+                                <div class="panel-heading" id="accordion1Heading4" role="tab">
+                                    <div class="panel-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#faq-left" href="#faq-4" aria-controls="faq-4" aria-expanded="false">
+                                            Do you provide any scripts with the template?
+                                            <div class="panel-arrow"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="panel-collapse collapse" id="faq-4" role="tabpanel" aria-labelledby="accordion1Heading4" aria-expanded="false">
+                                    <div class="panel-body">
+                                        <p>Our templates do not include any additional scripts. Newsletter subscriptions, search fields, forums, image galleries (in HTML versions of Flash products) are inactive. Basic scripts can be easily added at www.TemplateTuning.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 margin-auto section-rate-half text-left billionare">
+                        <div class="panel-group panel-group-custom panel-group-corporate" id="faq-right" role="tablist" aria-multiselectable="false">
+                            <!-- Bootstrap panel-->
+                            <div class="panel panel-custom panel-corporate">
+                                <div class="panel-heading" id="accordion1Heading1" role="tab">
+                                    <div class="panel-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#faq-right" href="#faq-5" aria-controls="faq-5" aria-expanded="false" class="collapsed">
+                                            What are the advantages of purchasing your template?
+                                            <div class="panel-arrow"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="panel-collapse collapse" id="faq-5" role="tabpanel" aria-labelledby="accordion1Heading1" aria-expanded="false" style="height: 0px;">
+                                    <div class="panel-body">
+                                        <p>The major advantage is price: You get a high quality design for just $20-$70. You don’t have to hire a web designer or web design studio. Second advantage is time frame: It usually takes 5-15 days for a good designer to produce a web page of such quality.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bootstrap panel-->
+                            <div class="panel panel-custom panel-corporate">
+                                <div class="panel-heading" id="accordion1Heading2" role="tab">
+                                    <div class="panel-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#faq-right" href="#faq-6" aria-controls="faq-6" aria-expanded="false">
+                                            What do I receive when I order this  template?
+                                            <div class="panel-arrow"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="panel-collapse collapse" id="faq-6" role="tabpanel" aria-labelledby="accordion1Heading2" aria-expanded="false">
+                                    <div class="panel-body">
+                                        <p>After you complete the payment via our secure form you will receive the instructions for downloading the product. The source files in the download package can vary based on the type of the product you have purchased.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bootstrap panel-->
+                            <div class="panel panel-custom panel-corporate">
+                                <div class="panel-heading" id="accordion1Heading3" role="tab">
+                                    <div class="panel-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#faq-right" href="#faq-7" aria-controls="faq-7" aria-expanded="false">
+                                            What am I allowed to do with the template?
+                                            <div class="panel-arrow"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="panel-collapse collapse" id="faq-7" role="tabpanel" aria-labelledby="accordion1Heading3" aria-expanded="false">
+                                    <div class="panel-body">
+                                        <p>You may build a website using the template in any way you like. You may not resell or redistribute templates (like we do); claim intellectual or exclusive ownership to any of our products, modified or unmodified. All products are property of content providing companies and individuals. You are also not allowed to make more than one project using the same template (you have to purchase the same template once more in order to make another project with the same design).</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bootstrap panel-->
+                            <div class="panel panel-custom panel-corporate">
+                                <div class="panel-heading" id="accordion1Heading4" role="tab">
+                                    <div class="panel-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#faq-right" href="#faq-8" aria-controls="faq-8" aria-expanded="false">
+                                            Do you provide any scripts with the template?
+                                            <div class="panel-arrow"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="panel-collapse collapse" id="faq-8" role="tabpanel" aria-labelledby="accordion1Heading4" aria-expanded="false">
+                                    <div class="panel-body">
+                                        <p>Our templates do not include any additional scripts. Newsletter subscriptions, search fields, forums, image galleries (in HTML versions of Flash products) are inactive. Basic scripts can be easily added at www.TemplateTuning.com</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
