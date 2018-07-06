@@ -20,21 +20,34 @@
                                 <a class="dropdown-item" href="#"><i class="flag-icon flag-icon-gb"></i> English</a>
                             </div>
                         </li>
-                        <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" asp-controller="Dashboard" asp-action="Index"><i class="ficon icon-wallet"></i></a></li>
-                        <li class="dropdown dropdown-user nav-item">
-                            <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown" aria-expanded="false">
-                                <span class="avatar avatar-online"><img src="~/images/avatar-1.jpeg" alt="avatar"></span>
-                                <span class="mr-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")<span class="user-name text-bold-700">@Model.TokenAmount.ToString("#,##0.#####")</span></span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" asp-controller="Profile" asp-action="EditAccount"><i class="ft-award"></i> @Model.FirstName @Model.LastName</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" asp-controller="Profile" asp-action="EditAccount"><i class="ft-user"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit")</a>
-                                <a class="dropdown-item" asp-controller="Profile" asp-action="EditCredential"><i class="ft-check-square"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item logout-confirmation"><i class="ft-power"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
-                            </div>
-                        </li>
+                        @if (Model == null)
+                        {
+
+                            <li class="dropdown dropdown-notification nav-item">
+                                <a class="btn btn-primary btn-sm navbar-action" asp-controller="Authentication" asp-action="LogIn"><i class="fas fa-sign-in-alt"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</a>
+                            </li>
+                            <li class="dropdown dropdown-notification nav-item">
+                                <a class="btn btn-outline-primary btn-sm navbar-action" asp-controller="Authentication" asp-action="Register"><i class="fas fa-user-plus"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" asp-controller="Dashboard" asp-action="Index"><i class="ficon icon-wallet"></i></a></li>
+                            <li class="dropdown dropdown-user nav-item">
+                                <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown" aria-expanded="false">
+                                    <span class="avatar avatar-online"><img src="~/images/avatar-1.jpeg" alt="avatar"></span>
+                                    <span class="mr-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")<span class="user-name text-bold-700">@Model.TokenAmount.ToString("#,##0.#####")</span></span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" asp-controller="Profile" asp-action="EditAccount"><i class="ft-award"></i> @Model.FirstName @Model.LastName</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-controller="Profile" asp-action="EditAccount"><i class="ft-user"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit")</a>
+                                    <a class="dropdown-item" asp-controller="Profile" asp-action="EditCredential"><i class="ft-check-square"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item logout-confirmation"><i class="ft-power"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
+                                </div>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

@@ -3,20 +3,38 @@
     <div class="main-menu-content">
         <a asp-controller="Home" asp-action="Index" class="navigation-brand d-none d-md-block d-lg-block d-xl-block"><img class="brand-logo" alt="crypto ico admin logo" src="~/images/logo_white.png" /></a>
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-            <li class="active">
-                <a asp-controller="Dashboard" asp-action="Index"><i class="icon-grid"></i><span class="menu-title" data-i18n="">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</span></a>
-            </li>
+            @if (Model != null)
+            {
+                <li class="active">
+                    <a asp-controller="Dashboard" asp-action="Index"><i class="icon-grid"></i><span class="menu-title" data-i18n="">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</span></a>
+                </li>
+            }
             <li class="nav-item">
-                <a href="#"><i class="icon-user-following"></i><span class="menu-title" data-i18n="">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</span></a>
+                <a href="#"><i class="fas fa-trophy"></i><span class="menu-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Play")</span></a>
                 <ul class="menu-content">
                     <li>
-                        <a class="menu-item" asp-controller="Profile" asp-action="EditAccount"><i class="ft-user"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditAccount")</a>
+                        <a class="menu-item" asp-controller="Lottery" asp-action="Index"><i class="fas fa-trophy"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
                     </li>
                     <li>
-                        <a class="menu-item" asp-controller="Profile" asp-action="EditCredential"><i class="ft-check-square"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
+                        <a class="menu-item" asp-controller="PricePrediction" asp-action="Index"><i class="fab fa-btc"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
                     </li>
                 </ul>
             </li>
+            @if (Model != null)
+            {
+                <li class="nav-item">
+                    <a href="#"><i class="icon-user-following"></i><span class="menu-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</span></a>
+                    <ul class="menu-content">
+                        <li>
+                            <a class="menu-item" asp-controller="Profile" asp-action="EditAccount"><i class="ft-user"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditAccount")</a>
+                        </li>
+                        <li>
+                            <a class="menu-item" asp-controller="Profile" asp-action="EditCredential"><i class="ft-check-square"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
+                        </li>
+                    </ul>
+                </li>
+            }
+
         </ul>
     </div>
 </div>
