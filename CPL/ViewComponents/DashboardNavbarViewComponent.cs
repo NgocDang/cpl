@@ -1,4 +1,6 @@
 ﻿using CPL.Core.Interfaces;
+using CPL.Misc;
+using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace CPL.ViewComponents
 {
+    [Permission(EnumRole.Guest)]
     public class DashboardNavbarViewComponent : ViewComponent
     {
         private readonly ISysUserService _sysUserService;
