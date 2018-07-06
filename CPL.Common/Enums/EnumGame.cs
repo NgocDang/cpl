@@ -11,7 +11,7 @@ namespace CPL.Common.Enums
         PENDING = 3
     }
 
-    public enum PricePredictionStatus
+    public enum EnumPricePredictionStatus
     {
         UP,
         DOWN
