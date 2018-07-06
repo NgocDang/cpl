@@ -15,7 +15,7 @@ namespace CPL.Domain
         public bool Prediction { get; set; }
         public string Result { get; set; }
         public decimal Award { get; set; }
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
         public virtual PricePrediction PricePrediction { get; set; }
         public virtual SysUser SysUser { get; set; }
