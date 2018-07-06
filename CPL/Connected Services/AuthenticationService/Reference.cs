@@ -178,7 +178,7 @@ namespace AuthenticationService
         {
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IAuthentication))
             {
-                return new System.ServiceModel.EndpointAddress("http://202.53.150.20/Security/Authentication.svc");
+                return new System.ServiceModel.EndpointAddress("http://api.famhopperchain.com/Security/Authentication.svc");
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

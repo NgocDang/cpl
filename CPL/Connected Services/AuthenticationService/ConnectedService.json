@@ -2,7 +2,7 @@
   "ProviderId": "Microsoft.VisualStudio.ConnectedService.Wcf",
   "Version": "15.0.20406.879",
   "ExtendedData": {
-    "Uri": "http://202.53.150.20/Security/Authentication.svc",
+    "Uri": "http://api.famhopperchain.com/Security/Authentication.svc",
     "Namespace": "AuthenticationService",
     "SelectedAccessLevelForGeneratedClass": "Public",
     "GenerateMessageContract": false,

@@ -25,7 +25,7 @@
                     type: "POST",
                     beforeSend: function () {
                         $("#btn-register").attr("disabled", true);
-                        $("#btn-register").html("<i class='fa fa-spinner fa-spin'></i><i class='far fa-registered'></i> " + $("#btn-register").text());
+                        $("#btn-register").html("<i class='fa fa-spinner fa-spin'></i><i class='fas fa-user-plus'></i> " + $("#btn-register").text());
                     },
                     data: {
                         Email: $("#Email").val(),
@@ -52,7 +52,7 @@
                     },
                     complete: function (data) {
                         $("#btn-register").attr("disabled", false);
-                        $("#btn-register").html("<i class='far fa-registered'></i> "+ $("#btn-register").text());
+                        $("#btn-register").html("<i class='fas fa-user-plus'></i> "+ $("#btn-register").text());
                     }
                 });
             }

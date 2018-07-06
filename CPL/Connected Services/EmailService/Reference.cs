@@ -679,7 +679,7 @@ namespace EmailService
         {
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IEmail))
             {
-                return new System.ServiceModel.EndpointAddress("http://202.53.150.20/Message/Email.svc");
+                return new System.ServiceModel.EndpointAddress("http://api.famhopperchain.com/Message/Email.svc");
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }
