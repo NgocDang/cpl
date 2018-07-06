@@ -24,8 +24,8 @@ namespace CPL.ViewComponents
         public IViewComponentResult Invoke()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
-            var model = Mapper.Map<DepositAndWithdrawViewModel>(user);
-            return View(model);
+            var viewModel = Mapper.Map<DepositAndWithdrawViewModel>(user);
+            return View(viewModel);
         }
     }
 }
