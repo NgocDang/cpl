@@ -41,5 +41,6 @@ namespace CPL.Domain
 
         public virtual ICollection<CoinTransaction> CoinTransactions { get; set; }
         public virtual ICollection<GameHistory> GameHistories { get; set; }
+        public virtual ICollection<PricePredictionHistory> PricePredictionHistories { get; set; }
     }
 }
