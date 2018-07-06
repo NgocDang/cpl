@@ -2,7 +2,7 @@
   "ProviderId": "Microsoft.VisualStudio.ConnectedService.Wcf",
   "Version": "15.0.20406.879",
   "ExtendedData": {
-    "Uri": "http://202.53.150.20/Message/Email.svc",
+    "Uri": "http://api.famhopperchain.com/Message/Email.svc",
     "Namespace": "EmailService",
     "SelectedAccessLevelForGeneratedClass": "Public",
     "GenerateMessageContract": false,
