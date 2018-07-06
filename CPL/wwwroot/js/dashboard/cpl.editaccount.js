@@ -104,6 +104,19 @@
         });
 
         $("#btn-save-account").on("click", function () {
+            var fsFileUpload = $("#FrontSideImage").get(0);
+            var fsFile = null;
+            if (fsFileUpload.files.length > 0) {
+                fsFile = fsFileUpload.files[0];
+                $("#BackSideImage").attr('required', true);
+            }
+            var bsFileUpload = $("#BackSideImage").get(0);
+            var bsFile = null;
+            if (bsFileUpload.files.length > 0) {
+                bsFile = bsFileUpload.files[0];
+                $("#FrontSideImage").attr('required', true);
+            }
+
             var isFormValid = $("#form-edit-account").valid();
 
             //Validate for Mobile
@@ -128,24 +141,29 @@
                 $("#country-msg").show();
 
             if (isFormValid && isMobileValid && isDOBValid && isCountryValid) {
+                var formData = new FormData();
+                formData.append('Id', $("#Id").val());
+                formData.append('FirstName', $("#FirstName").val());
+                formData.append('LastName', $("#LastName").val());
+                formData.append('Gender', $('#Male').is(':checked'));
+                formData.append('DOB', moment().date($("#Day").val()).month($("#Month").val() - 1).year($("#Year").val()).format("YYYY-MM-DD"));
+                formData.append('PostalCode', $("#PostalCode").val());
+                formData.append('Country', $("#Country").val());
+                formData.append('City', $("#City").val());
+                formData.append('StreetAddress', $("#StreetAddress").val());
+                formData.append('Mobile', $("#Mobile").intlTelInput("getNumber"));
+                formData.append('FrontSideImage', fsFile);
+                formData.append('BackSideImage', bsFile);
                 $.ajax({
                     url: "/Profile/EditAccount/",
                     type: "POST",
+                    processData: false,
+                    contentType: false,
                     beforeSend: function () {
                         $("#btn-save-account").attr("disabled", true);
                         $("#btn-save-account").html("<i class='fa fa-spinner fa-spin'></i> <i class='far fa-save'></i> " + $("#btn-save-account").text());
                     },
-                    data: {
-                        FirstName: $("#FirstName").val(),
-                        LastName: $("#LastName").val(),
-                        Gender: $('#Male').is(':checked'),
-                        DOB: moment().date($("#Day").val()).month($("#Month").val()-1).year($("#Year").val()).format("YYYY-MM-DD"),
-                        PostalCode: $("#PostalCode").val(),
-                        Country: $("#Country").val(),
-                        City: $("#City").val(),
-                        StreetAddress: $("#StreetAddress").val(),
-                        Mobile: $("#Mobile").intlTelInput("getNumber")
-                    },
+                    data: formData,
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');

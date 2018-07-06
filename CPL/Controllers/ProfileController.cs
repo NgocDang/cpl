@@ -14,12 +14,15 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Mail;
 using System.Net;
 using CPL.Misc.Utils;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace CPL.Controllers
 {
     [Permission(EnumRole.User)]
     public class ProfileController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILangService _langService;
         private readonly IMapper _mapper;
         private readonly IViewRenderService _viewRenderService;
@@ -31,6 +34,7 @@ namespace CPL.Controllers
         private readonly ITemplateService _templateService;
 
         public ProfileController(
+            IHostingEnvironment hostingEnvironment,
             ILangService langService,
             IMapper mapper,
             IViewRenderService viewRenderService,
@@ -42,6 +46,7 @@ namespace CPL.Controllers
             ITeamService teamService,
             ITemplateService templateService)
         {
+            this._hostingEnvironment = hostingEnvironment;
             this._langService = langService;
             this._mapper = mapper;
             this._viewRenderService = viewRenderService;
@@ -76,6 +81,29 @@ namespace CPL.Controllers
                 user.City = viewModel.City;
                 user.StreetAddress = viewModel.StreetAddress;
                 user.Mobile = viewModel.Mobile;
+
+                // KYC
+                if (viewModel.FrontSideImage != null || viewModel.BackSideImage != null)
+                {
+                    user.KYCCreatedDate = DateTime.Now;
+                    user.KYCVerified = false;
+                    var kyc = Path.Combine(_hostingEnvironment.WebRootPath, @"images\kyc");
+                    if (viewModel.FrontSideImage != null)
+                    {
+                        var frontSide = viewModel.Id.ToString() + "_FS_" + viewModel.FrontSideImage.FileName;
+                        var frontSidePath = Path.Combine(kyc, frontSide);
+                        viewModel.FrontSideImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
+                        user.FrontSide = frontSide;
+                    }
+                    if (viewModel.BackSideImage != null)
+                    {
+                        var backSide = viewModel.Id.ToString() + "_BS_" + viewModel.BackSideImage.FileName;
+                        var backSidePath = Path.Combine(kyc, backSide);
+                        viewModel.BackSideImage.CopyTo(new FileStream(backSidePath, FileMode.Create));
+                        user.BackSide = backSide;
+                    }
+                }
+
                 HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
                 _sysUserService.Update(user);
                 _unitOfWork.SaveChanges();
