@@ -108,7 +108,7 @@
             success: function (data) {
                 $("#dipositwithdraw-content").html(data);
             }
-        })
+        });
     }
 }
 
