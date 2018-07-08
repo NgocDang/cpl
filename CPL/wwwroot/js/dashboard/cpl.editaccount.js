@@ -9,9 +9,9 @@
         // Initiate date of birth 
         var year = moment().year();
         for (i = year; i >= year - 100; i--) {
-            if ($("#DOB").val() != "" && moment($("#DOB").val()).year() == i) 
+            if ($("#DOB").val() != "" && moment($("#DOB").val()).year() == i)
                 $("#Year").append($("<option selected='selected'></option>").val(i).html(i));
-            else 
+            else
                 $("#Year").append($("<option></option>").val(i).html(i));
         }
         for (i = 1; i <= 12; i++) {
@@ -103,82 +103,86 @@
                 });
         });
 
+        var form_original_data = $("#form-edit-account").serialize(); 
         $("#btn-save-account").on("click", function () {
-            var fsFileUpload = $("#FrontSideImage").get(0);
-            if (fsFileUpload.files.length > 0) {
-                var fsFile = fsFileUpload.files[0];
-                $("#BackSideImage").attr('required', true);
-            }
-            var bsFileUpload = $("#BackSideImage").get(0);
-            if (bsFileUpload.files.length > 0) {
-                var bsFile = bsFileUpload.files[0];
-                $("#FrontSideImage").attr('required', true);
-            }
+            if ($(this).closest("form").serialize() != form_original_data) {
+                var fsFileUpload = $("#FrontSideImage").get(0);
+                if (fsFileUpload !== undefined && fsFileUpload.files.length > 0) {
+                    var fsFile = fsFileUpload.files[0];
+                    $("#BackSideImage").attr('required', true);
+                }
+                var bsFileUpload = $("#BackSideImage").get(0);
+                if (bsFileUpload !== undefined && bsFileUpload.files.length > 0) {
+                    var bsFile = bsFileUpload.files[0];
+                    $("#FrontSideImage").attr('required', true);
+                }
 
-            var isFormValid = $("#form-edit-account").valid();
+                var isFormValid = $("#form-edit-account").valid();
 
-            //Validate for Mobile
-            var isMobileValid = $("#Mobile").intlTelInput("isValidNumber");
-            if (isMobileValid)
-                $("#mobile-msg").hide();
-            else
-                $("#mobile-msg").show();
+                //Validate for Mobile
+                var isMobileValid = $("#Mobile").intlTelInput("isValidNumber");
+                if (isMobileValid)
+                    $("#mobile-msg").hide();
+                else
+                    $("#mobile-msg").show();
 
-            //Validate for DOB
-            var isDOBValid = $("#Year").val() != "" && $("#Month").val() != "" && $("#Day").val() != "" && moment().date($("#Day").val()).month($("#Month").val()-1).year($("#Year").val()).isValid();
-            if (isDOBValid)
-                $("#dob-msg").hide();
-            else
-                $("#dob-msg").show();
+                //Validate for DOB
+                var isDOBValid = $("#Year").val() != "" && $("#Month").val() != "" && $("#Day").val() != "" && moment().date($("#Day").val()).month($("#Month").val() - 1).year($("#Year").val()).isValid();
+                if (isDOBValid)
+                    $("#dob-msg").hide();
+                else
+                    $("#dob-msg").show();
 
-            //Validate for Country
-            var isCountryValid = $("#Country").val() != "";
-            if (isCountryValid)
-                $("#country-msg").hide();
-            else
-                $("#country-msg").show();
+                //Validate for Country
+                var isCountryValid = $("#Country").val() != "";
+                if (isCountryValid)
+                    $("#country-msg").hide();
+                else
+                    $("#country-msg").show();
 
-            if (isFormValid && isMobileValid && isDOBValid && isCountryValid) {
-                var formData = new FormData();
-                formData.append('Id', $("#Id").val());
-                formData.append('FirstName', $("#FirstName").val());
-                formData.append('LastName', $("#LastName").val());
-                formData.append('Gender', $('#Male').is(':checked'));
-                formData.append('DOB', moment().date($("#Day").val()).month($("#Month").val() - 1).year($("#Year").val()).format("YYYY-MM-DD"));
-                formData.append('PostalCode', $("#PostalCode").val());
-                formData.append('Country', $("#Country").val());
-                formData.append('City', $("#City").val());
-                formData.append('StreetAddress', $("#StreetAddress").val());
-                formData.append('Mobile', $("#Mobile").intlTelInput("getNumber"));
-                formData.append('FrontSideImage', fsFile);
-                formData.append('BackSideImage', bsFile);
-                $.ajax({
-                    url: "/Profile/EditAccount/",
-                    type: "POST",
-                    processData: false,
-                    contentType: false,
-                    beforeSend: function () {
-                        $("#btn-save-account").attr("disabled", true);
-                        $("#btn-save-account").html("<i class='fa fa-spinner fa-spin'></i> <i class='far fa-save'></i> " + $("#btn-save-account").text());
-                    },
-                    data: formData,
-                    success: function (data) {
-                        if (data.success) {
-                            toastr.success(data.message, 'Success!');
-                            if (fsFile !== undefined && bsFile !== undefined) {
-                                $("#kyc-verify").replaceWith("<div class='row mb-1 col-sm-12' id='kyc-verify'><p class='text-muted'>" + data.kycconfirm + "</p><span class='badge badge-info h-50'>" + data.kycverify + "</span></div>");
+                if (isFormValid && isMobileValid && isDOBValid && isCountryValid) {
+                    var formData = new FormData();
+                    formData.append('Id', $("#Id").val());
+                    formData.append('FirstName', $("#FirstName").val());
+                    formData.append('LastName', $("#LastName").val());
+                    formData.append('Gender', $('#Male').is(':checked'));
+                    formData.append('DOB', moment().date($("#Day").val()).month($("#Month").val() - 1).year($("#Year").val()).format("YYYY-MM-DD"));
+                    formData.append('PostalCode', $("#PostalCode").val());
+                    formData.append('Country', $("#Country").val());
+                    formData.append('City', $("#City").val());
+                    formData.append('StreetAddress', $("#StreetAddress").val());
+                    formData.append('Mobile', $("#Mobile").intlTelInput("getNumber"));
+                    formData.append('FrontSideImage', fsFile);
+                    formData.append('BackSideImage', bsFile);
+                    $.ajax({
+                        url: "/Profile/EditAccount/",
+                        type: "POST",
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            $("#btn-save-account").attr("disabled", true);
+                            $("#btn-save-account").html("<i class='fa fa-spinner fa-spin'></i> <i class='far fa-save'></i> " + $("#btn-save-account").text());
+                        },
+                        data: formData,
+                        success: function (data) {
+                            if (data.success) {
+                                toastr.success(data.message, 'Success!');
+                                if (fsFile !== undefined && bsFile !== undefined) {
+                                    $("#kyc-verify").replaceWith("<div class='row mb-1 col-sm-12' id='kyc-verify'><p class='text-muted'>" + data.kycconfirm + "</p><span class='badge badge-info h-50'>" + data.kycverify + "</span></div>");
+                                }
+                            } else {
+                                toastr.error(data.message, 'Error!');
                             }
-                        } else {
-                            toastr.error(data.message, 'Error!');
+                        },
+                        complete: function (data) {
+                            $("#btn-save-account").attr("disabled", false);
+                            $("#btn-save-account").html("<i class='far fa-save'></i> " + $("#btn-save-account").text());
+                            form_original_data = $("#form-edit-account").serialize();
                         }
-                    },
-                    complete: function (data) {
-                        $("#btn-save-account").attr("disabled", false);
-                        $("#btn-save-account").html("<i class='far fa-save'></i> " + $("#btn-save-account").text());
-                    }
-                });
+                    });
+                }
+                return false;
             }
-            return false;
         });
     }
 };
