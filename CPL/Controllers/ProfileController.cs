@@ -94,7 +94,7 @@ namespace CPL.Controllers
                     var frontSide = $"{viewModel.Id.ToString()}_FS_{timestamp}_{viewModel.FrontSideImage.FileName}";
                     if (frontSide.Length > 50)
                     {
-                        return new JsonResult(new { success = false, message = "File name too long. Please try again!" });
+                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "FileNameToLong") });
                     }
                     var frontSidePath = Path.Combine(kyc, frontSide);
                     viewModel.FrontSideImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
@@ -104,7 +104,7 @@ namespace CPL.Controllers
                     var backSide = $"{viewModel.Id.ToString()}_BS_{timestamp}_{viewModel.BackSideImage.FileName}";
                     if (backSide.Length > 50)
                     {
-                        return new JsonResult(new { success = false, message = "File name too long. Please try again!" });
+                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "FileNameToLong") });
                     }
                     var backSidePath = Path.Combine(kyc, backSide);
                     viewModel.BackSideImage.CopyTo(new FileStream(backSidePath, FileMode.Create));
@@ -121,8 +121,8 @@ namespace CPL.Controllers
                     {
                         success = true,
                         message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated"),
-                        kycconfirm = "We have received your personal KYC document, please wait for our update..",
-                        kycverify = "Pending"
+                        kycconfirm = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "KYCReceived"),
+                        kycverify = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending")
                     });
                 }
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated") });

@@ -457,7 +457,7 @@
                                                 @if (!Model.KYCVerified.HasValue)
                                                 {
                                                     <div class="row mb-1" id="kyc-verify">
-                                                        <p id="kyc-message" class="text-muted col-sm-12">Please fill in photo page of your passport or the front side and back side of your driver's license.@*@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyIdentityDesc")*@</p>
+                                                        <p id="kyc-message" class="text-muted col-sm-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyIdentityDesc")</p>
                                                         <div class="col-md-6 col-sm-12">
                                                             <fieldset class="form-label-group">
                                                                 <input id="FrontSideImage" type="file" value="@Model.FrontSideImage" class="form-control" name="FrontSideImage" maxlength="30">
@@ -475,15 +475,15 @@
                                                 else if (Model.KYCVerified.Value)
                                                 {
                                                     <div class="row mb-1 col-sm-12" id="kyc-verify">
-                                                        <p class="text-muted">Your KYC is successfully confirmed.</p>
-                                                        <span class="badge badge-success h-50">Verified</span>
+                                                        <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCConfirmed")</p>
+                                                        <span class="badge badge-success h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verified")</span>
                                                     </div>
                                                 }
                                                 else
                                                 {
                                                     <div class="row mb-1 col-sm-12" id="kyc-verify">
-                                                        <p class="text-muted">We have received your personal KYC document, please wait for our update..</p>
-                                                        <span class="badge badge-info h-50">Pending</span>
+                                                        <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCReceived")</p>
+                                                        <span class="badge badge-info h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")</span>
                                                     </div>
                                                 }
                                                 <div class="row">
