@@ -105,15 +105,13 @@
 
         $("#btn-save-account").on("click", function () {
             var fsFileUpload = $("#FrontSideImage").get(0);
-            var fsFile = null;
             if (fsFileUpload.files.length > 0) {
-                fsFile = fsFileUpload.files[0];
+                var fsFile = fsFileUpload.files[0];
                 $("#BackSideImage").attr('required', true);
             }
             var bsFileUpload = $("#BackSideImage").get(0);
-            var bsFile = null;
             if (bsFileUpload.files.length > 0) {
-                bsFile = bsFileUpload.files[0];
+                var bsFile = bsFileUpload.files[0];
                 $("#FrontSideImage").attr('required', true);
             }
 
@@ -167,6 +165,9 @@
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
+                            if (fsFile !== undefined && bsFile !== undefined) {
+                                $("#kyc-verify").replaceWith("<div class='row mb-1 col-sm-12' id='kyc-verify'><p class='text-muted'>" + data.kycconfirm + "</p><span class='badge badge-info h-50'>" + data.kycverify + "</span></div>");
+                            }
                         } else {
                             toastr.error(data.message, 'Error!');
                         }

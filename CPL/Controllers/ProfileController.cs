@@ -83,31 +83,48 @@ namespace CPL.Controllers
                 user.Mobile = viewModel.Mobile;
 
                 // KYC
-                if (viewModel.FrontSideImage != null || viewModel.BackSideImage != null)
+                if (viewModel.FrontSideImage != null && viewModel.BackSideImage != null)
                 {
                     user.KYCCreatedDate = DateTime.Now;
                     user.KYCVerified = false;
                     var kyc = Path.Combine(_hostingEnvironment.WebRootPath, @"images\kyc");
-                    if (viewModel.FrontSideImage != null)
+                    string timestamp = DateTime.Now.ToString("ddMMyyyyhhmmss");
+
+                    // Front Size
+                    var frontSide = $"{viewModel.Id.ToString()}_FS_{timestamp}_{viewModel.FrontSideImage.FileName}";
+                    if (frontSide.Length > 50)
                     {
-                        var frontSide = viewModel.Id.ToString() + "_FS_" + viewModel.FrontSideImage.FileName;
-                        var frontSidePath = Path.Combine(kyc, frontSide);
-                        viewModel.FrontSideImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
-                        user.FrontSide = frontSide;
+                        return new JsonResult(new { success = false, message = "File name too long. Please try again!" });
                     }
-                    if (viewModel.BackSideImage != null)
+                    var frontSidePath = Path.Combine(kyc, frontSide);
+                    viewModel.FrontSideImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
+                    user.FrontSide = frontSide;
+
+                    // Back Size
+                    var backSide = $"{viewModel.Id.ToString()}_BS_{timestamp}_{viewModel.BackSideImage.FileName}";
+                    if (backSide.Length > 50)
                     {
-                        var backSide = viewModel.Id.ToString() + "_BS_" + viewModel.BackSideImage.FileName;
-                        var backSidePath = Path.Combine(kyc, backSide);
-                        viewModel.BackSideImage.CopyTo(new FileStream(backSidePath, FileMode.Create));
-                        user.BackSide = backSide;
+                        return new JsonResult(new { success = false, message = "File name too long. Please try again!" });
                     }
+                    var backSidePath = Path.Combine(kyc, backSide);
+                    viewModel.BackSideImage.CopyTo(new FileStream(backSidePath, FileMode.Create));
+                    user.BackSide = backSide;
                 }
 
                 HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
                 _sysUserService.Update(user);
                 _unitOfWork.SaveChanges();
 
+                if (viewModel.FrontSideImage != null && viewModel.BackSideImage != null)
+                {
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated"),
+                        kycconfirm = "We have received your personal KYC document, please wait for our update..",
+                        kycverify = "Pending"
+                    });
+                }
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated") });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
@@ -147,7 +164,7 @@ namespace CPL.Controllers
             if (user != null)
             {
                 if (!BCrypt.Net.BCrypt.Verify(viewModel.CurrentPassword, user.Password))
-                    return new JsonResult(new { success = false, name="current-password", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidCurrentPassword") });
+                    return new JsonResult(new { success = false, name = "current-password", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidCurrentPassword") });
 
                 user.Password = viewModel.NewPassword.ToBCrypt();
                 HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
