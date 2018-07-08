@@ -1,5 +1,9 @@
 ﻿var EditAccount = {
     init: function () {
+        EditAccount.bindInitForm();
+        EditAccount.bindSaveButton();
+    },
+    bindInitForm: function () {
         // Initiate country
         if ($("#Country").data("value") != "") {
             $("#Country option[value=" + $("#Country").data("value") + "]").attr("selected", "selected");
@@ -102,8 +106,9 @@
                     }
                 });
         });
-
-        var form_original_data = $("#form-edit-account").serialize(); 
+    },
+    bindSaveButton: function () {
+        var form_original_data = $("#form-edit-account").serialize();
         $("#btn-save-account").on("click", function () {
             if ($(this).closest("form").serialize() != form_original_data) {
                 var fsFileUpload = $("#FrontSideImage").get(0);
@@ -186,7 +191,6 @@
         });
     }
 };
-
 
 $(document).ready(function () {
     EditAccount.init();
