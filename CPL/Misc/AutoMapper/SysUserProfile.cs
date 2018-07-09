@@ -12,9 +12,14 @@ namespace CPL.Misc.MapperCreate
     {
         public SysUserProfile()
         {
-            CreateMap<SysUser, SysUserViewModel>();
+            CreateMap<SysUser, SysUserViewModel>()
+                .ForMember(dest => dest.DOBInString, opt => opt.MapFrom(src => src.DOB.HasValue ? src.DOB.Value.ToString("yyyy/MM/dd") : string.Empty))
+                .ForMember(dest => dest.CreatedDateInString, opt => opt.MapFrom(src => src.CreatedDate.ToString("yyyy/MM/dd")))
+                .ForMember(dest => dest.KYCCreatedDateInString, opt => opt.MapFrom(src => src.KYCCreatedDate.HasValue ? src.KYCCreatedDate.Value.ToString("yyyy/MM/dd") : string.Empty));
+
             CreateMap<SysUser, ActivateEmailTemplateViewModel>();
             CreateMap<SysUser, MemberEmailTemplateViewModel>();
+            CreateMap<SysUser, KYCVerifyEmailTemplateViewModel>();
 
             CreateMap<SysUserViewModel, SysUser>();
             CreateMap<SysUserViewModel, EditAccountViewModel>();
