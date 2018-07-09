@@ -50,6 +50,9 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<CoinTransaction>, Repository<CoinTransaction>>()
                 .AddScoped<IRepositoryAsync<PricePrediction>, Repository<PricePrediction>>()
                 .AddScoped<IRepositoryAsync<PricePredictionHistory>, Repository<PricePredictionHistory>>()
+                .AddScoped<IRepositoryAsync<Lottery>, Repository<Lottery>>()
+                .AddScoped<IRepositoryAsync<LotteryHistory>, Repository<LotteryHistory>>()
+                .AddScoped<IRepositoryAsync<LotteryPrize>, Repository<LotteryPrize>>()
 
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
@@ -75,7 +78,10 @@ namespace CPL
                 .AddTransient<IGameHistoryService, GameHistoryService>()
                 .AddTransient<IPricePredictionService, PricePredictionService>()
                 .AddTransient<IPricePredictionHistoryService, PricePredictionHistoryService>()
-                .AddTransient<IRateService, RateService>();
+                .AddTransient<IRateService, RateService>()
+                .AddTransient<ILotteryService, LotteryService>()
+                .AddTransient<ILotteryHistoryService, LotteryHistoryService>()
+                .AddTransient<ILotteryPrizeService, LotteryPrizeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

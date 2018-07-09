@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class DashboardSidebarViewModel
+    public class KYCVerifyEmailTemplateViewModel
     {
-        public bool IsAdmin { get; set; }
+
     }
 }

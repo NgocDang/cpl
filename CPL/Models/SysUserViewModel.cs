@@ -25,8 +25,10 @@ namespace CPL.Models
         public string ResetPasswordToken { get; set; }
         public string ActivateToken { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string CreatedDateInString { get; set; }
         public bool? KYCVerified { get; set; }
         public DateTime? KYCCreatedDate { get; set; }
+        public string KYCCreatedDateInString { get; set; }
         public string FrontSide { get; set; }
         public string BackSide { get; set; }
         public bool? Gender { get; set; }
@@ -34,6 +36,7 @@ namespace CPL.Models
         public string Country { get; set; }
         public string City { get; set; }
         public DateTime? DOB { get; set; }
+        public string DOBInString { get; set; }
         public bool IsDeleted { get; set; }
         public decimal BTCAmount { get; set; }
         public decimal ETHAmount { get; set; }

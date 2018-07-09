@@ -28,6 +28,11 @@ namespace CPL.Infrastructure
         public DbSet<Game> Game { get; set; }
         public DbSet<GameHistory> GameHistory { get; set; }
         public DbSet<Rate> Rate { get; set; }
+        public DbSet<PricePrediction> PricePrediction { get; set; }
+        public DbSet<PricePredictionHistory> PricePredictionHistory { get; set; }
+        public DbSet<Lottery> Lottery { get; set; }
+        public DbSet<LotteryHistory> LotteryHistory { get; set; }
+        public DbSet<LotteryPrize> LotteryPrize { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +50,13 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new GameMap());
             modelBuilder.ApplyConfiguration(new GameHistoryMap());
             modelBuilder.ApplyConfiguration(new RateMap());
+
+            modelBuilder.ApplyConfiguration(new PricePredictionMap());
+            modelBuilder.ApplyConfiguration(new PricePredictionHistoryMap());
+
+            modelBuilder.ApplyConfiguration(new LotteryMap());
+            modelBuilder.ApplyConfiguration(new LotteryPrizeMap());
+            modelBuilder.ApplyConfiguration(new LotteryHistoryMap());
 
             base.OnModelCreating(modelBuilder);
         }

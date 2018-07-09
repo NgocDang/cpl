@@ -11,6 +11,9 @@ namespace CPL.Common.Enums
         public static string ResetPasswordExpiredInDays = "ResetPasswordExpiredInDays";
         public static string IsAccountActivationEnable = "IsAccountActivationEnable";
 
+        //Setting
+        public static string BTCToTokenRate = "BTCToTokenRate";
+
         //Two-factor authentication
         public static string AppName = "CPL";
         public static string TwoFactorAuthenticationSecretKey = "CPLFamHopper";
