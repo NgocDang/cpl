@@ -18,10 +18,10 @@
     setProgress: function (up, down) {
         $("#up-bar").css({ "width": up + "%" })
             .attr("aria-valuenow", up)
-            .text("UP " + up + "%");
+            .html("<i class='fas fa-arrow-up'></i>" + up + "%");
         $("#down-bar").css({ "width": down + "%" })
             .attr("aria-valuenow", down)
-            .text("DOWN " + down + "%");
+            .html("<i class='fas fa-arrow-down'></i>" + down + "%");
     }
 }
 

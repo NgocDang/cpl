@@ -29,6 +29,7 @@ namespace CPL.Controllers
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
+        private readonly IPricePredictionService _pricePredictionService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
         private readonly IHubContext<ProgressHub> _progressHubContext;
 
@@ -43,6 +44,7 @@ namespace CPL.Controllers
             ITemplateService templateService,
             ISysUserService sysUserService,
             IGameHistoryService gameHistoryService,
+            IPricePredictionService pricePredictionService,
             IPricePredictionHistoryService pricePredictionHistoryService,
             IHubContext<ProgressHub> progressHubContext)
         {
@@ -55,6 +57,7 @@ namespace CPL.Controllers
             this._templateService = templateService;
             this._sysUserService = sysUserService;
             this._gameHistoryService = gameHistoryService;
+            this._pricePredictionService = pricePredictionService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._progressHubContext = progressHubContext;
         }
@@ -62,11 +65,7 @@ namespace CPL.Controllers
         public IActionResult Index()
         {
             var viewModel = new PricePredictionViewModel();
-            int? currentGameId = _pricePredictionHistoryService
-                .Query()
-                .Include(x => x.PricePrediction)
-                .Select()
-                .FirstOrDefault(x => x.PricePrediction.ResultPrice == null)?.Id;
+            int? currentGameId = _pricePredictionService.Query().Select().FirstOrDefault(x => x.ResultPrice == null)?.Id;
             decimal upPercentage;
             decimal downPercentage;
             this.CalculatePercentagePrediction(currentGameId.GetValueOrDefault(0), out upPercentage, out downPercentage);
@@ -92,8 +91,8 @@ namespace CPL.Controllers
             decimal downPercentage;
             this.CalculatePercentagePrediction(viewModel.PricePredictionId, out upPercentage, out downPercentage);
             // For testing
-            //decimal upPrediction = 13;
-            //decimal downPrediction = 26;
+            //decimal upPrediction = 10;
+            //decimal downPrediction = 1;
             //decimal upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
             //decimal downPercentage = 100 - upPercentage;
 
