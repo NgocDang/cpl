@@ -81,6 +81,7 @@ namespace CPL
                 .AddTransient<IPricePredictionHistoryService, PricePredictionHistoryService>()
                 .AddTransient<IRateService, RateService>()
                 .AddTransient<ILotteryService, LotteryService>()
+                .AddTransient<ILotteryHistoryService, LotteryHistoryService>()
                 .AddTransient<ILotteryPrizeService, LotteryPrizeService>();
 
             services.AddSignalR();
