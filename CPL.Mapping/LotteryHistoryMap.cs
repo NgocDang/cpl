@@ -34,6 +34,10 @@ namespace CPL.Mapping
             builder.HasOne(x => x.LotteryPrize)
                 .WithMany(x => x.LotteryHistories)
                 .HasForeignKey(x => x.LotteryPrizeId);
+
+            builder.HasOne(x => x.SysUser)
+                .WithMany(x => x.LotteryHistories)
+                .HasForeignKey(x => x.SysUserId);
         }
     }
 }
