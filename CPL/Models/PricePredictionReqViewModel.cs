@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class PricePredictionResViewModel
+    public class PricePredictionReqViewModel
     {
         public int PricePredictionId { get; set; }
     }
