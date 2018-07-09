@@ -92,20 +92,13 @@ namespace CPL.Controllers
 
                     // Front Size
                     var frontSide = $"{viewModel.Id.ToString()}_FS_{timestamp}_{viewModel.FrontSideImage.FileName}";
-                    if (frontSide.Length > 50)
-                    {
-                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "FileNameToLong") });
-                    }
+                    var frontSidePath = Path.Combine(kyc, frontSide);
                     var frontSidePath = Path.Combine(kyc, frontSide);
                     viewModel.FrontSideImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
                     user.FrontSide = frontSide;
 
                     // Back Size
                     var backSide = $"{viewModel.Id.ToString()}_BS_{timestamp}_{viewModel.BackSideImage.FileName}";
-                    if (backSide.Length > 50)
-                    {
-                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "FileNameToLong") });
-                    }
                     var backSidePath = Path.Combine(kyc, backSide);
                     viewModel.BackSideImage.CopyTo(new FileStream(backSidePath, FileMode.Create));
                     user.BackSide = backSide;
