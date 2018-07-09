@@ -88,7 +88,7 @@ namespace CPL.Controllers
                     user.KYCCreatedDate = DateTime.Now;
                     user.KYCVerified = false;
                     var kyc = Path.Combine(_hostingEnvironment.WebRootPath, @"images\kyc");
-                    string timestamp = DateTime.Now.ToString("ddMMyyyyhhmmss");
+                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
 
                     // Front Size
                     var frontSide = $"{viewModel.Id.ToString()}_FS_{timestamp}_{viewModel.FrontSideImage.FileName}";
