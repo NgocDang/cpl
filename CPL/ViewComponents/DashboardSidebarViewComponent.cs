@@ -1,4 +1,7 @@
 ﻿using CPL.Core.Interfaces;
+using CPL.Misc;
+using CPL.Misc.Enums;
+using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace CPL.ViewComponents
 {
+    [Permission(EnumRole.Guest)]
     public class DashboardSidebarViewComponent : ViewComponent
     {
         private readonly ISysUserService _sysUserService;
@@ -19,8 +23,8 @@ namespace CPL.ViewComponents
 
         public IViewComponentResult Invoke()
         {
-            var viewModel = new DashboardSidebarViewModel();
-            return View(viewModel);
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            return View(AutoMapper.Mapper.Map<DashboardSidebarViewModel>(user));
         }
     }
 }

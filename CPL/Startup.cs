@@ -48,6 +48,8 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<Team>, Repository<Team>>()
                 .AddScoped<IRepositoryAsync<GameHistory>, Repository<GameHistory>>()
                 .AddScoped<IRepositoryAsync<CoinTransaction>, Repository<CoinTransaction>>()
+                .AddScoped<IRepositoryAsync<PricePrediction>, Repository<PricePrediction>>()
+                .AddScoped<IRepositoryAsync<PricePredictionHistory>, Repository<PricePredictionHistory>>()
 
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
@@ -71,6 +73,8 @@ namespace CPL
                 .AddTransient<ICoinTransactionService, CoinTransactionService>()
                 .AddTransient<IGameService, GameService>()
                 .AddTransient<IGameHistoryService, GameHistoryService>()
+                .AddTransient<IPricePredictionService, PricePredictionService>()
+                .AddTransient<IPricePredictionHistoryService, PricePredictionHistoryService>()
                 .AddTransient<IRateService, RateService>();
         }
 

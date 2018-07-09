@@ -43,6 +43,12 @@
     <Content Update="Views\Home\_ContactEmailTemplate.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\PricePrediction\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Lottery\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Profile\EditCredential.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
