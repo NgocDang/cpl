@@ -14,9 +14,9 @@ namespace CPL.Domain
         public string TicketNumber { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public int TicketAmount { get; set; }
-        public decimal Price { get; set; }
-        public decimal PrizeId { get; set; }
+        public decimal? LotteryPrizeId { get; set; }
+        public int TicketIndex { get; set; }
+
 
         public virtual Lottery Lottery { get; set; }
         public virtual SysUser SysUser { get; set; }

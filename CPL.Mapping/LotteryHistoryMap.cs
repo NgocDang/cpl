@@ -23,9 +23,8 @@ namespace CPL.Mapping
             builder.Property(t => t.Result).HasColumnName("Result");
             builder.Property(t => t.TicketNumber).HasColumnName("TicketNumber");
             builder.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
-            builder.Property(t => t.Price).HasColumnName("Price");
-            builder.Property(t => t.PrizeId).HasColumnName("PrizeId");
-            builder.Property(t => t.TicketAmount).HasColumnName("TicketAmount");
+            builder.Property(t => t.LotteryPrizeId).HasColumnName("LotteryPrizeId");
+            builder.Property(t => t.TicketIndex).HasColumnName("TicketIndex");
 
             //Relationship
             builder.HasOne(x => x.Lottery)
@@ -34,7 +33,7 @@ namespace CPL.Mapping
 
             builder.HasOne(x => x.LotteryPrize)
                 .WithMany(x => x.LotteryHistories)
-                .HasForeignKey(x => x.PrizeId);
+                .HasForeignKey(x => x.LotteryPrizeId);
         }
     }
 }
