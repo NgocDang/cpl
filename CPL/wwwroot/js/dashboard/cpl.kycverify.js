@@ -102,7 +102,8 @@
                     "data": "Address",
                     "render": function (data, type, full, meta) {
                         return full.streetAddress + " " + full.city + " " + full.country;
-                    }
+                    },
+                    "orderable": false
                 },
                 {
                     "data": "DOB",
