@@ -35,6 +35,13 @@
                 </li>
             }
 
+            @if (Model != null && Model.IsAdmin)
+            {
+                <li class="nav-item">
+                    <a asp-controller="Admin" asp-action="Index"><i class="fas fa-tachometer-alt"></i><span class="menu-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</span></a>
+                </li>
+            }
+
         </ul>
     </div>
 </div>

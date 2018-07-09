@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class DashboardSidebarViewModel
+    public class AdminViewModel
     {
-        public bool IsAdmin { get; set; }
+        public int TotalKYCVerified { get; set; }
+        public int TotalKYCPending { get; set; }
     }
 }

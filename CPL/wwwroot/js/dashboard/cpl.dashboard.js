@@ -3,28 +3,27 @@
         Dashboard.loadHistoryDatatable();
         $('.owl-carousel').owlCarousel({
             loop: true,
-            margin: 15,
-            nav: false,
+            margin: 10,
+            auto:true,
             responsiveClass: true,
             responsive: {
                 0: {
-                    items: 1,
-                    nav: false
+                    items: 1
                 },
-                600: {
-                    items: 1,
-                    nav: false
+                768: {
+                    items: 2
                 },
-                1000: {
-                    items: 3,
-                    nav: false,
-                    loop: true
+                1024: {
+                    items: 1
+                },
+                1440: {
+                    items: 2
+                },
+                2560: {
+                    items: 3
                 }
-            },
-            autoplay: true,
-            autoplayTimeout: 3000,
-            autoplayHoverPause: true
-        })
+            }
+        });
 
         $("#btn-depo-withdr").on("click", function () {
             $("#wallet-view").hide();
