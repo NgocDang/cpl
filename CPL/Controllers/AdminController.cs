@@ -51,6 +51,14 @@ namespace CPL.Controllers
         public IActionResult Index()
         {
             var viewModel = new AdminViewModel();
+            viewModel.TotalKYCPending = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && !x.KYCVerified.Value);
+            viewModel.TotalKYCVerified = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && x.KYCVerified.Value);
+            return View(viewModel);
+        }
+
+        public IActionResult KYCVerify()
+        {
+            var viewModel = new KYCVerifyViewModel();
             return View(viewModel);
         }
     }
