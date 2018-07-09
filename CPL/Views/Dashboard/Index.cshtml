@@ -128,21 +128,19 @@
                     <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameHistory")</h6>
                     <div class="card pull-up">
                         <div class="card-content">
-                            <div class="">
-                                <table id="dt-history" class="table responsive table-hover table-xl mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Date")</th>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Time")</th>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameType")</th>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</th>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")</th>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
+                            <table id="dt-history" class="table responsive table-hover table-xl mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Date")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Time")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameType")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -152,7 +150,7 @@
 </div>
 
 @section scripts
-{
+    {
     <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
@@ -161,29 +159,6 @@
     <script src="~/js/dashboard/plugins/high-charts/series-label.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/exporting.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
+    <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/cpl.dashboard.js"></script>
-    <script>
-        $('.owl-carousel').owlCarousel({
-            loop: true,
-            margin: 10,
-            responsiveClass: true,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                768: {
-                    items: 2
-                },
-                1024: {
-                    items: 1
-                },
-                1440: {
-                    items: 2
-                },
-                2560: {
-                    items: 3
-                }
-            }
-        })
-    </script>
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Misc.Utils;
 using CPL.Models;
@@ -30,8 +31,8 @@ namespace CPL.ViewComponents
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             var viewModel = new TokenCalculatorViewModel(); ;
             var ethToBTCRate = CoinExchangeExtension.CoinExchanging();
-            viewModel.ETHToTokenRate = (decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value)) * ethToBTCRate;
-            viewModel.BTCToTokenRate = 1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
+            viewModel.ETHToTokenRate = (decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value)) * ethToBTCRate;
+            viewModel.BTCToTokenRate = 1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
             return View(viewModel);
         }
     }

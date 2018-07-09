@@ -51,6 +51,9 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<CoinTransaction>, Repository<CoinTransaction>>()
                 .AddScoped<IRepositoryAsync<PricePrediction>, Repository<PricePrediction>>()
                 .AddScoped<IRepositoryAsync<PricePredictionHistory>, Repository<PricePredictionHistory>>()
+                .AddScoped<IRepositoryAsync<Lottery>, Repository<Lottery>>()
+                .AddScoped<IRepositoryAsync<LotteryHistory>, Repository<LotteryHistory>>()
+                .AddScoped<IRepositoryAsync<LotteryPrize>, Repository<LotteryPrize>>()
 
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
@@ -76,7 +79,9 @@ namespace CPL
                 .AddTransient<IGameHistoryService, GameHistoryService>()
                 .AddTransient<IPricePredictionService, PricePredictionService>()
                 .AddTransient<IPricePredictionHistoryService, PricePredictionHistoryService>()
-                .AddTransient<IRateService, RateService>();
+                .AddTransient<IRateService, RateService>()
+                .AddTransient<ILotteryService, LotteryService>()
+                .AddTransient<ILotteryPrizeService, LotteryPrizeService>();
 
             services.AddSignalR();
         }
@@ -142,7 +147,7 @@ namespace CPL
 
         private void LoadSetting(IServiceProvider serviceProvider)
         {
-            
+
             CPLConstant.Maintenance.IsOnMaintenance = bool.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.Maintenance.IsOnMaintenanceSetting).Value);
         }
     }

@@ -1,113 +1,11 @@
 ﻿var Dashboard = {
     init: function () {
         Dashboard.loadHistoryDatatable();
-        $('.owl-carousel').owlCarousel({
-            loop: true,
-            margin: 15,
-            nav: false,
-            responsiveClass: true,
-            responsive: {
-                0: {
-                    items: 1,
-                    nav: false
-                },
-                600: {
-                    items: 1,
-                    nav: false
-                },
-                1000: {
-                    items: 3,
-                    nav: false,
-                    loop: true
-                }
-            },
-            autoplay: true,
-            autoplayTimeout: 3000,
-            autoplayHoverPause: true
-        })
-
-        $("#btn-depo-withdr").on("click", function () {
-            $("#wallet-view").hide();
-            $("#deposite-withdrawal-view").show();
-
-            $.ajax({
-                url: "/Dashboard/DepositeAndWithdrawal/",
-                type: "GET",
-                beforeSend: function () {
-                    $("#btn-depo-withdr").attr("disabled", true);
-                    $("#btn-depo-withdr").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-depo-withdr").text());
-                },
-                data: {
-                },
-                success: function (data) {
-                    $("#deposite-withdrawal-view").html(data);
-                    Dashboard.bindCopy();
-                    Dashboard.bindBtcOut();
-                },
-                complete: function (data) {
-                    $("#btn-depo-withdr").attr("disabled", false);
-                    $("#btn-depo-withdr").html($("#btn-depo-withdr").text());
-                }
-            });
-        })
-
-        $.ajax({
-            url: '/Dashboard/GetDataPieChart',
-            type: "POST",
-            data: {},
-            success: function (data) {
-                if (data.success) {
-                    var a = data.message;
-                    Highcharts.chart('holding-percentage-chart', {
-                        chart: {
-                            plotBackgroundColor: null,
-                            plotBorderWidth: null,
-                            plotShadow: false,
-                            type: 'pie'
-                        },
-                        title: {
-                            text: null
-                        },
-                        tooltip: {
-                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                        },
-                        exporting: {
-                            enabled: false
-                        },
-                        plotOptions: {
-                            pie: {
-                                allowPointSelect: true,
-                                cursor: 'pointer',
-                                dataLabels: {
-                                    enabled: false
-                                },
-                                showInLegend: true
-                            }
-                        },
-                        series: [{
-                            name: 'Balance',
-                            colorByPoint: true,
-                            data: [{
-                                name: 'CPL',
-                                y: JSON.parse(a).CPLPercentage,
-                                sliced: true,
-                                selected: true,
-                                color: '#4267b2'
-                            }, {
-                                name: 'BTC',
-                                y: JSON.parse(a).BTCPercentage,
-                                color: '#f7931a'
-                            }, {
-                                name: 'ETH',
-                                y: JSON.parse(a).ETHPercentage,
-                                color: '#828384'
-                            }]
-                        }]
-                    });
-                }
-            }
-        })
-
+        Dashboard.loadSlider();
+        Dashboard.loadHoldingPercentage();
+        Dashboard.loadBetStatistic();
+    },
+    loadBetStatistic: function () {
         $.ajax({
             url: '/Dashboard/GetDataLineChart',
             type: "POST",
@@ -198,7 +96,90 @@
                     new Highcharts.Chart("bet-statistic-chart", options);
                 }
             }
-        })
+        });
+    },
+    loadHoldingPercentage: function () {
+        $.ajax({
+            url: '/Dashboard/GetDataPieChart',
+            type: "POST",
+            data: {},
+            success: function (data) {
+                if (data.success) {
+                    var a = data.message;
+                    Highcharts.chart('holding-percentage-chart', {
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false,
+                            type: 'pie'
+                        },
+                        title: {
+                            text: null
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        },
+                        exporting: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: true
+                            }
+                        },
+                        series: [{
+                            name: 'Balance',
+                            colorByPoint: true,
+                            data: [{
+                                name: 'CPL',
+                                y: JSON.parse(a).CPLPercentage,
+                                sliced: true,
+                                selected: true,
+                                color: '#4267b2'
+                            }, {
+                                name: 'BTC',
+                                y: JSON.parse(a).BTCPercentage,
+                                color: '#f7931a'
+                            }, {
+                                name: 'ETH',
+                                y: JSON.parse(a).ETHPercentage,
+                                color: '#828384'
+                            }]
+                        }]
+                    });
+                }
+            }
+        });
+    },
+    loadSlider: function () {
+        $('.owl-carousel').owlCarousel({
+            loop: true,
+            margin: 10,
+            auto: true,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                768: {
+                    items: 2
+                },
+                1024: {
+                    items: 1
+                },
+                1440: {
+                    items: 2
+                },
+                2560: {
+                    items: 3
+                }
+            }
+        });
     },
     bindCopy: function () {
         if ($(".btn-copy").length > 0) {
@@ -238,7 +219,7 @@
                 url: "/Dashboard/SearchGameHistory",
                 type: 'POST'
             },
-            //"language": DTLang.getLang(),
+            "language": DTLang.getLang(),
             "columns": [
                 {
                     "data": "CreatedDateInString",
