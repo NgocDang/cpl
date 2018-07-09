@@ -85,7 +85,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public void PredictResult(PricePredictionReqViewModel viewModel)
+        public void PredictResult(PricePredictionResViewModel viewModel)
         {
             decimal upPercentage;
             decimal downPercentage;
