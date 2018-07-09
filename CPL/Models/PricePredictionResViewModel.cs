@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class PricePredictionViewModel
+    public class PricePredictionResViewModel
     {
         public int PricePredictionId { get; set; }
-        public decimal UpPercentage { get; set; }
-        public decimal DownPercentage { get; set; }
     }
 }

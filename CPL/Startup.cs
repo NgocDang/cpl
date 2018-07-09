@@ -8,6 +8,7 @@ using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Core.Services;
 using CPL.Domain;
+using CPL.Hubs;
 using CPL.Infrastructure;
 using CPL.Infrastructure.Interfaces;
 using CPL.Infrastructure.Repositories;
@@ -76,6 +77,8 @@ namespace CPL
                 .AddTransient<IPricePredictionService, PricePredictionService>()
                 .AddTransient<IPricePredictionHistoryService, PricePredictionHistoryService>()
                 .AddTransient<IRateService, RateService>();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,6 +106,10 @@ namespace CPL
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ProgressHub>("/preditedUserProgress");
             });
             app.UseMvcWithDefaultRoute();
         }
