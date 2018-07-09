@@ -1,0 +1,101 @@
+﻿@model EditSecurityViewModel
+@{
+    Layout = "_DashboardLayout";
+}
+
+<div class="app-content content">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="breadcrumb-wrapper col-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                Security Edit
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="content-header-right col-md-4 col-12 d-none d-md-inline-block">
+                <div class="btn-group float-md-right"><a class="btn-gradient-secondary btn-sm white" href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PlayGame")</a></div>
+            </div>
+        </div>
+        <div class="content-body">
+            <div class="row">
+                <div class="col-lg-8 col-md-12 col-sm-12">
+                    <!-- User Profile -->
+                    <section class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-2 col-12">
+                                            <img src="~/images/avatar-1.jpeg" class="rounded-circle height-70" @*alt="@Model.FirstName @Model.LastName" *@ />
+                                        </div>
+                                        <div class="col-md-10 col-12">
+                                            <h5>Edit Security</h5>
+                                            <hr />
+                                            <form id="form-edit-account" class="form-horizontal form-user-profile mt-2" action="">
+                                                @if (!Model.KYCVerified.HasValue)
+                                                {
+                                                    <div class="row mb-1" id="kyc-verify">
+                                                        <p id="kyc-message" class="text-muted col-sm-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyIdentityDesc")</p>
+                                                        <div class="col-md-6 col-sm-12">
+                                                            <fieldset class="form-label-group">
+                                                                <input id="FrontSideImage" type="file" value="@Model.FrontSideImage" class="form-control" name="FrontSideImage" required maxlength="30">
+                                                                <label for="FrontSideImage" class="mt-0">Front side</label>
+                                                            </fieldset>
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-12">
+                                                            <fieldset class="form-label-group">
+                                                                <input id="BackSideImage" type="file" value="@Model.BackSideImage" class="form-control" name="BackSideImage" required maxlength="30">
+                                                                <label for="BackSideImage" class="mt-0">Back side</label>
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else if (Model.KYCVerified.Value)
+                                                {
+                                                    <div class="row mb-1 col-sm-12" id="kyc-verify">
+                                                        <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCConfirmed")</p>
+                                                        <span class="badge badge-success h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verified")</span>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="row mb-1 col-sm-12" id="kyc-verify">
+                                                        <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCReceived")</p>
+                                                        <span class="badge badge-info h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")</span>
+                                                    </div>
+                                                }
+                                                <div class="row">
+                                                    <div class="col-sm-12 text-right">
+                                                        <button type="button" id="btn-save-account" class="btn btn-gradient-primary my-1"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
+                                                    </div>
+                                                </div>
+                                                @Html.HiddenFor(x => x.Id)
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                    @await Component.InvokeAsync("TokenBalance")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+    {
+        <script src="~/js/dashboard/cpl.editsecurity.js"></script>
+    }

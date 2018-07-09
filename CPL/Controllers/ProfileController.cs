@@ -167,5 +167,52 @@ namespace CPL.Controllers
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
+
+        public IActionResult EditSecurity()
+        {
+            var viewModel = Mapper.Map<EditSecurityViewModel>(HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser"));
+            return View("EditSecurity", viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult EditSecurity(EditSecurityViewModel viewModel)
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+            if (user != null)
+            {
+                if (viewModel.FrontSideImage != null && viewModel.BackSideImage != null)
+                {
+                    user.KYCCreatedDate = DateTime.Now;
+                    user.KYCVerified = false;
+                    var kyc = Path.Combine(_hostingEnvironment.WebRootPath, @"images\kyc");
+                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                    // Front Size
+                    var frontSide = $"{viewModel.Id.ToString()}_FS_{timestamp}_{viewModel.FrontSideImage.FileName}";
+                    var frontSidePath = Path.Combine(kyc, frontSide);
+                    viewModel.FrontSideImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
+                    user.FrontSide = frontSide;
+
+                    // Back Size
+                    var backSide = $"{viewModel.Id.ToString()}_BS_{timestamp}_{viewModel.BackSideImage.FileName}";
+                    var backSidePath = Path.Combine(kyc, backSide);
+                    viewModel.BackSideImage.CopyTo(new FileStream(backSidePath, FileMode.Create));
+                    user.BackSide = backSide;
+                }
+
+                HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated"),
+                    kycconfirm = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "KYCReceived"),
+                    kycverify = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending")
+                });
+            }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+        }
     }
 }
