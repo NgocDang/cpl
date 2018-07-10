@@ -8,6 +8,7 @@ using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Core.Services;
 using CPL.Domain;
+using CPL.Hubs;
 using CPL.Infrastructure;
 using CPL.Infrastructure.Interfaces;
 using CPL.Infrastructure.Repositories;
@@ -82,6 +83,8 @@ namespace CPL
                 .AddTransient<ILotteryService, LotteryService>()
                 .AddTransient<ILotteryHistoryService, LotteryHistoryService>()
                 .AddTransient<ILotteryPrizeService, LotteryPrizeService>();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,6 +112,10 @@ namespace CPL
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<UserPredictionProgressHub>("/predictedUserProgress");
             });
             app.UseMvcWithDefaultRoute();
         }
@@ -141,7 +148,7 @@ namespace CPL
 
         private void LoadSetting(IServiceProvider serviceProvider)
         {
-            
+
             CPLConstant.Maintenance.IsOnMaintenance = bool.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.Maintenance.IsOnMaintenanceSetting).Value);
         }
     }
