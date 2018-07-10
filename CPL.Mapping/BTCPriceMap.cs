@@ -17,10 +17,8 @@ namespace CPL.Mapping
             // Table & Column Mappings
             builder.ToTable("BTCPrice");
             builder.Property(t => t.Id).HasColumnName("Id");
-            builder.Property(t => t.Currency).HasColumnName("Currency");
             builder.Property(t => t.Price).HasColumnName("Price");
             builder.Property(t => t.Time).HasColumnName("Time");
-            builder.Property(t => t.Description).HasColumnName("Description");
         }
     }
 }
