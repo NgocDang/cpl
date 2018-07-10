@@ -147,6 +147,8 @@ namespace EmailService
         
         private System.Nullable<System.DateTime> ProcessedDateField;
         
+        private int ProjectIdField;
+        
         private int ServerIdField;
         
         private EmailService.ServerResult ServerResultField;
@@ -275,6 +277,19 @@ namespace EmailService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int ProjectId
+        {
+            get
+            {
+                return this.ProjectIdField;
+            }
+            set
+            {
+                this.ProjectIdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public int ServerId
         {
             get
@@ -361,6 +376,8 @@ namespace EmailService
         private int PortField;
         
         private int PriorityField;
+        
+        private int ProjectIdField;
         
         private int ServerIdField;
         
@@ -471,6 +488,19 @@ namespace EmailService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int ProjectId
+        {
+            get
+            {
+                return this.ProjectIdField;
+            }
+            set
+            {
+                this.ProjectIdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public int ServerId
         {
             get
@@ -571,6 +601,80 @@ namespace EmailService
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ProjectGetResult", Namespace="http://schemas.datacontract.org/2004/07/FHCore.WCF.Message")]
+    public partial class ProjectGetResult : object
+    {
+        
+        private EmailService.ProjectResult[] ProjectsField;
+        
+        private EmailService.Status StatusField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public EmailService.ProjectResult[] Projects
+        {
+            get
+            {
+                return this.ProjectsField;
+            }
+            set
+            {
+                this.ProjectsField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public EmailService.Status Status
+        {
+            get
+            {
+                return this.StatusField;
+            }
+            set
+            {
+                this.StatusField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ProjectResult", Namespace="http://schemas.datacontract.org/2004/07/FHCore.WCF.Message")]
+    public partial class ProjectResult : object
+    {
+        
+        private int IdField;
+        
+        private string NameField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Id
+        {
+            get
+            {
+                return this.IdField;
+            }
+            set
+            {
+                this.IdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Name
+        {
+            get
+            {
+                return this.NameField;
+            }
+            set
+            {
+                this.NameField = value;
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="EmailService.IEmail")]
     public interface IEmail
@@ -584,6 +688,9 @@ namespace EmailService
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IEmail/Dispatched", ReplyAction="http://tempuri.org/IEmail/DispatchedResponse")]
         System.Threading.Tasks.Task<EmailService.EmailDispatchedResult> DispatchedAsync(string authenticatedToken, int emailId, int smtpId, bool status);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IEmail/GetProjects", ReplyAction="http://tempuri.org/IEmail/GetProjectsResponse")]
+        System.Threading.Tasks.Task<EmailService.ProjectGetResult> GetProjectsAsync(string authenticatedToken);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
@@ -649,6 +756,11 @@ namespace EmailService
         public System.Threading.Tasks.Task<EmailService.EmailDispatchedResult> DispatchedAsync(string authenticatedToken, int emailId, int smtpId, bool status)
         {
             return base.Channel.DispatchedAsync(authenticatedToken, emailId, smtpId, status);
+        }
+        
+        public System.Threading.Tasks.Task<EmailService.ProjectGetResult> GetProjectsAsync(string authenticatedToken)
+        {
+            return base.Channel.GetProjectsAsync(authenticatedToken);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()

@@ -92,7 +92,7 @@ namespace AuthenticationService
     {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IAuthentication/Authenticate", ReplyAction="http://tempuri.org/IAuthentication/AuthenticateResponse")]
-        System.Threading.Tasks.Task<AuthenticationService.AuthenticationResult> AuthenticateAsync();
+        System.Threading.Tasks.Task<AuthenticationService.AuthenticationResult> AuthenticateAsync(string email, string projectName);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
@@ -145,9 +145,9 @@ namespace AuthenticationService
         {
         }
         
-        public System.Threading.Tasks.Task<AuthenticationService.AuthenticationResult> AuthenticateAsync()
+        public System.Threading.Tasks.Task<AuthenticationService.AuthenticationResult> AuthenticateAsync(string email, string projectName)
         {
-            return base.Channel.AuthenticateAsync();
+            return base.Channel.AuthenticateAsync(email, projectName);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()
