@@ -90,12 +90,6 @@ namespace CPL.Controllers
             decimal upPercentage;
             decimal downPercentage;
             this.CalculatePercentagePrediction(viewModel.PricePredictionId, out upPercentage, out downPercentage);
-            // For testing
-            //decimal upPrediction = 10;
-            //decimal downPrediction = 1;
-            //decimal upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
-            //decimal downPercentage = 100 - upPercentage;
-
             // PROGRESS
             _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage);
         }
@@ -112,8 +106,14 @@ namespace CPL.Controllers
                 .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.DOWN.ToBoolean())
                 .Count();
 
-            upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
-            downPercentage = 100 - upPercentage;
+            if (upPrediction + downPrediction == 0)
+            {
+                upPercentage = downPercentage = 50;
+            } else
+            {
+                upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
+                downPercentage = 100 - upPercentage;
+            }
         }
     }
 }
