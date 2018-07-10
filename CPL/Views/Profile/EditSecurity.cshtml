@@ -7,7 +7,7 @@
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block">Security Edit</h3>
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecurityEdit")</h3>
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
@@ -15,7 +15,7 @@
                                 <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             </li>
                             <li class="breadcrumb-item active">
-                                Security Edit
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecurityEdit")
                             </li>
                         </ol>
                     </div>
@@ -38,7 +38,7 @@
                                             <img src="~/images/avatar-1.jpeg" class="rounded-circle height-70" @*alt="@Model.FirstName @Model.LastName" *@ />
                                         </div>
                                         <div class="col-md-10 col-12">
-                                            <h5>Edit Security</h5>
+                                            <h5>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditSecurity")</h5>
                                             <hr />
                                             <form id="form-edit-account" class="form-horizontal form-user-profile mt-2" action="">
                                                 @if (!Model.KYCVerified.HasValue)
@@ -48,13 +48,13 @@
                                                         <div class="col-md-6 col-sm-12">
                                                             <fieldset class="form-label-group">
                                                                 <input id="FrontSideImage" type="file" value="@Model.FrontSideImage" class="form-control" name="FrontSideImage" required maxlength="30">
-                                                                <label for="FrontSideImage" class="mt-0">Front side</label>
+                                                                <label for="FrontSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FrontSide")</label>
                                                             </fieldset>
                                                         </div>
                                                         <div class="col-md-6 col-sm-12">
                                                             <fieldset class="form-label-group">
                                                                 <input id="BackSideImage" type="file" value="@Model.BackSideImage" class="form-control" name="BackSideImage" required maxlength="30">
-                                                                <label for="BackSideImage" class="mt-0">Back side</label>
+                                                                <label for="BackSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BackSide")</label>
                                                             </fieldset>
                                                         </div>
                                                     </div>
