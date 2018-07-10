@@ -54,6 +54,7 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<Lottery>, Repository<Lottery>>()
                 .AddScoped<IRepositoryAsync<LotteryHistory>, Repository<LotteryHistory>>()
                 .AddScoped<IRepositoryAsync<LotteryPrize>, Repository<LotteryPrize>>()
+                .AddScoped<IRepositoryAsync<BTCPrice>, Repository<BTCPrice>>()
 
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
@@ -82,7 +83,8 @@ namespace CPL
                 .AddTransient<IRateService, RateService>()
                 .AddTransient<ILotteryService, LotteryService>()
                 .AddTransient<ILotteryHistoryService, LotteryHistoryService>()
-                .AddTransient<ILotteryPrizeService, LotteryPrizeService>();
+                .AddTransient<ILotteryPrizeService, LotteryPrizeService>()
+                .AddTransient<IBTCPriceService, BTCPriceService>();
 
             services.AddSignalR();
         }

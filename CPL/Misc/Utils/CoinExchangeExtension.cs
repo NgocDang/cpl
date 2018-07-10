@@ -22,5 +22,22 @@ namespace CPL.Misc.Utils
             }
             return -1;
         }
+
+        public static decimal BTCCurrentPrice(string currency)
+        {
+            // URL from hitBTC:
+            // https://api.hitbtc.com/api/2/public/ticker/BTCUSD
+            // URL from Binance:
+            // https://api.binance.com//api/v3/ticker/price?symbol=BTCUSDT
+
+            var response = new HttpClient().GetAsync(string.Format("https://api.binance.com//api/v3/ticker/price?symbol=BTC{0}", currency));
+            response.Wait();
+            if (response.Result.IsSuccessStatusCode)
+            {
+                var jsonResponse = response.Result.Content.ReadAsStringAsync();
+                return (decimal)JObject.Parse(jsonResponse.Result)["price"];
+            }
+            return -1;
+        }
     }
 }
