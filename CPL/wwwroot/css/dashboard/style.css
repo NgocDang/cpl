@@ -1000,3 +1000,15 @@ select.bs-select-hidden, select.selectpicker {
         margin: 1rem 0.5rem;
     }
 }
+
+/*Progrss bar*/
+.progress-cus {
+    height: 150%;
+    border-radius: 50px;
+}
+
+.progress-bar-cus {
+    font-size: 150%;
+    font-weight: bold;
+}
+

@@ -13,7 +13,7 @@ namespace CPL.Common.Enums
 
     public enum EnumPricePredictionStatus
     {
-        UP,
-        DOWN
+        UP,     // true
+        DOWN    // false
     }
 }
