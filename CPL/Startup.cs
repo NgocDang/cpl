@@ -138,7 +138,7 @@ namespace CPL
 
             // Load Wcf
             // Authentication
-            var authentication = ServiceClient.AuthenticationClient.AuthenticateAsync();
+            var authentication = ServiceClient.AuthenticationClient.AuthenticateAsync(CPLConstant.ProjectEmail, CPLConstant.ProjectName);
             authentication.Wait();
             Authentication.Token = authentication.Result.Token;
         }

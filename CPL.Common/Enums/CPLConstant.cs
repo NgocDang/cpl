@@ -56,5 +56,9 @@ namespace CPL.Common.Enums
         public static string ServiceEndpoint = "ServiceEndPointUrl";
         public static string AuthenticationServiceEndpoint = "Security/Authentication.svc";
         public static string EmailServiceEndpoint = "Message/Email.svc";
+
+        // FHCore Authentication
+        public static string ProjectEmail = "info.cplcoin@gmail.com";
+        public static string ProjectName = "CPL";
     }
 }
