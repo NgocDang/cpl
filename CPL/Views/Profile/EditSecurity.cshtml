@@ -2,7 +2,17 @@
 @{
     Layout = "_DashboardLayout";
 }
-
+@section styles
+    {
+    <style type="text/css">
+        @@media (min-width: 1024px) and (max-width: 1440px) {
+            .col-custom-two-factor {
+                flex: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+}
 <div class="app-content content">
     <div class="content-wrapper">
         <div class="content-header row">
@@ -29,7 +39,7 @@
             <div class="row">
                 <div class="col-lg-8 col-md-12 col-sm-12">
                     <!-- User Profile -->
-                    <section class="card">
+                    <section id="user-profile" class="card">
                         <div class="card-content">
                             <div class="card-body">
                                 <div class="col-12">
@@ -88,6 +98,56 @@
                             </div>
                         </div>
                     </section>
+                    <section id="two-factor-authenticator" class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-12 col-12">
+                                            <h5>TWO-FACTOR AUTHENTICATION</h5>
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-12 col-md-12 col-custom-two-factor col-lg-6 mt-2">
+                                                            <form id="form-two-factor-enable" method="POST" action="#" style="" class="needs-validation" novalidate="">
+                                                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                                                    <label for="PIN"> Enter PIN to enable</label>
+                                                                    <input id="PIN" type="text" class="form-control" name="PIN" tabindex="1" required="">
+                                                                    <div class="invalid-feedback">
+                                                                        Invalid PIN. Please try again!
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                                                    <button type="submit" id="btn-two-factor-enable" class="btn btn-gradient-primary my-1 btn-block">
+                                                                        Enable
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="col-sm-12 col-md-12 col-lg-6 col-custom-two-factor text-center">
+                                                            <img alt="QR Code" src="http://chart.googleapis.com/chart?cht=qr&amp;chs=300x300&amp;chl=otpauth%3A%2F%2Ftotp%2Fnhat-nguyen%40famhopper.com%3Fsecret%3DIZQW2SDPOBYGK4Q%26issuer%3DNAM" class="img-fluid">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12 col-md-6 col-lg-6 mt-2">
+                                                    <p class="text-muted">Please follow the below steps for two-factor authentication:</p>
+                                                    <ul>
+                                                        <li>Install the authentication application on smartphone:</li>
+                                                        <li><a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS (App Store)</a></li>
+                                                        <li><a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android (Google Play)</a></li>
+                                                        <li>Scan the QR code with the authentication application.</li>
+                                                        <li>Enter the 6 digit number displayed in the application and click on activate two-factor verification.</li>
+                                                        <li>Two-step authentication code will be required from the next login.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
                 <div class="col-lg-4 col-md-12 col-sm-12">
                     @await Component.InvokeAsync("TokenBalance")
@@ -98,5 +158,5 @@
 </div>
 @section scripts
     {
-        <script src="~/js/dashboard/cpl.editsecurity.js"></script>
-    }
+    <script src="~/js/dashboard/cpl.editsecurity.js"></script>
+}
