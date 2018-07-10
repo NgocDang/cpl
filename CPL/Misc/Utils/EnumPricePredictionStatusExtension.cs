@@ -2,7 +2,7 @@
 
 namespace CPL.Misc.Utils
 {
-    public static class BooleanExtension
+    public static class EnumPricePredictionStatusExtension
     {
         public static bool ToBoolean(this EnumPricePredictionStatus value)
         {

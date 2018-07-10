@@ -3,19 +3,19 @@
         PricePrediction.bindLoadPredictionResult();
     },
     bindLoadPredictionResult: function () {
-        var progressConnection = new signalR.HubConnection("/preditedUserProgress");
+        var progressConnection = new signalR.HubConnection("/predictedUserProgress");
         progressConnection
             .start()
             .catch(() => {
                 console.log("Error while establishing connection");
             });
 
-        progressConnection.on("preditedUserProgress", (up, down) => {
+        progressConnection.on("predictedUserProgress", (up, down) => {
             if (up !== undefined && down !== undefined) 
-                this.setProgress(up, down);
+                this.setUserProgress(up, down);
         });
     },
-    setProgress: function (up, down) {
+    setUserProgress: function (up, down) {
         $("#up-bar").css({ "width": up + "%" })
             .attr("aria-valuenow", up)
             .html("<i class='fas fa-arrow-up'></i>" + up + "%");

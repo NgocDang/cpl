@@ -31,7 +31,7 @@ namespace CPL.Controllers
         private readonly ISysUserService _sysUserService;
         private readonly IPricePredictionService _pricePredictionService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
-        private readonly IHubContext<ProgressHub> _progressHubContext;
+        private readonly IHubContext<UserPredictionProgressHub> _progressHubContext;
 
 
         public PricePredictionController(
@@ -46,7 +46,7 @@ namespace CPL.Controllers
             IGameHistoryService gameHistoryService,
             IPricePredictionService pricePredictionService,
             IPricePredictionHistoryService pricePredictionHistoryService,
-            IHubContext<ProgressHub> progressHubContext)
+            IHubContext<UserPredictionProgressHub> progressHubContext)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -85,7 +85,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public void PredictResult(PricePredictionResViewModel viewModel)
+        public void PredictResult(PricePredictionResponseViewModel viewModel)
         {
             decimal upPercentage;
             decimal downPercentage;
@@ -97,7 +97,7 @@ namespace CPL.Controllers
             //decimal downPercentage = 100 - upPercentage;
 
             // PROGRESS
-            _progressHubContext.Clients.All.SendAsync("preditedUserProgress", upPercentage, downPercentage);
+            _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage);
         }
 
         private void CalculatePercentagePrediction(int pricePredictionId, out decimal upPercentage, out decimal downPercentage)

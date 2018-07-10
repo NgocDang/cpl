@@ -115,7 +115,7 @@ namespace CPL
             });
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ProgressHub>("/preditedUserProgress");
+                routes.MapHub<UserPredictionProgressHub>("/predictedUserProgress");
             });
             app.UseMvcWithDefaultRoute();
         }
