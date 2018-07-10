@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/intl-tel-input/css/intlTelInput.css" />
     <style type="text/css">
         #Year-error, #Month-error, #Day-error, #Country-error {
-            display:none !important;
+            display: none !important;
         }
 
         #Mobile-error {
@@ -166,7 +166,7 @@
                                                 <div class="row mb-1">
                                                     <div class="col-md-6 col-sm-12">
                                                         <fieldset class="form-label-group">
-                                                            <input type="text" name="PostalCode" class="form-control" id="PostalCode" value="@Model.PostalCode" required autofocus="">
+                                                            <input type="text" name="PostalCode" class="form-control" id="PostalCode" value="@Model.PostalCode" autofocus="">
                                                             <label for="PostalCode">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PostalCode")</label>
                                                         </fieldset>
                                                     </div>
@@ -455,7 +455,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-sm-12 text-right">
-                                                        <button type="button" id="btn-save-account" class="btn-gradient-primary my-1"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
+                                                        <button type="button" id="btn-save-account" class="btn btn-gradient-primary my-1"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -465,20 +465,20 @@
                             </div>
                         </div>
                     </section>
-                </div>     
-                @*<div class="sidebar-detached sidebar-right">
-                    <div class="sidebar">
-                        <div id="wallet-sidebar" class="sidebar-content">
-                            @await Component.InvokeAsync("TokenBalance")
-                        </div>
-                    </div>
                 </div>
-            </div>*@
+                @*<div class="sidebar-detached sidebar-right">
+                            <div class="sidebar">
+                                <div id="wallet-sidebar" class="sidebar-content">
+                                    @await Component.InvokeAsync("TokenBalance")
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
 
                 <div class="col-lg-4 col-md-12 col-sm-12">
                     @await Component.InvokeAsync("TokenBalance")
                 </div>
-        </div>
+            </div>
         </div>
     </div>
 </div>

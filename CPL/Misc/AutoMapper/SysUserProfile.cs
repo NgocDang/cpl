@@ -27,6 +27,7 @@ namespace CPL.Misc.MapperCreate
                 .ForMember(dest => dest.CurrentEmail, opt => opt.MapFrom(src => src.Email));
 
             CreateMap<SysUserViewModel, DashboardNavbarViewModel>();
+            CreateMap<SysUserViewModel, EditSecurityViewModel>();
 
             CreateMap<SysUser, DashboardViewModel>();
             CreateMap<SysUser, HoldingPercentageViewModel>();

@@ -13,8 +13,8 @@
     <div class="col-md-4"></div>
     <div class="col-md-4">
         <div class="progress progress-cus">
-            <div id="up-bar" class="progress-bar bg-success progress-bar-cus" role="progressbar" style="width: @Model.UpPercentage%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"><i class="fas fa-arrow-up"></i> @Model.UpPercentage%</div>
-            <div id="down-bar" class="progress-bar bg-danger progress-bar-cus" role="progressbar" style="width: @Model.DownPercentage%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"><i class="fas fa-arrow-down"></i> @Model.DownPercentage%</div>
+            <div id="up-bar" class="progress-bar bg-success progress-bar-cus" role="progressbar" style="width: @Model.UpPercentage%;" aria-valuenow="@Model.UpPercentage" aria-valuemin="0" aria-valuemax="100"><i class="fas fa-arrow-up"></i> @Model.UpPercentage%</div>
+            <div id="down-bar" class="progress-bar bg-danger progress-bar-cus" role="progressbar" style="width: @Model.DownPercentage%;" aria-valuenow="@Model.DownPercentage" aria-valuemin="0" aria-valuemax="100"><i class="fas fa-arrow-down"></i> @Model.DownPercentage%</div>
         </div>
     </div>
 </div>

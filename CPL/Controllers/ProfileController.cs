@@ -14,12 +14,15 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Mail;
 using System.Net;
 using CPL.Misc.Utils;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace CPL.Controllers
 {
     [Permission(EnumRole.User)]
     public class ProfileController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILangService _langService;
         private readonly IMapper _mapper;
         private readonly IViewRenderService _viewRenderService;
@@ -31,6 +34,7 @@ namespace CPL.Controllers
         private readonly ITemplateService _templateService;
 
         public ProfileController(
+            IHostingEnvironment hostingEnvironment,
             ILangService langService,
             IMapper mapper,
             IViewRenderService viewRenderService,
@@ -42,6 +46,7 @@ namespace CPL.Controllers
             ITeamService teamService,
             ITemplateService templateService)
         {
+            this._hostingEnvironment = hostingEnvironment;
             this._langService = langService;
             this._mapper = mapper;
             this._viewRenderService = viewRenderService;
@@ -76,10 +81,42 @@ namespace CPL.Controllers
                 user.City = viewModel.City;
                 user.StreetAddress = viewModel.StreetAddress;
                 user.Mobile = viewModel.Mobile;
+
+                // KYC
+                if (viewModel.FrontSideImage != null && viewModel.BackSideImage != null)
+                {
+                    user.KYCCreatedDate = DateTime.Now;
+                    user.KYCVerified = false;
+                    var kyc = Path.Combine(_hostingEnvironment.WebRootPath, @"images\kyc");
+                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                    // Front Size
+                    var frontSide = $"{viewModel.Id.ToString()}_FS_{timestamp}_{viewModel.FrontSideImage.FileName}";
+                    var frontSidePath = Path.Combine(kyc, frontSide);
+                    viewModel.FrontSideImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
+                    user.FrontSide = frontSide;
+
+                    // Back Size
+                    var backSide = $"{viewModel.Id.ToString()}_BS_{timestamp}_{viewModel.BackSideImage.FileName}";
+                    var backSidePath = Path.Combine(kyc, backSide);
+                    viewModel.BackSideImage.CopyTo(new FileStream(backSidePath, FileMode.Create));
+                    user.BackSide = backSide;
+                }
+
                 HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
                 _sysUserService.Update(user);
                 _unitOfWork.SaveChanges();
 
+                if (viewModel.FrontSideImage != null && viewModel.BackSideImage != null)
+                {
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated"),
+                        kycconfirm = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "KYCReceived"),
+                        kycverify = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending")
+                    });
+                }
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated") });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
@@ -119,7 +156,7 @@ namespace CPL.Controllers
             if (user != null)
             {
                 if (!BCrypt.Net.BCrypt.Verify(viewModel.CurrentPassword, user.Password))
-                    return new JsonResult(new { success = false, name="current-password", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidCurrentPassword") });
+                    return new JsonResult(new { success = false, name = "current-password", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidCurrentPassword") });
 
                 user.Password = viewModel.NewPassword.ToBCrypt();
                 HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
@@ -127,6 +164,53 @@ namespace CPL.Controllers
                 _unitOfWork.SaveChanges();
 
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PasswordUpdated") });
+            }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+        }
+
+        public IActionResult EditSecurity()
+        {
+            var viewModel = Mapper.Map<EditSecurityViewModel>(HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser"));
+            return View("EditSecurity", viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult EditSecurity(EditSecurityViewModel viewModel)
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+            if (user != null)
+            {
+                if (viewModel.FrontSideImage != null && viewModel.BackSideImage != null)
+                {
+                    user.KYCCreatedDate = DateTime.Now;
+                    user.KYCVerified = false;
+                    var kyc = Path.Combine(_hostingEnvironment.WebRootPath, @"images\kyc");
+                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                    // Front Size
+                    var frontSide = $"{viewModel.Id.ToString()}_FS_{timestamp}_{viewModel.FrontSideImage.FileName}";
+                    var frontSidePath = Path.Combine(kyc, frontSide);
+                    viewModel.FrontSideImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
+                    user.FrontSide = frontSide;
+
+                    // Back Size
+                    var backSide = $"{viewModel.Id.ToString()}_BS_{timestamp}_{viewModel.BackSideImage.FileName}";
+                    var backSidePath = Path.Combine(kyc, backSide);
+                    viewModel.BackSideImage.CopyTo(new FileStream(backSidePath, FileMode.Create));
+                    user.BackSide = backSide;
+                }
+
+                HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated"),
+                    kycconfirm = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "KYCReceived"),
+                    kycverify = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending")
+                });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }

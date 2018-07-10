@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,8 +18,12 @@ namespace CPL.Models
         public string Country { get; set; }
         public string City { get; set; }
         public DateTime? DOB { get; set; }
+        public bool? KYCVerified { get; set; }
+        public DateTime? KYCCreatedDate { get; set; }
 
         public int NumberOfTransactions { get; set; }
         public int NumberOfGameHistories { get; set; }
+        public IFormFile FrontSideImage { set; get; }
+        public IFormFile BackSideImage { set; get; }
     }
 }
