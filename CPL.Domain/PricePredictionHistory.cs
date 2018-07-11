@@ -14,10 +14,17 @@ namespace CPL.Domain
         public decimal Amount { get; set; }
         public bool Prediction { get; set; }
         public string Result { get; set; }
-        public decimal Award { get; set; }
+        public decimal? Award { get; set; }
         public DateTime? UpdatedDate { get; set; }
 
         public virtual PricePrediction PricePrediction { get; set; }
         public virtual SysUser SysUser { get; set; }
+
+        public enum EnumGameId
+        {
+            LOTTERY = 1,
+            WORLDCUP = 2,
+            PRICE_PREDICTION = 3
+        }
     }
 }

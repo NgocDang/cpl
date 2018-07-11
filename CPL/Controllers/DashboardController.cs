@@ -198,7 +198,8 @@ namespace CPL.Controllers
                 var lotteryHistory  = _lotteryHistoryService
                         .Queryable()
                         .Where(x => x.SysUserId == user.Id)
-                        .OrderBy("CreatedDate", false)
+                        .GroupBy(x=>x.LotteryId)
+
                         .Select(x => Mapper.Map<GameHistoryViewModel>(x))
                         .OrderBy(sortBy, sortDir)
                         .ToList();
@@ -206,39 +207,66 @@ namespace CPL.Controllers
                 var pricePredictionHistory = _pricePredictionHistoryService
                         .Queryable()
                         .Where(x => x.SysUserId == user.Id)
-                        .OrderBy("CreatedDate", false)
                         .Select(x => Mapper.Map<GameHistoryViewModel>(x))
                         .OrderBy(sortBy, sortDir)
                         .ToList();
 
-                return lotteryHistory.Concat(pricePredictionHistory);
+                return lotteryHistory.Concat(pricePredictionHistory).OrderBy(x => x.CreatedDate).ToList();
             }
             else
             {
-                filteredResultsCount = _gameHistoryService.Query()
-                        .Include(x => x.Game)
+                filteredResultsCount = _lotteryHistoryService.Query()
                         .Select()
                         .AsQueryable()
                         .Where(x => x.SysUserId == user.Id)
-                        .Where(x => x.Amount.ToString().Contains(searchBy) || x.Award.ToString().Contains(searchBy) || x.Game.Name.Contains(searchBy))
+                        .Select(x => Mapper.Map<GameHistoryViewModel>(x))
+                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.Contains(searchBy) || x.CreatedDateInString.Contains(searchBy))
+                        .Count()
+                        +
+                        _pricePredictionHistoryService.Query()
+                        .Select()
+                        .AsQueryable()
+                        .Where(x => x.SysUserId == user.Id)
+                        .Select(x => Mapper.Map<GameHistoryViewModel>(x))
+                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.Contains(searchBy) || x.CreatedDateInString.Contains(searchBy))
                         .Count();
 
-                totalResultsCount = _gameHistoryService
+                totalResultsCount = _lotteryHistoryService
+                        .Queryable()
+                        .Where(x => x.SysUserId == user.Id)
+                        .Count()
+                        +
+                        _pricePredictionHistoryService
                         .Queryable()
                         .Where(x => x.SysUserId == user.Id)
                         .Count();
 
-                return _gameHistoryService.Query()
-                        .Include(x => x.Game)
+                var lotteryHistory = _lotteryHistoryService
+                        .Query()
                         .Select()
                         .AsQueryable()
                         .Where(x => x.SysUserId == user.Id)
-                        .Where(x => x.Amount.ToString().Contains(searchBy) || x.Award.ToString().Contains(searchBy) || x.Game.Name.Contains(searchBy))
+                        .Select(x => Mapper.Map<GameHistoryViewModel>(x))
+                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.Contains(searchBy) || x.CreatedDateInString.Contains(searchBy))
+                        .Skip(skip)
+                        .Take(take)
+                        .OrderBy(sortBy, sortDir)
+                        .ToList();
+
+                var pricePredictionHistory = _pricePredictionHistoryService
+                        .Query()
+                        .Select()
+                        .AsQueryable()
+                        .Where(x => x.SysUserId == user.Id)
+                        .Select(x => Mapper.Map<GameHistoryViewModel>(x))
+                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.Contains(searchBy) || x.CreatedDateInString.Contains(searchBy))
                         .Skip(skip)
                         .Take(take)
                         .Select(x => Mapper.Map<GameHistoryViewModel>(x))
                         .OrderBy(sortBy, sortDir)
                         .ToList();
+
+                return lotteryHistory.Concat(pricePredictionHistory).ToList();
             }
         }
     }

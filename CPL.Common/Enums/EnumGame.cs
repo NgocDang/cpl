@@ -21,6 +21,6 @@ namespace CPL.Common.Enums
     {
         LOTTERY = 1,
         WORLDCUP = 2,
-        PRICEPREDICTION = 3
+        PRICE_PREDICTION = 3
     }
 }
