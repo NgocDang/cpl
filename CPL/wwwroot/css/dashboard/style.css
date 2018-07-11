@@ -995,8 +995,16 @@ select.bs-select-hidden, select.selectpicker {
     margin: 1.4rem 0.5rem 1rem 0.5rem;
 }
 
+.header-navbar .navbar-container ul.nav li button.navbar-action {
+    margin: 1.4rem 0.5rem 1rem 0.5rem;
+}
+
 @media (max-width: 767.98px) {
     .header-navbar .navbar-container ul.nav li a.navbar-action {
+        margin: 1rem 0.5rem;
+    }
+
+    .header-navbar .navbar-container ul.nav li button.navbar-action {
         margin: 1rem 0.5rem;
     }
 }
@@ -1270,3 +1278,16 @@ select.bs-select-hidden, select.selectpicker {
     .card .card-header h4 a.unstyled {
         font-size: 14px;
     }
+}
+
+/*Progrss bar*/
+.progress-cus {
+    height: 150%;
+    border-radius: 50px;
+}
+
+.progress-bar-cus {
+    font-size: 150%;
+    font-weight: bold;
+}
+

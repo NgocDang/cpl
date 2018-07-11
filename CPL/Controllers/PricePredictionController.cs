@@ -5,11 +5,15 @@ using CPL.Misc;
 using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using CPL.Hubs;
+using CPL.Common.Enums;
+using System;
 
 namespace CPL.Controllers
 {
@@ -25,6 +29,10 @@ namespace CPL.Controllers
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
+        private readonly IPricePredictionService _pricePredictionService;
+        private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
+        private readonly IHubContext<UserPredictionProgressHub> _progressHubContext;
+
 
         public PricePredictionController(
             ILangService langService,
@@ -35,7 +43,10 @@ namespace CPL.Controllers
             ITeamService teamService,
             ITemplateService templateService,
             ISysUserService sysUserService,
-            IGameHistoryService gameHistoryService)
+            IGameHistoryService gameHistoryService,
+            IPricePredictionService pricePredictionService,
+            IPricePredictionHistoryService pricePredictionHistoryService,
+            IHubContext<UserPredictionProgressHub> progressHubContext)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -46,12 +57,63 @@ namespace CPL.Controllers
             this._templateService = templateService;
             this._sysUserService = sysUserService;
             this._gameHistoryService = gameHistoryService;
+            this._pricePredictionService = pricePredictionService;
+            this._pricePredictionHistoryService = pricePredictionHistoryService;
+            this._progressHubContext = progressHubContext;
         }
 
         public IActionResult Index()
         {
             var viewModel = new PricePredictionViewModel();
+            int? currentGameId = _pricePredictionService.Query().Select().FirstOrDefault(x => x.ResultPrice == null)?.Id;
+            decimal upPercentage;
+            decimal downPercentage;
+            this.CalculatePercentagePrediction(currentGameId.GetValueOrDefault(0), out upPercentage, out downPercentage);
+
+            //// For testing
+            //decimal upPrediction = 50;
+            //decimal downPrediction = 50;
+            //decimal upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
+            //decimal downPercentage = 100 - upPercentage;
+
+            // Set to Model
+            viewModel.PricePredictionId = 1;
+            viewModel.UpPercentage = upPercentage;
+            viewModel.DownPercentage = downPercentage;
+
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public void PredictResult(PricePredictionResponseViewModel viewModel)
+        {
+            decimal upPercentage;
+            decimal downPercentage;
+            this.CalculatePercentagePrediction(viewModel.PricePredictionId, out upPercentage, out downPercentage);
+            // PROGRESS
+            _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage);
+        }
+
+        private void CalculatePercentagePrediction(int pricePredictionId, out decimal upPercentage, out decimal downPercentage)
+        {
+            decimal upPrediction = _pricePredictionHistoryService
+                .Queryable()
+                .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.UP.ToBoolean())
+                .Count();
+
+            decimal downPrediction = _pricePredictionHistoryService
+                .Queryable()
+                .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.DOWN.ToBoolean())
+                .Count();
+
+            if (upPrediction + downPrediction == 0)
+            {
+                upPercentage = downPercentage = 50;
+            } else
+            {
+                upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
+                downPercentage = 100 - upPercentage;
+            }
         }
     }
 }

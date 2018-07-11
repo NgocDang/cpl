@@ -1,5 +1,9 @@
 ﻿var EditAccount = {
     init: function () {
+        EditAccount.bindInitForm();
+        EditAccount.bindSaveButton();
+    },
+    bindInitForm: function () {
         // Initiate country
         if ($("#Country").data("value") != "") {
             $("#Country option[value=" + $("#Country").data("value") + "]").attr("selected", "selected");
@@ -9,9 +13,9 @@
         // Initiate date of birth 
         var year = moment().year();
         for (i = year; i >= year - 100; i--) {
-            if ($("#DOB").val() != "" && moment($("#DOB").val()).year() == i) 
+            if ($("#DOB").val() != "" && moment($("#DOB").val()).year() == i)
                 $("#Year").append($("<option selected='selected'></option>").val(i).html(i));
-            else 
+            else
                 $("#Year").append($("<option></option>").val(i).html(i));
         }
         for (i = 1; i <= 12; i++) {
@@ -102,8 +106,10 @@
                     }
                 });
         });
-
+    },
+    bindSaveButton: function () {
         $("#btn-save-account").on("click", function () {
+
             var isFormValid = $("#form-edit-account").valid();
 
             //Validate for Mobile
@@ -114,7 +120,7 @@
                 $("#mobile-msg").show();
 
             //Validate for DOB
-            var isDOBValid = $("#Year").val() != "" && $("#Month").val() != "" && $("#Day").val() != "" && moment().date($("#Day").val()).month($("#Month").val()-1).year($("#Year").val()).isValid();
+            var isDOBValid = $("#Year").val() != "" && $("#Month").val() != "" && $("#Day").val() != "" && moment().date($("#Day").val()).month($("#Month").val() - 1).year($("#Year").val()).isValid();
             if (isDOBValid)
                 $("#dob-msg").hide();
             else
@@ -163,7 +169,6 @@
         });
     }
 };
-
 
 $(document).ready(function () {
     EditAccount.init();

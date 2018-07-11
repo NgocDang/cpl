@@ -8,12 +8,12 @@ namespace CPL.Common.Enums
     {
         WIN = 1,
         LOSE = 2,
-        PENDING = 3
+        KYC_PENDING = 3
     }
 
     public enum EnumPricePredictionStatus
     {
-        UP,
-        DOWN
+        UP,     // true
+        DOWN    // false
     }
 }

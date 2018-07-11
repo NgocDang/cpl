@@ -10,5 +10,7 @@ namespace CPL.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public decimal TokenAmount { get; set; }
+        public bool KYCStatus { get; set; }
+        public bool NotificationStatus { get; set; }
     }
 }

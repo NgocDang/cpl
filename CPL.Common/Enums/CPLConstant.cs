@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CPL.Common.ExchangePrice;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,12 @@ namespace CPL.Common.Enums
 {
     public class CPLConstant
     {
+        //Realtime exchange price
+        public struct ExchangePrice
+        {
+            public static BTCPrice BTCPrice;
+        }
+        
         //Authentication
         public static string ActivateExpiredInDays = "ActivateExpiredInDays";
         public static string ResetPasswordExpiredInDays = "ResetPasswordExpiredInDays";
@@ -49,5 +56,9 @@ namespace CPL.Common.Enums
         public static string ServiceEndpoint = "ServiceEndPointUrl";
         public static string AuthenticationServiceEndpoint = "Security/Authentication.svc";
         public static string EmailServiceEndpoint = "Message/Email.svc";
+
+        // FHCore Authentication
+        public static string ProjectEmail = "info.cplcoin@gmail.com";
+        public static string ProjectName = "CPL";
     }
 }

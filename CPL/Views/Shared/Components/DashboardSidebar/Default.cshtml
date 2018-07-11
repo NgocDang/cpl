@@ -31,6 +31,10 @@
                         <li>
                             <a class="menu-item" asp-controller="Profile" asp-action="EditCredential"><i class="ft-check-square"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
                         </li>
+                        <li>
+                            <a class="menu-item" asp-controller="Profile" asp-action="EditSecurity"><i class="fa fa-lock"></i> &nbsp; Security</a>
+                        </li>
+
                     </ul>
                 </li>
             }

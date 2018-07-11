@@ -33,6 +33,7 @@ namespace CPL.Infrastructure
         public DbSet<Lottery> Lottery { get; set; }
         public DbSet<LotteryHistory> LotteryHistory { get; set; }
         public DbSet<LotteryPrize> LotteryPrize { get; set; }
+        public DbSet<BTCPrice> BTCPrice { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -57,6 +58,8 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new LotteryMap());
             modelBuilder.ApplyConfiguration(new LotteryPrizeMap());
             modelBuilder.ApplyConfiguration(new LotteryHistoryMap());
+
+            modelBuilder.ApplyConfiguration(new BTCPriceMap());
 
             base.OnModelCreating(modelBuilder);
         }
