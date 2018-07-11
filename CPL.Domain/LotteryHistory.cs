@@ -16,6 +16,7 @@ namespace CPL.Domain
         public DateTime? UpdatedDate { get; set; }
         public int? LotteryPrizeId { get; set; }
         public int TicketIndex { get; set; }
+        public decimal? Award { get; set; }
 
 
         public virtual Lottery Lottery { get; set; }

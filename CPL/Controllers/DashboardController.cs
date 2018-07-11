@@ -21,7 +21,8 @@ namespace CPL.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-        private readonly IGameHistoryService _gameHistoryService;
+        private readonly ILotteryHistoryService _lotteryHistoryService;
+        private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
@@ -35,7 +36,8 @@ namespace CPL.Controllers
             ITeamService teamService,
             ITemplateService templateService,
             ISysUserService sysUserService,
-            IGameHistoryService gameHistoryService)
+            ILotteryHistoryService lotteryHistoryService,
+            IPricePredictionHistoryService pricePredictionHistoryService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -45,7 +47,8 @@ namespace CPL.Controllers
             this._teamService = teamService;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
-            this._gameHistoryService = gameHistoryService;
+            this._lotteryHistoryService = lotteryHistoryService;
+            this._pricePredictionHistoryService = pricePredictionHistoryService;
         }
 
         public IActionResult Index()
@@ -110,26 +113,26 @@ namespace CPL.Controllers
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
             var viewModel = Mapper.Map<DashboardViewModel>(user);
 
-            viewModel.MonthlyInvest = _gameHistoryService.Queryable()
-                        .Where(x => x.SysUserId == user.Id)
-                        .GroupBy(x => x.CreatedDate.Day)
-                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Amount) })
-                        .ToList();
-            viewModel.MonthlyInvest.Reverse();
+            //viewModel.MonthlyInvest = _gameHistoryService.Queryable()
+            //            .Where(x => x.SysUserId == user.Id)
+            //            .GroupBy(x => x.CreatedDate.Day)
+            //            .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Amount) })
+            //            .ToList();
+            //viewModel.MonthlyInvest.Reverse();
 
-            viewModel.AssetChange = _gameHistoryService.Queryable()
-                        .Where(x => x.SysUserId == user.Id && x.Result.HasValue)
-                        .GroupBy(x => x.CreatedDate.Day)
-                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => (x.Award.Value - x.Amount)) })
-                        .ToList();
-            viewModel.AssetChange.Reverse();
+            //viewModel.AssetChange = _gameHistoryService.Queryable()
+            //            .Where(x => x.SysUserId == user.Id && x.Result.HasValue)
+            //            .GroupBy(x => x.CreatedDate.Day)
+            //            .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => (x.Award.Value - x.Amount)) })
+            //            .ToList();
+            //viewModel.AssetChange.Reverse();
 
-            viewModel.BonusChange = _gameHistoryService.Queryable()
-                        .Where(x => x.SysUserId == user.Id && x.Result.HasValue)
-                        .GroupBy(x => x.CreatedDate.Day)
-                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Award.Value) })
-                        .ToList();
-            viewModel.BonusChange.Reverse();
+            //viewModel.BonusChange = _gameHistoryService.Queryable()
+            //            .Where(x => x.SysUserId == user.Id && x.Result.HasValue)
+            //            .GroupBy(x => x.CreatedDate.Day)
+            //            .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Award.Value) })
+            //            .ToList();
+            //viewModel.BonusChange.Reverse();
 
 
             var mess = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
@@ -172,23 +175,43 @@ namespace CPL.Controllers
             // search the dbase taking into consideration table sorting and paging
             if (string.IsNullOrEmpty(searchBy))
             {
-                filteredResultsCount = _gameHistoryService
+                filteredResultsCount = _lotteryHistoryService
+                        .Queryable()
+                        .Where(x => x.SysUserId == user.Id)
+                        .Count() 
+                        + 
+                        _pricePredictionHistoryService
                         .Queryable()
                         .Where(x => x.SysUserId == user.Id)
                         .Count();
 
-                totalResultsCount = _gameHistoryService
+                totalResultsCount = _lotteryHistoryService
+                        .Queryable()
+                        .Where(x => x.SysUserId == user.Id)
+                        .Count()
+                        +
+                        _pricePredictionHistoryService
                         .Queryable()
                         .Where(x => x.SysUserId == user.Id)
                         .Count();
 
-                return _gameHistoryService
+                var lotteryHistory  = _lotteryHistoryService
                         .Queryable()
                         .Where(x => x.SysUserId == user.Id)
                         .OrderBy("CreatedDate", false)
                         .Select(x => Mapper.Map<GameHistoryViewModel>(x))
                         .OrderBy(sortBy, sortDir)
                         .ToList();
+
+                var pricePredictionHistory = _pricePredictionHistoryService
+                        .Queryable()
+                        .Where(x => x.SysUserId == user.Id)
+                        .OrderBy("CreatedDate", false)
+                        .Select(x => Mapper.Map<GameHistoryViewModel>(x))
+                        .OrderBy(sortBy, sortDir)
+                        .ToList();
+
+                return lotteryHistory.Concat(pricePredictionHistory);
             }
             else
             {
