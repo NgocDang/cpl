@@ -27,11 +27,11 @@
         })
     },
     bindWinButton: function () {
-        if ($("#NotificationStatus").val() == "True") {
+        if ($("#NotificationStatus").val().toLowerCase() == "true") {
             $("#winner-notification").show();
 
             $('.navbar-nav').on('click', '#btn-win', function () {
-                if ($("#KYCStatus").val() == "True") {
+                if ($("#KYCStatus").val().toLowerCase() == "false") {
                     window.location.replace('/Profile/EditSecurity');
                 }
             })
