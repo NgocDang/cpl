@@ -19,4 +19,4 @@ Insert into LangDetail Values (1, N'Enable', N'Enable');
 Insert into LangDetail Values (1, N'TwoFactorAuthenticationUpdated', N'Two-factor authentication setting is updated.');
 Insert into LangDetail Values (1, N'PIN', N'PIN');
 Insert into LangDetail Values (1, N'WaitingPIN', N'Waiting for PIN to be input');
-
+Insert into LangDetail Values (1, N'YouWin', N'You Win');
