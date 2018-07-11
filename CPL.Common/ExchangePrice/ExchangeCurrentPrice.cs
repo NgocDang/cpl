@@ -12,7 +12,7 @@ namespace CPL.Common.ExchangePrice
             return new BTCPrice()
             {
                 Price = ExchangeExtension.GetBTCPrice(),
-                Time = DateTime.Now
+                Time = DateTime.UtcNow
             };
         }
     }

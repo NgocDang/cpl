@@ -16,7 +16,7 @@ namespace CPL.Models
 
         //public bool TwoFactorAuthenticationEnable { get; set; }
 
-        //public string PIN { get; set; }
+        public string PIN { get; set; }
         public string ReturnUrl { get; set; }
         public bool RememberMe { get; set; }
 

@@ -15,6 +15,7 @@ namespace CPL.Models
         public DateTime? KYCCreatedDate { get; set; }
         public IFormFile FrontSideImage { set; get; }
         public IFormFile BackSideImage { set; get; }
-        //public bool? TwoFactorAuthenticationEnable { get; set; }
+        public bool TwoFactorAuthenticationEnable { get; set; }
+        public string QrCodeSetupImageUrl { get; set; }
     }
 }
