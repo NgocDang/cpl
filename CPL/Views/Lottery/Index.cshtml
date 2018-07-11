@@ -5,6 +5,71 @@
 
 @section styles
     {
+    <style>
+        .bg-custom {
+            line-height: 25px !important;
+            padding-top: 25px !important;
+            height: 100px !important;
+            width: 100px !important;
+            margin-top: 0px !important;
+            margin-left: 0px !important;
+            margin-bottom: 0px !important;
+            border-bottom-right-radius: 0px !important;
+            border-top-right-radius: 0px !important;
+        }
+
+        .card-header-custom {
+            text-align: right !important;
+        }
+
+        .card-body-custom {
+            text-align: right !important;
+        }
+
+        .progress-custom {
+            height: 3px;
+            width: 65%;
+            margin-top: 15px;
+            margin-left: 15px;
+        }
+
+        .card-description {
+            font-size: 15px;
+            font-weight: 300;
+        }
+
+        @@media (min-width: 320px) and (max-width: 374px) {
+            .progress-custom {
+                width: 50%;
+            }
+        }
+
+        @@media (min-width: 768px) and (max-width: 1023px){
+            .progress-custom {
+                width: 50%;
+            }
+        }
+
+        @@media (min-width: 768px) and (max-width: 1023px) {
+            .col-probability {
+                max-width: 100%;
+                flex: 100%;
+            }
+        }
+
+        @@media (min-width: 1024px) and (max-width: 1439px){
+            .col-probability {
+                max-width: 100%;
+                flex: 100%;
+            }
+        }
+
+        @@media (min-width: 1440px) and (max-width: 1640px) {
+            .progress-custom {
+                width: 50%;
+            }
+        }
+    </style>
 }
 <div class="app-content content">
     <div class="content-wrapper">
@@ -12,66 +77,109 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">&nbsp;</h5>
+                        <div class="card-body w-100 p-0">
+                            <img src="~/images/lottery_banner.jpg" class="img-fluid" alt="Lottery banner">
                         </div>
                     </div>
                 </div>
-                
             </div>
             <div class="row">
-                <div class="col-md-8 col-12">
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <div class="card card-sm-3"><div class="card-icon bg-primary"><i class="fas fa-hand-holding-usd"></i></div><div class="card-wrap"><div class="card-header"><h4>Total Admin</h4></div><div class="card-body">10</div></div></div>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <div class="card card-sm bg-danger">
-                                <div class="card-icon">
-                                    <i class="fas fa-hand-holding-usd"></i>
-                                </div>
-                                <div class="card-wrap">
-                                    <div class="card-body">10</div>
-                                    <div class="card-header"><h4>Prize #2</h4></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <div class="card card-sm bg-warning">
-                                <div class="card-icon">
-                                    <i class="fas fa-hand-holding-usd"></i>
-                                </div>
-                                <div class="card-wrap">
-                                    <div class="card-body">10</div>
-                                    <div class="card-header"><h4>Prize #3</h4></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <div class="card card-sm bg-success">
-                                <div class="card-icon">
-                                    <i class="fas fa-hand-holding-usd"></i>
-                                </div>
-                                <div class="card-wrap">
-                                    <div class="card-body">10</div>
-                                    <div class="card-header"><h4>Prize #4</h4></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-7 col-12">
                     <div class="row">
                         <div class="col-12">
+                            <div class="card card-sm-3">
+                                <div class="card-wrap">
+                                    <div class="card-header">
+                                        <h1>2450/5000 <a class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketCollected")</a></h1>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryPuchaseNumberSelection")</p>
+                                        <form id="form-purchase-lottery">
+                                            <div class="form-group row">
+                                                <div class="col-md-12 col-sm-12 col-lg-6">
+                                                    <div class="input-group my-1">
+                                                        <input type="number" class="form-control" id="number-of-ticket" min="0" aria-describedby="basic-addon4">
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text" id="basic-addon4"><i class="fas fa-ticket-alt"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-lg-6">
+                                                    <button type="button" class="btn btn-gradient-primary my-1"><i class="fas fa-money-bill-alt"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <h4 class="text-muted mb-2 mt-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProbabilityOfWinning")</h4>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-6">
+                            <div class="card card-sm-3">
+                                <div class="card-icon bg-custom bg-warning">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstPrize"))</div>
+                                <div class="card-wrap">
+                                    <div class="card-header card-header-custom">
+                                        <h4>1/5000</h4>
+                                    </div>
+                                    <div class="card-body card-body-custom">10%</div>
+                                    <div class="progress progress-custom">
+                                        <div class="progress-bar bg-warning" style="width:40%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-6">
+                            <div class="card card-sm-3">
+                                <div class="card-icon bg-custom bg-primary">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecondPrize"))</div>
+                                <div class="card-wrap">
+                                    <div class="card-header card-header-custom">
+                                        <h4>1/1000</h4>
+                                    </div>
+                                    <div class="card-body card-body-custom">10%</div>
+                                    <div class="progress progress-custom">
+                                        <div class="progress-bar bg-primary" style="width:40%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-6">
+                            <div class="card card-sm-3">
+                                <div class="card-icon bg-custom bg-danger">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ThirdPrize"))</div>
+                                <div class="card-wrap">
+                                    <div class="card-header card-header-custom">
+                                        <h4>1/200</h4>
+                                    </div>
+                                    <div class="card-body card-body-custom">10%</div>
+                                    <div class="progress progress-custom">
+                                        <div class="progress-bar bg-danger" style="width:40%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-6">
+                            <div class="card card-sm-3">
+                                <div class="card-icon bg-custom bg-success">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FourthPrize"))</div>
+                                <div class="card-wrap">
+                                    <div class="card-header card-header-custom">
+                                        <h4>1/10</h4>
+                                    </div>
+                                    <div class="card-body card-body-custom">10%</div>
+                                    <div class="progress progress-custom">
+                                        <div class="progress-bar bg-success" style="width:40%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-muted mb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PercentagesInParentheses")</p>
                 </div>
-                <div class="col-md-4 col-12">
-                    <div class="card">
-                        <img src="~/images/blog-post.png" alt="Card image cap" class="card-img-top img-fluid">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p><a href="#" class="btn btn-primary">Button</a>
-                        </div>
+                <div class="col-md-5 col-12">
+                    <div class="card p-0 mb-1">
+                        <img src="~/images/lottery_prize.jpg" alt="Lottery prize" class="card-img-top img-fluid">
                     </div>
+                    <p class="text-muted">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NotePrize"))</p>
                 </div>
             </div>
         </div>

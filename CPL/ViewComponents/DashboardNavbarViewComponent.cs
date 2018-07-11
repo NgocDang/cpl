@@ -30,6 +30,8 @@ namespace CPL.ViewComponents
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             var viewmodel = AutoMapper.Mapper.Map<DashboardNavbarViewModel>(user);
+            if (user is null)
+                return View(viewmodel);
             var lotteryRecords = _lotteryHistoryService.Queryable().Where(x => x.SysUserId == user.Id && x.Result == EnumGameResult.WIN.ToString() && x.UpdatedDate.HasValue && x.UpdatedDate.Value.AddDays(7) >= DateTime.Now).ToList();
             var pricePredictionRecords = _pricePredictionHistoryService.Queryable().Where(x => x.SysUserId == user.Id && x.Result == EnumGameResult.WIN.ToString() && x.UpdatedDate.HasValue && x.UpdatedDate.Value.AddDays(7) >= DateTime.Now).ToList();
             if (lotteryRecords.Count > 0 || pricePredictionRecords.Count > 0)
