@@ -104,41 +104,49 @@
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-md-12 col-12">
-                                            <h5>TWO-FACTOR AUTHENTICATION</h5>
+                                            <h5>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</h5>
                                             <hr />
                                             <div class="row">
                                                 <div class="col-sm-12 col-md-6 col-lg-6">
                                                     <div class="row">
                                                         <div class="col-sm-12 col-md-12 col-custom-two-factor col-lg-6 mt-2">
-                                                            <form id="form-two-factor-enable" method="POST" action="#" style="" class="needs-validation" novalidate="">
+                                                            @Html.HiddenFor(x => x.TwoFactorAuthenticationEnable)
+                                                            <form id="form-two-factor-disable" method="POST" action="#" style="display:none;" class="needs-validation" novalidate="">
                                                                 <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                                                                    <label for="PIN"> Enter PIN to enable</label>
-                                                                    <input id="PIN" type="text" class="form-control" name="PIN" tabindex="1" required="">
+                                                                    <button type="submit" id="btn-two-factor-disable" class="btn btn-gradient-primary my-1 btn-block">
+                                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Disable")
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                            <form id="form-two-factor-enable" method="POST" action="#" style="display:none;" class="needs-validation" novalidate="">
+                                                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                                                    <label for="PIN">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EnterPINToEnable")</label>
+                                                                    <input id="PIN" type="text" class="form-control" name="PIN" tabindex="1" required>
                                                                     <div class="invalid-feedback">
-                                                                        Invalid PIN. Please try again!
+                                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidPIN")
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group col-lg-12 col-md-12 col-sm-12">
                                                                     <button type="submit" id="btn-two-factor-enable" class="btn btn-gradient-primary my-1 btn-block">
-                                                                        Enable
+                                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Enable")
                                                                     </button>
                                                                 </div>
                                                             </form>
                                                         </div>
                                                         <div class="col-sm-12 col-md-12 col-lg-6 col-custom-two-factor text-center">
-                                                            <img alt="QR Code" src="http://chart.googleapis.com/chart?cht=qr&amp;chs=300x300&amp;chl=otpauth%3A%2F%2Ftotp%2Fnhat-nguyen%40famhopper.com%3Fsecret%3DIZQW2SDPOBYGK4Q%26issuer%3DNAM" class="img-fluid">
+                                                            <img alt="QR Code" src="@Model.QrCodeSetupImageUrl" class="img-fluid">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12 col-md-6 col-lg-6 mt-2">
-                                                    <p class="text-muted">Please follow the below steps for two-factor authentication:</p>
+                                                    <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationShortDescription")</p>
                                                     <ul>
-                                                        <li>Install the authentication application on smartphone:</li>
-                                                        <li><a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS (App Store)</a></li>
-                                                        <li><a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android (Google Play)</a></li>
-                                                        <li>Scan the QR code with the authentication application.</li>
-                                                        <li>Enter the 6 digit number displayed in the application and click on activate two-factor verification.</li>
-                                                        <li>Two-step authentication code will be required from the next login.</li>
+                                                        <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep1")</li>
+                                                        <li><a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep2")</a></li>
+                                                        <li><a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep3")</a></li>
+                                                        <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep4")</li>
+                                                        <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep5")</li>
+                                                        <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep6")</li>
                                                     </ul>
                                                 </div>
                                             </div>

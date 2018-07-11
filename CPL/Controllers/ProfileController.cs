@@ -16,6 +16,8 @@ using System.Net;
 using CPL.Misc.Utils;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Google.Authenticator;
+using CPL.Common.Enums;
 
 namespace CPL.Controllers
 {
@@ -170,12 +172,51 @@ namespace CPL.Controllers
 
         public IActionResult EditSecurity()
         {
-            var viewModel = Mapper.Map<EditSecurityViewModel>(HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser"));
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            var viewModel = Mapper.Map<EditSecurityViewModel>(user);
+
+            var tfa = new TwoFactorAuthenticator();
+            var setupInfo = tfa.GenerateSetupCode(CPLConstant.AppName, user.Email, CPLConstant.TwoFactorAuthenticationSecretKey, 300, 300);
+            viewModel.QrCodeSetupImageUrl = setupInfo.QrCodeSetupImageUrl;
+
             return View("EditSecurity", viewModel);
         }
 
         [HttpPost]
-        public IActionResult EditSecurity(EditSecurityViewModel viewModel)
+        public IActionResult UpdateTwoFactorAuthentication(bool value, string pin)
+        {
+            if (value)
+            {
+                var tfa = new TwoFactorAuthenticator();
+                bool isCorrectPIN = tfa.ValidateTwoFactorPIN(CPLConstant.TwoFactorAuthenticationSecretKey, pin);
+
+                if (isCorrectPIN)
+                {
+                    var userId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
+                    var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == userId);
+                    user.TwoFactorAuthenticationEnable = value;
+                    HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
+                    _sysUserService.Update(user);
+                    _unitOfWork.SaveChanges();
+                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationUpdated") });
+                }
+                else
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidPIN") });
+            }
+            else
+            {
+                var userId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == userId);
+                user.TwoFactorAuthenticationEnable = value;
+                HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationUpdated") });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult UpdateKYC(EditSecurityViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
