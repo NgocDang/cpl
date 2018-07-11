@@ -2,6 +2,7 @@
     init: function () {
         DashboardLayout.bindLogout();
         DashboardLayout.bindConfirmLogout();
+        DashboardLayout.bindWinButton();
     },
     bindLogout: function () {
         $('.navbar-nav').on('click', '.logout-confirmation', function () {
@@ -24,6 +25,17 @@
         $('#modal').on('click', '#btn-confirm-logout', function () {
             window.location.href = '/Authentication/Logout/';
         })
+    },
+    bindWinButton: function () {
+        if ($("#NotificationStatus").val().toLowerCase() == "true") {
+            $("#winner-notification").show();
+
+            $('.navbar-nav').on('click', '#btn-win', function () {
+                if ($("#KYCStatus").val().toLowerCase() == "false") {
+                    window.location.replace('/Profile/EditSecurity');
+                }
+            })
+        }
     }
 };
 

@@ -995,8 +995,16 @@ select.bs-select-hidden, select.selectpicker {
     margin: 1.4rem 0.5rem 1rem 0.5rem;
 }
 
+.header-navbar .navbar-container ul.nav li button.navbar-action {
+    margin: 1.4rem 0.5rem 1rem 0.5rem;
+}
+
 @media (max-width: 767.98px) {
     .header-navbar .navbar-container ul.nav li a.navbar-action {
+        margin: 1rem 0.5rem;
+    }
+
+    .header-navbar .navbar-container ul.nav li button.navbar-action {
         margin: 1rem 0.5rem;
     }
 }
