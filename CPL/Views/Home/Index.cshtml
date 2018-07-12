@@ -111,14 +111,14 @@
                                 <h5 class="card-title">Lottery</h5>
                             </div>
                             <div class="card-body">
-                                <form class="row">
-                                    <div class="col-8" style="padding-right:0px;">
+                                <div class="row">
+                                    @*<div class="col-8" style="padding-right:0px;">
                                         <input type="number" class="form-control" aria-describedby="emailHelp" placeholder="CPL amount">
+                                    </div>*@
+                                    <div class="col-12">
+                                        <a asp-controller="Lottery" asp-action="Index" class="btn btn-danger btn-card text-light">Buy</a>
                                     </div>
-                                    <div class="col-4">
-                                        <button class="btn btn-danger btn-card">Buy</button>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
