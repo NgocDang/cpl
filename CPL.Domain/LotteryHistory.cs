@@ -17,7 +17,6 @@ namespace CPL.Domain
         public int? LotteryPrizeId { get; set; }
         public int TicketIndex { get; set; }
 
-
         public virtual Lottery Lottery { get; set; }
         public virtual SysUser SysUser { get; set; }
         public virtual LotteryPrize LotteryPrize { get; set; }

@@ -16,4 +16,11 @@ namespace CPL.Common.Enums
         UP,     // true
         DOWN    // false
     }
+
+    public enum EnumGameId
+    {
+        LOTTERY = 1,
+        WORLDCUP = 2,
+        PRICE_PREDICTION = 3
+    }
 }
