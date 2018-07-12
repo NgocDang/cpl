@@ -7,5 +7,17 @@ namespace CPL.Models
 {
     public class LotteryViewModel
     {
+        public decimal FirstPrizeProbability { get; set; }
+        public decimal SecondPrizeProbability { get; set; }
+        public decimal ThirdPrizeProbability { get; set; }
+        public decimal FourthPrizeProbability { get; set; }
+
+        public int TotalTicket { get; set; }
+        public int TicketCollected { get; set; }
+
+        public int NumberOfTicketWinFirstPrize { get; set; }
+        public int NumberOfTicketWinSecondPrize { get; set; }
+        public int NumberOfTicketWinThirdPrize { get; set; }
+        public int NumberOfTicketWinFourthPrize { get; set; }
     }
 }

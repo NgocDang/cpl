@@ -51,6 +51,20 @@ namespace CPL.Controllers
         public IActionResult Index()
         {
             var viewModel = new LotteryViewModel();
+
+            viewModel.TotalTicket = 5000;
+            viewModel.TicketCollected = 2543;
+
+            viewModel.FirstPrizeProbability = 0.1m;
+            viewModel.SecondPrizeProbability = 5m;
+            viewModel.ThirdPrizeProbability = 10m;
+            viewModel.FourthPrizeProbability = 50m;
+
+            viewModel.NumberOfTicketWinFirstPrize = 1;
+            viewModel.NumberOfTicketWinSecondPrize = 5;
+            viewModel.NumberOfTicketWinThirdPrize = 25;
+            viewModel.NumberOfTicketWinFourthPrize = 500;
+            
             return View(viewModel);
         }
     }
