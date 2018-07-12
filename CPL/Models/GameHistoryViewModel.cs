@@ -10,7 +10,7 @@ namespace CPL.Models
         public int GameId { get; set; }
         public DateTime CreatedDate { get; set; }
         public decimal Amount { get; set; }
-        public bool? Result { get; set; }
+        public string Result { get; set; }
         public decimal Balance { get; set; }
         public decimal? Award { get; set; }
 

@@ -19,12 +19,5 @@ namespace CPL.Domain
 
         public virtual PricePrediction PricePrediction { get; set; }
         public virtual SysUser SysUser { get; set; }
-
-        public enum EnumGameId
-        {
-            LOTTERY = 1,
-            WORLDCUP = 2,
-            PRICE_PREDICTION = 3
-        }
     }
 }

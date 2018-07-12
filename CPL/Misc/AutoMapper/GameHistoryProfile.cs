@@ -24,26 +24,23 @@ namespace CPL.Misc.AutoMapper
                 .ForMember(dest => dest.GameType, opt => opt.MapFrom(src => src.GameId == 1 ? "Lotto" : (src.GameId == 2 ? "BTCPrise" : "WorldCup" )));
             CreateMap<GameHistoryViewModel, GameHistory>();
 
-            CreateMap<LotteryHistory, GameHistoryViewModel>()
-                .ForMember(dest => dest.GameType, opt => opt.MapFrom(src => EnumGameId.LOTTERY.ToString()))
-                //.ForMember(dest => dest.AmountInString, opt => opt.MapFrom(src => src.Amount.ToString("#,##0.########")))
-                //.ForMember(dest => dest.AwardInString, opt => opt.MapFrom(src => src.Award.HasValue ? src.Award.Value.ToString("#,##0.########") : string.Empty))
-                .ForMember(dest => dest.CreatedDateInString, opt => opt.MapFrom(src => src.CreatedDate.ToString("yyyy/MM/dd")))
-                .ForMember(dest => dest.CreatedTimeInString, opt => opt.MapFrom(src => src.CreatedDate.ToString("HH:mm:ss")));
-                //.ForMember(dest => dest.BalanceInString, opt => opt.MapFrom(src => src.Award.HasValue ?
-                //    ((src.Award.Value - src.Amount >= 0) ? (src.Award.Value - src.Amount).ToString("+#,##0.########") : (src.Award.Value - src.Amount).ToString("#,##0.########"))
-                //    : string.Empty));
-            CreateMap<GameHistoryViewModel, LotteryHistory>();
-
             CreateMap<PricePredictionHistory, GameHistoryViewModel>()
-                .ForMember(dest => dest.GameType, opt => opt.MapFrom(src => EnumGameId.PRICE_PREDICTION.ToString()))
+                .ForMember(dest => dest.GameType, opt => opt.MapFrom(src => CPLConstant.PricePredictionName))
                 .ForMember(dest => dest.AmountInString, opt => opt.MapFrom(src => src.Amount.ToString("#,##0.########")))
-                //.ForMember(dest => dest.AwardInString, opt => opt.MapFrom(src => src.Award.HasValue ? src.Award.Value.ToString("#,##0.########") : string.Empty))
+                .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Amount))
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate))
+                .ForMember(dest => dest.AwardInString, opt => opt.MapFrom(src => src.Award.HasValue ? src.Award.Value.ToString("#,##0.########") : string.Empty))
+                .ForMember(dest => dest.Award, opt => opt.MapFrom(src => src.Award.HasValue ? src.Award.Value : 0))
                 .ForMember(dest => dest.CreatedDateInString, opt => opt.MapFrom(src => src.CreatedDate.ToString("yyyy/MM/dd")))
-                .ForMember(dest => dest.CreatedTimeInString, opt => opt.MapFrom(src => src.CreatedDate.ToString("HH:mm:ss")));
-                //.ForMember(dest => dest.BalanceInString, opt => opt.MapFrom(src => src.Award.HasValue ?
-                //    ((src.Award.Value - src.Amount >= 0) ? (src.Award.Value - src.Amount).ToString("+#,##0.########") : (src.Award.Value - src.Amount).ToString("#,##0.########"))
-                //    : string.Empty));
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate))
+                .ForMember(dest => dest.CreatedTimeInString, opt => opt.MapFrom(src => src.CreatedDate.ToString("HH:mm:ss")))
+                .ForMember(dest => dest.Result, opt => opt.MapFrom(src => src.Result))
+                .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Award.HasValue ?
+                    ((src.Award.Value - src.Amount >= 0) ? (src.Award.Value - src.Amount) : (src.Award.Value - src.Amount))
+                    : 0))
+                .ForMember(dest => dest.BalanceInString, opt => opt.MapFrom(src => src.Award.HasValue ?
+                    ((src.Award.Value - src.Amount >= 0) ? (src.Award.Value - src.Amount).ToString("+#,##0.########") : (src.Award.Value - src.Amount).ToString("#,##0.########"))
+                    : string.Empty));
             CreateMap<GameHistoryViewModel, PricePredictionHistory>();
 
 

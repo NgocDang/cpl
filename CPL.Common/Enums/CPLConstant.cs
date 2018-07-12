@@ -60,5 +60,12 @@ namespace CPL.Common.Enums
         // FHCore Authentication
         public static string ProjectEmail = "info.cplcoin@gmail.com";
         public static string ProjectName = "CPL";
+
+        //Lottery ticket price
+        public static int LotteryTicketPrice = 500;
+
+        //Game name
+        public static string LotteryName = "Lottery";
+        public static string PricePredictionName = "Price Prediction";
     }
 }
