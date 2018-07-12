@@ -90,7 +90,7 @@
                             <div class="card card-sm-3">
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h1>2450/5000 <a class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketCollected")</a></h1>
+                                        <h1>@Model.TicketCollected/@Model.TotalTicket <a class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketCollected")</a></h1>
                                     </div>
                                     <div class="card-body">
                                         <p class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryPuchaseNumberSelection")</p>
@@ -121,9 +121,9 @@
                                 <div class="card-icon bg-custom bg-warning">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstPrize"))</div>
                                 <div class="card-wrap">
                                     <div class="card-header card-header-custom">
-                                        <h4>1/5000</h4>
+                                        <h4>@Model.NumberOfTicketWinFirstPrize/@Model.TotalTicket</h4>
                                     </div>
-                                    <div class="card-body card-body-custom">10%</div>
+                                    <div class="card-body card-body-custom">@Model.FirstPrizeProbability%</div>
                                     <div class="progress progress-custom">
                                         <div class="progress-bar bg-warning" style="width:40%"></div>
                                     </div>
@@ -135,9 +135,9 @@
                                 <div class="card-icon bg-custom bg-primary">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecondPrize"))</div>
                                 <div class="card-wrap">
                                     <div class="card-header card-header-custom">
-                                        <h4>1/1000</h4>
+                                        <h4>@Model.NumberOfTicketWinSecondPrize/@Model.TotalTicket</h4>
                                     </div>
-                                    <div class="card-body card-body-custom">10%</div>
+                                    <div class="card-body card-body-custom">@Model.SecondPrizeProbability%</div>
                                     <div class="progress progress-custom">
                                         <div class="progress-bar bg-primary" style="width:40%"></div>
                                     </div>
@@ -149,9 +149,9 @@
                                 <div class="card-icon bg-custom bg-danger">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ThirdPrize"))</div>
                                 <div class="card-wrap">
                                     <div class="card-header card-header-custom">
-                                        <h4>1/200</h4>
+                                        <h4>@Model.NumberOfTicketWinThirdPrize/@Model.TotalTicket</h4>
                                     </div>
-                                    <div class="card-body card-body-custom">10%</div>
+                                    <div class="card-body card-body-custom">@Model.ThirdPrizeProbability%</div>
                                     <div class="progress progress-custom">
                                         <div class="progress-bar bg-danger" style="width:40%"></div>
                                     </div>
@@ -163,9 +163,9 @@
                                 <div class="card-icon bg-custom bg-success">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FourthPrize"))</div>
                                 <div class="card-wrap">
                                     <div class="card-header card-header-custom">
-                                        <h4>1/10</h4>
+                                        <h4>@Model.NumberOfTicketWinFourthPrize/@Model.TotalTicket</h4>
                                     </div>
-                                    <div class="card-body card-body-custom">10%</div>
+                                    <div class="card-body card-body-custom">@Model.FourthPrizeProbability%</div>
                                     <div class="progress progress-custom">
                                         <div class="progress-bar bg-success" style="width:40%"></div>
                                     </div>
