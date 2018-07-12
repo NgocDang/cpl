@@ -118,22 +118,43 @@ namespace CPL.Controllers
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
             var viewModel = Mapper.Map<DashboardViewModel>(user);
 
-            viewModel.MonthlyInvest = _gameHistoryService.Queryable()
+            var lotteryHistory = _lotteryHistoryService
+                        .Query().Include(x => x.LotteryPrize).Select()
                         .Where(x => x.SysUserId == user.Id)
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.LotteryPrize?.Amount })
+                        .GroupBy(x => x.LotteryId)
+                        .Select(y => new GameHistoryViewModel
+                        {
+                            CreatedDate = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault(),
+                            Amount = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice),
+                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Amount.GetValueOrDefault(0))),
+                        })
+                        .AsQueryable()
+                        .ToList();
+
+            var pricePredictionHistory = _pricePredictionHistoryService
+                    .Queryable()
+                    .Where(x => x.SysUserId == user.Id)
+                    .Select(x => Mapper.Map<GameHistoryViewModel>(x))
+                    .ToList();
+
+            var gameHistoryList = lotteryHistory.Concat(pricePredictionHistory).ToList();
+
+            viewModel.MonthlyInvest = gameHistoryList.AsQueryable()
                         .GroupBy(x => x.CreatedDate.Day)
                         .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Amount) })
                         .ToList();
             viewModel.MonthlyInvest.Reverse();
 
-            viewModel.AssetChange = _gameHistoryService.Queryable()
-                        .Where(x => x.SysUserId == user.Id && x.Result.HasValue)
+            viewModel.AssetChange = gameHistoryList.AsQueryable()
+                        .Where(x => x.Result != string.Empty)
                         .GroupBy(x => x.CreatedDate.Day)
                         .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => (x.Award.Value - x.Amount)) })
                         .ToList();
             viewModel.AssetChange.Reverse();
 
-            viewModel.BonusChange = _gameHistoryService.Queryable()
-                        .Where(x => x.SysUserId == user.Id && x.Result.HasValue)
+            viewModel.BonusChange = gameHistoryList.AsQueryable()
+                        .Where(x => x.Result != string.Empty)
                         .GroupBy(x => x.CreatedDate.Day)
                         .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Award.Value) })
                         .ToList();
@@ -215,16 +236,14 @@ namespace CPL.Controllers
                             CreatedTimeInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("HH:mm:ss"),
                             GameType = EnumGameId.LOTTERY.ToString(),
                             Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : "LOSE"),
-                            AmountInString = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0.########"),
+                            AmountInString = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0"),
                             Amount = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice),
-                            AwardInString = (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0))).ToString("#,##0.########"),
-                            Award = (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0))),
+                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Amount.GetValueOrDefault(0))).ToString("#,##0"),
+                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Amount.GetValueOrDefault(0))),
                             BalanceInString = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    ((y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) >= 0 ? (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("+#,##0.########") : (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0.########")) 
-                                                    : string.Empty,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("+#,##0;-#,##0") : string.Empty,
                             Balance = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    ((y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) >= 0 ? (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) : (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice))
-                                                    : 0,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) : 0,
                         })
                         .AsQueryable()
                         .OrderBy(sortBy, sortDir)
@@ -253,16 +272,14 @@ namespace CPL.Controllers
                             CreatedTimeInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("HH:mm:ss"),
                             GameType = EnumGameId.LOTTERY.ToString(),
                             Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : "LOSE"),
-                            AmountInString = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0.########"),
+                            AmountInString = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0"),
                             Amount = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice),
-                            AwardInString = (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0))).ToString("#,##0.########"),
-                            Award = (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0))),
+                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Amount.GetValueOrDefault(0))).ToString("#,##0"),
+                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Amount.GetValueOrDefault(0))),
                             BalanceInString = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    ((y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) >= 0 ? (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("+#,##0.########") : (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0.########"))
-                                                    : string.Empty,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("+#,##0;-#,##0") : string.Empty,
                             Balance = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    ((y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) >= 0 ? (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) : (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice))
-                                                    : 0,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) : 0,
                         })
                         .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
                         .Count()
@@ -298,16 +315,14 @@ namespace CPL.Controllers
                             CreatedTimeInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("HH:mm:ss"),
                             GameType = EnumGameId.LOTTERY.ToString(),
                             Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : "LOSE"),
-                            AmountInString = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0.########"),
+                            AmountInString = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0"),
                             Amount = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice),
-                            AwardInString = (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0))).ToString("#,##0.########"),
-                            Award = (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0))),
+                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Amount.GetValueOrDefault(0))).ToString("#,##0"),
+                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Amount.GetValueOrDefault(0))),
                             BalanceInString = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    ((y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) >= 0 ? (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("+#,##0.########") : (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0.########"))
-                                                    : string.Empty,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("+#,##0;-#,##0") : string.Empty,
                             Balance = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    ((y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) >= 0 ? (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) : (y.Select(x => x).Where(x => x.Result == "WIN").Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice))
-                                                    : 0,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Amount.GetValueOrDefault(0)) - y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice) : 0,
                         })
                         .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
                         .Skip(skip)

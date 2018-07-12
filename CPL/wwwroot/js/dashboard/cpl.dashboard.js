@@ -3,7 +3,7 @@
         Dashboard.loadHistoryDatatable();
         Dashboard.loadSlider();
         Dashboard.loadHoldingPercentage();
-        //Dashboard.loadBetStatistic();
+        Dashboard.loadBetStatistic();
     },
     loadBetStatistic: function () {
         $.ajax({
