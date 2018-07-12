@@ -1,5 +1,9 @@
 ﻿var LogIn = {
     init: function () {
+        LogIn.bindLoginForm();
+        LogIn.bindVerify();
+    },
+    bindLoginForm: function () {
         $("#form-log-in").validate();
         $("#btn-log-in").on("click", function () {
             var isFormValid = $("#form-log-in").valid();
@@ -25,12 +29,15 @@
                     },
                     success: function (data) {
                         if (data.success) {
-                            //if (data.twofactor) {
-                            //    $("#log-in").hide();
-                            //    $("#two-factor").show();
-                            //} else {
+                            if (data.twofactor) {
+                                $("div.card-login-page").removeClass("height-500");
+                                $("div.card-login-page").addClass("height-200");
+                                $("img#img-logo").css("margin-top", "-5%");
+                                $("#login").hide();
+                                $("#two-factor").show();
+                            } else {
                                 window.location.replace(data.url);
-                            //}
+                            }
                         } else {
                             //if (data.name == "mobile-verify") {
                             //    $("#mobile-verify-message").html(data.message);
@@ -53,7 +60,6 @@
             }
             return false;
         });
-
         var checkValidReCaptchaV2 = function () {
             var v = grecaptcha.getResponse();
             if (v === '') {
@@ -63,7 +69,42 @@
                 return true;
             }
         }
+    },
+    bindVerify: function () {
+        $("form-two-factor").validate();
+        $("#two-factor").on("click", "#btn-two-factor", function () {
+            var isFormValid = $("#form-two-factor").valid();
+            $("#form-two-factor").addClass('was-validated');
+            if (isFormValid) {
+                $("#two-factor-error").hide();
+                $(".two-factor-error").removeClass("border-danger");
+                $.ajax({
+                    url: "/Authentication/VerifyPIN/",
+                    type: "POST",
+                    beforeSend: function () {
+                        $("#btn-two-factor").addClass("disabled");
+                    },
+                    data: {
+                        Email: $("#Email").val(),
+                        PIN: $("#PIN").val()
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.replace(data.url);
+                        } else {
+                            $(".two-factor-error").addClass("danger");
+                            $(".two-factor-error").html(data.message);
+                            $(".two-factor-error").show();
+                        }
+                    },
+                    complete: function (data) {
+                        $("#btn-two-factor").removeClass("disabled");
+                    }
 
+                });
+            }
+            return false;
+        });
     }
 };
 

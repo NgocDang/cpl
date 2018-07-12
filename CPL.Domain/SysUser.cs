@@ -38,6 +38,7 @@ namespace CPL.Domain
         public decimal BTCAmount { get; set; }
         public decimal ETHAmount { get; set; }
         public decimal TokenAmount { get; set; }
+        public bool TwoFactorAuthenticationEnable { get; set; }
 
         public virtual ICollection<CoinTransaction> CoinTransactions { get; set; }
         public virtual ICollection<GameHistory> GameHistories { get; set; }

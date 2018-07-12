@@ -1,8 +1,10 @@
-﻿var EditAccount = {
+﻿var EditSecurity = {
     init: function () {
-        EditAccount.bindSaveButton();
+        EditSecurity.bindSaveKYCButton();
+        EditSecurity.bindTwoFactorAuthenticate();
+        EditSecurity.bindTwoFactorAuthenticateEnable();
     },
-    bindSaveButton: function () {
+    bindSaveKYCButton: function () {
         $("#form-edit-account").on("click", "#btn-save-account", function () {
             if ($("#KYCVerified").val() !== "") {
                 $("#btn-save-account").attr("disabled", true);
@@ -25,7 +27,7 @@
                     formData.append('FrontSideImage', fsFile);
                     formData.append('BackSideImage', bsFile);
                     $.ajax({
-                        url: "/Profile/EditSecurity/",
+                        url: "/Profile/UpdateKYC/",
                         type: "POST",
                         processData: false,
                         contentType: false,
@@ -54,9 +56,80 @@
                 return false;
             }
         });
+    },
+    bindTwoFactorAuthenticate: function () {
+        if ($("#TwoFactorAuthenticationEnable").val().toLowerCase() == "false") {
+            $("#form-two-factor-enable").show();
+            $("#form-two-factor-disable").hide();
+        } else {
+            $("#form-two-factor-enable").hide();
+            $("#form-two-factor-disable").show();
+        }
+    },
+    bindTwoFactorAuthenticateEnable: function () {
+        $("#two-factor-authenticator").on("click", "#btn-two-factor-disable", function () {
+            $.ajax({
+                url: "/Profile/UpdateTwoFactorAuthentication/",
+                type: "POST",
+                beforeSend: function () {
+                    $("#btn-two-factor-disable").attr("disabled", true);
+                    $("#btn-two-factor-disable").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-two-factor-disable").text());
+                },
+                data: {
+                    value: false
+                },
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message, 'Success!');
+                        $("#form-two-factor-disable").hide();
+                        $("#form-two-factor-enable").show();
+                    } else {
+                        toastr.error(data.message, 'Error!');
+                    }
+                },
+                complete: function (data) {
+                    $("#btn-two-factor-disable").attr("disabled", false);
+                    $("#btn-two-factor-disable").html($("#btn-two-factor-disable").text());
+                }
+            });
+        });
+        $("#form-two-factor-enable").validate();
+        $("#two-factor-authenticator").on("click", "#btn-two-factor-enable", function () {
+            var isFormValid = $("#form-two-factor-enable").valid();
+            $("#form-two-factor-enable").addClass('was-validated');
+            $("#PIN").remove("border-danger");
+            if (isFormValid) {
+                $.ajax({
+                    url: "/Profile/UpdateTwoFactorAuthentication/",
+                    type: "POST",
+                    beforeSend: function () {
+                        $("#btn-two-factor-enable").attr("disabled", true);
+                        $("#btn-two-factor-enable").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-two-factor-enable").text());
+                    },
+                    data: {
+                        value: true,
+                        pin: $("#PIN").val()
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message, 'Success!');
+                            $("#form-two-factor-disable").show();
+                            $("#form-two-factor-enable").hide();
+                        } else {
+                            $("#PIN").addClass("border-danger");
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $("#btn-two-factor-enable").attr("disabled", false);
+                        $("#btn-two-factor-enable").html($("#btn-two-factor-enable").text());
+                    }
+                });
+            }
+        });
     }
 };
 
 $(document).ready(function () {
-    EditAccount.init();
+    EditSecurity.init();
 });

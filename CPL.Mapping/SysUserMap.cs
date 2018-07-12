@@ -43,6 +43,7 @@ namespace CPL.Mapping
             builder.Property(t => t.BTCAmount).HasColumnName("BTCAmount");
             builder.Property(t => t.ETHAmount).HasColumnName("ETHAmount");
             builder.Property(t => t.TokenAmount).HasColumnName("TokenAmount");
+            builder.Property(t => t.TwoFactorAuthenticationEnable).HasColumnName("TwoFactorAuthenticationEnable");
         }
     }
 }
