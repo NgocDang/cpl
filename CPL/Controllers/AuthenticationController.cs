@@ -11,6 +11,7 @@ using CPL.Misc;
 using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
+using Google.Authenticator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -69,14 +70,37 @@ namespace CPL.Controllers
                         return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "EmailInactivatingAccount") });
                     else
                     {
-                        HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
-                        return RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Dashboard")}");
+                        if (user.TwoFactorAuthenticationEnable)
+                        {
+                            return new JsonResult(new { success = true, twofactor = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WaitingPIN") });
+                        }
+                        else
+                        {
+                            HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
+                            return RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Dashboard")}");
+                        }
                     }
                 }
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidEmailPassword") });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
+
+        [HttpPost]
+        public IActionResult VerifyPIN(AccountLoginModel viewModel)
+        {
+            var tfa = new TwoFactorAuthenticator();
+            bool isCorrectPIN = tfa.ValidateTwoFactorPIN(CPLConstant.TwoFactorAuthenticationSecretKey, viewModel.PIN);
+
+            if (isCorrectPIN)
+            {
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email);
+                HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
+                return RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Dashboard")}");
+            }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidPIN") });
+        }
+
 
         public ActionResult Register(int? id, string token)
         {
