@@ -35,12 +35,8 @@ namespace CPL.Misc.AutoMapper
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate))
                 .ForMember(dest => dest.CreatedTimeInString, opt => opt.MapFrom(src => src.CreatedDate.ToString("HH:mm:ss")))
                 .ForMember(dest => dest.Result, opt => opt.MapFrom(src => src.Result))
-                .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Award.HasValue ?
-                    ((src.Award.Value - src.Amount >= 0) ? (src.Award.Value - src.Amount) : (src.Award.Value - src.Amount))
-                    : 0))
-                .ForMember(dest => dest.BalanceInString, opt => opt.MapFrom(src => src.Award.HasValue ?
-                    ((src.Award.Value - src.Amount >= 0) ? (src.Award.Value - src.Amount).ToString("+#,##0.########") : (src.Award.Value - src.Amount).ToString("#,##0.########"))
-                    : string.Empty));
+                .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Award.HasValue ? (src.Award.Value - src.Amount) : 0))
+                .ForMember(dest => dest.BalanceInString, opt => opt.MapFrom(src => src.Award.HasValue ? (src.Award.Value - src.Amount).ToString("+#,##0;-#,##0") : string.Empty));
             CreateMap<GameHistoryViewModel, PricePredictionHistory>();
 
 
