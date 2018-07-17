@@ -67,5 +67,42 @@ namespace CPL.Controllers
             
             return View(viewModel);
         }
+
+        public IActionResult GetConfirmPurchaseTicket(int amount)
+        {
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            if (user == null)
+            {
+                return new JsonResult(new
+                {
+                    success = true,
+                    url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("LogIn", "Authentication")}?returnUrl={Url.Action("Index", "Lottery")}"
+                });
+            }
+
+            var viewModel = new LotteryTicketPurchaseViewModel();
+
+            viewModel.TicketPrice = 500;
+            viewModel.TotalTickets = amount;
+            viewModel.TotalPriceOfTickets = viewModel.TotalTickets * viewModel.TicketPrice;
+
+            return PartialView("_PurchaseTicketConfirm", viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult ConfirmPurchaseTicket(LotteryTicketPurchaseViewModel viewModel)
+        {
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            if (user == null)
+            {
+                return new JsonResult(new
+                {
+                    success = true,
+                    url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("LogIn", "Authentication")}?returnUrl={Url.Action("Index", "Lottery")}"
+                });
+            }
+
+            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully") });
+        }
     }
 }
