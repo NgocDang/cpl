@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="CPL.WCF.ExchangeCurrentPrice.BTCCurrentPrice" CodeBehind="BTCCurrentPrice.svc.cs" %>
