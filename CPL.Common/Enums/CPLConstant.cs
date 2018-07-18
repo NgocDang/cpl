@@ -55,8 +55,9 @@ namespace CPL.Common.Enums
         public static string ProjectEmail = "info.cplcoin@gmail.com";
         public static string ProjectName = "CPL";
 
-        //Lottery ticket price
+        //Lottery game
         public static int LotteryTicketPrice = 500;
+        public static int LotteryGroupSize = 10;
 
         //Game name
         public static string LotteryName = "Lottery";

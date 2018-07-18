@@ -11,17 +11,13 @@ namespace CPL.Models
         public DateTime CreatedDate { get; set; }
         public int Volume { get; set; }
 
-        public decimal FirstPrizeProbability { get; set; }
-        public decimal SecondPrizeProbability { get; set; }
-        public decimal ThirdPrizeProbability { get; set; }
-        public decimal FourthPrizeProbability { get; set; }
+        public List<LotteryHistoryViewModel> LotteryHistories { get; set; }
+        public List<LotteryPrizeViewModel> LotteryPrizes { get; set; }
+    }
 
-        public int TotalTicket { get; set; }
-        public int TicketCollected { get; set; }
-
-        public int NumberOfTicketWinFirstPrize { get; set; }
-        public int NumberOfTicketWinSecondPrize { get; set; }
-        public int NumberOfTicketWinThirdPrize { get; set; }
-        public int NumberOfTicketWinFourthPrize { get; set; }
+    public class Prizes
+    {
+        public decimal NumberOfTicketWin { get; set; }
+        public decimal PrizeProbability { get; set; }
     }
 }

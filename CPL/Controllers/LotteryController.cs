@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
@@ -26,6 +27,9 @@ namespace CPL.Controllers
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
+        private readonly ILotteryService _lotteryService;
+        private readonly ILotteryPrizeService _lotteryPrizeService;
+        private readonly ILotteryHistoryService _lotteryHistoryService;
 
         public LotteryController(
             ILangService langService,
@@ -36,6 +40,9 @@ namespace CPL.Controllers
             ITeamService teamService,
             ITemplateService templateService,
             ISysUserService sysUserService,
+            ILotteryService lotteryService,
+            ILotteryPrizeService lotteryPrizeService,
+            ILotteryHistoryService lotteryHistoryService,
             IGameHistoryService gameHistoryService)
         {
             this._langService = langService;
@@ -46,27 +53,36 @@ namespace CPL.Controllers
             this._teamService = teamService;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
+            this._lotteryService = lotteryService;
+            this._lotteryPrizeService = lotteryPrizeService;
+            this._lotteryHistoryService = lotteryHistoryService;
             this._gameHistoryService = gameHistoryService;
         }
 
         public IActionResult Index()
         {
-            var viewModel = new LotteryViewModel();
+            var viewModel = new LotteryGameViewModel();
 
             //TODO: Should load data from current lottery game in Lottery and LotteryPrize tables
-            viewModel.TotalTicket = 5000;
-            viewModel.TicketCollected = 2543;
+            viewModel.Lotteries = _lotteryService
+                .Query()
+                .Include(x => x.LotteryHistories)
+                .Include(x => x.LotteryPrizes)
+                .Select()
+                .Where(x => x.LotteryHistories.Count() < x.Volume)
+                .Select(x => Mapper.Map<LotteryViewModel>(x))
+                .ToList();
 
-            viewModel.NumberOfTicketWinFirstPrize = 1;
-            viewModel.NumberOfTicketWinSecondPrize = 5;
-            viewModel.NumberOfTicketWinThirdPrize = 25;
-            viewModel.NumberOfTicketWinFourthPrize = 500;
 
-            viewModel.FourthPrizeProbability = Math.Round(500 / 500m * 1 / 10m, 4);
-            viewModel.ThirdPrizeProbability = Math.Round(25 / 500m * 1 / 9m, 4); 
-            viewModel.SecondPrizeProbability = Math.Round(5 /475m * 1/9m, 4);
-            viewModel.FirstPrizeProbability = Math.Round(1 /470m * 1/9m, 4);
+            foreach(var lottery in viewModel.Lotteries)
+            {
+                for (var i = lottery.LotteryPrizes.Count - 1; i >= 0; i--)
+                {
+                    var magicNumber = (i == 3) ? new decimal[] { 0, 0 } : ((i == 2) ? new decimal[] { 0, 1 } : ((i == 1) ? new decimal[] { 25, 1 } : new decimal[] { 30, 1 }));
+                    lottery.LotteryPrizes[i].Probability = Math.Round(lottery.LotteryPrizes[i].Volume / ((lottery.Volume / CPLConstant.LotteryGroupSize) - magicNumber[0]) * 1m / (CPLConstant.LotteryGroupSize - magicNumber[1]) * 100m, 4);
+                }
 
+            }
             return View(viewModel);
         }
 
