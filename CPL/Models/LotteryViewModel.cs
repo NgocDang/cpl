@@ -7,6 +7,10 @@ namespace CPL.Models
 {
     public class LotteryViewModel
     {
+        public int Phase { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int Volume { get; set; }
+
         public decimal FirstPrizeProbability { get; set; }
         public decimal SecondPrizeProbability { get; set; }
         public decimal ThirdPrizeProbability { get; set; }

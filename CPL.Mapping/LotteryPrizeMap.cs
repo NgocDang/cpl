@@ -18,8 +18,9 @@ namespace CPL.Mapping
             builder.ToTable("LotteryPrize");
             builder.Property(t => t.Id).HasColumnName("Id");
             builder.Property(t => t.Name).HasColumnName("Name");
-            builder.Property(t => t.Amount).HasColumnName("Amount");
+            builder.Property(t => t.Value).HasColumnName("Value");
             builder.Property(t => t.LotteryId).HasColumnName("LotteryId");
+            builder.Property(t => t.Volume).HasColumnName("Volume");
 
             //Relationship
             builder.HasOne(x => x.Lottery)
