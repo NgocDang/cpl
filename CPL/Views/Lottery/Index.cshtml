@@ -38,6 +38,10 @@
             font-weight: 300;
         }
 
+        .small-font {
+            font-size: 12px;
+        }
+
         @@media (min-width: 320px) and (max-width: 374px) {
             .progress-custom {
                 width: 50%;
@@ -90,7 +94,7 @@
                             <div class="card card-sm-3">
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h1>20/5000 <span class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketCollected")</span></h1>
+                                        <h1>@Model.Lotteries[0].LotteryHistories.Count() / @Model.Lotteries[0].Volume <span class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketCollected")</span></h1>
                                     </div>
                                     <div class="card-body">
                                         <p class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryPuchaseNumberSelection")</p>
@@ -117,7 +121,24 @@
                     </div>
                     <h4 class="text-muted mb-2 mt-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProbabilityOfWinning")</h4>
                     <div class="row">
-                        <div class="col-sm-12 col-md-12 col-lg-6">
+                        @foreach (var loterryPrize in Model.Lotteries[0].LotteryPrizes)
+                        {
+                            <div class="col-sm-12 col-md-12 col-lg-6">
+                                <div class="card card-sm-3">
+                                    <div class="card-icon bg-custom" id="@loterryPrize.Name"><span class="font-weight-bold">@loterryPrize.Name</span><br /><span class="small-font">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")</span></div>
+                                    <div class="card-wrap">
+                                        <div class="card-header card-header-custom">
+                                            <h4>@loterryPrize.Volume/@Model.Lotteries[0].Volume</h4>
+                                        </div>
+                                        <div class="card-body card-body-custom">@loterryPrize.Probability %</div>
+                                        <div class="progress progress-custom">
+                                            <div class="progress-bar bg-warning" style="width:40%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @*<div class="col-sm-12 col-md-12 col-lg-6">
                             <div class="card card-sm-3">
                                 <div class="card-icon bg-custom bg-warning">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstPrize"))</div>
                                 <div class="card-wrap">
@@ -172,7 +193,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                     <p class="text-muted mb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PercentagesInParentheses")</p>
                 </div>
