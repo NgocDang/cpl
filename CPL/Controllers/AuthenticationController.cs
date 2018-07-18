@@ -42,7 +42,7 @@ namespace CPL.Controllers
 
         public IActionResult Login(string returnUrl)
         {
-            EnsureLoggedOut();
+            ClearSession();
             var viewModel = new AccountLoginModel { ReturnUrl = returnUrl };
             viewModel.Langs = _langService.Queryable()
                 .Select(x => Mapper.Map<LangViewModel>(x))
@@ -77,7 +77,7 @@ namespace CPL.Controllers
                         else
                         {
                             HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
-                            return RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Dashboard")}");
+                            return viewModel.ReturnUrl == null ? RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Dashboard")}") : RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{viewModel.ReturnUrl}");
                         }
                     }
                 }
@@ -104,7 +104,7 @@ namespace CPL.Controllers
 
         public ActionResult Register(int? id, string token)
         {
-            EnsureLoggedOut();
+            ClearSession();
 
             var viewModel = new AccountRegistrationModel();
             //viewModel.Status = EnumAccountStatus.UNREGISTERED;
@@ -185,17 +185,8 @@ namespace CPL.Controllers
 
         public IActionResult LogOut()
         {
-            // Keep language setting
-            var langId = (int)EnumLang.ENGLISH;
-            if (HttpContext.Session.GetInt32("LangId").HasValue)
-                langId = HttpContext.Session.GetInt32("LangId").Value;
 
-            // Clear session
-            HttpContext.Session.Clear();
-
-            // Reset language setting
-            HttpContext.Session.SetInt32("LangId", langId);
-
+            ClearSession();
             return RedirectToAction("Index", "Home");
         }
 
@@ -220,10 +211,18 @@ namespace CPL.Controllers
             });
         }
 
-        private void EnsureLoggedOut()
+        private void ClearSession()
         {
-            // If the request is (still) marked as authenticated we send the user to the logout action
-            LogOut();
+            // Keep language setting
+            var langId = (int)EnumLang.ENGLISH;
+            if (HttpContext.Session.GetInt32("LangId").HasValue)
+                langId = HttpContext.Session.GetInt32("LangId").Value;
+
+            // Clear session
+            HttpContext.Session.Clear();
+
+            // Reset language setting
+            HttpContext.Session.SetInt32("LangId", langId);
         }
     }
 }

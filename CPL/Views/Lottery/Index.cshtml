@@ -44,7 +44,7 @@
             }
         }
 
-        @@media (min-width: 768px) and (max-width: 1023px){
+        @@media (min-width: 768px) and (max-width: 1023px) {
             .progress-custom {
                 width: 50%;
             }
@@ -57,7 +57,7 @@
             }
         }
 
-        @@media (min-width: 1024px) and (max-width: 1439px){
+        @@media (min-width: 1024px) and (max-width: 1439px) {
             .col-probability {
                 max-width: 100%;
                 flex: 100%;
@@ -90,7 +90,7 @@
                             <div class="card card-sm-3">
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h1>@Model.TicketCollected/@Model.TotalTicket <a class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketCollected")</a></h1>
+                                        <h1>@Model.TicketCollected/@Model.TotalTicket <span class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketCollected")</span></h1>
                                     </div>
                                     <div class="card-body">
                                         <p class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryPuchaseNumberSelection")</p>
@@ -98,14 +98,17 @@
                                             <div class="form-group row">
                                                 <div class="col-md-12 col-sm-12 col-lg-6">
                                                     <div class="input-group my-1">
-                                                        <input type="number" class="form-control" id="number-of-ticket" min="0" aria-describedby="basic-addon4">
+                                                        <input type="number" class="form-control" id="number-of-ticket" value="0" min="0" max="5000" aria-describedby="basic-addon4">
                                                         <div class="input-group-append">
                                                             <span class="input-group-text" id="basic-addon4"><i class="fas fa-ticket-alt"></i></span>
+                                                        </div>
+                                                        <div class="invalid-feedback">
+                                                            sadasd
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 col-sm-12 col-lg-6">
-                                                    <button type="button" class="btn btn-gradient-primary my-1"><i class="fas fa-money-bill-alt"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                                                    <button type="button" class="btn btn-gradient-primary my-1" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -188,5 +191,5 @@
 
 @section scripts
     {
-
+    <script src="~/js/dashboard/cpl.lottery.js"></script>
 }
