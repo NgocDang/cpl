@@ -7,6 +7,12 @@ namespace CPL.Common.Enums
 {
     public class CPLConstant
     {
+        //Realtime exchange price
+        public struct ExchangePrice
+        {
+            public static BTCPrice BTCPrice;
+        }
+        
         //Authentication
         public static string ActivateExpiredInDays = "ActivateExpiredInDays";
         public static string ResetPasswordExpiredInDays = "ResetPasswordExpiredInDays";
