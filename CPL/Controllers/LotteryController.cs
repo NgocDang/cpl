@@ -8,6 +8,7 @@ using CPL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -52,19 +53,20 @@ namespace CPL.Controllers
         {
             var viewModel = new LotteryViewModel();
 
+            //TODO: Should load data from current lottery game in Lottery and LotteryPrize tables
             viewModel.TotalTicket = 5000;
             viewModel.TicketCollected = 2543;
-
-            viewModel.FirstPrizeProbability = 0.1m;
-            viewModel.SecondPrizeProbability = 5m;
-            viewModel.ThirdPrizeProbability = 10m;
-            viewModel.FourthPrizeProbability = 50m;
 
             viewModel.NumberOfTicketWinFirstPrize = 1;
             viewModel.NumberOfTicketWinSecondPrize = 5;
             viewModel.NumberOfTicketWinThirdPrize = 25;
             viewModel.NumberOfTicketWinFourthPrize = 500;
-            
+
+            viewModel.FourthPrizeProbability = Math.Round(500 / 500m * 1 / 10m, 4);
+            viewModel.ThirdPrizeProbability = Math.Round(25 / 500m * 1 / 9m, 4); 
+            viewModel.SecondPrizeProbability = Math.Round(5 /475m * 1/9m, 4);
+            viewModel.FirstPrizeProbability = Math.Round(1 /470m * 1/9m, 4);
+
             return View(viewModel);
         }
 

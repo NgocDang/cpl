@@ -11,7 +11,7 @@
                 type: "GET",
                 beforeSend: function () {
                     $("#btn-purchase-lottery").attr("disabled", true);
-                    $("#btn-purchase-lottery").html("<i class='fa fa-spinner fa-spin'></i> <i class='fas fa - ticket - alt'></i>" + $(_this).text());
+                    $("#btn-purchase-lottery").html("<i class='fa fa-spinner fa-spin'></i> <i class='fas fa-money-bill-alt'></i> " + $(_this).text().trim());
                 },
                 data: {
                     amount: parseInt($("#number-of-ticket").val())
@@ -27,7 +27,7 @@
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
-                    $(_this).html("<i class='fas fa - ticket - alt'></i>" + $(_this).text());
+                    $(_this).html("<i class='fas fa-money-bill-alt'></i> " + $(_this).text().trim());
                 }
             });
         })
