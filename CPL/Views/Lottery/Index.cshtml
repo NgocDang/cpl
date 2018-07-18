@@ -125,7 +125,7 @@
                         {
                             <div class="col-sm-12 col-md-12 col-lg-6">
                                 <div class="card card-sm-3">
-                                    <div class="card-icon bg-custom" id="@loterryPrize.Name"><span class="font-weight-bold">@loterryPrize.Name</span><br /><span class="small-font">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")</span></div>
+                                    <div class="card-icon bg-custom @loterryPrize.Color"><span class="font-weight-bold">@loterryPrize.Name</span><br /><span class="small-font">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")</span></div>
                                     <div class="card-wrap">
                                         <div class="card-header card-header-custom">
                                             <h4>@loterryPrize.Volume/@Model.Lotteries[0].Volume</h4>

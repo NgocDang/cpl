@@ -2,7 +2,6 @@
     init: function () {
         Lottery.bindPurchaseTicket();
         Lottery.bindConfirmPurchaseTicket();
-        Lottery.bindColorPrize();
     },
     bindPurchaseTicket: function () {
         $('#form-purchase-lottery').on('click', '#btn-purchase-lottery', function () {
@@ -65,12 +64,6 @@
                 }
             });
         })
-    },
-    bindColorPrize: function () {
-        $("#1st").addClass('bg-warning');
-        $("#2nd").addClass('bg-primary');
-        $("#3rd").addClass('bg-danger');
-        $("#4th").addClass('bg-success');
     }
 };
 
