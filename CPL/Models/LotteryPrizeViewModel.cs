@@ -11,6 +11,7 @@ namespace CPL.Models
         public decimal Value { get; set; }
         public int LotteryId { get; set; }
         public int Volume { get; set; }
+        public string Color { get; set; }
 
         public decimal Probability { get; set; }
     }
