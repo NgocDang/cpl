@@ -1,6 +1,7 @@
 ﻿using CPL.Common.Models;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
 namespace CPL.Domain
@@ -9,6 +10,6 @@ namespace CPL.Domain
     {
         public int Id { get; set; }
         public decimal Price { get; set; }
-        public DateTime Time { get; set; }
+        public long Time { get; set; }
     }
 }
