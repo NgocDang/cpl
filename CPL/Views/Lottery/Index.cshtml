@@ -101,13 +101,11 @@
                                         <form id="form-purchase-lottery">
                                             <div class="form-group row">
                                                 <div class="col-md-12 col-sm-12 col-lg-6">
-                                                    <div class="input-group my-1">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text" id="basic-addon4"><i class="fas fa-ticket-alt"></i></span>
-                                                        </div>
+                                                    <fieldset class="form-label-group my-1">
                                                         <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="0" max="5000" aria-describedby="basic-addon4">
 
-                                                    </div>
+                                                        <label for="LastName">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets")</label>
+                                                    </fieldset>
                                                 </div>
                                                 <div class="col-md-12 col-sm-12 col-lg-6">
                                                     <button type="button" class="btn btn-gradient-primary my-1" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
