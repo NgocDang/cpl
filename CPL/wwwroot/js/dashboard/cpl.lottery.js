@@ -8,7 +8,7 @@
             var _this = this;
             $('#form-purchase-lottery').valid();
             var _numberOfTicket = parseInt($("#number-of-ticket").val());
-            var isFromValid = (_numberOfTicket <= $("#number-of-ticket").attr("max") && _numberOfTicket >= $("#number-of-ticket").attr("min"));
+            var isFromValid = (_numberOfTicket <= parseInt($("#number-of-ticket").attr("max")) && _numberOfTicket >= parseInt($("#number-of-ticket").attr("min")));
             if (isFromValid) {
                 $.ajax({
                     url: "/Lottery/GetConfirmPurchaseTicket/",
