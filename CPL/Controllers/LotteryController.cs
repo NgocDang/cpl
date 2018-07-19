@@ -74,16 +74,35 @@ namespace CPL.Controllers
                 .ToList();
 
 
-            foreach(var lottery in viewModel.Lotteries)
+            foreach (var lottery in viewModel.Lotteries)
             {
+                var numberOfGroup = lottery.Volume / CPLConstant.LotteryGroupSize;
+                var groups = Enumerable.Repeat(0, numberOfGroup).ToArray();
+                var groupSize = CPLConstant.LotteryGroupSize;
+
                 for (var i = lottery.LotteryPrizes.Count - 1; i >= 0; i--)
                 {
-                    var magicNumber = (i == 3) ? new decimal[] { 0, 0 } : ((i == 2) ? new decimal[] { 0, 1 } : ((i == 1) ? new decimal[] { 25, 1 } : new decimal[] { 30, 1 }));
-                    lottery.LotteryPrizes[i].Probability = Math.Round(lottery.LotteryPrizes[i].Volume / ((lottery.Volume / CPLConstant.LotteryGroupSize) - magicNumber[0]) * 1m / (CPLConstant.LotteryGroupSize - magicNumber[1]) * 100m, 4);
+                    lottery.LotteryPrizes[i].Probability = Math.Round(((decimal)lottery.LotteryPrizes[i].Volume / (decimal)numberOfGroup) * (1m / (decimal)groupSize) * 100m, 4);
+                    ProbabilityCalculate(ref groups, ref numberOfGroup, ref groupSize, lottery.LotteryPrizes[i].Volume);
                 }
 
             }
             return View(viewModel);
+        }
+
+        private void ProbabilityCalculate(ref int[] groups, ref int numberOfGroup, ref int groupSize, int numberOfGroupWasRemove)
+        {
+            if (groups[0] == 0)
+            {
+                groups = Enumerable.Repeat(1, numberOfGroup).ToArray();
+                groupSize--;
+            }
+            else
+            {
+                var counterNumber2Exist = groups.Count(x => x == 2);
+                Enumerable.Repeat(2, numberOfGroupWasRemove).ToArray().CopyTo(groups, counterNumber2Exist);
+                numberOfGroup -= numberOfGroupWasRemove;
+            }
         }
 
         public IActionResult GetConfirmPurchaseTicket(int amount)
