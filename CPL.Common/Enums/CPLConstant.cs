@@ -58,6 +58,7 @@ namespace CPL.Common.Enums
         //Lottery game
         public static int LotteryTicketPrice = 500;
         public static int LotteryGroupSize = 10;
+        public static int MaximumNumberOfWinnerPerGroup = 2;
 
         //Game name
         public static string LotteryName = "Lottery";

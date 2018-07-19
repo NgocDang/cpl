@@ -99,8 +99,8 @@ namespace CPL.Controllers
             }
             else
             {
-                var counterNumber2Exist = groups.Count(x => x == 2);
-                Enumerable.Repeat(2, numberOfGroupWasRemove).ToArray().CopyTo(groups, counterNumber2Exist);
+                var counterMaximumExist = groups.Count(x => x == CPLConstant.MaximumNumberOfWinnerPerGroup);
+                Enumerable.Repeat(CPLConstant.MaximumNumberOfWinnerPerGroup, numberOfGroupWasRemove).ToArray().CopyTo(groups, counterMaximumExist);
                 numberOfGroup -= numberOfGroupWasRemove;
             }
         }
