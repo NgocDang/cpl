@@ -1,4 +1,0 @@
-Use CPL;
-
-ALTER TABLE [dbo].[BTCPrice] ALTER COLUMN Time NVARCHAR(1);
-ALTER TABLE [dbo].[BTCPrice] ALTER COLUMN Time BigInt;
