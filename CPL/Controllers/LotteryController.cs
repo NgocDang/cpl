@@ -90,7 +90,7 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
-        private void ProbabilityCalculate(ref int[] groups, ref int numberOfGroup, ref int groupSize, int numberOfGroupWasRemove)
+        private void ProbabilityCalculate(ref int[] groups, ref int numberOfGroup, ref int groupSize, int numberOfGroupWasRemoved)
         {
             if (groups[0] == 0)
             {
@@ -100,8 +100,8 @@ namespace CPL.Controllers
             else
             {
                 var counterMaximumExist = groups.Count(x => x == CPLConstant.MaximumNumberOfWinnerPerGroup);
-                Enumerable.Repeat(CPLConstant.MaximumNumberOfWinnerPerGroup, numberOfGroupWasRemove).ToArray().CopyTo(groups, counterMaximumExist);
-                numberOfGroup -= numberOfGroupWasRemove;
+                Enumerable.Repeat(CPLConstant.MaximumNumberOfWinnerPerGroup, numberOfGroupWasRemoved).ToArray().CopyTo(groups, counterMaximumExist);
+                numberOfGroup -= numberOfGroupWasRemoved;
             }
         }
 
