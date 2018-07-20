@@ -8,17 +8,180 @@
     {
 
 }
+<div class="app-content content">
+    <div class="content-wrapper">
+        <div class="content-body">
+            <div class="row">
+                <div class="col-12">
+                    <img src="~/images/banner_13.jpg" class="img-fluid" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8 col-12">
 
-<div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-        <div class="progress progress-cus">
-            <div id="up-bar" class="progress-bar bg-success progress-bar-cus" role="progressbar" style="width: @Model.UpPercentage%;" aria-valuenow="@Model.UpPercentage" aria-valuemin="0" aria-valuemax="100"><i class="fas fa-arrow-up"></i> @Model.UpPercentage%</div>
-            <div id="down-bar" class="progress-bar bg-danger progress-bar-cus" role="progressbar" style="width: @Model.DownPercentage%;" aria-valuenow="@Model.DownPercentage" aria-valuemin="0" aria-valuemax="100"><i class="fas fa-arrow-down"></i> @Model.DownPercentage%</div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-12">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h1>7183 USD / BTC</h1>
+                                            </div>
+                                        </div>
+                                        <form id="form-price-bet">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <fieldset class="form-label-group">
+                                                        @*Max value should be user's CPL*@
+                                                        <input type="number" name="Amount" class="form-control" min="1" id="Amount" value="0" required autofocus="">
+                                                        <label for="Amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <button type="button" id="btn-bet-1000" class="btn btn-gray btn-block">1.000 CPL</button>
+                                                </div>
+                                                <div class="col-md-4 pl-0 pr-0">
+                                                    <button type="button" id="btn-bet-5000" class="btn btn-secondary btn-block">5.000 CPL</button>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <button type="button" id="btn-bet-10000" class="btn btn-gray btn-block">10.000 CPL</button>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top:5px;">
+                                                <div class="col-md-5 pr-0">
+                                                    <button type="button" id="btn-bet-1000" class="btn btn-success btn-block">Up</button>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    &nbsp;
+                                                </div>
+                                                <div class="col-md-5 pl-0">
+                                                    <button type="button" id="btn-bet-10000" class="btn btn-danger btn-block">Down</button>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top:5px;">
+                                                <div class="col-12">
+                                                    <button type="button" id="btn-bet" class="btn btn-yellow btn-block">Bet</button>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-12">
+                                                    <div class="progress progress-cus">
+                                                        <div id="up-bar" class="progress-bar bg-success progress-bar-cus" role="progressbar" style="width: @Model.UpPercentage%;" aria-valuenow="@Model.UpPercentage" aria-valuemin="0" aria-valuemax="100"><i class="fas fa-arrow-up"></i> @Model.UpPercentage%</div>
+                                                        <div id="down-bar" class="progress-bar bg-danger progress-bar-cus" role="progressbar" style="width: @Model.DownPercentage%;" aria-valuenow="@Model.DownPercentage" aria-valuemin="0" aria-valuemax="100"><i class="fas fa-arrow-down"></i> @Model.DownPercentage%</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div id="recent-transactions">
+                        <h6 class="my-2">Recent Transactions</h6>
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="table-responsive">
+                                    <table id="recent-orders" class="table table-hover table-xl mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="border-top-0">Status</th>
+                                                <th class="border-top-0">Date</th>
+                                                <th class="border-top-0">Amount</th>
+                                                <th class="border-top-0">Currency</th>
+                                                <th class="border-top-0">Currency</th>
+                                                <th class="border-top-0">Tokens (CIC)</th>
+                                                <th class="border-top-0">Details</th>
+                                                <th class="border-top-0"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-truncate"><i class="la la-dot-circle-o success font-medium-1 mr-1"></i> Paid</td>
+                                                <td class="text-truncate"><a href="#">2018-01-03</a></td>
+                                                <td class="text-truncate">
+                                                    <a href="#" class="mb-0 btn-sm btn btn-outline-success round">Deposit</a>
+                                                </td>
+                                                <td class="text-truncate p-1">5.34111</td>
+                                                <td>
+                                                    <i class="cc ETH-alt"></i> ETH
+                                                </td>
+                                                <td>-</td>
+                                                <td class="text-truncate">Deposit to your Balance</td>
+                                                <td><i class="la la-thumbs-up warning float-right"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-truncate"><i class="la la-dot-circle-o success font-medium-1 mr-1"></i> Paid</td>
+                                                <td class="text-truncate"><a href="#">2018-01-03</a></td>
+                                                <td class="text-truncate">
+                                                    <a href="#" class="mb-0 btn-sm btn btn-outline-success round">Deposit</a>
+                                                </td>
+                                                <td class="text-truncate p-1">5.34111</td>
+                                                <td>
+                                                    <i class="cc ETH-alt"></i> ETH
+                                                </td>
+                                                <td>3,258</td>
+                                                <td class="text-truncate">Tokens Purchase</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-truncate"><i class="la la-dot-circle-o warning font-medium-1 mr-1"></i> in Process</td>
+                                                <td class="text-truncate"><a href="#">2018-01-21</a></td>
+                                                <td class="text-truncate">
+                                                    <a href="#" class="mb-0 btn-sm btn btn-outline-warning round">Referral</a>
+                                                </td>
+                                                <td class="text-truncate p-1">-</td>
+                                                <td>-</td>
+                                                <td>200.88</td>
+                                                <td class="text-truncate">Referral Promo Bonus</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-truncate"><i class="la la-dot-circle-o danger font-medium-1 mr-1"></i> Pending</td>
+                                                <td class="text-truncate"><a href="#">2018-01-25</a></td>
+                                                <td class="text-truncate">
+                                                    <a href="#" class="mb-0 btn-sm btn btn-outline-danger round">Withdrawal</a>
+                                                </td>
+                                                <td class="text-truncate p-1">-</td>
+                                                <td>-</td>
+                                                <td>-3,458.88</td>
+                                                <td class="text-truncate">Tokens withdrawn</td>
+                                                <td><i class="la la-dollar warning float-right"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-truncate"><i class="la la-dot-circle-o success font-medium-1 mr-1"></i> Paid</td>
+                                                <td class="text-truncate"><a href="#">2018-01-28</a></td>
+                                                <td class="text-truncate">
+                                                    <a href="#" class="mb-0 btn-sm btn btn-outline-danger round">Deposit</a>
+                                                </td>
+                                                <td class="text-truncate p-1">0.8791</td>
+                                                <td><i class="cc BTC-alt"></i> BTC</td>
+                                                <td>--</td>
+                                                <td class="text-truncate">Deposit to your Balance</td>
+                                                <td><i class="la la-thumbs-up warning float-right"></i></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<div class="col-md-4"></div>
+
+
 @section scripts
     {
     <script src="~/js/dashboard/plugins/signalr.js"></script>

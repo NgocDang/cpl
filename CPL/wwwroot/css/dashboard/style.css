@@ -1291,3 +1291,28 @@ select.bs-select-hidden, select.selectpicker {
     font-weight: bold;
 }
 
+.btn-yellow {
+    border-color: #ffc111 !important;
+    background-color: #ffc111 !important;
+    color: #FFF;
+}
+
+.btn-yellow:hover, .btn-yellow:active {
+    border-color: #fdcc42 !important;
+    background-color: #fdcc42 !important;
+}
+
+.btn-gray {
+    border-color: #dddddd !important;
+    background-color: #dddddd !important;
+    color: #000;
+}
+
+    .btn-gray:hover, .btn-gray:active {
+        border-color: #f1f0f0 !important;
+        background-color: #f1f0f0 !important;
+    }
+
+#form-price-bet .progress {
+    height:.2rem;
+}
