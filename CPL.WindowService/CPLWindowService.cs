@@ -66,24 +66,35 @@ namespace CPL.WindowService
             Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC thread on CPL window service STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
             while (IsCPLWindowServiceRunning)
             {
-                var btcCurrentPriceResult = BTCCurrentPriceClient.SetBTCCurrentPriceAsync();
-                btcCurrentPriceResult.Wait();
-
-                if (btcCurrentPriceResult.Result.Status.Code != 0)
+                try
                 {
-                    Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC failed. Reason: {0}{1}", btcCurrentPriceResult.Result.Status.Text, Environment.NewLine));
-                    return;
+                    var btcCurrentPriceResult = BTCCurrentPriceClient.SetBTCCurrentPriceAsync();
+                    btcCurrentPriceResult.Wait();
+
+                    if (btcCurrentPriceResult.Result.Status.Code != 0)
+                    {
+                        Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC failed. Reason: {0}{1}", btcCurrentPriceResult.Result.Status.Text, Environment.NewLine));
+                        return;
+                    }
+
+                    var btcPrice = new BTCPrice()
+                    {
+                        Price = btcCurrentPriceResult.Result.Price,
+                        Time = btcCurrentPriceResult.Result.DateTime
+                    };
+
+                    Resolver.BTCPriceService.Insert(btcPrice);
+                    Resolver.UnitOfWork.SaveChanges();
+
+                    Thread.Sleep(RunningIntervalInMilliseconds);
                 }
-
-                var btcPrice = new BTCPrice() {
-                    Price = btcCurrentPriceResult.Result.Price,
-                    Time = btcCurrentPriceResult.Result.DateTime
-                };
-
-                Resolver.BTCPriceService.Insert(btcPrice);
-                Resolver.UnitOfWork.SaveChanges();
-
-                Thread.Sleep(RunningIntervalInMilliseconds);
+                catch(Exception ex)
+                {
+                    if(ex.InnerException.Message != null)
+                        Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                    else
+                        Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+                }
             }
             Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC thread on CPL window service STOPPED at {0}{1}", DateTime.Now, Environment.NewLine));
         }
