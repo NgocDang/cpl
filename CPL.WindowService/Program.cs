@@ -1,16 +1,16 @@
-﻿using CPL.WindowService.Misc;
+﻿using CPL.PredictionGameService.Misc;
 using Microsoft.Extensions.PlatformAbstractions;
 using PeterKottas.DotNetCore.WindowsService;
 using System;
 using System.IO;
 
-namespace CPL.WindowService
+namespace CPL.PredictionGameService
 {
     class Program
     {
         public static void Main(string[] args)
         {
-            ServiceRunner<CPLWindowService>.Run(config =>
+            ServiceRunner<CPLPredictionGameService>.Run(config =>
             {
                 string fileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
 
@@ -22,7 +22,7 @@ namespace CPL.WindowService
                 {
                     serviceConfig.ServiceFactory((extraArguments, controller) =>
                     {
-                        return new CPLWindowService();
+                        return new CPLPredictionGameService();
                     });
 
                     serviceConfig.OnStart((service, extraParams) =>

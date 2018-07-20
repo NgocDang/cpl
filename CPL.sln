@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPL.WCF", "CPL.WCF\CPL.WCF.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPL.Common", "CPL.Common\CPL.Common.csproj", "{B75C6920-3D04-4E92-B2AB-4CE5A42B718D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPL.WindowService", "CPL.WindowService\CPL.WindowService.csproj", "{88D698AA-5DFD-4655-8EA2-CD16D12ABED3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CPL.PredictionGameService", "CPL.WindowService\CPL.PredictionGameService.csproj", "{88D698AA-5DFD-4655-8EA2-CD16D12ABED3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

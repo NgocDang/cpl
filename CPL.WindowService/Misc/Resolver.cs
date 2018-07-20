@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CPL.WindowService.Misc
+namespace CPL.PredictionGameService.Misc
 {
     public class Resolver
     {

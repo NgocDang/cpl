@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace CPL.WindowService.Misc
+namespace CPL.PredictionGameService.Misc
 {
     public class Utils
     {

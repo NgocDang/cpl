@@ -6,7 +6,7 @@ using CPL.Domain;
 using CPL.Infrastructure;
 using CPL.Infrastructure.Interfaces;
 using CPL.Infrastructure.Repositories;
-using CPL.WindowService.Misc;
+using CPL.PredictionGameService.Misc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -20,13 +20,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CPL.WindowService
+namespace CPL.PredictionGameService
 {
-    public class CPLWindowService : MicroService, IMicroService
+    public class CPLPredictionGameService : MicroService, IMicroService
     {
         public static IConfiguration Configuration { get; set; }
         public static BTCCurrentPriceClient BTCCurrentPriceClient = new BTCCurrentPriceClient();
-        public static bool IsCPLWindowServiceRunning = false;
+        public static bool IsCPLPredictionGameServiceRunning = false;
         public static List<Task> Tasks = new List<Task>();
 
         public string FileName { get; set; }
@@ -48,14 +48,14 @@ namespace CPL.WindowService
             Repository();
 
             //Init setting
-            IsCPLWindowServiceRunning = true;
+            IsCPLPredictionGameServiceRunning = true;
             Tasks.Clear();
             Tasks.Add(Task.Run(() => GetCurrentBTCPrice()));
         }
 
         public void Stop()
         {
-            IsCPLWindowServiceRunning = false;
+            IsCPLPredictionGameServiceRunning = false;
             Utils.FileAppendThreadSafe(FileName, string.Format("Stop main thread at : {0}{1}{2}", DateTime.Now, Environment.NewLine, Environment.NewLine));
             Task.WaitAll(Tasks.ToArray());
         }
@@ -64,7 +64,7 @@ namespace CPL.WindowService
         private void GetCurrentBTCPrice()
         {
             Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC thread on CPL window service STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
-            while (IsCPLWindowServiceRunning)
+            while (IsCPLPredictionGameServiceRunning)
             {
                 try
                 {
