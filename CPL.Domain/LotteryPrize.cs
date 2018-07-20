@@ -9,8 +9,11 @@ namespace CPL.Domain
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Amount { get; set; }
+        public decimal Value { get; set; }
         public int LotteryId { get; set; }
+        public int Volume { get; set; }
+        public string Color { get; set; }
+
 
         public virtual ICollection<LotteryHistory> LotteryHistories { get; set; }
 

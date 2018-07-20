@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "_DashboardLayout";
 }
-@model LotteryViewModel
+@model LotteryGameViewModel
 
 @section styles
     {
@@ -36,6 +36,10 @@
         .card-description {
             font-size: 15px;
             font-weight: 300;
+        }
+
+        .small-font {
+            font-size: 12px;
         }
 
         @@media (min-width: 320px) and (max-width: 374px) {
@@ -90,20 +94,18 @@
                             <div class="card card-sm-3">
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h1>@Model.TicketCollected/@Model.TotalTicket <span class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketCollected")</span></h1>
+                                        <h1>@Model.Lotteries[0].LotteryHistories.Count() / @Model.Lotteries[0].Volume <span class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketCollected")</span></h1>
                                     </div>
                                     <div class="card-body">
                                         <p class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryPuchaseNumberSelection")</p>
                                         <form id="form-purchase-lottery">
                                             <div class="form-group row">
                                                 <div class="col-md-12 col-sm-12 col-lg-6">
-                                                    <div class="input-group my-1">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text" id="basic-addon4"><i class="fas fa-ticket-alt"></i></span>
-                                                        </div>
-                                                        <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="0" max="5000" aria-describedby="basic-addon4">
+                                                    <fieldset class="form-label-group my-1">
+                                                        <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" aria-describedby="basic-addon4">
 
-                                                    </div>
+                                                        <label for="LastName">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets")</label>
+                                                    </fieldset>
                                                 </div>
                                                 <div class="col-md-12 col-sm-12 col-lg-6">
                                                     <button type="button" class="btn btn-gradient-primary my-1" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
@@ -117,62 +119,23 @@
                     </div>
                     <h4 class="text-muted mb-2 mt-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProbabilityOfWinning")</h4>
                     <div class="row">
-                        <div class="col-sm-12 col-md-12 col-lg-6">
-                            <div class="card card-sm-3">
-                                <div class="card-icon bg-custom bg-warning">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstPrize"))</div>
-                                <div class="card-wrap">
-                                    <div class="card-header card-header-custom">
-                                        <h4>@Model.NumberOfTicketWinFirstPrize/@Model.TotalTicket</h4>
-                                    </div>
-                                    <div class="card-body card-body-custom">@Model.FirstPrizeProbability%</div>
-                                    <div class="progress progress-custom">
-                                        <div class="progress-bar bg-warning" style="width:40%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-12 col-lg-6">
-                            <div class="card card-sm-3">
-                                <div class="card-icon bg-custom bg-primary">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecondPrize"))</div>
-                                <div class="card-wrap">
-                                    <div class="card-header card-header-custom">
-                                        <h4>@Model.NumberOfTicketWinSecondPrize/@Model.TotalTicket</h4>
-                                    </div>
-                                    <div class="card-body card-body-custom">@Model.SecondPrizeProbability%</div>
-                                    <div class="progress progress-custom">
-                                        <div class="progress-bar bg-primary" style="width:40%"></div>
+                        @foreach (var loterryPrize in Model.Lotteries[0].LotteryPrizes)
+                        {
+                            <div class="col-sm-12 col-md-12 col-lg-6">
+                                <div class="card card-sm-3">
+                                    <div class="card-icon bg-custom @loterryPrize.Color"><span class="font-weight-bold">@loterryPrize.Name</span><br /><span class="small-font">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")</span></div>
+                                    <div class="card-wrap">
+                                        <div class="card-header card-header-custom">
+                                            <h4>@loterryPrize.Volume/@Model.Lotteries[0].Volume</h4>
+                                        </div>
+                                        <div class="card-body card-body-custom">@loterryPrize.Probability %</div>
+                                        <div class="progress progress-custom">
+                                            <div class="progress-bar bg-warning" style="width:40%"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-12 col-md-12 col-lg-6">
-                            <div class="card card-sm-3">
-                                <div class="card-icon bg-custom bg-danger">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ThirdPrize"))</div>
-                                <div class="card-wrap">
-                                    <div class="card-header card-header-custom">
-                                        <h4>@Model.NumberOfTicketWinThirdPrize/@Model.TotalTicket</h4>
-                                    </div>
-                                    <div class="card-body card-body-custom">@Model.ThirdPrizeProbability%</div>
-                                    <div class="progress progress-custom">
-                                        <div class="progress-bar bg-danger" style="width:40%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-12 col-lg-6">
-                            <div class="card card-sm-3">
-                                <div class="card-icon bg-custom bg-success">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FourthPrize"))</div>
-                                <div class="card-wrap">
-                                    <div class="card-header card-header-custom">
-                                        <h4>@Model.NumberOfTicketWinFourthPrize/@Model.TotalTicket</h4>
-                                    </div>
-                                    <div class="card-body card-body-custom">@Model.FourthPrizeProbability%</div>
-                                    <div class="progress progress-custom">
-                                        <div class="progress-bar bg-success" style="width:40%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        }
                     </div>
                     <p class="text-muted mb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PercentagesInParentheses")</p>
                 </div>

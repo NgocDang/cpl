@@ -7,12 +7,7 @@
         $('#form-purchase-lottery').on('click', '#btn-purchase-lottery', function () {
             var _this = this;
             var isFromValid = $('#form-purchase-lottery').valid();
-            $("#number-of-ticket-error").addClass("text-danger");
-            var _numberOfTickets = parseInt($("#number-of-ticket").val());
-            if (_numberOfTickets < 0 || _numberOfTickets > 5000) {
-                return false;
-            }
-            else {
+            if (isFromValid) {
                 $.ajax({
                     url: "/Lottery/GetConfirmPurchaseTicket/",
                     type: "GET",
@@ -21,7 +16,7 @@
                         $("#btn-purchase-lottery").html("<i class='fa fa-spinner fa-spin'></i> <i class='fas fa-money-bill-alt'></i> " + $(_this).text().trim());
                     },
                     data: {
-                        amount: _numberOfTickets
+                        amount: _numberOfTicket
                     },
                     success: function (data) {
                         if (data.url == null) {
@@ -37,7 +32,7 @@
                         $(_this).html("<i class='fas fa-money-bill-alt'></i> " + $(_this).text().trim());
                     }
                 });
-            };
+            }
         })
     },
     bindConfirmPurchaseTicket: function () {
@@ -64,7 +59,7 @@
                 }
             });
         })
-    },
+    }
 };
 
 
