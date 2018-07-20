@@ -20,6 +20,7 @@ namespace CPL.Mapping
             builder.Property(t => t.Phase).HasColumnName("Phase");
             builder.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
             builder.Property(t => t.Volume).HasColumnName("Volume");
+            builder.Property(t => t.Status).HasColumnName("Status");
         }
     }
 }

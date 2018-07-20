@@ -69,7 +69,7 @@ namespace CPL.Controllers
                 .Include(x => x.LotteryHistories)
                 .Include(x => x.LotteryPrizes)
                 .Select()
-                .Where(x => x.LotteryHistories.Count() < x.Volume)
+                .Where(x => x.LotteryHistories.Count() < x.Volume && x.Status.Equals((int)EnumLotteryGameStatus.ACTIVE))
                 .Select(x => Mapper.Map<LotteryViewModel>(x))
                 .ToList();
 

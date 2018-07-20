@@ -1,8 +1,14 @@
 ﻿using Autofac;
+using AutoMapper;
+using CPL.Common.Enums;
+using CPL.Core.Interfaces;
+using CPL.Core.Services;
+using CPL.Domain;
 using CPL.Infrastructure;
 using CPL.Infrastructure.Interfaces;
 using CPL.Infrastructure.Repositories;
 using CPL.LotteryGameService.Misc;
+using CPL.LotteryGameService.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -11,6 +17,7 @@ using PeterKottas.DotNetCore.WindowsService.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,10 +48,14 @@ namespace CPL.LotteryGameService
             //Init dependency transaction & dbcontext
             Repository();
 
+            // AutoMapper Initialize
+            AutoMapperInitialize();
+
             //Init setting
             IsCPLLotteryGameServiceRunning = true;
             Tasks.Clear();
-            Tasks.Add(Task.Run(() => ABC()));
+            ABC();
+            //Tasks.Add(Task.Run(() => ABC()));
         }
 
         public void Stop()
@@ -63,7 +74,19 @@ namespace CPL.LotteryGameService
                 try
                 {
                     // TODO: Implement your code in here
+                    var lotteries = Resolver.LotteryService
+                        .Query()
+                        .Include(x => x.LotteryHistories)
+                        .Include(x => x.LotteryPrizes)
+                        .Select()
+                        .Where(x => x.Status.Equals((int)EnumLotteryGameStatus.ACTIVE) && x.Volume.Equals(x.LotteryHistories.Count))
+                        .Select(x => Mapper.Map<LotteryModel>(x))
+                        .ToList();
 
+                    foreach (var lottery in lotteries)
+                    {
+                        var rawingTime = lottery.LotteryHistories.LastOrDefault().CreatedDate.Hour;
+                    }
 
                     Thread.Sleep(RunningIntervalInMilliseconds);
                 }
@@ -78,6 +101,34 @@ namespace CPL.LotteryGameService
             Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC thread on CPL window service STOPPED at {0}{1}", DateTime.Now, Environment.NewLine));
         }
 
+        // random group all ticket to n group
+        private void GroupTicket(ref List<LotteryHistory> lotteryHistories)
+        {
+
+        }
+
+        // pick random 1 ticket from group to pick winner
+        private void PickWinner()
+        {
+
+        }
+
+        // AutoMapper Initialize
+        private void AutoMapperInitialize()
+        {
+            Mapper.Initialize(config =>
+            {
+                config.CreateMap<LotteryHistory, LotteryHistoryModel>();
+                config.CreateMap<LotteryHistoryModel, LotteryHistory>();
+
+                config.CreateMap<LotteryPrize, LotteryPrizeModel>();
+                config.CreateMap<LotteryPrizeModel, LotteryPrize>();
+
+                config.CreateMap<Lottery, LotteryModel>();
+                config.CreateMap<LotteryModel, Lottery>();
+            });
+        }
+
         //Init dependency transaction & dbcontext
         private void Repository()
         {
@@ -90,13 +141,26 @@ namespace CPL.LotteryGameService
                 return optionsBuilder.Options;
             }).InstancePerLifetimeScope();
 
+            builder.RegisterType<LotteryService>().As<ILotteryService>().InstancePerLifetimeScope();
+            builder.RegisterType<LotteryHistoryService>().As<ILotteryHistoryService>().InstancePerLifetimeScope();
+            builder.RegisterType<LotteryPrizeService>().As<ILotteryPrizeService>().InstancePerLifetimeScope();
+            builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
 
             builder.RegisterType<UnitOfWork>().As<IUnitOfWorkAsync>().InstancePerLifetimeScope();
             builder.RegisterType<CPLContext>().As<IDataContextAsync>().InstancePerLifetimeScope();
 
+            builder.RegisterType<Repository<Lottery>>().As<IRepositoryAsync<Lottery>>().InstancePerLifetimeScope();
+            builder.RegisterType<Repository<LotteryHistory>>().As<IRepositoryAsync<LotteryHistory>>().InstancePerLifetimeScope();
+            builder.RegisterType<Repository<LotteryPrize>>().As<IRepositoryAsync<LotteryPrize>>().InstancePerLifetimeScope();
+            builder.RegisterType<Repository<Setting>>().As<IRepositoryAsync<Setting>>().InstancePerLifetimeScope();
 
             Resolver.Container = builder.Build();
             Resolver.UnitOfWork = Resolver.Container.Resolve<IUnitOfWorkAsync>();
+
+            Resolver.LotteryService = Resolver.Container.Resolve<ILotteryService>();
+            Resolver.LotteryHistoryService = Resolver.Container.Resolve<ILotteryHistoryService>();
+            Resolver.LotteryPrizeService = Resolver.Container.Resolve<ILotteryPrizeService>();
+            Resolver.SettingService = Resolver.Container.Resolve<ISettingService>();
         }
 
         // ConfigurationBuilder

@@ -1,11 +1,10 @@
-﻿using CPL.Common.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CPL.Domain
+namespace CPL.LotteryGameService.Models
 {
-    public class Lottery : Entity
+    public class LotteryModel
     {
         public int Id { get; set; }
         public int Phase { get; set; }
@@ -13,7 +12,7 @@ namespace CPL.Domain
         public int Volume { get; set; }
         public int Status { get; set; }
 
-        public virtual ICollection<LotteryPrize> LotteryPrizes { get; set; }
-        public virtual ICollection<LotteryHistory> LotteryHistories { get; set; }
+        public List<LotteryHistoryModel> LotteryHistories { get; set; }
+        public List<LotteryPrizeModel> LotteryPrizes { get; set; }
     }
 }
