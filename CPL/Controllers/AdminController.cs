@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
@@ -8,6 +9,7 @@ using CPL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,6 +27,7 @@ namespace CPL.Controllers
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
+        private readonly ILotteryHistoryService _lotteryHistoryService;
 
         public AdminController(
             ILangService langService,
@@ -35,7 +38,8 @@ namespace CPL.Controllers
             ITeamService teamService,
             ITemplateService templateService,
             ISysUserService sysUserService,
-            IGameHistoryService gameHistoryService)
+            IGameHistoryService gameHistoryService,
+            ILotteryHistoryService lotteryHistoryService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -46,6 +50,7 @@ namespace CPL.Controllers
             this._templateService = templateService;
             this._sysUserService = sysUserService;
             this._gameHistoryService = gameHistoryService;
+            this._lotteryHistoryService = lotteryHistoryService;
         }
 
         public IActionResult Index()
@@ -143,9 +148,25 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
             user.KYCVerified = true;
+
+            // Transfer prize
+            var lotteryHistorys = _lotteryHistoryService
+                              .Query().Include(x => x.LotteryPrize).Select()
+                              .Where(x => x.SysUserId == user.Id && x.Result == EnumGameResult.KYC_PENDING.ToString() && x.UpdatedDate.HasValue && x.UpdatedDate <= DateTime.Now)
+                              .ToList();
+            foreach (var lotteryHistory in lotteryHistorys)
+            {
+                user.TokenAmount += lotteryHistory.LotteryPrize.Value;
+                // Update status
+                lotteryHistory.Result = EnumGameResult.WIN.ToString();
+                _lotteryHistoryService.Update(lotteryHistory);
+            }
+
+            // Save DB
             _sysUserService.Update(user);
             _unitOfWork.SaveChanges();
 
+            // Send email
             var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.KYCVerify.ToString());
             var kycVerifyEmailTemplateViewModel = Mapper.Map<KYCVerifyEmailTemplateViewModel>(user);
 
