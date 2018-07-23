@@ -1,4 +1,9 @@
-﻿using Quartz;
+﻿using AutoMapper;
+using CPL.Common.Enums;
+using CPL.Core.Interfaces;
+using CPL.Misc.Quartz;
+using CPL.Models;
+using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,19 +13,38 @@ namespace CPL.Misc
 {
     public interface ILotteryRawingService
     {
-        Task Rawing();
+        void Rawing();
     }
 
     public class LotteryRawingService : ILotteryRawingService
     {
-        public Task Rawing()
+        public void Rawing()
         {
-            throw new NotImplementedException();
+            var lotteries = Resolver.LotteryService
+                    .Query()
+                    .Include(x => x.LotteryHistories)
+                    .Include(x => x.LotteryPrizes)
+                    .Select()
+                    .Where(x => x.Status.Equals((int)EnumLotteryGameStatus.ACTIVE) && x.Volume.Equals(x.LotteryHistories.Count))
+                    .Select(x => Mapper.Map<LotteryViewModel>(x))
+                    .ToList();
+
+            var hasRawing = CheckStatus(lotteries);
+
+            if (hasRawing)
+            {
+                
+
+                foreach (var lottery in lotteries)
+                {
+                    var rawingTime = lottery.LotteryHistories.LastOrDefault().CreatedDate.Hour;
+                }
+            }
         }
 
-        private void CheckStatus()
+        private bool CheckStatus(List<LotteryViewModel> lottery)
         {
-            throw new NotImplementedException();
+            return !(lottery is null);
         }
 
         private void PickWinner()

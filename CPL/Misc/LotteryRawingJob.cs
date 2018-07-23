@@ -12,7 +12,7 @@ namespace CPL.Misc
         {
             ILotteryRawingService lotteryRawingService = new LotteryRawingService();
 
-            return lotteryRawingService.Rawing();
+            return Task.Run(() => lotteryRawingService.Rawing());
         }
     }
 }

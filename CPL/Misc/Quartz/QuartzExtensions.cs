@@ -30,7 +30,7 @@ namespace CPL.Misc.Quartz
             });
         }
 
-        public static void StartJob<TJob>(IScheduler scheduler, int hourOfDay)
+        public static void StartJob<TJob>(IScheduler scheduler, DateTime dateTime)
         where TJob : IJob
         {
             var jobName = typeof(TJob).FullName;
@@ -42,15 +42,15 @@ namespace CPL.Misc.Quartz
             var trigger = TriggerBuilder.Create()
                 .WithIdentity($"{jobName}.trigger")
                 .StartNow()
-                .WithCronSchedule(BuildCronSchedule(hourOfDay))
+                .WithSchedule(BuildCronSchedule(dateTime))
                 .Build();
 
             scheduler.ScheduleJob(job, trigger);
         }
 
-        private static string BuildCronSchedule(int hourOfDay)
+        private static CronScheduleBuilder BuildCronSchedule(DateTime dateTime)
         {
-            return string.Format("0 0 {0} * * ?", hourOfDay);
+            return CronScheduleBuilder.DailyAtHourAndMinute(dateTime.Hour, dateTime.Minute);
         }
     }
 }

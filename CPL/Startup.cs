@@ -163,7 +163,11 @@ namespace CPL
             var scheduler = serviceProvider.GetService<IScheduler>();
 
             // Rawing lottery job
-            var rawingTime = Int32.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameRawingInHourOfDay).Value);
+            var rawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameRawingInHourOfDay).Value);
+
+            Resolver.LotteryService = (LotteryService)serviceProvider.GetService(typeof(ILotteryService));
+            Resolver.LotteryPrizeService = (LotteryPrizeService)serviceProvider.GetService(typeof(ILotteryPrizeService));
+            Resolver.LotteryHistoryService = (LotteryHistoryService)serviceProvider.GetService(typeof(ILotteryHistoryService));
 
             QuartzExtensions.StartJob<LotteryRawingJob>(scheduler, rawingTime);
         }
