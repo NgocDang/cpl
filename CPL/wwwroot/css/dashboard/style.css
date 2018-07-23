@@ -1305,7 +1305,7 @@ select.bs-select-hidden, select.selectpicker {
 .btn-gray {
     border-color: #dddddd !important;
     background-color: #dddddd !important;
-    color: #000;
+    color: #464855;
 }
 
     .btn-gray:hover, .btn-gray:active {
