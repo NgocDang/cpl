@@ -23,4 +23,11 @@ namespace CPL.Common.Enums
         WORLDCUP = 2,
         PRICE_PREDICTION = 3
     }
+
+    public enum EnumGameStatus
+    {
+        NOW = 1,
+        END = 2
+    }
+
 }

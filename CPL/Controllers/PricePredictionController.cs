@@ -115,5 +115,152 @@ namespace CPL.Controllers
                 downPercentage = 100 - upPercentage;
             }
         }
+
+        public JsonResult SearchPricePredictionHistory(DataTableAjaxPostModel viewModel)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchPricePredictionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        public IList<PricePredictionHistoryViewModel> SearchPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            var searchBy = (model.search != null) ? model.search.value?.ToLower() : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            totalResultsCount = _pricePredictionHistoryService
+                .Queryable()
+                .Where(x => x.SysUserId == user.Id)
+                .Count();
+
+            // search the dbase taking into consideration table sorting and paging
+            var pricePredictionHistors = new List<PricePredictionHistoryViewModel>();
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = totalResultsCount;
+
+                pricePredictionHistors = _pricePredictionHistoryService
+                        .Query()
+                        .Include(x => x.PricePrediction)
+                        .Select()
+                        .Where(x => x.SysUserId == user.Id)
+                        .Select(x => new PricePredictionHistoryViewModel
+                        {
+                            StartRate = x.PricePrediction.PredictionPrice,
+                            StartRateInString = x.PricePrediction.PredictionPrice.ToString(),
+                            JudgmentRate = x.PricePrediction.ResultPrice,
+                            JudgmentRateInString = $"{x.PricePrediction.ResultPrice.ToString()} {EnumCurrency.USD.ToString()}",
+                            JudgmentTime = x.PricePrediction.PredictionResultTime,
+                            JudgmentTimeInString = x.PricePrediction.PredictionResultTime.ToString(),
+                            Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
+                            Status = x.UpdatedDate.HasValue == true ? EnumGameStatus.END.ToString() : EnumGameStatus.NOW.ToString(),
+                            PurcharseTime = x.CreatedDate,
+                            PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")} {EnumCurrency.USD.ToString()}",
+                            Bonus = x.Award.GetValueOrDefault(0),
+                            BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                            Amount = x.Amount,
+                            AmountInString = $"{x.Amount.ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                        })
+                        .AsQueryable()
+                        .Skip(skip)
+                        .Take(take)
+                        .OrderBy(sortBy, sortDir)
+                        .ToList();
+            }
+            else
+            {
+                filteredResultsCount = _pricePredictionHistoryService
+                    .Query()
+                    .Include(x => x.PricePrediction)
+                    .Select()
+                    .Where(x => x.SysUserId == user.Id)
+                    .Select(x => new PricePredictionHistoryViewModel
+                    {
+                        StartRate = x.PricePrediction.PredictionPrice,
+                        StartRateInString = x.PricePrediction.PredictionPrice.ToString(),
+                        JudgmentRate = x.PricePrediction.ResultPrice,
+                        JudgmentRateInString = $"{x.PricePrediction.ResultPrice.ToString()} {EnumCurrency.USD.ToString()}",
+                        JudgmentTime = x.PricePrediction.PredictionResultTime,
+                        JudgmentTimeInString = x.PricePrediction.PredictionResultTime.ToString(),
+                        Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
+                        Status = x.UpdatedDate.HasValue == true ? EnumGameStatus.END.ToString() : EnumGameStatus.NOW.ToString(),
+                        PurcharseTime = x.CreatedDate,
+                        PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")} {EnumCurrency.USD.ToString()}",
+                        Bonus = x.Award.GetValueOrDefault(0),
+                        BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                        Amount = x.Amount,
+                        AmountInString = $"{x.Amount.ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                    })
+                    .Where(x => x.PurcharseTimeInString.ToLower().Contains(searchBy) 
+                                || x.Bet.ToLower().Contains(searchBy) 
+                                || x.StartRateInString.ToLower().Contains(searchBy) 
+                                || x.Status.ToLower().Contains(searchBy)
+                                || x.AmountInString.ToLower().Contains(searchBy) 
+                                || x.BonusInString.ToLower().Contains(searchBy) 
+                                || x.JudgmentRateInString.ToLower().Contains(searchBy) 
+                                || x.JudgmentTimeInString.ToLower().Contains(searchBy))
+                    .Count();
+
+                if (filteredResultsCount > 0)
+                    pricePredictionHistors = _pricePredictionHistoryService
+                        .Query()
+                        .Include(x => x.PricePrediction)
+                        .Select()
+                        .Where(x => x.SysUserId == user.Id)
+                        .Select(x => new PricePredictionHistoryViewModel
+                        {
+                            StartRate = x.PricePrediction.PredictionPrice,
+                            StartRateInString = x.PricePrediction.PredictionPrice.ToString(),
+                            JudgmentRate = x.PricePrediction.ResultPrice,
+                            JudgmentRateInString = $"{x.PricePrediction.ResultPrice.ToString()} {EnumCurrency.USD.ToString()}",
+                            JudgmentTime = x.PricePrediction.PredictionResultTime,
+                            JudgmentTimeInString = x.PricePrediction.PredictionResultTime.ToString(),
+                            Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
+                            Status = x.UpdatedDate.HasValue == true ? EnumGameStatus.END.ToString() : EnumGameStatus.NOW.ToString(),
+                            PurcharseTime = x.CreatedDate,
+                            PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")} {EnumCurrency.USD.ToString()}",
+                            Bonus = x.Award.GetValueOrDefault(0),
+                            BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                            Amount = x.Amount,
+                            AmountInString = $"{x.Amount.ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                        })
+                    .Where(x => x.PurcharseTimeInString.ToLower().Contains(searchBy)
+                                || x.Bet.ToLower().Contains(searchBy)
+                                || x.StartRateInString.ToLower().Contains(searchBy)
+                                || x.Status.ToLower().Contains(searchBy)
+                                || x.AmountInString.ToLower().Contains(searchBy)
+                                || x.BonusInString.ToLower().Contains(searchBy)
+                                || x.JudgmentRateInString.ToLower().Contains(searchBy)
+                                || x.JudgmentTimeInString.ToLower().Contains(searchBy))
+                    .AsQueryable()
+                    .Skip(skip)
+                    .Take(take)
+                    .OrderBy(sortBy, sortDir)
+                    .ToList();
+            }
+
+            return pricePredictionHistors.AsQueryable().OrderBy(sortBy, sortDir).ToList();
+        }
     }
 }

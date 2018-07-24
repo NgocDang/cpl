@@ -2,6 +2,7 @@
     init: function () {
         PricePrediction.bindLoadPredictionResult();
         PricePrediction.loadBTCPriceChart();
+        PricePrediction.loadHistoryDatatable();
     },
     bindLoadPredictionResult: function () {
         var progressConnection = new signalR.HubConnection("/predictedUserProgress");
@@ -113,6 +114,75 @@
                     return data;
                 }())
             }]
+        });
+    },
+    loadHistoryDatatable: function () {
+        $('#dt-prediction-history').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                url: "/PricePrediction/SearchPricePredictionHistory",
+                type: 'POST'
+            },
+            "language": DTLang.getLang(),
+            "columns": [
+                {
+                    "data": "PurcharseTime",
+                    "render": function (data, type, full, meta) {
+                        return full.purcharseTimeInString;
+                    }
+                },
+                {
+                    "data": "Bet",
+                    "render": function (data, type, full, meta) {
+                        return full.bet;
+                    }
+                },
+                {
+                    "data": "StartRate",
+                    "render": function (data, type, full, meta) {
+                        return full.startRateInString;
+                    }
+                },
+                {
+                    "data": "Amount",
+                    "render": function (data, type, full, meta) {
+                        return full.amountInString;
+                    }
+                },
+                {
+                    "data": "Bonus",
+                    "render": function (data, type, full, meta) {
+                        return full.bonusInString;
+                    }
+                },
+                {
+                    "data": "Status",
+                    "render": function (data, type, full, meta) {
+                        if (full.status == "NOW")
+                        {
+                            return "<i class='fas fa-circle' id='fa-circle-active'></i> " + full.status;
+                        }
+                        else
+                        {
+                            return "<i class='fas fa-circle' id='fa-circle-inactive'></i> " + full.status;
+                        }
+                    }
+                },
+                {
+                    "data": "JudgmentRate",
+                    "render": function (data, type, full, meta) {
+                        return full.judgmentRateInString;
+                    }
+                },
+                {
+                    "data": "JudgmentTime",
+                    "render": function (data, type, full, meta) {
+                        return full.judgmentTimeInString;
+                    }
+                }
+            ],
         });
     }
 }

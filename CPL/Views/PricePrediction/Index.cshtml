@@ -6,7 +6,20 @@
 
 @section styles
     {
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
 
+    <style>
+        #fa-circle-active {
+            color: #1EC481;
+            font-size: .5rem !important;
+        }
+        #fa-circle-inactive {
+            color: #ff0000;
+            font-size: .5rem !important;
+        }
+    </style>
 }
 <div class="app-content content">
     <div class="content-wrapper">
@@ -87,94 +100,24 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12">
-                    <div id="recent-transactions">
-                        <h6 class="my-2">Recent Transactions</h6>
-                        <div class="card">
-                            <div class="card-content">
-                                <div class="table-responsive">
-                                    <table id="recent-orders" class="table table-hover table-xl mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th class="border-top-0">Status</th>
-                                                <th class="border-top-0">Date</th>
-                                                <th class="border-top-0">Amount</th>
-                                                <th class="border-top-0">Currency</th>
-                                                <th class="border-top-0">Currency</th>
-                                                <th class="border-top-0">Tokens (CIC)</th>
-                                                <th class="border-top-0">Details</th>
-                                                <th class="border-top-0"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-truncate"><i class="la la-dot-circle-o success font-medium-1 mr-1"></i> Paid</td>
-                                                <td class="text-truncate"><a href="#">2018-01-03</a></td>
-                                                <td class="text-truncate">
-                                                    <a href="#" class="mb-0 btn-sm btn btn-outline-success round">Deposit</a>
-                                                </td>
-                                                <td class="text-truncate p-1">5.34111</td>
-                                                <td>
-                                                    <i class="cc ETH-alt"></i> ETH
-                                                </td>
-                                                <td>-</td>
-                                                <td class="text-truncate">Deposit to your Balance</td>
-                                                <td><i class="la la-thumbs-up warning float-right"></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-truncate"><i class="la la-dot-circle-o success font-medium-1 mr-1"></i> Paid</td>
-                                                <td class="text-truncate"><a href="#">2018-01-03</a></td>
-                                                <td class="text-truncate">
-                                                    <a href="#" class="mb-0 btn-sm btn btn-outline-success round">Deposit</a>
-                                                </td>
-                                                <td class="text-truncate p-1">5.34111</td>
-                                                <td>
-                                                    <i class="cc ETH-alt"></i> ETH
-                                                </td>
-                                                <td>3,258</td>
-                                                <td class="text-truncate">Tokens Purchase</td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-truncate"><i class="la la-dot-circle-o warning font-medium-1 mr-1"></i> in Process</td>
-                                                <td class="text-truncate"><a href="#">2018-01-21</a></td>
-                                                <td class="text-truncate">
-                                                    <a href="#" class="mb-0 btn-sm btn btn-outline-warning round">Referral</a>
-                                                </td>
-                                                <td class="text-truncate p-1">-</td>
-                                                <td>-</td>
-                                                <td>200.88</td>
-                                                <td class="text-truncate">Referral Promo Bonus</td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-truncate"><i class="la la-dot-circle-o danger font-medium-1 mr-1"></i> Pending</td>
-                                                <td class="text-truncate"><a href="#">2018-01-25</a></td>
-                                                <td class="text-truncate">
-                                                    <a href="#" class="mb-0 btn-sm btn btn-outline-danger round">Withdrawal</a>
-                                                </td>
-                                                <td class="text-truncate p-1">-</td>
-                                                <td>-</td>
-                                                <td>-3,458.88</td>
-                                                <td class="text-truncate">Tokens withdrawn</td>
-                                                <td><i class="la la-dollar warning float-right"></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-truncate"><i class="la la-dot-circle-o success font-medium-1 mr-1"></i> Paid</td>
-                                                <td class="text-truncate"><a href="#">2018-01-28</a></td>
-                                                <td class="text-truncate">
-                                                    <a href="#" class="mb-0 btn-sm btn btn-outline-danger round">Deposit</a>
-                                                </td>
-                                                <td class="text-truncate p-1">0.8791</td>
-                                                <td><i class="cc BTC-alt"></i> BTC</td>
-                                                <td>--</td>
-                                                <td class="text-truncate">Deposit to your Balance</td>
-                                                <td><i class="la la-thumbs-up warning float-right"></i></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                <div id="recent-transactions" class="col-12">
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionHistory")</h6>
+                    <div class="card">
+                        <div class="card-content">
+                            <table id="dt-prediction-history" class="table responsive table-hover table-xl mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchaseTime")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bet")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StartRate")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bonus")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "JudgmentRate")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "JudgmentTime")</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -183,10 +126,12 @@
     </div>
 </div>
 
-
 @section scripts
     {
-
+    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/plugins/signalr.js"></script>
     <script src="~/js/dashboard/cpl.priceprediction.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/highcharts.js"></script>
