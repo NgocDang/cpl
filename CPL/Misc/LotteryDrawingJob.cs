@@ -27,21 +27,24 @@ namespace CPL.Misc
 
         public void Drawing(IJobExecutionContext context)
         {
-            var listOfSysUser = ((SysUserService)context.JobDetail.JobDataMap["SysUserService"])
-                                .Queryable()
-                                .Where(x => x.KYCVerified.HasValue).ToList();
+            var lotteryService = ((LotteryService)context.JobDetail.JobDataMap["LotteryService"]);
+            var sysUserService = ((SysUserService)context.JobDetail.JobDataMap["SysUserService"]);
+            var lotteryHistoryService = ((LotteryHistoryService)context.JobDetail.JobDataMap["LotteryHistoryService"]);
+            var unitOfWork = ((UnitOfWork)context.JobDetail.JobDataMap["UnitOfWork"]);
 
-            var lotteries = ((LotteryService)context.JobDetail.JobDataMap["LotteryService"])
-                    .Query()
+            var listOfSysUser = sysUserService.Queryable()
+                                .Where(x => x.KYCVerified.HasValue).ToList(); //1
+
+            var lotteries = lotteryService.Query()
                     .Include(x => x.LotteryHistories)
-                    .Include(x => x.LotteryPrizes)
+                    .Include(x => x.LotteryPrizes) //2
                     .Select()
                     .Where(x => x.Status.Equals((int)EnumLotteryGameStatus.ACTIVE)
                                 && x.Volume.Equals(x.LotteryHistories.Count)
                                 && !x.LotteryHistories.Any(y => string.Equals(y.CreatedDate.Date, DateTime.Now.Date)))
                     .Select(x => Mapper.Map<LotteryViewModel>(x));
 
-            if (!(lotteries is null))
+            if (lotteries != null)
             {
                 foreach (var lottery in lotteries)
                 {
@@ -50,26 +53,18 @@ namespace CPL.Misc
 
                     var histories = listOfWinner.Concat(listOfLoser).OrderBy(x => x.TicketIndex).ToList();
 
-                    var dataHistories = ((LotteryHistoryService)context.JobDetail.JobDataMap["LotteryHistoryService"])
-                                        .Queryable()
+                    var dataHistories = lotteryHistoryService.Queryable()
                                         .Where(x => x.LotteryId == lottery.Id)
                                         .OrderBy(x=>x.TicketIndex)
                                         .ToList();
 
-                    for (var i=0;i<lottery.Volume;i++)
+                    for (var i=0;i< lottery.Volume; i++)
                     {
                         dataHistories[i].LotteryPrizeId = histories[i].LotteryPrizeId;
                         dataHistories[i].Result = string.IsNullOrEmpty(histories[i].Result) ? EnumGameResult.LOSE.ToString() : histories[i].Result;
-                        ((LotteryHistoryService)context.JobDetail.JobDataMap["LotteryHistoryService"]).Update(dataHistories[i]);
+                        lotteryHistoryService.Update(dataHistories[i]);
                     }
-                    try
-                    {
-                        ((UnitOfWork)context.JobDetail.JobDataMap["UnitOfWork"]).SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
+                    unitOfWork.SaveChanges(); //3
                 }
             }
         }
@@ -102,7 +97,7 @@ namespace CPL.Misc
                             winner.Result = EnumGameResult.KYC_PENDING.ToString();
 
                         listOfWinnerTicket.Add(winner);
-                        lotteryHistoriesGroupedList[index].RemoveAt(winnerIndexInGroup);
+                        lotteryHistoriesGroupedList[index].RemoveAt(winnerIndexInGroup); //4
                     }
                     else
                     {
@@ -117,7 +112,7 @@ namespace CPL.Misc
 
                         listOfWinnerTicket.Add(winner);
                         lotteryHistoriesGroupedList.RemoveAt(index);
-                        lotteryHistoriesGroupedList[index].RemoveAt(winnerIndexInGroup);
+                        lotteryHistoriesGroupedList[index].RemoveAt(winnerIndexInGroup); //4
                     }
                 }
             }
@@ -134,7 +129,6 @@ namespace CPL.Misc
         private bool IsKYCVerified(List<SysUser> listOfSysUser, int sysUserId)
         {
             return listOfSysUser.Any(x => x.Id == sysUserId);
-
         }
     }
 }
