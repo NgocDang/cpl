@@ -154,7 +154,6 @@ namespace CPL
 
         private void LoadSetting(IServiceProvider serviceProvider)
         {
-
             CPLConstant.Maintenance.IsOnMaintenance = bool.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.Maintenance.IsOnMaintenanceSetting).Value);
         }
 
@@ -164,11 +163,6 @@ namespace CPL
 
             // Rawing lottery job
             var rawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameRawingInHourOfDay).Value);
-
-            Resolver.LotteryService = (LotteryService)serviceProvider.GetService(typeof(ILotteryService));
-            Resolver.LotteryPrizeService = (LotteryPrizeService)serviceProvider.GetService(typeof(ILotteryPrizeService));
-            Resolver.LotteryHistoryService = (LotteryHistoryService)serviceProvider.GetService(typeof(ILotteryHistoryService));
-
             QuartzExtensions.StartJob<LotteryRawingJob>(scheduler, rawingTime);
         }
     }

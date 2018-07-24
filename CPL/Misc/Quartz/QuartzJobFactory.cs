@@ -1,4 +1,5 @@
-﻿using Quartz;
+﻿using CPL.Core.Interfaces;
+using Quartz;
 using Quartz.Spi;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace CPL.Misc.Quartz
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
             var jobDetail = bundle.JobDetail;
+            jobDetail.JobDataMap["LotteryService"] = _serviceProvider.GetService(typeof(ILotteryService));
             return (IJob)_serviceProvider.GetService(jobDetail.JobType);
         }
 
