@@ -23,6 +23,5 @@ namespace CPL.Models
         public string BonusInString { get; set; }
         public string JudgmentRateInString { get; set; }
         public string JudgmentTimeInString { get; set; }
-
     }
 }

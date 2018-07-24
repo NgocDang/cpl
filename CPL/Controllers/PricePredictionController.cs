@@ -155,12 +155,12 @@ namespace CPL.Controllers
                 .Count();
 
             // search the dbase taking into consideration table sorting and paging
-            var pricePredictionHistors = new List<PricePredictionHistoryViewModel>();
+            var pricePredictionHistory = new List<PricePredictionHistoryViewModel>();
             if (string.IsNullOrEmpty(searchBy))
             {
                 filteredResultsCount = totalResultsCount;
 
-                pricePredictionHistors = _pricePredictionHistoryService
+                pricePredictionHistory = _pricePredictionHistoryService
                         .Query()
                         .Include(x => x.PricePrediction)
                         .Select()
@@ -223,7 +223,7 @@ namespace CPL.Controllers
                     .Count();
 
                 if (filteredResultsCount > 0)
-                    pricePredictionHistors = _pricePredictionHistoryService
+                    pricePredictionHistory = _pricePredictionHistoryService
                         .Query()
                         .Include(x => x.PricePrediction)
                         .Select()
@@ -260,7 +260,7 @@ namespace CPL.Controllers
                     .ToList();
             }
 
-            return pricePredictionHistors.AsQueryable().OrderBy(sortBy, sortDir).ToList();
+            return pricePredictionHistory.AsQueryable().OrderBy(sortBy, sortDir).ToList();
         }
     }
 }
