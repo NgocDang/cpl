@@ -152,7 +152,7 @@ namespace CPL.Controllers
             // Transfer prize
             var lotteryHistorys = _lotteryHistoryService
                               .Query().Include(x => x.LotteryPrize).Select()
-                              .Where(x => x.SysUserId == user.Id && x.Result == EnumGameResult.KYC_PENDING.ToString() && x.UpdatedDate.HasValue && x.UpdatedDate <= DateTime.Now)
+                              .Where(x => x.SysUserId == user.Id && x.Result == EnumGameResult.KYC_PENDING.ToString())
                               .ToList();
             foreach (var lotteryHistory in lotteryHistorys)
             {
