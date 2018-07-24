@@ -136,6 +136,10 @@ namespace CPL
             ServiceClient.EmailClient = new EmailService.EmailClient();
             ServiceClient.EmailClient.Endpoint.Address = new EndpointAddress(new Uri(serviceEndpoint + CPLConstant.EmailServiceEndpoint));
 
+            // BTC Current price Servie
+            ServiceClient.BTCCurrentPriceClient = new BTCCurrentPriceService.BTCCurrentPriceClient();
+            ServiceClient.BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(Configuration["ConnectionStrings:BTCCurrentPriceClientEndpoint"]));
+
             // Load Wcf
             // Authentication
             var authentication = ServiceClient.AuthenticationClient.AuthenticateAsync(CPLConstant.ProjectEmail, CPLConstant.ProjectName);
