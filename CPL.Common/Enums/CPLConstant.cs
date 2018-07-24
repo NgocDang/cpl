@@ -63,6 +63,11 @@ namespace CPL.Common.Enums
         //Game name
         public static string LotteryName = "Lottery";
         public static string PricePredictionName = "Price Prediction";
-        public static string LotteryGameRawingInHourOfDay = "LotteryGameRawingTimeInHour";
+        public static string LotteryGameDrawingInHourOfDay = "LotteryGameDrawingTimeInHour";
+
+        public static string FirstPrize = "1st";
+        public static string SecondPrize = "2nd";
+        public static string ThirdPrize = "3rd";
+        public static string FourthPrize = "4th";
     }
 }

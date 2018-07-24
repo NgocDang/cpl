@@ -7,6 +7,7 @@ namespace CPL.Models
 {
     public class LotteryViewModel
     {
+        public int Id { get; set; }
         public int Phase { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Volume { get; set; }

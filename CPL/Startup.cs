@@ -65,7 +65,7 @@ namespace CPL
             services.AddAutoMapper();
             services.AddMvc().AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSession();
-            services.UseQuartz(typeof(LotteryRawingJob));
+            services.UseQuartz(typeof(LotteryDrawingJob));
 
             services
                 .AddTransient<ILangService, LangService>()
@@ -161,9 +161,9 @@ namespace CPL
         {
             var scheduler = serviceProvider.GetService<IScheduler>();
 
-            // Rawing lottery job
-            var rawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameRawingInHourOfDay).Value);
-            QuartzExtensions.StartJob<LotteryRawingJob>(scheduler, rawingTime);
+            // Drawing lottery job
+            var rawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameDrawingInHourOfDay).Value);
+            QuartzExtensions.StartJob<LotteryDrawingJob>(scheduler, rawingTime);
         }
     }
 }

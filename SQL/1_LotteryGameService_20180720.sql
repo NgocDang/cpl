@@ -1,8 +1,9 @@
 Use CPL;
 
 ALTER TABLE Lottery ADD Status INT NOT NULL DEFAULT '1';
+GO
 
-INSERT INTO Setting Values (N'LotteryGameRawingTimeInHour', N'12:00', N'Time to rawing lottery. From 0 to 24');
+INSERT INTO Setting Values (N'LotteryGameDrawingTimeInHour', N'12:00', N'Time to drawing lottery. From 0 to 24');
 
 -- Update dump data
 Update Lottery Set Status = 3 where Phase = 1;
