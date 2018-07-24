@@ -70,12 +70,15 @@ namespace CPL.Controllers
             decimal downPercentage;
             this.CalculatePercentagePrediction(currentGameId.GetValueOrDefault(0), out upPercentage, out downPercentage);
 
-            //// For testing
-            //decimal upPrediction = 50;
-            //decimal downPrediction = 50;
-            //decimal upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
-            //decimal downPercentage = 100 - upPercentage;
+            var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
+            btcCurrentPriceResult.Wait();
 
+            if (btcCurrentPriceResult.Result.Status.Code == 0)
+            {
+                viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
+                viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
+            }
+                
             // Set to Model
             viewModel.PricePredictionId = 1;
             viewModel.UpPercentage = upPercentage;
@@ -115,5 +118,25 @@ namespace CPL.Controllers
                 downPercentage = 100 - upPercentage;
             }
         }
+
+        [HttpPost]
+        public IActionResult GetBTCCurrentRate()
+        {
+            try
+            {
+                var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
+                btcCurrentPriceResult.Wait();
+
+                if (btcCurrentPriceResult.Result.Status.Code == 0)
+                    return new JsonResult(new { success = true, value = btcCurrentPriceResult.Result.Price, valueInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00") });
+
+                return new JsonResult(new { success = false, value = 0, valueInString = "0" });
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+        }
+
     }
 }

@@ -2,6 +2,7 @@
     init: function () {
         PricePrediction.bindLoadPredictionResult();
         PricePrediction.loadBTCPriceChart();
+        PricePrediction.bindLoadBTCCurrentRate();
     },
     bindLoadPredictionResult: function () {
         var progressConnection = new signalR.HubConnection("/predictedUserProgress");
@@ -15,6 +16,30 @@
             if (up !== undefined && down !== undefined) 
                 this.setUserProgress(up, down);
         });
+    },
+    bindLoadBTCCurrentRate: function () {
+        setInterval(function () {
+            $.ajax({
+                url: '/PricePrediction/GetBTCCurrentRate',
+                type: "POST",
+                data: {},
+                success: function (data) {
+                    if (data.success) {
+                        if ($("#btc-rate").val() < data.value) { // Up
+                            $("#btc-rate").removeClass("text-danger");
+                            $("#btc-rate").addClass("text-success");
+                        }
+                        else if ($("#btc-rate").val() > data.value){ //Down
+                            $("#btc-rate").removeClass("text-success");
+                            $("#btc-rate").addClass("text-danger");
+                        }
+                        $("#btc-rate").val(data.value);
+                        $("#btc-rate").html(data.valueInString);
+                    }
+                }
+            });
+
+        }, 1000);
     },
     setUserProgress: function (up, down) {
         $("#up-bar").css({ "width": up + "%" })
