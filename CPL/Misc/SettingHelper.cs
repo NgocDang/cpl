@@ -14,5 +14,6 @@ namespace CPL.Misc
     {
         public static AuthenticationService.AuthenticationClient AuthenticationClient { get; set; }
         public static EmailService.EmailClient EmailClient { get; set; }
+        public static BTCCurrentPriceService.BTCCurrentPriceClient BTCCurrentPriceClient { get; set; }
     }
 }

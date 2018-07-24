@@ -3,6 +3,7 @@
         PricePrediction.bindLoadPredictionResult();
         PricePrediction.loadBTCPriceChart();
         PricePrediction.loadHistoryDatatable();
+        PricePrediction.bindLoadBTCCurrentRate();
     },
     bindLoadPredictionResult: function () {
         var progressConnection = new signalR.HubConnection("/predictedUserProgress");
@@ -16,6 +17,30 @@
             if (up !== undefined && down !== undefined) 
                 this.setUserProgress(up, down);
         });
+    },
+    bindLoadBTCCurrentRate: function () {
+        setInterval(function () {
+            $.ajax({
+                url: '/PricePrediction/GetBTCCurrentRate',
+                type: "POST",
+                data: {},
+                success: function (data) {
+                    if (data.success) {
+                        if ($("#btc-rate").val() < data.value) { // Up
+                            $("#btc-rate").removeClass("text-danger");
+                            $("#btc-rate").addClass("text-success");
+                        }
+                        else if ($("#btc-rate").val() > data.value){ //Down
+                            $("#btc-rate").removeClass("text-success");
+                            $("#btc-rate").addClass("text-danger");
+                        }
+                        $("#btc-rate").val(data.value);
+                        $("#btc-rate").html(data.valueInString);
+                    }
+                }
+            });
+
+        }, 1000);
     },
     setUserProgress: function (up, down) {
         $("#up-bar").css({ "width": up + "%" })
@@ -32,14 +57,14 @@
             }
         });
 
-        Highcharts.chart('btc-price-chart', {
+        var btcPriceChart = Highcharts.chart('btc-price-chart', {
             chart: {
-                type: 'spline',
-                animation: Highcharts.svg, // don't animate in old IE
-                marginRight: 10,
+                type: 'area',
+                zoomType: 'x',
+                panning: true,
+                panKey: 'shift',
                 events: {
                     load: function () {
-
                         // set up the updating of the chart each second
                         var series = this.series[0];
                         setInterval(function () {
@@ -52,19 +77,18 @@
             },
             plotOptions: {
                 area: {
-                    color: 'rgba(24,90,169,.75)',
-                    fillColor: 'rgba(24,90,169,.25)',
                     marker: {
                         enabled: false,
-                        symbol: 'circle'
                     }
                 },
                 series: {
-                    shadow: false
+                    shadow: false,
+                    lineWidth: 0.01,
+                    turboThreshold: 50000
                 }
             },
             title: {
-                text: 'Live random data'
+                text: 'Live BTC/USD rate'
             },
             xAxis: {
                 type: 'datetime',
@@ -72,7 +96,7 @@
             },
             yAxis: {
                 title: {
-                    text: 'Value'
+                    text: 'Price'
                 },
                 plotLines: [{
                     value: 0,
@@ -81,11 +105,7 @@
                 }]
             },
             tooltip: {
-                formatter: function () {
-                    return '<b>' + this.series.name + '</b><br/>' +
-                        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
-                        Highcharts.numberFormat(this.y, 2);
-                }
+                enable: false
             },
             legend: {
                 enabled: false
@@ -94,21 +114,27 @@
                 enabled: false
             },
             series: [{
-                name: 'Random data',
-                lineColor: Highcharts.getOptions().colors[1],
-                color: Highcharts.getOptions().colors[2],
+                name: 'BTC/USD rate',
                 fillOpacity: 0.5,
-                fillColor: 'rgba(24,90,169,.25)',
+                states: { hover: { enabled: false } },
+                dataGrouping: { enabled: false },
                 data: (function () {
                     // generate an array of random data
                     var data = [],
                         time = (new Date()).getTime(),
                         i;
 
-                    for (i = -19; i <= 0; i += 1) {
+                    for (i = -43200; i <= 0; i += 1) {
                         data.push({
                             x: time + i * 1000,
-                            y: Math.random()
+                            y: Math.random() + 3
+                        });
+                    }
+
+                    for (i = 0; i <= 3600; i += 1) {
+                        data.push({
+                            x: time + i * 1000,
+                            y: 0
                         });
                     }
                     return data;
