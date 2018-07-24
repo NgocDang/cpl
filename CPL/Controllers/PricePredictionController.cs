@@ -183,9 +183,9 @@ namespace CPL.Controllers
                             AmountInString = $"{x.Amount.ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
                         })
                         .AsQueryable()
+                        .OrderBy(sortBy, sortDir)
                         .Skip(skip)
                         .Take(take)
-                        .OrderBy(sortBy, sortDir)
                         .ToList();
             }
             else
@@ -254,9 +254,9 @@ namespace CPL.Controllers
                                 || x.JudgmentRateInString.ToLower().Contains(searchBy)
                                 || x.JudgmentTimeInString.ToLower().Contains(searchBy))
                     .AsQueryable()
+                    .OrderBy(sortBy, sortDir)
                     .Skip(skip)
                     .Take(take)
-                    .OrderBy(sortBy, sortDir)
                     .ToList();
             }
 

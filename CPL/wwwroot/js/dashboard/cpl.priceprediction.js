@@ -160,7 +160,7 @@
                 {
                     "data": "Status",
                     "render": function (data, type, full, meta) {
-                        if (full.status == "NOW")
+                        if (full.status === "NOW")
                         {
                             return "<i class='fas fa-circle' id='fa-circle-active'></i> " + full.status;
                         }
