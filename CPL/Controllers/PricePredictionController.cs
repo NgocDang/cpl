@@ -73,6 +73,7 @@ namespace CPL.Controllers
             var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
             btcCurrentPriceResult.Wait();
 
+            viewModel.sysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
             if (btcCurrentPriceResult.Result.Status.Code == 0)
             {
                 viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;

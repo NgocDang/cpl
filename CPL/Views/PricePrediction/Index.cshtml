@@ -5,18 +5,20 @@
 @model PricePredictionViewModel
 
 @section styles
-    {
+{
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
-
     <style>
-        #fa-circle-active {
-            color: #1EC481;
+        .fa-circle-active {
+            bottom: 2px;
+            position: relative;
             font-size: .5rem !important;
         }
-        #fa-circle-inactive {
-            color: #ff0000;
+
+        .fa-circle-inactive {
+            bottom: 2px;
+            position: relative;
             font-size: .5rem !important;
         }
     </style>
@@ -60,7 +62,7 @@
                                                 <div class="col-md-4">
                                                     <button type="button" id="btn-bet-1000" class="btn btn-gray btn-block font-weight-bold">1.000 CPL</button>
                                                 </div>
-                                                <div class="col-md-4 p-sm-0" >
+                                                <div class="col-md-4 p-sm-0">
                                                     <button type="button" id="btn-bet-5000" class="btn btn-secondary btn-block font-weight-bold">5.000 CPL</button>
                                                 </div>
                                                 <div class="col-md-4">
@@ -96,42 +98,46 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div id="recent-transactions" class="col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionHistory")</h6>
-                    <div class="card">
-                        <div class="card-content">
-                            <table id="dt-prediction-history" class="table responsive table-hover table-xl mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchaseTime")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bet")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StartRate")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bonus")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultRate")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTime")</th>
-                                    </tr>
-                                </thead>
-                            </table>
+            @if (Model.sysUserId != null)
+            {
+                <div class="row">
+                    <div id="recent-transactions" class="col-12">
+                        <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionHistory")</h6>
+                        <div class="card">
+                            <div class="card-content">
+                                <table id="dt-prediction-history" class="table responsive table-hover table-xl mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchaseTime")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bet")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StartRate")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bonus")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultRate")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTime")</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                @Html.HiddenFor(x => x.sysUserId)
+            }
         </div>
     </div>
 </div>
 
 @section scripts
     {
-    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
-    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
-    <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/plugins/signalr.js"></script>
     <script src="~/js/dashboard/cpl.priceprediction.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/highcharts.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/boost.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/exporting.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/cpl.dtlang.js"></script>
 }

@@ -12,5 +12,6 @@ namespace CPL.Models
         public decimal DownPercentage { get; set; }
         public decimal CurrentBTCRate { get; set; }
         public string CurrentBTCRateInString { get; set; }
+        public int? sysUserId { get; set; }
     }
 }

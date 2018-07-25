@@ -143,6 +143,8 @@
         });
     },
     loadHistoryDatatable: function () {
+        if ($("#sysUserId").val() === undefined)
+            return false;
         $('#dt-prediction-history').DataTable({
             "processing": true,
             "serverSide": true,
@@ -186,13 +188,13 @@
                 {
                     "data": "Status",
                     "render": function (data, type, full, meta) {
-                        if (full.status === "NOW")
+                        if (full.status === "ACTIVE")
                         {
-                            return "<i class='fas fa-circle' id='fa-circle-active'></i> " + full.status;
+                            return "<i class='fas fa-circle text-success fa-circle-active'></i> " + full.status;
                         }
                         else
                         {
-                            return "<i class='fas fa-circle' id='fa-circle-inactive'></i> " + full.status;
+                            return "<i class='fas fa-circle text-danger fa-circle-inactive'></i> " + full.status;
                         }
                     }
                 },
