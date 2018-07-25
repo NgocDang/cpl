@@ -14,6 +14,7 @@ using System.Linq;
 using CPL.Hubs;
 using CPL.Common.Enums;
 using System;
+using CPL.Domain;
 
 namespace CPL.Controllers
 {
@@ -223,6 +224,34 @@ namespace CPL.Controllers
             }
 
             return pricePredictionHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
+        }
+
+        [HttpPost]
+        public IActionResult ConfirmPrediction(decimal betAmount, bool predictedTrend)
+        {
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            int? currentGameId = _pricePredictionService.Query().Select().LastOrDefault(x => x.ResultPrice == null)?.Id;
+
+            if (user != null && currentGameId.HasValue)
+            {
+                var currentUser = _sysUserService.Query().Select().FirstOrDefault(x => x.Id == user.Id);
+                if (betAmount < currentUser.TokenAmount)
+                {
+                    var predictionPrice = _pricePredictionService.Queryable().Where(x => x.Id == currentGameId).FirstOrDefault().PredictionPrice;
+                    var predictionRecord = new PricePredictionHistory() { PricePredictionId = currentGameId.Value, Amount = betAmount, CreatedDate = DateTime.Now, Prediction = predictedTrend, SysUserId = user.Id };
+                    _pricePredictionHistoryService.Insert(predictionRecord);
+                    
+                    currentUser.TokenAmount -= betAmount;
+                    _sysUserService.Update(currentUser);
+
+                    _unitOfWork.SaveChanges();
+                    return new JsonResult(new { success = true });
+                }
+                return new JsonResult(new { success = false, message = "Insufficient funds!" });
+
+            }
+
+            return new JsonResult(new { success = false, message = "LogIn" });
         }
     }
 }

@@ -5,7 +5,7 @@
 @model PricePredictionViewModel
 
 @section styles
-{
+    {
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
@@ -42,7 +42,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-sm-12">
+                                    <div class="col-md-3 col-sm-12" id="form-bet">
                                         <div class="row">
                                             <div class="col-12">
                                                 <span class="font-large-2 font-weight-bold" value="@Model.CurrentBTCRate" id="btc-rate">@Model.CurrentBTCRateInString</span> <span class="font-medium-4">USD/BTC</span>
@@ -53,7 +53,7 @@
                                                 <div class="col-12">
                                                     <fieldset class="form-label-group">
                                                         @*Max value should be user's CPL*@
-                                                        <input type="number" name="Amount" class="form-control" min="1" id="Amount" value="0" required autofocus="">
+                                                        <input type="number" name="Amount" class="form-control" min="1" id="bet-amount" value="0" required autofocus="">
                                                         <label for="Amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
                                                     </fieldset>
                                                 </div>
@@ -63,21 +63,23 @@
                                                     <button type="button" id="btn-bet-1000" class="btn btn-gray btn-block font-weight-bold">1.000 CPL</button>
                                                 </div>
                                                 <div class="col-md-4 p-sm-0">
-                                                    <button type="button" id="btn-bet-5000" class="btn btn-secondary btn-block font-weight-bold">5.000 CPL</button>
+                                                    <button type="button" id="btn-bet-5000" class="btn btn-gray btn-block font-weight-bold">5.000 CPL</button>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <button type="button" id="btn-bet-10000" class="btn btn-gray btn-block font-weight-bold">10.000 CPL</button>
                                                 </div>
                                             </div>
-                                            <div class="row" style="margin-top:5px;">
-                                                <div class="col-md-6">
-                                                    <button type="button" id="btn-bet-1000" class="btn btn-success btn-block font-weight-bold">UP</button>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <button type="button" id="btn-bet-10000" class="btn btn-danger btn-block font-weight-bold">DOWN</button>
+                                            <div class="row" style="margin-top:10px;">
+                                                <div class="btn-group btn-group-toggle col-md-12 col-sm-12" data-toggle="buttons">
+                                                    <label class="btn btn-success col-md-6 col-sm-6" id="lbl-bet-up">
+                                                        <input type="radio" name="options" id="btn-bet-up" autocomplete="off" class="btn btn-success btn-block font-weight-bold">UP</input>
+                                                    </label>
+                                                    <label class="btn btn-danger col-md-6 col-sm-6" id="lbl-bet-down">
+                                                        <input type="radio" name="options" id="btn-bet-down" autocomplete="off" class="btn btn-danger btn-block font-weight-bold">DOWN</button>
+                                                    </label>
                                                 </div>
                                             </div>
-                                            <div class="row" style="margin-top:5px;">
+                                            <div class="row" style="margin-top:10px;">
                                                 <div class="col-12">
                                                     <button type="button" id="btn-bet" class="btn btn-yellow btn-block font-weight-bold">BET</button>
                                                 </div>
@@ -91,6 +93,33 @@
                                                 </div>
                                             </div>
                                         </form>
+                                    </div>
+                                    <div class="col-md-3 col-sm-12" style="display:none" id="form-confirm">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12" style="text-align:center">
+                                                <span class="font-large-2 font-weight-bold info">Confirmation</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                <span class="font-medium-4">Predicted trend:</span><span class="font-medium-4 font-weight-bold" id="predicted-trend-confirm" style="display:inline; float:right"></span>
+                                            </div>
+                                            <div class="col-md-12 col-sm-12">
+                                                <span class="font-medium-4">Bet amount:</span><span class="font-medium-4 font-weight-bold success" id="bet-amount-confirm" style="display:inline; float:right"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top:10px;">
+                                            <div class="col-md-5">
+                                                <button type="button" id="btn-confirm" class="btn btn-success btn-block font-weight-bold">CONFIRM</button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-md-5">
+                                                <button type="button" id="btn-back" class="btn btn-danger btn-block font-weight-bold">BACK</button>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
