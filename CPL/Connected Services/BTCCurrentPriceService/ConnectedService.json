@@ -2,7 +2,7 @@
   "ProviderId": "Microsoft.VisualStudio.ConnectedService.Wcf",
   "Version": "15.0.20406.879",
   "ExtendedData": {
-    "Uri": "http://localhost:52401/ExchangeCurrentPrice/BTCCurrentPrice.svc?wsdl",
+    "Uri": "http://202.53.150.20/ExchangeCurrentPrice/BTCCurrentPrice.svc?wsdl",
     "Namespace": "BTCCurrentPriceService",
     "SelectedAccessLevelForGeneratedClass": "Public",
     "GenerateMessageContract": false,
