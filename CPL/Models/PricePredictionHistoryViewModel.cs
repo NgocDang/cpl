@@ -14,14 +14,14 @@ namespace CPL.Models
         public decimal Amount { get; set; }
         public decimal? Bonus { get; set; }
         public string Status { get; set; }
-        public decimal? JudgmentRate{get;set;}
-        public DateTime? JudgmentTime { get; set; }
+        public decimal? ResultRate{get;set;}
+        public DateTime? ResultTime { get; set; }
 
         public string PurcharseTimeInString { get; set; }
         public string StartRateInString { get; set; }
         public string AmountInString { get; set; }
         public string BonusInString { get; set; }
-        public string JudgmentRateInString { get; set; }
-        public string JudgmentTimeInString { get; set; }
+        public string ResultRateInString { get; set; }
+        public string ResultTimeInString { get; set; }
     }
 }

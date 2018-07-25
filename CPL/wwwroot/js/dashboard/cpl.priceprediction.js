@@ -197,15 +197,15 @@
                     }
                 },
                 {
-                    "data": "JudgmentRate",
+                    "data": "ResultRate",
                     "render": function (data, type, full, meta) {
-                        return full.judgmentRateInString;
+                        return full.resultRateInString;
                     }
                 },
                 {
-                    "data": "JudgmentTime",
+                    "data": "ResultTime",
                     "render": function (data, type, full, meta) {
-                        return full.judgmentTimeInString;
+                        return full.resultTimeInString;
                     }
                 }
             ],

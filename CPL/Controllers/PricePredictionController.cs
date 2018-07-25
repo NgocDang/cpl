@@ -188,10 +188,10 @@ namespace CPL.Controllers
                                           {
                                               StartRate = x.PricePrediction.PredictionPrice,
                                               StartRateInString = x.PricePrediction.PredictionPrice.ToString(),
-                                              JudgmentRate = x.PricePrediction.ResultPrice,
-                                              JudgmentRateInString = $"{x.PricePrediction.ResultPrice.ToString()} {EnumCurrency.USD.ToString()}",
-                                              JudgmentTime = x.PricePrediction.PredictionResultTime,
-                                              JudgmentTimeInString = x.PricePrediction.PredictionResultTime.ToString(),
+                                              ResultRate = x.PricePrediction.ResultPrice,
+                                              ResultRateInString = $"{x.PricePrediction.ResultPrice.ToString()} {EnumCurrency.USD.ToString()}",
+                                              ResultTime = x.PricePrediction.PredictionResultTime,
+                                              ResultTimeInString = x.PricePrediction.PredictionResultTime.ToString(),
                                               Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
                                               Status = x.UpdatedDate.HasValue == true ? EnumLotteryGameStatus.COMPLETED.ToString() : EnumLotteryGameStatus.ACTIVE.ToString(),
                                               PurcharseTime = x.CreatedDate,
@@ -215,8 +215,8 @@ namespace CPL.Controllers
                                                     || x.Status.ToLower().Contains(searchBy)
                                                     || x.AmountInString.ToLower().Contains(searchBy)
                                                     || x.BonusInString.ToLower().Contains(searchBy)
-                                                    || x.JudgmentRateInString.ToLower().Contains(searchBy)
-                                                    || x.JudgmentTimeInString.ToLower().Contains(searchBy));
+                                                    || x.ResultRateInString.ToLower().Contains(searchBy)
+                                                    || x.ResultTimeInString.ToLower().Contains(searchBy));
 
                 filteredResultsCount = pricePredictionHistory.Count();
             }
