@@ -193,7 +193,7 @@ namespace CPL.Controllers
                                               JudgmentTime = x.PricePrediction.PredictionResultTime,
                                               JudgmentTimeInString = x.PricePrediction.PredictionResultTime.ToString(),
                                               Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
-                                              Status = x.UpdatedDate.HasValue == true ? EnumGameStatus.END.ToString() : EnumGameStatus.NOW.ToString(),
+                                              Status = x.UpdatedDate.HasValue == true ? EnumLotteryGameStatus.COMPLETED.ToString() : EnumLotteryGameStatus.ACTIVE.ToString(),
                                               PurcharseTime = x.CreatedDate,
                                               PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")} {EnumCurrency.USD.ToString()}",
                                               Bonus = x.Award.GetValueOrDefault(0),

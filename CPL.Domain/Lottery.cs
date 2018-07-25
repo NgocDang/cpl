@@ -11,6 +11,7 @@ namespace CPL.Domain
         public int Phase { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Volume { get; set; }
+        public int Status { get; set; }
 
         public virtual ICollection<LotteryPrize> LotteryPrizes { get; set; }
         public virtual ICollection<LotteryHistory> LotteryHistories { get; set; }

@@ -17,16 +17,17 @@ namespace CPL.Common.Enums
         DOWN    // false
     }
 
-    public enum EnumGameType
+    public enum EnumGameId
     {
         LOTTERY = 1,
         WORLDCUP = 2,
         PRICE_PREDICTION = 3
     }
 
-    public enum EnumGameStatus
+    public enum EnumLotteryGameStatus
     {
-        NOW = 1,
-        END = 2
+        OPEN = 1,
+        ACTIVE = 2,
+        COMPLETED = 3
     }
 }
