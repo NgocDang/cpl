@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="row">
-                @if (!string.IsNullOrEmpty(@Model.Lotteries.ToString()))
+                @if (Model.Lotteries != null && Model.Lotteries.Count > 0)
                 {
                     <div class="col-md-7 col-12">
                         <div class="row">

@@ -49,7 +49,7 @@ namespace CPL.Misc
             {
                 foreach (var lottery in lotteries)
                 {
-                    var listUserId = lottery.LotteryHistories.GroupBy(x => x.Id).Select(g => g.First().Id);
+                    var listUserId = lottery.LotteryHistories.Select(x => x.SysUserId).Distinct();
                     var lstSysUser = listOfSysUser.Where(x => listUserId.Contains(x.Id)).ToList();
 
                     var listOfWinner = PickWinner(lstSysUser, lottery);
@@ -70,7 +70,7 @@ namespace CPL.Misc
                     }
                 }
 
-                unitOfWork.SaveChanges(); //3
+                unitOfWork.SaveChanges();
             }
         }
 
@@ -102,7 +102,7 @@ namespace CPL.Misc
                             winner.Result = EnumGameResult.KYC_PENDING.ToString();
 
                         listOfWinnerTicket.Add(winner);
-                        lotteryHistoriesGroupedList[index].RemoveAt(winnerIndexInGroup); //4
+                        lotteryHistoriesGroupedList[index].RemoveAt(winnerIndexInGroup); 
                     }
                     else
                     {
