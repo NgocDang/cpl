@@ -253,7 +253,7 @@ namespace BTCCurrentPriceService
         {
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IBTCCurrentPrice))
             {
-                return new System.ServiceModel.EndpointAddress("http://localhost:52401/ExchangeCurrentPrice/BTCCurrentPrice.svc");
+                return new System.ServiceModel.EndpointAddress("http://202.53.150.20/ExchangeCurrentPrice/BTCCurrentPrice.svc");
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }
