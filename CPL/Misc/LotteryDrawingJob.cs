@@ -32,9 +32,6 @@ namespace CPL.Misc
             var lotteryHistoryService = ((LotteryHistoryService)context.JobDetail.JobDataMap["LotteryHistoryService"]);
             var unitOfWork = ((UnitOfWork)context.JobDetail.JobDataMap["UnitOfWork"]);
 
-            var listOfSysUser = sysUserService.Queryable()
-                                .Where(x => x.KYCVerified.HasValue).ToList(); //1
-
             var lotteries = lotteryService.Query()
                     .Include(x => x.LotteryHistories)
                     .Include(x => x.LotteryPrizes)
@@ -44,11 +41,18 @@ namespace CPL.Misc
                                 && !x.LotteryHistories.Any(y => string.Equals(y.CreatedDate.Date, DateTime.Now.Date)))
                     .Select(x => Mapper.Map<LotteryViewModel>(x));
 
+
+            var listOfSysUser = sysUserService.Queryable()
+                                .Where(x => x.KYCVerified.HasValue);
+
             if (lotteries != null)
             {
                 foreach (var lottery in lotteries)
                 {
-                    var listOfWinner = PickWinner(listOfSysUser, lottery);
+                    var listUserId = lottery.LotteryHistories.GroupBy(x => x.Id).Select(g => g.First().Id);
+                    var lstSysUser = listOfSysUser.Where(x => listUserId.Contains(x.Id)).ToList();
+
+                    var listOfWinner = PickWinner(lstSysUser, lottery);
                     var listOfLoser = lottery.LotteryHistories.Where(x => !listOfWinner.Any(w => w.Id == x.Id));
 
                     var histories = listOfWinner.Concat(listOfLoser).OrderBy(x => x.TicketIndex).ToList();
@@ -112,8 +116,8 @@ namespace CPL.Misc
                             winner.Result = EnumGameResult.KYC_PENDING.ToString();
 
                         listOfWinnerTicket.Add(winner);
+                        lotteryHistoriesGroupedList[index].RemoveAt(winnerIndexInGroup);
                         lotteryHistoriesGroupedList.RemoveAt(index);
-                        lotteryHistoriesGroupedList[index].RemoveAt(winnerIndexInGroup); //4
                     }
                 }
             }
