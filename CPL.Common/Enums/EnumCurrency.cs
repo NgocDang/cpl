@@ -8,6 +8,7 @@ namespace CPL.Common.Enums
     {
         ETH = 1,
         BTC = 2,
-        CPL = 3
+        CPL = 3,
+        USD = 4
     }
 }

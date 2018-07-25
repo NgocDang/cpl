@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\lib\**" />
+    <Content Remove="wwwroot\lib\**" />
+    <EmbeddedResource Remove="wwwroot\lib\**" />
+    <None Remove="wwwroot\lib\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
     <PackageReference Include="BCrypt.Net-Next" Version="2.1.3" />
     <PackageReference Include="GoogleAuthenticator" Version="1.2.1" />
@@ -35,8 +42,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css\dashboard\plugins\high-charts\" />
-    <Folder Include="wwwroot\js\dashboard\plugins\high-charts\" />
-    <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
   <ItemGroup>

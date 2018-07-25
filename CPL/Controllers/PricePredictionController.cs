@@ -70,12 +70,16 @@ namespace CPL.Controllers
             decimal downPercentage;
             this.CalculatePercentagePrediction(currentGameId.GetValueOrDefault(0), out upPercentage, out downPercentage);
 
-            //// For testing
-            //decimal upPrediction = 50;
-            //decimal downPrediction = 50;
-            //decimal upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
-            //decimal downPercentage = 100 - upPercentage;
+            var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
+            btcCurrentPriceResult.Wait();
 
+            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
+            if (btcCurrentPriceResult.Result.Status.Code == 0)
+            {
+                viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
+                viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
+            }
+                
             // Set to Model
             viewModel.PricePredictionId = 1;
             viewModel.UpPercentage = upPercentage;
@@ -114,6 +118,111 @@ namespace CPL.Controllers
                 upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
                 downPercentage = 100 - upPercentage;
             }
+        }
+
+        [HttpPost]
+        public IActionResult GetBTCCurrentRate()
+        {
+            try
+            {
+                var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
+                btcCurrentPriceResult.Wait();
+
+                if (btcCurrentPriceResult.Result.Status.Code == 0)
+                    return new JsonResult(new { success = true, value = btcCurrentPriceResult.Result.Price, valueInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00") });
+
+                return new JsonResult(new { success = false, value = 0, valueInString = "0" });
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+        }
+
+        public JsonResult SearchPricePredictionHistory(DataTableAjaxPostModel viewModel)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchPricePredictionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        public IList<PricePredictionHistoryViewModel> SearchPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            var searchBy = (model.search != null) ? model.search.value?.ToLower() : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            totalResultsCount = _pricePredictionHistoryService
+                                 .Query()
+                                 .Include(x => x.PricePrediction)
+                                 .Select()
+                                 .Where(x => x.SysUserId == user.Id)
+                                 .Count();
+
+            // search the dbase taking into consideration table sorting and paging
+            var pricePredictionHistory = _pricePredictionHistoryService
+                                          .Query()
+                                          .Include(x => x.PricePrediction)
+                                          .Select()
+                                          .Where(x => x.SysUserId == user.Id)
+                                          .Select(x => new PricePredictionHistoryViewModel
+                                          {
+                                              StartRate = x.PricePrediction.PredictionPrice,
+                                              StartRateInString = x.PricePrediction.PredictionPrice.ToString(),
+                                              ResultRate = x.PricePrediction.ResultPrice,
+                                              ResultRateInString = $"{x.PricePrediction.ResultPrice.ToString()} {EnumCurrency.USD.ToString()}",
+                                              ResultTime = x.PricePrediction.PredictionResultTime,
+                                              ResultTimeInString = x.PricePrediction.PredictionResultTime.ToString(),
+                                              Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
+                                              Status = x.UpdatedDate.HasValue == true ? EnumLotteryGameStatus.COMPLETED.ToString() : EnumLotteryGameStatus.ACTIVE.ToString(),
+                                              PurcharseTime = x.CreatedDate,
+                                              PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")} {EnumCurrency.USD.ToString()}",
+                                              Bonus = x.Award.GetValueOrDefault(0),
+                                              BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                                              Amount = x.Amount,
+                                              AmountInString = $"{x.Amount.ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                                          });
+
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = totalResultsCount;
+            }
+            else
+            {
+                pricePredictionHistory = pricePredictionHistory
+                                        .Where(x => x.PurcharseTimeInString.ToLower().Contains(searchBy)
+                                                    || x.Bet.ToLower().Contains(searchBy)
+                                                    || x.StartRateInString.ToLower().Contains(searchBy)
+                                                    || x.Status.ToLower().Contains(searchBy)
+                                                    || x.AmountInString.ToLower().Contains(searchBy)
+                                                    || x.BonusInString.ToLower().Contains(searchBy)
+                                                    || x.ResultRateInString.ToLower().Contains(searchBy)
+                                                    || x.ResultTimeInString.ToLower().Contains(searchBy));
+
+                filteredResultsCount = pricePredictionHistory.Count();
+            }
+
+            return pricePredictionHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
         }
     }
 }
