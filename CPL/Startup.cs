@@ -13,12 +13,14 @@ using CPL.Infrastructure;
 using CPL.Infrastructure.Interfaces;
 using CPL.Infrastructure.Repositories;
 using CPL.Misc;
+using CPL.Misc.Quartz;
 using CPL.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Quartz;
 
 namespace CPL
 {
@@ -63,6 +65,7 @@ namespace CPL
             services.AddAutoMapper();
             services.AddMvc().AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSession();
+            services.UseQuartz(typeof(LotteryDrawingJob));
 
             services
                 .AddTransient<ILangService, LangService>()
@@ -108,6 +111,7 @@ namespace CPL
             LoadLangDetail(serviceProvider);
             LoadSetting(serviceProvider);
             LoadWCF(serviceProvider);
+            LoadQuartz(serviceProvider);
 
             app.UseMvc(routes =>
             {
@@ -150,8 +154,16 @@ namespace CPL
 
         private void LoadSetting(IServiceProvider serviceProvider)
         {
-
             CPLConstant.Maintenance.IsOnMaintenance = bool.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.Maintenance.IsOnMaintenanceSetting).Value);
+        }
+
+        private void LoadQuartz(IServiceProvider serviceProvider)
+        {
+            var scheduler = serviceProvider.GetService<IScheduler>();
+
+            // Drawing lottery job
+            var rawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameDrawingInHourOfDay).Value);
+            QuartzExtensions.StartJob<LotteryDrawingJob>(scheduler, rawingTime);
         }
     }
 }

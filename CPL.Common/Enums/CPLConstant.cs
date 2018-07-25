@@ -35,10 +35,10 @@ namespace CPL.Common.Enums
         public static string FacebookUrl = "FacebookUrl";
 
         //BWallet
-        public static string BTCMnemonic = "clinic length diary episode fan hope initial broccoli anger happy exile aunt"; // Already changed diff with NAM
+        public static string BTCMnemonic = "violin cute bulb grunt hybrid uniform father chef antique lawsuit camp inherit"; // Will changed on production
 
         //EWallet
-        public static string ETHMnemonic = "cover cake supply collect army resist street ring angry record solar axis"; // Already changed diff with NAM
+        public static string ETHMnemonic = "stock fatigue leopard despair boat brother asset dizzy marriage drop fragile add"; // Will changed on production
 
         //ETransaction
         public static string ETransactionAPIKey = "3FMSCKJX5HUXF5D2HTZ5QVUFXRMJAJ4WSA";
@@ -63,5 +63,11 @@ namespace CPL.Common.Enums
         //Game name
         public static string LotteryName = "Lottery";
         public static string PricePredictionName = "Price Prediction";
+        public static string LotteryGameDrawingInHourOfDay = "LotteryGameDrawingTimeInHour";
+
+        public static string FirstPrize = "1st";
+        public static string SecondPrize = "2nd";
+        public static string ThirdPrize = "3rd";
+        public static string FourthPrize = "4th";
     }
 }

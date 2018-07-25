@@ -23,4 +23,11 @@ namespace CPL.Common.Enums
         WORLDCUP = 2,
         PRICE_PREDICTION = 3
     }
+
+    public enum EnumLotteryGameStatus
+    {
+        OPEN = 1,
+        ACTIVE = 2,
+        COMPLETED = 3
+    }
 }
