@@ -143,7 +143,7 @@
         });
     },
     loadHistoryDatatable: function () {
-        if ($("#sysUserId").val() === undefined)
+        if ($("#SysUserId").val() === undefined)
             return false;
         $('#dt-prediction-history').DataTable({
             "processing": true,
