@@ -17,7 +17,7 @@ namespace CPL.Common.Enums
         DOWN    // false
     }
 
-    public enum EnumGameId
+    public enum EnumGameType
     {
         LOTTERY = 1,
         WORLDCUP = 2,
@@ -29,5 +29,4 @@ namespace CPL.Common.Enums
         NOW = 1,
         END = 2
     }
-
 }

@@ -41,7 +41,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css\dashboard\plugins\high-charts\" />
-    <Folder Include="wwwroot\js\dashboard\plugins\high-charts\" />
   </ItemGroup>
 
   <ItemGroup>
