@@ -37,7 +37,7 @@ namespace CPL.Misc
 
             var lotteries = lotteryService.Query()
                     .Include(x => x.LotteryHistories)
-                    .Include(x => x.LotteryPrizes) //2
+                    .Include(x => x.LotteryPrizes)
                     .Select()
                     .Where(x => x.Status.Equals((int)EnumLotteryGameStatus.ACTIVE)
                                 && x.Volume.Equals(x.LotteryHistories.Count)
@@ -64,8 +64,9 @@ namespace CPL.Misc
                         dataHistories[i].Result = string.IsNullOrEmpty(histories[i].Result) ? EnumGameResult.LOSE.ToString() : histories[i].Result;
                         lotteryHistoryService.Update(dataHistories[i]);
                     }
-                    unitOfWork.SaveChanges(); //3
                 }
+
+                unitOfWork.SaveChanges(); //3
             }
         }
 
