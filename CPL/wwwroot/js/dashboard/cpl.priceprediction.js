@@ -50,12 +50,15 @@
         }, 1000);
     },
     setUserProgress: function (up, down) {
+        // Reset up-bar setting
         $("#up-bar").css({ "width": up + "%" })
             .attr("aria-valuenow", up)
-            .html("<i class='fas fa-arrow-up'></i>" + up + "%");
+        $("#up-bar-value").html(up + "%");
+
+        // Reset down-bar setting
         $("#down-bar").css({ "width": down + "%" })
             .attr("aria-valuenow", down)
-            .html("<i class='fas fa-arrow-down'></i>" + down + "%");
+        $("#down-bar-value").html(down + "%");
     },
     loadBTCPriceChart: function () {
         Highcharts.setOptions({
