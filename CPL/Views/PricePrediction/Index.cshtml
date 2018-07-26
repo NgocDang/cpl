@@ -5,7 +5,7 @@
 @model PricePredictionViewModel
 
 @section styles
-{
+    {
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
@@ -125,6 +125,7 @@
                 </div>
                 @Html.HiddenFor(x => x.SysUserId)
             }
+            @Html.HiddenFor(x => x.PreviousBtcRate);
         </div>
     </div>
 </div>

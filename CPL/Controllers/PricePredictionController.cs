@@ -31,6 +31,7 @@ namespace CPL.Controllers
         private readonly ISysUserService _sysUserService;
         private readonly IPricePredictionService _pricePredictionService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
+        private readonly IBTCPriceService _btcPriceService;
         private readonly IHubContext<UserPredictionProgressHub> _progressHubContext;
 
 
@@ -46,6 +47,7 @@ namespace CPL.Controllers
             IGameHistoryService gameHistoryService,
             IPricePredictionService pricePredictionService,
             IPricePredictionHistoryService pricePredictionHistoryService,
+            IBTCPriceService btcPriceService,
             IHubContext<UserPredictionProgressHub> progressHubContext)
         {
             this._langService = langService;
@@ -59,6 +61,7 @@ namespace CPL.Controllers
             this._gameHistoryService = gameHistoryService;
             this._pricePredictionService = pricePredictionService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
+            this._btcPriceService = btcPriceService;
             this._progressHubContext = progressHubContext;
         }
 
@@ -73,6 +76,13 @@ namespace CPL.Controllers
             var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
             btcCurrentPriceResult.Wait();
 
+            // Get btc previous rates 12h before until now
+            var btcPrices = _btcPriceService.Queryable().Where(x => x.Time >= ((DateTimeOffset)DateTime.UtcNow.AddHours(-12)).ToUnixTimeSeconds()).ToList();
+            var previousTime = string.Join(",", btcPrices.Select(x => x.Time));
+            var previousRate = string.Join(",", btcPrices.Select(x => x.Price));
+            var previousBtcRate = $"{previousTime};{previousRate}";
+
+            viewModel.PreviousBtcRate = previousBtcRate;
             viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
             if (btcCurrentPriceResult.Result.Status.Code == 0)
             {
@@ -86,6 +96,27 @@ namespace CPL.Controllers
             viewModel.DownPercentage = downPercentage;
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult GetBTCDelayRate(long start, long end)
+        {
+            try
+            {
+                var btcPrices = _btcPriceService.Queryable().Where(x => x.Time > start && x.Time < end).ToList();
+                var delayTime = string.Join(",", btcPrices.Select(x => x.Time));
+                var delayRate = string.Join(",", btcPrices.Select(x => x.Price));
+                var delayBtcRate = $"{delayTime};{delayRate}";
+
+                if (btcPrices.Count > 0)
+                    return new JsonResult(new { success = true, valueInString = delayBtcRate });
+
+                return new JsonResult(new { success = false, valueInString = "0" });
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
         }
 
         [HttpPost]
@@ -129,7 +160,7 @@ namespace CPL.Controllers
                 btcCurrentPriceResult.Wait();
 
                 if (btcCurrentPriceResult.Result.Status.Code == 0)
-                    return new JsonResult(new { success = true, value = btcCurrentPriceResult.Result.Price, valueInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00") });
+                    return new JsonResult(new { success = true, value = btcCurrentPriceResult.Result.Price, valueInString = $"{btcCurrentPriceResult.Result.Price.ToString("#,##0.00")};{btcCurrentPriceResult.Result.Price.ToString()};{btcCurrentPriceResult.Result.DateTime.ToString()}" });
 
                 return new JsonResult(new { success = false, value = 0, valueInString = "0" });
             }
