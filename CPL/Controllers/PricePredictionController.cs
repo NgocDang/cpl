@@ -232,7 +232,7 @@ namespace CPL.Controllers
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             int? currentGameId = _pricePredictionService.Query().Select().LastOrDefault(x => x.ResultPrice == null)?.Id;
 
-            if (user != null && currentGameId.HasValue)
+            if (user != null && !user.IsDeleted && currentGameId.HasValue)
             {
                 var currentUser = _sysUserService.Query().Select().FirstOrDefault(x => x.Id == user.Id);
                 if (betAmount < currentUser.TokenAmount)
