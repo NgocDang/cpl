@@ -1,5 +1,5 @@
 ﻿var PricePrediction = {
-    historyDatatable,
+    historyDatatable: null,
     init: function () {
         PricePrediction.bindLoadPredictionResult();
         PricePrediction.loadBTCPriceChart();
