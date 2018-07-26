@@ -171,6 +171,7 @@
                 },
                 {
                     "data": "Bet",
+                    "className": "text-center",
                     "render": function (data, type, full, meta) {
                         return full.bet;
                     }

@@ -77,7 +77,6 @@ namespace CPL.Controllers
                 var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
                 btcCurrentPriceResult.Wait();
 
-                viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
                 if (btcCurrentPriceResult.Result.Status.Code == 0)
                 {
                     viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
@@ -89,6 +88,9 @@ namespace CPL.Controllers
                 viewModel.UpPercentage = upPercentage;
                 viewModel.DownPercentage = downPercentage;
             }
+
+            // Get history game
+            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
 
             return View(viewModel);
         }
@@ -164,7 +166,7 @@ namespace CPL.Controllers
             {
                 // in this example we just default sort on the 1st column
                 sortBy = model.columns[model.order[0].column].data;
-                sortDir = model.order[0].dir.ToLower() == "asc";
+                sortDir = model.order[0].dir.ToLower() == "desc";
             }
 
             totalResultsCount = _pricePredictionHistoryService
@@ -183,19 +185,19 @@ namespace CPL.Controllers
                                           .Select(x => new PricePredictionHistoryViewModel
                                           {
                                               StartRate = x.PricePrediction.PredictionPrice,
-                                              StartRateInString = x.PricePrediction.PredictionPrice.ToString(),
+                                              StartRateInString = x.PricePrediction.PredictionPrice.ToString("#,##0.##"),
                                               ResultRate = x.PricePrediction.ResultPrice,
-                                              ResultRateInString = $"{x.PricePrediction.ResultPrice.ToString()} {EnumCurrency.USD.ToString()}",
+                                              ResultRateInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USD.ToString()}",
                                               ResultTime = x.PricePrediction.PredictionResultTime,
                                               ResultTimeInString = x.PricePrediction.PredictionResultTime.ToString(),
                                               Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
                                               Status = x.UpdatedDate.HasValue == true ? EnumLotteryGameStatus.COMPLETED.ToString() : EnumLotteryGameStatus.ACTIVE.ToString(),
                                               PurcharseTime = x.CreatedDate,
-                                              PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")} {EnumCurrency.USD.ToString()}",
+                                              PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")}",
                                               Bonus = x.Award.GetValueOrDefault(0),
-                                              BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                                              BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
                                               Amount = x.Amount,
-                                              AmountInString = $"{x.Amount.ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                                              AmountInString = $"{x.Amount.ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
                                           });
 
             if (string.IsNullOrEmpty(searchBy))
@@ -217,7 +219,7 @@ namespace CPL.Controllers
                 filteredResultsCount = pricePredictionHistory.Count();
             }
 
-            return pricePredictionHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
+           return pricePredictionHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
         }
 
         [HttpPost]
