@@ -48,6 +48,8 @@
                                                 <span class="font-large-2 font-weight-bold" value="@Model.CurrentBTCRate" id="btc-rate">@Model.CurrentBTCRateInString</span> <span class="font-medium-4">USD/BTC</span>
                                             </div>
                                         </div>
+                                        @if (Model.PricePredictionId.HasValue)
+                                        {
                                         <form id="form-price-bet">
                                             <div class="row">
                                                 <div class="col-12">
@@ -72,10 +74,10 @@
                                             <div class="row" style="margin-top:10px;">
                                                 <div class="btn-group btn-group-toggle col-md-12 col-sm-12" data-toggle="buttons">
                                                     <label class="btn btn-success col-md-6 col-sm-6" id="lbl-bet-up">
-                                                        <input type="radio" name="options" id="btn-bet-up" autocomplete="off" class="btn btn-success btn-block font-weight-bold">UP</input>
+                                                        <input type="radio" name="options" id="btn-bet-up" autocomplete="off" class="btn btn-success btn-block font-weight-bold" /> UP
                                                     </label>
                                                     <label class="btn btn-danger col-md-6 col-sm-6" id="lbl-bet-down">
-                                                        <input type="radio" name="options" id="btn-bet-down" autocomplete="off" class="btn btn-danger btn-block font-weight-bold">DOWN</button>
+                                                        <input type="radio" name="options" id="btn-bet-down" autocomplete="off" class="btn btn-danger btn-block font-weight-bold" /> DOWN
                                                     </label>
                                                 </div>
                                             </div>
@@ -92,7 +94,9 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            @Html.HiddenFor(x => x.PricePredictionId)
                                         </form>
+                                        }
                                     </div>
                                     <div class="col-md-3 col-sm-12" style="display:none" id="form-confirm">
                                         <div class="row">

@@ -1,9 +1,9 @@
-﻿var historytable;
-var PricePrediction = {
+﻿var PricePrediction = {
+    historyDatatable,
     init: function () {
         PricePrediction.bindLoadPredictionResult();
         PricePrediction.loadBTCPriceChart();
-        PricePrediction.loadHistoryDatatable();
+        PricePrediction.historyDatatable = PricePrediction.loadHistoryDatatable();
         PricePrediction.bindLoadBTCCurrentRate();
         PricePrediction.bindButtonBet1000();
         PricePrediction.bindButtonBet5000();
@@ -152,7 +152,8 @@ var PricePrediction = {
     loadHistoryDatatable: function () {
         if ($("#SysUserId").val() === undefined)
             return false;
-        historytable = $('#dt-prediction-history').DataTable({
+
+        return $('#dt-prediction-history').DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
@@ -306,6 +307,7 @@ var PricePrediction = {
                 url: '/PricePrediction/ConfirmPrediction',
                 type: "POST",
                 data: {
+                    pricePredictionId: $("#PricePredictionId").val(),
                     betAmount: $("#bet-amount-confirm").val(),
                     predictedTrend: ($("#predicted-trend-confirm").val() == "UP" ? true : false)
                 },
@@ -315,7 +317,7 @@ var PricePrediction = {
                             $("#form-confirm").hide();
                             $("#form-bet").show();
                             toastr.success(data.message);
-                            historytable.ajax.reload();
+                            PricePrediction.historyDatatable.ajax.reload();
                         } else
                             window.location.replace(data.url);
                     } else {

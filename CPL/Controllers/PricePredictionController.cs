@@ -66,37 +66,31 @@ namespace CPL.Controllers
         public IActionResult Index()
         {
             var viewModel = new PricePredictionViewModel();
-            int? currentGameId = _pricePredictionService.Query().Select().FirstOrDefault(x => x.ResultPrice == null)?.Id;
-            decimal upPercentage;
-            decimal downPercentage;
-            this.CalculatePercentagePrediction(currentGameId.GetValueOrDefault(0), out upPercentage, out downPercentage);
+            viewModel.PricePredictionId = _pricePredictionService.Queryable().LastOrDefault(x => !x.UpdatedDate.HasValue)?.Id;
 
-            var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
-            btcCurrentPriceResult.Wait();
-
-            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
-            if (btcCurrentPriceResult.Result.Status.Code == 0)
+            if (viewModel.PricePredictionId.HasValue)
             {
-                viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
-                viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
+                decimal upPercentage;
+                decimal downPercentage;
+                this.CalculatePercentagePrediction(viewModel.PricePredictionId.Value, out upPercentage, out downPercentage);
+
+                var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
+                btcCurrentPriceResult.Wait();
+
+                viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
+                if (btcCurrentPriceResult.Result.Status.Code == 0)
+                {
+                    viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
+                    viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
+                }
+
+                // Set to Model
+
+                viewModel.UpPercentage = upPercentage;
+                viewModel.DownPercentage = downPercentage;
             }
-                
-            // Set to Model
-            viewModel.PricePredictionId = 1;
-            viewModel.UpPercentage = upPercentage;
-            viewModel.DownPercentage = downPercentage;
 
             return View(viewModel);
-        }
-
-        [HttpPost]
-        public void PredictResult(PricePredictionResponseViewModel viewModel)
-        {
-            decimal upPercentage;
-            decimal downPercentage;
-            this.CalculatePercentagePrediction(viewModel.PricePredictionId, out upPercentage, out downPercentage);
-            // PROGRESS
-            _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage);
         }
 
         private void CalculatePercentagePrediction(int pricePredictionId, out decimal upPercentage, out decimal downPercentage)
@@ -227,24 +221,29 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConfirmPrediction(decimal betAmount, bool predictedTrend)
+        public IActionResult ConfirmPrediction(int pricePredictionId, decimal betAmount, bool predictedTrend)
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            int? currentGameId = _pricePredictionService.Query().Select().LastOrDefault(x => x.ResultPrice == null)?.Id;
-
-            if (user != null && !user.IsDeleted && currentGameId.HasValue)
+            if (user != null)
             {
                 var currentUser = _sysUserService.Query().Select().FirstOrDefault(x => x.Id == user.Id);
                 if (betAmount < currentUser.TokenAmount)
                 {
-                    var predictionPrice = _pricePredictionService.Queryable().Where(x => x.Id == currentGameId).FirstOrDefault().PredictionPrice;
-                    var predictionRecord = new PricePredictionHistory() { PricePredictionId = currentGameId.Value, Amount = betAmount, CreatedDate = DateTime.Now, Prediction = predictedTrend, SysUserId = user.Id };
+                    var predictionRecord = new PricePredictionHistory() { PricePredictionId = pricePredictionId, Amount = betAmount, CreatedDate = DateTime.Now, Prediction = predictedTrend, SysUserId = user.Id };
                     _pricePredictionHistoryService.Insert(predictionRecord);
                     
                     currentUser.TokenAmount -= betAmount;
                     _sysUserService.Update(currentUser);
 
                     _unitOfWork.SaveChanges();
+
+                    // Signify up and down percentage
+                    decimal upPercentage;
+                    decimal downPercentage;
+                    this.CalculatePercentagePrediction(pricePredictionId, out upPercentage, out downPercentage);
+                    _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage);
+
+
                     return new JsonResult(new { success = true, message = "Betting successfully!" });
                 }
                 return new JsonResult(new { success = false, message = "Insufficient funds!" });
