@@ -311,19 +311,19 @@ var PricePrediction = {
                 },
                 success: function (data) {
                     if (data.success) {
-                        $("#form-confirm").hide();
-                        $("#form-bet").show();
-                        historytable.ajax.reload();
+                        if (data.url == null) {
+                            $("#form-confirm").hide();
+                            $("#form-bet").show();
+                            toastr.success(data.message);
+                            historytable.ajax.reload();
+                        } else
+                            window.location.replace(data.url);
                     } else {
-                        var a = data.message;
-                        if (a == "LogIn")
-                            window.location.href = '/Authentication/LogIn/';
-                        else
-                            toastr.error(a);
+                        toastr.error(a);
                     }
                 }
             });
-        });        
+        });
     }
 }
 

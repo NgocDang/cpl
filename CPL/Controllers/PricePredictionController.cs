@@ -245,13 +245,15 @@ namespace CPL.Controllers
                     _sysUserService.Update(currentUser);
 
                     _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true });
+                    return new JsonResult(new { success = true, message = "Betting successfully!" });
                 }
                 return new JsonResult(new { success = false, message = "Insufficient funds!" });
-
             }
-
-            return new JsonResult(new { success = false, message = "LogIn" });
+            return new JsonResult(new
+            {
+                success = true,
+                url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("LogIn", "Authentication")}?returnUrl={Url.Action("Index", "Lottery")}"
+            });
         }
     }
 }
