@@ -4,11 +4,12 @@ var PricePrediction = {
     init: function () {
         PricePrediction.bindLoadPredictionResult();
         PricePrediction.loadBTCPriceChart();
-        PricePrediction.loadHistoryDatatable();
+        PricePrediction.historyDatatable = PricePrediction.loadHistoryDatatable();
         PricePrediction.bindLoadBTCCurrentRate();
         PricePrediction.bindButtonBet1000();
         PricePrediction.bindButtonBet5000();
         PricePrediction.bindButtonBet10000();
+        PricePrediction.bindBetButton();
         PricePrediction.bindBackButton();
         PricePrediction.bindConfirmButton();
     },
