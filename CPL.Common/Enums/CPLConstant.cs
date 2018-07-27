@@ -73,5 +73,8 @@ namespace CPL.Common.Enums
         // High Chart
         public static int HourBeforeInChart = 12; // hour
         public static int LowestRateBTCNumber = 1000; // milisecond
+
+        // GCapcha Key
+        public static string GCaptchaKey = "GCaptchaKey";
     }
 }

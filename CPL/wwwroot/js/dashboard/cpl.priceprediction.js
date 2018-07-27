@@ -1,4 +1,4 @@
-﻿var btcCurrentRate, btcLastestTime;
+﻿var btcCurrentRate, btcLastestTime, PreviousBtcRate;
 var PricePrediction = {
     historyDatatable: null,
     init: function () {
