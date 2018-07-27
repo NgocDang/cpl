@@ -126,12 +126,14 @@
                 @Html.HiddenFor(x => x.SysUserId)
             }
             @Html.HiddenFor(x => x.PreviousBtcRate);
+            @Html.HiddenFor(x => x.LowestBtcRate);
         </div>
     </div>
 </div>
 
 @section scripts
     {
+    <script src="~/js/dashboard/plugins/moment.min.js"></script>
     <script src="~/js/dashboard/plugins/signalr.js"></script>
     <script src="~/js/dashboard/cpl.priceprediction.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/highcharts.js"></script>

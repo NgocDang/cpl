@@ -1,4 +1,4 @@
-﻿var btcCurrentRate, btcDelayValue, btcLastestTime;
+﻿var btcCurrentRate, btcLastestTime;
 var PricePrediction = {
     init: function () {
         PricePrediction.bindLoadPredictionResult();
@@ -15,7 +15,7 @@ var PricePrediction = {
             });
 
         progressConnection.on("predictedUserProgress", (up, down) => {
-            if (up !== undefined && down !== undefined) 
+            if (up !== undefined && down !== undefined)
                 this.setUserProgress(up, down);
         });
     },
@@ -46,25 +46,6 @@ var PricePrediction = {
             }
         });
     },
-    bindLoadBTCDelayRate: function (start, end) {
-        $.ajax({
-            url: '/PricePrediction/GetBTCDelayRate',
-            type: "POST",
-            data: {
-                Start: start,
-                End :  end
-            },
-            success: function (data) {
-                if (data.success) {
-                    btcDelayValue = data.valueInString;
-                }
-                else {
-                    btcDelayValue = null;
-                }
-            }
-        });
-    },
-
     setUserProgress: function (up, down) {
         $("#up-bar").css({ "width": up + "%" })
             .attr("aria-valuenow", up)
@@ -89,51 +70,39 @@ var PricePrediction = {
                 events: {
                     load: function () {
                         // set up the updating of the chart each second
-                        var series = this.series[0];
+                        var series = this.series[0], x, y;
+
+                        // Load gap between real time
+                        var previousX = x;
+                        setInterval(function () {
+                            if (x !== undefined) {
+                                var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                                previousX = x / 1000;
+                                var count = currentTime - previousX;
+                                if (count > 0) {
+                                    for (var i = 0; i < count; i++) {
+                                        series.addPoint([x + i * 1000, y], true, true);
+                                    }
+                                }
+                            }
+                        }, 1000);
+
+                        // Load current BTC-USDT rate in real time
                         setInterval(function () {
                             PricePrediction.bindLoadBTCCurrentRate();
                             if (btcCurrentRate !== undefined && btcCurrentRate !== null) {
-                                var x = parseFloat(btcCurrentRate.split(";")[2]) * 1000, // current time
-                                    y = parseFloat(btcCurrentRate.split(";")[1]);
+                                x = parseFloat(btcCurrentRate.split(";")[2]) * 1000; // current time
+                                y = parseFloat(btcCurrentRate.split(";")[1]);
                                 series.addPoint([x, y], true, true);
-                                //var point = series.points[series.points.length - 1];
-                                //var pointt = series.getPoint(point);
-                                //pointt.setState('select');
-                                //series.chart.tooltip.refresh(pointt);
-                                //var i = series.data.length;
-                                //var data;
-                                //if (i > 0) {
-                                //    data = series.data[i - 1];
-                                //    data.setState('hover');
-                                //    series.chart.tooltip.refresh(data);
-                                //}
-
-
-                                //// Find last not-null point in data
-                                //let last = data.indexOf(null) - 1;
-                                //last = (last === -2) ? data.length - 1 : last;
-                                //const lastPoint = this.series[0].points[last];
-
-                                //// Trigger the hover event 
-                                //lastPoint.setState('hover');
-                                //lastPoint.state = '';  // You need this to fix hover bug
-                                //this.tooltip.refresh(lastPoint); // Show tooltip
                             }
                         }, 1000);
-                        PricePrediction.bindLoadBTCDelayRate(btcLastestTime, (new Date()).getTime());
-                        if (btcDelayValue !== undefined && btcDelayValue !== null)
-                        {
-                            var x = parseFloat(btcDelayValue.split(";")[1]) * 1000,
-                                y = parseFloat(btcDelayValue.split(";")[0]);
-                            series.addPoint([x, y], true, true);
-                        }
                     }
                 }
             },
             plotOptions: {
                 area: {
                     marker: {
-                        enabled: false,
+                        enabled: false
                     }
                 },
                 series: {
@@ -153,10 +122,11 @@ var PricePrediction = {
                 title: {
                     text: 'Price'
                 },
+                min: $("#LowestBtcRate").val(),
                 plotLines: [{
                     value: 0,
                     width: 1,
-                    color: '#808080'
+                    color: '#1EC481'
                 }]
             },
             tooltip: {
@@ -169,39 +139,38 @@ var PricePrediction = {
                 enabled: false
             },
             series: [{
-                name: 'BTC/USD rate',
-                fillOpacity: 0.5,
+                name: 'BTC/USDT rate',
+                fillOpacity: 1,
                 states: { hover: { enabled: false } },
                 dataGrouping: { enabled: false },
                 data: (function () {
                     // generate an array of random data
                     var data = [],
-                       currentTime,
-                       time,
-                       rate,
-                       count,
-                       i;
+                        currentTime,
+                        time,
+                        rate,
+                        count,
+                        i;
 
-                    currentTime = (new Date()).getTime();
-                    time = $("#PreviousBtcRate").val().split(";")[0].split(",");
+                    currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                    time = $("#PreviousBtcRate").val().split(";")[0];
                     rate = $("#PreviousBtcRate").val().split(";")[1].split(",");
-                    count = time.length;
+                    count = rate.length;
 
                     for (i = -count; i <= 0; i += 1) {
                         data.push({
-                            x: parseFloat(time[count + i]) * 1000, // Convert to milisecond
+                            x: (parseFloat(time) + count + i) * 1000, // Convert to milisecond
                             y: parseFloat(rate[count + i])
                         });
                     }
 
-                    btcLastestTime = parseFloat(time[count - 1]) * 1000;
-
-                    for (i = 0; i <= 3600; i += 1) {
-                        data.push({
-                            x: currentTime + i * 1000,
-                            y: 0
-                        });
-                    }
+                    btcLastestTime = (parseFloat(time) + count) * 1000;
+                    //for (i = 0; i <= 3600; i += 1) {
+                    //    data.push({
+                    //       x: (currentTime + i) * 1000,
+                    //       y: 0
+                    //    });
+                    //}
                     return data;
                 }())
             }]
@@ -253,12 +222,10 @@ var PricePrediction = {
                 {
                     "data": "Status",
                     "render": function (data, type, full, meta) {
-                        if (full.status === "ACTIVE")
-                        {
+                        if (full.status === "ACTIVE") {
                             return "<i class='fas fa-circle text-success fa-circle-active'></i> " + full.status;
                         }
-                        else
-                        {
+                        else {
                             return "<i class='fas fa-circle text-danger fa-circle-inactive'></i> " + full.status;
                         }
                     }
@@ -275,10 +242,10 @@ var PricePrediction = {
                         return full.resultTimeInString;
                     }
                 }
-            ],
+            ]
         });
     }
-}
+};
 
 $(document).ready(function () {
     PricePrediction.init();

@@ -14,5 +14,6 @@ namespace CPL.Models
         public string CurrentBTCRateInString { get; set; }
         public int? SysUserId { get; set; }
         public string PreviousBtcRate { get; set; }
+        public decimal LowestBtcRate { get; set; }
     }
 }
