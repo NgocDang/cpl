@@ -1,10 +1,16 @@
 ﻿var btcCurrentRate, btcLastestTime;
 var PricePrediction = {
+    historyDatatable: null,
     init: function () {
         PricePrediction.bindLoadPredictionResult();
         PricePrediction.loadBTCPriceChart();
-        PricePrediction.bindLoadBTCCurrentRate();
         PricePrediction.loadHistoryDatatable();
+        PricePrediction.bindLoadBTCCurrentRate();
+        PricePrediction.bindButtonBet1000();
+        PricePrediction.bindButtonBet5000();
+        PricePrediction.bindButtonBet10000();
+        PricePrediction.bindBackButton();
+        PricePrediction.bindConfirmButton();
     },
     bindLoadPredictionResult: function () {
         var progressConnection = new signalR.HubConnection("/predictedUserProgress");
@@ -30,7 +36,7 @@ var PricePrediction = {
                         $("#btc-rate").removeClass("text-danger");
                         $("#btc-rate").addClass("text-success");
                     }
-                    else if ($("#btc-rate").val() > data.value) { //Down
+                        else if ($("#btc-rate").val() > data.value){ //Down
                         $("#btc-rate").removeClass("text-success");
                         $("#btc-rate").addClass("text-danger");
                     }
@@ -47,12 +53,15 @@ var PricePrediction = {
         });
     },
     setUserProgress: function (up, down) {
+        // Reset up-bar setting
         $("#up-bar").css({ "width": up + "%" })
             .attr("aria-valuenow", up)
-            .html("<i class='fas fa-arrow-up'></i>" + up + "%");
+        $("#up-bar-value").html(up + "%");
+
+        // Reset down-bar setting
         $("#down-bar").css({ "width": down + "%" })
             .attr("aria-valuenow", down)
-            .html("<i class='fas fa-arrow-down'></i>" + down + "%");
+        $("#down-bar-value").html(down + "%");
     },
     loadBTCPriceChart: function () {
         Highcharts.setOptions({
@@ -179,7 +188,8 @@ var PricePrediction = {
     loadHistoryDatatable: function () {
         if ($("#SysUserId").val() === undefined)
             return false;
-        $('#dt-prediction-history').DataTable({
+
+        return $('#dt-prediction-history').DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
@@ -197,6 +207,7 @@ var PricePrediction = {
                 },
                 {
                     "data": "Bet",
+                    "className": "text-center",
                     "render": function (data, type, full, meta) {
                         return full.bet;
                     }
@@ -243,6 +254,114 @@ var PricePrediction = {
                     }
                 }
             ]
+        });
+    },
+    bindButtonBet1000: function () {
+        $("#btn-bet-1000").on("click", function () {
+            $("#bet-amount").val(1000);
+            if ($("#btn-bet-5000").hasClass("btn-secondary")) {
+                $("#btn-bet-5000").removeClass("btn-secondary");
+                $("#btn-bet-5000").addClass("btn-gray");
+            }
+            if ($("#btn-bet-10000").hasClass("btn-secondary")) {
+                $("#btn-bet-10000").removeClass("btn-secondary");
+                $("#btn-bet-10000").addClass("btn-gray");
+            }
+            $("#btn-bet-1000").removeClass("btn-gray");
+            $("#btn-bet-1000").addClass("btn-secondary");
+        });
+    },
+    bindButtonBet5000: function () {
+        $("#btn-bet-5000").on("click", function () {
+            $("#bet-amount").val(5000);
+            if ($("#btn-bet-1000").hasClass("btn-secondary")) {
+                $("#btn-bet-1000").removeClass("btn-secondary");
+                $("#btn-bet-1000").addClass("btn-gray");
+            }
+            if ($("#btn-bet-10000").hasClass("btn-secondary")) {
+                $("#btn-bet-10000").removeClass("btn-secondary");
+                $("#btn-bet-10000").addClass("btn-gray");
+            }
+            $("#btn-bet-5000").removeClass("btn-gray");
+            $("#btn-bet-5000").addClass("btn-secondary");
+        });
+    },
+    bindButtonBet10000: function () {
+        $("#btn-bet-10000").on("click", function () {
+            $("#bet-amount").val(10000);
+            if ($("#btn-bet-1000").hasClass("btn-secondary")) {
+                $("#btn-bet-1000").removeClass("btn-secondary");
+                $("#btn-bet-1000").addClass("btn-gray");
+            }
+            if ($("#btn-bet-5000").hasClass("btn-secondary")) {
+                $("#btn-bet-5000").removeClass("btn-secondary");
+                $("#btn-bet-5000").addClass("btn-gray");
+            }
+            $("#btn-bet-10000").removeClass("btn-gray");
+            $("#btn-bet-10000").addClass("btn-secondary");
+        });
+    },
+    bindBetButton: function () {
+        $("#btn-bet").on("click", function () {
+            if ($("#bet-amount").val() <= 0) {
+                toastr.error("Incorrect amount!");
+            } else {
+                if ($("#lbl-bet-up").hasClass("active") || $("#lbl-bet-down").hasClass("active")) {
+                    $("#predicted-trend-confirm").val($("#lbl-bet-up").hasClass("active") ? "UP" : "DOWN");
+                    if ($("#lbl-bet-up").hasClass("active")) {
+                        $("#predicted-trend-confirm").removeClass("danger");
+                        $("#predicted-trend-confirm").addClass("success");
+
+                        $("#bet-amount-confirm").removeClass("danger");
+                        $("#bet-amount-confirm").addClass("success");
+                    } else {
+                        $("#predicted-trend-confirm").removeClass("success");
+                        $("#predicted-trend-confirm").addClass("danger");
+
+                        $("#bet-amount-confirm").removeClass("success");
+                        $("#bet-amount-confirm").addClass("danger");
+                    }
+                    $("#predicted-trend-confirm").html($("#lbl-bet-up").hasClass("active") ? "UP" : "DOWN");
+                    $("#bet-amount-confirm").val($("#bet-amount").val());
+                    $("#bet-amount-confirm").html($("#bet-amount").val());
+                    $("#form-bet").hide();
+                    $("#form-confirm").show();
+                } else {
+                    toastr.error("Please select UP or DOWN");
+                }
+            }
+        });
+    },
+    bindBackButton: function () {
+        $("#btn-back").on("click", function () {
+            $("#form-confirm").hide();
+            $("#form-bet").show();
+        });
+    },
+    bindConfirmButton: function () {
+        $("#btn-confirm").on("click", function () {
+            $.ajax({
+                url: '/PricePrediction/ConfirmPrediction',
+                type: "POST",
+                data: {
+                    pricePredictionId: $("#PricePredictionId").val(),
+                    betAmount: $("#bet-amount-confirm").val(),
+                    predictedTrend: ($("#predicted-trend-confirm").val() == "UP" ? true : false)
+                },
+                success: function (data) {
+                    if (data.success) {
+                        if (data.url == null) {
+                            $("#form-confirm").hide();
+                            $("#form-bet").show();
+                            toastr.success(data.message);
+                            PricePrediction.historyDatatable.ajax.reload();
+                        } else
+                            window.location.replace(data.url);
+                    } else {
+                        toastr.error(a);
+                    }
+                }
+            });
         });
     }
 };
