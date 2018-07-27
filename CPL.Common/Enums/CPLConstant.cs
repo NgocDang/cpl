@@ -69,5 +69,9 @@ namespace CPL.Common.Enums
         public static string SecondPrize = "2nd";
         public static string ThirdPrize = "3rd";
         public static string FourthPrize = "4th";
+
+        // High Chart
+        public static int HourBeforeInChart = 12; // hour
+        public static int LowestRateBTCNumber = 1000; // milisecond
     }
 }
