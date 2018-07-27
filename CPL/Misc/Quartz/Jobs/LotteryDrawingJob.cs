@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CPL.Misc
+namespace CPL.Misc.Quartz.Jobs
 {
     public class LotteryDrawingJob : IJob
     {

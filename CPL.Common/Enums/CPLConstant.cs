@@ -22,6 +22,10 @@ namespace CPL.Common.Enums
         //Notification
         public static string AdminEmail = "info.cplcoin@gmail.com";
 
+        // Quartz jobs
+        public static string LotteryGameJobGroupName = "LotteryGame";
+        public static string PricePredictionGameJobGroupName = "PricePredictionGame";
+
         // Maintenance
         public struct Maintenance
         {

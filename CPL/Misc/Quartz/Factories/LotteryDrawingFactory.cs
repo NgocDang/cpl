@@ -7,13 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CPL.Misc.Quartz
+namespace CPL.Misc.Quartz.Factories
 {
-    public class QuartzJobFactory : IJobFactory
+    public class LotteryDrawingFactory : IJobFactory
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public QuartzJobFactory(IServiceProvider serviceProvider)
+        public LotteryDrawingFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
