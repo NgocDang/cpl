@@ -80,52 +80,52 @@ namespace CPL.Controllers
                 var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
                 btcCurrentPriceResult.Wait();
 
-            // Get btc previous rates 12h before until now
-            var btcPriceInLocals = _btcPriceService.Queryable().Where(x => x.Time >= ((DateTimeOffset)DateTime.UtcNow.AddHours(-CPLConstant.HourBeforeInChart)).ToUnixTimeSeconds())
-                .GroupBy(x => x.Time)
-                .Select(y => new PricePredictionHighChartViewModel
+                // Get btc previous rates 12h before until now
+                var btcPriceInLocals = _btcPriceService.Queryable().Where(x => x.Time >= ((DateTimeOffset)DateTime.UtcNow.AddHours(-CPLConstant.HourBeforeInChart)).ToUnixTimeSeconds())
+                    .GroupBy(x => x.Time)
+                    .Select(y => new PricePredictionHighChartViewModel
+                    {
+                        Time = y.Key,
+                        Price = y.Select(x => x.Price).OrderByDescending(x => x).FirstOrDefault()
+                    })
+                    .ToList();
+
+                var currentTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+                var listCurrentTime = new Dictionary<long, decimal>();
+                var second = CPLConstant.HourBeforeInChart * 60 * 60 - 1; // currently 43200
+                for (int i = -second; i <= 0; i++)
                 {
-                    Time = y.Key,
-                    Price = y.Select(x => x.Price).OrderByDescending(x => x).FirstOrDefault()
-                })
-                .ToList();
-
-            var currentTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
-            var listCurrentTime = new Dictionary<long, decimal>();
-            var second = CPLConstant.HourBeforeInChart * 60 * 60 - 1; // currently 43200
-            for (int i = -second; i <= 0; i++)
-            {
-                listCurrentTime.Add(currentTime + i, 0); // Default Price is 0;
-            }
-
-            // Join 2 list
-            var pricePredictionViewModels = (from left in listCurrentTime.Keys
-                                             join right in btcPriceInLocals on left equals right.Time into leftRight
-                                             from lr in leftRight.DefaultIfEmpty()
-                                             select new PricePredictionHighChartViewModel
-                                             {
-                                                 Time = left,
-                                                 Price = lr?.Price,
-                                             })
-                                            .ToList();
-
-            decimal value = 0;
-            for (int i = 0; i < pricePredictionViewModels.Count; i++)
-            {
-                if (pricePredictionViewModels[i].Price != null)
-                {
-                    value = pricePredictionViewModels[i].Price.GetValueOrDefault(0);
+                    listCurrentTime.Add(currentTime + i, 0); // Default Price is 0;
                 }
 
-                pricePredictionViewModels[i].Price = value;
-            }
+                // Join 2 list
+                var pricePredictionViewModels = (from left in listCurrentTime.Keys
+                                                 join right in btcPriceInLocals on left equals right.Time into leftRight
+                                                 from lr in leftRight.DefaultIfEmpty()
+                                                 select new PricePredictionHighChartViewModel
+                                                 {
+                                                     Time = left,
+                                                     Price = lr?.Price,
+                                                 })
+                                                .ToList();
 
-            var previousTime = pricePredictionViewModels.FirstOrDefault().Time.ToString();
-            var previousRate = string.Join(",", pricePredictionViewModels.Select(x => x.Price));
-            var lowestRate = pricePredictionViewModels.Where(x => x.Price != 0).Min(x => x.Price).Value - CPLConstant.LowestRateBTCNumber;
-            var previousBtcRate = $"{previousTime};{previousRate}";
+                decimal value = 0;
+                for (int i = 0; i < pricePredictionViewModels.Count; i++)
+                {
+                    if (pricePredictionViewModels[i].Price != null)
+                    {
+                        value = pricePredictionViewModels[i].Price.GetValueOrDefault(0);
+                    }
 
-            viewModel.PreviousBtcRate = previousBtcRate;
+                    pricePredictionViewModels[i].Price = value;
+                }
+
+                var previousTime = pricePredictionViewModels.FirstOrDefault().Time.ToString();
+                var previousRate = string.Join(",", pricePredictionViewModels.Select(x => x.Price));
+                var lowestRate = pricePredictionViewModels.Where(x => x.Price != 0).Min(x => x.Price).Value - CPLConstant.LowestRateBTCNumber;
+                var previousBtcRate = $"{previousTime};{previousRate}";
+
+                viewModel.PreviousBtcRate = previousBtcRate;
                 if (btcCurrentPriceResult.Result.Status.Code == 0)
                 {
                     viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
@@ -136,7 +136,7 @@ namespace CPL.Controllers
 
                 viewModel.UpPercentage = upPercentage;
                 viewModel.DownPercentage = downPercentage;
-            viewModel.LowestBtcRate = lowestRate;
+                viewModel.LowestBtcRate = lowestRate;
             }
 
             // Get history game
@@ -160,7 +160,8 @@ namespace CPL.Controllers
             if (upPrediction + downPrediction == 0)
             {
                 upPercentage = downPercentage = 50;
-            } else
+            }
+            else
             {
                 upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
                 downPercentage = 100 - upPercentage;
@@ -269,7 +270,7 @@ namespace CPL.Controllers
                 filteredResultsCount = pricePredictionHistory.Count();
             }
 
-           return pricePredictionHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
+            return pricePredictionHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
         }
 
         [HttpPost]
@@ -283,7 +284,7 @@ namespace CPL.Controllers
                 {
                     var predictionRecord = new PricePredictionHistory() { PricePredictionId = pricePredictionId, Amount = betAmount, CreatedDate = DateTime.Now, Prediction = predictedTrend, SysUserId = user.Id };
                     _pricePredictionHistoryService.Insert(predictionRecord);
-                    
+
                     currentUser.TokenAmount -= betAmount;
                     _sysUserService.Update(currentUser);
 
