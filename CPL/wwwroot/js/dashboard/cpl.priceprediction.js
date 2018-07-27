@@ -122,7 +122,7 @@ var PricePrediction = {
                 }
             },
             title: {
-                text: 'Live BTC/USD rate'
+                text: 'Live BTC/USDT rate'
             },
             xAxis: {
                 type: 'datetime',
