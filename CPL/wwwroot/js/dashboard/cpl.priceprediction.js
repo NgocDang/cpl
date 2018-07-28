@@ -67,7 +67,9 @@ var PricePrediction = {
     loadBTCPriceChart: function () {
         Highcharts.setOptions({
             global: {
-                useUTC: false
+                //useUTC: true,
+                //timezoneOffset: -500
+                //timezone: 'Asia/Bangkok'
             }
         });
 
@@ -102,8 +104,16 @@ var PricePrediction = {
                             PricePrediction.bindLoadBTCCurrentRate();
                             if (btcCurrentRate !== undefined && btcCurrentRate !== null) {
                                 x = parseFloat(btcCurrentRate.split(";")[2]) * 1000; // current time
+                                //x = (new Date()).getTime(); // current time
                                 y = parseFloat(btcCurrentRate.split(";")[1]);
                                 series.addPoint([x, y], true, true);
+
+                                var lastPoint = series.getPoint(series.points[series.points.length - 1]);
+
+                                //lastPoint;
+                                lastPoint.setState('hover');
+                                lastPoint.state = '';  // need this to fix hover bug
+                                series.chart.tooltip.refresh(lastPoint); // Show tooltip
                             }
                         }, 1000);
                     }
@@ -140,7 +150,7 @@ var PricePrediction = {
                 }]
             },
             tooltip: {
-                enable: false
+                crosshairs: [true, true]
             },
             legend: {
                 enabled: false
