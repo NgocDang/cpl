@@ -153,6 +153,7 @@ var PricePrediction = {
                 fillOpacity: 1,
                 states: { hover: { enabled: false } },
                 dataGrouping: { enabled: false },
+                connectNulls: true, 
                 data: (function () {
                     // generate an array of random data
                     var data = [],
@@ -175,12 +176,12 @@ var PricePrediction = {
                     }
 
                     btcLastestTime = (parseFloat(time) + count) * 1000;
-                    //for (i = 0; i <= 3600; i += 1) {
-                    //    data.push({
-                    //       x: (currentTime + i) * 1000,
-                    //       y: 0
-                    //    });
-                    //}
+                    for (i = 0; i <= 3600; i += 1) {
+                        data.push({
+                           x: (currentTime + i) * 1000,
+                           y: null
+                        });
+                    }
                     return data;
                 }())
             }]
