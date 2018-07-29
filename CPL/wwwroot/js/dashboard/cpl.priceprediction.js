@@ -67,10 +67,12 @@ var PricePrediction = {
     loadBTCPriceChart: function () {
         Highcharts.setOptions({
             global: {
-                //useUTC: true,
-                //timezoneOffset: -500
-                //timezone: 'Asia/Bangkok'
-            }
+                useUTC: false
+            }//,
+            //time: {
+            //    timezoneOffset: 4 * 60,
+            //    //timezone: 'indochina'
+            //}
         });
 
         var btcPriceChart = Highcharts.chart('btc-price-chart', {
@@ -83,6 +85,20 @@ var PricePrediction = {
                     load: function () {
                         // set up the updating of the chart each second
                         var series = this.series[0], x, y;
+
+                        //// auto set hover
+                        //setInterval(function () {
+                        //    var d = new Date();
+                            
+                        //    var tzOffset = d.getTimezoneOffset();
+
+                        //    series.redraw;
+                        //    var lastPoint = series.getPoint(series.points[series.points.length - 1]);
+
+                        //    lastPoint.setState('hover');
+                        //    //lastPoint.state = '';  // need this to fix hover bug
+                        //    series.chart.tooltip.refresh(lastPoint); // Show tooltip
+                        //}, 1000);
 
                         // Load gap between real time
                         var previousX = x;
@@ -103,17 +119,10 @@ var PricePrediction = {
                         setInterval(function () {
                             PricePrediction.bindLoadBTCCurrentRate();
                             if (btcCurrentRate !== undefined && btcCurrentRate !== null) {
-                                x = parseFloat(btcCurrentRate.split(";")[2]) * 1000; // current time
+                                x = parseFloat(btcCurrentRate.split(";")[2]) * 1000; // current time from wcf
                                 //x = (new Date()).getTime(); // current time
                                 y = parseFloat(btcCurrentRate.split(";")[1]);
                                 series.addPoint([x, y], true, true);
-
-                                var lastPoint = series.getPoint(series.points[series.points.length - 1]);
-
-                                //lastPoint;
-                                lastPoint.setState('hover');
-                                lastPoint.state = '';  // need this to fix hover bug
-                                series.chart.tooltip.refresh(lastPoint); // Show tooltip
                             }
                         }, 1000);
                     }
@@ -185,7 +194,6 @@ var PricePrediction = {
                         });
                     }
 
-                    btcLastestTime = (parseFloat(time) + count) * 1000;
                     for (i = 0; i <= 3600; i += 1) {
                         data.push({
                            x: (currentTime + i) * 1000,
