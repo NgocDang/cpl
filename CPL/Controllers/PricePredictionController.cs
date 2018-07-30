@@ -330,7 +330,7 @@ namespace CPL.Controllers
 
                 // Add quartz job
                 var scheduler = _quartzSchedulerService.GetScheduler<IScheduler, IPricePredictionUpdateResultFactory>();
-                QuartzHelper.AddJob<PricePredictionUpdateResultJob>(scheduler, viewModel.EndTime);
+                QuartzHelper.AddJob<PricePredictionUpdateResultJob>(scheduler, viewModel.PredictionResultTime);
 
                 return new EmptyResult();
             }

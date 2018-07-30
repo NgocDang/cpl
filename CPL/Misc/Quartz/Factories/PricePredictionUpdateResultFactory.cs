@@ -23,6 +23,8 @@ namespace CPL.Misc.Quartz.Factories
         {
             var jobDetail = bundle.JobDetail;
 
+            jobDetail.JobDataMap["BTCPriceService"] = _serviceProvider.GetService(typeof(IBTCPriceService));
+            jobDetail.JobDataMap["SysUserService"] = _serviceProvider.GetService(typeof(ISysUserService));
             jobDetail.JobDataMap["PricePredictionService"] = _serviceProvider.GetService(typeof(IPricePredictionService));
             jobDetail.JobDataMap["PricePredictionHistoryService"] = _serviceProvider.GetService(typeof(IPricePredictionHistoryService));
             jobDetail.JobDataMap["UnitOfWork"] = _serviceProvider.GetService(typeof(IUnitOfWorkAsync));
