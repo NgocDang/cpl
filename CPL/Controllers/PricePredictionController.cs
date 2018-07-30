@@ -16,6 +16,8 @@ using CPL.Common.Enums;
 using System;
 using CPL.Domain;
 using Quartz;
+using CPL.Misc.Quartz;
+using CPL.Misc.Quartz.Jobs;
 
 namespace CPL.Controllers
 {
@@ -36,8 +38,6 @@ namespace CPL.Controllers
         private readonly IHubContext<UserPredictionProgressHub> _progressHubContext;
         private readonly IScheduler _scheduler;
 
-
-
         public PricePredictionController(
             ILangService langService,
             IMapper mapper,
@@ -50,7 +50,7 @@ namespace CPL.Controllers
             IGameHistoryService gameHistoryService,
             IPricePredictionService pricePredictionService,
             IPricePredictionHistoryService pricePredictionHistoryService,
-            IServiceProvider serviceProvider,
+            IScheduler scheduler,
             IHubContext<UserPredictionProgressHub> progressHubContext)
         {
             this._langService = langService;
@@ -64,12 +64,15 @@ namespace CPL.Controllers
             this._gameHistoryService = gameHistoryService;
             this._pricePredictionService = pricePredictionService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
-            this._serviceProvider = serviceProvider;
+            this._scheduler = scheduler;
             this._progressHubContext = progressHubContext;
         }
 
         public IActionResult Index()
         {
+
+            QuartzExtensions.TriggerForJobAtTime<PricePredictionUpdateResultJob>(_scheduler, DateTime.Now);
+
             var viewModel = new PricePredictionViewModel();
             viewModel.PricePredictionId = _pricePredictionService.Queryable().LastOrDefault(x => !x.UpdatedDate.HasValue)?.Id;
 
@@ -274,7 +277,8 @@ namespace CPL.Controllers
                 // Update database
 
                 // Active quartz job
-                var scheduler = _serviceProvider.GetService<IScheduler>();
+                QuartzExtensions.TriggerForJobAtTime<PricePredictionUpdateResultJob>(_scheduler, DateTime.Now);
+                return new EmptyResult();
             }
             else
                 return new JsonResult(new { success = false, message = "You don't have permission to do this action" });

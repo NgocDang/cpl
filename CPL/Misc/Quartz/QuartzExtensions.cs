@@ -57,6 +57,13 @@ namespace CPL.Misc.Quartz
                 .Build();
 
             scheduler.AddJob(job, true);
+
+            //var jobKey = new JobKey(jobName);
+
+            //var jobDetailResult = scheduler.GetJobDetail(jobKey);
+            //jobDetailResult.Wait();
+            //var jobDetail = jobDetailResult.Result;
+
         }
 
         public static void TriggerForJobAtTime<TJob>(IScheduler scheduler, DateTime dateTime)
