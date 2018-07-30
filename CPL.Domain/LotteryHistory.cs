@@ -16,7 +16,7 @@ namespace CPL.Domain
         public DateTime? UpdatedDate { get; set; }
         public int? LotteryPrizeId { get; set; }
         public int TicketIndex { get; set; }
-
+        public string TxHash { get; set; }
         public virtual Lottery Lottery { get; set; }
         public virtual SysUser SysUser { get; set; }
         public virtual LotteryPrize LotteryPrize { get; set; }

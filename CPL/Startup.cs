@@ -134,7 +134,7 @@ namespace CPL
             // Set endpoint address
             // Authentication Service
             ServiceClient.AuthenticationClient = new AuthenticationService.AuthenticationClient();
-            ServiceClient.AuthenticationClient.Endpoint.Address = new EndpointAddress(new Uri(serviceEndpoint + CPLConstant.AuthenticationServiceEndpoint));
+            //ServiceClient.AuthenticationClient.Endpoint.Address = new EndpointAddress(new Uri(serviceEndpoint + CPLConstant.AuthenticationServiceEndpoint));
 
             // Email Service
             ServiceClient.EmailClient = new EmailService.EmailClient();
@@ -144,11 +144,18 @@ namespace CPL
             ServiceClient.BTCCurrentPriceClient = new BTCCurrentPriceService.BTCCurrentPriceClient();
             ServiceClient.BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(Configuration["ConnectionStrings:BTCCurrentPriceClientEndpoint"]));
 
+            // EToken service
+            ServiceClient.ETokenClient = new ETokenService.ETokenClient();
+            //ServiceClient.ETokenClient.Endpoint.Address = new EndpointAddress(new Uri(serviceEndpoint + CPLConstant.ETokenServiceEndpoint));
+
             // Load Wcf
             // Authentication
             var authentication = ServiceClient.AuthenticationClient.AuthenticateAsync(CPLConstant.ProjectEmail, CPLConstant.ProjectName);
             authentication.Wait();
             Authentication.Token = authentication.Result.Token;
+
+            var eToken = ServiceClient.ETokenClient.SetAsync(Authentication.Token, new ETokenService.ETokenSetting { Abi = CPLConstant.Abi, ContractAddress = CPLConstant.SmartContractAddress, Environment = ETokenService.Environment.TESTNET, Platform = ETokenService.Platform.ETH });
+            eToken.Wait();
         }
 
         private void LoadLangDetail(IServiceProvider serviceProvider)
