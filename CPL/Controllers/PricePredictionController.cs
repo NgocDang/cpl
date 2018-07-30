@@ -15,6 +15,7 @@ using CPL.Hubs;
 using CPL.Common.Enums;
 using System;
 using CPL.Domain;
+using Quartz;
 
 namespace CPL.Controllers
 {
@@ -33,6 +34,8 @@ namespace CPL.Controllers
         private readonly IPricePredictionService _pricePredictionService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
         private readonly IHubContext<UserPredictionProgressHub> _progressHubContext;
+        private readonly IScheduler _scheduler;
+
 
 
         public PricePredictionController(
@@ -47,6 +50,7 @@ namespace CPL.Controllers
             IGameHistoryService gameHistoryService,
             IPricePredictionService pricePredictionService,
             IPricePredictionHistoryService pricePredictionHistoryService,
+            IServiceProvider serviceProvider,
             IHubContext<UserPredictionProgressHub> progressHubContext)
         {
             this._langService = langService;
@@ -60,6 +64,7 @@ namespace CPL.Controllers
             this._gameHistoryService = gameHistoryService;
             this._pricePredictionService = pricePredictionService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
+            this._serviceProvider = serviceProvider;
             this._progressHubContext = progressHubContext;
         }
 
@@ -255,6 +260,24 @@ namespace CPL.Controllers
                 success = true,
                 url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("LogIn", "Authentication")}?returnUrl={Url.Action("Index", "PricePrediction")}"
             });
+        }
+
+
+        // Not implemented yet
+        [HttpPost]
+        public IActionResult AddNewGame(PricePredictionViewModel viewModel)
+        {
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            var currentUser = _sysUserService.Query().Select().FirstOrDefault(x => x.Id == user.Id && x.IsAdmin == true);
+            if (currentUser != null)
+            {
+                // Update database
+
+                // Active quartz job
+                var scheduler = _serviceProvider.GetService<IScheduler>();
+            }
+            else
+                return new JsonResult(new { success = false, message = "You don't have permission to do this action" });
         }
     }
 }

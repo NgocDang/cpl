@@ -71,6 +71,7 @@ namespace CPL
                     .AddSingleton<IJobFactory, PricePredictionUpdateResultFactory>();
 
             services.UseQuartz(typeof(LotteryDrawingJob));
+            services.UseQuartz(typeof(PricePredictionUpdateResultJob));
 
             services
                 .AddTransient<ILangService, LangService>()
@@ -172,7 +173,10 @@ namespace CPL
 
             // Drawing lottery job
             var rawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameDrawingInHourOfDay).Value);
-            QuartzExtensions.StartJob<LotteryDrawingJob>(scheduler, CPLConstant.LotteryGameJobGroupName, rawingTime);
+            QuartzExtensions.StartJob<LotteryDrawingJob>(scheduler, rawingTime);
+
+            //Price Prediction Update Result Job
+            QuartzExtensions.AddJob<PricePredictionUpdateResultJob>(scheduler);
         }
     }
 }

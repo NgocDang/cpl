@@ -56,7 +56,7 @@ namespace CPL.Misc.Quartz
                 .WithIdentity(jobName)
                 .Build();
 
-            scheduler.AddJob(job, false);
+            scheduler.AddJob(job, true);
         }
 
         public static void TriggerForJobAtTime<TJob>(IScheduler scheduler, DateTime dateTime)
