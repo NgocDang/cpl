@@ -1,5 +1,6 @@
 ﻿using CPL.Core.Services;
 using CPL.Infrastructure.Repositories;
+using CPL.Misc.Quartz.Interfaces;
 using Quartz;
 using System;
 using System.Collections.Generic;

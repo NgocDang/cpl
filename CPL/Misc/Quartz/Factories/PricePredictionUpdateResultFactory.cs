@@ -1,5 +1,6 @@
 ﻿using CPL.Core.Interfaces;
 using CPL.Infrastructure.Interfaces;
+using CPL.Misc.Quartz.Interfaces;
 using Quartz;
 using Quartz.Spi;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Misc.Quartz.Factories
 {
-    public class PricePredictionUpdateResultFactory : IJobFactory
+    public class PricePredictionUpdateResultFactory : IPricePredictionUpdateResultFactory
     {
         private readonly IServiceProvider _serviceProvider;
 

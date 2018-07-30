@@ -71,7 +71,7 @@ namespace CPL.Controllers
         public IActionResult Index()
         {
 
-            QuartzExtensions.TriggerForJobAtTime<PricePredictionUpdateResultJob>(_scheduler, DateTime.Now);
+            QuartzHelper.TriggerForJobAtTime<PricePredictionUpdateResultJob>(_scheduler, DateTime.Now);
 
             var viewModel = new PricePredictionViewModel();
             viewModel.PricePredictionId = _pricePredictionService.Queryable().LastOrDefault(x => !x.UpdatedDate.HasValue)?.Id;
@@ -277,7 +277,7 @@ namespace CPL.Controllers
                 // Update database
 
                 // Active quartz job
-                QuartzExtensions.TriggerForJobAtTime<PricePredictionUpdateResultJob>(_scheduler, DateTime.Now);
+                QuartzHelper.TriggerForJobAtTime<PricePredictionUpdateResultJob>(_scheduler, DateTime.Now);
                 return new EmptyResult();
             }
             else
