@@ -68,11 +68,7 @@ var PricePrediction = {
         Highcharts.setOptions({
             global: {
                 useUTC: false
-            }//,
-            //time: {
-            //    timezoneOffset: 4 * 60,
-            //    //timezone: 'indochina'
-            //}
+            }
         });
 
         var btcPriceChart = Highcharts.chart('btc-price-chart', {
