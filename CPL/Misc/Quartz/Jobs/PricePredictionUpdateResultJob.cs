@@ -22,6 +22,8 @@ namespace CPL.Misc.Quartz.Jobs
             var lotteryService = ((PricePredictionService)context.JobDetail.JobDataMap["PricePredictionService"]);
             var sysUserService = ((PricePredictionHistoryService)context.JobDetail.JobDataMap["PricePredictionHistoryService"]);
             var unitOfWork = ((UnitOfWork)context.JobDetail.JobDataMap["UnitOfWork"]);
+
+
         }
     }
 }

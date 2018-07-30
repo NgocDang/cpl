@@ -94,6 +94,7 @@ namespace CPL
                 .AddTransient<ILotteryService, LotteryService>()
                 .AddTransient<ILotteryHistoryService, LotteryHistoryService>()
                 .AddTransient<ILotteryPrizeService, LotteryPrizeService>()
+                .AddTransient<IQuartzSchedulerService, QuartzSchedulerService>()
                 .AddTransient<IBTCPriceService, BTCPriceService>();
 
             services.AddSignalR();
@@ -170,14 +171,11 @@ namespace CPL
 
         private void LoadQuartz(IServiceProvider serviceProvider)
         {
-            var scheduler = serviceProvider.GetService<IScheduler>();
+            var scheduler = serviceProvider.GetScheduler<IScheduler, ILotteryDrawingFactory>();
 
             // Drawing lottery job
             var rawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameDrawingInHourOfDay).Value);
             QuartzHelper.StartJob<LotteryDrawingJob>(scheduler, rawingTime);
-
-            //Price Prediction Update Result Job
-            QuartzHelper.AddJob<PricePredictionUpdateResultJob>(scheduler);
         }
     }
 }

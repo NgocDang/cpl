@@ -29,5 +29,17 @@ namespace CPL.Misc.Quartz
                 return scheduler;
             });
         }
+
+        public static IScheduler GetScheduler<Scheduler, JobFactory>(this IServiceProvider provider)
+            where Scheduler : IScheduler
+            where JobFactory : IJobFactory
+        {
+            var schedulerFactory = new StdSchedulerFactory();
+            var scheduler = schedulerFactory.GetScheduler().Result;
+
+            scheduler.JobFactory = provider.GetService<JobFactory>();
+            scheduler.Start();
+            return scheduler;
+        }
     }
 }

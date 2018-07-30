@@ -24,58 +24,32 @@ namespace CPL.Misc.Quartz
                 .Build();
 
             scheduler.ScheduleJob(job, trigger);
-            var jobKey = new JobKey(jobName);
-
-            var jobDetailResult = scheduler.GetJobDetail(jobKey);
-            jobDetailResult.Wait();
-            var jobDetail = jobDetailResult.Result;
         }
 
-        public static void AddJob<TJob>(IScheduler scheduler)
+        public static void AddJob<TJob>(IScheduler scheduler, DateTime dateTime)
             where TJob : IJob
         {
-            var jobName = typeof(TJob).FullName;
-
-            var job = JobBuilder.Create<TJob>()
-                .WithIdentity(jobName)
-                .Build();
-
-            scheduler.AddJob(job, true);
-
-            var jobKey = new JobKey(jobName);
-
-            var jobDetailResult = scheduler.GetJobDetail(jobKey);
-            jobDetailResult.Wait();
-            var jobDetail = jobDetailResult.Result;
-
-        }
-
-        public static void TriggerForJobAtTime<TJob>(IScheduler scheduler, DateTime dateTime)
-            where TJob : IJob
-        {
-            var jobName = typeof(TJob).FullName;
-            var jobKey = new JobKey(jobName);
-
-            var jobDetailResult = scheduler.GetJobDetail(jobKey);
-            jobDetailResult.Wait();
-            var jobDetail = jobDetailResult.Result;
+            var jobName = $"{dateTime.ToString("yyyyMMddHHmmss")}.job";
+            var jobGroupName = $"{typeof(TJob).FullName}.jobGroup";
 
             var triggerName = $"{dateTime.ToString("yyyyMMddHHmmss")}.trigger";
-            var triggerGroupName = $"{jobName}.triggerGroup";
 
-            var trigger = TriggerBuilder.Create()
-                .WithIdentity($"{triggerName}.trigger", triggerGroupName)
-                .StartAt(dateTime)
-                .ForJob(jobDetail)
+            var job = JobBuilder.Create<TJob>()
+                .WithIdentity(jobName, jobGroupName)
                 .Build();
 
-            var triggerExistedResult = scheduler.GetTriggersOfJob(jobKey);
-            triggerExistedResult.Wait();
+            var trigger = TriggerBuilder.Create()
+                .WithIdentity(triggerName)
+                .StartAt(dateTime)
+                .Build();
 
-            if (!triggerExistedResult.Result.Any(x => x.Key == trigger.Key))
-            {
-                scheduler.ScheduleJob(trigger);
-            }
+            scheduler.ScheduleJob(job, trigger);
+
+            var jobKey = new JobKey(jobName);
+
+            var jobDetailResult = scheduler.GetJobDetail(jobKey);
+            jobDetailResult.Wait();
+            var jobDetail = jobDetailResult.Result;
         }
 
         private static CronScheduleBuilder BuildCronSchedule(DateTime dateTime)
