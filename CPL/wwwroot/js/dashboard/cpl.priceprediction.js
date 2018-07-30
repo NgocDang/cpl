@@ -1,4 +1,4 @@
-﻿var btcCurrentRate, btcLastestTime, PreviousBtcRate;
+﻿var btcCurrentRate, btcLastestTime, bctDelayTime;
 var PricePrediction = {
     historyDatatable: null,
     init: function () {
@@ -189,13 +189,23 @@ var PricePrediction = {
                             y: parseFloat(rate[count + i])
                         });
                     }
-
+                    bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
                     for (i = 0; i <= 3600; i += 1) {
                         data.push({
-                           x: (currentTime + i) * 1000,
-                           y: null
+                            x: (currentTime + i) * 1000,
+                            y: null
                         });
                     }
+
+                    // Fill Delay Time
+                    var count = currentTime - bctDelayTime;
+                    for (var i = 0; i < count; i++) {
+                        data.push({
+                            x: (bctDelayTime + i) * 1000,
+                            y: null
+                        });
+                    }
+
                     return data;
                 }())
             }]
