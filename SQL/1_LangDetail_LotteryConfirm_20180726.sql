@@ -4,5 +4,5 @@ INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'LotteryTicket
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'UpdatedDate', N'Updated Date')
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'PurchaseFailed', N'Purchase failed, please try again!')
 
-ALTER TABLE LotteryHistory ADD TxHash nvarchar(6) NOT NULL DEFAULT ''
+ALTER TABLE LotteryHistory ADD TxHash nvarchar(100) NOT NULL DEFAULT ''
 ALTER TABLE LotteryHistory ALTER COLUMN TicketNumber nvarchar(6) NULL
