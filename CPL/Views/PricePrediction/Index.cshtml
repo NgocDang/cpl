@@ -74,16 +74,16 @@
                                             <div class="row" style="margin-top:10px;">
                                                 <div class="btn-group btn-group-toggle col-md-12 col-sm-12" data-toggle="buttons">
                                                     <label class="btn btn-success col-md-6 col-sm-6" id="lbl-bet-up">
-                                                        <input type="radio" name="options" id="btn-bet-up" autocomplete="off" class="btn btn-success btn-block font-weight-bold" /> UP
+                                                        <input type="radio" name="options" id="btn-bet-up" autocomplete="off" class="btn btn-success btn-block font-weight-bold" /> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Up")
                                                     </label>
                                                     <label class="btn btn-danger col-md-6 col-sm-6" id="lbl-bet-down">
-                                                        <input type="radio" name="options" id="btn-bet-down" autocomplete="off" class="btn btn-danger btn-block font-weight-bold" /> DOWN
+                                                        <input type="radio" name="options" id="btn-bet-down" autocomplete="off" class="btn btn-danger btn-block font-weight-bold" /> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Down")
                                                     </label>
                                                 </div>
                                             </div>
                                             <div class="row" style="margin-top:10px;">
                                                 <div class="col-12">
-                                                    <button type="button" id="btn-bet" class="btn btn-yellow btn-block font-weight-bold">BET</button>
+                                                    <button type="button" id="btn-bet" class="btn btn-yellow btn-block font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bet")</button>
                                                 </div>
                                             </div>
                                             <div class="row mt-2">
@@ -105,26 +105,26 @@
                                     <div class="col-md-3 col-sm-12" style="display:none" id="form-confirm">
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12" style="text-align:center">
-                                                <span class="font-large-2 font-weight-bold info">Confirmation</span>
+                                                <span class="font-large-2 font-weight-bold info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12">
-                                                <span class="font-medium-4">Predicted trend:</span><span class="font-medium-4 font-weight-bold" id="predicted-trend-confirm" style="display:inline; float:right"></span>
+                                                <span class="font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PredictedTrend"):</span><span class="font-medium-4 font-weight-bold" id="predicted-trend-confirm" style="display:inline; float:right"></span>
                                             </div>
                                             <div class="col-md-12 col-sm-12">
-                                                <span class="font-medium-4">Bet amount:</span><span class="font-medium-4 font-weight-bold success" id="bet-amount-confirm" style="display:inline; float:right"></span>
+                                                <span class="font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BetAmount"):</span><span class="font-medium-4 font-weight-bold success" id="bet-amount-confirm" style="display:inline; float:right"></span>
                                             </div>
                                         </div>
                                         <div class="row" style="margin-top:10px;">
                                             <div class="col-md-5">
-                                                <button type="button" id="btn-confirm" class="btn btn-success btn-block font-weight-bold">CONFIRM</button>
+                                                <button type="button" id="btn-confirm" class="btn btn-success btn-block font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</button>
                                             </div>
                                             <div class="col-md-2">
                                                 &nbsp;
                                             </div>
                                             <div class="col-md-5">
-                                                <button type="button" id="btn-back" class="btn btn-danger btn-block font-weight-bold">BACK</button>
+                                                <button type="button" id="btn-back" class="btn btn-danger btn-block font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Back")</button>
                                             </div>
                                         </div>
 
@@ -135,7 +135,7 @@
                     </div>
                 </div>
             </div>
-            @if (Model.SysUserId != null)
+            @if (Model.SysUserId.HasValue)
             {
                 <div class="row">
                     <div id="recent-transactions" class="col-12">

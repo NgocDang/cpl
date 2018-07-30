@@ -50,7 +50,7 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        $('#modal').hide();
+                        $('#modal').modal("hide");
                         toastr.success(data.message, 'Success!');
                         Lottery.historyDatatable.ajax.reload();
                     }

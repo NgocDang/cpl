@@ -154,7 +154,7 @@ namespace CPL
             authentication.Wait();
             Authentication.Token = authentication.Result.Token;
 
-            var eToken = ServiceClient.ETokenClient.SetAsync(Authentication.Token, new ETokenService.ETokenSetting { Abi = CPLConstant.Abi, ContractAddress = CPLConstant.SmartContractAddress, Environment = ETokenService.Environment.MAINNET, Platform = ETokenService.Platform.ETH });
+            var eToken = ServiceClient.ETokenClient.SetAsync(Authentication.Token, new ETokenService.ETokenSetting { Abi = CPLConstant.Abi, ContractAddress = CPLConstant.SmartContractAddress, Environment = ETokenService.Environment.TESTNET, Platform = ETokenService.Platform.ETH });
             eToken.Wait();
         }
 
