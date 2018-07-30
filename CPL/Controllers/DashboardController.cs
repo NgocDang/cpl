@@ -195,7 +195,7 @@ namespace CPL.Controllers
             {
                 // in this example we just default sort on the 1st column
                 sortBy = model.columns[model.order[0].column].data;
-                sortDir = model.order[0].dir.ToLower() == "asc";
+                sortDir = model.order[0].dir.ToLower() == "desc";
             }
 
             // search the dbase taking into consideration table sorting and paging

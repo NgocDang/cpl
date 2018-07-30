@@ -22,6 +22,8 @@ namespace CPL.Models
 
         public IList<LangViewModel> Langs { get; set; }
         public LangViewModel Lang { get; set; }
+
+        public string GCapchaKey { get; set; }
     }
 
     public class AccountForgotPasswordModel
@@ -75,6 +77,7 @@ namespace CPL.Models
         public IList<LangViewModel> Langs { get; set; }
         public LangViewModel Lang { get; set; }
 
+        public string GCapchaKey { get; set; }
     }
 
     public class AccountActivateModel

@@ -32,6 +32,7 @@ namespace CPL.Controllers
         private readonly ISysUserService _sysUserService;
         private readonly IPricePredictionService _pricePredictionService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
+        private readonly IBTCPriceService _btcPriceService;
         private readonly IHubContext<UserPredictionProgressHub> _progressHubContext;
 
 
@@ -47,6 +48,7 @@ namespace CPL.Controllers
             IGameHistoryService gameHistoryService,
             IPricePredictionService pricePredictionService,
             IPricePredictionHistoryService pricePredictionHistoryService,
+            IBTCPriceService btcPriceService,
             IHubContext<UserPredictionProgressHub> progressHubContext)
         {
             this._langService = langService;
@@ -60,6 +62,7 @@ namespace CPL.Controllers
             this._gameHistoryService = gameHistoryService;
             this._pricePredictionService = pricePredictionService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
+            this._btcPriceService = btcPriceService;
             this._progressHubContext = progressHubContext;
         }
 
@@ -73,22 +76,71 @@ namespace CPL.Controllers
                 decimal upPercentage;
                 decimal downPercentage;
                 this.CalculatePercentagePrediction(viewModel.PricePredictionId.Value, out upPercentage, out downPercentage);
-
-                var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
-                btcCurrentPriceResult.Wait();
-
-                viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
-                if (btcCurrentPriceResult.Result.Status.Code == 0)
-                {
-                    viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
-                    viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
-                }
-
                 // Set to Model
-
                 viewModel.UpPercentage = upPercentage;
                 viewModel.DownPercentage = downPercentage;
             }
+
+            var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
+            btcCurrentPriceResult.Wait();
+            if (btcCurrentPriceResult.Result.Status.Code == 0)
+            {
+                viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
+                viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
+            }
+
+            // Get btc previous rates 12h before until now
+            var btcPriceInLocals = _btcPriceService.Queryable().Where(x => x.Time >= ((DateTimeOffset)DateTime.UtcNow.AddHours(-CPLConstant.HourBeforeInChart)).ToUnixTimeSeconds())
+                .GroupBy(x => x.Time)
+                .Select(y => new PricePredictionHighChartViewModel
+                {
+                    Time = y.Key,
+                    Price = y.Select(x => x.Price).OrderByDescending(x => x).FirstOrDefault()
+                })
+                .ToList();
+
+            var currentTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+            var listCurrentTime = new Dictionary<long, decimal>();
+            var second = CPLConstant.HourBeforeInChart * 60 * 60 - 1; // currently 43200
+            for (int i = -second; i <= 0; i++)
+            {
+                listCurrentTime.Add(currentTime + i, 0); // Default Price is 0;
+            }
+
+            // Join 2 list
+            var pricePredictionViewModels = (from left in listCurrentTime.Keys
+                                             join right in btcPriceInLocals on left equals right.Time into leftRight
+                                             from lr in leftRight.DefaultIfEmpty()
+                                             select new PricePredictionHighChartViewModel
+                                             {
+                                                 Time = left,
+                                                 Price = lr?.Price,
+                                             })
+                                            .ToList();
+
+            decimal value = 0;
+            for (int i = 0; i < pricePredictionViewModels.Count; i++)
+            {
+                if (pricePredictionViewModels[i].Price != null)
+                {
+                    value = pricePredictionViewModels[i].Price.GetValueOrDefault(0);
+                }
+
+                pricePredictionViewModels[i].Price = value;
+            }
+
+            var previousTime = pricePredictionViewModels.FirstOrDefault().Time.ToString();
+            var previousRate = string.Join(",", pricePredictionViewModels.Select(x => x.Price));
+            var lowestRate = pricePredictionViewModels.Where(x => x.Price != 0).Min(x => x.Price).GetValueOrDefault(0) - CPLConstant.LowestRateBTCNumber;
+            if (lowestRate < 0)
+                lowestRate = 0;
+            var previousBtcRate = $"{previousTime};{previousRate}";
+
+            viewModel.PreviousBtcRate = previousBtcRate;
+            viewModel.LowestBtcRate = lowestRate;
+
+            // Get history game
+            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
 
             return View(viewModel);
         }
@@ -108,7 +160,8 @@ namespace CPL.Controllers
             if (upPrediction + downPrediction == 0)
             {
                 upPercentage = downPercentage = 50;
-            } else
+            }
+            else
             {
                 upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
                 downPercentage = 100 - upPercentage;
@@ -124,7 +177,7 @@ namespace CPL.Controllers
                 btcCurrentPriceResult.Wait();
 
                 if (btcCurrentPriceResult.Result.Status.Code == 0)
-                    return new JsonResult(new { success = true, value = btcCurrentPriceResult.Result.Price, valueInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00") });
+                    return new JsonResult(new { success = true, value = btcCurrentPriceResult.Result.Price, valueInString = $"{btcCurrentPriceResult.Result.Price.ToString("#,##0.00")};{btcCurrentPriceResult.Result.Price.ToString()};{btcCurrentPriceResult.Result.DateTime.ToString()}" });
 
                 return new JsonResult(new { success = false, value = 0, valueInString = "0" });
             }
@@ -183,19 +236,19 @@ namespace CPL.Controllers
                                           .Select(x => new PricePredictionHistoryViewModel
                                           {
                                               StartRate = x.PricePrediction.PredictionPrice,
-                                              StartRateInString = x.PricePrediction.PredictionPrice.ToString(),
+                                              StartRateInString = x.PricePrediction.PredictionPrice.ToString("#,##0.##"),
                                               ResultRate = x.PricePrediction.ResultPrice,
-                                              ResultRateInString = $"{x.PricePrediction.ResultPrice.ToString()} {EnumCurrency.USD.ToString()}",
+                                              ResultRateInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USD.ToString()}",
                                               ResultTime = x.PricePrediction.PredictionResultTime,
                                               ResultTimeInString = x.PricePrediction.PredictionResultTime.ToString(),
                                               Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
                                               Status = x.UpdatedDate.HasValue == true ? EnumLotteryGameStatus.COMPLETED.ToString() : EnumLotteryGameStatus.ACTIVE.ToString(),
                                               PurcharseTime = x.CreatedDate,
-                                              PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")} {EnumCurrency.USD.ToString()}",
+                                              PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")}",
                                               Bonus = x.Award.GetValueOrDefault(0),
-                                              BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                                              BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
                                               Amount = x.Amount,
-                                              AmountInString = $"{x.Amount.ToString("#,##0.########")} {EnumCurrency.CPL.ToString()}",
+                                              AmountInString = $"{x.Amount.ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
                                           });
 
             if (string.IsNullOrEmpty(searchBy))
@@ -231,7 +284,7 @@ namespace CPL.Controllers
                 {
                     var predictionRecord = new PricePredictionHistory() { PricePredictionId = pricePredictionId, Amount = betAmount, CreatedDate = DateTime.Now, Prediction = predictedTrend, SysUserId = user.Id };
                     _pricePredictionHistoryService.Insert(predictionRecord);
-                    
+
                     currentUser.TokenAmount -= betAmount;
                     _sysUserService.Update(currentUser);
 

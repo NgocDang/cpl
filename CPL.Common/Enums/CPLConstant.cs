@@ -71,6 +71,13 @@ namespace CPL.Common.Enums
         public static string ThirdPrize = "3rd";
         public static string FourthPrize = "4th";
 
+        // High Chart
+        public static int HourBeforeInChart = 12; // hour
+        public static int LowestRateBTCNumber = 1000; // milisecond
+
+        // GCapcha Key
+        public static string GCaptchaKey = "GCaptchaKey";
+
         // Smart Contract
         public static string SmartContractAddress = "0xFF7C0b51bc57DA70A484CEBE6a6258d77Fe38699";
         public static string Environment = "Environment";
