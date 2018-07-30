@@ -1,4 +1,4 @@
-﻿var btcCurrentRate, btcLastestTime, PreviousBtcRate;
+﻿var btcCurrentRate, btcLastestTime, bctDelayTime;
 var PricePrediction = {
     historyDatatable: null,
     init: function () {
@@ -82,6 +82,20 @@ var PricePrediction = {
                         // set up the updating of the chart each second
                         var series = this.series[0], x, y;
 
+                        //// auto set hover
+                        //setInterval(function () {
+                        //    var d = new Date();
+                            
+                        //    var tzOffset = d.getTimezoneOffset();
+
+                        //    series.redraw;
+                        //    var lastPoint = series.getPoint(series.points[series.points.length - 1]);
+
+                        //    lastPoint.setState('hover');
+                        //    //lastPoint.state = '';  // need this to fix hover bug
+                        //    series.chart.tooltip.refresh(lastPoint); // Show tooltip
+                        //}, 1000);
+
                         // Load gap between real time
                         var previousX = x;
                         setInterval(function () {
@@ -101,7 +115,8 @@ var PricePrediction = {
                         setInterval(function () {
                             PricePrediction.bindLoadBTCCurrentRate();
                             if (btcCurrentRate !== undefined && btcCurrentRate !== null) {
-                                x = parseFloat(btcCurrentRate.split(";")[2]) * 1000; // current time
+                                x = parseFloat(btcCurrentRate.split(";")[2]) * 1000; // current time from wcf
+                                //x = (new Date()).getTime(); // current time
                                 y = parseFloat(btcCurrentRate.split(";")[1]);
                                 series.addPoint([x, y], true, true);
                             }
@@ -140,7 +155,7 @@ var PricePrediction = {
                 }]
             },
             tooltip: {
-                enable: false
+                crosshairs: [true, true]
             },
             legend: {
                 enabled: false
@@ -153,6 +168,7 @@ var PricePrediction = {
                 fillOpacity: 1,
                 states: { hover: { enabled: false } },
                 dataGrouping: { enabled: false },
+                connectNulls: true, 
                 data: (function () {
                     // generate an array of random data
                     var data = [],
@@ -173,14 +189,23 @@ var PricePrediction = {
                             y: parseFloat(rate[count + i])
                         });
                     }
+                    bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                    for (i = 0; i <= 3600; i += 1) {
+                        data.push({
+                            x: (currentTime + i) * 1000,
+                            y: null
+                        });
+                    }
 
-                    btcLastestTime = (parseFloat(time) + count) * 1000;
-                    //for (i = 0; i <= 3600; i += 1) {
-                    //    data.push({
-                    //       x: (currentTime + i) * 1000,
-                    //       y: 0
-                    //    });
-                    //}
+                    // Fill Delay Time
+                    var count = currentTime - bctDelayTime;
+                    for (var i = 0; i < count; i++) {
+                        data.push({
+                            x: (bctDelayTime + i) * 1000,
+                            y: null
+                        });
+                    }
+
                     return data;
                 }())
             }]
