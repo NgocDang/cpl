@@ -5,6 +5,9 @@
 
 @section styles
     {
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
     <style>
         .bg-custom {
             line-height: 25px !important;
@@ -78,6 +81,7 @@
 <div class="app-content content">
     <div class="content-wrapper">
         <div class="content-body">
+            @Html.HiddenFor(x => x.SysUserId)
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -150,6 +154,30 @@
                     <p class="text-muted">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NotePrize"))</p>
                 </div>
             </div>
+            <div class="row">
+                @if (Model.SysUserId.HasValue)
+                {
+                    <div id="recent-transactions" class="col-12">
+                        <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
+                        <div class="card">
+                            <div class="card-content">
+                                <table id="dt-lottery-history" class="table responsive table-hover table-xl mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTicketNumber")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
+                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UpdatedDate")</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
@@ -157,4 +185,8 @@
 @section scripts
     {
     <script src="~/js/dashboard/cpl.lottery.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/cpl.dtlang.js"></script>
 }

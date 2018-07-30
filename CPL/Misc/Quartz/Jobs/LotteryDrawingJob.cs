@@ -76,14 +76,14 @@ namespace CPL.Misc.Quartz.Jobs
 
         private List<LotteryHistoryViewModel> PickWinner(List<SysUser> listOfSysUser, LotteryViewModel lottery)
         {
-            var numberOfFourthPrizeWinner = lottery.LotteryPrizes.FirstOrDefault(p => string.Equals(p.Name, CPLConstant.FourthPrize)).Volume;
+            var lastPrize = lottery.LotteryPrizes.LastOrDefault();
 
             var listOfWinnerTicket = new List<LotteryHistoryViewModel>();
 
             var lotteryHistoriesGroupedList = lottery.LotteryHistories.GroupBy(x => x.SysUserId).OrderByDescending(g => g.Count())
                                                             .SelectMany(x => x)
                                                             .ToList()
-                                                            .Split(numberOfFourthPrizeWinner);
+                                                            .Split(lastPrize.Volume);
 
             for (var i = lottery.LotteryPrizes.Count() - 1; i >= 0; i--)
             {
@@ -91,7 +91,7 @@ namespace CPL.Misc.Quartz.Jobs
 
                 foreach (var index in groupPickedIndexs)
                 {
-                    if (lottery.LotteryPrizes[i].Name == CPLConstant.FourthPrize)
+                    if (lottery.LotteryPrizes[i].Id == lastPrize.Id)
                     {
                         var winnerIndexInGroup = new Random().Next(0, CPLConstant.LotteryGroupSize);
                         var winner = lotteryHistoriesGroupedList[index][winnerIndexInGroup];

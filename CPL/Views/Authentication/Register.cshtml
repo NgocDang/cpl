@@ -73,7 +73,7 @@
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Captcha")
                                                 </label>
                                                 <div class="box-captcha">
-                                                    <div class="g-recaptcha" data-sitekey="6LcmwmAUAAAAAOaDjdjGVgSHYj9fzZH-1-U8Ffd4"></div>
+                                                    <div class="g-recaptcha" data-sitekey="@Model.GCapchaKey"></div>
                                                 </div>
                                             </div>
                                             <div class="invalid-feedback" id="register-msg">

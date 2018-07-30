@@ -25,6 +25,7 @@ namespace CPL.Mapping
             builder.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
             builder.Property(t => t.LotteryPrizeId).HasColumnName("LotteryPrizeId");
             builder.Property(t => t.TicketIndex).HasColumnName("TicketIndex");
+            builder.Property(t => t.TxHash).HasColumnName("TxHash");
 
             //Relationship
             builder.HasOne(x => x.Lottery)
