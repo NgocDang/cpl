@@ -75,6 +75,9 @@ namespace CPL.Common.Enums
         // GCapcha Key
         public static string GCaptchaKey = "GCaptchaKey";
 
+        // Page size of News
+        public static int PageSize = 5;
+
         // Smart Contract
         //public static string SmartContractAddress = "0xFF7C0b51bc57DA70A484CEBE6a6258d77Fe38699"; // PROD
         public static string SmartContractAddress = "0x6f47E11F5B9ec93BCC6947C13b9Fd1e5fcdD0FD0"; // TEST
