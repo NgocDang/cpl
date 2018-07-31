@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using BTCCurrentPriceService;
+using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Core.Services;
 using CPL.Domain;
@@ -15,6 +16,7 @@ using PeterKottas.DotNetCore.WindowsService.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading;
@@ -112,14 +114,16 @@ namespace CPL.PredictionGameService
             }).InstancePerLifetimeScope();
 
             builder.RegisterType<BTCPriceService>().As<IBTCPriceService>().InstancePerLifetimeScope();
-
+            builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
             builder.RegisterType<UnitOfWork>().As<IUnitOfWorkAsync>().InstancePerLifetimeScope();
             builder.RegisterType<CPLContext>().As<IDataContextAsync>().InstancePerLifetimeScope();
 
             builder.RegisterType<Repository<BTCPrice>>().As<IRepositoryAsync<BTCPrice>>().InstancePerLifetimeScope();
+            builder.RegisterType<Repository<Setting>>().As<IRepositoryAsync<Setting>>().InstancePerLifetimeScope();
 
             Resolver.Container = builder.Build();
             Resolver.BTCPriceService = Resolver.Container.Resolve<IBTCPriceService>();
+            Resolver.SettingService = Resolver.Container.Resolve<ISettingService>();
             Resolver.UnitOfWork = Resolver.Container.Resolve<IUnitOfWorkAsync>();
         }
 
@@ -139,7 +143,8 @@ namespace CPL.PredictionGameService
             FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
             ConnectionString = Configuration["ConnectionString"];
-            BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(Configuration["BTCCurrentPriceClientEndpoint"]));
+            var cplServiceEndpoint = Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
+            BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(cplServiceEndpoint + CPLConstant.BTCCurrentPriceServiceEndpoint));
         }
     }
 }
