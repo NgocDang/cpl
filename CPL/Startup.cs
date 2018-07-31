@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
-using System.Threading.Tasks;
 using AutoMapper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
@@ -14,6 +12,9 @@ using CPL.Infrastructure.Interfaces;
 using CPL.Infrastructure.Repositories;
 using CPL.Misc;
 using CPL.Misc.Quartz;
+using CPL.Misc.Quartz.Factories;
+using CPL.Misc.Quartz.Interfaces;
+using CPL.Misc.Quartz.Jobs;
 using CPL.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
+using Quartz.Spi;
 
 namespace CPL
 {
@@ -65,7 +67,12 @@ namespace CPL
             services.AddAutoMapper();
             services.AddMvc().AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSession();
-            services.UseQuartz(typeof(LotteryDrawingJob));
+
+            services.AddSingleton<ILotteryDrawingFactory, LotteryDrawingFactory>()
+                    .AddSingleton<IPricePredictionUpdateResultFactory, PricePredictionUpdateResultFactory>();
+
+            services.UseQuartz<ILotteryDrawingFactory>(typeof(LotteryDrawingJob));
+            services.UseQuartz<IPricePredictionUpdateResultFactory>(typeof(PricePredictionUpdateResultJob));
 
             services
                 .AddTransient<ILangService, LangService>()
@@ -87,6 +94,7 @@ namespace CPL
                 .AddTransient<ILotteryService, LotteryService>()
                 .AddTransient<ILotteryHistoryService, LotteryHistoryService>()
                 .AddTransient<ILotteryPrizeService, LotteryPrizeService>()
+                .AddTransient<IQuartzSchedulerService, QuartzSchedulerService>()
                 .AddTransient<IBTCPriceService, BTCPriceService>();
 
             services.AddSignalR();
@@ -170,11 +178,11 @@ namespace CPL
 
         private void LoadQuartz(IServiceProvider serviceProvider)
         {
-            var scheduler = serviceProvider.GetService<IScheduler>();
+            var scheduler = serviceProvider.GetScheduler<IScheduler, ILotteryDrawingFactory>();
 
             // Drawing lottery job
             var rawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameDrawingInHourOfDay).Value);
-            QuartzExtensions.StartJob<LotteryDrawingJob>(scheduler, rawingTime);
+            QuartzHelper.StartJob<LotteryDrawingJob>(scheduler, rawingTime);
         }
     }
 }

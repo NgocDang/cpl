@@ -14,8 +14,16 @@ namespace CPL.Models
         public decimal Amount { get; set; }
         public decimal? Bonus { get; set; }
         public string Status { get; set; }
-        public decimal? ResultRate{get;set;}
+        public decimal? ResultRate { get; set; }
         public DateTime? ResultTime { get; set; }
+
+        public int PricePredictionId { get; set; }
+        public int SysUserId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public bool Prediction { get; set; }
+        public string Result { get; set; }
+        public decimal? Award { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
         public string PurcharseTimeInString { get; set; }
         public string StartRateInString { get; set; }

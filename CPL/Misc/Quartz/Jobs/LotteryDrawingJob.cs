@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CPL.Misc
+namespace CPL.Misc.Quartz.Jobs
 {
     public class LotteryDrawingJob : IJob
     {
@@ -66,8 +66,15 @@ namespace CPL.Misc
                     {
                         dataHistories[i].LotteryPrizeId = histories[i].LotteryPrizeId;
                         dataHistories[i].Result = string.IsNullOrEmpty(histories[i].Result) ? EnumGameResult.LOSE.ToString() : histories[i].Result;
+                        dataHistories[i].UpdatedDate = DateTime.Now;
                         lotteryHistoryService.Update(dataHistories[i]);
                     }
+
+                    var dataLottery = lotteryService.Queryable()
+                                        .Where(x => x.Id == lottery.Id)
+                                        .FirstOrDefault();
+                    dataLottery.Status = (int)EnumLotteryGameStatus.COMPLETED;
+                    lotteryService.Update(dataLottery);
                 }
 
                 unitOfWork.SaveChanges();
