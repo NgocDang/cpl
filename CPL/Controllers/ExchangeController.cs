@@ -52,7 +52,7 @@ namespace CPL.Controllers
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             var viewModel = Mapper.Map<ExchangeViewModel>(user);
             viewModel.ETHToBTCRate = CoinExchangeExtension.CoinExchanging();
-            viewModel.BTCToTokenrate = decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
+            viewModel.BTCToTokenrate = decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
             return View(viewModel);
         }
 
@@ -70,16 +70,16 @@ namespace CPL.Controllers
                 if (viewModel.FromCurrency == EnumCurrency.BTC.ToString() && viewModel.FromAmount <= user.BTCAmount)
                 {
                     user.BTCAmount -= viewModel.FromAmount;
-                    var tokenAmount = viewModel.FromAmount * decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
+                    var tokenAmount = viewModel.FromAmount * decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
                     user.TokenAmount += tokenAmount;
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully") });
+                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, CPLConstant.BTCToTokenRate) });
                 }
                 else if (viewModel.FromCurrency == EnumCurrency.ETH.ToString() && viewModel.FromAmount <= user.ETHAmount)
                 {
                     user.ETHAmount -= viewModel.FromAmount;
-                    var tokenAmount = viewModel.FromAmount * CoinExchangeExtension.CoinExchanging() * decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
+                    var tokenAmount = viewModel.FromAmount * CoinExchangeExtension.CoinExchanging() * decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
                     user.TokenAmount += tokenAmount;
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
@@ -90,7 +90,7 @@ namespace CPL.Controllers
                     if (viewModel.ToCurrency == EnumCurrency.BTC.ToString())
                     {
                         user.TokenAmount -= viewModel.FromAmount;
-                        var currencyAmount = viewModel.FromAmount / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
+                        var currencyAmount = viewModel.FromAmount / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
                         user.BTCAmount += currencyAmount;
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
