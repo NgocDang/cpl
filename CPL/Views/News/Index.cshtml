@@ -5,18 +5,24 @@
 @using X.PagedList.Mvc.Core; @*import this so we get our HTML Helper*@
 @model X.PagedList.IPagedList<NewsViewModel>
 
+<link href="~/css/dashboard/PagedList.css" rel="stylesheet" />
+
 <div class="app-content content">
     <div class="content-wrapper">
         @foreach (var item in Model)
         {
-            <div><h2>@item.Title</h2></div>
+            <div class="row mb-5">
+                <div class="col-12 mb-2"><img src="~/images/banner_13.jpg" class="img-fluid" alt="Responsive image"></div>
+                <div class="col-12 mb-2"><h2>@item.Title</h2></div>
+                <div class="col-12">@Html.Raw(item.ShortDescription)</div>
+            </div>
         }
     </div>
+    <div class="text-center">
+        <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), PagedListRenderOptions.OnlyShowFivePagesAtATime)
+    </div>
+
 </div>
 
-<div class="text-center">
-    <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
-    @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page = Page, status = ViewBag.Status }), PagedListRenderOptions.OnlyShowFivePagesAtATime)
-    You are in @Model.PageNumber (in @Model.PageCount page)
-</div>
 
