@@ -189,7 +189,7 @@ namespace CPL.Controllers
                                 LotteryId = lotteryId.Value,
                                 SysUserId = user.Id,
                                 TicketIndex = ticketIndexList[i],
-                                TxHash = ticketGenResult.Result.TxId
+                                TxHashId = ticketGenResult.Result.TxId
                             };
 
                             _lotteryHistoryService.Insert(lotteryRecord);

@@ -27,7 +27,7 @@ namespace CPL.Mapping
             builder.Property(t => t.TokenAmount).HasColumnName("TokenAmount");
             builder.Property(t => t.Rate).HasColumnName("Rate");
             builder.Property(t => t.Type).HasColumnName("Type");
-            builder.Property(t => t.TxId).HasColumnName("TxId");
+            builder.Property(t => t.TxHashId).HasColumnName("TxHashId");
 
             //Relationship
             builder.HasOne(x => x.SysUser)
