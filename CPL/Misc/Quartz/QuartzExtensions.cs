@@ -13,9 +13,9 @@ namespace CPL.Misc.Quartz
 {
     public static class QuartzExtensions
     {
-        public static void UseQuartz(this IServiceCollection services, params Type[] jobs)
+        public static void UseQuartz<TIJobFactory>(this IServiceCollection services, params Type[] jobs)
+            where TIJobFactory : IJobFactory
         {
-            services.AddSingleton<IJobFactory, QuartzJobFactory>();
             services.Add(jobs.Select(jobType => new ServiceDescriptor(jobType, jobType, ServiceLifetime.Singleton)));
 
             services.AddSingleton(provider =>
@@ -23,34 +23,23 @@ namespace CPL.Misc.Quartz
                 var schedulerFactory = new StdSchedulerFactory();
                 var scheduler = schedulerFactory.GetScheduler().Result;
 
-                scheduler.JobFactory = provider.GetService<IJobFactory>();
+                scheduler.JobFactory = provider.GetService<TIJobFactory>();
 
                 scheduler.Start();
                 return scheduler;
             });
         }
 
-        public static void StartJob<TJob>(IScheduler scheduler, DateTime dateTime)
-        where TJob : IJob
+        public static IScheduler GetScheduler<Scheduler, JobFactory>(this IServiceProvider provider)
+            where Scheduler : IScheduler
+            where JobFactory : IJobFactory
         {
-            var jobName = typeof(TJob).FullName;
+            var schedulerFactory = new StdSchedulerFactory();
+            var scheduler = schedulerFactory.GetScheduler().Result;
 
-            var job = JobBuilder.Create<TJob>()
-                .WithIdentity(jobName)
-                .Build();
-
-            var trigger = TriggerBuilder.Create()
-                .WithIdentity($"{jobName}.trigger")
-                .StartNow()
-                .WithSchedule(BuildCronSchedule(dateTime))
-                .Build();
-
-            scheduler.ScheduleJob(job, trigger);
-        }
-
-        private static CronScheduleBuilder BuildCronSchedule(DateTime dateTime)
-        {
-            return CronScheduleBuilder.DailyAtHourAndMinute(dateTime.Hour, dateTime.Minute);
+            scheduler.JobFactory = provider.GetService<JobFactory>();
+            scheduler.Start();
+            return scheduler;
         }
     }
 }

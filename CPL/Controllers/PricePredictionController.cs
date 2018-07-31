@@ -8,13 +8,16 @@ using CPL.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using CPL.Hubs;
 using CPL.Common.Enums;
 using System;
 using CPL.Domain;
+using Quartz;
+using CPL.Misc.Quartz;
+using CPL.Misc.Quartz.Jobs;
+using CPL.Misc.Quartz.Interfaces;
 
 namespace CPL.Controllers
 {
@@ -34,7 +37,7 @@ namespace CPL.Controllers
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
         private readonly IBTCPriceService _btcPriceService;
         private readonly IHubContext<UserPredictionProgressHub> _progressHubContext;
-
+        private readonly IQuartzSchedulerService _quartzSchedulerService;
 
         public PricePredictionController(
             ILangService langService,
@@ -48,6 +51,7 @@ namespace CPL.Controllers
             IGameHistoryService gameHistoryService,
             IPricePredictionService pricePredictionService,
             IPricePredictionHistoryService pricePredictionHistoryService,
+            IQuartzSchedulerService quartzSchedulerService,
             IBTCPriceService btcPriceService,
             IHubContext<UserPredictionProgressHub> progressHubContext)
         {
@@ -62,12 +66,17 @@ namespace CPL.Controllers
             this._gameHistoryService = gameHistoryService;
             this._pricePredictionService = pricePredictionService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
+            this._quartzSchedulerService = quartzSchedulerService;
             this._btcPriceService = btcPriceService;
             this._progressHubContext = progressHubContext;
         }
 
         public IActionResult Index()
         {
+            // Test quartz job price prediction update result
+            //var scheduler = _quartzSchedulerService.GetScheduler<IScheduler, IPricePredictionUpdateResultFactory>();
+            //QuartzHelper.AddJob<PricePredictionUpdateResultJob>(scheduler, new DateTime(2018, 07, 30, 12, 56, 0));
+
             var viewModel = new PricePredictionViewModel();
             viewModel.PricePredictionId = _pricePredictionService.Queryable().LastOrDefault(x => !x.UpdatedDate.HasValue)?.Id;
 
@@ -306,6 +315,27 @@ namespace CPL.Controllers
                 success = true,
                 url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("LogIn", "Authentication")}?returnUrl={Url.Action("Index", "PricePrediction")}"
             });
+        }
+
+
+        // Not implemented yet
+        [HttpPost]
+        public IActionResult AddNewGame(PricePredictionViewModel viewModel)
+        {
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            var currentUser = _sysUserService.Query().Select().FirstOrDefault(x => x.Id == user.Id && x.IsAdmin == true);
+            if (currentUser != null)
+            {
+                // Update database
+
+                // Add quartz job
+                var scheduler = _quartzSchedulerService.GetScheduler<IScheduler, IPricePredictionUpdateResultFactory>();
+                QuartzHelper.AddJob<PricePredictionUpdateResultJob>(scheduler, viewModel.PredictionResultTime);
+
+                return new EmptyResult();
+            }
+            else
+                return new JsonResult(new { success = false, message = "You don't have permission to do this action" });
         }
     }
 }
