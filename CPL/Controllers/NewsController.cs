@@ -10,7 +10,7 @@ using CPL.Misc;
 using CPL.Misc.Enums;
 using CPL.Models;
 using Microsoft.AspNetCore.Mvc;
-using PagedList;
+using X.PagedList;
 
 namespace CPL.Controllers
 {
