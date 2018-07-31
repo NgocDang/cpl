@@ -140,7 +140,7 @@ namespace CPL.Controllers
 
             var previousTime = pricePredictionViewModels.FirstOrDefault().Time.ToString();
             var previousRate = string.Join(",", pricePredictionViewModels.Select(x => x.Price));
-            var lowestRate = pricePredictionViewModels.Where(x => x.Price != 0).Min(x => x.Price).GetValueOrDefault(0) - CPLConstant.LowestRateBTCNumber;
+            var lowestRate = pricePredictionViewModels.Where(x => x.Price != 0).Min(x => x.Price).GetValueOrDefault(0) - CPLConstant.LowestRateBTCInterval;
             if (lowestRate < 0)
                 lowestRate = 0;
             var previousBtcRate = $"{previousTime};{previousRate}";
