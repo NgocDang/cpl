@@ -139,26 +139,27 @@ namespace CPL
         private void LoadWCF(IServiceProvider serviceProvider)
         {
             // Load URL Endpoint
-            var serviceEndpoint = ((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.ServiceEndpoint).Value;
+            var fhCoreServiceEndpoint = ((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.FHCoreServiceEndpoint).Value;
 
             // Set endpoint address
             // Authentication Service
             ServiceClient.AuthenticationClient = new AuthenticationService.AuthenticationClient();
-            //ServiceClient.AuthenticationClient.Endpoint.Address = new EndpointAddress(new Uri(serviceEndpoint + CPLConstant.AuthenticationServiceEndpoint));
+            ServiceClient.AuthenticationClient.Endpoint.Address = new EndpointAddress(new Uri(fhCoreServiceEndpoint + CPLConstant.AuthenticationServiceEndpoint));
 
             // Email Service
             ServiceClient.EmailClient = new EmailService.EmailClient();
-            ServiceClient.EmailClient.Endpoint.Address = new EndpointAddress(new Uri(serviceEndpoint + CPLConstant.EmailServiceEndpoint));
+            ServiceClient.EmailClient.Endpoint.Address = new EndpointAddress(new Uri(fhCoreServiceEndpoint + CPLConstant.EmailServiceEndpoint));
 
-            // BTC Current price Servie
+            // BTC Current price service
+            var cplServiceEndpoint = ((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
+
             ServiceClient.BTCCurrentPriceClient = new BTCCurrentPriceService.BTCCurrentPriceClient();
-            ServiceClient.BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(Configuration["ConnectionStrings:BTCCurrentPriceClientEndpoint"]));
+            ServiceClient.BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(cplServiceEndpoint + CPLConstant.BTCCurrentPriceServiceEndpoint));
 
             // EToken service
             ServiceClient.ETokenClient = new ETokenService.ETokenClient();
-            //ServiceClient.ETokenClient.Endpoint.Address = new EndpointAddress(new Uri(serviceEndpoint + CPLConstant.ETokenServiceEndpoint));
+            ServiceClient.ETokenClient.Endpoint.Address = new EndpointAddress(new Uri(fhCoreServiceEndpoint + CPLConstant.ETokenServiceEndpoint));
 
-            // Load Wcf
             // Authentication
             var authentication = ServiceClient.AuthenticationClient.AuthenticateAsync(CPLConstant.ProjectEmail, CPLConstant.ProjectName);
             authentication.Wait();

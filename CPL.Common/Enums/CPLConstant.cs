@@ -48,8 +48,12 @@ namespace CPL.Common.Enums
         //ETN duration in second
         public static int DurationInSecond = 1200;
 
+        //CPL service endpoint
+        public static string CPLServiceEndpoint = "CPLServiceEndPointUrl";
+        public static string BTCCurrentPriceServiceEndpoint = "ExchangeCurrentPrice/BTCCurrentPrice.svc";
+
         //FHCore service endpoint
-        public static string ServiceEndpoint = "ServiceEndPointUrl";
+        public static string FHCoreServiceEndpoint = "FHCoreServiceEndPointUrl";
         public static string AuthenticationServiceEndpoint = "Security/Authentication.svc";
         public static string EmailServiceEndpoint = "Message/Email.svc";
         public static string ETokenServiceEndpoint = "Token/EToken.svc";
@@ -70,7 +74,7 @@ namespace CPL.Common.Enums
 
         // High Chart
         public static int HourBeforeInChart = 12; // hour
-        public static int LowestRateBTCNumber = 1000; // milisecond
+        public static int LowestRateBTCInterval = 500;
 
         // GCapcha Key
         public static string GCaptchaKey = "GCaptchaKey";

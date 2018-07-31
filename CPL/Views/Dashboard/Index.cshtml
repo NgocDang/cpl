@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "_DashboardLayout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard");
 }
 @model DashboardViewModel
 
@@ -126,7 +127,7 @@
             <div class="row">
                 <div id="recent-transactions" class="col-12">
                     <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameHistory")</h6>
-                    <div class="card pull-up">
+                    <div class="card">
                         <div class="card-content">
                             <table id="dt-history" class="table responsive table-hover table-xl mb-0">
                                 <thead>

@@ -12,5 +12,6 @@ namespace CPL.PredictionGameService.Misc
         public static IContainer Container { get; set; }
         public static IUnitOfWorkAsync UnitOfWork { get; set; }
         public static IBTCPriceService BTCPriceService { get; set; }
+        public static ISettingService SettingService { get; set; }
     }
 }

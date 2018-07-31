@@ -1,6 +1,7 @@
 ﻿@model EditSecurityViewModel
 @{
     Layout = "_DashboardLayout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecurityEdit");
 }
 @section styles
     {
