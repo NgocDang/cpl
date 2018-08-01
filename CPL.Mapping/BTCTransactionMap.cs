@@ -17,8 +17,8 @@ namespace CPL.Mapping
             // Table & Column Mappings
             builder.ToTable("BTCTransaction");
             builder.Property(t => t.Id).HasColumnName("Id");
-            builder.Property(t => t.TxId).HasColumnName("TxId");
-            builder.Property(t => t.UpdateTime).HasColumnName("UpdateTime");
+            builder.Property(t => t.TxHashId).HasColumnName("TxHashId");
+            builder.Property(t => t.UpdatedTime).HasColumnName("UpdatedTime");
         }
     }
 }

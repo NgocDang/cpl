@@ -13,8 +13,8 @@ GO
 CREATE TABLE dbo.ETHTransaction
 	(
 	Id int NOT NULL IDENTITY (1, 1),
-	TxId nvarchar(100) NOT NULL,
-	UpdateTime datetime NULL
+	TxHashId nvarchar(100) NOT NULL,
+	UpdatedTime datetime NULL
 	)  ON [PRIMARY]
 GO
 ALTER TABLE dbo.ETHTransaction ADD CONSTRAINT
@@ -32,8 +32,8 @@ GO
 CREATE TABLE dbo.BTCTransaction
 	(
 	Id int NOT NULL IDENTITY (1, 1),
-	TxId nvarchar(100) NOT NULL,
-	UpdateTime datetime NULL
+	TxHashId nvarchar(100) NOT NULL,
+	UpdatedTime datetime NULL
 	)  ON [PRIMARY]
 GO		
 ALTER TABLE dbo.BTCTransaction ADD CONSTRAINT

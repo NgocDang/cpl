@@ -13,7 +13,7 @@ namespace CPL.WCF.Misc
         public const string OkText = "Success";
 
         public const int InvalidIxIdCode = OkCode + 1;
-        public const string InvalidIxIdText = "TxId is Invalid!";
+        public const string InvalidIxIdText = "TxHashId is Invalid!";
 
         public const int ExceptionCode = InvalidIxIdCode + 1;
         public const string ExceptionText = "";

@@ -19,11 +19,11 @@ namespace CPL.WCF.BitcoindNotify
         /// <summary>
         /// Inserts the tx identifier to BTC transaction.
         /// </summary>
-        /// <param name="txId">The tx identifier.</param>
+        /// <param name="txHashId">The tx identifier.</param>
         /// <returns></returns>
-        public BitcoindNotifyTransactionIdResult InsertTxIdToBTCTransaction(string txId)
+        public BitcoindNotifyTransactionIdResult InsertTxHashIdToBTCTransaction(string txHashId)
         {
-            if (txId != null)
+            if (txHashId != null)
             {
                 using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["CPLConnection"].ConnectionString))
                 {
@@ -31,7 +31,7 @@ namespace CPL.WCF.BitcoindNotify
                     {
                         SqlCommand command = new SqlCommand("dbo.usp_InsertTxIdToBTCTransaction", connection);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TxId", txId);
+                        command.Parameters.AddWithValue("@TxHashId", txHashId);
 
                         connection.Open();
                         command.ExecuteNonQuery();

@@ -14,6 +14,6 @@ namespace CPL.WCF.BitcoindNotify
     {
         [OperationContract]
         [WebGet]
-        BitcoindNotifyTransactionIdResult InsertTxIdToBTCTransaction(string txId);
+        BitcoindNotifyTransactionIdResult InsertTxHashIdToBTCTransaction(string txHashId);
     }
 }

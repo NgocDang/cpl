@@ -8,7 +8,7 @@ namespace CPL.Domain
     public class ETHTransaction : Entity
     {
         public int Id { get; set; }
-        public string TxId { get; set; }
-        public DateTime? UpdateTime { get; set; }
+        public string TxHashId { get; set; }
+        public DateTime? UpdatedTime { get; set; }
     }
 }
