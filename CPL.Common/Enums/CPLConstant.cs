@@ -90,5 +90,9 @@ namespace CPL.Common.Enums
         //public static int GasPriceMultiplicator = 1; // PROD
         public static int GasPriceMultiplicator = 3; // TEST
         public static string paramJson = "{\"1\":{\"uint32\":\"lotteryphase\"},\"2\":{\"address\":\"useraddress\"}, \"3\": {\"uint32[]\":\"[ticketindexlist]\"}}";
+
+
+        // Store procedure name
+        public static string InsertTxIdToBTCTransaction = "usp_InsertTxIdToBTCTransaction";
     }
 }

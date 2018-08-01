@@ -35,6 +35,8 @@ namespace CPL.Infrastructure
         public DbSet<LotteryPrize> LotteryPrize { get; set; }
         public DbSet<BTCPrice> BTCPrice { get; set; }
         public DbSet<News> News { get; set; }
+        public DbSet<BTCTransaction> BTCTransaction { get; set; }
+        public DbSet<ETHTransaction> ETHTransaction { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -63,6 +65,9 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new BTCPriceMap());
 
             modelBuilder.ApplyConfiguration(new NewsMap());
+
+            modelBuilder.ApplyConfiguration(new BTCTransactionMap());
+            modelBuilder.ApplyConfiguration(new ETHTransactionMap());
 
             base.OnModelCreating(modelBuilder);
         }
