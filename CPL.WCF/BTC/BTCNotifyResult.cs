@@ -5,10 +5,10 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 
-namespace CPL.WCF.BitcoindNotify
+namespace CPL.WCF.BTC
 {
     [DataContract]
-    public class BitcoindNotifyTransactionIdResult
+    public class BTCNotifyResult
     {
         [DataMember]
         public Status Status { get; set; }

@@ -61,16 +61,16 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BitcoindNotify\BitcoindNotifyTransactionId.svc" />
+    <Content Include="BTC\BTCNotify.svc" />
     <Content Include="ExchangeCurrentPrice\BTCCurrentPrice.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitcoindNotify\BitcoindNotifyResult.cs" />
-    <Compile Include="BitcoindNotify\BitcoindNotifyTransactionId.svc.cs">
-      <DependentUpon>BitcoindNotifyTransactionId.svc</DependentUpon>
+    <Compile Include="BTC\BTCNotify.svc.cs">
+      <DependentUpon>BTCNotify.svc</DependentUpon>
     </Compile>
-    <Compile Include="BitcoindNotify\IBitcoindNotifyTransactionId.cs" />
+    <Compile Include="BTC\BTCNotifyResult.cs" />
+    <Compile Include="BTC\IBTCNotify.cs" />
     <Compile Include="ExchangeCurrentPrice\BTCCurrentPrice.svc.cs">
       <DependentUpon>BTCCurrentPrice.svc</DependentUpon>
     </Compile>
