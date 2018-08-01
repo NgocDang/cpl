@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "_DashboardLayout";
+    Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCVerify");
 }
 @model KYCVerifyViewModel
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
 }
-<div class="app-content content">
+<div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-body">
             <div class="row">

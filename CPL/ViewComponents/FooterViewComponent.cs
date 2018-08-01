@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace CPL.ViewComponents
 {
-    public class DashboardFooterViewComponent : ViewComponent
+    public class FooterViewComponent : ViewComponent
     {
         private readonly ISysUserService _sysUserService;
 
-        public DashboardFooterViewComponent(ISysUserService sysUserService)
+        public FooterViewComponent(ISysUserService sysUserService)
         {
             _sysUserService = sysUserService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var viewModel = new DashboardFooterViewModel();
+            var viewModel = new FooterViewModel();
             return View(viewModel);
         }
     }

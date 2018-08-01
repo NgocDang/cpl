@@ -1,0 +1,6 @@
+﻿@model FooterViewModel
+<footer class="footer footer-transparent navbar-shadow">
+    <p class="clearfix darken-2 text-sm-center mb-0 px-2 container center-layout">
+        <span class="d-block d-md-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copyright") @DateTime.Now.Year <a asp-controller="Home" asp-action="Index" target="_blank">CPL</a>, @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllRightReserved")</span>
+    </p>
+</footer>
