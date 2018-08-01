@@ -1,110 +1,75 @@
 ﻿@model AccountRegistrationModel
 @{
-    Layout = null;
+    Layout = "_Layout";
 }
 
-<!DOCTYPE html>
-<html class="loading" lang="en" data-textdirection="ltr">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description" content="Crypto ICO admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities with bitcoin dashboard.">
-    <meta name="keywords" content="admin template, crypto ico admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard">
-    <meta name="author" content="PIXINVENT">
-    <title>
-        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")
-    </title>
-    <link href="~/css/dashboard/vendors.min.css" rel="stylesheet" />
-    <link href="~/css/dashboard/plugins/forms/icheck/icheck.css" rel="stylesheet" />
-    <link href="~/css/dashboard/plugins/forms/icheck/custom.css" rel="stylesheet" />
-    <link href="~/css/dashboard/app.min.css" rel="stylesheet" />
-    <link href="~/css/dashboard/vertical-compact-menu.min.css" rel="stylesheet" />
-    <link href="~/css/dashboard/plugins/cryptocoins/cryptocoins.css" rel="stylesheet" />
-    <link href="~/css/dashboard/plugins/toastr/build/toastr.css" rel="stylesheet" />
-    <link href="~/css/dashboard/style.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" crossorigin="anonymous">
-
-</head>
-
-<body class="vertical-layout vertical-compact-menu 1-column  bg-full-screen-image menu-expanded blank-page blank-page" data-open="click" data-menu="vertical-compact-menu" data-col="1-column">
-    <!-- ////////////////////////////////////////////////////////////////////////////-->
-    <div class="app-content content">
-        <div class="content-wrapper">
-            <div class="content-header row">
-            </div>
-            <div class="content-body">
-                <section id="account-login" class="flexbox-container">
-                    <div class="col-12 d-flex align-items-center justify-content-center">
-                        <!-- image -->
-                        <div class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-12 p-0 text-center d-none d-md-block">
-                            <div class="border-grey border-lighten-3 m-0 box-shadow-0 card-account-left height-500">
-                                <img src="~/images/logo_white_v2.png" class="card-account-img width-200" alt="card-account-img" style="margin-top: 25%">
-                            </div>
-                        </div>
-                        <!-- login form -->
-                        <div class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-12 p-0">
-                            <div class="card border-grey border-lighten-3 m-0 box-shadow-0 card-account-right height-500">
-                                <div class="card-content">
-                                    <div class="card-body">
-                                        <p class="text-center h5 text-capitalize txt-welcome">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Welcome")</p>
-                                        <form id="form-register" class="form-horizontal form-signin form needs-validation">
-                                            @*<p id="register-message" class="text-center text-light">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AccountInfoRequired")</p>*@
-                                            <fieldset class="form-label-group">
-                                                <input id="Email" class="form-control" name="Email" type="email" tabindex="1" autofocus required />
-                                                <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
-                                                <div id="email-msg" class="invalid-feedback">
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ExistingEmail")
-                                                </div>
-                                            </fieldset>
-                                            <fieldset class="form-label-group">
-                                                <input type="password" name="Password" id="Password" class="form-control" tabindex="2" required />
-                                                <label for="Password">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
-                                            </fieldset>
-                                            <fieldset class="form-label-group">
-                                                <input type="password" name="PasswordConfirm" id="PasswordConfirm" class="form-control" tabindex="3" required />
-                                                <label for="PasswordConfirm">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordConfirm")</label>
-                                                <div id="password-confirm-msg" class="invalid-feedback">
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MismatchPassword")
-                                                </div>
-                                            </fieldset>
-                                            <div class="form-group">
-                                                <label for="captcha" class="text-light d-block">
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Captcha")
-                                                </label>
-                                                <div class="box-captcha">
-                                                    <div class="g-recaptcha" data-sitekey="@Model.GCapchaKey"></div>
-                                                </div>
-                                            </div>
-                                            <div class="invalid-feedback" id="register-msg">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidEmailPassword")
-                                            </div>
-                                            <button type="submit" id="btn-register" class="btn btn-gradient-primary btn-block my-1"><i class="fas fa-user-plus"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</button>
-                                            <p class="text-center">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AlreadyHaveAccount") <a asp-controller="Authentication" asp-action="LogIn">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHere")</a> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToLogIn")
-                                            </p>
-                                        </form>
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+<div class="content-wrapper mt-2 mb-2">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+        <section id="account-login" class="flexbox-container">
+            <div class="col-12 d-flex align-items-center justify-content-center">
+                <!-- image -->
+                <div class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-12 p-0 text-center d-none d-md-block">
+                    <div class="border-grey border-lighten-3 m-0 box-shadow-0 card-account-left height-500">
+                        <img src="~/images/logo_white_v2.png" class="card-account-img width-200" alt="card-account-img" style="margin-top: 25%">
+                    </div>
+                </div>
+                <!-- login form -->
+                <div class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-12 p-0">
+                    <div class="card border-grey border-lighten-3 m-0 box-shadow-0 card-account-right height-500">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <p class="text-center h5 text-capitalize txt-welcome">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Welcome")</p>
+                                <form id="form-register" class="form-horizontal form-signin form needs-validation">
+                                    @*<p id="register-message" class="text-center text-light">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AccountInfoRequired")</p>*@
+                                    <fieldset class="form-label-group">
+                                        <input id="Email" class="form-control" name="Email" type="email" tabindex="1" autofocus required />
+                                        <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                                        <div id="email-msg" class="invalid-feedback">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ExistingEmail")
+                                        </div>
+                                    </fieldset>
+                                    <fieldset class="form-label-group">
+                                        <input type="password" name="Password" id="Password" class="form-control" tabindex="2" required />
+                                        <label for="Password">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
+                                    </fieldset>
+                                    <fieldset class="form-label-group">
+                                        <input type="password" name="PasswordConfirm" id="PasswordConfirm" class="form-control" tabindex="3" required />
+                                        <label for="PasswordConfirm">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordConfirm")</label>
+                                        <div id="password-confirm-msg" class="invalid-feedback">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MismatchPassword")
+                                        </div>
+                                    </fieldset>
+                                    <div class="form-group">
+                                        <label for="captcha" class="text-light d-block">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Captcha")
+                                        </label>
+                                        <div class="box-captcha">
+                                            <div class="g-recaptcha" data-sitekey="@Model.GCapchaKey"></div>
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="invalid-feedback" id="register-msg">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidEmailPassword")
+                                    </div>
+                                    <button type="submit" id="btn-register" class="btn btn-gradient-primary btn-block my-1"><i class="fas fa-user-plus"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</button>
+                                    <p class="text-center">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AlreadyHaveAccount") <a asp-controller="Authentication" asp-action="LogIn">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHere")</a> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToLogIn")
+                                    </p>
+                                </form>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
             </div>
-        </div>
-        <input type="hidden" name="captchaMessage" id="captchaMessage" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CaptchaMessage")" />
+            <input type="hidden" name="captchaMessage" id="captchaMessage" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CaptchaMessage")" />
+        </section>
     </div>
-    <!-- ////////////////////////////////////////////////////////////////////////////-->
+</div>
+<!-- ////////////////////////////////////////////////////////////////////////////-->
+@section scripts
+    {
     <script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
-    <script src="~/js/dashboard/vendors.min.js"></script>
-    <script src="~/js/dashboard/plugins/forms/icheck/icheck.min.js"></script>
-    <script src="~/js/dashboard/app-menu.min.js"></script>
-    <script src="~/js/dashboard/app-menu.min.js"></script>
-    <script src="~/js/dashboard/app.min.js"></script>
-    <script src="~/js/dashboard/demo.min.js"></script>
-    <script src="~/js/dashboard/form-login-register.min.js"></script>
     <script src="~/js/dashboard/cpl.register.js"></script>
-    <script src="~/js/dashboard/jquery.validate.min.js"></script>
-    <script src="~/css/dashboard/plugins/toastr/toastr.js"></script>
-</body>
-</html>
+}
