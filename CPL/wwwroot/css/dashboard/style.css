@@ -1429,3 +1429,7 @@ footer {
 .navbar-left {
     z-index: 1000;
 }
+
+#bg {
+    background-image: url('/images/backgrounds/bg_07.jpg');
+}
