@@ -173,7 +173,7 @@ namespace CPL.Controllers
                     }
                     string ticketList = string.Join(",", ticketIndexList.ToArray());
 
-                    var paramJson = CPLConstant.paramJson.Replace("lotteryphase", lotteryPhase.ToString()).Replace("useraddress", userAddress).Replace("ticketindexlist", ticketList);
+                    var paramJson = CPLConstant.randomParamInJson.Replace("lotteryphase", lotteryPhase.ToString()).Replace("useraddress", userAddress).Replace("ticketindexlist", ticketList);
 
                     var buyTime = DateTime.Now;
                     var ticketGenResult = ServiceClient.ETokenClient.CallTransactionAsync(Authentication.Token, CPLConstant.OwnerAddress, CPLConstant.OwnerPassword, "random", CPLConstant.GasPriceMultiplicator, CPLConstant.DurationInSecond, paramJson);
