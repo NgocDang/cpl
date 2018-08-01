@@ -1,0 +1,26 @@
+﻿#Year-error, #Month-error, #Day-error, #Country-error {
+    display: none !important;
+}
+
+#Mobile-error {
+    text-align: right;
+    color: #FF4961;
+    padding-top: -webkit-calc(var(--input-padding-y)/ 3);
+    padding-top: -moz-calc(var(--input-padding-y)/ 3);
+    padding-top: calc(var(--input-padding-y)/ 3);
+    padding-bottom: -webkit-calc(var(--input-padding-y)/ 3);
+    padding-bottom: -moz-calc(var(--input-padding-y)/ 3);
+    padding-bottom: calc(var(--input-padding-y)/ 3);
+    font-size: 11px;
+    position: absolute;
+    top: 0;
+    right: 10px;
+    display: block;
+    width: 100%;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    -webkit-transition: all .1s ease-in-out;
+    -o-transition: all .1s ease-in-out;
+    -moz-transition: all .1s ease-in-out;
+    transition: all .1s ease-in-out;
+}
