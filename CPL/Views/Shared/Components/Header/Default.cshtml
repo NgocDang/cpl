@@ -7,17 +7,17 @@
                 <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
                 <li class="nav-item mobile-menu d-md-none mr-auto">
                     <a class="navbar-brand" asp-controller="Home" asp-action="Index" >
-                        <img class="brand-logo" alt="modern admin logo" src="~/images/logo.png">
+                        <img class="brand-logo" alt="CPL" src="~/images/logo.png">
                     </a>
                 </li>
             </ul>
         </div>
         <div class="navbar-container container center-layout">
             <div class="collapse navbar-collapse" id="navbar-mobile">
-                <ul class="nav navbar-nav float-left" style="z-index:9999;">
+                <ul class="nav navbar-nav float-left navbar-left">
                     <li class="nav-item">
-                        <a class="navbar-brand-desktop text-center pull-up" href="index.html">
-                            <img class="brand-logo" alt="modern admin logo" src="~/images/logo.png">
+                        <a class="navbar-brand-desktop text-center pull-up" asp-controller="Home" asp-action="Index" >
+                            <img class="brand-logo" alt="CPL" src="~/images/logo.png">
                         </a>
                     </li>
                 </ul>
@@ -29,14 +29,13 @@
                         <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
                     </li>
                 </ul>
-                <ul class="nav navbar-nav float-right" style="padding-bottom: 2rem;">
+                <ul class="nav navbar-nav float-right navbar-right">
                     <li class="dropdown dropdown-language nav-item">
-                        <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false"><i class="flag-icon @Model.Lang.Image"></i><span class="font-small-3 selected-language">@Model.Lang.Name</span></a>
+                        <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flag-icon @Model.Lang.Image"></i><span class="font-small-3 selected-language">@Model.Lang.Name</span></a>
                         <div class="dropdown-menu" aria-labelledby="dropdown-flag">
                             @foreach (var lang in Model.Langs)
                             {
-                                <a class="dropdown-item" href="#"><i class="flag-icon @lang.Image"></i> @lang.Name</a>
+                                <a data-id="@lang.Id" class="dropdown-item lang-item" href="#"><i class="flag-icon @lang.Image"></i> @lang.Name</a>
                             }
                         </div>
                     </li>
@@ -85,7 +84,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" data-toggle="dropdown">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
+                                <a class="dropdown-item lang-item" id="logout-confirmation"><i class="la la-power-off"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
                             </li>
                         </ul>
                     </li>
