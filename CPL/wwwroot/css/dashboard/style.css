@@ -1411,7 +1411,7 @@ footer {
 }
 
 .game-menu {
-    z-index: 9999;
+    z-index: 1000;
     padding-bottom: 2.3rem;
 }
 
@@ -1421,4 +1421,11 @@ footer {
 
 .navbar-dark .navbar-nav .nav-link {
     color: #464855;
+}
+
+.navbar-right {
+    padding-bottom: 2rem;
+}
+.navbar-left {
+    z-index: 1000;
 }
