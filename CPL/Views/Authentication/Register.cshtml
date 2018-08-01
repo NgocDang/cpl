@@ -10,12 +10,6 @@
     <div class="content-body">
         <section id="account-login" class="flexbox-container">
             <div class="col-12 d-flex align-items-center justify-content-center">
-                <!-- image -->
-                <div class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-12 p-0 text-center d-none d-md-block">
-                    <div class="border-grey border-lighten-3 m-0 box-shadow-0 card-account-left height-500">
-                        <img src="~/images/logo_white_v2.png" class="card-account-img width-200" alt="card-account-img" style="margin-top: 25%">
-                    </div>
-                </div>
                 <!-- login form -->
                 <div class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-12 p-0">
                     <div class="card border-grey border-lighten-3 m-0 box-shadow-0 card-account-right height-500">
@@ -53,7 +47,7 @@
                                     <div class="invalid-feedback" id="register-msg">
                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidEmailPassword")
                                     </div>
-                                    <button type="submit" id="btn-register" class="btn btn-gradient-primary btn-block my-1"><i class="fas fa-user-plus"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</button>
+                                    <button type="submit" id="btn-register" class="btn btn-primary btn-block my-1"><i class="la la-user-plus"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</button>
                                     <p class="text-center">
                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AlreadyHaveAccount") <a asp-controller="Authentication" asp-action="LogIn">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHere")</a> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToLogIn")
                                     </p>
