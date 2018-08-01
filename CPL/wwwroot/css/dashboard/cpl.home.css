@@ -1,0 +1,28 @@
+﻿
+
+body {
+    background-image: url('../../images/backgrounds/bg_02.jpg');
+}
+
+img.img-border {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    width: 150px;
+    background-color: #fff;
+}
+
+#navbar-scroll-game-info {
+    background: #ffd300;
+}
+
+.owl-theme .owl-dots .owl-dot span {
+    width: 40px;
+    height: 5px;
+    border-radius: 0;
+}
+
+.owl-theme .owl-dots .owl-dot.active span,
+.owl-theme .owl-dots .owl-dot:hover span {
+    background: #ffd300;
+}

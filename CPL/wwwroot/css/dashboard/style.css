@@ -20,10 +20,6 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     padding-left: 3px;
 }
 
-.owl-dots {
-    display:none;
-}
-
 .form-label-group input:not(:placeholder-shown) ~ label.error {
     text-align: right;
     color: #FF4961;
