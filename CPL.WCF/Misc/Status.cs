@@ -12,10 +12,13 @@ namespace CPL.WCF.Misc
         public const int OkCode = 0;
         public const string OkText = "Success";
 
-        public const int InvalidIxIdCode = OkCode + 1;
-        public const string InvalidIxIdText = "TxHashId is Invalid!";
+        public const int UnAuthenticatedCode = OkCode + 1;
+        public const string UnAuthenticatedText = "Current IP - {0}. You are not authenticated to use this service.";
 
-        public const int ExceptionCode = InvalidIxIdCode + 1;
+        public const int InvalidIxHashIdCode = UnAuthenticatedCode + 1;
+        public const string InvalidIxHashIdText = "TxHashId is Invalid!";
+
+        public const int ExceptionCode = InvalidIxHashIdCode + 1;
         public const string ExceptionText = "";
 
         [DataMember]

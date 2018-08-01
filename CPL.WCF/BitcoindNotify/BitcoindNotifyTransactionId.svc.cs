@@ -23,31 +23,39 @@ namespace CPL.WCF.BitcoindNotify
         /// <returns></returns>
         public BitcoindNotifyTransactionIdResult InsertTxHashIdToBTCTransaction(string txHashId)
         {
-            if (txHashId != null)
+            var ipAddress = Utils.GetClientIpAddress();
+            if (!Utils.IsAuthenticated(ipAddress))
             {
-                using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["CPLConnection"].ConnectionString))
-                {
-                    try
-                    {
-                        SqlCommand command = new SqlCommand("dbo.usp_InsertTxIdToBTCTransaction", connection);
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TxHashId", txHashId);
-
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                        connection.Close();
-
-                        return new BitcoindNotifyTransactionIdResult { Status = new Status { Code = Status.OkCode, Text = Status.OkText } };
-                    }
-                    catch (Exception ex)
-                    {
-                        return new BitcoindNotifyTransactionIdResult { Status = new Status { Code = Status.ExceptionCode, Text = ex.Message } };
-                    }
-                }
+                return new BitcoindNotifyTransactionIdResult { Status = new Status { Code = Status.UnAuthenticatedCode, Text = string.Format(Status.UnAuthenticatedText, ipAddress) } };
             }
             else
             {
-                return new BitcoindNotifyTransactionIdResult { Status = new Status { Code = Status.InvalidIxIdCode, Text = Status.InvalidIxIdText } };
+                if (txHashId != null)
+                {
+                    using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["CPLConnection"].ConnectionString))
+                    {
+                        try
+                        {
+                            SqlCommand command = new SqlCommand("dbo.usp_InsertTxIdToBTCTransaction", connection);
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("@TxHashId", txHashId);
+
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                            connection.Close();
+
+                            return new BitcoindNotifyTransactionIdResult { Status = new Status { Code = Status.OkCode, Text = Status.OkText } };
+                        }
+                        catch (Exception ex)
+                        {
+                            return new BitcoindNotifyTransactionIdResult { Status = new Status { Code = Status.ExceptionCode, Text = ex.Message } };
+                        }
+                    }
+                }
+                else
+                {
+                    return new BitcoindNotifyTransactionIdResult { Status = new Status { Code = Status.InvalidIxHashIdCode, Text = Status.InvalidIxHashIdText } };
+                }
             }
         }
     }
