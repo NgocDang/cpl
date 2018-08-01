@@ -2,7 +2,7 @@
     init: function () {
         DashboardLayout.bindLogout();
         DashboardLayout.bindConfirmLogout();
-        DashboardLayout.bindWinButton();
+        //DashboardLayout.bindWinButton();
     },
     bindLogout: function () {
         $('.navbar-nav').on('click', '.logout-confirmation', function () {
