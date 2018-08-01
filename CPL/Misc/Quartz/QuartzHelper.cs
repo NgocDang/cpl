@@ -44,12 +44,11 @@ namespace CPL.Misc.Quartz
                 .Build();
 
             scheduler.ScheduleJob(job, trigger);
+            //var jobKey = new JobKey(jobName);
 
-            var jobKey = new JobKey(jobName);
-
-            var jobDetailResult = scheduler.GetJobDetail(jobKey);
-            jobDetailResult.Wait();
-            var jobDetail = jobDetailResult.Result;
+            //var jobDetailResult = scheduler.GetJobDetail(jobKey);
+            //jobDetailResult.Wait();
+            //var jobDetail = jobDetailResult.Result;
         }
 
         private static CronScheduleBuilder BuildCronSchedule(DateTime dateTime)
