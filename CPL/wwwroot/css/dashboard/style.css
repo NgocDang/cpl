@@ -1422,3 +1422,7 @@ footer {
 .navbar-dark .navbar-nav .nav-link {
     color: #464855;
 }
+
+.bg-cpl {
+    background: #ffd300;
+}
