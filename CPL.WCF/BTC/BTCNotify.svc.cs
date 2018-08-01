@@ -21,31 +21,39 @@ namespace CPL.WCF.BTC
         /// <returns></returns>
         public BTCNotifyResult Notify(string txHashId)
         {
-            if (!string.IsNullOrEmpty(txHashId))
+            var ipAddress = Utils.GetClientIpAddress();
+            if (!Utils.IsAuthenticated(ipAddress))
             {
-                using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["CPLConnection"].ConnectionString))
-                {
-                    try
-                    {
-                        SqlCommand command = new SqlCommand("dbo.usp_InsertTxHashIdToBTCTransaction", connection);
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@TxHashId", txHashId);
-
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                        connection.Close();
-
-                        return new BTCNotifyResult { Status = new Status { Code = Status.OkCode, Text = Status.OkText } };
-                    }
-                    catch (Exception ex)
-                    {
-                        return new BTCNotifyResult { Status = new Status { Code = Status.ExceptionCode, Text = ex.Message } };
-                    }
-                }
+                return new BTCNotifyResult { Status = new Status { Code = Status.UnAuthenticatedCode, Text = string.Format(Status.UnAuthenticatedText, ipAddress) } };
             }
             else
             {
-                return new BTCNotifyResult { Status = new Status { Code = Status.InvalidIxIdCode, Text = Status.InvalidIxIdText } };
+                if (!string.IsNullOrEmpty(txHashId))
+                {
+                    using (var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["CPLConnection"].ConnectionString))
+                    {
+                        try
+                        {
+                            SqlCommand command = new SqlCommand("dbo.usp_InsertTxHashIdToBTCTransaction", connection);
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("@TxHashId", txHashId);
+
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                            connection.Close();
+
+                            return new BTCNotifyResult { Status = new Status { Code = Status.OkCode, Text = Status.OkText } };
+                        }
+                        catch (Exception ex)
+                        {
+                            return new BTCNotifyResult { Status = new Status { Code = Status.ExceptionCode, Text = ex.Message } };
+                        }
+                    }
+                }
+                else
+                {
+                    return new BTCNotifyResult { Status = new Status { Code = Status.InvalidTxHashIdCode, Text = Status.InvalidTxHashIdText } };
+                }
             }
         }
     }
