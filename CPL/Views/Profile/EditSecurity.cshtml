@@ -1,6 +1,6 @@
 ﻿@model EditSecurityViewModel
 @{
-    Layout = "_DashboardLayout";
+    Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecurityEdit");
 }
 @section styles
@@ -14,7 +14,7 @@
         }
     </style>
 }
-<div class="app-content content">
+<div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">

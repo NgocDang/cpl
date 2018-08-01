@@ -192,7 +192,6 @@ namespace CPL.Controllers
 
         public IActionResult LogOut()
         {
-
             ClearSession();
             return RedirectToAction("Index", "Home");
         }
