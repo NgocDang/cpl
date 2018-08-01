@@ -69,11 +69,11 @@ namespace CPL
             services.AddMvc().AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSession();
 
-            services.AddSingleton<ILotteryDrawingFactory, LotteryDrawingFactory>()
-                    .AddSingleton<IPricePredictionUpdateResultFactory, PricePredictionUpdateResultFactory>();
+            services.AddSingleton<ILotteryDrawingFactory, LotteryDrawingFactory>();
+                    //.AddSingleton<IPricePredictionUpdateResultFactory, PricePredictionUpdateResultFactory>();
 
             services.UseQuartz<ILotteryDrawingFactory>(typeof(LotteryDrawingJob));
-            services.UseQuartz<IPricePredictionUpdateResultFactory>(typeof(PricePredictionUpdateResultJob));
+            //services.UseQuartz<IPricePredictionUpdateResultFactory>(typeof(PricePredictionUpdateResultJob));
 
             services
                 .AddTransient<ILangService, LangService>()
@@ -181,9 +181,8 @@ namespace CPL
 
         private void LoadQuartz(IServiceProvider serviceProvider)
         {
-            var scheduler = serviceProvider.GetScheduler<IScheduler, ILotteryDrawingFactory>();
-
             // Drawing lottery job
+            var scheduler = serviceProvider.GetScheduler<IScheduler, ILotteryDrawingFactory>();
             var rawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameDrawingInHourOfDay).Value);
             QuartzHelper.StartJob<LotteryDrawingJob>(scheduler, rawingTime);
         }

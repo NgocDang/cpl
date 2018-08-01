@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "_DashboardLayout";
+    Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction");
 }
 
@@ -24,7 +24,7 @@
         }
     </style>
 }
-<div class="app-content content">
+<div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-body">
             <div class="row">
