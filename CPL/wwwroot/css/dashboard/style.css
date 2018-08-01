@@ -1372,7 +1372,7 @@ footer {
 }
 
 .navbar-lottery-desktop.active {
-    background-color: #ffd300;
+    background-color: #ffd300 !important;
     color: black;
 }
 
@@ -1411,8 +1411,11 @@ footer {
 }
 
 .game-menu {
-    z-index: 1000;
     padding-bottom: 2.3rem;
+}
+
+ul.game-menu li.active {
+    z-index: 1000;
 }
 
 .main-menu.menu-light .navigation > li.active > a, .main-menu.menu-light .navigation > li.hover > a, .main-menu.menu-light .navigation > li:hover > a {

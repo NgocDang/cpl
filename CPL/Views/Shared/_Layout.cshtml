@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="~/css/dashboard/style.css" asp-append-version="true">
     @RenderSection("styles", required: false)
 </head>
-<body class="horizontal-layout horizontal-menu horizontal-menu-padding 2-columns menu-expanded" data-open="click" data-menu="horizontal-menu" data-col="2-columns" id="bg">
+<body class="horizontal-layout horizontal-menu horizontal-menu-padding 2-columns menu-expanded" data-open="click" data-menu="horizontal-menu" data-col="2-columns">
     @await Component.InvokeAsync("Header")
     @RenderBody()
     @await Component.InvokeAsync("Footer")
