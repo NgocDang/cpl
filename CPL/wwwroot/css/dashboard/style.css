@@ -1316,6 +1316,10 @@ select.bs-select-hidden, select.selectpicker {
 
 footer {
     background: #ffd300;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 
 .header-navbar .navbar-header .navbar-brand .brand-logo {
