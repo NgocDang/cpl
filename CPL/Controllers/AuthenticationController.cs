@@ -103,8 +103,7 @@ namespace CPL.Controllers
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidPIN") });
         }
-
-
+        
         public ActionResult Register(int? id, string token)
         {
             ClearSession();
@@ -231,6 +230,48 @@ namespace CPL.Controllers
             HttpContext.Session.SetInt32("LangId", langId);
         }
 
+        [HttpPost]
+        public ActionResult ForgotPassword(AccountForgotPasswordModel viewModel)
+        {
+            // Ensure we have a valid viewModel to work with
+            if (ModelState.IsValid)
+            {
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email && x.IsDeleted == false);
+                if (user == null)
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+
+                user.ResetPasswordDate = DateTime.Now;
+                user.ResetPasswordToken = Guid.NewGuid().ToString();
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+                var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.ForgotPassword.ToString());
+
+                var forgotPasswordViewModel = Mapper.Map<ForgotPasswordEmailTemplateViewModel>(user);
+                forgotPasswordViewModel.ResetPasswordUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("ResetPassword", "Authentication", new { token = forgotPasswordViewModel.ResetPasswordToken, id = forgotPasswordViewModel.Id })}";
+                forgotPasswordViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+
+                // Populate language
+                forgotPasswordViewModel.ResetYourPasswordText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ResetYourPassword");
+                forgotPasswordViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+                forgotPasswordViewModel.ResetPasswordRequestText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ResetPasswordRequest");
+                forgotPasswordViewModel.ButtonClickBelowText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ButtonClickBelow");
+                forgotPasswordViewModel.NotWorkUrlText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotWorkUrl");
+                forgotPasswordViewModel.NotYourRequestText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotYourRequest");
+                forgotPasswordViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+                forgotPasswordViewModel.ConnectWithUsText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ConnectWithUs");
+                forgotPasswordViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+                forgotPasswordViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+                forgotPasswordViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+                forgotPasswordViewModel.ExpiredEmail24hText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExpiredEmail24h");
+
+                template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_ForgotPasswordEmailTemplate.cshtml", forgotPasswordViewModel).Result;
+                EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ResetPasswordEmailSent") });
+            }
+
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
+
         public ActionResult ForgotPassword()
         {
             // We do not want to use any existing identity information
@@ -246,6 +287,34 @@ namespace CPL.Controllers
             else
                 viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult ResetPassword(AccountResetPasswordModel viewModel)
+        {
+            // Ensure we have a valid viewModel to work with
+            if (ModelState.IsValid)
+            {
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == viewModel.Id);
+                if (user == null)
+                {
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+                }
+                else if (user.ResetPasswordToken != viewModel.Token)
+                {
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidToken") });
+                }
+                else
+                {
+                    user.ResetPasswordDate = null;
+                    user.ResetPasswordToken = null;
+                    user.Password = viewModel.Password.ToBCrypt();
+                    _sysUserService.Update(user);
+                    _unitOfWork.SaveChanges();
+                    return new JsonResult(new { success = true, message = $"{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PasswordResetSuccessfully")} {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Click")} <a href='{$"{ HttpContext.Request.Scheme }://{HttpContext.Request.Host}{Url.Action("LogIn", "Authentication")}"}'>{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Here")}</a> {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ToLogIn")}" });
+                }
+            }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
 
         public ActionResult ResetPassword(int id, string token)
