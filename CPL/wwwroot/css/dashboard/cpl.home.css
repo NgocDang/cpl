@@ -34,16 +34,20 @@ img.img-border {
     background: #ffd300;
 }
 
-#slider-banner .owl-theme .owl-dots .owl-dot span {
-    width: 40px;
-    height: 3px;
-    border-radius: 0;
+#slider-banner .owl-theme .owl-dots .owl-dot {
+    outline: none;
 }
 
-#slider-banner .owl-theme .owl-dots .owl-dot.active span,
-#slider-banner .owl-theme .owl-dots .owl-dot:hover span {
-    background: #ffd300;
-}
+    #slider-banner .owl-theme .owl-dots .owl-dot span {
+        width: 40px;
+        height: 3px;
+        border-radius: 0;
+    }
+
+    #slider-banner .owl-theme .owl-dots .owl-dot.active span,
+    #slider-banner .owl-theme .owl-dots .owl-dot:hover span {
+        background: #ffd300;
+    }
 
 .card-game {
     border: 1px solid thin;
@@ -85,6 +89,7 @@ img.img-border {
     left: 0px;
     border: hidden;
     margin: 2px;
+    outline: none;
 }
 
     #slider-game .owl-nav .owl-prev span {
@@ -106,6 +111,7 @@ img.img-border {
     right: 0px;
     border: hidden;
     margin: 2px;
+    outline: none;
 }
 
     #slider-game .owl-nav .owl-next span {
