@@ -230,5 +230,22 @@ namespace CPL.Controllers
             // Reset language setting
             HttpContext.Session.SetInt32("LangId", langId);
         }
+
+        public ActionResult ForgotPassword()
+        {
+            // We do not want to use any existing identity information
+            ClearSession();
+
+            var viewModel = new AccountForgotPasswordModel();
+            viewModel.Langs = _langService.Queryable()
+                .Select(x => Mapper.Map<LangViewModel>(x))
+                .ToList();
+
+            if (HttpContext.Session.GetInt32("LangId").HasValue)
+                viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
+            else
+                viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
+            return View(viewModel);
+        }
     }
 }
