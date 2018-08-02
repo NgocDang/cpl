@@ -45,7 +45,7 @@
                                                     <h1>@Model.Lotteries[0].LotteryHistories.Count() / @Model.Lotteries[0].Volume <span class="card-description text-muted"></span></h1>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row mt-8px">
                                                 <div class="progress progress-custom">
                                                     <div class="progress-bar bg-cpl" id="process-lottery" style="width:@Model.PrecentOfPerchasedTickets%"></div>
                                                 </div>
@@ -61,20 +61,17 @@
                                     <div class="card-body text-center p-5">
                                         <form id="form-purchase-lottery">
                                             <div class="form-group row text-white">
-                                                <div class="col-12 font-large-1 font-weight-bold mb-3">
-                                                    BUY LOTTERY !
-                                                </div>
-                                                <div class="col-12 mb-10px font-medium-3">
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SelectNumberTicket")
+                                                <div class="col-12 font-large-2 font-weight-bold mb-5">
+                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BuyLottery")
                                                 </div>
                                                 <div class="col-12 mb">
                                                     <fieldset class="form-label-group my-1">
                                                         <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" aria-describedby="basic-addon4">
-                                                        <label for="number-of-ticket"></label>
+                                                        <label for="number-of-ticket">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SelectNumberTicket")</label>
                                                     </fieldset>
                                                 </div>
                                                 <div class="col-12 mb">
-                                                    <button type="button" class="btn btn-gradient-primary my-1 w-100" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                                                    <button type="button" class="btn btn-primary btn-block my-1 w-100" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
                                                 </div>
                                             </div>
                                         </form>
