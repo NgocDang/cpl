@@ -89,6 +89,9 @@ namespace CPL.Controllers
                 }
 
             }
+
+            viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.Lotteries[0].LotteryHistories.Count() / (decimal)viewModel.Lotteries[0].Volume * 100).ToString();
+
             return View(viewModel);
         }
 

@@ -9,180 +9,106 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
-    <style>
-        .bg-custom {
-            line-height: 25px !important;
-            padding-top: 25px !important;
-            height: 100px !important;
-            width: 100px !important;
-            margin-top: 0px !important;
-            margin-left: 0px !important;
-            margin-bottom: 0px !important;
-            border-bottom-right-radius: 0px !important;
-            border-top-right-radius: 0px !important;
-        }
-
-        .card-header-custom {
-            text-align: right !important;
-        }
-
-        .card-body-custom {
-            text-align: right !important;
-        }
-
-        .progress-custom {
-            height: 3px;
-            width: 65%;
-            margin-top: 15px;
-            margin-left: 15px;
-        }
-
-        .card-description {
-            font-size: 15px;
-            font-weight: 300;
-        }
-
-        .small-font {
-            font-size: 12px;
-        }
-
-        @@media (min-width: 320px) and (max-width: 374px) {
-            .progress-custom {
-                width: 50%;
-            }
-        }
-
-        @@media (min-width: 768px) and (max-width: 1023px) {
-            .progress-custom {
-                width: 50%;
-            }
-        }
-
-        @@media (min-width: 768px) and (max-width: 1023px) {
-            .col-probability {
-                max-width: 100%;
-                flex: 100%;
-            }
-        }
-
-        @@media (min-width: 1024px) and (max-width: 1439px) {
-            .col-probability {
-                max-width: 100%;
-                flex: 100%;
-            }
-        }
-
-        @@media (min-width: 1440px) and (max-width: 1640px) {
-            .progress-custom {
-                width: 50%;
-            }
-        }
-    </style>
+    <link href="~/css/dashboard/lottery-style.css" rel="stylesheet" />
 }
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-body">
             @Html.HiddenFor(x => x.SysUserId)
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-12">
+                    <div class="card p-1">
+                        <img src="~/images/lottery/slide_lottery.jpg" class="img-fluid" alt="Lottery banner">
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("TokenBalance")
+            <div class="row mb-1">
+                <div class="col-lg-6 col-12">
                     <div class="card">
-                        <div class="card-body w-100 p-0">
-                            <img src="~/images/lottery_banner.jpg" class="img-fluid" alt="Lottery banner">
-                        </div>
+                        <img class="img-fluid" src="~/images/lottery/NEW-HP-01_78.png" />
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                @if (Model.Lotteries != null && Model.Lotteries.Count > 0)
-                {
-                    <div class="col-md-7 col-12">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card card-sm-3">
-                                    <div class="card-wrap">
-                                        <div class="card-header">
-                                            <h1>@Model.Lotteries[0].LotteryHistories.Count() / @Model.Lotteries[0].Volume <span class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketCollected")</span></h1>
-                                        </div>
-                                        <div class="card-body">
-                                            <p class="card-description text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryPuchaseNumberSelection")</p>
-                                            <form id="form-purchase-lottery">
-                                                <div class="form-group row">
-                                                    <div class="col-md-12 col-sm-12 col-lg-6">
-                                                        <fieldset class="form-label-group my-1">
-                                                            <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" aria-describedby="basic-addon4">
-
-                                                            <label for="LastName">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets")</label>
-                                                        </fieldset>
-                                                    </div>
-                                                    <div class="col-md-12 col-sm-12 col-lg-6">
-                                                        <button type="button" class="btn btn-gradient-primary my-1" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h4 class="text-muted mb-2 mt-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProbabilityOfWinning")</h4>
-                        <div class="row">
-                            @foreach (var loterryPrize in Model.Lotteries[0].LotteryPrizes)
-                            {
-                                <div class="col-sm-12 col-md-12 col-lg-6">
-                                    <div class="card card-sm-3">
-                                        <div class="card-icon bg-custom @loterryPrize.Color"><span class="font-weight-bold">@loterryPrize.Name</span><br /><span class="small-font">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")</span></div>
-                                        <div class="card-wrap">
-                                            <div class="card-header card-header-custom">
-                                                <h4>@loterryPrize.Volume/@Model.Lotteries[0].Volume</h4>
-                                            </div>
-                                            <div class="card-body card-body-custom">@loterryPrize.Probability %</div>
-                                            <div class="progress progress-custom">
-                                                <div class="progress-bar bg-warning" style="width:40%"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                        <p class="text-muted mb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PercentagesInParentheses")</p>
-                    </div>
-                }
-
-                <div class="col-md-5 col-12">
-                    <div class="card p-0 mb-1">
-                        <img src="~/images/lottery_prize.jpg" alt="Lottery prize" class="card-img-top img-fluid">
-                    </div>
-                    <p class="text-muted">@Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NotePrize"))</p>
-                </div>
-            </div>
-            <div class="row">
-                @if (Model.SysUserId.HasValue)
-                {
-                    <div id="recent-transactions" class="col-12">
-                        <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
-                        <div class="card">
+                <div class="col-lg-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
                             <div class="card-content">
-                                <table id="dt-lottery-history" class="table responsive table-hover table-xl mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTicketNumber")</th>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
-                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UpdatedDate")</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+                                <div class="card-body">
+                                    <div class="col-12">
+                                        <div class="row font-weight-bold">
+                                            <div class="col-6">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchasedTickets")
+                                            </div>
+                                            <div class="col-6 text-right">
+                                                <h1>@Model.Lotteries[0].LotteryHistories.Count() / @Model.Lotteries[0].Volume <span class="card-description text-muted"></span></h1>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="progress progress-custom">
+                                                <div class="progress-bar bg-cpl" id="process-lottery" style="width:@Model.PrecentOfPerchasedTickets%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                }
+                    <div class="card" id="buy-lottery-bg">
+                        <div class="card-content">
+                            <div class="card-content">
+                                <div class="card-body text-center p-5">
+                                    <form id="form-purchase-lottery">
+                                        <div class="form-group row text-white">
+                                            <div class="col-12 font-large-1 font-weight-bold mb-3">
+                                                BUY LOTTERY !
+                                            </div>
+                                            <div class="col-12 mb-10px font-medium-3">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SelectNumberTicket")
+                                            </div>
+                                            <div class="col-12 mb">
+                                                <fieldset class="form-label-group my-1">
+                                                    <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" aria-describedby="basic-addon4">
+                                                    <label for="number-of-ticket"></label>
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-12 mb">
+                                                <button type="button" class="btn btn-gradient-primary my-1 w-100" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="row">
+            @if (Model.SysUserId.HasValue)
+            {
+                <div id="recent-transactions" class="col-12">
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
+                    <div class="card">
+                        <div class="card-content">
+                            <table id="dt-lottery-history" class="table responsive table-hover table-xl mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTicketNumber")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UpdatedDate")</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>
-
 @section scripts
     {
     <script src="~/js/dashboard/cpl.lottery.js"></script>
