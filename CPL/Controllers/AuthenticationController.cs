@@ -145,12 +145,65 @@ namespace CPL.Controllers
                     CreatedDate = DateTime.Now,
                     IsAdmin = false,
                     ActivateToken = isAccountActivationEnable ? Guid.NewGuid().ToString() : null,
-                    BTCHDWalletAddress = "1P8qwzdXgXBTyZPPXxsZPxTDmuimtTGj4d",
-                    BTCAmount = 10,
-                    ETHHDWalletAddress = "0xEbf7aEa65944A953C27643160797a90176e6f03f",
-                    ETHAmount = 100,
-                    TokenAmount = 10000000
+                    BTCAmount = 0,
+                    ETHAmount = 0,
+                    TokenAmount = 0
                 };
+
+                try
+                {
+                    var requestCount = 0;
+                    var isETHHDWalletAddressGenerated = false;
+                    var isBTCHDWalletAddressGenerated = false;
+                    while (requestCount < CPLConstant.RequestCountLimit)
+                    {
+                        // Populate ETH HD Wallet Address
+                        if (!isETHHDWalletAddressGenerated)
+                        {
+                            var eWallet = new EWalletService.EWalletClient().GetAccountAsync(Authentication.Token, ETNConstant.ETHMnemonic, latestAddressIndex + 1);
+                            eWallet.Wait();
+
+                            if (eWallet.Result.Status.Code == 0) //OK
+                            {
+                                user.ETHHDWalletAddress = eWallet.Result.Address;
+                                user.ETHHDWalletAddressIndex = latestAddressIndex + 1;
+                                isETHHDWalletAddressGenerated = true;
+                            }
+                        }
+
+
+                        // Populate BTC HD Wallet Address
+                        if (!isBTCHDWalletAddressGenerated)
+                        {
+                            var bWallet = new BWalletService.BWalletClient().GetAccountAsync(Authentication.Token, ETNConstant.BTCMnemonic, latestAddressIndex + 1);
+                            bWallet.Wait();
+
+                            if (bWallet.Result.Status.Code == 0) //OK
+                            {
+                                user.BTCHDWalletAddress = bWallet.Result.Address;
+                                user.BTCHDWalletAddressIndex = latestAddressIndex + 1;
+                                isBTCHDWalletAddressGenerated = true;
+                            }
+                        }
+
+
+                        if (isETHHDWalletAddressGenerated && isBTCHDWalletAddressGenerated)
+                            break;
+                        else
+                        {
+                            requestCount++;
+                            Thread.Sleep(ETNConstant.RequestCountIntervalInMiliseconds);
+                        }
+                    }
+
+                    if (requestCount == ETNConstant.RequestCountLimit)
+                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+                }
+                catch (Exception ex)
+                {
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+                }
+
 
                 _sysUserService.Insert(user);
                 _unitOfWork.SaveChanges();
