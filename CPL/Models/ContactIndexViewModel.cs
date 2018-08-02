@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class ContactViewModel
+    public class ContactIndexViewModel
     {
         public string Name { get; set; }
         public string Email { get; set; }
         public string Message { get; set; }
         public int Category { get; set; }
+
+        public SysUserViewModel SysUser { get; set; }
     }
 }

@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 
 namespace CPL.Misc.Enums
 {
-    public enum EnumLang
+    public enum EnumSupportCategory
     {
-        ENGLISH = 1,
-        JAPANESE = 2
+        DEPOSIT = 3,
+        WITHDRAW = 4,
+        KYC = 5,
+        LOTTERY = 6
     }
 }
