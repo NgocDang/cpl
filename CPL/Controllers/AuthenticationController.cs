@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CPL.Common.Enums;
@@ -137,6 +138,7 @@ namespace CPL.Controllers
                 }
 
                 var isAccountActivationEnable = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value);
+                var latestAddressIndex = _sysUserService.Queryable().LastOrDefault().ETHHDWalletAddressIndex;
                 // Try to create a user with the given identity
                 var user = new SysUser
                 {
@@ -160,7 +162,7 @@ namespace CPL.Controllers
                         // Populate ETH HD Wallet Address
                         if (!isETHHDWalletAddressGenerated)
                         {
-                            var eWallet = new EWalletService.EWalletClient().GetAccountAsync(Authentication.Token, ETNConstant.ETHMnemonic, latestAddressIndex + 1);
+                            var eWallet = new EWalletService.EWalletClient().GetAccountAsync(Authentication.Token, CPLConstant.ETHMnemonic, latestAddressIndex + 1);
                             eWallet.Wait();
 
                             if (eWallet.Result.Status.Code == 0) //OK
@@ -175,7 +177,7 @@ namespace CPL.Controllers
                         // Populate BTC HD Wallet Address
                         if (!isBTCHDWalletAddressGenerated)
                         {
-                            var bWallet = new BWalletService.BWalletClient().GetAccountAsync(Authentication.Token, ETNConstant.BTCMnemonic, latestAddressIndex + 1);
+                            var bWallet = new BWalletService.BWalletClient().GetAccountAsync(Authentication.Token, CPLConstant.BTCMnemonic, latestAddressIndex + 1);
                             bWallet.Wait();
 
                             if (bWallet.Result.Status.Code == 0) //OK
@@ -192,11 +194,11 @@ namespace CPL.Controllers
                         else
                         {
                             requestCount++;
-                            Thread.Sleep(ETNConstant.RequestCountIntervalInMiliseconds);
+                            Thread.Sleep(CPLConstant.RequestCountIntervalInMiliseconds);
                         }
                     }
 
-                    if (requestCount == ETNConstant.RequestCountLimit)
+                    if (requestCount == CPLConstant.RequestCountLimit)
                         return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
                 }
                 catch (Exception ex)
