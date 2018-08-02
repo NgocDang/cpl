@@ -1,10 +1,14 @@
 ﻿var ForgotPassword = {
     init: function () {
+        ForgotPassword.bindForgotPasswordForm();
+    },
+    bindForgotPasswordForm: function () {
+        $("#form-forgot-password").validate();
         $("#btn-forgot-password").on("click", function () {
-            var isFormValid = $("#form-forgot-password")[0].checkValidity();
+            var isFormValid = $("#form-forgot-password").valid();
             $("#form-forgot-password").addClass('was-validated');
 
-            if ($("#form-forgot-password")[0].checkValidity()) {
+            if (isFormValid) {
                 $(".forgot-password-error").hide();
                 $.ajax({
                     url: "/Authentication/ForgotPassword/",

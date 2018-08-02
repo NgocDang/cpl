@@ -247,5 +247,88 @@ namespace CPL.Controllers
                 viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
             return View(viewModel);
         }
+
+        public ActionResult ResetPassword(int id, string token)
+        {
+            var viewmodel = new AccountResetPasswordModel();
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
+
+            if (!HttpContext.Session.GetInt32("LangId").HasValue)
+                HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
+
+            if (user == null)
+            {
+                viewmodel.Status = EnumAccountStatus.REQUESTNOTEXIST;
+                viewmodel.Message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount");
+                viewmodel.Langs = _langService.Queryable()
+                    .Select(x => Mapper.Map<LangViewModel>(x))
+                    .ToList();
+
+                if (HttpContext.Session.GetInt32("LangId").HasValue)
+                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
+                else
+                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
+                return View(viewmodel);
+            }
+            else if (user.ResetPasswordDate == null)
+            {
+                viewmodel.Status = EnumAccountStatus.REQUESTNOTEXIST;
+                viewmodel.Message = $"Request does not exist. Please try again.";
+                viewmodel.Langs = _langService.Queryable()
+                    .Select(x => Mapper.Map<LangViewModel>(x))
+                    .ToList();
+
+                if (HttpContext.Session.GetInt32("LangId").HasValue)
+                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
+                else
+                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
+                return View(viewmodel);
+            }
+            else if (user.ResetPasswordDate.Value.AddDays(int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.ResetPasswordExpiredInDays).Value)) > DateTime.Now)
+            {
+                if (user.ResetPasswordToken == token)
+                {
+                    viewmodel.Id = id;
+                    viewmodel.Token = token;
+                    viewmodel.Langs = _langService.Queryable()
+                        .Select(x => Mapper.Map<LangViewModel>(x))
+                        .ToList();
+
+                    if (HttpContext.Session.GetInt32("LangId").HasValue)
+                        viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
+                    else
+                        viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
+                    return View(viewmodel);
+                }
+                else
+                {
+                    viewmodel.Status = EnumAccountStatus.INVALIDTOKEN;
+                    viewmodel.Message = $"Invalid token. Please try again.";
+                    viewmodel.Langs = _langService.Queryable()
+                        .Select(x => Mapper.Map<LangViewModel>(x))
+                        .ToList();
+
+                    if (HttpContext.Session.GetInt32("LangId").HasValue)
+                        viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
+                    else
+                        viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
+                    return View(viewmodel);
+                }
+            }
+            else
+            {
+                viewmodel.Status = EnumAccountStatus.EXPIRED;
+                viewmodel.Message = $"{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExpiredResetPasswordToken")} {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Click")} <a href='{$"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("ForgotPassword", "Authentication")}"}'>{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Here")}</a> {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ToAskResetPassword")}";
+                viewmodel.Langs = _langService.Queryable()
+                    .Select(x => Mapper.Map<LangViewModel>(x))
+                    .ToList();
+
+                if (HttpContext.Session.GetInt32("LangId").HasValue)
+                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
+                else
+                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
+                return View(viewmodel);
+            }
+        }
     }
 }
