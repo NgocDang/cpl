@@ -31,7 +31,7 @@
                             <img class="img-fluid" src="~/images/lottery/NEW-HP-01_78.png" />
                         </div>
                     </div>
-                    <div class="col-lg-6 col-12" id="div-buy-lottery" hidden>
+                    <div class="col-lg-6 col-12" id="div-buy-lottery">
                         <div class="card">
                             <div class="card-content">
                                 <div class="card-content">
@@ -80,7 +80,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-12" id="div-confirm-lottery">
+                    <div class="col-lg-6 col-12 none" id="div-confirm-lottery">
                         <form id="form-purchase-lottery-ticket" method="POST" action="#" class="needs-validation" novalidate="">
 
                             <div class="card pl-2 pr-2 pt-2 pb-5">
@@ -92,11 +92,11 @@
                                         <div class="card-body mt-1">
                                             <div class="row mb-1">
                                                 <div class="col-6 text-left">Ticket price:</div>
-                                                <div class="col-6 text-right">500 CPL</div>
+                                                <div class="col-6 text-right" id="ticket-price">500 CPL</div>
                                             </div>
                                             <div class="row mb-2">
                                                 <div class="col-6 text-left">Total of tickets:</div>
-                                                <div class="col-6 text-right">1</div>
+                                                <div class="col-6 text-right" id="total-of-tiket">1</div>
                                             </div>
                                         </div>
                                     </div>
@@ -104,14 +104,14 @@
                                 <div class="card-footer font-weight-bold font-medium-4">
                                     <div class="row mt-1 text-danger">
                                         <div class="col-6 text-left">Total price:</div>
-                                        <div class="col-6 text-right">500 CPL</div>
+                                        <div class="col-6 text-right" id="total-price">500 CPL</div>
                                     </div>
                                 </div>
 
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <button type="button" id="btn-confirm-purchase-lottery-ticket" class="btn btn-primary btn-block font-large-1">Back</button>
+                                    <button type="button" id="btn-cancel-purchase-lottery-ticket" class="btn btn-primary btn-block font-large-1">Back</button>
                                 </div>
                                 <div class="col-6">
                                     <button type="button" id="btn-confirm-purchase-lottery-ticket" class="btn btn-primary btn-block font-large-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</button>

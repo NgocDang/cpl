@@ -3,6 +3,7 @@
     init: function () {
         Lottery.bindPurchaseTicket();
         Lottery.bindConfirmPurchaseTicket();
+        Lottery.bindCancelPurchaseTicket();
         Lottery.historyDatatable = Lottery.loadLotteryHistoryTable();
     },
     bindPurchaseTicket: function () {
@@ -22,8 +23,11 @@
                     },
                     success: function (data) {
                         if (data.url == null) {
-                            $("#modal").html(data);
-                            $("#purchase-lottery-ticket").modal("show");
+                            $("#div-buy-lottery").hide();
+                            $("#ticket-price").html(data.ticketPrice + " CPL");
+                            $("#total-of-tiket").html(data.totalTickets);
+                            $("#total-price").html(data.totalPriceOfTickets + " CPL");
+                            $("#div-confirm-lottery").show();
                         }
                         else {
                             window.location.replace(data.url);
@@ -36,6 +40,12 @@
                 });
             }
         })
+    },
+    bindCancelPurchaseTicket: function () {
+        $('#btn-cancel-purchase-lottery-ticket').click(function () {
+            $("#div-buy-lottery").show();
+            $("#div-confirm-lottery").hide();
+        });
     },
     bindConfirmPurchaseTicket: function () {
         $('#modal').on('click', '#btn-confirm-purchase-lottery-ticket', function () {

@@ -129,7 +129,7 @@ namespace CPL.Controllers
             viewModel.TotalTickets = amount;
             viewModel.TotalPriceOfTickets = viewModel.TotalTickets * viewModel.TicketPrice;
 
-            return PartialView("_PurchaseTicketConfirm", viewModel);
+            return new JsonResult(viewModel);
         }
 
         [HttpPost]
