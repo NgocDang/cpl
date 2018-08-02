@@ -19,6 +19,17 @@ namespace CPL.Common.Enums
         public static string AppName = "CPL";
         public static string TwoFactorAuthenticationSecretKey = "CPLFamHopper";
 
+        //SMTP
+        public struct SMTP
+        {
+            public static string Host = "smtp.gmail.com";
+            public static int Port = 587;
+            public static bool IsSSLEnable = true;
+            public static string Email = "info.cplcoin@gmail.com";
+            public static string From = "info.cplcoin@gmail.com";
+            public static string Password = "aG31@ie20P!";
+        }
+
         //Notification
         public static string AdminEmail = "info.cplcoin@gmail.com";
 
