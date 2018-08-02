@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
-    <link href="~/css/dashboard/lottery-style.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/css/dashboard/cpl.lottery.css" rel="stylesheet" asp-append-version="true"/>
 }
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
@@ -22,66 +22,69 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("TokenBalance")
-            <div class="row mb-1">
-                <div class="col-lg-6 col-12">
-                    <div class="card">
-                        <img class="img-fluid" src="~/images/lottery/NEW-HP-01_78.png" />
+            @if (Model.Lotteries != null && Model.Lotteries.Count > 0)
+            {
+                @await Component.InvokeAsync("TokenBalance")
+                <div class="row mb-1">
+                    <div class="col-lg-6 col-12">
+                        <div class="card">
+                            <img class="img-fluid" src="~/images/lottery/NEW-HP-01_78.png" />
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-6 col-12">
-                    <div class="card">
-                        <div class="card-content">
+                    <div class="col-lg-6 col-12">
+                        <div class="card">
                             <div class="card-content">
-                                <div class="card-body">
-                                    <div class="col-12">
-                                        <div class="row font-weight-bold">
-                                            <div class="col-6">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchasedTickets")
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="col-12">
+                                            <div class="row font-weight-bold">
+                                                <div class="col-6">
+                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchasedTickets")
+                                                </div>
+                                                <div class="col-6 text-right">
+                                                    <h1>@Model.Lotteries[0].LotteryHistories.Count() / @Model.Lotteries[0].Volume <span class="card-description text-muted"></span></h1>
+                                                </div>
                                             </div>
-                                            <div class="col-6 text-right">
-                                                <h1>@Model.Lotteries[0].LotteryHistories.Count() / @Model.Lotteries[0].Volume <span class="card-description text-muted"></span></h1>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="progress progress-custom">
-                                                <div class="progress-bar bg-cpl" id="process-lottery" style="width:@Model.PrecentOfPerchasedTickets%"></div>
+                                            <div class="row">
+                                                <div class="progress progress-custom">
+                                                    <div class="progress-bar bg-cpl" id="process-lottery" style="width:@Model.PrecentOfPerchasedTickets%"></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card" id="buy-lottery-bg">
-                        <div class="card-content">
+                        <div class="card" id="buy-lottery-bg">
                             <div class="card-content">
-                                <div class="card-body text-center p-5">
-                                    <form id="form-purchase-lottery">
-                                        <div class="form-group row text-white">
-                                            <div class="col-12 font-large-1 font-weight-bold mb-3">
-                                                BUY LOTTERY !
+                                <div class="card-content">
+                                    <div class="card-body text-center p-5">
+                                        <form id="form-purchase-lottery">
+                                            <div class="form-group row text-white">
+                                                <div class="col-12 font-large-1 font-weight-bold mb-3">
+                                                    BUY LOTTERY !
+                                                </div>
+                                                <div class="col-12 mb-10px font-medium-3">
+                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SelectNumberTicket")
+                                                </div>
+                                                <div class="col-12 mb">
+                                                    <fieldset class="form-label-group my-1">
+                                                        <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" aria-describedby="basic-addon4">
+                                                        <label for="number-of-ticket"></label>
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-12 mb">
+                                                    <button type="button" class="btn btn-gradient-primary my-1 w-100" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                                                </div>
                                             </div>
-                                            <div class="col-12 mb-10px font-medium-3">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SelectNumberTicket")
-                                            </div>
-                                            <div class="col-12 mb">
-                                                <fieldset class="form-label-group my-1">
-                                                    <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" aria-describedby="basic-addon4">
-                                                    <label for="number-of-ticket"></label>
-                                                </fieldset>
-                                            </div>
-                                            <div class="col-12 mb">
-                                                <button type="button" class="btn btn-gradient-primary my-1 w-100" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
         <div class="row">
             @if (Model.SysUserId.HasValue)
