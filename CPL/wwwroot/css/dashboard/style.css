@@ -20,10 +20,6 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     padding-left: 3px;
 }
 
-.owl-dots {
-    display:none;
-}
-
 .form-label-group input:not(:placeholder-shown) ~ label.error {
     text-align: right;
     color: #FF4961;
@@ -1372,7 +1368,7 @@ footer {
 }
 
 .navbar-lottery-desktop.active {
-    background-color: #ffd300;
+    background-color: #ffd300 !important;
     color: black;
 }
 
@@ -1411,8 +1407,11 @@ footer {
 }
 
 .game-menu {
-    z-index: 9999;
     padding-bottom: 2.3rem;
+}
+
+ul.game-menu li.active {
+    z-index: 1000;
 }
 
 .main-menu.menu-light .navigation > li.active > a, .main-menu.menu-light .navigation > li.hover > a, .main-menu.menu-light .navigation > li:hover > a {
@@ -1423,48 +1422,13 @@ footer {
     color: #464855;
 }
 
-.bg-cpl {
-    background: #ffd300;
+.navbar-right {
+    padding-bottom: 2rem;
+}
+.navbar-left {
+    z-index: 1000;
 }
 
-/*Start ==> Token balance view component*/
-.txt-stroke {
-    -webkit-text-fill-color: red;
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: #fff;
+#bg {
+    background-image: url('/images/backgrounds/bg_07.jpg');
 }
-
-.txt-box-lottery {
-    display: inline-block;
-    min-height: 82px;
-}
-
-#img-result-lottery {
-    background: url(/images/lottery/new-hp-01_62.png) no-repeat;
-    background-size: 100%;
-    height: 100%;
-    background-position: top;
-    text-align: center;
-}
-
-#img-2 {
-    background: url(/images/lottery/2.png) repeat;
-    background-size: 100%;
-}
-
-.txt-stroke {
-    -webkit-text-fill-color: red;
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: #fff;
-}
-
-.txt-box-lottery {
-    display: inline-block;
-    min-height: 82px;
-}
-
-#img-2 {
-    background: url(/images/lottery/2.png) repeat;
-    background-size: 100%;
-}
-/*End <== Token balance view component*/
