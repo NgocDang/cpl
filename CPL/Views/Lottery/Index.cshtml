@@ -57,47 +57,81 @@
                         </div>
                         <div class="card" id="buy-lottery-bg">
                             <div class="card-content">
-                                <div class="card-content">
-                                    <div class="card-body p-5">
-                                        <form id="form-purchase-lottery">
-                                            <div class="form-group row text-white">
-                                                <div class="col-12 text-center font-large-2 font-weight-bold mb-5">
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BuyLottery")
-                                                </div>
-                                                <div class="col-12 mb">
-                                                    <fieldset class="form-label-group my-1">
-                                                        <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" required aria-describedby="basic-addon4">
-                                                        <label for="number-of-ticket">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SelectNumberTicket")</label>
-                                                    </fieldset>
-                                                </div>
-                                                <div class="col-12 mb">
-                                                    <button type="button" class="btn btn-primary btn-block my-1 w-100" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
-                                                </div>
+                                <div class="card-body p-5">
+                                    <form id="form-purchase-lottery">
+                                        <div class="form-group row text-white">
+                                            <div class="col-12 text-center font-large-2 font-weight-bold mb-5">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BuyLottery")
                                             </div>
-                                        </form>
-                                    </div>
+                                            <div class="col-12 mb">
+                                                <fieldset class="form-label-group my-1">
+                                                    <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" required aria-describedby="basic-addon4">
+                                                    <label for="number-of-ticket">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SelectNumberTicket")</label>
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-12 mb">
+                                                <button type="button" class="btn btn-primary btn-block my-1 w-100" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-12 none" id="div-confirm-lottery">
+                    <div class="col-lg-6 col-12 d-none" id="div-confirm-lottery">
                         <form id="form-purchase-lottery-ticket" method="POST" action="#" class="needs-validation" novalidate="">
 
                             <div class="card pl-2 pr-2 pt-2 pb-5">
                                 <div class="card-header text-center font-large-1 font-weight-bold text-danger">
                                     CONFIRMATION
                                 </div>
-                                <div class="card-content mt-5">
-                                    <div class="card-content font-weight-bold font-medium-4">
-                                        <div class="card-body mt-1">
-                                            <div class="row mb-1">
-                                                <div class="col-6 text-left">Ticket price:</div>
-                                                <div class="col-6 text-right" id="ticket-price">500 CPL</div>
-                                            </div>
-                                            <div class="row mb-2">
-                                                <div class="col-6 text-left">Total of tickets:</div>
-                                                <div class="col-6 text-right" id="total-of-tiket">1</div>
-                                            </div>
+                                <div class="card-content font-weight-bold font-medium-4  mt-5">
+                                    <div class="card-body mt-1">
+                                        <div class="row mb-1">
+                                            <div class="col-6 text-left">Ticket price:</div>
+                                            <div class="col-6 text-right" id="ticket-price">500 CPL</div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-6 text-left">Total of tickets:</div>
+                                            <div class="col-6 text-right" id="total-of-tiket">1</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer font-weight-bold font-medium-4">
+                                    <div class="row mt-1 text-danger">
+                                        <div class="col-6 text-left">Total price:</div>
+                                        <div class="col-6 text-right" id="total-price">500 CPL</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="button" id="btn-cancel-purchase-lottery-ticket" class="btn btn-primary btn-block font-large-1">Back</button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" id="btn-confirm-purchase-lottery-ticket" class="btn btn-primary btn-block font-large-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-6 col-12 d-none" id="div-thankyou-lottery">
+                        <form id="form-purchase-lottery-ticket" method="POST" action="#" class="needs-validation" novalidate="">
+
+                            <div class="card pl-2 pr-2 pt-2 pb-4">
+                                <div class="card-header text-center font-large-1 font-weight-bold text-danger">
+                                    <p>THANK YOU!</p>
+                                    <p>YOU BOUGHT XXX CPL</p>
+                                </div>
+                                <div class="card-content font-weight-bold font-medium-4">
+                                    <div class="card-body mt-1">
+                                        <div class="row mb-1">
+                                            <div class="col-6 text-left">Ticket price:</div>
+                                            <div class="col-6 text-right" id="ticket-price">500 CPL</div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-6 text-left">Total of tickets:</div>
+                                            <div class="col-6 text-right" id="total-of-tiket">1</div>
                                         </div>
                                     </div>
                                 </div>
