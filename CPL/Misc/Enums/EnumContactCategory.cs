@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace CPL.Misc.Enums
 {
-    public enum EnumSupportCategory
+    public enum EnumContactCategory
     {
+        REGISTER = 1,
+        LOGIN = 2,
         DEPOSIT = 3,
         WITHDRAW = 4,
         KYC = 5,

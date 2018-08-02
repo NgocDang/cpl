@@ -327,7 +327,7 @@ namespace CPL.Controllers
 
             if (user == null)
             {
-                viewmodel.Status = EnumAccountStatus.REQUESTNOTEXIST;
+                viewmodel.Status = EnumAccountStatus.REQUEST_NOT_EXIST;
                 viewmodel.Message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount");
                 viewmodel.Langs = _langService.Queryable()
                     .Select(x => Mapper.Map<LangViewModel>(x))
@@ -341,7 +341,7 @@ namespace CPL.Controllers
             }
             else if (user.ResetPasswordDate == null)
             {
-                viewmodel.Status = EnumAccountStatus.REQUESTNOTEXIST;
+                viewmodel.Status = EnumAccountStatus.REQUEST_NOT_EXIST;
                 viewmodel.Message = $"Request does not exist. Please try again.";
                 viewmodel.Langs = _langService.Queryable()
                     .Select(x => Mapper.Map<LangViewModel>(x))
@@ -371,7 +371,7 @@ namespace CPL.Controllers
                 }
                 else
                 {
-                    viewmodel.Status = EnumAccountStatus.INVALIDTOKEN;
+                    viewmodel.Status = EnumAccountStatus.INVALID_TOKEN;
                     viewmodel.Message = $"Invalid token. Please try again.";
                     viewmodel.Langs = _langService.Queryable()
                         .Select(x => Mapper.Map<LangViewModel>(x))

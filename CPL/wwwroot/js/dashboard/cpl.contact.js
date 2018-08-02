@@ -22,25 +22,22 @@
                     },
                     data: {
                         Email: $("#Email").val(),
-                        Des: $("#LastName").val(),
-                        Gender: $('#Male').is(':checked'),
-                        DOB: moment().date($("#Day").val()).month($("#Month").val()-1).year($("#Year").val()).format("YYYY-MM-DD"),
-                        PostalCode: $("#PostalCode").val(),
-                        Country: $("#Country").val(),
-                        City: $("#City").val(),
-                        StreetAddress: $("#StreetAddress").val(),
-                        Mobile: $("#Mobile").intlTelInput("getNumber")
+                        Description: $("#Description").val(),
+                        Subject: $('#Subject').val(),
+                        Category: $("#Category").val()
                     },
                     success: function (data) {
                         if (data.success) {
+                            $("#form-contact").hide();
+                            $("#contact-response").show();
                             toastr.success(data.message, 'Success!');
                         } else {
                             toastr.error(data.message, 'Error!');
                         }
                     },
                     complete: function (data) {
-                        $("#btn-save-account").attr("disabled", false);
-                        $("#btn-save-account").html("<i class='far fa-save'></i> " + $("#btn-save-account").text());
+                        $(_this).attr("disabled", false);
+                        $(_this).html("<i class='la la-check'></i> " + $(_this).text().trim());
                     }
                 });
             }
@@ -50,5 +47,5 @@
 };
 
 $(document).ready(function () {
-    EditAccount.init();
+    Contact.init();
 });

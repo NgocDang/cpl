@@ -9,6 +9,7 @@ namespace CPL.Misc.AutoMapper
         public ContactProfile()
         {
             CreateMap<Contact, ContactViewModel>();
+            CreateMap<ContactIndexViewModel, ContactEmailTemplateViewModel>();
         }
     }
 }

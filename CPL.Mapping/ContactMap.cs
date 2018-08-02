@@ -18,7 +18,8 @@ namespace CPL.Mapping
             builder.ToTable("Contact");
             builder.Property(t => t.Id).HasColumnName("Id");
             builder.Property(t => t.Email).HasColumnName("Email");
-            builder.Property(t => t.Category).HasColumnName("Type");
+            builder.Property(t => t.Category).HasColumnName("Category");
+            builder.Property(t => t.Category).HasColumnName("Category");
             builder.Property(t => t.Description).HasColumnName("Description");
             builder.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
         }

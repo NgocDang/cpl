@@ -5,8 +5,8 @@
 @model ContactIndexViewModel
 
 @section styles
-{
-   
+    {
+
 }
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
@@ -29,12 +29,12 @@
         </div>
         <div class="content-body">
             <div class="row">
-                <div class="col-lg-8 col-md-12 col-sm-12">
+                <div class="col-12">
                     <section class="card">
                         <div class="card-content">
                             <div class="card-body">
                                 <div class="col-12">
-                                    <p class="text-bold-700 text-uppercase mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowCanWeHelp")</p>
+                                    <p class="text-bold-700 text-uppercase mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AskUsAnything")</p>
                                     <hr />
                                 </div>
                                 <div class="col-12">
@@ -42,13 +42,25 @@
                                         <div class="row mb-1">
                                             <div class="col-12">
                                                 <fieldset class="form-label-group">
-                                                    <input type="text" name="Email" class="form-control" maxlength="50" id="Email" required autofocus="">
-                                                    <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                                                    <input type="text" name="Subject" class="form-control" maxlength="200" id="Subject" required autofocus="">
+                                                    <label for="Subject">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Subject")</label>
+                                                    <div class="invalid-feedback">
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SubjectIsRequired")
+                                                    </div>
                                                 </fieldset>
                                             </div>
                                         </div>
                                         <div class="row mb-1">
-                                            <div class="col-12">
+                                            <div class="col-md-6 col-12">
+                                                <fieldset class="form-label-group">
+                                                    <input type="text" name="Email" class="form-control" maxlength="50" id="Email" required autofocus="">
+                                                    <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                                                    <div class="invalid-feedback">
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailIsRequired")
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-md-6 col-12">
                                                 <fieldset class="form-label-group">
                                                     <select data-value="@Model.Category" name="Type" id="Type" class="selectpicker" required data-style="btn btn-round" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Category")">
                                                         @if (Model.SysUser == null)
@@ -72,9 +84,12 @@
                                         </div>
                                         <div class="row mb-1">
                                             <div class="col-12">
-                                                <fieldset class="form-label-group">
-                                                    <textarea name="Description" class="form-control" row="3" id="Description" required autofocus=""></textarea>
+                                                <fieldset class="form-group">
                                                     <label for="Description">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Description")</label>
+                                                    <textarea name="Description" class="form-control" row="5" id="Description" required autofocus=""></textarea>
+                                                    <div class="invalid-feedback">
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DescriptionIsRequired")
+                                                    </div>
                                                 </fieldset>
                                             </div>
                                         </div>
@@ -84,6 +99,7 @@
                                             </div>
                                         </div>
                                     </form>
+                                    <p class="text-muted" style="display:none;" id="contact-response">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ThankYouForYourContactMessage")</p>
                                 </div>
                             </div>
                         </div>
@@ -97,4 +113,5 @@
 @section scripts
     {
     <script src="~/js/dashboard/cpl.contact.js"></script>
+    <script src="~/js/dashboard/plugins/bootstrap-selectpicker.js"></script>
 }

@@ -10,6 +10,7 @@ using System.Linq;
 using CPL.Misc.Utils;
 using CPL.Domain;
 using CPL.Misc;
+using CPL.Common.Enums;
 
 namespace CPL.Controllers
 {
@@ -56,15 +57,24 @@ namespace CPL.Controllers
                     _unitOfWork.SaveChanges();
                     var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Contact.ToString());
 
-                    var contactViewModel = Mapper.Map<ContactEmailTemplateViewModel>(viewModel);
+                    var contactEmailTemplateViewModel = Mapper.Map<ContactEmailTemplateViewModel>(viewModel);
+                    contactEmailTemplateViewModel.CategoryName = ((EnumContactCategory)viewModel.Category).ToString();
+                    contactEmailTemplateViewModel.CategoryText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Category");
+                    contactEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+                    contactEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+                    contactEmailTemplateViewModel.CPLTeamText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "CPLTeam");
+                    contactEmailTemplateViewModel.DescriptionText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Description");
+                    contactEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+                    contactEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+                    contactEmailTemplateViewModel.MessageFromCustomerText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "MessageFromCustomer");
+                    contactEmailTemplateViewModel.SubjectText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Subject");
+                    contactEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+                    contactEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
 
-                    contactViewModel.ContactfullText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "MessageFromCustomer");
-                    contactViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                    template.Body = _viewRenderService.RenderToStringAsync("/Views/Contact/_ContactEmailTemplate.cshtml", contactEmailTemplateViewModel).Result;
 
-                    template.Body = _viewRenderService.RenderToStringAsync("/Views/Home/_ContactEmailTemplate.cshtml", contactViewModel).Result;
-
-                    EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), ETNConstant.SMTP.Contact);
-                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "EmailSentSuccessfully") });
+                    EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), CPLConstant.SMTP.Contact);
+                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "MessageSentSuccessfully") });
                 }
                 catch (Exception ex)
                 {
