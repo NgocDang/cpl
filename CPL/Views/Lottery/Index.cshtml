@@ -58,15 +58,15 @@
                         <div class="card" id="buy-lottery-bg">
                             <div class="card-content">
                                 <div class="card-content">
-                                    <div class="card-body text-center p-5">
+                                    <div class="card-body p-5">
                                         <form id="form-purchase-lottery">
                                             <div class="form-group row text-white">
-                                                <div class="col-12 font-large-2 font-weight-bold mb-5">
+                                                <div class="col-12 text-center font-large-2 font-weight-bold mb-5">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BuyLottery")
                                                 </div>
                                                 <div class="col-12 mb">
                                                     <fieldset class="form-label-group my-1">
-                                                        <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" aria-describedby="basic-addon4">
+                                                        <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" required aria-describedby="basic-addon4">
                                                         <label for="number-of-ticket">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SelectNumberTicket")</label>
                                                     </fieldset>
                                                 </div>

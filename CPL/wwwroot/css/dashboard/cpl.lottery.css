@@ -81,7 +81,9 @@
 }
 
 body {
-    background: url('/images/lottery/bg_lottery.jpg') no-repeat;
+    background: url('/images/lottery/bg_lottery.jpg');
+    background-repeat: repeat-x;
+    background-color: white;
 }
 
 .mb-10px {
