@@ -26,6 +26,7 @@ namespace CPL.Common.Enums
             public static int Port = 587;
             public static bool IsSSLEnable = true;
             public static string Email = "info.cplcoin@gmail.com";
+            public static string Contact = "info.cplcoin@gmail.com";
             public static string From = "info.cplcoin@gmail.com";
             public static string Password = "aG31@ie20P!";
         }
