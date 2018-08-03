@@ -62,7 +62,9 @@ namespace CPL.Controllers
 
         public IActionResult EditAccount()
         {
-            var viewModel = Mapper.Map<EditAccountViewModel>(HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser"));
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+            var viewModel = Mapper.Map<EditAccountViewModel>(user);
+
             viewModel.NumberOfGameHistories = _gameHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
             viewModel.NumberOfTransactions = _coinTransactionService.Queryable().Count(x => x.SysUserId == viewModel.Id);
             return View("EditAccount", viewModel);
