@@ -122,7 +122,7 @@ namespace CPL.SmartContractService
 
                                     if (duplicateTicketIndexList.Count > 0)
                                     {
-                                        var randomParamJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", duplicateTicketIndexList.ToArray()));
+                                        var randomParamJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", duplicateTicketIndexList));
                                         var ticketRandomResult = _eToken.CallTransactionAsync(authentication.Result.Token,
                                             CPLConstant.OwnerAddress,
                                             CPLConstant.OwnerPassword,
@@ -134,11 +134,12 @@ namespace CPL.SmartContractService
                                         ticketRandomResult.Wait();
                                         if (ticketRandomResult.Result.Status.Code == 0)
                                         {
+                                            //Performance issue
                                             for (int i = 0; i < duplicateTicketIndexList.Count; i++)
                                             {
-                                                var lotteryRecord = Resolver.LotteryHistoryService.Queryable().Where(x => x.TicketIndex == duplicateTicketIndexList[i] && x.LotteryId == lotteryId).FirstOrDefault();
-                                                lotteryRecord.TxHashId = ticketRandomResult.Result.TxId;
-                                                Resolver.LotteryHistoryService.Update(lotteryRecord);
+                                                var lotteryHistory = Resolver.LotteryHistoryService.Queryable().FirstOrDefault(x => x.TicketIndex == duplicateTicketIndexList[i] && x.LotteryId == lotteryId);
+                                                lotteryHistory.TxHashId = ticketRandomResult.Result.TxId;
+                                                Resolver.LotteryHistoryService.Update(lotteryHistory);
                                             }
                                         }
                                     }
