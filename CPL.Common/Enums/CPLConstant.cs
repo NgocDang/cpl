@@ -69,6 +69,8 @@ namespace CPL.Common.Enums
         public static string AuthenticationServiceEndpoint = "Security/Authentication.svc";
         public static string EmailServiceEndpoint = "Message/Email.svc";
         public static string ETokenServiceEndpoint = "Token/EToken.svc";
+        public static string EWalletServiceEndpoint = "Wallet/EWallet.svc";
+        public static string BWalletServiceEndpoint = "Wallet/BWallet.svc";
 
         // FHCore Authentication
         public static string ProjectEmail = "info.cplcoin@gmail.com";
@@ -109,5 +111,9 @@ namespace CPL.Common.Enums
 
         // Store procedure name
         public static string InsertTxIdToBTCTransaction = "usp_InsertTxIdToBTCTransaction";
+
+        //Request to get BTC and ETH address count limit
+        public static int RequestCountLimit = 5;
+        public static int RequestCountIntervalInMiliseconds = 3000;
     }
 }
