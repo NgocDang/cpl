@@ -9,5 +9,6 @@ namespace CPL.Models
     {
         public List<LotteryViewModel> Lotteries { get; set; }
         public int? SysUserId { get; set; }
+        public string PrecentOfPerchasedTickets { get; set; }
     }
 }

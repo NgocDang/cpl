@@ -65,8 +65,9 @@
         })
     },
     loadLotteryHistoryTable: function () {
-        if ($("#SysUserId").val() === undefined)
+        if ($("#dt-lottery-history").length == 0)
             return false;
+
         return $("#dt-lottery-history").DataTable({
             "processing": true,
             "serverSide": true,
