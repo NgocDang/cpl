@@ -94,6 +94,10 @@ body {
     margin-top: 8px;
 }
 
+.mt-14px {
+    margin-top: 14px;
+}
+
 .d-none-not-important{
     display: none;
 }

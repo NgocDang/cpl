@@ -24,12 +24,12 @@
                     success: function (data) {
                         if (data.url == null) {
                             $("#div-buy-lottery").hide();
-                            $("#ticket-price").html(data.ticketPrice + " CPL");
-                            $("#ticket-price").val(data.ticketPrice); // Set value to calculate in contronller
-                            $("#total-of-tiket").html(data.totalTickets);
-                            $("#total-of-tiket").val(data.totalTickets); // Set value to calculate in contronller
-                            $("#total-price").html(data.totalPriceOfTickets + " CPL");
-                            $("#total-price").val(data.totalPriceOfTickets); // Set value to calculate in contronller
+                            $(".ticket-price").html(data.ticketPrice + " CPL");
+                            $(".ticket-price").val(data.ticketPrice); // Set value to calculate in contronller
+                            $(".total-of-tiket").html(data.totalTickets);
+                            $(".total-of-tiket").val(data.totalTickets); // Set value to calculate in contronller
+                            $(".total-price").html(data.totalPriceOfTickets + " CPL");
+                            $(".total-price").val(data.totalPriceOfTickets); // Set value to calculate in contronller
                             $("#div-confirm-lottery").show();
                         }
                         else {
@@ -63,8 +63,10 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        $('#modal').modal("hide");
-                        toastr.success(data.message, 'Success!');
+                        $("#div-confirm-lottery").hide();
+                        $("#div-thankyou-lottery").show();
+                        $("#total-price").val(data.totalPriceOfTickets); // Set value to calculate in contronller
+                        $("#span-txHashId").html("<a class='text-success' target='_blank' href = https://etherscan.io/tx/" + data.txHashId + "><u>" + data.txHashId + "</u></a>");
                         Lottery.historyDatatable.ajax.reload();
                     }
                     else {
