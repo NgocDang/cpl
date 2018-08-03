@@ -89,6 +89,10 @@ namespace CPL.Controllers
                 }
 
             }
+
+            if (viewModel.Lotteries != null && viewModel.Lotteries[0] != null && viewModel.Lotteries[0].Volume > 0)
+                viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.Lotteries[0].LotteryHistories.Count() / (decimal)viewModel.Lotteries[0].Volume * 100).ToString();
+
             return View(viewModel);
         }
 
@@ -171,9 +175,7 @@ namespace CPL.Controllers
                         lastTicketIndex += 1;
                         ticketIndexList.Add(lastTicketIndex);
                     }
-                    string ticketList = string.Join(",", ticketIndexList.ToArray());
-
-                    var paramJson = CPLConstant.randomParamInJson.Replace("lotteryphase", lotteryPhase.ToString()).Replace("useraddress", userAddress).Replace("ticketindexlist", ticketList);
+                    var paramJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", ticketIndexList.ToArray()));
 
                     var buyTime = DateTime.Now;
                     var ticketGenResult = ServiceClient.ETokenClient.CallTransactionAsync(Authentication.Token, CPLConstant.OwnerAddress, CPLConstant.OwnerPassword, "random", CPLConstant.GasPriceMultiplicator, CPLConstant.DurationInSecond, paramJson);

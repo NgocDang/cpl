@@ -37,24 +37,26 @@ namespace CPL.SmartContractService
         public static ETokenService.ETokenClient _eToken = new ETokenService.ETokenClient();
         public static ETransactionService.ETransactionClient _eTransaction = new ETransactionService.ETransactionClient();
 
+        public readonly int NumberOfDigits = 6;
+
         public void Start()
         {
             // ConfigurationBuilder
             ConfigurationBuilder();
 
             // Initialize
-            Initialize();
+            InitializeSetting();
 
             // write log
             Utils.FileAppendThreadSafe(FileName, String.Format("{0} started at {1}{2}", WSConstant.ServiceName, DateTime.Now, Environment.NewLine));
 
             //Init dependency transaction & dbcontext
-            Repository();
+            InitializeRepositories();
 
             //Init setting
             IsSmartContractServiceRunning = true;
             Tasks.Clear();
-            Tasks.Add(Task.Run(() => CheckTransactions()));
+            Tasks.Add(Task.Run(() => CheckTransaction()));
         }
 
         public void Stop()
@@ -64,17 +66,18 @@ namespace CPL.SmartContractService
             Task.WaitAll(Tasks.ToArray());
         }
 
-        private void CheckTransactions()
+        private void CheckTransaction()
         {
             try
             {
+                Utils.FileAppendThreadSafe(FileName, string.Format("Check Tx thread STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
+
                 var authentication = new AuthenticationService.AuthenticationClient().AuthenticateAsync(WSConstant.Email, WSConstant.ProjectName);
                 authentication.Wait();
 
                 if (authentication.Result.Status.Code == 0)
                 {
-                    Utils.FileAppendThreadSafe(FileName, string.Format("Check Tx thread STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
-
+                    Utils.FileAppendThreadSafe(FileName, string.Format("Successful authentication with token {0} at {1}{2}", authentication.Result.Token, DateTime.Now, Environment.NewLine));
                     var eToken = new ETokenService.ETokenClient().SetAsync(authentication.Result.Token, new ETokenService.ETokenSetting { Abi = CPLConstant.Abi, ContractAddress = CPLConstant.SmartContractAddress, Environment = (ServiceEnvironment == ETokenService.Environment.MAINNET.ToString() ? ETokenService.Environment.MAINNET : ETokenService.Environment.TESTNET), Platform = ETokenService.Platform.ETH });
                     eToken.Wait();
                     var eTransaction = new ETransactionService.ETransactionClient().SetAsync(authentication.Result.Token, new ETransactionService.ETransactionSetting { ApiKey = CPLConstant.ETransactionAPIKey, Environment = (ServiceEnvironment == ETransactionService.Environment.MAINNET.ToString() ? ETransactionService.Environment.MAINNET : ETransactionService.Environment.TESTNET), Platform = ETransactionService.Platform.ETH });
@@ -82,7 +85,10 @@ namespace CPL.SmartContractService
 
                     do
                     {
-                        var transactionList = Resolver.LotteryHistoryService.Queryable().Where(x => string.IsNullOrEmpty(x.TicketNumber)).Select(x => x.TxHashId).Distinct().ToList();
+                        var transactionList = Resolver.LotteryHistoryService.Queryable()
+                            .Where(x => string.IsNullOrEmpty(x.TicketNumber))
+                            .Select(x => x.TxHashId).Distinct().ToList(); // In case user buys multiple lottery tickets
+
                         foreach(var tx in transactionList)
                         {
                             var txStatus = _eTransaction.GetTransactionStatusAsync(authentication.Result.Token, tx);
@@ -92,95 +98,90 @@ namespace CPL.SmartContractService
                                 if(txStatus.Result.Receipt == true)
                                 {
                                     var duplicateTicketIndexList = new List<int>();
-                                    var lotteryPhase = Resolver.LotteryHistoryService.Queryable().Include(x => x.Lottery).Where(x => x.TxHashId == tx).FirstOrDefault().Lottery.Phase;
-                                    var lotteryId = Resolver.LotteryHistoryService.Queryable().Include(x => x.Lottery).Where(x => x.TxHashId == tx).FirstOrDefault().Lottery.Id;
-                                    var userAddress = Resolver.LotteryHistoryService.Queryable().Include(x => x.SysUser).Where(x => x.TxHashId == tx).FirstOrDefault().SysUser.ETHHDWalletAddress;
+                                    var lotteryPhase = Resolver.LotteryHistoryService.Queryable().Include(x => x.Lottery).FirstOrDefault(x => x.TxHashId == tx).Lottery.Phase;
+                                    var lotteryId = Resolver.LotteryHistoryService.Queryable().Include(x => x.Lottery).FirstOrDefault(x => x.TxHashId == tx).Lottery.Id;
+                                    var userAddress = Resolver.LotteryHistoryService.Queryable().Include(x => x.SysUser).FirstOrDefault(x => x.TxHashId == tx).SysUser.ETHHDWalletAddress;
 
-                                    var lotteryRecords = Resolver.LotteryHistoryService.Queryable().Where(x => x.TxHashId == tx).ToList();
-                                    foreach(var lotto in lotteryRecords)
+                                    var lotteryHistories = Resolver.LotteryHistoryService.Queryable().Where(x => x.TxHashId == tx).ToList();
+                                    foreach(var lotteryHistory in lotteryHistories)
                                     {
-                                        var getTicketParamJson = CPLConstant.getTicketParamInJson.Replace("lotteryphase", lotteryPhase.ToString()).Replace("useraddress", userAddress).Replace("ticketindex", lotto.TicketIndex.ToString());
+                                        var getTicketParamJson = string.Format(CPLConstant.GetTicketParamInJson, lotteryPhase, userAddress, lotteryHistory.TicketIndex);
                                         var ticketNumber = _eToken.CallFunctionAsync(authentication.Result.Token, "getTicket", getTicketParamJson);
                                         ticketNumber.Wait();
 
                                         if (ticketNumber.Result.Status.Code == 0)
                                         {
-                                            StringBuilder sb = new StringBuilder();
-                                            var tmpTicketNo = ticketNumber.Result.Result;
-
-                                            if(tmpTicketNo.Length < 6 )
-                                            {
-                                                do
-                                                {
-                                                    tmpTicketNo = tmpTicketNo.Insert(0, "0");
-                                                } while (tmpTicketNo.Length < 6);
-                                            }
-
-                                            var duplicateRecords = Resolver.LotteryHistoryService.Queryable().Where(x => x.TicketNumber == tmpTicketNo && x.LotteryId == lotto.LotteryId).FirstOrDefault();
-                                            if(duplicateRecords == null)
-                                            {
-                                                lotto.TicketNumber = tmpTicketNo;
-                                            }
+                                            var tickerNumber = CorrectTicketNumber(ticketNumber.Result.Result);
+                                            if(!Resolver.LotteryHistoryService.Queryable().Any(x => x.TicketNumber == tickerNumber && x.LotteryId == lotteryHistory.LotteryId))
+                                                lotteryHistory.TicketNumber = tickerNumber;
                                             else
-                                            {
-                                                duplicateTicketIndexList.Add(lotto.TicketIndex);
-                                            }
+                                                duplicateTicketIndexList.Add(lotteryHistory.TicketIndex);
                                         }
-                                        Resolver.LotteryHistoryService.Update(lotto);
+                                        Resolver.LotteryHistoryService.Update(lotteryHistory);
                                     }
 
-                                    string ticketList = string.Join(",", duplicateTicketIndexList.ToArray());
-                                    var randomParamJson = CPLConstant.randomParamInJson.Replace("lotteryphase", lotteryPhase.ToString()).Replace("useraddress", userAddress).Replace("ticketindexlist", ticketList);
-
-                                    var ticketGenResult = _eToken.CallTransactionAsync(authentication.Result.Token, CPLConstant.OwnerAddress, CPLConstant.OwnerPassword, "random", CPLConstant.GasPriceMultiplicator, CPLConstant.DurationInSecond, randomParamJson);
-                                    ticketGenResult.Wait();
-
-                                    if(ticketGenResult.Result.Status.Code == 0)
+                                    if (duplicateTicketIndexList.Count > 0)
                                     {
-                                        for(int i = 0; i < duplicateTicketIndexList.Count; i++)
+                                        var randomParamJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", duplicateTicketIndexList.ToArray()));
+                                        var ticketRandomResult = _eToken.CallTransactionAsync(authentication.Result.Token,
+                                            CPLConstant.OwnerAddress,
+                                            CPLConstant.OwnerPassword,
+                                            "random",
+                                            CPLConstant.GasPriceMultiplicator,
+                                            CPLConstant.DurationInSecond,
+                                            randomParamJson);
+
+                                        //What happen if randomized ticket number is duplicated again?
+                                        ticketRandomResult.Wait();
+                                        if (ticketRandomResult.Result.Status.Code == 0)
                                         {
-                                            var lotteryRecord = Resolver.LotteryHistoryService.Queryable().Where(x => x.TicketIndex == duplicateTicketIndexList[i] && x.LotteryId == lotteryId).FirstOrDefault();
-                                            lotteryRecord.TxHashId = ticketGenResult.Result.TxId;
-                                            Resolver.LotteryHistoryService.Update(lotteryRecord);
+                                            for (int i = 0; i < duplicateTicketIndexList.Count; i++)
+                                            {
+                                                var lotteryRecord = Resolver.LotteryHistoryService.Queryable().Where(x => x.TicketIndex == duplicateTicketIndexList[i] && x.LotteryId == lotteryId).FirstOrDefault();
+                                                lotteryRecord.TxHashId = ticketRandomResult.Result.TxId;
+                                                Resolver.LotteryHistoryService.Update(lotteryRecord);
+                                            }
                                         }
                                     }
                                 }
                                 else if(txStatus.Result.Receipt == false)
                                 {
-                                    var ticketIndexList = new List<int>();
-                                    int lotteryPhase = Resolver.LotteryHistoryService.Queryable().Include(x => x.Lottery).Where(x => x.TxHashId == tx).FirstOrDefault().Lottery.Phase;
-                                    string userAddress = Resolver.LotteryHistoryService.Queryable().Include(x => x.SysUser).Where(x => x.TxHashId == tx).FirstOrDefault().SysUser.ETHHDWalletAddress;
+                                    int lotteryPhase = Resolver.LotteryHistoryService.Queryable().Include(x => x.Lottery).FirstOrDefault(x => x.TxHashId == tx).Lottery.Phase;
+                                    string userAddress = Resolver.LotteryHistoryService.Queryable().Include(x => x.SysUser).FirstOrDefault(x => x.TxHashId == tx).SysUser.ETHHDWalletAddress;
 
-                                    var lotteryRecords = Resolver.LotteryHistoryService.Queryable().Where(x => x.TxHashId == tx).ToList();
-                                    foreach (var lotto in lotteryRecords)
-                                    {
-                                        ticketIndexList.Add(lotto.TicketIndex);
-                                    }
-                                    string ticketList = string.Join(",", ticketIndexList.ToArray());
-                                    var randomParamJson = CPLConstant.randomParamInJson.Replace("lotteryphase", lotteryPhase.ToString()).Replace("useraddress", userAddress).Replace("ticketindexlist", ticketList);
+                                    var ticketIndexList = Resolver.LotteryHistoryService.Queryable().Where(x => x.TxHashId == tx).Select(x => x.TicketIndex).ToList();
+                                    var randomParamJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", ticketIndexList));
 
-                                    var ticketGenResult = _eToken.CallTransactionAsync(authentication.Result.Token, CPLConstant.OwnerAddress, CPLConstant.OwnerPassword, "random", CPLConstant.GasPriceMultiplicator, CPLConstant.DurationInSecond, randomParamJson);
-                                    ticketGenResult.Wait();
+                                    var ticketRandomResult = _eToken.CallTransactionAsync(authentication.Result.Token, 
+                                        CPLConstant.OwnerAddress, 
+                                        CPLConstant.OwnerPassword, 
+                                        "random", 
+                                        CPLConstant.GasPriceMultiplicator, 
+                                        CPLConstant.DurationInSecond, 
+                                        randomParamJson);
 
-                                    var lotteryId = Resolver.LotteryHistoryService.Queryable().Include(x => x.Lottery).Where(x => x.TxHashId == tx).FirstOrDefault().Lottery.Id;
+                                    ticketRandomResult.Wait();
+                                    var lotteryId = Resolver.LotteryHistoryService.Queryable().FirstOrDefault(x => x.TxHashId == tx).LotteryId;
 
-                                    if (ticketGenResult.Result.Status.Code == 0)
+                                    if (ticketRandomResult.Result.Status.Code == 0)
                                     {
                                         for (int i = 0; i < ticketIndexList.Count; i++)
                                         {
-                                            var lotteryRecord = Resolver.LotteryHistoryService.Queryable().Where(x => x.TicketIndex == ticketIndexList[i] && x.LotteryId == lotteryId).FirstOrDefault();
-                                            lotteryRecord.TxHashId = ticketGenResult.Result.TxId;
-                                            Resolver.LotteryHistoryService.Update(lotteryRecord);
+                                            var lotteryHistoryRecord = Resolver.LotteryHistoryService.Queryable().FirstOrDefault(x => x.TicketIndex == ticketIndexList[i] && x.LotteryId == lotteryId);
+                                            lotteryHistoryRecord.TxHashId = ticketRandomResult.Result.TxId;
+                                            Resolver.LotteryHistoryService.Update(lotteryHistoryRecord);
                                         }
                                     }
                                 }
                             }
                         }
                         Resolver.UnitOfWork.SaveChanges();
-                        Thread.Sleep(60000);
+                        Thread.Sleep(RunningIntervalInMilliseconds);
                     }
                     while (IsSmartContractServiceRunning);
                 }
+                else
+                    Utils.FileAppendThreadSafe(FileName, string.Format("Authentication failed at {0}. Reason {1}{2}", DateTime.Now, authentication.Result.Status.Text, Environment.NewLine));
             }
             catch(Exception ex)
             {
@@ -193,8 +194,27 @@ namespace CPL.SmartContractService
             Utils.FileAppendThreadSafe(FileName, string.Format("Check Tx thread STOPPED at {0}{1}", DateTime.Now, Environment.NewLine));
         }
 
-        //Init dependency transaction & dbcontext
-        private void Repository()
+        /// <summary>
+        /// Corrects the ticket number.
+        /// </summary>
+        /// <param name="tickerNumber">The ticker number.</param>
+        /// <returns></returns>
+        private string CorrectTicketNumber(string tickerNumber)
+        {
+            if (tickerNumber.Length < NumberOfDigits)
+            {
+                do
+                {
+                    tickerNumber = tickerNumber.Insert(0, "0");
+                } while (tickerNumber.Length < NumberOfDigits);
+            }
+            return tickerNumber;
+        }
+
+        /// <summary>
+        /// Initializes the repositories.
+        /// </summary>
+        private void InitializeRepositories()
         {
             var builder = new ContainerBuilder();
 
@@ -223,7 +243,9 @@ namespace CPL.SmartContractService
             Resolver.SysUserService = Resolver.Container.Resolve<ISysUserService>();
         }
 
-        // ConfigurationBuilder
+        /// <summary>
+        /// Configurations the builder.
+        /// </summary>
         private void ConfigurationBuilder()
         {
             var configBuilder = new ConfigurationBuilder()
@@ -233,8 +255,10 @@ namespace CPL.SmartContractService
             Configuration = configBuilder.Build();
         }
 
-        // Initialize
-        private void Initialize()
+        /// <summary>
+        /// Initializes the setting.
+        /// </summary>
+        private void InitializeSetting()
         {
             FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);

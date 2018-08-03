@@ -22,7 +22,7 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav mr-auto float-left game-menu">
-                    <li class="nav-item">
+                    <li class="nav-item active">
                         <a class="navbar-lottery-desktop active" asp-controller="Lottery" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
                     </li>
                     <li class="nav-item">
@@ -31,7 +31,10 @@
                 </ul>
                 <ul class="nav navbar-nav float-right navbar-right">
                     <li class="dropdown dropdown-language nav-item">
-                        <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flag-icon @Model.Lang.Image"></i><span class="font-small-3 selected-language">@Model.Lang.Name</span></a>
+                        <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="flag-icon @Model.Lang.Image"></i>
+                            <span class="font-small-3 selected-language">@Model.Lang.Name</span>
+                        </a>
                         <div class="dropdown-menu" aria-labelledby="dropdown-flag">
                             @foreach (var lang in Model.Langs)
                             {
@@ -56,7 +59,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-bold" asp-controller="DepositAndWithdraw" asp-action="Index" >
+                <a class="nav-link text-bold" asp-controller="DepositAndWithdraw" asp-action="Index">
                     <i class="la la-mail-forward"></i>
                     <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</span>
                 </a>
@@ -73,6 +76,19 @@
                     <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link text-bold" asp-controller="Contact" asp-action="Index">
+                    <i class="la la-envelope"></i>
+                    @if (Model.User == null)
+                    {
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")</span>
+                    }
+                    else
+                    {
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Support")</span>
+                    }
+                </a>
+            </li>
         </ul>
             @if (Model.User != null)
             {
@@ -84,7 +100,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item lang-item" id="logout-confirmation"><i class="la la-power-off"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
+                                <a class="dropdown-item" asp-controller="Profile" asp-action="EditCredential" ><i class="la la-key"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" id="logout-confirmation"><i class="la la-power-off"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
                             </li>
                         </ul>
                     </li>
