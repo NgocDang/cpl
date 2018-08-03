@@ -25,12 +25,13 @@ namespace CPL.Controllers
         private readonly IUnitOfWorkAsync _unitOfWork;
 
         public ContactController(ILangService langService, IContactService contactService, IViewRenderService viewRenderService,
-            ISettingService settingService, ISysUserService sysUserService, ITemplateService templateService,
+            ISettingService settingService, ISysUserService sysUserService, ITemplateService templateService, 
             IUnitOfWorkAsync unitOfWork)
         {
             this._langService = langService;
             this._contactService = contactService;
             this._settingService = settingService;
+            this._viewRenderService = viewRenderService;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
             this._unitOfWork = unitOfWork;
@@ -52,7 +53,7 @@ namespace CPL.Controllers
                 try
                 {
                     var contact = Mapper.Map<Contact>(viewModel);
-                    // Try to create a user with the given identity
+                    contact.CreatedDate = DateTime.Now;
                     _contactService.Insert(contact);
                     _unitOfWork.SaveChanges();
                     var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Contact.ToString());
@@ -72,7 +73,7 @@ namespace CPL.Controllers
                     contactEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
 
                     template.Body = _viewRenderService.RenderToStringAsync("/Views/Contact/_ContactEmailTemplate.cshtml", contactEmailTemplateViewModel).Result;
-
+                    template.Subject = string.Format(template.Subject, contact.Id);
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), CPLConstant.SMTP.Contact);
                     return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "MessageSentSuccessfully") });
                 }

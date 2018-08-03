@@ -10,6 +10,7 @@ namespace CPL.Misc.AutoMapper
         {
             CreateMap<Contact, ContactViewModel>();
             CreateMap<ContactIndexViewModel, ContactEmailTemplateViewModel>();
+            CreateMap<ContactIndexViewModel, Contact>();
         }
     }
 }

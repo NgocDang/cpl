@@ -19,7 +19,7 @@ namespace CPL.Mapping
             builder.Property(t => t.Id).HasColumnName("Id");
             builder.Property(t => t.Email).HasColumnName("Email");
             builder.Property(t => t.Category).HasColumnName("Category");
-            builder.Property(t => t.Category).HasColumnName("Category");
+            builder.Property(t => t.Subject).HasColumnName("Subject");
             builder.Property(t => t.Description).HasColumnName("Description");
             builder.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
         }

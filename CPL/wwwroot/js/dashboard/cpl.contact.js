@@ -6,13 +6,13 @@
         $("#btn-send").on("click", function () {
             var _this = this;
             var isFormValid = $("#form-contact").valid();
-            //var isCountryValid = $("#Country").val() != "";
-            //if (isCountryValid)
-            //    $("#country-msg").hide();
-            //else
-            //    $("#country-msg").show();
+            var isCategoryValid = $("#Category").val() != "";
+            if (isCategoryValid)
+                $("#category-error").hide();
+            else
+                $("#category-error").show();
 
-            if (isFormValid) {
+            if (isFormValid && isCategoryValid) {
                 $.ajax({
                     url: "/Contact/Send/",
                     type: "POST",

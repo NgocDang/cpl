@@ -79,7 +79,7 @@
             <li class="nav-item">
                 <a class="nav-link text-bold" asp-controller="Contact" asp-action="Index">
                     <i class="la la-envelope"></i>
-                    @if (Model.User != null)
+                    @if (Model.User == null)
                     {
                         <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")</span>
                     }
