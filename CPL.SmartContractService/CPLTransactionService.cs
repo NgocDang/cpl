@@ -131,7 +131,6 @@ namespace CPL.SmartContractService
                                             CPLConstant.DurationInSecond,
                                             randomParamJson);
 
-                                        //What happen if randomized ticket number is duplicated again?
                                         ticketRandomResult.Wait();
                                         if (ticketRandomResult.Result.Status.Code == 0)
                                         {
