@@ -93,3 +93,7 @@ body {
 .mt-8px {
     margin-top: 8px;
 }
+
+.d-none-not-important{
+    display: none;
+}

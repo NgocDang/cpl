@@ -25,8 +25,11 @@
                         if (data.url == null) {
                             $("#div-buy-lottery").hide();
                             $("#ticket-price").html(data.ticketPrice + " CPL");
+                            $("#ticket-price").val(data.ticketPrice); // Set value to calculate in contronller
                             $("#total-of-tiket").html(data.totalTickets);
+                            $("#total-of-tiket").val(data.totalTickets); // Set value to calculate in contronller
                             $("#total-price").html(data.totalPriceOfTickets + " CPL");
+                            $("#total-price").val(data.totalPriceOfTickets); // Set value to calculate in contronller
                             $("#div-confirm-lottery").show();
                         }
                         else {
@@ -48,15 +51,15 @@
         });
     },
     bindConfirmPurchaseTicket: function () {
-        $('#modal').on('click', '#btn-confirm-purchase-lottery-ticket', function () {
+        $('#btn-confirm-purchase-lottery-ticket').click( function () {
             var _this = this;
             $.ajax({
                 url: "/Lottery/ConfirmPurchaseTicket/",
                 type: "POST",
                 data: {
-                    TicketPrice: parseInt($("#TicketPrice").val()),
-                    TotalTickets: parseInt($("#TotalTickets").val()),
-                    TotalPriceOfTickets: parseInt($("#TotalPriceOfTickets").val()),
+                    TicketPrice: parseInt($("#ticket-price").val()),
+                    TotalTickets: parseInt($("#total-of-tiket").val()),
+                    TotalPriceOfTickets: parseInt($("#total-price").val()),
                 },
                 success: function (data) {
                     if (data.success) {

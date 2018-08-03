@@ -14,7 +14,6 @@
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-body">
-            @Html.HiddenFor(x => x.SysUserId)
             <div class="row mb-3">
                 <div class="col-12">
                     <div class="card p-1">
@@ -24,7 +23,10 @@
             </div>
             @if (Model.Lotteries != null && Model.Lotteries.Count > 0)
             {
-                @await Component.InvokeAsync("TokenBalance")
+                if (Model.SysUserId.HasValue)
+                {
+                    @await Component.InvokeAsync("TokenBalance")
+                }
                 <div class="row mb-1">
                     <div class="col-lg-6 col-12">
                         <div class="card">
@@ -78,44 +80,48 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-12 d-none" id="div-confirm-lottery">
+                    <div class="col-lg-6 col-12 d-none-not-important" id="div-confirm-lottery">
                         <form id="form-purchase-lottery-ticket" method="POST" action="#" class="needs-validation" novalidate="">
-
-                            <div class="card pl-2 pr-2 pt-2 pb-5">
+                            <div class="card font-medium-2 pl-2 pr-2 pt-2">
                                 <div class="card-header text-center font-large-1 font-weight-bold text-danger">
-                                    CONFIRMATION
+                                    CONFIRM YOUR TICKET
                                 </div>
-                                <div class="card-content font-weight-bold font-medium-4  mt-5">
-                                    <div class="card-body mt-1">
+                                <div class="card-content mt-lg-3">
+                                    <div class="card-body mt-lg-1">
                                         <div class="row mb-1">
-                                            <div class="col-6 text-left">Ticket price:</div>
-                                            <div class="col-6 text-right" id="ticket-price">500 CPL</div>
+                                            <div class="col-lg-6 col-12 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketPrice")</div>
+                                            <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-medium-4" id="ticket-price"></div>
                                         </div>
-                                        <div class="row mb-2">
-                                            <div class="col-6 text-left">Total of tickets:</div>
-                                            <div class="col-6 text-right" id="total-of-tiket">1</div>
+                                        <div class="row mb-lg-2">
+                                            <div class="col-lg-6 col-12 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets")</div>
+                                            <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-medium-4" id="total-of-tiket"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-footer font-weight-bold font-medium-4">
-                                    <div class="row mt-1 text-danger">
-                                        <div class="col-6 text-left">Total price:</div>
-                                        <div class="col-6 text-right" id="total-price">500 CPL</div>
+                                <div class="card-footer">
+                                    <div class="row text-danger mt-1">
+                                        <div class="col-lg-6 col-12 text-left font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPrice")</div>
+                                        <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-large-1" id="total-price"></div>
                                     </div>
+                                    <small class="row mt-2 mb-lg-1 text-muted font-italic">
+                                        ccccccccccccccccccccccc
+                                        aaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbb ccccccccccccccccccccccc
+                                    </small>
+
                                 </div>
 
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <button type="button" id="btn-cancel-purchase-lottery-ticket" class="btn btn-primary btn-block font-large-1">Back</button>
+                                    <button type="button" id="btn-cancel-purchase-lottery-ticket" class="btn btn-secondary btn-block font-medium-3">Back</button>
                                 </div>
                                 <div class="col-6">
-                                    <button type="button" id="btn-confirm-purchase-lottery-ticket" class="btn btn-primary btn-block font-large-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</button>
+                                    <button type="button" id="btn-confirm-purchase-lottery-ticket" class="btn btn-primary btn-block font-medium-3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</button>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <div class="col-lg-6 col-12 d-none" id="div-thankyou-lottery">
+                    <div class="col-lg-6 col-12 d-none-not-important" id="div-thankyou-lottery">
                         <form id="form-purchase-lottery-ticket" method="POST" action="#" class="needs-validation" novalidate="">
 
                             <div class="card pl-2 pr-2 pt-2 pb-4">
@@ -126,18 +132,18 @@
                                 <div class="card-content font-weight-bold font-medium-4">
                                     <div class="card-body mt-1">
                                         <div class="row mb-1">
-                                            <div class="col-6 text-left">Ticket price:</div>
+                                            <div class="col-6 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketPrice"):</div>
                                             <div class="col-6 text-right" id="ticket-price">500 CPL</div>
                                         </div>
                                         <div class="row mb-2">
-                                            <div class="col-6 text-left">Total of tickets:</div>
+                                            <div class="col-6 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets"):</div>
                                             <div class="col-6 text-right" id="total-of-tiket">1</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-footer font-weight-bold font-medium-4">
                                     <div class="row mt-1 text-danger">
-                                        <div class="col-6 text-left">Total price:</div>
+                                        <div class="col-6 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPrice"):</div>
                                         <div class="col-6 text-right" id="total-price">500 CPL</div>
                                     </div>
                                 </div>
@@ -185,7 +191,7 @@
 </div>
 @section scripts
     {
-    <script src="~/js/dashboard/cpl.lottery.js"></script>
+    <script src="~/js/dashboard/cpl.lottery.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
