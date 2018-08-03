@@ -97,3 +97,7 @@ body {
 .d-none-not-important{
     display: none;
 }
+
+#number-of-ticket {
+    border:none;
+}

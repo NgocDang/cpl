@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CPL.Misc.Enums
+namespace CPL.Controllers
 {
-    public enum EnumLang
+    public class SupportViewModel
     {
-        ENGLISH = 1,
-        JAPANESE = 2
     }
 }

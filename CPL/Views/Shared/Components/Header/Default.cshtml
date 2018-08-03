@@ -59,7 +59,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-bold" asp-controller="DepositAndWithdraw" asp-action="Index" >
+                <a class="nav-link text-bold" asp-controller="DepositAndWithdraw" asp-action="Index">
                     <i class="la la-mail-forward"></i>
                     <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</span>
                 </a>
@@ -74,6 +74,19 @@
                 <a class="nav-link text-bold" asp-controller="Exchange" asp-action="Index">
                     <i class="la la-arrows-h"></i>
                     <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-bold" asp-controller="Contact" asp-action="Index">
+                    <i class="la la-envelope"></i>
+                    @if (Model.User == null)
+                    {
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")</span>
+                    }
+                    else
+                    {
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Support")</span>
+                    }
                 </a>
             </li>
         </ul>

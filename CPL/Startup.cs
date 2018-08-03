@@ -60,6 +60,7 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<LotteryPrize>, Repository<LotteryPrize>>()
                 .AddScoped<IRepositoryAsync<BTCPrice>, Repository<BTCPrice>>()
                 .AddScoped<IRepositoryAsync<News>, Repository<News>>()
+                .AddScoped<IRepositoryAsync<Contact>, Repository<Contact>>()
 
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
@@ -97,7 +98,8 @@ namespace CPL
                 .AddTransient<ILotteryPrizeService, LotteryPrizeService>()
                 .AddTransient<IQuartzSchedulerService, QuartzSchedulerService>()
                 .AddTransient<IBTCPriceService, BTCPriceService>()
-                .AddTransient<INewsService, NewsService>();
+                .AddTransient<INewsService, NewsService>()
+                .AddTransient<IContactService, ContactService>();
 
             services.AddSignalR();
         }
@@ -160,6 +162,14 @@ namespace CPL
             ServiceClient.ETokenClient = new ETokenService.ETokenClient();
             ServiceClient.ETokenClient.Endpoint.Address = new EndpointAddress(new Uri(fhCoreServiceEndpoint + CPLConstant.ETokenServiceEndpoint));
 
+            // EWallet Service
+            ServiceClient.EWalletClient = new EWalletService.EWalletClient();
+            ServiceClient.EWalletClient.Endpoint.Address = new EndpointAddress(new Uri(fhCoreServiceEndpoint + CPLConstant.EWalletServiceEndpoint));
+
+            // BWallet Service
+            ServiceClient.BWalletClient = new BWalletService.BWalletClient();
+            ServiceClient.BWalletClient.Endpoint.Address = new EndpointAddress(new Uri(fhCoreServiceEndpoint + CPLConstant.BWalletServiceEndpoint));
+
             // Authentication
             var authentication = ServiceClient.AuthenticationClient.AuthenticateAsync(CPLConstant.ProjectEmail, CPLConstant.ProjectName);
             authentication.Wait();
@@ -167,6 +177,12 @@ namespace CPL
 
             var eToken = ServiceClient.ETokenClient.SetAsync(Authentication.Token, new ETokenService.ETokenSetting { Abi = CPLConstant.Abi, ContractAddress = CPLConstant.SmartContractAddress, Environment = ETokenService.Environment.TESTNET, Platform = ETokenService.Platform.ETH });
             eToken.Wait();
+
+            var eWallet = ServiceClient.EWalletClient.SetAsync(Authentication.Token, new EWalletService.EWalletSetting { Environment = EWalletService.Environment.TESTNET });
+            eWallet.Wait();
+
+            var bWallet = ServiceClient.BWalletClient.SetAsync(Authentication.Token, new BWalletService.BWalletSetting { Environment = BWalletService.Environment.TESTNET });
+            bWallet.Wait();
         }
 
         private void LoadLangDetail(IServiceProvider serviceProvider)

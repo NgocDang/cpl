@@ -55,20 +55,6 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
-        public IActionResult Contact(ContactViewModel viewModel)
-        {
-            var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Contact.ToString());
-            var contactEmailTemplateViewModel = new ContactEmailTemplateViewModel();
-            contactEmailTemplateViewModel.Name = viewModel.Name;
-            contactEmailTemplateViewModel.Message = viewModel.Message;
-            contactEmailTemplateViewModel.Email = viewModel.Email;
-            contactEmailTemplateViewModel.Subject = template.Subject;
-            template.Body = _viewRenderService.RenderToStringAsync("/Views/Home/_ContactEmailTemplate.cshtml", contactEmailTemplateViewModel).Result;
-            EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), CPLConstant.AdminEmail);
-            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactEmailSent") });
-        }
-
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

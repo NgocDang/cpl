@@ -1,0 +1,23 @@
+﻿#Category-error {
+    display:none!important;
+}
+
+button[data-id="Category"] {
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+}
+
+#Description-error {
+    color: #FF4961;
+    padding-top: -webkit-calc(var(--input-padding-y)/ 3);
+    padding-top: -moz-calc(var(--input-padding-y)/ 3);
+    padding-top: calc(var(--input-padding-y)/ 3);
+    padding-bottom: -webkit-calc(var(--input-padding-y)/ 3);
+    padding-bottom: -moz-calc(var(--input-padding-y)/ 3);
+    padding-bottom: calc(var(--input-padding-y)/ 3);
+    font-size: 11px;
+    -webkit-transition: all .1s ease-in-out;
+    -o-transition: all .1s ease-in-out;
+    -moz-transition: all .1s ease-in-out;
+    transition: all .1s ease-in-out;
+}
