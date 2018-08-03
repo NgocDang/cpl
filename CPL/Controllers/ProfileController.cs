@@ -130,6 +130,9 @@ namespace CPL.Controllers
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             var viewModel = Mapper.Map<EditCredentialViewModel>(user);
+            var tfa = new TwoFactorAuthenticator();
+            var setupInfo = tfa.GenerateSetupCode(CPLConstant.AppName, user.Email, CPLConstant.TwoFactorAuthenticationSecretKey, 300, 300);
+            viewModel.QrCodeSetupImageUrl = setupInfo.QrCodeSetupImageUrl;
             return View(viewModel);
         }
 
@@ -176,11 +179,6 @@ namespace CPL.Controllers
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             var viewModel = Mapper.Map<EditSecurityViewModel>(user);
-
-            var tfa = new TwoFactorAuthenticator();
-            var setupInfo = tfa.GenerateSetupCode(CPLConstant.AppName, user.Email, CPLConstant.TwoFactorAuthenticationSecretKey, 300, 300);
-            viewModel.QrCodeSetupImageUrl = setupInfo.QrCodeSetupImageUrl;
-
             return View("EditSecurity", viewModel);
         }
 
