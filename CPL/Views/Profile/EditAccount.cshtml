@@ -12,6 +12,9 @@
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-header row">
+            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+                @await Component.InvokeAsync("TokenBalance")
+            </div>
             <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
                 <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditAccount")</h3>
                 <div class="row breadcrumbs-top d-inline-block">
@@ -440,7 +443,7 @@
                                             }
                                             else
                                             {
-                                                <div class="row mb-2">
+                                                <div class="row mb-2 pt-1">
                                                     <div class="col-md-6 col-sm-12">
                                                         <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</h6>
                                                         <h4>@Model.FirstName</h4>
