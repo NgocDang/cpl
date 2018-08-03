@@ -1,35 +1,33 @@
 ﻿@model TokenBalanceViewModel
-
-<div class="card">
-    <div class="card-header">
-        <h6 class="card-title text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenName")</h6>
-    </div>
-    <div class="card-content collapse show">
-        <div class="card-body">
-            <div class="text-center row clearfix mb-2">
-                <div class="col-12">
-                    <i class="cpl-token-balance font-large-3 bg-warning bg-glow white rounded-circle p-3 d-inline-block"></i>
+<div class="row">
+    <div class="col-12">
+        <section class="card bg-cpl">
+            <div class="card-content">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <div class="col-12 bg-white txt-box-lottery">
+                                <div class="float-lg-left float-md-none text-lg-left text-center mt-1">
+                                    <span class="font-medium-1 font-weight-bold text-danger">CPL Amount</span>
+                                    <br/>
+                                    <span class="font-large-1 font-weight-bold">@Model.TokenAmount.ToString("#,##0.########") CPL</span>
+                                </div>
+                                <div class="float-lg-right float-md-none text-lg-right text-center mt-0 mt-lg-2 mb-1 mb-lg-0">
+                                    <span class="font-medium-2 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice") = @Model.BTCToTokenRate.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span>
+                                    <br/>
+                                    <span class="font-medium-2 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice") = @Model.ETHToTokenRate.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12 mt-lg-0 mt-2 mt-sm-0">
+                            <img class="img-fluid d-block" src="~/images/lottery/1.png"/>
+                            <div id="img-2" class="font-medium-4 txt-stroke text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTotteryText")</div>
+                            <img class="img-fluid d-block" src="~/images/lottery/3.png"/>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <h3 class="text-center">@Model.TokenAmount.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h3>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-de mb-0">
-                <tbody>
-                    <tr>
-                        <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</td>
-                        <td><i class='cpl-token-grey-sm'></i> @Model.TokenAmount.ToString("#,##0.########")</td>
-                    </tr>
-                    <tr>
-                        <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice")</td>
-                        <td><i class='cc BTC-alt'></i> @Model.BTCToTokenRate.ToString("#,##0.########")</td>
-                    </tr>
-                    <tr>
-                        <td>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToETHPrice")</td>
-                        <td><i class="cc ETH-alt"></i> @Model.ETHToTokenRate.ToString("#,##0.########")</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        </section>
     </div>
 </div>
+
