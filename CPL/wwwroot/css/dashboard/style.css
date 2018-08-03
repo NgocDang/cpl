@@ -1323,7 +1323,7 @@ footer {
 }
 
 .header-navbar .nav-item + .nav-item, .header-navbar.navbar-without-menu .navbar-container {
-    margin-left:10px;
+    margin-left:5px;
 }
 
 .navbar-dark, .navbar-dark.navbar-horizontal {

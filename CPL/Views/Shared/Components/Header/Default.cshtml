@@ -131,5 +131,55 @@
                 </li>
             </ul>
         }
+            <li class="nav-item">
+                <a class="nav-link text-bold" asp-controller="Contact" asp-action="Index">
+                    <i class="la la-envelope"></i>
+                    @if (Model.User == null)
+                    {
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")</span>
+                    }
+                    else
+                    {
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Support")</span>
+                    }
+                </a>
+            </li>
+        </ul>
+            @if (Model.User != null)
+            {
+                <ul class="nav navbar-nav main-menu-navigation" data-menu="menu-navigation">
+                    <li class="dropdown nav-item" data-menu="dropdown">
+                        <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                            <i class="la la-user"></i>
+                            <span>Hi, @Model.User.FirstName @Model.User.LastName</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" asp-controller="Profile" asp-action="EditCredential" ><i class="la la-key"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" id="logout-confirmation"><i class="la la-power-off"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            }
+            else
+            {
+                <ul class="nav navbar-nav" data-menu="menu-navigation">
+                    <li class="nav-item">
+                        <a class="btn btn-sm btn-danger" asp-controller="Authentication" asp-action="Register">
+                            <i class="la la-user-plus"></i>
+                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-sm btn-white" asp-controller="Authentication" asp-action="LogIn">
+                            <i class="la la-sign-in"></i>
+                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</span>
+                        </a>
+                    </li>
+                </ul>
+            }
     </div>
 </div>
