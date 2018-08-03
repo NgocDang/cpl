@@ -37,6 +37,7 @@ namespace CPL.Infrastructure
         public DbSet<News> News { get; set; }
         public DbSet<BTCTransaction> BTCTransaction { get; set; }
         public DbSet<ETHTransaction> ETHTransaction { get; set; }
+        public DbSet<Contact> Contact { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
