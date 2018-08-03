@@ -83,28 +83,29 @@
                     </div>
                     <div class="col-lg-6 col-12 d-none-not-important" id="div-confirm-lottery">
                         <div class="card font-medium-2 pl-2 pr-2 pt-2">
-                            <div class="card-header text-center font-large-1 font-weight-bold text-danger">
+                            <div class="card-header text-center font-large-1 font-weight-bold text-danger text-uppercase">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ConfirmYourTicket")
                             </div>
                             <div class="card-content mt-lg-3">
-                                <div class="card-body mt-lg-1">
+                                <div class="card-body mt-14px">
                                     <div class="row mb-1">
                                         <div class="col-lg-6 col-12 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketPrice")</div>
-                                        <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-medium-4" id="ticket-price"></div>
+                                        <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-medium-4 ticket-price"></div>
                                     </div>
                                     <div class="row mb-lg-2">
                                         <div class="col-lg-6 col-12 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets")</div>
-                                        <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-medium-4" id="total-of-tiket"></div>
+                                        <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-medium-4 total-of-tiket"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer">
                                 <div class="row text-danger mt-1">
                                     <div class="col-lg-6 col-12 text-left font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPrice")</div>
-                                    <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-large-1" id="total-price"></div>
+                                    <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-large-1 total-price"></div>
                                 </div>
-                                <small class="row mt-2 mb-lg-1 text-muted font-italic">
-                                    temp text temp text temp temp text temp text temp temp text temp text temp temp text temp text temp
+                                <small class="font-italic">
+                                    <p class="mb-0 mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HintConfirmLottery1")</p>
+                                    <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HintConfirmLottery2")</p>
                                 </small>
                             </div>
                         </div>
@@ -117,40 +118,41 @@
                             </div>
                         </div>
                     </div>
-                    @*<div class="col-lg-6 col-12 d-none-not-important" id="div-thankyou-lottery">
-                            <div class="card pl-2 pr-2 pt-2 pb-4">
-                                <div class="card-header text-center font-large-1 font-weight-bold text-danger">
-                                    <p>THANK YOU!</p>
-                                    <p>YOU BOUGHT XXX CPL</p>
-                                </div>
-                                <div class="card-content font-weight-bold font-medium-4">
-                                    <div class="card-body mt-1">
-                                        <div class="row mb-1">
-                                            <div class="col-6 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketPrice"):</div>
-                                            <div class="col-6 text-right" id="ticket-price">500 CPL</div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="col-6 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets"):</div>
-                                            <div class="col-6 text-right" id="total-of-tiket">1</div>
-                                        </div>
+                    <div class="col-lg-6 col-12 d-none-not-important" id="div-thankyou-lottery">
+                        <div class="card font-medium-2 pl-2 pr-2 pt-2">
+                            <div class="card-header text-center font-large-1 font-weight-bold text-danger">
+                                THANK YOU!
+                                YOU BOUGHT XXX CPL
+                            </div>
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="row mb-1">
+                                        <div class="col-lg-6 col-12 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketPrice")</div>
+                                        <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-medium-4 ticket-price"></div>
                                     </div>
-                                </div>
-                                <div class="card-footer font-weight-bold font-medium-4">
-                                    <div class="row mt-1 text-danger">
-                                        <div class="col-6 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPrice"):</div>
-                                        <div class="col-6 text-right" id="total-price">500 CPL</div>
+                                    <div class="row mb-lg-2">
+                                        <div class="col-lg-6 col-12 text-left">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets")</div>
+                                        <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-medium-4 total-of-tiket"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <button type="button" id="btn-cancel-purchase-lottery-ticket" class="btn btn-primary btn-block font-large-1">Back</button>
+                            <div class="card-footer">
+                                <div class="row text-danger mt-1">
+                                    <div class="col-lg-6 col-12 text-left font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPrice")</div>
+                                    <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-large-1 total-price"></div>
                                 </div>
-                                <div class="col-6">
-                                    <button type="button" id="btn-confirm-purchase-lottery-ticket" class="btn btn-primary btn-block font-large-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</button>
-                                </div>
+                                <small class="font-italic">
+                                    <p class="mb-0 mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HintThankYouLottery1")</p> <p class="text-primary mb-0" id="span-txHashId"></p>
+                                    <p class="mt-0 mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HintThankYouLottery2")</p>
+                                </small>
                             </div>
-                        </div>*@
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-primary btn-block mb-lg-3" id="btn-go-to-toppage">Go to top page</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
