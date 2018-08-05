@@ -1,4 +1,6 @@
-﻿var Lottery = {
+﻿/// <reference path="cpl.login.js" />
+/// <reference path="cpl.login.js" />
+var Lottery = {
     historyDatatable: null,
     init: function () {
         Lottery.bindPurchaseTicket();
@@ -62,16 +64,10 @@
                     TotalPriceOfTickets: parseInt($("#total-price").val()),
                 },
                 success: function (data) {
-                    if (data.success) {
-                        $("#div-confirm-lottery").hide();
-                        $("#div-thankyou-lottery").show();
-                        $("#total-price").val(data.totalPriceOfTickets); // Set value to calculate in contronller
-                        $("#span-txHashId").html("<a class='text-success' target='_blank' href = https://etherscan.io/tx/" + data.txHashId + "><u>" + data.txHashId + "</u></a>");
-                        Lottery.historyDatatable.ajax.reload();
-                    }
-                    else {
-                        toastr.error(data.message, 'Error!');
-                    }
+                    $("#modal").html(data);
+                    $("#login-modal").modal("show");
+                    $.getScript("https://www.google.com/recaptcha/api.js?hl=en");
+                    $.getScript("/js/dashboard/cpl.login.js");
                 },
                 complete: function (data) {
                     $("#purchase-lottery-ticket").modal("hide");
@@ -140,7 +136,6 @@
         });
     }
 };
-
 
 $(document).ready(function () {
     Lottery.init();
