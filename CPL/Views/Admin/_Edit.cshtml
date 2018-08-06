@@ -1,0 +1,81 @@
+﻿@model SysUserViewModel
+
+<div class="modal" tabindex="-1" role="dialog" id="update-user" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="form-update-user" method="POST" action="#" class="needs-validation" novalidate="">
+                <div class="modal-header">
+                    <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "User")</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12">
+                            <label for="FirstName" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</label>
+                            <input id="FirstName" type="text" value="@Model.FirstName" class="form-control" required name="FirstName" autofocus>
+                            <div class="invalid-feedback">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstNameRequired")
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12">
+                            <label for="LastName" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</label>
+                            <input id="LastName" type="text" value="@Model.LastName" class="form-control" required name="LastName" autofocus>
+                            <div class="invalid-feedback">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastNameRequired")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12">
+                            <label for="Email" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                            <input id="Email" type="email" value="@Model.Email" class="form-control" name="Email" autofocus>
+                            <div class="invalid-feedback">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidOrExistingEmail")
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12">
+                            <label for="Password" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
+                            <input id="Password" type="password" class="form-control" name="Password" autofocus>
+                            <div class="invalid-feedback">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12">
+                            <label for="Address" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</label>
+                            <input id="Address" type="text" value="@Model.StreetAddress" class="form-control" required name="Address" autofocus>
+                            <div class="invalid-feedback">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AddressRequired")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12">
+                            <label for="Mobile">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Mobile")</label>
+                            <input id="Mobile" type="tel" value="@Model.Mobile" class="form-control" maxlength="13" name="Mobile">
+                            <div class="invalid-feedback">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidMobileNumber")
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12" style="padding-top:35px;">
+                            <input id="TwoFactorAuthenticationEnable" type="checkbox" checked="@Model.TwoFactorAuthenticationEnable" class="js-switch" name="TwoFactorAuthenticationEnable">
+                            <label for="TwoFactorAuthenticationEnable" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsTwoFactorAuthenticationEnabled")  &nbsp; </label>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(x => x.Id)
+                </div>
+                <div class="modal-footer">
+                    @if (!Model.IsDeleted)
+                    {
+                        <button type="button" id="btn-update-user" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
+                        <button type="button" id="btn-delete-user" class="btn btn-sm btn-danger">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Delete")</button>
+                    }
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

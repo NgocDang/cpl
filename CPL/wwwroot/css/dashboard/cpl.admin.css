@@ -1,0 +1,6 @@
+﻿@media (max-width: 400px){
+    #search-box .form-group{
+        position: relative !important;
+        right:auto !important;
+    }
+}

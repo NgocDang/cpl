@@ -58,6 +58,13 @@ namespace CPL.Controllers
             var viewModel = new AdminViewModel();
             viewModel.TotalKYCPending = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && !x.KYCVerified.Value);
             viewModel.TotalKYCVerified = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && x.KYCVerified.Value);
+            viewModel.TotalUser = _sysUserService.Queryable().Count();
+            return View(viewModel);
+        }
+
+        public IActionResult AllUser()
+        {
+            var viewModel = new AllUserViewModel();
             return View(viewModel);
         }
 
@@ -143,6 +150,75 @@ namespace CPL.Controllers
             }
         }
 
+        public JsonResult SearchAllUser(DataTableAjaxPostModel viewModel)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchAllUserFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        public IList<SysUserViewModel> SearchAllUserFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            // search the dbase taking into consideration table sorting and paging
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = _sysUserService.Queryable()
+                        .Count();
+
+                totalResultsCount = _sysUserService.Queryable()
+                        .Count();
+
+                return _sysUserService.Queryable()
+                            .Select(x => Mapper.Map<SysUserViewModel>(x))
+                            .OrderBy(sortBy, sortDir)
+                            .Skip(skip)
+                            .Take(take)
+                            .ToList();
+            }
+            else
+            {
+                filteredResultsCount = _sysUserService.Queryable()
+                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
+                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
+                        .Count();
+
+                totalResultsCount = _sysUserService.Queryable()
+                        .Count();
+
+                return _sysUserService.Queryable()
+                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
+                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
+                        .Select(x => Mapper.Map<SysUserViewModel>(x))
+                        .OrderBy(sortBy, sortDir)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToList();
+            }
+        }
+
         [HttpPost]
         public IActionResult UpdateKYCVerify(int id)
         {
@@ -189,6 +265,14 @@ namespace CPL.Controllers
             _unitOfWork.SaveChanges();
 
             return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "CancelSuccessfully") });
+        }
+
+        public IActionResult EditUser(int id)
+        {
+            var user = _sysUserService.Queryable()
+                .FirstOrDefault(x => x.Id == id);
+
+            return PartialView("_Edit", Mapper.Map<SysUserViewModel>(user));
         }
     }
 }
