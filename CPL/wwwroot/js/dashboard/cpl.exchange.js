@@ -7,10 +7,10 @@
         Exchange.bindConfirmExchange();
     },
     bindNext: function () {
-        $('section').on('click', '.btn-next', function () {
+        $('.session-exchange').on('click', '.btn-next', function () {
             var _this = this;
-            if (parseFloat($(_this).parents("section").find(".from-amount").val()) > 0 && parseFloat($(_this).parents("section").find(".from-amount").val()) <= parseFloat($(_this).parents("section").find(".from-amount").siblings(".max-amount").val())) {
-                $(_this).parents("section").find(".invalid-amount").hide();
+            if (parseFloat($(_this).parents(".session-exchange").find(".from-amount").val()) > 0 && parseFloat($(_this).parents(".session-exchange").find(".from-amount").val()) <= parseFloat($(_this).parents(".session-exchange").find(".from-amount").siblings(".max-amount").val())) {
+                $(_this).parents(".session-exchange").find(".invalid-amount").hide();
                 $.ajax({
                     url: "/Exchange/GetConfirm/",
                     type: "GET",
@@ -19,10 +19,10 @@
                         $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
                     },
                     data: {
-                        FromCurrency: $(_this).parents("section").find(".from-currency").val(),
-                        FromAmount: $(_this).parents("section").find(".from-amount").val(),
-                        ToCurrency: $(_this).parents("section").find(".to-currency").val(),
-                        ToAmount: $(_this).parents("section").find(".to-amount").val(),
+                        FromCurrency: $(_this).parents(".session-exchange").find(".from-currency").val(),
+                        FromAmount: $(_this).parents(".session-exchange").find(".from-amount").val(),
+                        ToCurrency: $(_this).parents(".session-exchange").find(".to-currency").val(),
+                        ToAmount: $(_this).parents(".session-exchange").find(".to-amount").val(),
                     },
                     success: function (data) {
                         $("#modal").html(data);
@@ -35,7 +35,7 @@
                 });
             }
             else
-                $(_this).parents("section").find(".invalid-amount").show();
+                $(_this).parents(".session-exchange").find(".invalid-amount").show();
         })
     },
     bindConfirmExchange: function () {
@@ -72,10 +72,10 @@
         })
     },
     bindSwap: function () {
-        $('section').on('click', '.btn-swap', function () {
+        $('.session-exchange').on('click', '.btn-swap', function () {
             //Swap label
-            if ($(this).parents("section").length > 0) {
-                var section = $(this).parents("section");
+            if ($(this).parents(".session-exchange").length > 0) {
+                var section = $(this).parents(".session-exchange");
                 var label = section.find("label[for='from-amount']").text();
                 section.find("label[for='from-amount']").text(section.find("label[for='to-amount']").text());
                 section.find("label[for='to-amount']").text(label);
@@ -98,19 +98,19 @@
         });
     },
     bindMax: function () {
-        $('section').on('click', '.btn-max', function () {
+        $('.session-exchange').on('click', '.btn-max', function () {
             //Swap label
-            if ($(this).parents("section").length > 0) {
-                var section = $(this).parents("section");
+            if ($(this).parents(".session-exchange").length > 0) {
+                var section = $(this).parents(".session-exchange");
                 //var label = section.find((".from-amount").val);
                 section.find(".from-amount").val(section.find(".from-amount").siblings(".max-amount").val()).trigger('change');
             }
         });
     },
     bindInputChange: function(){
-        $('section').on('change paste keyup input', '.from-amount', function () {
-            if ($(this).parents("section").length > 0) {
-                var section = $(this).parents("section");
+        $('.session-exchange').on('change paste keyup input', '.from-amount', function () {
+            if ($(this).parents(".session-exchange").length > 0) {
+                var section = $(this).parents(".session-exchange");
                 if (parseFloat(section.find(".from-amount").val()) > 0) {
                     var fromCurrency = section.find(".from-amount").siblings(".from-currency").val();
                     section.find(".invalid-amount").hide()
@@ -133,8 +133,8 @@
                     }
                 }
                 else {
-                    $(this).parents("section").find(".invalid-amount").show();
-                    $(this).parents("section").find(".to-amount").val(null);
+                    $(this).parents(".session-exchange").find(".invalid-amount").show();
+                    $(this).parents(".session-exchange").find(".to-amount").val(null);
                 }
             }
         });

@@ -1,23 +1,21 @@
 ﻿@model ConfirmExchangeViewModel
 
 <div class="modal" tabindex="-1" role="dialog" id="exchange" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-md" role="document">
+    <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <form id="form-exchange" method="POST" action="#" class="needs-validation" novalidate="">
-                <div class="modal-header">
+                <div class="modal-header text-center">
                     <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="Name">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ConfirmExchangeWarning")</label>
-                    </div>
+                <div class="modal-body text-center">
+                    <label for="Name">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ConfirmExchangeWarning")</label>
                     <div class="card-body">
                         <form class="form-horizontal form-purchase-token" action="buy-ico.html">
                             <div class="row">
                                 <div class="col-md-5 col-12">
                                     <fieldset class="form-label-group mb-0">
-                                        <input type="text" class="form-control" id="from-currency" value="@Model.FromAmount" readonly>
+                                        <input type="text" class="form-control" id="from-currency" value="@Model.FromAmount.ToString("#,##0.####")" readonly>
                                         <label for="from-currency">@Model.FromCurrency</label>
                                     </fieldset>
                                 </div>
@@ -26,7 +24,7 @@
                                 </div>
                                 <div class="col-md-5 col-12">
                                     <fieldset class="form-label-group mb-0">
-                                        <input type="text" class="form-control" id="to-currency" value="@Model.ToAmount" readonly>
+                                        <input type="text" class="form-control" id="to-currency" value="@Model.ToAmount.ToString("#,##0.####")" readonly>
                                         <label for="to-currency">@Model.ToCurrency</label>
                                     </fieldset>
                                 </div>
@@ -38,10 +36,10 @@
                     <button type="button" id="btn-confirm-exchange" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yes")</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
                 </div>
-                @Html.HiddenFor(x => x.FromAmount)
-                @Html.HiddenFor(x => x.FromCurrency)
-                @Html.HiddenFor(x => x.ToAmount)
-                @Html.HiddenFor(x => x.ToCurrency)
+            @Html.HiddenFor(x => x.FromAmount)
+            @Html.HiddenFor(x => x.FromCurrency)
+            @Html.HiddenFor(x => x.ToAmount)
+            @Html.HiddenFor(x => x.ToCurrency)
             </form>
         </div>
     </div>
