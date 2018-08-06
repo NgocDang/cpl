@@ -21,7 +21,7 @@
                     </div>
                 </div>
             </div>
-            @if (Model.Lotteries != null && Model.Lotteries.Count > 0)
+            @if (Model.Lottery != null)
             {
                 if (Model.SysUserId.HasValue)
                 {
@@ -45,7 +45,7 @@
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchasedTickets")
                                                 </div>
                                                 <div class="col-md-6 col-12 text-md-right">
-                                                    <h1>@Model.Lotteries[0].LotteryHistories.Count() / @Model.Lotteries[0].Volume <span class="card-description text-muted"></span></h1>
+                                                    <h1>@Model.Lottery.LotteryHistories.Count() / @Model.Lottery.Volume <span class="card-description text-muted"></span></h1>
                                                 </div>
                                             </div>
                                             <div class="row mt-8px">

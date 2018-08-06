@@ -60,38 +60,37 @@ namespace CPL.Controllers
             this._gameHistoryService = gameHistoryService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
             var viewModel = new LotteryGameViewModel();
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             viewModel.SysUserId = user?.Id;
 
-            //TODO: Should load data from current lottery game in Lottery and LotteryPrize tables
-            viewModel.Lotteries = _lotteryService
-                .Query()
-                .Include(x => x.LotteryHistories)
-                .Include(x => x.LotteryPrizes)
-                .Select()
-                .Where(x => x.LotteryHistories.Count() < x.Volume && x.Status.Equals((int)EnumLotteryGameStatus.ACTIVE))
-                .Select(x => Mapper.Map<LotteryViewModel>(x))
-                .ToList();
+            var lottery = _lotteryService
+                            .Query()
+                            .Include(x => x.LotteryHistories)
+                            //.Include(x => x.LotteryPrizes)
+                            .Select()
+                            .FirstOrDefault(x => x.Id == id);
 
-            foreach (var lottery in viewModel.Lotteries)
-            {
-                var numberOfGroup = lottery.Volume / CPLConstant.LotteryGroupSize;
-                var groups = Enumerable.Repeat(0, numberOfGroup).ToArray();
-                var groupSize = CPLConstant.LotteryGroupSize;
+            viewModel.Lottery = Mapper.Map<LotteryViewModel>(lottery);
 
-                for (var i = lottery.LotteryPrizes.Count - 1; i >= 0; i--)
-                {
-                    lottery.LotteryPrizes[i].Probability = Math.Round(((decimal)lottery.LotteryPrizes[i].Volume / (decimal)numberOfGroup) * (1m / (decimal)groupSize) * 100m, 4);
-                    ProbabilityCalculate(ref groups, ref numberOfGroup, ref groupSize, lottery.LotteryPrizes[i].Volume);
-                }
+            // Do not delete !
+            //foreach (var lottery in viewModel.Lotteries)
+            //{
+            //    var numberOfGroup = lottery.Volume / CPLConstant.LotteryGroupSize;
+            //    var groups = Enumerable.Repeat(0, numberOfGroup).ToArray();
+            //    var groupSize = CPLConstant.LotteryGroupSize;
 
-            }
+            //    for (var i = lottery.LotteryPrizes.Count - 1; i >= 0; i--)
+            //    {
+            //        lottery.LotteryPrizes[i].Probability = Math.Round(((decimal)lottery.LotteryPrizes[i].Volume / (decimal)numberOfGroup) * (1m / (decimal)groupSize) * 100m, 4);
+            //        ProbabilityCalculate(ref groups, ref numberOfGroup, ref groupSize, lottery.LotteryPrizes[i].Volume);
+            //    }
+            //}
 
-            if (viewModel.Lotteries != null && viewModel.Lotteries[0] != null && viewModel.Lotteries[0].Volume > 0)
-                viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.Lotteries[0].LotteryHistories.Count() / (decimal)viewModel.Lotteries[0].Volume * 100).ToString();
+            if (viewModel.Lottery != null && viewModel.Lottery.Volume > 0)
+                viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.Lottery.LotteryHistories.Count() / (decimal)viewModel.Lottery.Volume * 100m).ToString();
 
             return View(viewModel);
         }
