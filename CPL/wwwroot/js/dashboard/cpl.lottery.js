@@ -1,6 +1,4 @@
-﻿/// <reference path="cpl.login.js" />
-/// <reference path="cpl.login.js" />
-var Lottery = {
+﻿var Lottery = {
     historyDatatable: null,
     init: function () {
         Lottery.bindPurchaseTicket();

@@ -11,21 +11,22 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
     <link href="~/css/dashboard/cpl.lottery.css" rel="stylesheet" asp-append-version="true" />
 }
-<div class="content-wrapper">
-    <div class="content-body">
-        <div class="row">
-            <div class="col-12">
-                <div class="card p-lg-1">
-                    <img src="~/images/lottery/slide_lottery.jpg" class="img-fluid" alt="Lottery banner">
+<div class="app-content container center-layout mt-2">
+    <div class="content-wrapper">
+        <div class="content-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card p-lg-1">
+                        <img src="~/images/lottery/slide_lottery.jpg" class="img-fluid" alt="Lottery banner">
+                    </div>
                 </div>
             </div>
-        </div>
-        @if (Model.Lotteries != null && Model.Lotteries.Count > 0)
-        {
-            if (Model.SysUserId.HasValue)
+            @if (Model.Lotteries != null && Model.Lotteries.Count > 0)
             {
-                @await Component.InvokeAsync("TokenBalance")
-            }
+                if (Model.SysUserId.HasValue)
+                {
+                    @await Component.InvokeAsync("TokenBalance")
+                }
 
             <div class="row mb-1">
                 <div class="col-lg-6 col-12">
@@ -155,32 +156,32 @@
                     </div>
                 </div>
             </div>
-        }
-    </div>
-    <div id="box-captcha"></div>
-    <div class="row">
-        @if (Model.SysUserId.HasValue)
-        {
-            <div class="col-12">
-                <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
-                <div class="card">
-                    <div class="card-content">
-                        <table id="dt-lottery-history" class="table responsive table-hover table-xl mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTicketNumber")</th>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UpdatedDate")</th>
-                                </tr>
-                            </thead>
-                        </table>
+            }
+        </div>
+        <div class="row">
+            @if (Model.SysUserId.HasValue)
+            {
+                <div class="col-12">
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
+                    <div class="card">
+                        <div class="card-content">
+                            <table id="dt-lottery-history" class="table responsive table-hover table-xl mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTicketNumber")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UpdatedDate")</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 </div>
 @section scripts
