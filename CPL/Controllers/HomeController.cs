@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Mail;
 using System.Net;
 using CPL.Common.Enums;
+using LinqKit;
 
 namespace CPL.Controllers
 {
@@ -26,8 +27,7 @@ namespace CPL.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-
-        private readonly ITeamService _teamService;
+        private readonly ILotteryService _lotteryService;
         private readonly ITemplateService _templateService;
 
         public HomeController(
@@ -37,7 +37,7 @@ namespace CPL.Controllers
             IViewRenderService viewRenderService,
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
-            ITeamService teamService,
+            ILotteryService lotteryService,
             ITemplateService templateService)
         {
             this._langService = langService;
@@ -46,7 +46,7 @@ namespace CPL.Controllers
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
             this._unitOfWork = unitOfWork;
-            this._teamService = teamService;
+            this._lotteryService = lotteryService;
             this._templateService = templateService;
         }
 
@@ -54,7 +54,21 @@ namespace CPL.Controllers
         {
             if (!HttpContext.Session.GetInt32("LangId").HasValue)
                 HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
+            var lotteries = _lotteryService.Query()
+                .Include(x => x.LotteryHistories)
+                .Select()
+                .Where(x => x.Status == (int)EnumLotteryGameStatus.ACTIVE)
+                .OrderByDescending(x => x.CreatedDate);
+
             var viewModel = new HomeViewModel();
+            viewModel.Lotteries = lotteries
+                .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
+                .ToList();
+
+            viewModel.Slides = lotteries
+                .Select(x => Mapper.Map<HomeSlideViewModel>(x))
+                .ToList();
+
             return View(viewModel);
         }
 
