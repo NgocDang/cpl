@@ -73,15 +73,34 @@
                  }
                  else {
                      $("#login-modal").modal("hide");
-                     $("#div-confirm-lottery").hide();
-                     $("#div-thankyou-lottery").show();
-                     $("#span-txHashId").html("<a class='text-success' target='_blank' href = https://rinkeby.etherscan.io/tx/" + data.txHashId + "><u>" + data.txHashId + "</u></a>");
-                     Lottery.historyDatatable.ajax.reload();
+                     Lottery.loadHeaderViewComponent(); // Reloader header view component after login
+                     if (data.success) {
+                         $("#div-confirm-lottery").hide();
+                         $("#div-thankyou-lottery").show();
+                         $("#span-txHashId").html("<a class='text-success' target='_blank' href = https://rinkeby.etherscan.io/tx/" + data.txHashId + "><u>" + data.txHashId + "</u></a>");
+                         toastr.success(data.message, 'Success!');
+                         Lottery.historyDatatable.ajax.reload();
+                     }
+                     else {
+                         toastr.error(data.message, 'Error!');
+                         Lottery.historyDatatable.ajax.reload();
+                     }
                  }
              },
              complete: function (data) {
              }
          });
+    },
+    loadHeaderViewComponent: function () {
+        $.ajax({
+            url: "/Home/LoadHeaderViewComponent/",
+            type: "GET",
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#header-content").html(data);
+            }
+        });
     },
     loadLotteryHistoryTable: function () {
         if ($("#dt-lottery-history").length == 0)

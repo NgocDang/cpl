@@ -68,5 +68,10 @@ namespace CPL.Controllers
             LangDetailHelper.LangDetails = _langDetailService.Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
         }
 
+        public IActionResult LoadHeaderViewComponent()
+        {
+            return ViewComponent("Header");
+        }
+
     }
 }
