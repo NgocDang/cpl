@@ -51,27 +51,37 @@
         });
     },
     bindConfirmPurchaseTicket: function () {
-        $('#btn-confirm-purchase-lottery-ticket').click( function () {
-            var _this = this;
-            $.ajax({
-                url: "/Lottery/ConfirmPurchaseTicket/",
-                type: "POST",
-                data: {
-                    TicketPrice: parseInt($(".ticket-price").val()),
-                    TotalTickets: parseInt($(".total-of-tiket").val()),
-                    TotalPriceOfTickets: parseInt($(".total-price").val()),
-                },
-                success: function (data) {
-                    $("#modal").html(data);
-                    $("#login-modal").modal("show");
-                    $.getScript("https://www.google.com/recaptcha/api.js?hl=en");
-                    $.getScript("/js/dashboard/cpl.login.js");
-                },
-                complete: function (data) {
-                    $("#purchase-lottery-ticket").modal("hide");
-                }
-            });
+        $('#btn-confirm-purchase-lottery-ticket').click(function () {
+            Lottery.loadAjaxConfirmPurchaseTicket();
         })
+
+    },
+    loadAjaxConfirmPurchaseTicket() {
+         $.ajax({
+             url: "/Lottery/ConfirmPurchaseTicket/",
+             type: "POST",
+             data: {
+                 TicketPrice: parseInt($(".ticket-price").val()),
+                 TotalTickets: parseInt($(".total-of-tiket").val()),
+                 TotalPriceOfTickets: parseInt($(".total-price").val()),
+             },
+             success: function (data) {
+                 if (data.success === undefined) {
+                     $("#modal").html(data);
+                     $("#login-modal").modal("show");
+                     $.getScript("https://www.google.com/recaptcha/api.js?hl=en");
+                 }
+                 else {
+                     $("#login-modal").modal("hide");
+                     $("#div-confirm-lottery").hide();
+                     $("#div-thankyou-lottery").show();
+                     $("#span-txHashId").html("<a class='text-success' target='_blank' href = https://rinkeby.etherscan.io/tx/" + data.txHashId + "><u>" + data.txHashId + "</u></a>");
+                     Lottery.historyDatatable.ajax.reload();
+                 }
+             },
+             complete: function (data) {
+             }
+         });
     },
     loadLotteryHistoryTable: function () {
         if ($("#dt-lottery-history").length == 0)
@@ -132,7 +142,7 @@
                 },
             ],
         });
-    }
+    },
 };
 
 $(document).ready(function () {

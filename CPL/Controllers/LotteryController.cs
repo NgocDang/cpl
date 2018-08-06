@@ -125,36 +125,32 @@ namespace CPL.Controllers
         [HttpPost]
         public IActionResult ConfirmPurchaseTicket(LotteryTicketPurchaseViewModel viewModel)
         {
-            // For test
-            // return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully"), txHashId = "0x5c581096af1d62eb9a4e70539652ffbd7b9c868932b9f5a61b9ec2181e986064" });
-
-            var LoginViewModel = new AccountLoginModel { ReturnUrl = null };
-            LoginViewModel.Langs = _langService.Queryable()
-                .Select(x => Mapper.Map<LangViewModel>(x))
-                .ToList();
-
-            var gcapchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
-            LoginViewModel.GCapchaKey = gcapchaKey;
-
-            if (HttpContext.Session.GetInt32("LangId").HasValue)
-                LoginViewModel.Lang = LoginViewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-            else
-                LoginViewModel.Lang = LoginViewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
-
-            HttpContext.Session.SetInt32("LangId", 1);
-
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             if (user == null)
             {
-                return PartialView("_Login", LoginViewModel);
-                return new JsonResult(new
-                {
-                    success = true,
-                    url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("LogIn", "Authentication")}?returnUrl={Url.Action("Index", "Lottery")}"
-                });
+                var loginViewModel = new AccountLoginModel();
+
+                loginViewModel.Langs = _langService.Queryable()
+                    .Select(x => Mapper.Map<LangViewModel>(x))
+                    .ToList();
+
+                var gcapchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
+                loginViewModel.GCapchaKey = gcapchaKey;
+
+                if (HttpContext.Session.GetInt32("LangId").HasValue)
+                    loginViewModel.Lang = loginViewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
+                else
+                    loginViewModel.Lang = loginViewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
+
+                HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
+
+                return PartialView("_Login", loginViewModel);
             }
             else
             {
+                // For test
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully"), txHashId = "0x5c581096af1d62eb9a4e70539652ffbd7b9c868932b9f5a61b9ec2181e986064" });
+
                 var currentUser = _sysUserService.Query().Select().Where(x => x.Id == user.Id).FirstOrDefault();
                 var lotteryId = _lotteryService
                                     .Query()
