@@ -64,6 +64,7 @@
                  TicketPrice: parseInt($(".ticket-price").val()),
                  TotalTickets: parseInt($(".total-of-tiket").val()),
                  TotalPriceOfTickets: parseInt($(".total-price").val()),
+                 LotteryId: parseInt($("#Lottery_Id").val())
              },
              success: function (data) {
                  if (data.success === undefined) {
