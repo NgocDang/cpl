@@ -129,12 +129,15 @@ namespace CPL.Controllers
             viewModel.TotalTickets = amount;
             viewModel.TotalPriceOfTickets = viewModel.TotalTickets * viewModel.TicketPrice;
 
-            return PartialView("_PurchaseTicketConfirm", viewModel);
+            return new JsonResult(viewModel);
         }
 
         [HttpPost]
         public IActionResult ConfirmPurchaseTicket(LotteryTicketPurchaseViewModel viewModel)
         {
+            // For test
+            // return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully"), txHashId = "0x5c581096af1d62eb9a4e70539652ffbd7b9c868932b9f5a61b9ec2181e986064" });
+
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             if (user == null)
             {
@@ -175,9 +178,7 @@ namespace CPL.Controllers
                         lastTicketIndex += 1;
                         ticketIndexList.Add(lastTicketIndex);
                     }
-                    string ticketList = string.Join(",", ticketIndexList.ToArray());
-
-                    var paramJson = CPLConstant.paramJson.Replace("lotteryphase", lotteryPhase.ToString()).Replace("useraddress", userAddress).Replace("ticketindexlist", ticketList);
+                    var paramJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", ticketIndexList.ToArray()));
 
                     var buyTime = DateTime.Now;
                     var ticketGenResult = ServiceClient.ETokenClient.CallTransactionAsync(Authentication.Token, CPLConstant.OwnerAddress, CPLConstant.OwnerPassword, "random", CPLConstant.GasPriceMultiplicator, CPLConstant.DurationInSecond, paramJson);
@@ -203,7 +204,7 @@ namespace CPL.Controllers
                         _sysUserService.Update(currentUser);
 
                         _unitOfWork.SaveChanges();
-                        return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully") });
+                        return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully"), txHashId = ticketGenResult.Result.TxId.ToString() });
                     }
                     else
                         return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseFailed") });

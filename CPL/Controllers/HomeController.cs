@@ -21,6 +21,7 @@ namespace CPL.Controllers
     public class HomeController : Controller
     {
         private readonly ILangService _langService;
+        private readonly ILangDetailService _langDetailService;
         private readonly IMapper _mapper;
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
@@ -31,6 +32,7 @@ namespace CPL.Controllers
 
         public HomeController(
             ILangService langService,
+            ILangDetailService langDetailService,
             IMapper mapper,
             IViewRenderService viewRenderService,
             IUnitOfWorkAsync unitOfWork,
@@ -39,6 +41,7 @@ namespace CPL.Controllers
             ITemplateService templateService)
         {
             this._langService = langService;
+            this._langDetailService = langDetailService;
             this._mapper = mapper;
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
@@ -59,5 +62,11 @@ namespace CPL.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public void UpdateLangDetail()
+        {
+            LangDetailHelper.LangDetails = _langDetailService.Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
+        }
+
     }
 }
