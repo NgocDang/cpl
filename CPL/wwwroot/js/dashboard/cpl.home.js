@@ -26,7 +26,7 @@
         
     },
     loadSliderGame: function () {
-        $("#slider-game .owl-carousel").owlCarousel({
+        $("#lottery-game .owl-carousel").owlCarousel({
             items: 4,
             loop: true,
             margin: 5,
