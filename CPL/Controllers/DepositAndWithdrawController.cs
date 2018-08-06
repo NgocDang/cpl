@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
+using CPL.Domain;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
 using CPL.Misc.Enums;
@@ -56,6 +57,23 @@ namespace CPL.Controllers
         public IActionResult DoDepositWithdraw(WithdrawViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+
+            if (!CheckUserProfile(user))
+                return new JsonResult(new
+                {
+                    success = true,
+                    profileKyc = false,
+                    url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("EditAccount", "Profile")}?returnUrl={Url.Action("DoDepositWithdraw", "DepositAndWithdraw")}"
+                });
+
+            if (user.KYCVerified == null || !user.KYCVerified.Value)
+                return new JsonResult(new
+                {
+                    success = true,
+                    profileKyc = false,
+                    url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("EditSecurity", "Profile")}?returnUrl={Url.Action("DoDepositWithdraw", "DepositAndWithdraw")}"
+                });
+
             if (viewModel.Currency == EnumCurrency.BTC.ToString())
             {
                 // Validate max BTC Amount
@@ -87,7 +105,7 @@ namespace CPL.Controllers
                 _unitOfWork.SaveChanges();
             }
 
-            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
+            return new JsonResult(new { success = true, profileKyc = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
         }
 
         [HttpPost]
@@ -109,6 +127,17 @@ namespace CPL.Controllers
         public IActionResult LoadDepositWithdrawViewComponent()
         {
             return ViewComponent("DepositWithdraw");
+        }
+
+        private bool CheckUserProfile(SysUser user)
+        {
+            if (user.FirstName == null || user.LastName == null
+                || user.Mobile == null || user.DOB == null
+                || user.Country == null || user.City == null
+                || user.StreetAddress == null
+                || user.Mobile == null)
+                return false;
+            else return true;
         }
     }
 }

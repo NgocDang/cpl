@@ -45,10 +45,15 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        $(_this).parents("form").find(".address-error").hide();
-                        $(_this).parents("form").find(".amount-error").hide();
-                        toastr.success(data.message, 'Success!');
-                        DepositAndWithdraw.bindLoadViewComponent();
+                        if (data.profileKyc) {
+                            $(_this).parents("form").find(".address-error").hide();
+                            $(_this).parents("form").find(".amount-error").hide();
+                            toastr.success(data.message, 'Success!');
+                            DepositAndWithdraw.bindLoadViewComponent();
+                        }
+                        else {
+                            window.location.replace(data.url);
+                        }
                     } else {
                         if (data.name === "wallet") {
                             $(_this).parents("form").find(".amount-error").hide();

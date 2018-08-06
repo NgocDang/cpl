@@ -436,7 +436,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-sm-12 text-right">
-                                                            <button type="button" id="btn-save-account" class="btn btn-primary my-1"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
+                                                            <button type="button" id="btn-save-account" class="btn btn-danger my-1"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
+                                                            <a  id="btn-continue-verify-kyc" class="btn btn-success my-1" asp-controller="Profile" asp-action="EditSecurity" style="display: none"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContinueVerifyKYC") Continue verify KYC<i class="la la-angle-right"></i></a>
                                                         </div>
                                                     </div>
                                                 </form>

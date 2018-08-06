@@ -110,7 +110,6 @@
     },
     bindSaveButton: function () {
         $("#btn-save-account").on("click", function () {
-
             var isFormValid = $("#form-edit-account").valid();
 
             //Validate for Mobile
@@ -135,6 +134,7 @@
                 $("#country-msg").show();
 
             if (isFormValid && isMobileValid && isDOBValid && isCountryValid) {
+                var returnUrl = EditAccount.getUrlParameter("returnUrl").trim();
                 $.ajax({
                     url: "/Profile/EditAccount/",
                     type: "POST",
@@ -146,7 +146,7 @@
                         FirstName: $("#FirstName").val(),
                         LastName: $("#LastName").val(),
                         Gender: $('#Male').is(':checked'),
-                        DOB: moment().date($("#Day").val()).month($("#Month").val()-1).year($("#Year").val()).format("YYYY-MM-DD"),
+                        DOB: moment().date($("#Day").val()).month($("#Month").val() - 1).year($("#Year").val()).format("YYYY-MM-DD"),
                         PostalCode: $("#PostalCode").val(),
                         Country: $("#Country").val(),
                         City: $("#City").val(),
@@ -156,6 +156,10 @@
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
+                            if (returnUrl == "/DepositAndWithdraw/DoDepositWithdraw") {
+                                $("#btn-save-account").hide();
+                                $("#btn-continue-verify-kyc").show();
+                            }
                         } else {
                             toastr.error(data.message, 'Error!');
                         }
@@ -420,6 +424,18 @@
         };
         var country = countries[$("#country-value").val()];
         $("#country-show").text(country);
+    },
+
+    getUrlParameter: function (sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'), sParameterName, i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
     }
 };
 
