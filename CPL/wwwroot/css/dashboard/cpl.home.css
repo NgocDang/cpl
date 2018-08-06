@@ -78,7 +78,7 @@ img.img-border {
     color: black;
 }
 
-#slider-game .owl-nav .owl-prev {
+#lottery-game .owl-nav .owl-prev {
     position: absolute;
     top: 20%;
     font-size: 80px;
@@ -90,7 +90,7 @@ img.img-border {
     outline: none;
 }
 
-    #slider-game .owl-nav .owl-prev span {
+    #lottery-game .owl-nav .owl-prev span {
         line-height: 45px;
         height: 60px;
         width: 40px;
@@ -100,7 +100,7 @@ img.img-border {
         display: inline-block;
     }
 
-#slider-game .owl-nav .owl-next {
+#lottery-game .owl-nav .owl-next {
     position: absolute;
     top: 20%;
     font-size: 80px;
@@ -112,7 +112,7 @@ img.img-border {
     outline: none;
 }
 
-    #slider-game .owl-nav .owl-next span {
+    #lottery-game .owl-nav .owl-next span {
         line-height: 45px;
         height: 60px;
         width: 40px;

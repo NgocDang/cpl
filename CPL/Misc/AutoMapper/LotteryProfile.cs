@@ -14,6 +14,9 @@ namespace CPL.Misc.AutoMapper
         {
             CreateMap<Lottery, LotteryViewModel>();
             CreateMap<LotteryViewModel, Lottery>();
+            CreateMap<Lottery, HomeLotteryViewModel>()
+                .ForMember(dest => dest.NumberOfTicketLeft, opt => opt.MapFrom(src => src.Volume - src.LotteryHistories.Count));
+            CreateMap<Lottery, HomeSlideViewModel>();
         }
     }
 }
