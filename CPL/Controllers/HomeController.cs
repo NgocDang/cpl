@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Mail;
 using System.Net;
 using CPL.Common.Enums;
+using LinqKit;
 
 namespace CPL.Controllers
 {
@@ -21,29 +22,31 @@ namespace CPL.Controllers
     public class HomeController : Controller
     {
         private readonly ILangService _langService;
+        private readonly ILangDetailService _langDetailService;
         private readonly IMapper _mapper;
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-
-        private readonly ITeamService _teamService;
+        private readonly ILotteryService _lotteryService;
         private readonly ITemplateService _templateService;
 
         public HomeController(
             ILangService langService,
+            ILangDetailService langDetailService,
             IMapper mapper,
             IViewRenderService viewRenderService,
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
-            ITeamService teamService,
+            ILotteryService lotteryService,
             ITemplateService templateService)
         {
             this._langService = langService;
+            this._langDetailService = langDetailService;
             this._mapper = mapper;
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
             this._unitOfWork = unitOfWork;
-            this._teamService = teamService;
+            this._lotteryService = lotteryService;
             this._templateService = templateService;
         }
 
@@ -51,7 +54,21 @@ namespace CPL.Controllers
         {
             if (!HttpContext.Session.GetInt32("LangId").HasValue)
                 HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
+            var lotteries = _lotteryService.Query()
+                .Include(x => x.LotteryHistories)
+                .Select()
+                .Where(x => x.Status == (int)EnumLotteryGameStatus.ACTIVE)
+                .OrderByDescending(x => x.CreatedDate);
+
             var viewModel = new HomeViewModel();
+            viewModel.Lotteries = lotteries
+                .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
+                .ToList();
+
+            viewModel.Slides = lotteries
+                .Select(x => Mapper.Map<HomeSlideViewModel>(x))
+                .ToList();
+
             return View(viewModel);
         }
 
@@ -59,5 +76,11 @@ namespace CPL.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public void UpdateLangDetail()
+        {
+            LangDetailHelper.LangDetails = _langDetailService.Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
+        }
+
     }
 }
