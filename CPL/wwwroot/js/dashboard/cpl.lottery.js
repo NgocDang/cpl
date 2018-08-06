@@ -3,6 +3,7 @@
     init: function () {
         Lottery.bindPurchaseTicket();
         Lottery.bindConfirmPurchaseTicket();
+        Lottery.bindCancelPurchaseTicket();
         Lottery.historyDatatable = Lottery.loadLotteryHistoryTable();
     },
     bindPurchaseTicket: function () {
@@ -22,8 +23,14 @@
                     },
                     success: function (data) {
                         if (data.url == null) {
-                            $("#modal").html(data);
-                            $("#purchase-lottery-ticket").modal("show");
+                            $("#div-buy-lottery").hide();
+                            $(".ticket-price").html(data.ticketPrice + " CPL");
+                            $(".ticket-price").val(data.ticketPrice); // Set value to calculate in contronller
+                            $(".total-of-tiket").html(data.totalTickets);
+                            $(".total-of-tiket").val(data.totalTickets); // Set value to calculate in contronller
+                            $(".total-price").html(data.totalPriceOfTickets + " CPL");
+                            $(".total-price").val(data.totalPriceOfTickets); // Set value to calculate in contronller
+                            $("#div-confirm-lottery").show();
                         }
                         else {
                             window.location.replace(data.url);
@@ -37,21 +44,29 @@
             }
         })
     },
+    bindCancelPurchaseTicket: function () {
+        $('#btn-cancel-purchase-lottery-ticket').click(function () {
+            $("#div-buy-lottery").show();
+            $("#div-confirm-lottery").hide();
+        });
+    },
     bindConfirmPurchaseTicket: function () {
-        $('#modal').on('click', '#btn-confirm-purchase-lottery-ticket', function () {
+        $('#btn-confirm-purchase-lottery-ticket').click( function () {
             var _this = this;
             $.ajax({
                 url: "/Lottery/ConfirmPurchaseTicket/",
                 type: "POST",
                 data: {
-                    TicketPrice: parseInt($("#TicketPrice").val()),
-                    TotalTickets: parseInt($("#TotalTickets").val()),
-                    TotalPriceOfTickets: parseInt($("#TotalPriceOfTickets").val()),
+                    TicketPrice: parseInt($("#ticket-price").val()),
+                    TotalTickets: parseInt($("#total-of-tiket").val()),
+                    TotalPriceOfTickets: parseInt($("#total-price").val()),
                 },
                 success: function (data) {
                     if (data.success) {
-                        $('#modal').modal("hide");
-                        toastr.success(data.message, 'Success!');
+                        $("#div-confirm-lottery").hide();
+                        $("#div-thankyou-lottery").show();
+                        $("#total-price").val(data.totalPriceOfTickets); // Set value to calculate in contronller
+                        $("#span-txHashId").html("<a class='text-success' target='_blank' href = https://etherscan.io/tx/" + data.txHashId + "><u>" + data.txHashId + "</u></a>");
                         Lottery.historyDatatable.ajax.reload();
                     }
                     else {
