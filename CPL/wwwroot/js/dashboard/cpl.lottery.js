@@ -57,9 +57,9 @@
                 url: "/Lottery/ConfirmPurchaseTicket/",
                 type: "POST",
                 data: {
-                    TicketPrice: parseInt($("#ticket-price").val()),
-                    TotalTickets: parseInt($("#total-of-tiket").val()),
-                    TotalPriceOfTickets: parseInt($("#total-price").val()),
+                    TicketPrice: parseInt($(".ticket-price").val()),
+                    TotalTickets: parseInt($(".total-of-tiket").val()),
+                    TotalPriceOfTickets: parseInt($(".total-price").val()),
                 },
                 success: function (data) {
                     $("#modal").html(data);
