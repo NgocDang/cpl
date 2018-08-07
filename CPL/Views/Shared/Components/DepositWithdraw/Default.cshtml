@@ -1,152 +1,188 @@
 ﻿@model DepositAndWithdrawViewModel
 
-<div id="wallet">
-    <div class="wallet-table-th d-none d-md-block">
-        <div class="row">
-            <div class="col-md-6 col-12 pt-1">
-                <p class="mt-0 text-capitalize">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cryptocurrency")</p>
+<div id="depositandwithdraw">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" id="deposit-nav-tab" data-toggle="tab" href="#deposit-nav" aria-controls="deposit-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="withdraw-nav-tab" data-toggle="tab" href="#withdraw-nav" aria-controls="withdraw-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</a>
+        </li>
+    </ul>
+    <div class="tab-content px-2 py-1 mb-1">
+        <div role="tabpanel" class="tab-pane active" id="deposit-nav" aria-labelledby="deposit-nav-tab" aria-expanded="true">
+            <div class="card mb-1">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="pt-1 col-md-4 col-12 text-center">
+                                    <div class="col-12">
+                                        <h4 class="text-uppercase font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCName")</h4>
+                                    </div>
+                                    <div class="col-12">
+                                        <i class="cc BTC warning font-large-5"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12 pt-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-lg-9 col-12 pt-1 col-sm-center">
+                                                    <p id="BTCAddress" class="text-muted mb-0 font-small-3 wallet-address">@Model.BTCHDWalletAddress</p>
+                                                </div>
+                                                <div class="col-lg-3 col-12 col-sm-center">
+                                                    <button type="button" class="btn btn-sm  mr-1 mt-1 btn-copy" data-clipboard-target="#BTCAddress"><i class="fas fa-copy"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 pt-2">
+                                            <div class="row">
+                                                <div class="col-lg-3 col-12 col-sm-center">
+                                                    <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Available")</h6>
+                                                </div>
+                                                <div class="col-lg-9 col-12 col-sm-center">
+                                                    <h6 class="font-weight-bold text-sm-bigger">@Model.BTCAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-12 pt-1 text-center">
+                                    <img class="img-fluid" src=@Model.BTCQrCodeImage>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-2 col-12 pt-1 text-center">
-                <p class="mt-0 text-capitalize">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Available")</p>
+            <div class="card mb-0">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="pt-1 col-md-4 col-12 text-center">
+                                    <div class="col-12">
+                                        <h5 class="mt-2 text-uppercase font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHName")</h5>
+                                    </div>
+                                    <div class="col-12">
+                                        <i class="cc ETH font-large-5"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12 pt-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-lg-9 col-12 pt-1 col-sm-center">
+                                                    <p id="ETHAddress" class="text-muted mb-0 font-small-3 wallet-address">@Model.ETHHDWalletAddress</p>
+                                                </div>
+                                                <div class="col-lg-3 col-12 col-sm-center">
+                                                    <button type="button" class="btn btn-sm  mr-1 mt-1 btn-copy" data-clipboard-target="#ETHAddress"><i class="fas fa-copy"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 pt-2">
+                                            <div class="row">
+                                                <div class="col-lg-3 col-12 col-sm-center">
+                                                    <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Available")</h6>
+                                                </div>
+                                                <div class="col-lg-9 col-12 col-sm-center">
+                                                    <h6 class="font-weight-bold text-sm-bigger">@Model.ETHAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-12 pt-1 text-center">
+                                    <img class="img-fluid" src=@Model.ETHQrCodeImage>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-2 col-12 pt-1 pr-4 text-center">
-                <p class="mt-0 text-capitalize">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</p>
+        </div>
+        <div class="tab-pane" id="withdraw-nav" role="tabpanel" aria-labelledby="withdraw-nav-tab" aria-expanded="false">
+            <div class="card mb-1">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="col-12">
+                            <div class="panel-withdraw">
+                                <p class="mt-2">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCWithdrawWarning"))</p>
+
+                                <form class="form-horizontal form-purchase-token row form-withdraw">
+                                    <div class="col-lg-4 col-md-3 col-sm-12 col-12">
+                                        <fieldset class="form-label-group mb-0">
+                                            <input type="number" name="btc-amount" class="form-control amount-value" value="0" required="" autofocus="" min="0" max="@Model.BTCAmount" step="any">
+                                            <label for="btc-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
+                                        </fieldset>
+                                        <div class="invalid-feedback amount-error"></div>
+                                        <button type="button" class="btn btn-sm  mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
+                                        <input type="hidden" value="@Model.BTCAmount" class="max-amount" />
+                                    </div>
+                                    <div class="col-lg-2 col-md-1 col-sm-12 col-12 mb-1 text-center">
+                                        <span class="la la-arrow-right"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                        <fieldset class="form-label-group mb-0">
+                                            <input type="text" class="form-control address-value" name="address-btc" required="" autofocus="">
+                                            <label for="address-btc">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</label>
+                                        </fieldset>
+                                        <div class="invalid-feedback address-error"></div>
+                                        <button type="button" class="btn btn-sm  mr-1 mt-1 btn-qrcode"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
+                                        <input type="file" class="file-qrcode" hidden />
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-12 text-center">
+                                        <button type="submit" class="btn btn-danger btn-do-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw") <i class="la la-angle-right"></i></button>
+                                    </div>
+                                    <input type="hidden" class="currency" value="BTC" />
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-2 col-12 pt-1 text-center">
+            <div class="card mb-0">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="col-12">
+                            <div class="panel-withdraw">
+                                <hr>
+                                <p class="mt-2">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHWithdrawWarning"))</p>
+
+                                <form class="form-horizontal form-purchase-token row form-withdraw">
+                                    <div class="col-lg-4 col-md-3 col-sm-12 col-12">
+                                        <fieldset class="form-label-group mb-0">
+                                            <input type="number" name="amount-eth" class="form-control amount-value" value="0" required="" autofocus="" min="0" max="@Model.ETHAmount" step="any">
+                                            <label for="amount-eth">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
+                                        </fieldset>
+                                        <div class="invalid-feedback amount-error"></div>
+                                        <button type="button" class="btn btn-sm  mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
+                                        <input type="hidden" value="@Model.ETHAmount" class="max-amount" />
+                                    </div>
+                                    <div class="col-lg-2 col-md-1 col-sm-12 col-12 mb-1 text-center">
+                                        <span class="la la-arrow-right"></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
+                                        <fieldset class="form-label-group mb-0">
+                                            <input type="text" class="form-control address-value" name="eth-address" required="" autofocus="">
+                                            <label for="eth-address">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</label>
+                                        </fieldset>
+                                        <div class="invalid-feedback address-error"></div>
+                                        <button type="button" class="btn btn-sm  mr-1 mt-1 btn-qrcode"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
+                                        <input type="file" class="file-qrcode" hidden />
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-12 text-center">
+                                        <button type="submit" class="btn btn-danger btn-do-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw") <i class="la la-angle-right"></i></button>
+                                    </div>
+                                    <input type="hidden" class="currency" value="ETH" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <section class="card pull-up">
-        <div class="card-content">
-            <div class="card-body">
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col-md-2 col-12 pt-1 mt-2">
-                            <div class="media">
-                                <i class="cc BTC mr-2 warning font-large-3"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-12 pt-1">
-                            <div class="media">
-                                <div class="media-body">
-                                    <h5 class="mt-2 text-capitalize">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCName")</h5>
-                                    <p id="BTCAddress" class="text-muted mb-0 font-small-3 wallet-address">@Model.BTCHDWalletAddress</p>
-                                    <button type="button" class="btn btn-sm round mr-1 mt-1 btn-copy" data-clipboard-target="#BTCAddress"><i class="fas fa-copy"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-12 pt-1 text-center">
-                            <h6 class="mt-2">@Model.BTCAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
-                            @*<p class="text-muted mb-0 font-small-3">~ $2650.78</p>*@
-                        </div>
-                        <div class="col-md-2 col-12 pt-1 text-center">
-                            <img class="img-fluid" src=@Model.BTCQrCodeImage>
-                        </div>
-
-                        <div class="col-md-2 col-12 pt-1 text-center">
-                            <button class="mb-0 btn-sm btn btn-outline-danger round btn-withdraw mt-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</button>
-                        </div>
-                    </div>
-                    <div class="panel-withdraw" style="display:none">
-                        <hr>
-                        <p class="mt-2">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCWithdrawWarning"))</p>
-
-                        <form class="form-horizontal form-purchase-token row form-withdraw">
-                            <div class="col-lg-4 col-md-3 col-sm-12 col-12">
-                                <fieldset class="form-label-group mb-0">
-                                    <input type="number" name="btc-amount" class="form-control amount-value" value="0" required="" autofocus="" min="0" max="@Model.BTCAmount" step="any">
-                                    <label for="btc-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
-                                </fieldset>
-                                <div class="invalid-feedback amount-error"></div>
-                                <button type="button" class="btn btn-sm round mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
-                                <input type="hidden" value="@Model.BTCAmount" class="max-amount" />
-                            </div>
-                            <div class="col-lg-1 col-md-1 col-sm-12 col-12 mb-1 text-center">
-                                <span class="la la-arrow-right"></span>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
-                                <fieldset class="form-label-group mb-0">
-                                    <input type="text" class="form-control address-value" name="address-btc" required="" autofocus="">
-                                    <label for="address-btc">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</label>
-                                </fieldset>
-                                <div class="invalid-feedback address-error"></div>
-                                <button type="button" class="btn btn-sm round mr-1 mt-1 btn-qrcode"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
-                                <input type="file" class="file-qrcode" hidden />
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-12 text-center">
-                                <button type="submit" class="btn btn-gradient-secondary btn-do-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw") <i class="la la-angle-right"></i></button>
-                            </div>
-                            <input type="hidden" class="currency" value="BTC" />
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="card pull-up">
-        <div class="card-content">
-            <div class="card-body">
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col-md-2 col-12 pt-1 mt-2">
-                            <div class="media">
-                                <i class="cc ETH mr-2 font-large-3"></i>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-12 pt-1">
-                            <div class="media">
-                                <div class="media-body">
-                                    <h5 class="mt-2 text-capitalize">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHName")</h5>
-                                    <p id="ETHAddress" class="text-muted mb-0 font-small-3 wallet-address">@Model.ETHHDWalletAddress</p>
-                                    <button type="button" class="btn btn-sm round mr-1 mt-1 btn-copy" data-clipboard-target="#ETHAddress"><i class="fas fa-copy"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-12 pt-1 text-center">
-                            <h6 class="mt-2">@Model.ETHAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</h6>
-                            @*<p class="text-muted mb-0 font-small-3">~ $650.78</p>*@
-                        </div>
-                        <div class="col-md-2 col-12 pt-1 text-center">
-                            <img class="img-fluid" src=@Model.ETHQrCodeImage>
-                        </div>
-                        <div class="col-md-2 col-12 pt-1 text-center">
-                            <button class="mb-0 btn-sm btn btn-outline-danger round btn-withdraw mt-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</button>
-                        </div>
-                    </div>
-                    <div class="panel-withdraw" style="display:none">
-                        <hr>
-                        <p class="mt-2">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHWithdrawWarning"))</p>
-
-                        <form class="form-horizontal form-purchase-token row form-withdraw">
-                            <div class="col-lg-4 col-md-3 col-sm-12 col-12">
-                                <fieldset class="form-label-group mb-0">
-                                    <input type="number" name="amount-eth" class="form-control amount-value" value="0" required="" autofocus="" min="0" max="@Model.ETHAmount" step="any">
-                                    <label for="amount-eth">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
-                                </fieldset>
-                                <div class="invalid-feedback amount-error"></div>
-                                <button type="button" class="btn btn-sm round mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
-                                <input type="hidden" value="@Model.ETHAmount" class="max-amount" />
-                            </div>
-                            <div class="col-lg-1 col-md-1 col-sm-12 col-12 mb-1 text-center">
-                                <span class="la la-arrow-right"></span>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-12 col-12 mb-1">
-                                <fieldset class="form-label-group mb-0">
-                                    <input type="text" class="form-control address-value" name="eth-address" required="" autofocus="">
-                                    <label for="eth-address">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</label>
-                                </fieldset>
-                                <div class="invalid-feedback address-error"></div>
-                                <button type="button" class="btn btn-sm round mr-1 mt-1 btn-qrcode"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
-                                <input type="file" class="file-qrcode" hidden />
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-12 text-center">
-                                <button type="submit" class="btn btn-gradient-secondary btn-do-withdraw">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw") <i class="la la-angle-right"></i></button>
-                            </div>
-                            <input type="hidden" class="currency" value="ETH" />
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 </div>
