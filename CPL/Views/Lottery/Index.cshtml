@@ -45,7 +45,7 @@
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchasedTickets")
                                                 </div>
                                                 <div class="col-md-6 col-12 text-md-right">
-                                                    <h1>@Model.Lottery.LotteryHistories.Count() / @Model.Lottery.Volume <span class="card-description text-muted"></span></h1>
+                                                    <h1>@Model.Lottery.LotteryHistories.Count() / @Model.Lottery.Volume.ToString("#,###") <span class="card-description text-muted"></span></h1>
                                                 </div>
                                             </div>
                                             <div class="row mt-8px">
@@ -159,28 +159,25 @@
             }
         </div>
         <div class="row">
-            @if (Model.SysUserId.HasValue)
-            {
-                <div class="col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
-                    <div class="card">
-                        <div class="card-content">
-                            <table id="dt-lottery-history" class="table responsive table-hover table-xl mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTicketNumber")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UpdatedDate")</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
+            <div id="lottery-history" class="col-12 @(Model.SysUserId.HasValue ? "" : "d-none")">
+                <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
+                <div class="card">
+                    <div class="card-content">
+                        <table id="dt-lottery-history" class="table responsive table-hover table-xl mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
+                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
+                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTicketNumber")</th>
+                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
+                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UpdatedDate")</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
-            }
+            </div>
         </div>
         @Html.HiddenFor(x => x.Lottery.Id)
     </div>

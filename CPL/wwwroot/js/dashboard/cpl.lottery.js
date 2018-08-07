@@ -24,11 +24,11 @@
                     success: function (data) {
                         if (data.url == null) {
                             $("#div-buy-lottery").hide();
-                            $(".ticket-price").html(data.ticketPrice + " CPL");
+                            $(".ticket-price").html(new Intl.NumberFormat('vn-VN').format(data.ticketPrice) + " CPL");
                             $(".ticket-price").val(data.ticketPrice); // Set value to calculate in contronller
-                            $(".total-of-tiket").html(data.totalTickets);
+                            $(".total-of-tiket").html(new Intl.NumberFormat('vn-VN').format(data.totalTickets));
                             $(".total-of-tiket").val(data.totalTickets); // Set value to calculate in contronller
-                            $(".total-price").html(data.totalPriceOfTickets + " CPL");
+                            $(".total-price").html(new Intl.NumberFormat('vn-VN').format(data.totalPriceOfTickets) + " CPL");
                             $(".total-price").val(data.totalPriceOfTickets); // Set value to calculate in contronller
                             $("#div-confirm-lottery").show();
                         }
@@ -67,13 +67,18 @@
                  LotteryId: parseInt($("#Lottery_Id").val())
              },
              success: function (data) {
-                 if (data.success === undefined) {
+                 if (data.success === undefined) { // before log in
                      $("#modal").html(data);
                      $("#login-modal").modal("show");
                      $.getScript("https://www.google.com/recaptcha/api.js?hl=en");
                  }
-                 else {
+                 else { // after log in
                      $("#login-modal").modal("hide");
+                     if ($("#lottery-history").hasClass("d-none")) { // not login yet
+                         $("#lottery-history").removeClass("d-none");
+                         Lottery.historyDatatable = Lottery.loadLotteryHistoryTable();
+                     }
+
                      Lottery.loadHeaderViewComponent(); // Reloader header view component after login
                      if (data.success) {
                          $("#div-confirm-lottery").hide();
@@ -84,7 +89,6 @@
                      }
                      else {
                          toastr.error(data.message, 'Error!');
-                         Lottery.historyDatatable.ajax.reload();
                      }
                  }
              },
@@ -104,7 +108,7 @@
         });
     },
     loadLotteryHistoryTable: function () {
-        if ($("#dt-lottery-history").length == 0)
+        if ($("#lottery-history").hasClass("d-none"))
             return false;
 
         return $("#dt-lottery-history").DataTable({
