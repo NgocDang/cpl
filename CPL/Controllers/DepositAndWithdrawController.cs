@@ -53,6 +53,16 @@ namespace CPL.Controllers
             return View();
         }
 
+        public IActionResult LoadRequireProfile(ConfirmExchangeViewModel viewModel)
+        {
+            return PartialView("_RequireProfile", viewModel);
+        }
+
+        public IActionResult LoadRequireKYC(ConfirmExchangeViewModel viewModel)
+        {
+            return PartialView("_RequireKYC", viewModel);
+        }
+
         [HttpPost]
         public IActionResult DoDepositWithdraw(WithdrawViewModel viewModel)
         {
@@ -64,17 +74,15 @@ namespace CPL.Controllers
             if (!CheckUserProfile(user))
                 return new JsonResult(new
                 {
-                    success = true,
-                    profileKyc = false,
-                    url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("EditAccount", "Profile")}?returnUrl={Url.Action("DoDepositWithdraw", "DepositAndWithdraw")}"
+                    success = false,
+                    requireProfile = false
                 });
 
             if (user.KYCVerified == null || !user.KYCVerified.Value)
                 return new JsonResult(new
                 {
-                    success = true,
-                    profileKyc = false,
-                    url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("EditSecurity", "Profile")}?returnUrl={Url.Action("DoDepositWithdraw", "DepositAndWithdraw")}"
+                    success = false,
+                    requireKyc = false
                 });
 
             if (viewModel.Currency == EnumCurrency.BTC.ToString())

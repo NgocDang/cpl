@@ -134,7 +134,7 @@
                 $("#country-msg").show();
 
             if (isFormValid && isMobileValid && isDOBValid && isCountryValid) {
-                var returnUrl = EditAccount.getUrlParameter("returnUrl").trim();
+                var returnUrl = EditAccount.getUrlParameter("returnUrl");
                 $.ajax({
                     url: "/Profile/EditAccount/",
                     type: "POST",
@@ -156,7 +156,7 @@
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
-                            if (returnUrl == "/DepositAndWithdraw/DoDepositWithdraw") {
+                            if (returnUrl == "/DepositAndWithdraw/Index") {
                                 $("#btn-save-account").hide();
                                 $("#btn-continue-verify-kyc").show();
                             }
