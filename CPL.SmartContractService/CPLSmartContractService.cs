@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.Core.Interfaces;
 using CPL.Core.Services;
 using CPL.Domain;
@@ -22,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace CPL.SmartContractService
 {
-    public class CPLTransactionService : MicroService, IMicroService
+    public class CPLSmartContractService : MicroService, IMicroService
     {
         public static IConfiguration Configuration { get; set; }
         public static bool IsSmartContractServiceRunning = false;
@@ -48,7 +49,7 @@ namespace CPL.SmartContractService
             InitializeSetting();
 
             // write log
-            Utils.FileAppendThreadSafe(FileName, String.Format("{0} started at {1}{2}", WSConstant.ServiceName, DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(FileName, String.Format("{0} started at {1}{2}", SmartContractServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
 
             //Init dependency transaction & dbcontext
             InitializeRepositories();
@@ -72,7 +73,7 @@ namespace CPL.SmartContractService
             {
                 Utils.FileAppendThreadSafe(FileName, string.Format("Check Tx thread STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
 
-                var authentication = new AuthenticationService.AuthenticationClient().AuthenticateAsync(WSConstant.Email, WSConstant.ProjectName);
+                var authentication = new AuthenticationService.AuthenticationClient().AuthenticateAsync(SmartContractServiceConstant.Email, SmartContractServiceConstant.ProjectName);
                 authentication.Wait();
 
                 if (authentication.Result.Status.Code == 0)

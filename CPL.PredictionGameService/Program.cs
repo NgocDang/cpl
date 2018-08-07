@@ -14,9 +14,9 @@ namespace CPL.PredictionGameService
             {
                 string fileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
 
-                config.SetDisplayName(WSConstant.ServiceName);
-                config.SetName(WSConstant.ServiceName);
-                config.SetDescription(WSConstant.ServiceDescription);
+                config.SetDisplayName(PredictionGameServiceConstant.ServiceName);
+                config.SetName(PredictionGameServiceConstant.ServiceName);
+                config.SetDescription(PredictionGameServiceConstant.ServiceDescription);
 
                 config.Service(serviceConfig =>
                 {

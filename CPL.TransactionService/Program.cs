@@ -1,30 +1,28 @@
-﻿using CPL.Common.Misc;
-using CPL.SmartContractService;
-using CPL.SmartContractService.Misc;
+﻿using CPL.TransactionService.Misc;
 using Microsoft.Extensions.PlatformAbstractions;
 using PeterKottas.DotNetCore.WindowsService;
 using System;
 using System.IO;
 
-namespace CPL.CPL.SmartContractService
+namespace CPL.TransactionService
 {
     class Program
     {
         public static void Main(string[] args)
         {
-            ServiceRunner<CPLSmartContractService>.Run(config =>
+            ServiceRunner<CPLTransactionService>.Run(config =>
             {
                 string fileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
 
-                config.SetDisplayName(SmartContractServiceConstant.ServiceName);
-                config.SetName(SmartContractServiceConstant.ServiceName);
-                config.SetDescription(SmartContractServiceConstant.ServiceDescription);
+                config.SetDisplayName(TransactionServiceConstant.ServiceName);
+                config.SetName(TransactionServiceConstant.ServiceName);
+                config.SetDescription(TransactionServiceConstant.ServiceDescription);
 
                 config.Service(serviceConfig =>
                 {
                     serviceConfig.ServiceFactory((extraArguments, controller) =>
                     {
-                        return new CPLSmartContractService();
+                        return new CPLTransactionService();
                     });
 
                     serviceConfig.OnStart((service, extraParams) =>
