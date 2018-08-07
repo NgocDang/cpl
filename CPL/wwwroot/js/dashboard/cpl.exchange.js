@@ -7,10 +7,10 @@
         Exchange.bindConfirmExchange();
     },
     bindNext: function () {
-        $('.session-exchange').on('click', '.btn-next', function () {
+        $('.section-exchange').on('click', '.btn-next', function () {
             var _this = this;
-            if (parseFloat($(_this).parents(".session-exchange").find(".from-amount").val()) > 0 && parseFloat($(_this).parents(".session-exchange").find(".from-amount").val()) <= parseFloat($(_this).parents(".session-exchange").find(".from-amount").siblings(".max-amount").val())) {
-                $(_this).parents(".session-exchange").find(".invalid-amount").hide();
+            if (parseFloat($(_this).parents(".section-exchange").find(".from-amount").val()) > 0 && parseFloat($(_this).parents(".section-exchange").find(".from-amount").val()) <= parseFloat($(_this).parents(".section-exchange").find(".from-amount").siblings(".max-amount").val())) {
+                $(_this).parents(".section-exchange").find("#from-amount-error").hide();
                 $.ajax({
                     url: "/Exchange/GetConfirm/",
                     type: "GET",
@@ -19,10 +19,10 @@
                         $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
                     },
                     data: {
-                        FromCurrency: $(_this).parents(".session-exchange").find(".from-currency").val(),
-                        FromAmount: $(_this).parents(".session-exchange").find(".from-amount").val(),
-                        ToCurrency: $(_this).parents(".session-exchange").find(".to-currency").val(),
-                        ToAmount: $(_this).parents(".session-exchange").find(".to-amount").val(),
+                        FromCurrency: $(_this).parents(".section-exchange").find(".from-currency").val(),
+                        FromAmount: $(_this).parents(".section-exchange").find(".from-amount").val(),
+                        ToCurrency: $(_this).parents(".section-exchange").find(".to-currency").val(),
+                        ToAmount: $(_this).parents(".section-exchange").find(".to-amount").val(),
                     },
                     success: function (data) {
                         $("#modal").html(data);
@@ -30,12 +30,12 @@
                     },
                     complete: function (data) {
                         $(_this).attr("disabled", false);
-                        $(_this).html($(_this).text());
+                        $(_this).html($(_this).text() + "<i class='la la-angle-right'></i>");
                     }
                 });
             }
             else
-                $(_this).parents(".session-exchange").find(".invalid-amount").show();
+                $(_this).parents(".section-exchange").find("#from-amount-error").show();
         })
     },
     bindConfirmExchange: function () {
@@ -59,6 +59,7 @@
                         $("#exchange").modal("hide");
                         //alert("Success!");
                         toastr.success(data.message, "Success!");
+                        Exchange.loadViewComponent();
                     } else {
                         //alert("Error!");
                         toastr.error(data.message, "Error!");
@@ -72,13 +73,13 @@
         })
     },
     bindSwap: function () {
-        $('.session-exchange').on('click', '.btn-swap', function () {
+        $('.section-exchange').on('click', '.btn-swap', function () {
             //Swap label
-            if ($(this).parents(".session-exchange").length > 0) {
-                var section = $(this).parents(".session-exchange");
-                var label = section.find("label[for='from-amount']").text();
-                section.find("label[for='from-amount']").text(section.find("label[for='to-amount']").text());
-                section.find("label[for='to-amount']").text(label);
+            if ($(this).parents(".section-exchange").length > 0) {
+                var section = $(this).parents(".section-exchange");
+                var label = section.find("#from-amount").text();
+                section.find("#from-amount").text(section.find("#to-amount").text());
+                section.find("#to-amount").text(label);
 
                 //Swap value
                 var value = section.find(".from-amount").val();
@@ -98,19 +99,19 @@
         });
     },
     bindMax: function () {
-        $('.session-exchange').on('click', '.btn-max', function () {
+        $('.section-exchange').on('click', '.btn-max', function () {
             //Swap label
-            if ($(this).parents(".session-exchange").length > 0) {
-                var section = $(this).parents(".session-exchange");
+            if ($(this).parents(".section-exchange").length > 0) {
+                var section = $(this).parents(".section-exchange");
                 //var label = section.find((".from-amount").val);
                 section.find(".from-amount").val(section.find(".from-amount").siblings(".max-amount").val()).trigger('change');
             }
         });
     },
     bindInputChange: function(){
-        $('.session-exchange').on('change paste keyup input', '.from-amount', function () {
-            if ($(this).parents(".session-exchange").length > 0) {
-                var section = $(this).parents(".session-exchange");
+        $('.section-exchange').on('change paste keyup input', '.from-amount', function () {
+            if ($(this).parents(".section-exchange").length > 0) {
+                var section = $(this).parents(".section-exchange");
                 if (parseFloat(section.find(".from-amount").val()) > 0) {
                     var fromCurrency = section.find(".from-amount").siblings(".from-currency").val();
                     section.find(".invalid-amount").hide()
@@ -133,9 +134,20 @@
                     }
                 }
                 else {
-                    $(this).parents(".session-exchange").find(".invalid-amount").show();
-                    $(this).parents(".session-exchange").find(".to-amount").val(null);
+                    $(this).parents(".section-exchange").find(".invalid-amount").show();
+                    $(this).parents(".section-exchange").find(".to-amount").val(null);
                 }
+            }
+        });
+    },
+    loadViewComponent: function () {
+        $.ajax({
+            url: "/Exchange/LoadExchangeViewComponent/",
+            type: "GET",
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#exchange-content").html(data);
             }
         });
     }
