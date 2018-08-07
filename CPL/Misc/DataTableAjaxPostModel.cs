@@ -15,8 +15,6 @@ namespace CPL.Misc
         public Search search { get; set; }
         public List<Order> order { get; set; }
 
-        //used by Admin in user searching
-        public int userid { get; set; }
     }
 
     public class Column

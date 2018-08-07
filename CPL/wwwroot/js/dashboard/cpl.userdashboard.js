@@ -34,7 +34,7 @@
             "serverSide": true,
             "autoWidth": false,
             "ajax": {
-                url: "/Admin/SearchUserGameHistory",
+                url: "/Dashboard/SearchGameHistory",
                 type: 'POST',
                 data: {
                     userId: $("#Id").val()
