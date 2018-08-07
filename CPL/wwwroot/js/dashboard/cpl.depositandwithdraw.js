@@ -49,17 +49,26 @@
                         $(_this).parents("form").find(".amount-error").hide();
                         toastr.success(data.message, 'Success!');
                         DepositAndWithdraw.bindLoadViewComponent("withdraw");
-                    } else {
-                        if (data.name === "wallet") {
-                            $(_this).parents("form").find(".amount-error").hide();
-                            $(_this).parents("form").find(".address-error").show();
-                            $(_this).parents("form").find(".address-error").html(data.message);
+                    }
+                    else {
+                        if (data.requireProfile != null && !data.requireProfile) {
+                            DepositAndWithdraw.loadRequireProfileViewComponent();
                         }
-                        if (data.name === "amount") {
-                            $(_this).parents("form").find(".address-error").hide();
-                            $(_this).parents("form").find(".amount-error").html(data.message);
-                            $(_this).parents("form").find(".amount-error").show();
+                        else if (data.requireKyc != null && !data.requireKyc) {
+                            DepositAndWithdraw.loadRequireKYCViewComponent();
+                        } else {
+                            if (data.name === "wallet") {
+                                $(_this).parents("form").find(".amount-error").hide();
+                                $(_this).parents("form").find(".address-error").show();
+                                $(_this).parents("form").find(".address-error").html(data.message);
+                            }
+                            if (data.name === "amount") {
+                                $(_this).parents("form").find(".address-error").hide();
+                                $(_this).parents("form").find(".amount-error").html(data.message);
+                                $(_this).parents("form").find(".amount-error").show();
+                            }
                         }
+
                     }
                 }
             });
@@ -113,6 +122,30 @@
                     $("#withdraw-nav-tab").addClass("active");
                     $("#withdraw-nav").addClass("active");
                 }
+            }
+        });
+    },
+    loadRequireProfileViewComponent: function () {
+        $.ajax({
+            url: "/DepositAndWithdraw/LoadRequireProfile/",
+            type: "GET",
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#modal").html(data);
+                $("#depositandwithdraw-profile").modal("show");
+            }
+        });
+    },
+    loadRequireKYCViewComponent: function () {
+        $.ajax({
+            url: "/DepositAndWithdraw/LoadRequireKYC/",
+            type: "GET",
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#modal").html(data);
+                $("#depositandwithdraw-kyc").modal("show");
             }
         });
     }
