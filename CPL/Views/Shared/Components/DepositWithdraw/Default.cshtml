@@ -9,9 +9,9 @@
             <a class="nav-link" id="link-tab1" data-toggle="tab" href="#link1" aria-controls="link1" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</a>
         </li>
     </ul>
-    <div class="tab-content px-2 py-1">
+    <div class="tab-content px-2 py-1 mb-1">
         <div role="tabpanel" class="tab-pane active" id="active1" aria-labelledby="active-tab1" aria-expanded="true">
-            <div class="card">
+            <div class="card mb-1">
                 <div class="card-content">
                     <div class="card-body">
                         <div class="col-12">
@@ -28,21 +28,21 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="row">
-                                                <div class="col-lg-9 col-12 pt-1">
+                                                <div class="col-lg-9 col-12 pt-1 col-sm-center">
                                                     <p id="BTCAddress" class="text-muted mb-0 font-small-3 wallet-address">@Model.BTCHDWalletAddress</p>
                                                 </div>
-                                                <div class="col-lg-3 col-12">
+                                                <div class="col-lg-3 col-12 col-sm-center">
                                                     <button type="button" class="btn btn-sm  mr-1 mt-1 btn-copy" data-clipboard-target="#BTCAddress"><i class="fas fa-copy"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12 pt-2">
                                             <div class="row">
-                                                <div class="col-lg-3 col-12">
+                                                <div class="col-lg-3 col-12 col-sm-center">
                                                     <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Available")</h6>
                                                 </div>
-                                                <div class="col-lg-9 col-12">
-                                                    <h6 class="font-weight-bold">@Model.BTCAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
+                                                <div class="col-lg-9 col-12 col-sm-center">
+                                                    <h6 class="font-weight-bold text-sm-bigger">@Model.BTCAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card mb-0">
                 <div class="card-content">
                     <div class="card-body">
                         <div class="col-12">
@@ -73,21 +73,21 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="row">
-                                                <div class="col-lg-9 col-12 pt-1">
+                                                <div class="col-lg-9 col-12 pt-1 col-sm-center">
                                                     <p id="ETHAddress" class="text-muted mb-0 font-small-3 wallet-address">@Model.ETHHDWalletAddress</p>
                                                 </div>
-                                                <div class="col-lg-3 col-12">
+                                                <div class="col-lg-3 col-12 col-sm-center">
                                                     <button type="button" class="btn btn-sm  mr-1 mt-1 btn-copy" data-clipboard-target="#ETHAddress"><i class="fas fa-copy"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12 pt-2">
                                             <div class="row">
-                                                <div class="col-lg-3 col-12">
+                                                <div class="col-lg-3 col-12 col-sm-center">
                                                     <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Available")</h6>
                                                 </div>
-                                                <div class="col-lg-9 col-12">
-                                                    <h6 class="font-weight-bold">@Model.ETHAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</h6>
+                                                <div class="col-lg-9 col-12 col-sm-center">
+                                                    <h6 class="font-weight-bold text-sm-bigger">@Model.ETHAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -103,7 +103,7 @@
             </div>
         </div>
         <div class="tab-pane" id="link1" role="tabpanel" aria-labelledby="link-tab1" aria-expanded="false">
-            <div class="card">
+            <div class="card mb-1">
                 <div class="card-content">
                     <div class="card-body">
                         <div class="col-12">
@@ -143,7 +143,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card mb-0">
                 <div class="card-content">
                     <div class="card-body">
                         <div class="col-12">
