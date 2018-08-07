@@ -20,7 +20,7 @@ namespace CPL.Misc.MapperCreate
             CreateMap<SysUser, ActivateEmailTemplateViewModel>();
             CreateMap<SysUser, MemberEmailTemplateViewModel>();
             CreateMap<SysUser, KYCVerifyEmailTemplateViewModel>();
-
+            CreateMap<SysUser, ForgotPasswordEmailTemplateViewModel>();
             CreateMap<SysUserViewModel, SysUser>();
             CreateMap<SysUserViewModel, EditAccountViewModel>();
             CreateMap<SysUserViewModel, EditCredentialViewModel>()
@@ -35,6 +35,8 @@ namespace CPL.Misc.MapperCreate
 
             CreateMap<SysUser, ExchangeViewModel>();
             CreateMap<SysUser, TokenBalanceViewModel>();
+
+            CreateMap<SysUser, EditAccountViewModel>();
         }
     }
 }

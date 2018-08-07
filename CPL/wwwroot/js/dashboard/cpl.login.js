@@ -2,6 +2,7 @@
     init: function () {
         LogIn.bindLoginForm();
         LogIn.bindVerify();
+        LogIn.bindResetTabIndex();
     },
     bindLoginForm: function () {
         $("#form-log-in").validate();
@@ -104,6 +105,11 @@
                 });
             }
             return false;
+        });
+    },
+    bindResetTabIndex: function () {
+        $("[tabindex]").each(function () {
+            $(this).attr('tabindex', '0');
         });
     }
 };

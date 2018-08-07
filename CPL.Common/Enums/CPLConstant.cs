@@ -19,6 +19,18 @@ namespace CPL.Common.Enums
         public static string AppName = "CPL";
         public static string TwoFactorAuthenticationSecretKey = "CPLFamHopper";
 
+        //SMTP
+        public struct SMTP
+        {
+            public static string Host = "smtp.gmail.com";
+            public static int Port = 587;
+            public static bool IsSSLEnable = true;
+            public static string Email = "info.cplcoin@gmail.com";
+            public static string Contact = "info.cplcoin@gmail.com";
+            public static string From = "info.cplcoin@gmail.com";
+            public static string Password = "aG31@ie20P!";
+        }
+
         //Notification
         public static string AdminEmail = "info.cplcoin@gmail.com";
 
@@ -57,6 +69,8 @@ namespace CPL.Common.Enums
         public static string AuthenticationServiceEndpoint = "Security/Authentication.svc";
         public static string EmailServiceEndpoint = "Message/Email.svc";
         public static string ETokenServiceEndpoint = "Token/EToken.svc";
+        public static string EWalletServiceEndpoint = "Wallet/EWallet.svc";
+        public static string BWalletServiceEndpoint = "Wallet/BWallet.svc";
 
         // FHCore Authentication
         public static string ProjectEmail = "info.cplcoin@gmail.com";
@@ -92,6 +106,12 @@ namespace CPL.Common.Enums
         public static string Abi = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"name\":\"_phase\",\"type\":\"uint32\"},{\"name\":\"_playerAddress\",\"type\":\"address\"},{\"name\":\"_listTicketIndex\",\"type\":\"uint32[]\"}],\"name\":\"random\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_phase\",\"type\":\"uint32\"},{\"name\":\"_playerAddress\",\"type\":\"address\"},{\"name\":\"_listTicketIndex\",\"type\":\"uint32[]\"}],\"name\":\"reRandom\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"phaseNumber\",\"type\":\"uint32\"},{\"indexed\":true,\"name\":\"playerAddress\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"ticketIndex\",\"type\":\"uint32\"},{\"indexed\":false,\"name\":\"ticketNumber\",\"type\":\"uint32\"}],\"name\":\"TicketNumberGenerated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"phaseNumber\",\"type\":\"uint32\"},{\"indexed\":true,\"name\":\"playerAddress\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"ticketIndex\",\"type\":\"uint32\"},{\"indexed\":false,\"name\":\"oldTicketNumber\",\"type\":\"uint32\"},{\"indexed\":false,\"name\":\"newTicketNumber\",\"type\":\"uint32\"}],\"name\":\"TicketNumberReGenerated\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_phase\",\"type\":\"uint32\"},{\"name\":\"_playerAddress\",\"type\":\"address\"},{\"name\":\"_ticketIndex\",\"type\":\"uint32\"}],\"name\":\"getTicket\",\"outputs\":[{\"name\":\"\",\"type\":\"uint32\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]";
         //public static int GasPriceMultiplicator = 1; // PROD
         public static int GasPriceMultiplicator = 3; // TEST
-        public static string paramJson = "{\"1\":{\"uint32\":\"lotteryphase\"},\"2\":{\"address\":\"useraddress\"}, \"3\": {\"uint32[]\":\"[ticketindexlist]\"}}";
+
+        //Request to get BTC and ETH address count limit
+        public static int RequestCountLimit = 5;
+        public static int RequestCountIntervalInMiliseconds = 3000;
+
+        public static string RandomParamInJson = "{{\"1\":{{\"uint32\":\"{0}\"}},\"2\":{{\"address\":\"{1}\"}}, \"3\": {{\"uint32[]\":\"[{2}]\"}}}}"; // Replace { by {{ to fix bug invalid input string when using string.Format
+        public static string GetTicketParamInJson = "{\"1\":{\"uint32\":\"{0}\"},\"2\":{\"address\":\"{1}\"}, \"3\": {\"uint32\":\"{2}\"}}";
     }
 }
