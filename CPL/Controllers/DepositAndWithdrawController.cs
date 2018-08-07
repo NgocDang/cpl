@@ -56,6 +56,9 @@ namespace CPL.Controllers
         [HttpPost]
         public IActionResult DoDepositWithdraw(WithdrawViewModel viewModel)
         {
+            if (viewModel.Amount <= 0)
+                return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidWithdrawAmount") });
+
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
 
             if (!CheckUserProfile(user))
@@ -120,7 +123,7 @@ namespace CPL.Controllers
             }
             catch (Exception ex)
             {
-                return new JsonResult(new { success = false, message = ex.Message });
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "GeneratedQRCodeError") });
             }
         }
 

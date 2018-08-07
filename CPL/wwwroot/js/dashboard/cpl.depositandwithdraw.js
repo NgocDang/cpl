@@ -45,6 +45,10 @@
                 },
                 success: function (data) {
                     if (data.success) {
+                        $(_this).parents("form").find(".address-error").hide();
+                        $(_this).parents("form").find(".amount-error").hide();
+                        toastr.success(data.message, 'Success!');
+                        DepositAndWithdraw.bindLoadViewComponent("withdraw");
                         if (data.profileKyc) {
                             $(_this).parents("form").find(".address-error").hide();
                             $(_this).parents("form").find(".amount-error").hide();
@@ -91,10 +95,10 @@
                     success: function (data) {
                         if (data.success) {
                             $(_this).parents("form").find(".address-value").val(data.address);
-                            toastr.success(data.message);
+                            toastr.success(data.message, 'Success!');
                         } else {
                             $(_this).parents("form").find(".address-value").val("");
-                            toastr.error('Error!');
+                            toastr.error(data.message, 'Error!');
                         }
                     },
                     complete: function (data) {
@@ -104,7 +108,7 @@
             return false;
         });
     },
-    bindLoadViewComponent: function () {
+    bindLoadViewComponent: function (tab) {
         $.ajax({
             url: "/DepositAndWithdraw/LoadDepositWithdrawViewComponent/",
             type: "GET",
@@ -112,6 +116,12 @@
             contentType: false,
             success: function (data) {
                 $("#dipositwithdraw-content").html(data);
+                if (tab == "withdraw") {
+                    $("#deposit-nav-tab").removeClass("active");
+                    $("#deposit-nav").removeClass("active");
+                    $("#withdraw-nav-tab").addClass("active");
+                    $("#withdraw-nav").addClass("active");
+                }
             }
         });
     }
