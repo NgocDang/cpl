@@ -24,11 +24,11 @@
                     success: function (data) {
                         if (data.url == null) {
                             $("#div-buy-lottery").hide();
-                            $(".ticket-price").html(data.ticketPrice + " CPL");
+                            $(".ticket-price").html(new Intl.NumberFormat('vn-VN').format(data.ticketPrice) + " CPL");
                             $(".ticket-price").val(data.ticketPrice); // Set value to calculate in contronller
-                            $(".total-of-tiket").html(data.totalTickets);
+                            $(".total-of-tiket").html(new Intl.NumberFormat('vn-VN').format(data.totalTickets));
                             $(".total-of-tiket").val(data.totalTickets); // Set value to calculate in contronller
-                            $(".total-price").html(data.totalPriceOfTickets + " CPL");
+                            $(".total-price").html(new Intl.NumberFormat('vn-VN').format(data.totalPriceOfTickets) + " CPL");
                             $(".total-price").val(data.totalPriceOfTickets); // Set value to calculate in contronller
                             $("#div-confirm-lottery").show();
                         }
@@ -51,36 +51,64 @@
         });
     },
     bindConfirmPurchaseTicket: function () {
-        $('#btn-confirm-purchase-lottery-ticket').click( function () {
-            var _this = this;
-            $.ajax({
-                url: "/Lottery/ConfirmPurchaseTicket/",
-                type: "POST",
-                data: {
-                    TicketPrice: parseInt($(".ticket-price").val()),
-                    TotalTickets: parseInt($(".total-of-tiket").val()),
-                    TotalPriceOfTickets: parseInt($(".total-price").val()),
-                },
-                success: function (data) {
-                    if (data.success) {
-                        $("#div-confirm-lottery").hide();
-                        $("#div-thankyou-lottery").show();
-                        $("#total-price").val(data.totalPriceOfTickets); // Set value to calculate in contronller
-                        $("#span-txHashId").html("<a class='text-success' target='_blank' href = https://etherscan.io/tx/" + data.txHashId + "><u>" + data.txHashId + "</u></a>");
-                        Lottery.historyDatatable.ajax.reload();
-                    }
-                    else {
-                        toastr.error(data.message, 'Error!');
-                    }
-                },
-                complete: function (data) {
-                    $("#purchase-lottery-ticket").modal("hide");
-                }
-            });
+        $('#btn-confirm-purchase-lottery-ticket').click(function () {
+            Lottery.loadAjaxConfirmPurchaseTicket();
         })
+
+    },
+    loadAjaxConfirmPurchaseTicket() {
+         $.ajax({
+             url: "/Lottery/ConfirmPurchaseTicket/",
+             type: "POST",
+             data: {
+                 TicketPrice: parseInt($(".ticket-price").val()),
+                 TotalTickets: parseInt($(".total-of-tiket").val()),
+                 TotalPriceOfTickets: parseInt($(".total-price").val()),
+                 LotteryId: parseInt($("#Lottery_Id").val())
+             },
+             success: function (data) {
+                 if (data.success === undefined) { // before log in
+                     $("#modal").html(data);
+                     $("#login-modal").modal("show");
+                     $.getScript("https://www.google.com/recaptcha/api.js?hl=en");
+                 }
+                 else { // after log in
+                     $("#login-modal").modal("hide");
+                     if ($("#lottery-history").hasClass("d-none")) { // not login yet
+                         $("#lottery-history").removeClass("d-none");
+                         Lottery.historyDatatable = Lottery.loadLotteryHistoryTable();
+                     }
+
+                     Lottery.loadHeaderViewComponent(); // Reloader header view component after login
+                     if (data.success) {
+                         $("#div-confirm-lottery").hide();
+                         $("#div-thankyou-lottery").show();
+                         $("#span-txHashId").html("<a class='text-success' target='_blank' href = https://rinkeby.etherscan.io/tx/" + data.txHashId + "><u>" + data.txHashId + "</u></a>");
+                         toastr.success(data.message, 'Success!');
+                         Lottery.historyDatatable.ajax.reload();
+                     }
+                     else {
+                         toastr.error(data.message, 'Error!');
+                     }
+                 }
+             },
+             complete: function (data) {
+             }
+         });
+    },
+    loadHeaderViewComponent: function () {
+        $.ajax({
+            url: "/Home/LoadHeaderViewComponent/",
+            type: "GET",
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#header-content").html(data);
+            }
+        });
     },
     loadLotteryHistoryTable: function () {
-        if ($("#dt-lottery-history").length == 0)
+        if ($("#lottery-history").hasClass("d-none"))
             return false;
 
         return $("#dt-lottery-history").DataTable({
@@ -138,9 +166,8 @@
                 },
             ],
         });
-    }
+    },
 };
-
 
 $(document).ready(function () {
     Lottery.init();
