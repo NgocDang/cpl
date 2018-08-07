@@ -3,14 +3,14 @@
 <div id="depositandwithdraw">
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link active" id="active-tab1" data-toggle="tab" href="#active1" aria-controls="active1" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</a>
+            <a class="nav-link active" id="deposit-nav-tab" data-toggle="tab" href="#deposit-nav" aria-controls="deposit-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="link-tab1" data-toggle="tab" href="#link1" aria-controls="link1" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</a>
+            <a class="nav-link" id="withdraw-nav-tab" data-toggle="tab" href="#withdraw-nav" aria-controls="withdraw-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</a>
         </li>
     </ul>
     <div class="tab-content px-2 py-1 mb-1">
-        <div role="tabpanel" class="tab-pane active" id="active1" aria-labelledby="active-tab1" aria-expanded="true">
+        <div role="tabpanel" class="tab-pane active" id="deposit-nav" aria-labelledby="deposit-nav-tab" aria-expanded="true">
             <div class="card mb-1">
                 <div class="card-content">
                     <div class="card-body">
@@ -102,7 +102,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane" id="link1" role="tabpanel" aria-labelledby="link-tab1" aria-expanded="false">
+        <div class="tab-pane" id="withdraw-nav" role="tabpanel" aria-labelledby="withdraw-nav-tab" aria-expanded="false">
             <div class="card mb-1">
                 <div class="card-content">
                     <div class="card-body">
