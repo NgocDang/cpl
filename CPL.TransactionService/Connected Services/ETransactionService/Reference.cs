@@ -425,6 +425,163 @@ namespace ETransactionService
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ETransactionDetailRetrieveResult", Namespace="http://schemas.datacontract.org/2004/07/FHCore.WCF.Transaction")]
+    public partial class ETransactionDetailRetrieveResult : object
+    {
+        
+        private string BlockHashField;
+        
+        private int BlockNumberField;
+        
+        private string FromAddressField;
+        
+        private decimal GasField;
+        
+        private decimal GasPriceField;
+        
+        private ETransactionService.Status StatusField;
+        
+        private string ToAddressField;
+        
+        private System.Nullable<bool> TransactionStatusField;
+        
+        private string TxHashIdField;
+        
+        private decimal ValueField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string BlockHash
+        {
+            get
+            {
+                return this.BlockHashField;
+            }
+            set
+            {
+                this.BlockHashField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int BlockNumber
+        {
+            get
+            {
+                return this.BlockNumberField;
+            }
+            set
+            {
+                this.BlockNumberField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string FromAddress
+        {
+            get
+            {
+                return this.FromAddressField;
+            }
+            set
+            {
+                this.FromAddressField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Gas
+        {
+            get
+            {
+                return this.GasField;
+            }
+            set
+            {
+                this.GasField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal GasPrice
+        {
+            get
+            {
+                return this.GasPriceField;
+            }
+            set
+            {
+                this.GasPriceField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public ETransactionService.Status Status
+        {
+            get
+            {
+                return this.StatusField;
+            }
+            set
+            {
+                this.StatusField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ToAddress
+        {
+            get
+            {
+                return this.ToAddressField;
+            }
+            set
+            {
+                this.ToAddressField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<bool> TransactionStatus
+        {
+            get
+            {
+                return this.TransactionStatusField;
+            }
+            set
+            {
+                this.TransactionStatusField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string TxHashId
+        {
+            get
+            {
+                return this.TxHashIdField;
+            }
+            set
+            {
+                this.TxHashIdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Value
+        {
+            get
+            {
+                return this.ValueField;
+            }
+            set
+            {
+                this.ValueField = value;
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ETransactionService.IETransaction")]
     public interface IETransaction
@@ -438,6 +595,9 @@ namespace ETransactionService
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IETransaction/GetTransactionStatus", ReplyAction="http://tempuri.org/IETransaction/GetTransactionStatusResponse")]
         System.Threading.Tasks.Task<ETransactionService.ETransactionStatusRetrieveResult> GetTransactionStatusAsync(string authenticatedToken, string txHashId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IETransaction/RetrieveTransactionDetail", ReplyAction="http://tempuri.org/IETransaction/RetrieveTransactionDetailResponse")]
+        System.Threading.Tasks.Task<ETransactionService.ETransactionDetailRetrieveResult> RetrieveTransactionDetailAsync(string authenticatedToken, string txHashId);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
@@ -503,6 +663,11 @@ namespace ETransactionService
         public System.Threading.Tasks.Task<ETransactionService.ETransactionStatusRetrieveResult> GetTransactionStatusAsync(string authenticatedToken, string txHashId)
         {
             return base.Channel.GetTransactionStatusAsync(authenticatedToken, txHashId);
+        }
+        
+        public System.Threading.Tasks.Task<ETransactionService.ETransactionDetailRetrieveResult> RetrieveTransactionDetailAsync(string authenticatedToken, string txHashId)
+        {
+            return base.Channel.RetrieveTransactionDetailAsync(authenticatedToken, txHashId);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()

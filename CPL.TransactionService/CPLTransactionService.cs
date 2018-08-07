@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CPL.TransactionService
@@ -28,10 +29,12 @@ namespace CPL.TransactionService
         public static bool IsTransactionServiceRunning = false;
         public static List<Task> Tasks = new List<Task>();
 
-        public string FileName { get; set; }
+        public string BTCFileName { get; set; }
+        public string ETHFileName { get; set; }
         public string ConnectionString { get; set; }
         public int RunningIntervalInMilliseconds { get; set; }
         public string ServiceEnvironment { get; set; }
+        public int NumberOfConfirmsForUnreversedTransaction { get; set; }
 
         public static AuthenticationService.AuthenticationClient _authentication = new AuthenticationService.AuthenticationClient();
         public static ETransactionService.ETransactionClient _eTransaction = new ETransactionService.ETransactionClient();
@@ -44,8 +47,6 @@ namespace CPL.TransactionService
             public static string Token { get; set; }
         }
 
-        public readonly int NumberOfConfirmsForUnreversedTransaction = 6;
-
         public void Start()
         {
             // Configure Builder
@@ -56,9 +57,6 @@ namespace CPL.TransactionService
 
             // Initialize wcf 
             InitializeWCF();
-
-            // write log
-            Utils.FileAppendThreadSafe(FileName, String.Format("{0} started at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
 
             //Init dependency transaction & dbcontext
             InitializeRepositories();
@@ -79,30 +77,84 @@ namespace CPL.TransactionService
             if (authentication.Result.Status.Code == 0)
             {
                 Authentication.Token = authentication.Result.Token;
-                Utils.FileAppendThreadSafe(FileName, String.Format("Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
+                Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
                 var bTransaction = _bTransaction.SetAsync(Authentication.Token, new BTransactionService.BTransactionSetting { Environment = (ServiceEnvironment == BTransactionService.Environment.MAINNET.ToString() ? BTransactionService.Environment.MAINNET : BTransactionService.Environment.TESTNET), Platform = BTransactionService.Platform.BTC});
                 bTransaction.Wait();
                 var eTransaction = _eTransaction.SetAsync(Authentication.Token, new ETransactionService.ETransactionSetting { Environment = (ServiceEnvironment == ETransactionService.Environment.MAINNET.ToString() ? ETransactionService.Environment.MAINNET : ETransactionService.Environment.TESTNET), Platform = ETransactionService.Platform.ETH, ApiKey= CPLConstant.ETransactionAPIKey });
                 eTransaction.Wait();
             } else
             {
-                Utils.FileAppendThreadSafe(FileName, String.Format("Authenticate failed. Error {0}{1}", authentication.Result.Status.Text, Environment.NewLine));
+                Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Authenticate failed. Error {0}{1}", authentication.Result.Status.Text, Environment.NewLine));
             }
         }
 
         private void CheckBTransaction()
         {
-            var transactions = Resolver.BTCTransactionService.Queryable().Where(x => !x.UpdatedTime.HasValue);
-            foreach(var transaction in transactions)
+            try
             {
-                _bTransaction.RetrieveTransactionsAsync(Authentication.Token, transaction.a)
+                do
+                {
+                    BTCTransaction transaction = null;
+                    do
+                    {
+                        transaction = Resolver.BTCTransactionService.Queryable().FirstOrDefault(x => !x.UpdatedTime.HasValue);
+                        if (transaction == null)
+                            Thread.Sleep(RunningIntervalInMilliseconds);
+                    }
+                    while (IsTransactionServiceRunning && transaction == null);
+
+                    Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Transaction id {0} is in processing. {1}", transaction.TxHashId, Environment.NewLine));
+                    
+                    var transactionDetail = _bTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
+                    transactionDetail.Wait();
+
+                    if (transactionDetail.Result.Confirmations >= NumberOfConfirmsForUnreversedTransaction)
+                    {
+                        var user = Resolver.SysUserService.Queryable()
+                            .FirstOrDefault(x => transactionDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
+                        if (user != null)
+                        {
+                            // add BTC amount
+                            user.BTCAmount += transactionDetail.Result.Value;
+                            Resolver.SysUserService.Update(user);
+
+                            // update btc transaction so that it is not checked next time
+                            transaction.UpdatedTime = DateTime.Now;
+                            Resolver.BTCTransactionService.Update(transaction);
+
+                            // add record to coin transaction
+                            Resolver.CoinTransactionService.Insert(new CoinTransaction
+                            {
+                                CoinAmount = transactionDetail.Result.Value,
+                                CreatedDate = DateTime.Now,
+                                CurrencyId = (int)EnumCurrency.BTC,
+                                SysUserId = user.Id,
+                                ToWalletAddress = user.BTCHDWalletAddress,
+                                TxHashId = transaction.TxHashId,
+                                Type = (int)EnumCoinTransactionType.DEPOSIT_BTC
+                            });
+                        }
+                    }
+
+                    Resolver.UnitOfWork.SaveChanges();
+                    Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Transaction id {0} is processed.{1}", transaction.TxHashId, Environment.NewLine));
+                }
+                while (IsTransactionServiceRunning);
+                
             }
+            catch(Exception ex)
+            {
+                if (ex.InnerException.Message != null)
+                    Utils.FileAppendThreadSafe(BTCFileName, string.Format("BTC Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                else
+                    Utils.FileAppendThreadSafe(BTCFileName, string.Format("BTC Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+            }
+            Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
         }
 
         public void Stop()
         {
             IsTransactionServiceRunning = false;
-            Utils.FileAppendThreadSafe(FileName, String.Format("{0} stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
             Task.WaitAll(Tasks.ToArray());
         }
 
@@ -158,8 +210,10 @@ namespace CPL.TransactionService
         /// </summary>
         private void InitializeSetting()
         {
-            FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
+            BTCFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "btc_log.txt");
+            ETHFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "eth_log.txt");
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
+            NumberOfConfirmsForUnreversedTransaction = int.Parse(Configuration["NumberOfConfirmsForUnreversedTransaction"]);
             ConnectionString = Configuration["ConnectionString"];
             ServiceEnvironment = Configuration["Environment"];
         }

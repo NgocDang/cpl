@@ -23,7 +23,6 @@ namespace CPL.Mapping
             builder.Property(t => t.CoinAmount).HasColumnName("CoinAmount");
             builder.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
             builder.Property(t => t.CurrencyId).HasColumnName("CurrencyId");
-            builder.Property(t => t.Status).HasColumnName("Status");
             builder.Property(t => t.TokenAmount).HasColumnName("TokenAmount");
             builder.Property(t => t.Rate).HasColumnName("Rate");
             builder.Property(t => t.Type).HasColumnName("Type");

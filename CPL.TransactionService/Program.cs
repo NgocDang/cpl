@@ -1,4 +1,5 @@
-﻿using CPL.TransactionService.Misc;
+﻿using CPL.Common.Misc;
+using CPL.TransactionService.Misc;
 using Microsoft.Extensions.PlatformAbstractions;
 using PeterKottas.DotNetCore.WindowsService;
 using System;

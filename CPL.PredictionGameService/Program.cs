@@ -1,4 +1,5 @@
-﻿using CPL.PredictionGameService.Misc;
+﻿using CPL.Common.Misc;
+using CPL.PredictionGameService.Misc;
 using Microsoft.Extensions.PlatformAbstractions;
 using PeterKottas.DotNetCore.WindowsService;
 using System;

@@ -185,15 +185,13 @@ namespace BTransactionService
         
         private int BlockNumberField;
         
+        private int ConfirmationsField;
+        
+        private decimal FeeField;
+        
         private BTransactionService.BTransactionVIn[] FromField;
         
-        private decimal GasField;
-        
-        private decimal GasPriceField;
-        
         private int IdField;
-        
-        private System.Nullable<bool> StatusField;
         
         private BTransactionService.BTransactionVOut[] ToField;
         
@@ -228,6 +226,32 @@ namespace BTransactionService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Confirmations
+        {
+            get
+            {
+                return this.ConfirmationsField;
+            }
+            set
+            {
+                this.ConfirmationsField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Fee
+        {
+            get
+            {
+                return this.FeeField;
+            }
+            set
+            {
+                this.FeeField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public BTransactionService.BTransactionVIn[] From
         {
             get
@@ -241,32 +265,6 @@ namespace BTransactionService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public decimal Gas
-        {
-            get
-            {
-                return this.GasField;
-            }
-            set
-            {
-                this.GasField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public decimal GasPrice
-        {
-            get
-            {
-                return this.GasPriceField;
-            }
-            set
-            {
-                this.GasPriceField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
         public int Id
         {
             get
@@ -276,19 +274,6 @@ namespace BTransactionService
             set
             {
                 this.IdField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Nullable<bool> Status
-        {
-            get
-            {
-                return this.StatusField;
-            }
-            set
-            {
-                this.StatusField = value;
             }
         }
         
@@ -554,6 +539,148 @@ namespace BTransactionService
         Deleted = 3,
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="BTransactionDetailRetrieveResult", Namespace="http://schemas.datacontract.org/2004/07/FHCore.WCF.Transaction")]
+    public partial class BTransactionDetailRetrieveResult : object
+    {
+        
+        private string BlockHashField;
+        
+        private int BlockNumberField;
+        
+        private decimal ConfirmationsField;
+        
+        private decimal FeeField;
+        
+        private BTransactionService.BTransactionVIn[] FromField;
+        
+        private BTransactionService.Status StatusField;
+        
+        private BTransactionService.BTransactionVOut[] ToField;
+        
+        private string TxHashIdField;
+        
+        private decimal ValueField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string BlockHash
+        {
+            get
+            {
+                return this.BlockHashField;
+            }
+            set
+            {
+                this.BlockHashField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int BlockNumber
+        {
+            get
+            {
+                return this.BlockNumberField;
+            }
+            set
+            {
+                this.BlockNumberField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Confirmations
+        {
+            get
+            {
+                return this.ConfirmationsField;
+            }
+            set
+            {
+                this.ConfirmationsField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Fee
+        {
+            get
+            {
+                return this.FeeField;
+            }
+            set
+            {
+                this.FeeField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public BTransactionService.BTransactionVIn[] From
+        {
+            get
+            {
+                return this.FromField;
+            }
+            set
+            {
+                this.FromField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public BTransactionService.Status Status
+        {
+            get
+            {
+                return this.StatusField;
+            }
+            set
+            {
+                this.StatusField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public BTransactionService.BTransactionVOut[] To
+        {
+            get
+            {
+                return this.ToField;
+            }
+            set
+            {
+                this.ToField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string TxHashId
+        {
+            get
+            {
+                return this.TxHashIdField;
+            }
+            set
+            {
+                this.TxHashIdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public decimal Value
+        {
+            get
+            {
+                return this.ValueField;
+            }
+            set
+            {
+                this.ValueField = value;
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="BTransactionService.IBTransaction")]
     public interface IBTransaction
@@ -564,6 +691,9 @@ namespace BTransactionService
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBTransaction/RetrieveTransactions", ReplyAction="http://tempuri.org/IBTransaction/RetrieveTransactionsResponse")]
         System.Threading.Tasks.Task<BTransactionService.BTransactionRetrieveResult> RetrieveTransactionsAsync(string authenticatedToken, string address, int fromBlockNumber);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IBTransaction/RetrieveTransactionDetail", ReplyAction="http://tempuri.org/IBTransaction/RetrieveTransactionDetailResponse")]
+        System.Threading.Tasks.Task<BTransactionService.BTransactionDetailRetrieveResult> RetrieveTransactionDetailAsync(string authenticatedToken, string txHashId);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
@@ -624,6 +754,11 @@ namespace BTransactionService
         public System.Threading.Tasks.Task<BTransactionService.BTransactionRetrieveResult> RetrieveTransactionsAsync(string authenticatedToken, string address, int fromBlockNumber)
         {
             return base.Channel.RetrieveTransactionsAsync(authenticatedToken, address, fromBlockNumber);
+        }
+        
+        public System.Threading.Tasks.Task<BTransactionService.BTransactionDetailRetrieveResult> RetrieveTransactionDetailAsync(string authenticatedToken, string txHashId)
+        {
+            return base.Channel.RetrieveTransactionDetailAsync(authenticatedToken, txHashId);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()
