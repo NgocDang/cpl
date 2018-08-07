@@ -1,8 +1,11 @@
 ﻿var AllUser = {
+    allUserDataTable: null,
     init: function () {
-        AllUser.loadAllUserDatatable();
+        AllUser.allUserDataTable = AllUser.loadAllUserDatatable();
         AllUser.loadLightBox();
         AllUser.bindEditButton();
+        AllUser.bindUpdateButton();
+        AllUser.bindDeleteButton();
     },
     bindEditButton: function () {
         $("#dt-all-user").on("click", ".btn-edit", function () {
@@ -43,6 +46,67 @@
             return false;
         });
     },
+    bindUpdateButton: function () {
+        $("#modal").on("click", "#btn-update-user", function () {
+            var isFormValid = $("#form-update-user")[0].checkValidity();
+            $("#form-update-user").addClass('was-validated');
+            $("#Email").removeClass("border-danger");
+            var isMobileValid = true;
+            if ($("#Mobile").intlTelInput("getNumber") != "") {
+                isMobileValid = $("#Mobile").intlTelInput("isValidNumber");
+                if (!isMobileValid) {
+                    $("#Mobile").addClass("border-danger");
+                    $("#Mobile").closest(".form-group").find(".invalid-feedback").show();
+                } else {
+                    $("#Mobile").removeClass("border-danger");
+                    $("#Mobile").closest(".form-group").find(".invalid-feedback").hide();
+                }
+            }
+
+            if (isFormValid && isMobileValid) {
+                $.ajax({
+                    url: "/Admin/UpdateUser/",
+                    type: "POST",
+                    beforeSend: function () {
+                        $("#btn-update-user").attr("disabled", true);
+                        $("#btn-update-user").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-update-user").text());
+                    },
+                    data: {
+                        FirstName: $("#FirstName").val(),
+                        LastName: $("#LastName").val(),
+                        Mobile: $("#Mobile").intlTelInput("getNumber"),
+                        TwoFactorAuthenticationEnable: $("#TwoFactorAuthenticationEnable").is(":checked"),
+                        Password: $("#Password").val(),
+                        StreetAddress: $("#Address").val(),
+                        Email: $("#Email").val(),
+                        Id: $("#Id").val()
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $("#first-name-" + $("#Id").val()).html($("#FirstName").val());
+                            $("#last-name-" + $("#Id").val()).html($("#LastName").val());
+                            $("#mobile-" + $("#Id").val()).html($("#Mobile").intlTelInput("getNumber"));
+                            $("#address-" + $("#Id").val()).html($("#Address").val());
+                            $("#email-" + $("#Id").val()).html($("#Email").val());
+                            toastr.success(data.message, 'Success!');
+                            $("#update-user").modal("hide");
+                            AllUser.allUserDataTable.ajax.reload();
+                        } else {
+                            if (data.name == "email") {
+                                $("#Email").addClass("border-danger");
+                            }
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $("#btn-update-user").attr("disabled", false);
+                        $("#btn-update-user").html($("#btn-update-user").text());
+                    }
+                });
+            }
+            return false;
+        });
+    },
     loadLightBox: function () {
         $(document).on('click', '[data-toggle="lightbox"]', function (event) {
             event.preventDefault();
@@ -59,7 +123,7 @@
         return result;
     },
     loadAllUserDatatable: function () {
-        $('#dt-all-user').DataTable({
+        return $('#dt-all-user').DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
@@ -135,7 +199,7 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a style='line-height:12px;' href='/Dashboard/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-info btn-view'>View</a> <button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-primary btn-edit'>Edit</button>";
+                        return "<a style='line-height:12px;' href='/Admin/UserDashboard/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-info btn-view'>View</a> <button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-primary btn-edit'>Edit</button>";
                     },
                     "orderable": false
                 }
@@ -144,6 +208,38 @@
     },
     destroyAllUserDatatable: function () {
         $('#dt-all-user').DataTable().destroy();
+    },
+    bindDeleteButton: function () {
+        $("#modal").on("click", "#btn-delete-user", function () {
+            var result = confirm("Do you really want to delete this user?");
+            if (result) {
+                $.ajax({
+                    url: "/Admin/DeleteUser/",
+                    type: "POST",
+                    beforeSend: function () {
+                        $("#btn-delete-user").attr("disabled", true);
+                        $("#btn-delete-user").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-delete-user").text());
+                    },
+                    data: {
+                        Id: $("#Id").val()
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $("#update-user").modal("hide");
+                            toastr.success(data.message, 'Success!');
+                            AllUser.allUserDataTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $("#btn-delete-user").attr("disabled", false);
+                        $("#btn-delete-user").html($("#btn-delete-user").text());
+                    }
+                });
+            }
+            return false;
+        });
     }
 }
 
