@@ -133,8 +133,8 @@ namespace CPL.Controllers
                     .Select(x => Mapper.Map<LangViewModel>(x))
                     .ToList();
 
-                var gcapchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
-                loginViewModel.GCapchaKey = gcapchaKey;
+                var gcaptchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
+                loginViewModel.GCaptchaKey = gcaptchaKey;
 
                 if (HttpContext.Session.GetInt32("LangId").HasValue)
                     loginViewModel.Lang = loginViewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
@@ -147,9 +147,6 @@ namespace CPL.Controllers
             }
             else
             {
-                // For test
-                // return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully"), txHashId = "0x5c581096af1d62eb9a4e70539652ffbd7b9c868932b9f5a61b9ec2181e986064" });
-
                 var currentUser = _sysUserService.Query().Select().Where(x => x.Id == user.Id).FirstOrDefault();
                 var lotteryId = viewModel.LotteryId;
 

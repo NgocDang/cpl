@@ -3,58 +3,52 @@
     Layout = null;
 }
 
-<div class="modal content-wrapper mt-2 mb-2" role="dialog" id="login-modal" aria-hidden="true">
-    <div class="" role="document">
-        <div class="modal-body" id="account-login">
-            <div class="d-flex align-items-center justify-content-center">
-                <div class="card">
-                    <div class="card-content">
-                        <div class="card-body" id="login">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
-                            <div class="text-center mb-3">
-                                <img class="img-fluid" src="~/images/logo.png" />
-                            </div>
-                            <p class="mb-2 text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EnterLogin")</p>
-                            <form id="form-log-in" class="form-horizontal form-signin form needs-validation">
-                                <fieldset class="form-label-group">
-                                    <input id="Email" class="form-control" name="Email" type="email" tabindex="1" autofocus required />
-                                    <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
-                                </fieldset>
-                                <fieldset class="form-label-group">
-                                    <input type="password" id="Password" class="form-control" tabindex="2" required />
-                                    <label for="password">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
-                                </fieldset>
-                                <div class="form-group">
-                                    <label for="captcha" class="text-light d-block">
-                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Captcha")
-                                    </label>
-                                    <div class="box-captcha" id="box-captcha">
-                                        <div class="g-recaptcha" data-tabindex="3" data-sitekey="@Model.GCapchaKey"></div>
-                                    </div>
-                                </div>
-                                <div class="invalid-feedback invalid-feedback-login login-error">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidEmailPassword")
-                                </div>
-                                <button type="submit" id="btn-log-in" class="btn btn-primary btn-block my-1"><i class="fas fa-sign-in-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</button>
-                                <p class="text-center"><a asp-controller="Authentication" asp-action="Register" class="btn btn-secondary btn-block my-1"><i class="la la-user-plus"></i> Create Account</a></p>
-                            </form>
-                        </div>
-                        <div class="card-body" id="two-factor" style="display:none;">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
-                            <p class="text-center h5 text-capitalize txt-welcome">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</p>
-                            <div class="invalid-feedback text-danger two-factor-error" style="display:none;">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidPIN")
-                            </div>
-                            <form id="form-two-factor" method="POST" class="form-horizontal form-signin form needs-validation">
-                                <fieldset class="form-label-group">
-                                    <input id="PIN" class="form-control" name="PIN" type="text" autofocus required />
-                                    <label for="PIN">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PIN")</label>
-                                </fieldset>
-                                <button type="submit" id="btn-two-factor" class="btn btn-primary btn-block my-1"><i class="fas fa-key"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verify")</button>
-                            </form>
+<div class="modal" role="dialog" id="login-modal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content" id="account-login">
+            <div class="card-body" id="login">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                <div class="text-center mb-3">
+                    <img class="img-fluid" src="~/images/logo.png" />
+                </div>
+                <p class="mb-2 text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EnterLogin")</p>
+                <form id="form-log-in" class="form-horizontal form-signin form needs-validation">
+                    <fieldset class="form-label-group">
+                        <input id="Email" class="form-control" name="Email" type="email" tabindex="1" autofocus required />
+                        <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                    </fieldset>
+                    <fieldset class="form-label-group">
+                        <input type="password" id="Password" class="form-control" tabindex="2" required />
+                        <label for="password">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
+                    </fieldset>
+                    <div class="form-group">
+                        <label for="captcha" class="text-light d-block">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Captcha")
+                        </label>
+                        <div class="box-captcha" id="box-captcha">
+                            <div class="g-recaptcha" data-tabindex="3" data-sitekey="@Model.GCaptchaKey"></div>
                         </div>
                     </div>
+                    <div class="invalid-feedback invalid-feedback-login login-error">
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidEmailPassword")
+                    </div>
+                    <button type="submit" id="btn-log-in" class="btn btn-primary btn-block my-1"><i class="fas fa-sign-in-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</button>
+                    <a asp-controller="Authentication" asp-action="Register" class="btn btn-secondary btn-block"><i class="la la-user-plus"></i> Create Account</a>
+                </form>
+            </div>
+            <div class="card-body" id="two-factor" style="display:none;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                <p class="text-center h5 text-capitalize txt-welcome">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</p>
+                <div class="invalid-feedback text-danger two-factor-error" style="display:none;">
+                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidPIN")
                 </div>
+                <form id="form-two-factor" method="POST" class="form-horizontal form-signin form needs-validation">
+                    <fieldset class="form-label-group">
+                        <input id="PIN" class="form-control" name="PIN" type="text" autofocus required />
+                        <label for="PIN">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PIN")</label>
+                    </fieldset>
+                    <button type="submit" id="btn-two-factor" class="btn btn-primary btn-block my-1"><i class="fas fa-key"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verify")</button>
+                </form>
             </div>
             <input type="hidden" name="captchaMessage" id="captchaMessage" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CaptchaMessage")" />
             <input type="hidden" name="ReturnUrl" id="ReturnUrl" value="@Model.ReturnUrl" />

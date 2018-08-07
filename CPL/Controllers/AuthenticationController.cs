@@ -49,8 +49,8 @@ namespace CPL.Controllers
                 .Select(x => Mapper.Map<LangViewModel>(x))
                 .ToList();
 
-            var gcapchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
-            viewModel.GCapchaKey = gcapchaKey;
+            var gcaptchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
+            viewModel.GCaptchaKey = gcaptchaKey;
 
             if (HttpContext.Session.GetInt32("LangId").HasValue)
                 viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
@@ -115,8 +115,8 @@ namespace CPL.Controllers
                 .Select(x => Mapper.Map<LangViewModel>(x))
                 .ToList();
 				
-            var gcapchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
-            viewModel.GCapchaKey = gcapchaKey;
+            var gcaptchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
+            viewModel.GCaptchaKey = gcaptchaKey;
 			
             if (HttpContext.Session.GetInt32("LangId").HasValue)
                 viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
