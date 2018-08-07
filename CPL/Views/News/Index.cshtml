@@ -1,28 +1,46 @@
 ﻿@{
-    Layout = "_DashboardLayout";
+    Layout = "_Layout";
     ViewData["Title"] = "Index";
 }
 @using X.PagedList.Mvc.Core; @*import this so we get our HTML Helper*@
 @model X.PagedList.IPagedList<NewsViewModel>
 
-<link href="~/css/dashboard/PagedList.css" rel="stylesheet" />
+@section styles{
+    <link href="~/css/dashboard/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/plugins/owl-carousel/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/PagedList.css" rel="stylesheet" />
+    <link href="~/css/dashboard/cpl.home.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/dashboard/cpl.news.css" rel="stylesheet" asp-append-version="true" />
+}
 
-<div class="app-content content">
+@await Component.InvokeAsync("SliderBanner")
+<div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
-        @foreach (var item in Model)
-        {
-            <div class="row mb-5">
-                <div class="col-12 mb-2"><img src="~/images/banner_13.jpg" class="img-fluid" alt="Responsive image"></div>
-                <div class="col-12 mb-2"><h2>@item.Title</h2></div>
-                <div class="col-12">@Html.Raw(item.ShortDescription)</div>
-            </div>
-        }
+        <div class="content-body mt-3">
+            <h2 class="font-weight-bold mb-1">News</h2>
+            @foreach (var item in Model)
+            {
+                <div class="row mb-3">
+                    @if (item.Image != "")
+                    {
+                        <div class="col-12 mb-2"><a asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id"><img src="~/images/news/@item.Image" class="img-fluid" alt="Responsive image"></a></div>
+                    }
+                    <div class="col-12 ml-2"><a class="font-medium-3" asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id">@item.Title</a></div>
+                    <div class="col-12 ml-2 mb-2"><cite>@item.CreatedDate.ToString("MMMM dd, yyyy")</cite></div>
+                    <div class="col-12 ml-2"><p class="word-wrap">@Html.Raw(item.ShortDescription)...</p></div>
+                </div>
+            }
+        </div>
+        <div class="text-center">
+            <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), PagedListRenderOptions.OnlyShowFivePagesAtATime)
+        </div>
     </div>
-    <div class="text-center">
-        <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), PagedListRenderOptions.OnlyShowFivePagesAtATime)
-    </div>
-
 </div>
 
+@section scripts{
+    <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.min.js"></script>
+    <script src="~/js/dashboard/marquee.min.js"></script>
+    <script src="~/js/dashboard/cpl.home.js" asp-append-version="true"></script>
+}
 

@@ -65,10 +65,6 @@ namespace CPL.Controllers
                 .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
                 .ToList();
 
-            viewModel.Slides = lotteries
-                .Select(x => Mapper.Map<HomeSlideViewModel>(x))
-                .ToList();
-
             return View(viewModel);
         }
 
