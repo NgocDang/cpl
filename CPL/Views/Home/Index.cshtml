@@ -38,7 +38,7 @@
                     {
                         @foreach (var lottery in Model.Lotteries)
                         {
-                            <span class="d-block d-md-inline-block pr-4">
+                            <span class="d-md-inline-block pr-4">
                                 <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id">@lottery.Title, @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase") @lottery.Phase</a> - 
                                 @lottery.NumberOfTicketLeft.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
                             </span>

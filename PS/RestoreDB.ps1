@@ -1,3 +1,6 @@
+# Start Script
+Set-ExecutionPolicy RemoteSigned
+
 Import-Module SQLPS;
 
 $sqlFiles = @(Get-ChildItem ".\..\SQL\*.sql")
@@ -16,6 +19,9 @@ Invoke-Sqlcmd -Query $createDatabaseScript -ServerInstance $serverInstance;
 
 foreach ($sqlFile in $sqlFiles) {
     invoke-sqlcmd -inputFile $sqlFile -ServerInstance $serverInstance
-    }
+}
 
 "Database " + $database + " is restored successfully."
+
+"Deleting files"
+Get-ChildItem -Path ".\..\SQL\*.sql" | foreach { $_.Delete()}

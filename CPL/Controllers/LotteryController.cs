@@ -60,39 +60,46 @@ namespace CPL.Controllers
             this._gameHistoryService = gameHistoryService;
         }
 
-        public IActionResult Index(int id)
+        public IActionResult Index(int? id)
         {
-            var viewModel = new LotteryGameViewModel();
-            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            viewModel.SysUserId = user?.Id;
+            if (id.HasValue)
+            {
+                var viewModel = new LotteryGameViewModel();
+                var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+                viewModel.SysUserId = user?.Id;
 
-            var lottery = _lotteryService
-                            .Query()
-                            .Include(x => x.LotteryHistories)
-                            //.Include(x => x.LotteryPrizes)
-                            .Select()
-                            .FirstOrDefault(x => x.Id == id);
+                var lottery = _lotteryService
+                                .Query()
+                                .Include(x => x.LotteryHistories)
+                                //.Include(x => x.LotteryPrizes)
+                                .Select()
+                                .FirstOrDefault(x => x.Id == id);
 
-            viewModel.Lottery = Mapper.Map<LotteryViewModel>(lottery);
+                viewModel.Lottery = Mapper.Map<LotteryViewModel>(lottery);
 
-            // Do not delete !
-            //foreach (var lottery in viewModel.Lotteries)
-            //{
-            //    var numberOfGroup = lottery.Volume / CPLConstant.LotteryGroupSize;
-            //    var groups = Enumerable.Repeat(0, numberOfGroup).ToArray();
-            //    var groupSize = CPLConstant.LotteryGroupSize;
+                // DO NOT DELETE! THIS BLOCK OF CODE TO CALCULATE THE WINNING POSSIBILITY
+                //foreach (var lottery in viewModel.Lotteries)
+                //{
+                //    var numberOfGroup = lottery.Volume / CPLConstant.LotteryGroupSize;
+                //    var groups = Enumerable.Repeat(0, numberOfGroup).ToArray();
+                //    var groupSize = CPLConstant.LotteryGroupSize;
 
-            //    for (var i = lottery.LotteryPrizes.Count - 1; i >= 0; i--)
-            //    {
-            //        lottery.LotteryPrizes[i].Probability = Math.Round(((decimal)lottery.LotteryPrizes[i].Volume / (decimal)numberOfGroup) * (1m / (decimal)groupSize) * 100m, 4);
-            //        ProbabilityCalculate(ref groups, ref numberOfGroup, ref groupSize, lottery.LotteryPrizes[i].Volume);
-            //    }
-            //}
+                //    for (var i = lottery.LotteryPrizes.Count - 1; i >= 0; i--)
+                //    {
+                //        lottery.LotteryPrizes[i].Probability = Math.Round(((decimal)lottery.LotteryPrizes[i].Volume / (decimal)numberOfGroup) * (1m / (decimal)groupSize) * 100m, 4);
+                //        ProbabilityCalculate(ref groups, ref numberOfGroup, ref groupSize, lottery.LotteryPrizes[i].Volume);
+                //    }
+                //}
 
-            if (viewModel.Lottery != null && viewModel.Lottery.Volume > 0)
-                viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.Lottery.LotteryHistories.Count() / (decimal)viewModel.Lottery.Volume * 100m).ToString();
+                if (viewModel.Lottery != null && viewModel.Lottery.Volume > 0)
+                    viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.Lottery.LotteryHistories.Count() / (decimal)viewModel.Lottery.Volume * 100m).ToString();
 
-            return View(viewModel);
+                return View(viewModel);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         private void ProbabilityCalculate(ref int[] groups, ref int numberOfGroup, ref int groupSize, int numberOfGroupWasRemoved)

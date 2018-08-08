@@ -1,12 +1,9 @@
 ﻿var Layout = {
     init: function () {
-        Layout.bindLogOut();
         Layout.bindConfirmLogOut();
-        Layout.bindSwitchLanguage();
-        //DashboardLayout.bindWinButton();
     },
     bindLogOut: function () {
-        $('#header-content').on('click', '#logout-confirmation', function () {
+        $('a#logout-confirmation').on('click', function () {
             var _this = this;
             $.ajax({
                 url: "/Authentication/GetConfirm/",
@@ -28,19 +25,8 @@
             window.location.href = '/Authentication/LogOut/';
         });
     },
-    bindWinButton: function () {
-        if ($("#NotificationStatus").val().toLowerCase() == "true") {
-            $("#winner-notification").show();
-
-            $('.navbar-nav').on('click', '#btn-win', function () {
-                if ($("#KYCStatus").val().toLowerCase() == "false") {
-                    window.location.replace('/Profile/EditSecurity');
-                }
-            })
-        }
-    },
     bindSwitchLanguage: function () {
-        $("body").on("click", ".lang-item", function () {
+        $("a.lang-item").on("click", function () {
             var _this = this;
             $.ajax({
                 url: "/Layout/SwitchLang/",
@@ -69,3 +55,7 @@
 $(document).ready(function () {
     Layout.init();
 });
+
+window.onload = function () {
+   
+};
