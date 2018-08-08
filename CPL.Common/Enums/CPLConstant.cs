@@ -71,6 +71,8 @@ namespace CPL.Common.Enums
         public static string ETokenServiceEndpoint = "Token/EToken.svc";
         public static string EWalletServiceEndpoint = "Wallet/EWallet.svc";
         public static string BWalletServiceEndpoint = "Wallet/BWallet.svc";
+        public static string EAccountServiceEndpoint = "Account/EAccount.svc";
+        public static string BAccountServiceEndpoint = "Account/BAccount.svc";
 
         // FHCore Authentication
         public static string ProjectEmail = "info.cplcoin@gmail.com";
@@ -104,8 +106,26 @@ namespace CPL.Common.Enums
         public static string OwnerPassword = "ngocdang";
         public static string Platform = "Platform";
         public static string Abi = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"name\":\"_phase\",\"type\":\"uint32\"},{\"name\":\"_playerAddress\",\"type\":\"address\"},{\"name\":\"_listTicketIndex\",\"type\":\"uint32[]\"}],\"name\":\"random\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_phase\",\"type\":\"uint32\"},{\"name\":\"_playerAddress\",\"type\":\"address\"},{\"name\":\"_listTicketIndex\",\"type\":\"uint32[]\"}],\"name\":\"reRandom\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"phaseNumber\",\"type\":\"uint32\"},{\"indexed\":true,\"name\":\"playerAddress\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"ticketIndex\",\"type\":\"uint32\"},{\"indexed\":false,\"name\":\"ticketNumber\",\"type\":\"uint32\"}],\"name\":\"TicketNumberGenerated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"phaseNumber\",\"type\":\"uint32\"},{\"indexed\":true,\"name\":\"playerAddress\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"ticketIndex\",\"type\":\"uint32\"},{\"indexed\":false,\"name\":\"oldTicketNumber\",\"type\":\"uint32\"},{\"indexed\":false,\"name\":\"newTicketNumber\",\"type\":\"uint32\"}],\"name\":\"TicketNumberReGenerated\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_phase\",\"type\":\"uint32\"},{\"name\":\"_playerAddress\",\"type\":\"address\"},{\"name\":\"_ticketIndex\",\"type\":\"uint32\"}],\"name\":\"getTicket\",\"outputs\":[{\"name\":\"\",\"type\":\"uint32\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]";
+
         //public static int GasPriceMultiplicator = 1; // PROD
         public static int GasPriceMultiplicator = 3; // TEST
+
+        // Withdraw and deposit
+        // BTC
+        //public static string BTCDepositAddress = ""; // PROD
+        public static string BTCDepositAddress = ""; // TEST
+        //public static string BTCWithdrawAddress = ""; // PROD
+        public static string BTCWithdrawAddress = ""; // TEST
+        //public static string BTCWithdrawPrivateKey = ""; // PROD
+        public static string BTCWithdrawPrivateKey = ""; // TEST
+        // ETH
+        //public static string ETHDepositAddress = ""; //PROD
+        public static string ETHDepositAddress = ""; //TEST
+        //public static string ETHWithdrawAddress = ""; //PROD
+        public static string ETHWithdrawAddress = ""; //TEST
+        //public static string ETHWithdrawPrivateKey = ""; //PROD
+        public static string ETHWithdrawPrivateKey = ""; //TEST
+
 
         //Request to get BTC and ETH address count limit
         public static int RequestCountLimit = 5;
