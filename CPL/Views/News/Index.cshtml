@@ -24,19 +24,21 @@
             </div>
             @foreach (var item in Model)
             {
-            <div class="col-12">
-                <div class="row bg-white mb-2">
-                    @if (item.Image != "")
-                    {
-                        <div class=""><a asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id"><img src="~/images/news/@item.Image" class="img-fluid" alt="Responsive image"></a></div>
-                    }
-                    <div class="col-12 ml-2 @(item.Image != "" ? "mt-4" : "mt-1")">
-                        <a class="font-weight-bold font-medium-3" asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id">@item.Title</a>
+                <div class="card">
+
+
+                    <div class="card-content">
+                        @if (item.Image != "")
+                        {
+                            <a asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id"><img src="~/images/news/@item.Image" class="card-img-top img-fluid" alt="@item.Title"></a>
+                        }
+                        <div class="card-body">
+                            <h4 class="card-title"><a asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id">@item.Title</a></h4>
+                            <h6 class="card-subtitle text-muted">@item.CreatedDate.ToString("MMMM dd, yyyy")</h6>
+                            <p class="card-text mt-2">@Html.Raw(item.ShortDescription)...</p>
+                        </div>
                     </div>
-                    <div class="col-12 ml-2 mb-2"><cite>@item.CreatedDate.ToString("MMMM dd, yyyy")</cite></div>
-                    <div class="col-12"><p class="col-11 word-wrap">@Html.Raw(item.ShortDescription)...</p></div>
                 </div>
-            </div>
             }
         </div>
         <div class="text-right">
