@@ -1479,3 +1479,9 @@ ul.game-menu li.active {
     background-size: 100%;
 }
 /*End <== Token balance view component*/
+
+/*Start ==> Word Break*/
+.word-break {
+    word-break: break-word;
+}
+/*End <== Word Break*/
