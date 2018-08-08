@@ -285,7 +285,7 @@ namespace CPL.Controllers
             var user = _sysUserService.Queryable()
                 .FirstOrDefault(x => x.Id == id);
 
-            return PartialView("_Edit", Mapper.Map<SysUserViewModel>(user));
+            return PartialView("_EditUser", Mapper.Map<SysUserViewModel>(user));
         }
 
         [HttpPost]
