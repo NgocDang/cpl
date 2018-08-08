@@ -14,9 +14,7 @@ namespace CPL.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string StreetAddress { get; set; }
-        public string ETHWalletAddress { get; set; }
         public int BTCHDWalletAddressIndex { get; set; }
-        public string BTCWalletAddress { get; set; }
         public string ETHHDWalletAddress { get; set; }
         public int ETHHDWalletAddressIndex { get; set; }
         public string BTCHDWalletAddress { get; set; }

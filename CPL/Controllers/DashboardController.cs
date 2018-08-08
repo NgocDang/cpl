@@ -165,12 +165,12 @@ namespace CPL.Controllers
             return new JsonResult(new { success = true, message = mess });
         }
 
-        public JsonResult SearchGameHistory(DataTableAjaxPostModel viewModel)
+        public JsonResult SearchGameHistory(DataTableAjaxPostModel viewModel, int userId)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchGameHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            var res = SearchGameHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, userId);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -181,9 +181,12 @@ namespace CPL.Controllers
             });
         }
 
-        public IList<GameHistoryViewModel> SearchGameHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        public IList<GameHistoryViewModel> SearchGameHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int userId = 0)
         {
-            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            var user = new SysUserViewModel();
+            if (userId > 0)
+                user = Mapper.Map<SysUserViewModel>(_sysUserService.Queryable().Where(x => x.Id == userId).FirstOrDefault());
+            user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             var searchBy = (model.search != null) ? model.search.value : null;
             var take = model.length;
             var skip = model.start;
