@@ -10,11 +10,11 @@
         <div role="tabpanel" class="tab-pane active" id="active1" aria-labelledby="active-tab1" aria-expanded="true">
             <!-- BTC session -->
             <div class="card section-exchange mb-1">
-                <div class="card-content">
+                <div class="card-content p-2">
                     <div class="card-body mx-0 my-0 px-0 pt-0">
                         <div class="row">
                             <div class="col-lg-3 col-12 text-center">
-                                <i class="cc BTC mr-2 warning font-large-5"></i>
+                                <i class="cc BTC warning font-large-5"></i>
                             </div>
                             <div class="col-lg-4 col-12 pt-2">
                                 <fieldset class="form-label-group">
@@ -39,19 +39,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-danger btn-next">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Next") <i class="la la-angle-right"></i></button>
+                    <div class="card-footer px-0">
+                        <button type="button" class="btn btn-primary btn-next pull-right">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Next") <i class="la la-angle-right"></i></button>
                     </div>
                 </div>
             </div>
 
             <!-- ETH session -->
             <div class="card section-exchange mb-0">
-                <div class="card-content">
-                    <div class="card-body mx-0 my-0 px-0 pt-0">
+                <div class="card-content p-2">
+                    <div class="card-body m-0 px-0 pt-0">
                         <div class="row">
                             <div class="col-lg-3 col-sm-12 col-12 text-center">
-                                <i class="cc ETH mr-2 font-large-5"></i>
+                                <i class="cc ETH font-large-5"></i>
                             </div>
                             <div class="col-lg-4 col-sm-12 col-12 pt-2">
                                 <fieldset class="form-label-group">
@@ -77,8 +77,8 @@
 
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-danger btn-next">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Next") <i class="la la-angle-right"></i></button>
+                    <div class="card-footer px-0">
+                        <button type="button" class="btn btn-primary btn-next pull-right">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Next") <i class="la la-angle-right"></i></button>
                     </div>
                 </div>
             </div>

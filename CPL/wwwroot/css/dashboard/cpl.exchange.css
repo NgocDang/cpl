@@ -42,19 +42,8 @@
     border-top-right-radius: 10px;
 }
 
-#exchange-page .card-content {
-    padding: 15px;
-}
-
 #exchange-page .la {
     font-size: 15px;
-}
-
-#exchange-page .btn-next {
-    float: right;
-    margin-bottom: 10px;
-    padding-left: 30px;
-    padding-right: 30px;
 }
 
 @media (max-width: 425px) {
