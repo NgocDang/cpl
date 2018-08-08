@@ -11,5 +11,6 @@ namespace CPL.Models
         public int TicketPrice { get; set; }
         public int TotalTickets { get; set; }
         public int TotalPriceOfTickets { get; set; }
+        public int? LotteryId { get; set; }
     }
 }

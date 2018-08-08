@@ -90,7 +90,7 @@ namespace CPL.Common.Enums
         public static int HourBeforeInChart = 12; // hour
         public static int LowestRateBTCInterval = 500;
 
-        // GCapcha Key
+        // GCaptcha Key
         public static string GCaptchaKey = "GCaptchaKey";
 
         // Page size of News

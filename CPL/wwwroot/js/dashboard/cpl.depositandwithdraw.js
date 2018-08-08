@@ -48,18 +48,27 @@
                         $(_this).parents("form").find(".address-error").hide();
                         $(_this).parents("form").find(".amount-error").hide();
                         toastr.success(data.message, 'Success!');
-                        DepositAndWithdraw.bindLoadViewComponent();
-                    } else {
-                        if (data.name === "wallet") {
-                            $(_this).parents("form").find(".amount-error").hide();
-                            $(_this).parents("form").find(".address-error").show();
-                            $(_this).parents("form").find(".address-error").html(data.message);
+                        DepositAndWithdraw.bindLoadViewComponent("withdraw");
+                    }
+                    else {
+                        if (data.requireProfile != null && !data.requireProfile) {
+                            DepositAndWithdraw.loadRequireProfileViewComponent();
                         }
-                        if (data.name === "amount") {
-                            $(_this).parents("form").find(".address-error").hide();
-                            $(_this).parents("form").find(".amount-error").html(data.message);
-                            $(_this).parents("form").find(".amount-error").show();
+                        else if (data.requireKyc != null && !data.requireKyc) {
+                            DepositAndWithdraw.loadRequireKYCViewComponent();
+                        } else {
+                            if (data.name === "wallet") {
+                                $(_this).parents("form").find(".amount-error").hide();
+                                $(_this).parents("form").find(".address-error").show();
+                                $(_this).parents("form").find(".address-error").html(data.message);
+                            }
+                            if (data.name === "amount") {
+                                $(_this).parents("form").find(".address-error").hide();
+                                $(_this).parents("form").find(".amount-error").html(data.message);
+                                $(_this).parents("form").find(".amount-error").show();
+                            }
                         }
+
                     }
                 }
             });
@@ -86,10 +95,10 @@
                     success: function (data) {
                         if (data.success) {
                             $(_this).parents("form").find(".address-value").val(data.address);
-                            toastr.success(data.message);
+                            toastr.success(data.message, 'Success!');
                         } else {
                             $(_this).parents("form").find(".address-value").val("");
-                            toastr.error('Error!');
+                            toastr.error(data.message, 'Error!');
                         }
                     },
                     complete: function (data) {
@@ -99,7 +108,7 @@
             return false;
         });
     },
-    bindLoadViewComponent: function () {
+    bindLoadViewComponent: function (tab) {
         $.ajax({
             url: "/DepositAndWithdraw/LoadDepositWithdrawViewComponent/",
             type: "GET",
@@ -107,6 +116,36 @@
             contentType: false,
             success: function (data) {
                 $("#dipositwithdraw-content").html(data);
+                if (tab == "withdraw") {
+                    $("#deposit-nav-tab").removeClass("active");
+                    $("#deposit-nav").removeClass("active");
+                    $("#withdraw-nav-tab").addClass("active");
+                    $("#withdraw-nav").addClass("active");
+                }
+            }
+        });
+    },
+    loadRequireProfileViewComponent: function () {
+        $.ajax({
+            url: "/DepositAndWithdraw/LoadRequireProfile/",
+            type: "GET",
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#modal").html(data);
+                $("#depositandwithdraw-profile").modal("show");
+            }
+        });
+    },
+    loadRequireKYCViewComponent: function () {
+        $.ajax({
+            url: "/DepositAndWithdraw/LoadRequireKYC/",
+            type: "GET",
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#modal").html(data);
+                $("#depositandwithdraw-kyc").modal("show");
             }
         });
     }

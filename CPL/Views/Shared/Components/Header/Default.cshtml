@@ -1,136 +1,138 @@
 ﻿@model HeaderViewModel
 
-<nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow navbar-static-top navbar-light navbar-brand-center">
-    <div class="navbar-wrapper">
-        <div class="navbar-header">
-            <ul class="nav navbar-nav flex-row">
-                <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
-                <li class="nav-item mobile-menu d-md-none mr-auto">
-                    <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                        <img class="brand-logo" alt="CPL" src="~/images/logo.png">
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div class="navbar-container container center-layout">
-            <div class="collapse navbar-collapse" id="navbar-mobile">
-                <ul class="nav navbar-nav float-left navbar-left">
-                    <li class="nav-item">
-                        <a class="navbar-brand-desktop text-center pull-up" asp-controller="Home" asp-action="Index">
+<div id="header-content">
+    <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow navbar-static-top navbar-light navbar-brand-center">
+        <div class="navbar-wrapper">
+            <div class="navbar-header">
+                <ul class="nav navbar-nav flex-row">
+                    <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
+                    <li class="nav-item mobile-menu d-md-none mr-auto">
+                        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                             <img class="brand-logo" alt="CPL" src="~/images/logo.png">
                         </a>
                     </li>
                 </ul>
-                <ul class="nav navbar-nav mr-auto float-left game-menu">
-                    <li class="nav-item active">
-                        <a class="navbar-lottery-desktop active" asp-controller="Lottery" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav float-right navbar-right">
-                    <li class="dropdown dropdown-language nav-item">
-                        <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="flag-icon @Model.Lang.Image"></i>
-                            <span class="font-small-3 selected-language">@Model.Lang.Name</span>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown-flag">
-                            @foreach (var lang in Model.Langs)
-                            {
-                                <a data-id="@lang.Id" class="dropdown-item lang-item" href="#"><i class="flag-icon @lang.Image"></i> @lang.Name</a>
-                            }
-                        </div>
-                    </li>
-                </ul>
             </div>
-        </div>
-    </div>
-</nav>
-
-<div class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-fixed navbar-dark navbar-without-dd-arrow navbar-shadow"
-     role="navigation" data-menu="menu-wrapper">
-    <div class="navbar-container main-menu-content container center-layout" data-menu="menu-container">
-        <ul class="nav navbar-nav main-menu-navigation" id="main-menu-navigation" data-menu="menu-navigation">
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="la la-newspaper-o"></i>
-                    <span><u>What is CryptoLot?</u></span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-bold" asp-controller="DepositAndWithdraw" asp-action="Index">
-                    <i class="la la-mail-forward"></i>
-                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-bold" asp-controller="DepositAndWithdraw" asp-action="Index">
-                    <i class="la la-mail-reply"></i>
-                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-bold" asp-controller="Exchange" asp-action="Index">
-                    <i class="la la-arrows-h"></i>
-                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-bold" asp-controller="Contact" asp-action="Index">
-                    <i class="la la-envelope"></i>
-                    @if (Model.User == null)
-                    {
-                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")</span>
-                    }
-                    else
-                    {
-                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Support")</span>
-                    }
-                </a>
-            </li>
-        </ul>
-        @if (Model.User != null)
-        {
-            <ul class="nav navbar-nav main-menu-navigation" data-menu="menu-navigation">
-                <li class="dropdown nav-item" data-menu="dropdown">
-                    <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
-                        <i class="la la-user"></i>
-                        <span>Hi, @Model.User.FirstName @Model.User.LastName</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" asp-controller="Profile" asp-action="EditCredential"><i class="la la-key"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" asp-controller="Profile" asp-action="EditAccount"><i class="la la-file-text"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" asp-controller="Profile" asp-action="EditSecurity"><i class="la la-file-o"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" id="logout-confirmation"><i class="la la-power-off"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
+            <div class="navbar-container container center-layout">
+                <div class="collapse navbar-collapse" id="navbar-mobile">
+                    <ul class="nav navbar-nav float-left navbar-left">
+                        <li class="nav-item">
+                            <a class="navbar-brand-desktop text-center pull-up" asp-controller="Home" asp-action="Index">
+                                <img class="brand-logo" alt="CPL" src="~/images/logo.png">
+                            </a>
                         </li>
                     </ul>
-                </li>
-            </ul>
-        }
-        else
-        {
-            <ul class="nav navbar-nav" data-menu="menu-navigation">
+                    <ul class="nav navbar-nav mr-auto float-left game-menu">
+                        <li class="nav-item active">
+                            <a class="navbar-lottery-desktop active" asp-controller="Lottery" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav float-right navbar-right">
+                        <li class="dropdown dropdown-language nav-item">
+                            <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="flag-icon @Model.Lang.Image"></i>
+                                <span class="font-small-3 selected-language">@Model.Lang.Name</span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown-flag">
+                                @foreach (var lang in Model.Langs)
+                                {
+                                    <a data-id="@lang.Id" class="dropdown-item lang-item" href="#"><i class="flag-icon @lang.Image"></i> @lang.Name</a>
+                                }
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-fixed navbar-dark navbar-without-dd-arrow navbar-shadow"
+         role="navigation" data-menu="menu-wrapper">
+        <div class="navbar-container main-menu-content container center-layout" data-menu="menu-container">
+            <ul class="nav navbar-nav main-menu-navigation" id="main-menu-navigation" data-menu="menu-navigation">
                 <li class="nav-item">
-                    <a class="btn btn-sm btn-danger" asp-controller="Authentication" asp-action="Register">
-                        <i class="la la-user-plus"></i>
-                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</span>
+                    <a class="nav-link" href="#">
+                        <i class="la la-newspaper-o"></i>
+                        <span><u>What is CryptoLot?</u></span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-sm btn-white" asp-controller="Authentication" asp-action="LogIn">
-                        <i class="la la-sign-in"></i>
-                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</span>
+                    <a class="nav-link text-bold" asp-controller="DepositAndWithdraw" asp-action="Index">
+                        <i class="la la-mail-forward"></i>
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-bold" asp-controller="DepositAndWithdraw" asp-action="Index">
+                        <i class="la la-mail-reply"></i>
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-bold" asp-controller="Exchange" asp-action="Index">
+                        <i class="la la-arrows-h"></i>
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-bold" asp-controller="Contact" asp-action="Index">
+                        <i class="la la-envelope"></i>
+                        @if (Model.User == null)
+                        {
+                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")</span>
+                        }
+                        else
+                        {
+                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Support")</span>
+                        }
                     </a>
                 </li>
             </ul>
-        }
+            @if (Model.User != null)
+            {
+                <ul class="nav navbar-nav main-menu-navigation" data-menu="menu-navigation">
+                    <li class="dropdown nav-item" data-menu="dropdown">
+                        <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                            <i class="la la-user"></i>
+                            <span>Hi, @Model.User.FirstName @Model.User.LastName</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" asp-controller="Profile" asp-action="EditCredential"><i class="la la-key"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Profile" asp-action="EditAccount"><i class="la la-file-text"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-controller="Profile" asp-action="EditSecurity"><i class="la la-file-o"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" id="logout-confirmation"><i class="la la-power-off"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            }
+            else
+            {
+                <ul class="nav navbar-nav" data-menu="menu-navigation">
+                    <li class="nav-item">
+                        <a class="btn btn-sm btn-danger" asp-controller="Authentication" asp-action="Register">
+                            <i class="la la-user-plus"></i>
+                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-sm btn-white" asp-controller="Authentication" asp-action="LogIn">
+                            <i class="la la-sign-in"></i>
+                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</span>
+                        </a>
+                    </li>
+                </ul>
+            }
+        </div>
     </div>
 </div>

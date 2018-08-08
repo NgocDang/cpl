@@ -9,51 +9,20 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
+    <link href="~/css/dashboard/cpl.depositandwithdraw.css" rel="stylesheet" asp-append-version="true"/>
 }
 
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-12 col-12 mb-3 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
-                <div class="row breadcrumbs-top d-inline-block">
-                    <div class="btn-group pr-1 top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="Dashboard" asp-action="Index"><i class="ficon icon-wallet"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Wallet")</a></div>
-                    <div class="btn-group pr-1 top-1"><a class="btn-gradient-primary btn-sm white" asp-controller="DepositAndWithdraw" asp-action="Index"><i class="fa fa-money-bill-alt"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DepositAndWithdraw")</a></div>
-                    <div class="btn-group top-1"><a class="btn-gradient-secondary btn-sm white" asp-controller="Exchange" asp-action="Index"><i class="fa fa-exchange-alt"></i> &nbsp; @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</a></div>
-                </div>
-            </div>
-        </div>
-        <div class="content-body">
-            <div class="row">
-                <div class="col-12">
-                    <section class="card">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <p class="mt-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DepositWarning")</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
+            <div class="content-header-left col-md-12 col-12 breadcrumb-new">
+                @await Component.InvokeAsync("TokenBalance")
             </div>
         </div>
 
-        <div class="content-detached content-left">
+        <div class="content-detached">
             <div class="content-body" id="dipositwithdraw-content">
                 @await Component.InvokeAsync("DepositWithdraw")
-            </div>
-        </div>
-        <div class="sidebar-detached sidebar-right">
-            <div class="sidebar">
-                <div id="wallet-sidebar" class="sidebar-content">
-                    <div class="row">
-                        <p class="pt-1 text-capitalize col-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</p>
-                    </div>
-                    @await Component.InvokeAsync("TokenBalance")
-                </div>
             </div>
         </div>
     </div>
@@ -67,5 +36,5 @@
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
     <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
-    <script src="~/js/dashboard/cpl.depositandwithdraw.js"></script>
+    <script src="~/js/dashboard/cpl.depositandwithdraw.js" asp-append-version="true"></script>
 }

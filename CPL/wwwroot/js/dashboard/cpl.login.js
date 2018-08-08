@@ -6,7 +6,7 @@
     },
     bindLoginForm: function () {
         $("#form-log-in").validate();
-        $("#btn-log-in").on("click", function () {
+        $("body").on("click", "#btn-log-in", function () {
             var isFormValid = $("#form-log-in").valid();
             if (!checkValidReCaptchaV2()) {
                 $(".login-error").html($('#captchaMessage').val());
@@ -26,7 +26,7 @@
                     data: {
                         Email: $("#Email").val(),
                         Password: $("#Password").val(),
-                        ReturnUrl: $("#ReturnUrl").val()
+                        ReturnUrl: $("#ReturnUrl").val(),
                     },
                     success: function (data) {
                         if (data.success) {
@@ -36,9 +36,12 @@
                                 $("img#img-logo").css("margin-top", "-5%");
                                 $("#login").hide();
                                 $("#two-factor").show();
+                            } else if ($("#login-modal").length > 0) {
+                                Lottery.loadAjaxConfirmPurchaseTicket();
                             } else {
                                 window.location.replace(data.url);
                             }
+                            
                         } else {
                             //if (data.name == "mobile-verify") {
                             //    $("#mobile-verify-message").html(data.message);
@@ -73,7 +76,7 @@
     },
     bindVerify: function () {
         $("form-two-factor").validate();
-        $("#two-factor").on("click", "#btn-two-factor", function () {
+        $("body").on("click", "#btn-two-factor", function () {
             var isFormValid = $("#form-two-factor").valid();
             $("#form-two-factor").addClass('was-validated');
             if (isFormValid) {
@@ -91,7 +94,12 @@
                     },
                     success: function (data) {
                         if (data.success) {
-                            window.location.replace(data.url);
+                            if ($("#login-modal").length > 0) {
+                                Lottery.loadAjaxConfirmPurchaseTicket();
+                            }
+                            else {
+                                window.location.replace(data.url);
+                            }
                         } else {
                             $(".two-factor-error").addClass("danger");
                             $(".two-factor-error").html(data.message);
@@ -101,7 +109,6 @@
                     complete: function (data) {
                         $("#btn-two-factor").removeClass("disabled");
                     }
-
                 });
             }
             return false;
