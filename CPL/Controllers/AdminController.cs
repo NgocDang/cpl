@@ -58,7 +58,6 @@ namespace CPL.Controllers
             this._lotteryHistoryService = lotteryHistoryService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._newsService = newsService;
-            this.initCountryDict();
         }
 
         public IActionResult Index()
