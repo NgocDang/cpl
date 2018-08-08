@@ -108,22 +108,29 @@ namespace CPL.Controllers
                     txHashId = txHashIdTask.Result.TxId;
 
                     // Save to DB
-                    _coinTransactionService.Insert(new CoinTransaction()
+                    if (txHashId != null)
                     {
-                        SysUserId = user.Id,
-                        FromWalletAddress = CPLConstant.BTCWithdrawAddress,
-                        ToWalletAddress = viewModel.Address,
-                        CoinAmount = viewModel.Amount,
-                        CreatedDate = DateTime.Now,
-                        CurrencyId = (int)EnumCurrency.BTC,
-                        Status = EnumCoinstransactionStatus.PENDING.ToBoolean(),
-                        TxHashId = txHashId,
-                        Type = (int)EnumCoinTransactionType.WITHDRAW_BTC
-                    });
+                        _coinTransactionService.Insert(new CoinTransaction()
+                        {
+                            SysUserId = user.Id,
+                            FromWalletAddress = CPLConstant.BTCWithdrawAddress,
+                            ToWalletAddress = viewModel.Address,
+                            CoinAmount = viewModel.Amount,
+                            CreatedDate = DateTime.Now,
+                            CurrencyId = (int)EnumCurrency.BTC,
+                            Status = EnumCoinstransactionStatus.PENDING.ToBoolean(),
+                            TxHashId = txHashId,
+                            Type = (int)EnumCoinTransactionType.WITHDRAW_BTC
+                        });
 
-                    user.BTCAmount -= viewModel.Amount;
-                    _sysUserService.Update(user);
-                    _unitOfWork.SaveChanges();
+                        user.BTCAmount -= viewModel.Amount;
+                        _sysUserService.Update(user);
+                        _unitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -148,22 +155,29 @@ namespace CPL.Controllers
                     txHashId = txHashIdTask.Result.TxId;
 
                     // Save to DB
-                    _coinTransactionService.Insert(new CoinTransaction()
+                    if (txHashId != null)
                     {
-                        SysUserId = user.Id,
-                        FromWalletAddress = CPLConstant.ETHWithdrawAddress,
-                        ToWalletAddress = viewModel.Address,
-                        CoinAmount = viewModel.Amount,
-                        CreatedDate = DateTime.Now,
-                        CurrencyId = (int)EnumCurrency.ETH,
-                        Status = EnumCoinstransactionStatus.PENDING.ToBoolean(),
-                        TxHashId = txHashId,
-                        Type = (int)EnumCoinTransactionType.WITHDRAW_ETH
-                    });
+                        _coinTransactionService.Insert(new CoinTransaction()
+                        {
+                            SysUserId = user.Id,
+                            FromWalletAddress = CPLConstant.ETHWithdrawAddress,
+                            ToWalletAddress = viewModel.Address,
+                            CoinAmount = viewModel.Amount,
+                            CreatedDate = DateTime.Now,
+                            CurrencyId = (int)EnumCurrency.ETH,
+                            Status = EnumCoinstransactionStatus.PENDING.ToBoolean(),
+                            TxHashId = txHashId,
+                            Type = (int)EnumCoinTransactionType.WITHDRAW_ETH
+                        });
 
-                    user.ETHAmount -= viewModel.Amount;
-                    _sysUserService.Update(user);
-                    _unitOfWork.SaveChanges();
+                        user.ETHAmount -= viewModel.Amount;
+                        _sysUserService.Update(user);
+                        _unitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+                    }
                 }
                 catch (Exception ex)
                 {
