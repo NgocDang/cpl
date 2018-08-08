@@ -66,7 +66,7 @@ namespace CPL.TransactionService
 
             Tasks.Clear();
             Tasks.Add(Task.Run(() => CheckBTransaction()));
-            Tasks.Add(Task.Run(() => CheckETransaction()));
+            //Tasks.Add(Task.Run(() => CheckETransaction()));
         }
 
         private void InitializeWCF()
@@ -94,50 +94,52 @@ namespace CPL.TransactionService
             {
                 do
                 {
-                    BTCTransaction transaction = null;
+                    var transactions = new List<BTCTransaction>();
                     do
                     {
-                        transaction = Resolver.BTCTransactionService.Queryable().FirstOrDefault(x => !x.UpdatedTime.HasValue);
-                        if (transaction == null)
+                        transactions = Resolver.BTCTransactionService.Queryable().Where(x => !x.UpdatedTime.HasValue).ToList();
+                        if (transactions.Count == 0)
                             Thread.Sleep(RunningIntervalInMilliseconds);
                     }
-                    while (IsTransactionServiceRunning && transaction == null);
+                    while (IsTransactionServiceRunning && transactions.Count == 0);
 
-                    Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Transaction id {0} is in processing. {1}", transaction.TxHashId, Environment.NewLine));
-                    
-                    var transactionDetail = _bTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
-                    transactionDetail.Wait();
+                    Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
 
-                    if (transactionDetail.Result.Confirmations >= NumberOfConfirmsForUnreversedBTCTransaction)
+                    foreach (var transaction in transactions)
                     {
-                        var user = Resolver.SysUserService.Queryable()
-                            .FirstOrDefault(x => transactionDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
-                        if (user != null)
+                        var transactionDetail = _bTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
+                        transactionDetail.Wait();
+
+                        if (transactionDetail.Result.Confirmations >= NumberOfConfirmsForUnreversedBTCTransaction)
                         {
-                            // add BTC amount
-                            user.BTCAmount += transactionDetail.Result.Value;
-                            Resolver.SysUserService.Update(user);
-
-                            // update btc transaction so that it is not checked next time
-                            transaction.UpdatedTime = DateTime.Now;
-                            Resolver.BTCTransactionService.Update(transaction);
-
-                            // add record to coin transaction
-                            Resolver.CoinTransactionService.Insert(new CoinTransaction
+                            var user = Resolver.SysUserService.Queryable()
+                                .FirstOrDefault(x => transactionDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
+                            if (user != null)
                             {
-                                CoinAmount = transactionDetail.Result.Value,
-                                CreatedDate = DateTime.Now,
-                                CurrencyId = (int)EnumCurrency.BTC,
-                                SysUserId = user.Id,
-                                ToWalletAddress = user.BTCHDWalletAddress,
-                                TxHashId = transaction.TxHashId,
-                                Type = (int)EnumCoinTransactionType.DEPOSIT_BTC
-                            });
+                                // add BTC amount
+                                user.BTCAmount += transactionDetail.Result.Value;
+                                Resolver.SysUserService.Update(user);
+
+                                // update btc transaction so that it is not checked next time
+                                transaction.UpdatedTime = DateTime.Now;
+                                Resolver.BTCTransactionService.Update(transaction);
+
+                                // add record to coin transaction
+                                Resolver.CoinTransactionService.Insert(new CoinTransaction
+                                {
+                                    CoinAmount = transactionDetail.Result.Value,
+                                    CreatedDate = DateTime.Now,
+                                    CurrencyId = (int)EnumCurrency.BTC,
+                                    SysUserId = user.Id,
+                                    ToWalletAddress = user.BTCHDWalletAddress,
+                                    TxHashId = transaction.TxHashId,
+                                    Type = (int)EnumCoinTransactionType.DEPOSIT_BTC
+                                });
+                            }
                         }
                     }
 
                     Resolver.UnitOfWork.SaveChanges();
-                    Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Transaction id {0} is processed.{1}", transaction.TxHashId, Environment.NewLine));
                 }
                 while (IsTransactionServiceRunning);
                 
@@ -158,50 +160,51 @@ namespace CPL.TransactionService
             {
                 do
                 {
-                    ETHTransaction transaction = null;
+                    var transactions = new List<ETHTransaction>();
                     do
                     {
-                        transaction = Resolver.ETHTransactionService.Queryable().FirstOrDefault(x => !x.UpdatedTime.HasValue);
-                        if (transaction == null)
+                        transactions = Resolver.ETHTransactionService.Queryable().Where(x => !x.UpdatedTime.HasValue).ToList();
+                        if (transactions.Count == 0)
                             Thread.Sleep(RunningIntervalInMilliseconds);
                     }
-                    while (IsTransactionServiceRunning && transaction == null);
+                    while (IsTransactionServiceRunning && transactions.Count == 0);
 
-                    Utils.FileAppendThreadSafe(ETHFileName, String.Format("ETH Thread - Transaction id {0} is in processing. {1}", transaction.TxHashId, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(BTCFileName, String.Format("ETH Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
 
-                    var transactionDetail = _eTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
-                    transactionDetail.Wait();
-
-                    if (transactionDetail.Result.TransactionStatus.HasValue && transactionDetail.Result.TransactionStatus.Value)
+                    foreach (var transaction in transactions)
                     {
-                        var user = Resolver.SysUserService.Queryable()
-                            .FirstOrDefault(x => x.ETHHDWalletAddress ==  transactionDetail.Result.ToAddress);
-                        if (user != null)
+                        var transactionDetail = _eTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
+                        transactionDetail.Wait();
+
+                        if (transactionDetail.Result.TransactionStatus.HasValue && transactionDetail.Result.TransactionStatus.Value)
                         {
-                            // add BTC amount
-                            user.ETHAmount += transactionDetail.Result.Value;
-                            Resolver.SysUserService.Update(user);
-
-                            // update btc transaction so that it is not checked next time
-                            transaction.UpdatedTime = DateTime.Now;
-                            Resolver.ETHTransactionService.Update(transaction);
-
-                            // add record to coin transaction
-                            Resolver.CoinTransactionService.Insert(new CoinTransaction
+                            var user = Resolver.SysUserService.Queryable()
+                                .FirstOrDefault(x => x.ETHHDWalletAddress == transactionDetail.Result.ToAddress);
+                            if (user != null)
                             {
-                                CoinAmount = transactionDetail.Result.Value,
-                                CreatedDate = DateTime.Now,
-                                CurrencyId = (int)EnumCurrency.ETH,
-                                SysUserId = user.Id,
-                                ToWalletAddress = user.ETHHDWalletAddress,
-                                TxHashId = transaction.TxHashId,
-                                Type = (int)EnumCoinTransactionType.DEPOSIT_ETH
-                            });
+                                // add BTC amount
+                                user.ETHAmount += transactionDetail.Result.Value;
+                                Resolver.SysUserService.Update(user);
+
+                                // update btc transaction so that it is not checked next time
+                                transaction.UpdatedTime = DateTime.Now;
+                                Resolver.ETHTransactionService.Update(transaction);
+
+                                // add record to coin transaction
+                                Resolver.CoinTransactionService.Insert(new CoinTransaction
+                                {
+                                    CoinAmount = transactionDetail.Result.Value,
+                                    CreatedDate = DateTime.Now,
+                                    CurrencyId = (int)EnumCurrency.ETH,
+                                    SysUserId = user.Id,
+                                    ToWalletAddress = user.ETHHDWalletAddress,
+                                    TxHashId = transaction.TxHashId,
+                                    Type = (int)EnumCoinTransactionType.DEPOSIT_ETH
+                                });
+                            }
                         }
                     }
-
                     Resolver.UnitOfWork.SaveChanges();
-                    Utils.FileAppendThreadSafe(ETHFileName, String.Format("ETH Thread - Transaction id {0} is processed.{1}", transaction.TxHashId, Environment.NewLine));
                 }
                 while (IsTransactionServiceRunning);
 
