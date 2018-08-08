@@ -53,6 +53,7 @@
     <Compile Include="ExchangePrice\ExchangeExtension.cs" />
     <Compile Include="ExchangePrice\ExchangePrice.cs" />
     <Compile Include="Interfaces\IObjectState.cs" />
+    <Compile Include="Misc\Utils.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

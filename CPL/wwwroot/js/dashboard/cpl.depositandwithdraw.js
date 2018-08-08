@@ -1,7 +1,6 @@
 ﻿var DepositAndWithdraw = {
     init: function () {
         DepositAndWithdraw.bindCopy();
-        DepositAndWithdraw.bindWithdraw();
         DepositAndWithdraw.bindMax();
         DepositAndWithdraw.bindDoWithdraw();
         DepositAndWithdraw.bindReadQrCode();
@@ -13,16 +12,6 @@
                 toastr.success($("#CopiedText").val());
             });
         }
-    },
-    bindWithdraw: function () {
-        $("#dipositwithdraw-content").on("click", ".btn-withdraw", function () {
-            if ($(this).parents("section").find(".panel-withdraw:visible").length) {
-                $(this).parents("section").find(".panel-withdraw").slideUp();
-            } else {
-                $(".panel-withdraw").slideUp();
-                $(this).parents("section").find(".panel-withdraw").slideToggle();
-            }
-        });
     },
     bindMax: function () {
         $("#dipositwithdraw-content").on("click", ".btn-max", function () {

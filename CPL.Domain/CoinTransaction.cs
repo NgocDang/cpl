@@ -14,7 +14,6 @@ namespace CPL.Domain
         public decimal CoinAmount { get; set; }
         public DateTime CreatedDate { get; set; }
         public int CurrencyId { get; set; }
-        public string Status { get; set; }
         public decimal? TokenAmount { get; set; }
         public float? Rate { get; set; }
         public int Type { get; set; }
