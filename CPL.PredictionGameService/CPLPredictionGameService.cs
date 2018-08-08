@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using BTCCurrentPriceService;
 using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.Core.Interfaces;
 using CPL.Core.Services;
 using CPL.Domain;
@@ -44,7 +45,7 @@ namespace CPL.PredictionGameService
             Initialize();
 
             // write log
-            Utils.FileAppendThreadSafe(FileName, String.Format("{0} started at {1}{2}", WSConstant.ServiceName, DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(FileName, String.Format("{0} started at {1}{2}", PredictionGameServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
 
             //Init dependency transaction & dbcontext
             Repository();
