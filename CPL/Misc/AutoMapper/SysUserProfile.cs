@@ -37,6 +37,7 @@ namespace CPL.Misc.MapperCreate
             CreateMap<SysUser, TokenBalanceViewModel>();
 
             CreateMap<SysUser, EditAccountViewModel>();
+            CreateMap<SysUser, EditSecurityViewModel>();
         }
     }
 }

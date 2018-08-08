@@ -177,7 +177,7 @@ namespace CPL.Controllers
 
         public IActionResult EditSecurity()
         {
-            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            var user = _sysUserService.Queryable().Where(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).FirstOrDefault();
             var viewModel = Mapper.Map<EditSecurityViewModel>(user);
             return View("EditSecurity", viewModel);
         }
