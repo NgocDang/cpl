@@ -17,21 +17,27 @@
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-body mt-3">
-            <h2 class="font-weight-bold mb-1">News</h2>
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="font-weight-bold mb-1">News</h1>
+                </div>
+            </div>
             @foreach (var item in Model)
             {
-                <div class="row mb-3">
+            <div class="col-12">
+                <div class="row bg-white mb-2">
                     @if (item.Image != "")
                     {
-                        <div class="col-12 mb-2"><a asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id"><img src="~/images/news/@item.Image" class="img-fluid" alt="Responsive image"></a></div>
+                        <div class=""><a asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id"><img src="~/images/news/@item.Image" class="img-fluid" alt="Responsive image"></a></div>
                     }
-                    <div class="col-12 ml-2"><a class="font-medium-3" asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id">@item.Title</a></div>
+                    <div class="col-12 mt-4 ml-2"><a class="font-weight-bold font-medium-3" asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id">@item.Title</a></div>
                     <div class="col-12 ml-2 mb-2"><cite>@item.CreatedDate.ToString("MMMM dd, yyyy")</cite></div>
-                    <div class="col-12 ml-2"><p class="word-wrap">@Html.Raw(item.ShortDescription)...</p></div>
+                    <div class="col-12"><p class="col-11 word-wrap">@Html.Raw(item.ShortDescription)...</p></div>
                 </div>
+            </div>
             }
         </div>
-        <div class="text-center">
+        <div class="text-right">
             <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
             @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), PagedListRenderOptions.OnlyShowFivePagesAtATime)
         </div>
