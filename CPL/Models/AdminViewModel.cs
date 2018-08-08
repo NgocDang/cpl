@@ -9,7 +9,7 @@ namespace CPL.Models
     {
         public int TotalKYCVerified { get; set; }
         public int TotalKYCPending { get; set; }
-
         public int TotalUser { get; set; }
+        public int TotalNews { get; set; }
     }
 }
