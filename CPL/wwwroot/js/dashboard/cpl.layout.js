@@ -1,7 +1,6 @@
 ﻿var Layout = {
     init: function () {
         Layout.bindConfirmLogOut();
-        Layout.bindSwitchLanguage();
     },
     bindLogOut: function () {
         $('a#logout-confirmation').on('click', function () {
@@ -27,7 +26,7 @@
         });
     },
     bindSwitchLanguage: function () {
-        $("body").on("click", ".lang-item", function () {
+        $("a.lang-item").on("click", function () {
             var _this = this;
             $.ajax({
                 url: "/Layout/SwitchLang/",

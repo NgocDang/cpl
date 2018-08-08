@@ -7,7 +7,7 @@
         Exchange.bindConfirmExchange();
     },
     bindNext: function () {
-        $('.section-exchange').on('click', '.btn-next', function () {
+        $('#exchange-content').on('click', '.btn-next', function () {
             var _this = this;
             if (parseFloat($(_this).parents(".section-exchange").find(".from-amount").val()) > 0 && parseFloat($(_this).parents(".section-exchange").find(".from-amount").val()) <= parseFloat($(_this).parents(".section-exchange").find(".from-amount").siblings(".max-amount").val())) {
                 $(_this).parents(".section-exchange").find("#from-amount-error").hide();
@@ -73,7 +73,7 @@
         })
     },
     bindSwap: function () {
-        $('.section-exchange').on('click', '.btn-swap', function () {
+        $('#exchange-content').on('click', '.btn-swap', function () {
             //Swap label
             if ($(this).parents(".section-exchange").length > 0) {
                 var section = $(this).parents(".section-exchange");
@@ -99,7 +99,7 @@
         });
     },
     bindMax: function () {
-        $('.section-exchange').on('click', '.btn-max', function () {
+        $('#exchange-content').on('click', '.btn-max', function () {
             //Swap label
             if ($(this).parents(".section-exchange").length > 0) {
                 var section = $(this).parents(".section-exchange");
@@ -109,7 +109,7 @@
         });
     },
     bindInputChange: function(){
-        $('.section-exchange').on('change paste keyup input', '.from-amount', function () {
+        $('#exchange-content').on('change paste keyup input', '.from-amount', function () {
             if ($(this).parents(".section-exchange").length > 0) {
                 var section = $(this).parents(".section-exchange");
                 if (parseFloat(section.find(".from-amount").val()) > 0) {

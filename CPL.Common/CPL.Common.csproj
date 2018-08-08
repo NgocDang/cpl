@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\CPLConstant.cs" />
+    <Compile Include="Enums\EnumCoinstransactionStatus.cs" />
     <Compile Include="Enums\EnumCoinTransactionType.cs" />
     <Compile Include="Enums\EnumCurrency.cs" />
     <Compile Include="Enums\EnumGame.cs" />

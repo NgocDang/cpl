@@ -18,5 +18,7 @@ namespace CPL.Misc
         public static ETokenService.ETokenClient ETokenClient { get; set; }
         public static EWalletService.EWalletClient EWalletClient { get; set; }
         public static BWalletService.BWalletClient BWalletClient { get; set; }
+        public static EAccountService.EAccountClient EAccountClient { get; set; }
+        public static BAccountService.BAccountClient BAccountClient { get; set; }
     }
 }

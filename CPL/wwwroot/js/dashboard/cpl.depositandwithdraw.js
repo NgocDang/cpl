@@ -25,7 +25,7 @@
             $(this).parents("form").valid();
             var _this = this;
             $.ajax({
-                url: "/DepositAndWithdraw/DoDepositWithdraw/",
+                url: "/DepositAndWithdraw/DoWithdraw/",
                 type: "POST",
                 data: {
                     Currency: $(_this).parents("form").find(".currency").val(),

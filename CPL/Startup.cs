@@ -170,6 +170,14 @@ namespace CPL
             ServiceClient.BWalletClient = new BWalletService.BWalletClient();
             ServiceClient.BWalletClient.Endpoint.Address = new EndpointAddress(new Uri(fhCoreServiceEndpoint + CPLConstant.BWalletServiceEndpoint));
 
+            // EAccount Service
+            ServiceClient.EAccountClient = new EAccountService.EAccountClient();
+            ServiceClient.EAccountClient.Endpoint.Address = new EndpointAddress(new Uri(fhCoreServiceEndpoint + CPLConstant.EAccountServiceEndpoint));
+
+            // BAccount Service
+            ServiceClient.BAccountClient = new BAccountService.BAccountClient();
+            ServiceClient.BAccountClient.Endpoint.Address = new EndpointAddress(new Uri(fhCoreServiceEndpoint + CPLConstant.BAccountServiceEndpoint));
+
             // Authentication
             var authentication = ServiceClient.AuthenticationClient.AuthenticateAsync(CPLConstant.ProjectEmail, CPLConstant.ProjectName);
             authentication.Wait();
@@ -183,6 +191,12 @@ namespace CPL
 
             var bWallet = ServiceClient.BWalletClient.SetAsync(Authentication.Token, new BWalletService.BWalletSetting { Environment = BWalletService.Environment.TESTNET });
             bWallet.Wait();
+
+            var eAccount = ServiceClient.EAccountClient.SetAsync(Authentication.Token, new EAccountService.EAccountSetting { Environment = EAccountService.Environment.TESTNET, Platform = EAccountService.Platform.ETH});
+            eAccount.Wait();
+
+            var bAccount = ServiceClient.BAccountClient.SetAsync(Authentication.Token, new BAccountService.BAccountSetting { Environment = BAccountService.Environment.TESTNET, Platform = BAccountService.Platform.BTC});
+            bAccount.Wait();
         }
 
         private void LoadLangDetail(IServiceProvider serviceProvider)
