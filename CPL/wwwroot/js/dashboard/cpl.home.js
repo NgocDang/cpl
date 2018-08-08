@@ -1,29 +1,6 @@
 ﻿var Home = {
     init: function () {
-        Home.loadSliderBanner();
         Home.loadSliderGame();
-    },
-    loadSliderBanner: function () {
-        $("#slider-banner .owl-carousel").owlCarousel({
-            items: 2,
-            loop: true,
-            center: true,
-            merge: true,
-            margin: 20,
-            autoplay: true,
-            smartSpeed: 1000,
-            responsive: {
-                320: {
-                    items: 1,
-                    dots: false,
-                },
-                768: {
-                    items: 2,
-                    center: true,
-                }
-            }, 
-        });
-        
     },
     loadSliderGame: function () {
         $("#lottery-game .owl-carousel").owlCarousel({

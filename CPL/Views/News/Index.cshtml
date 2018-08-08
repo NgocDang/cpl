@@ -1,22 +1,56 @@
 ﻿@{
-    Layout = "_DashboardLayout";
-    ViewData["Title"] = "Index";
+    Layout = "_Layout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News");
 }
 @using X.PagedList.Mvc.Core; @*import this so we get our HTML Helper*@
 @model X.PagedList.IPagedList<NewsViewModel>
 
-<div class="app-content content">
+@section styles{
+    <link href="~/css/dashboard/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/plugins/owl-carousel/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/PagedList.css" rel="stylesheet" />
+    <link href="~/css/dashboard/cpl.sliderbanner.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/dashboard/cpl.news.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@await Component.InvokeAsync("SliderBanner")
+<div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
-        @foreach (var item in Model)
-        {
-            <div><h2>@item.Title</h2></div>
-        }
+        <div class="content-body mt-3">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="font-weight-bold mb-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</h1>
+                </div>
+            </div>
+            @foreach (var item in Model)
+            {
+                <div class="card">
+
+
+                    <div class="card-content">
+                        @if (item.Image != "")
+                        {
+                            <a asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id"><img src="~/images/news/@item.Image" class="card-img-top img-fluid" alt="@item.Title"></a>
+                        }
+                            <div class="card-body">
+                                <h4 class="card-title"><a asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id">@item.Title</a></h4>
+                                <h6 class="card-subtitle text-muted">@item.CreatedDate.ToString("MMMM dd, yyyy")</h6>
+                                <p class="card-text mt-2">@Html.Raw(item.ShortDescription)...<a asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id" class="card-link blue darken-2 text-lowercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ReadMore")</a></p>
+                            </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="text-right">
+            <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), PagedListRenderOptions.OnlyShowFivePagesAtATime)
+        </div>
     </div>
 </div>
 
-<div class="text-center">
-    <!-- output a paging control that lets the user navigation to the previous page, next page, etc -->
-    @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page = Page, status = ViewBag.Status }), PagedListRenderOptions.OnlyShowFivePagesAtATime)
-    You are in @Model.PageNumber (in @Model.PageCount page)
-</div>
+@section scripts{
+    <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.min.js"></script>
+    <script src="~/js/dashboard/marquee.min.js"></script>
+    <script src="~/js/dashboard/cpl.sliderbanner.js" asp-append-version="true"></script>
+}
 
