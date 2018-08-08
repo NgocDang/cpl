@@ -66,7 +66,7 @@ namespace CPL.TransactionService
 
             Tasks.Clear();
             Tasks.Add(Task.Run(() => CheckBTransaction()));
-            //Tasks.Add(Task.Run(() => CheckETransaction()));
+            Tasks.Add(Task.Run(() => CheckETransaction()));
         }
 
         private void InitializeWCF()
@@ -169,7 +169,7 @@ namespace CPL.TransactionService
                     }
                     while (IsTransactionServiceRunning && transactions.Count == 0);
 
-                    Utils.FileAppendThreadSafe(BTCFileName, String.Format("ETH Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(ETHFileName, String.Format("ETH Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
 
                     foreach (var transaction in transactions)
                     {
@@ -207,7 +207,6 @@ namespace CPL.TransactionService
                     Resolver.UnitOfWork.SaveChanges();
                 }
                 while (IsTransactionServiceRunning);
-
             }
             catch (Exception ex)
             {
