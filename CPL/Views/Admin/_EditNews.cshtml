@@ -1,0 +1,62 @@
+﻿@model NewsViewModel
+
+<div class="modal" tabindex="-1" role="dialog" id="update-user" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="form-update-user" method="POST" action="#" class="needs-validation" novalidate="">
+                <div class="modal-header">
+                    <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "User")</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                            <fieldset class="form-label-group">
+                                <input id="FirstName" type="text" value="@Model.Title" class="form-control" required name="FirstName" autofocus>
+                                <label for="FirstName" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</label>
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstNameRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                            <fieldset class="form-label-group">
+                                <input id="LastName" type="text" value="@Model.Title" class="form-control" required name="LastName" autofocus>
+                                <label for="LastName" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</label>
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastNameRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                            <fieldset class="form-label-group">
+                                <input id="Email" type="email" value="@Model.Title" class="form-control" name="Email" autofocus>
+                                <label for="Email" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidOrExistingEmail")
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                            <fieldset class="form-label-group">
+                                <input id="Password" type="password" class="form-control" name="Password" autofocus>
+                                <label for="Password" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(x => x.Id)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-update-user" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
