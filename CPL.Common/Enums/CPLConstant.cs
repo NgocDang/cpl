@@ -114,11 +114,15 @@ namespace CPL.Common.Enums
         // BTC
         //public static string BTCDepositAddress = ""; // PROD
         public static string BTCDepositAddress = ""; // TEST
+        //public static string BTCWithdrawAddress = ""; // PROD
+        public static string BTCWithdrawAddress = ""; // TEST
         //public static string BTCWithdrawPrivateKey = ""; // PROD
         public static string BTCWithdrawPrivateKey = ""; // TEST
         // ETH
         //public static string ETHDepositAddress = ""; //PROD
         public static string ETHDepositAddress = ""; //TEST
+        //public static string ETHWithdrawAddress = ""; //PROD
+        public static string ETHWithdrawAddress = ""; //TEST
         //public static string ETHWithdrawPrivateKey = ""; //PROD
         public static string ETHWithdrawPrivateKey = ""; //TEST
 

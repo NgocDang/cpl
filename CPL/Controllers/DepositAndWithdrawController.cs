@@ -27,6 +27,7 @@ namespace CPL.Controllers
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
+        private readonly ICoinTransactionService _coinTransactionService;
 
         public DepositAndWithdrawController(
             ILangService langService,
@@ -36,6 +37,7 @@ namespace CPL.Controllers
             ISettingService settingService,
             ITeamService teamService,
             ITemplateService templateService,
+            ICoinTransactionService coinTransactionService,
             ISysUserService sysUserService)
         {
             this._langService = langService;
@@ -45,6 +47,7 @@ namespace CPL.Controllers
             this._unitOfWork = unitOfWork;
             this._teamService = teamService;
             this._templateService = templateService;
+            this._coinTransactionService = coinTransactionService;
             this._sysUserService = sysUserService;
         }
 
@@ -64,7 +67,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult DoDepositWithdraw(WithdrawViewModel viewModel)
+        public IActionResult DoWithdraw(WithdrawViewModel viewModel)
         {
             if (viewModel.Amount <= 0)
                 return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidWithdrawAmount") });
@@ -96,6 +99,18 @@ namespace CPL.Controllers
                     return new JsonResult(new { success = false, name = "wallet", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidBTCAddress") });
 
                 // Save to DB
+                var transaction = new CoinTransaction()
+                {
+                    SysUserId = user.Id,
+                    FromWalletAddress = CPLConstant.BTCWithdrawAddress,
+                    ToWalletAddress = viewModel.Address,
+                    CoinAmount = viewModel.Amount,
+                    CreatedDate = DateTime.Now,
+                    CurrencyId = (int)EnumCurrency.BTC,
+                    Type = (int)EnumCoinTransactionType.WITHDRAW_BTC
+                };
+                _coinTransactionService.Insert(transaction);
+
                 user.BTCAmount -= viewModel.Amount;
                 _sysUserService.Update(user);
                 _unitOfWork.SaveChanges();
@@ -111,6 +126,18 @@ namespace CPL.Controllers
                     return new JsonResult(new { success = false, name = "wallet", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidETHAddress") });
 
                 // Save to DB
+                var transaction = new CoinTransaction()
+                {
+                    SysUserId = user.Id,
+                    FromWalletAddress = CPLConstant.ETHWithdrawAddress,
+                    ToWalletAddress = viewModel.Address,
+                    CoinAmount = viewModel.Amount,
+                    CreatedDate = DateTime.Now,
+                    CurrencyId = (int)EnumCurrency.ETH,
+                    Type = (int)EnumCoinTransactionType.WITHDRAW_ETH
+                };
+                _coinTransactionService.Insert(transaction);
+
                 user.ETHAmount -= viewModel.Amount;
                 _sysUserService.Update(user);
                 _unitOfWork.SaveChanges();
