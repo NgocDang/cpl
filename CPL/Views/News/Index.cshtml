@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "_Layout";
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News");
 }
 @using X.PagedList.Mvc.Core; @*import this so we get our HTML Helper*@
 @model X.PagedList.IPagedList<NewsViewModel>
@@ -19,7 +19,7 @@
         <div class="content-body mt-3">
             <div class="row">
                 <div class="col-12">
-                    <h1 class="font-weight-bold mb-1">News</h1>
+                    <h1 class="font-weight-bold mb-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</h1>
                 </div>
             </div>
             @foreach (var item in Model)
