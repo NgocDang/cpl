@@ -3,16 +3,14 @@
 <div id="header-content">
     <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow navbar-static-top navbar-light navbar-brand-center">
         <div class="navbar-wrapper">
-            <div class="navbar-header">
-                <ul class="nav navbar-nav flex-row">
-                    <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
-                    <li class="nav-item mobile-menu d-md-none mr-auto">
-                        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                            <img class="brand-logo" alt="CPL" src="~/images/logo.png">
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <ul class="nav navbar-nav flex-row">
+                <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
+                <li class="nav-item mobile-menu d-md-none mr-auto">
+                    <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                        <img class="brand-logo" alt="CPL" src="~/images/logo.png">
+                    </a>
+                </li>
+            </ul>
             <div class="navbar-container container center-layout">
                 <div class="collapse navbar-collapse" id="navbar-mobile">
                     <ul class="nav navbar-nav float-left navbar-left">
@@ -26,8 +24,13 @@
                         <li class="nav-item active">
                             <a class="navbar-lottery-desktop active" asp-controller="Lottery" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
                         </li>
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
+                        </li>*@
+                        <li class="nav-item pt-1 pl-1">
+                            <a class="bg-white hidden-sm text-primary" asp-controller="News" asp-action="Index">
+                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News") </a> | @Model.NewsViewComponent.CreatedDate.ToString("yyyy/MM/dd") @Model.NewsViewComponent.Title
+
                         </li>
                     </ul>
                     <ul class="nav navbar-nav float-right navbar-right">
