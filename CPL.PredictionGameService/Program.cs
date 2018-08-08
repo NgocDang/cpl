@@ -1,4 +1,5 @@
-﻿using CPL.PredictionGameService.Misc;
+﻿using CPL.Common.Misc;
+using CPL.PredictionGameService.Misc;
 using Microsoft.Extensions.PlatformAbstractions;
 using PeterKottas.DotNetCore.WindowsService;
 using System;
@@ -14,9 +15,9 @@ namespace CPL.PredictionGameService
             {
                 string fileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
 
-                config.SetDisplayName(WSConstant.ServiceName);
-                config.SetName(WSConstant.ServiceName);
-                config.SetDescription(WSConstant.ServiceDescription);
+                config.SetDisplayName(PredictionGameServiceConstant.ServiceName);
+                config.SetName(PredictionGameServiceConstant.ServiceName);
+                config.SetDescription(PredictionGameServiceConstant.ServiceDescription);
 
                 config.Service(serviceConfig =>
                 {

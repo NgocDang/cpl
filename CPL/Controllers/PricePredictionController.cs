@@ -247,7 +247,7 @@ namespace CPL.Controllers
                                               StartRate = x.PricePrediction.PredictionPrice,
                                               StartRateInString = x.PricePrediction.PredictionPrice.ToString("#,##0.##"),
                                               ResultRate = x.PricePrediction.ResultPrice,
-                                              ResultRateInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USD.ToString()}",
+                                              ResultRateInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
                                               ResultTime = x.PricePrediction.PredictionResultTime,
                                               ResultTimeInString = x.PricePrediction.PredictionResultTime.ToString(),
                                               Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),

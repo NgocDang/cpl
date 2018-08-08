@@ -1,0 +1,48 @@
+﻿html body {
+    background: linear-gradient(to bottom, #fff6cc, #ffffff);
+    background-repeat: no-repeat;
+}
+
+#depositandwithdraw .nav {
+    border: none;
+}
+
+#depositandwithdraw .tab-content {
+    background-color: #ffd300 !important;
+}
+
+#depositandwithdraw .nav-link {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+    outline: none;
+    border: none;
+    font-weight: bolder;
+    font-size: 20px;
+    background: #e6e6e6;
+    color: white;
+}
+
+    #depositandwithdraw .nav-link.active {
+        background: #ffd300;
+        color: #f93147;
+    }
+
+#depositandwithdraw .tab-content {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+@media (max-width: 425px){
+    #depositandwithdraw .col-sm-center {
+        text-align: center !important;
+    }
+    #depositandwithdraw .text-sm-bigger {
+        font-size: 25px !important;
+    }
+}
+

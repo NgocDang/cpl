@@ -7,7 +7,7 @@ namespace CPL.Models
 {
     public class LotteryGameViewModel
     {
-        public List<LotteryViewModel> Lotteries { get; set; }
+        public LotteryViewModel Lottery { get; set; }
         public int? SysUserId { get; set; }
         public string PrecentOfPerchasedTickets { get; set; }
     }
