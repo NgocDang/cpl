@@ -78,11 +78,12 @@ namespace CPL.TransactionService
             {
                 Authentication.Token = authentication.Result.Token;
                 Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
-                var bTransaction = _bTransaction.SetAsync(Authentication.Token, new BTransactionService.BTransactionSetting { Environment = (ServiceEnvironment == BTransactionService.Environment.MAINNET.ToString() ? BTransactionService.Environment.MAINNET : BTransactionService.Environment.TESTNET), Platform = BTransactionService.Platform.BTC});
+                var bTransaction = _bTransaction.SetAsync(Authentication.Token, new BTransactionService.BTransactionSetting { Environment = (ServiceEnvironment == BTransactionService.Environment.MAINNET.ToString() ? BTransactionService.Environment.MAINNET : BTransactionService.Environment.TESTNET), Platform = BTransactionService.Platform.BTC });
                 bTransaction.Wait();
-                var eTransaction = _eTransaction.SetAsync(Authentication.Token, new ETransactionService.ETransactionSetting { Environment = (ServiceEnvironment == ETransactionService.Environment.MAINNET.ToString() ? ETransactionService.Environment.MAINNET : ETransactionService.Environment.TESTNET), Platform = ETransactionService.Platform.ETH, ApiKey= CPLConstant.ETransactionAPIKey });
+                var eTransaction = _eTransaction.SetAsync(Authentication.Token, new ETransactionService.ETransactionSetting { Environment = (ServiceEnvironment == ETransactionService.Environment.MAINNET.ToString() ? ETransactionService.Environment.MAINNET : ETransactionService.Environment.TESTNET), Platform = ETransactionService.Platform.ETH, ApiKey = CPLConstant.ETransactionAPIKey });
                 eTransaction.Wait();
-            } else
+            }
+            else
             {
                 Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Authenticate failed. Error {0}{1}", authentication.Result.Status.Text, Environment.NewLine));
             }
@@ -133,6 +134,7 @@ namespace CPL.TransactionService
                                     SysUserId = user.Id,
                                     ToWalletAddress = user.BTCHDWalletAddress,
                                     TxHashId = transaction.TxHashId,
+                                    Status = true,
                                     Type = (int)EnumCoinTransactionType.DEPOSIT_BTC
                                 });
                             }
@@ -142,9 +144,9 @@ namespace CPL.TransactionService
                     Resolver.UnitOfWork.SaveChanges();
                 }
                 while (IsTransactionServiceRunning);
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (ex.InnerException.Message != null)
                     Utils.FileAppendThreadSafe(BTCFileName, string.Format("BTC Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
@@ -199,6 +201,7 @@ namespace CPL.TransactionService
                                     SysUserId = user.Id,
                                     ToWalletAddress = user.ETHHDWalletAddress,
                                     TxHashId = transaction.TxHashId,
+                                    Status = true,
                                     Type = (int)EnumCoinTransactionType.DEPOSIT_ETH
                                 });
                             }

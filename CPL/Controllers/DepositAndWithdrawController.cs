@@ -74,6 +74,8 @@ namespace CPL.Controllers
 
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
 
+            var txHashId = "";
+
             if (!CheckUserProfile(user))
                 return new JsonResult(new
                 {
@@ -98,8 +100,13 @@ namespace CPL.Controllers
                 if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidBTCAddress(viewModel.Address)))
                     return new JsonResult(new { success = false, name = "wallet", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidBTCAddress") });
 
+                // Transfer
+                var txHashIdTask = ServiceClient.BAccountClient.TransferAsync(Authentication.Token, CPLConstant.BTCWithdrawPrivateKey, viewModel.Address, viewModel.Amount);
+                txHashIdTask.Wait();
+                txHashId = txHashIdTask.Result.TxId;
+
                 // Save to DB
-                var transaction = new CoinTransaction()
+                _coinTransactionService.Insert(new CoinTransaction()
                 {
                     SysUserId = user.Id,
                     FromWalletAddress = CPLConstant.BTCWithdrawAddress,
@@ -107,13 +114,15 @@ namespace CPL.Controllers
                     CoinAmount = viewModel.Amount,
                     CreatedDate = DateTime.Now,
                     CurrencyId = (int)EnumCurrency.BTC,
+                    Status = EnumCoinstransactionStatus.PENDING.ToBoolean(),
+                    TxHashId = txHashId,
                     Type = (int)EnumCoinTransactionType.WITHDRAW_BTC
-                };
-                _coinTransactionService.Insert(transaction);
+                });
 
                 user.BTCAmount -= viewModel.Amount;
                 _sysUserService.Update(user);
                 _unitOfWork.SaveChanges();
+
             }
             else if (viewModel.Currency == EnumCurrency.ETH.ToString())
             {
@@ -125,8 +134,13 @@ namespace CPL.Controllers
                 if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidETHAddress(viewModel.Address)))
                     return new JsonResult(new { success = false, name = "wallet", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidETHAddress") });
 
+                // Transfer
+                var txHashIdTask = ServiceClient.EAccountClient.TransferByPrivateKeyAsync(Authentication.Token, CPLConstant.ETHWithdrawPrivateKey, viewModel.Address, viewModel.Amount, CPLConstant.DurationInSecond);
+                txHashIdTask.Wait();
+                txHashId = txHashIdTask.Result.TxId;
+
                 // Save to DB
-                var transaction = new CoinTransaction()
+                _coinTransactionService.Insert(new CoinTransaction()
                 {
                     SysUserId = user.Id,
                     FromWalletAddress = CPLConstant.ETHWithdrawAddress,
@@ -134,16 +148,17 @@ namespace CPL.Controllers
                     CoinAmount = viewModel.Amount,
                     CreatedDate = DateTime.Now,
                     CurrencyId = (int)EnumCurrency.ETH,
+                    Status = EnumCoinstransactionStatus.PENDING.ToBoolean(),
+                    TxHashId = txHashId,
                     Type = (int)EnumCoinTransactionType.WITHDRAW_ETH
-                };
-                _coinTransactionService.Insert(transaction);
+                });
 
                 user.ETHAmount -= viewModel.Amount;
                 _sysUserService.Update(user);
                 _unitOfWork.SaveChanges();
             }
 
-            return new JsonResult(new { success = true, profileKyc = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
+            return new JsonResult(new { success = true, profileKyc = true, txhashid = txHashId, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
         }
 
         [HttpPost]
