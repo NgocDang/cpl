@@ -285,7 +285,7 @@ namespace CPL.Controllers
             var user = _sysUserService.Queryable()
                 .FirstOrDefault(x => x.Id == id);
 
-            return PartialView("_Edit", Mapper.Map<SysUserViewModel>(user));
+            return PartialView("_EditUser", Mapper.Map<SysUserViewModel>(user));
         }
 
         [HttpPost]
@@ -304,7 +304,6 @@ namespace CPL.Controllers
                 user.Email = viewModel.Email;
                 if (!string.IsNullOrEmpty(viewModel.Password))
                     user.Password = viewModel.Password.ToBCrypt();
-                user.StreetAddress = viewModel.StreetAddress.ToLower();
                 user.TwoFactorAuthenticationEnable = viewModel.TwoFactorAuthenticationEnable;
 
                 _sysUserService.Update(user);
