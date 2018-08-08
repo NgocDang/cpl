@@ -29,8 +29,11 @@ namespace CPL.TransactionService
         public static bool IsTransactionServiceRunning = false;
         public static List<Task> Tasks = new List<Task>();
 
-        public string BTCFileName { get; set; }
-        public string ETHFileName { get; set; }
+        public string BTCDepositFileName { get; set; }
+        public string ETHDepositFileName { get; set; }
+        public string BTCWithdrawFileName { get; set; }
+        public string ETHWithdrawFileName { get; set; }
+
         public string ConnectionString { get; set; }
         public int RunningIntervalInMilliseconds { get; set; }
         public string ServiceEnvironment { get; set; }
@@ -65,8 +68,8 @@ namespace CPL.TransactionService
             IsTransactionServiceRunning = true;
 
             Tasks.Clear();
-            Tasks.Add(Task.Run(() => CheckBTransaction()));
-            Tasks.Add(Task.Run(() => CheckETransaction()));
+            Tasks.Add(Task.Run(() => DepositBTransaction()));
+            Tasks.Add(Task.Run(() => DepositETransaction()));
         }
 
         private void InitializeWCF()
@@ -77,18 +80,20 @@ namespace CPL.TransactionService
             if (authentication.Result.Status.Code == 0)
             {
                 Authentication.Token = authentication.Result.Token;
-                Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
+                Utils.FileAppendThreadSafe(BTCDepositFileName, String.Format("BTC Deposit Thread - Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
+                Utils.FileAppendThreadSafe(ETHDepositFileName, String.Format("ETH Deposit Thread - Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
                 var bTransaction = _bTransaction.SetAsync(Authentication.Token, new BTransactionService.BTransactionSetting { Environment = (ServiceEnvironment == BTransactionService.Environment.MAINNET.ToString() ? BTransactionService.Environment.MAINNET : BTransactionService.Environment.TESTNET), Platform = BTransactionService.Platform.BTC});
                 bTransaction.Wait();
                 var eTransaction = _eTransaction.SetAsync(Authentication.Token, new ETransactionService.ETransactionSetting { Environment = (ServiceEnvironment == ETransactionService.Environment.MAINNET.ToString() ? ETransactionService.Environment.MAINNET : ETransactionService.Environment.TESTNET), Platform = ETransactionService.Platform.ETH, ApiKey= CPLConstant.ETransactionAPIKey });
                 eTransaction.Wait();
             } else
             {
-                Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Authenticate failed. Error {0}{1}", authentication.Result.Status.Text, Environment.NewLine));
+                Utils.FileAppendThreadSafe(BTCDepositFileName, String.Format("BTC Deposit Thread - Authenticate failed. Error {0}{1}", authentication.Result.Status.Text, Environment.NewLine));
+                Utils.FileAppendThreadSafe(ETHDepositFileName, String.Format("ETH Deposit Thread - Authenticate failed. Error {0}{1}", authentication.Result.Status.Text, Environment.NewLine));
             }
         }
 
-        private void CheckBTransaction()
+        private void DepositBTransaction()
         {
             try
             {
@@ -103,7 +108,7 @@ namespace CPL.TransactionService
                     }
                     while (IsTransactionServiceRunning && transactions.Count == 0);
 
-                    Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(BTCDepositFileName, String.Format("BTC Deposit Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
 
                     foreach (var transaction in transactions)
                     {
@@ -147,14 +152,14 @@ namespace CPL.TransactionService
             catch(Exception ex)
             {
                 if (ex.InnerException.Message != null)
-                    Utils.FileAppendThreadSafe(BTCFileName, string.Format("BTC Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(BTCDepositFileName, string.Format("BTC Deposit Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                 else
-                    Utils.FileAppendThreadSafe(BTCFileName, string.Format("BTC Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(BTCDepositFileName, string.Format("BTC Deposit Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
             }
-            Utils.FileAppendThreadSafe(BTCFileName, String.Format("BTC Thread stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(BTCDepositFileName, String.Format("BTC Deposit Thread stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
         }
 
-        private void CheckETransaction()
+        private void DepositETransaction()
         {
             try
             {
@@ -169,7 +174,7 @@ namespace CPL.TransactionService
                     }
                     while (IsTransactionServiceRunning && transactions.Count == 0);
 
-                    Utils.FileAppendThreadSafe(ETHFileName, String.Format("ETH Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(ETHDepositFileName, String.Format("ETH Deposit Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
 
                     foreach (var transaction in transactions)
                     {
@@ -211,11 +216,89 @@ namespace CPL.TransactionService
             catch (Exception ex)
             {
                 if (ex.InnerException.Message != null)
-                    Utils.FileAppendThreadSafe(ETHFileName, string.Format("ETH Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(ETHDepositFileName, string.Format("ETH Deposit Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                 else
-                    Utils.FileAppendThreadSafe(ETHFileName, string.Format("ETH Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(ETHDepositFileName, string.Format("ETH Deposit Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
             }
-            Utils.FileAppendThreadSafe(ETHFileName, String.Format("ETH Thread stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(ETHDepositFileName, String.Format("ETH Deposit Thread stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
+        }
+
+        private void WithdrawBTransaction()
+        {
+            try
+            {
+                var transactions = new List<BTCTransaction>();
+                do
+                {
+                    transactions = Resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue).ToList();
+                    if (transactions.Count == 0)
+                        Thread.Sleep(RunningIntervalInMilliseconds);
+                }
+                while (IsTransactionServiceRunning && transactions.Count == 0);
+
+                Utils.FileAppendThreadSafe(BTCWithdrawFileName, String.Format("BTC Withdraw Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
+
+                foreach (var transaction in transactions)
+                {
+                    var transactionDetail = _bTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
+                    transactionDetail.Wait();
+
+                    if (transactionDetail.Result.Confirmations >= NumberOfConfirmsForUnreversedBTCTransaction)
+                    {
+                        var user = Resolver.SysUserService.Queryable()
+                            .FirstOrDefault(x => transactionDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
+                        if (user != null)
+                        {
+                            // add BTC amount
+                            user.BTCAmount += transactionDetail.Result.Value;
+                            Resolver.SysUserService.Update(user);
+
+                            // update btc transaction so that it is not checked next time
+                            transaction.UpdatedTime = DateTime.Now;
+                            Resolver.BTCTransactionService.Update(transaction);
+
+                            // add record to coin transaction
+                            Resolver.CoinTransactionService.Insert(new CoinTransaction
+                            {
+                                CoinAmount = transactionDetail.Result.Value,
+                                CreatedDate = DateTime.Now,
+                                CurrencyId = (int)EnumCurrency.BTC,
+                                SysUserId = user.Id,
+                                ToWalletAddress = user.BTCHDWalletAddress,
+                                TxHashId = transaction.TxHashId,
+                                Type = (int)EnumCoinTransactionType.DEPOSIT_BTC
+                            });
+                        }
+                    }
+                }
+
+                Resolver.UnitOfWork.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException.Message != null)
+                    Utils.FileAppendThreadSafe(BTCWithdrawFileName, string.Format("BTC Withdraw Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                else
+                    Utils.FileAppendThreadSafe(BTCWithdrawFileName, string.Format("BTC Withdraw Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+            }
+            Utils.FileAppendThreadSafe(BTCWithdrawFileName, String.Format("BTC Withdraw Thread stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
+        }
+
+        private void WithdrawETransaction()
+        {
+            try
+            {
+
+                Resolver.UnitOfWork.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException.Message != null)
+                    Utils.FileAppendThreadSafe(ETHWithdrawFileName, string.Format("ETH Withdraw Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                else
+                    Utils.FileAppendThreadSafe(ETHWithdrawFileName, string.Format("ETH Withdraw Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+            }
+            Utils.FileAppendThreadSafe(ETHWithdrawFileName, String.Format("ETH Withdraw Thread stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
         }
 
         public void Stop()
@@ -276,8 +359,11 @@ namespace CPL.TransactionService
         /// </summary>
         private void InitializeSetting()
         {
-            BTCFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "btc_log.txt");
-            ETHFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "eth_log.txt");
+            BTCDepositFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "btc_deposit_log.txt");
+            ETHDepositFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "eth_deposit_log.txt");
+            BTCWithdrawFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "btc_withdraw_log.txt");
+            ETHWithdrawFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "eth_withdraw_log.txt");
+
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
             NumberOfConfirmsForUnreversedBTCTransaction = int.Parse(Configuration["NumberOfConfirmsForUnreversedBTCTransaction"]);
             ConnectionString = Configuration["ConnectionString"];
