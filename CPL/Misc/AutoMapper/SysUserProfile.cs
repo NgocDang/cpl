@@ -38,6 +38,7 @@ namespace CPL.Misc.MapperCreate
 
             CreateMap<SysUser, EditAccountViewModel>();
             CreateMap<SysUser, EditSecurityViewModel>();
+            CreateMap<SysUser, UserDashboardAdminViewModel>();
         }
     }
 }

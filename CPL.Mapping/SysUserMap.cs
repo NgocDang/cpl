@@ -23,8 +23,6 @@ namespace CPL.Mapping
             builder.Property(t => t.FirstName).HasColumnName("FirstName");
             builder.Property(t => t.LastName).HasColumnName("LastName");
             builder.Property(t => t.StreetAddress).HasColumnName("StreetAddress");
-            builder.Property(t => t.ETHWalletAddress).HasColumnName("ETHWalletAddress");
-            builder.Property(t => t.BTCWalletAddress).HasColumnName("BTCWalletAddress");
             builder.Property(t => t.ETHHDWalletAddress).HasColumnName("ETHHDWalletAddress");
             builder.Property(t => t.ETHHDWalletAddressIndex).HasColumnName("ETHHDWalletAddressIndex");
             builder.Property(t => t.BTCHDWalletAddress).HasColumnName("BTCHDWalletAddress");
