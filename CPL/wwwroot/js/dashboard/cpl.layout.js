@@ -6,7 +6,7 @@
         //DashboardLayout.bindWinButton();
     },
     bindLogOut: function () {
-        $('.header-navbar').on('click', '#logout-confirmation', function () {
+        $('#header-content').on('click', '#logout-confirmation', function () {
             var _this = this;
             $.ajax({
                 url: "/Authentication/GetConfirm/",

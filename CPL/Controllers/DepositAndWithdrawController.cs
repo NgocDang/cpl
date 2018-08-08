@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
+using CPL.Domain;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
 using CPL.Misc.Enums;
@@ -52,10 +53,38 @@ namespace CPL.Controllers
             return View();
         }
 
+        public IActionResult LoadRequireProfile(ConfirmExchangeViewModel viewModel)
+        {
+            return PartialView("_RequireProfile", viewModel);
+        }
+
+        public IActionResult LoadRequireKYC(ConfirmExchangeViewModel viewModel)
+        {
+            return PartialView("_RequireKYC", viewModel);
+        }
+
         [HttpPost]
         public IActionResult DoDepositWithdraw(WithdrawViewModel viewModel)
         {
+            if (viewModel.Amount <= 0)
+                return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidWithdrawAmount") });
+
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+
+            if (!CheckUserProfile(user))
+                return new JsonResult(new
+                {
+                    success = false,
+                    requireProfile = false
+                });
+
+            if (user.KYCVerified == null || !user.KYCVerified.Value)
+                return new JsonResult(new
+                {
+                    success = false,
+                    requireKyc = false
+                });
+
             if (viewModel.Currency == EnumCurrency.BTC.ToString())
             {
                 // Validate max BTC Amount
@@ -87,7 +116,7 @@ namespace CPL.Controllers
                 _unitOfWork.SaveChanges();
             }
 
-            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
+            return new JsonResult(new { success = true, profileKyc = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
         }
 
         [HttpPost]
@@ -102,13 +131,24 @@ namespace CPL.Controllers
             }
             catch (Exception ex)
             {
-                return new JsonResult(new { success = false, message = ex.Message });
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "GeneratedQRCodeError") });
             }
         }
 
         public IActionResult LoadDepositWithdrawViewComponent()
         {
             return ViewComponent("DepositWithdraw");
+        }
+
+        private bool CheckUserProfile(SysUser user)
+        {
+            if (user.FirstName == null || user.LastName == null
+                || user.Mobile == null || user.DOB == null
+                || user.Country == null || user.City == null
+                || user.StreetAddress == null
+                || user.Mobile == null)
+                return false;
+            else return true;
         }
     }
 }

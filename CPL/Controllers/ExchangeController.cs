@@ -74,7 +74,7 @@ namespace CPL.Controllers
                     user.TokenAmount += tokenAmount;
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, CPLConstant.BTCToTokenRate) });
+                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully") });
                 }
                 else if (viewModel.FromCurrency == EnumCurrency.ETH.ToString() && viewModel.FromAmount <= user.ETHAmount)
                 {
@@ -83,7 +83,7 @@ namespace CPL.Controllers
                     user.TokenAmount += tokenAmount;
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true, message = "Success!" });
+                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully") });
                 }
                 else if (viewModel.FromCurrency == EnumCurrency.CPL.ToString() && viewModel.FromAmount <= user.TokenAmount)
                 {
@@ -99,7 +99,7 @@ namespace CPL.Controllers
                     else
                     {
                         user.TokenAmount -= viewModel.FromAmount;
-                        var currencyAmount = (viewModel.FromAmount / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value)) / CoinExchangeExtension.CoinExchanging();
+                        var currencyAmount = (viewModel.FromAmount / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value)) / CoinExchangeExtension.CoinExchanging();
                         user.ETHAmount += currencyAmount;
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
@@ -111,6 +111,11 @@ namespace CPL.Controllers
             }
             else
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
+
+        public IActionResult LoadExchangeViewComponent()
+        {
+            return ViewComponent("Exchange");
         }
     }
 }
