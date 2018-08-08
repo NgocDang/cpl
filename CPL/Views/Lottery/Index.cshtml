@@ -158,27 +158,7 @@
                 </div>
             }
         </div>
-        <div class="row">
-            <div id="lottery-history" class="col-12 @(Model.SysUserId.HasValue ? "" : "d-none")">
-                <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
-                <div class="card">
-                    <div class="card-content">
-                        <table id="dt-lottery-history" class="table responsive table-hover table-xl mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTicketNumber")</th>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
-                                    <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UpdatedDate")</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @await Component.InvokeAsync("LotteryHistory", Model)
         @Html.HiddenFor(x => x.Lottery.Id)
     </div>
 </div>
@@ -186,6 +166,7 @@
     {
     <script src="~/js/dashboard/cpl.login.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.lottery.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.lotteryHistory.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
