@@ -30,7 +30,9 @@
                     {
                         <div class=""><a asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id"><img src="~/images/news/@item.Image" class="img-fluid" alt="Responsive image"></a></div>
                     }
-                    <div class="col-12 mt-4 ml-2"><a class="font-weight-bold font-medium-3" asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id">@item.Title</a></div>
+                    <div class="col-12 ml-2 @(item.Image != "" ? "mt-4" : "mt-1")">
+                        <a class="font-weight-bold font-medium-3" asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id">@item.Title</a>
+                    </div>
                     <div class="col-12 ml-2 mb-2"><cite>@item.CreatedDate.ToString("MMMM dd, yyyy")</cite></div>
                     <div class="col-12"><p class="col-11 word-wrap">@Html.Raw(item.ShortDescription)...</p></div>
                 </div>
