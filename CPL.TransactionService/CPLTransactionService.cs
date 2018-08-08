@@ -38,6 +38,7 @@ namespace CPL.TransactionService
         public int RunningIntervalInMilliseconds { get; set; }
         public string ServiceEnvironment { get; set; }
         public int NumberOfConfirmsForUnreversedBTCTransaction { get; set; }
+        public int NumberOfDaysFailBTCTransaction { get; set; }
 
         public static AuthenticationService.AuthenticationClient _authentication = new AuthenticationService.AuthenticationClient();
         public static ETransactionService.ETransactionClient _eTransaction = new ETransactionService.ETransactionClient();
@@ -82,7 +83,7 @@ namespace CPL.TransactionService
                 Authentication.Token = authentication.Result.Token;
                 Utils.FileAppendThreadSafe(BTCDepositFileName, String.Format("BTC Deposit Thread - Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
                 Utils.FileAppendThreadSafe(ETHDepositFileName, String.Format("ETH Deposit Thread - Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
-                var bTransaction = _bTransaction.SetAsync(Authentication.Token, new BTransactionService.BTransactionSetting { Environment = (ServiceEnvironment == BTransactionService.Environment.MAINNET.ToString() ? BTransactionService.Environment.MAINNET : BTransactionService.Environment.TESTNET), Platform = BTransactionService.Platform.BTC});
+                var bTransaction = _bTransaction.SetAsync(Authentication.Token, new BTransactionService.BTransactionSetting { Environment = (ServiceEnvironment == BTransactionService.Environment.MAINNET.ToString() ? BTransactionService.Environment.MAINNET : BTransactionService.Environment.TESTNET), Platform = BTransactionService.Platform.BTC });
                 bTransaction.Wait();
                 var eTransaction = _eTransaction.SetAsync(Authentication.Token, new ETransactionService.ETransactionSetting { Environment = (ServiceEnvironment == ETransactionService.Environment.MAINNET.ToString() ? ETransactionService.Environment.MAINNET : ETransactionService.Environment.TESTNET), Platform = ETransactionService.Platform.ETH, ApiKey = CPLConstant.ETransactionAPIKey });
                 eTransaction.Wait();
@@ -230,10 +231,10 @@ namespace CPL.TransactionService
         {
             try
             {
-                var transactions = new List<BTCTransaction>();
+                var transactions = new List<CoinTransaction>();
                 do
                 {
-                    transactions = Resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue).ToList();
+                    transactions = Resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue && x.CurrencyId == (int)EnumCurrency.BTC).ToList();
                     if (transactions.Count == 0)
                         Thread.Sleep(RunningIntervalInMilliseconds);
                 }
@@ -246,31 +247,27 @@ namespace CPL.TransactionService
                     var transactionDetail = _bTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
                     transactionDetail.Wait();
 
-                    if (transactionDetail.Result.Confirmations >= NumberOfConfirmsForUnreversedBTCTransaction)
+                    if (transactionDetail.Result.Confirmations >= 1)
                     {
-                        var user = Resolver.SysUserService.Queryable()
-                            .FirstOrDefault(x => transactionDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
-                        if (user != null)
+                        // update record to coin transaction
+                        transaction.Status = true;
+                        Resolver.CoinTransactionService.Update(transaction);
+                    }
+
+                    if (transactionDetail == null)
+                    {
+                        var diff = DateTime.Now - transaction.CreatedDate;
+                        if (diff.Days >= NumberOfDaysFailBTCTransaction)
                         {
-                            // add BTC amount
-                            user.BTCAmount += transactionDetail.Result.Value;
+                            // update record to coin transaction
+                            transaction.Status = false;
+                            Resolver.CoinTransactionService.Update(transaction);
+
+                            // update record to sysuser
+                            var user = Resolver.SysUserService.Queryable()
+                                .FirstOrDefault(x => x.Id == transaction.SysUserId);
+                            user.BTCAmount += transaction.CoinAmount;
                             Resolver.SysUserService.Update(user);
-
-                            // update btc transaction so that it is not checked next time
-                            transaction.UpdatedTime = DateTime.Now;
-                            Resolver.BTCTransactionService.Update(transaction);
-
-                            // add record to coin transaction
-                            Resolver.CoinTransactionService.Insert(new CoinTransaction
-                            {
-                                CoinAmount = transactionDetail.Result.Value,
-                                CreatedDate = DateTime.Now,
-                                CurrencyId = (int)EnumCurrency.BTC,
-                                SysUserId = user.Id,
-                                ToWalletAddress = user.BTCHDWalletAddress,
-                                TxHashId = transaction.TxHashId,
-                                Type = (int)EnumCoinTransactionType.DEPOSIT_BTC
-                            });
                         }
                     }
                 }
@@ -291,6 +288,48 @@ namespace CPL.TransactionService
         {
             try
             {
+                var transactions = new List<CoinTransaction>();
+                do
+                {
+                    transactions = Resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue && x.CurrencyId == (int)EnumCurrency.ETH).ToList();
+                    if (transactions.Count == 0)
+                        Thread.Sleep(RunningIntervalInMilliseconds);
+                }
+                while (IsTransactionServiceRunning && transactions.Count == 0);
+
+                Utils.FileAppendThreadSafe(ETHWithdrawFileName, String.Format("ETH Withdraw Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
+
+                foreach (var transaction in transactions)
+                {
+                    var transactionStatus = _eTransaction.GetTransactionStatusAsync(Authentication.Token, transaction.TxHashId);
+                    transactionStatus.Wait();
+
+                    if (transactionStatus.Result.Receipt.HasValue)
+                    {
+                        if (transactionStatus.Result.Receipt.Value)
+                        {
+                            // update record to coin transaction
+                            transaction.Status = true;
+                            Resolver.CoinTransactionService.Update(transaction);
+                        }
+                        else
+                        {
+                            var diff = DateTime.Now - transaction.CreatedDate;
+                            if (diff.Days >= NumberOfDaysFailBTCTransaction)
+                            {
+                                // update record to coin transaction
+                                transaction.Status = false;
+                                Resolver.CoinTransactionService.Update(transaction);
+
+                                // update record to sysuser
+                                var user = Resolver.SysUserService.Queryable()
+                                    .FirstOrDefault(x => x.Id == transaction.SysUserId);
+                                user.BTCAmount += transaction.CoinAmount;
+                                Resolver.SysUserService.Update(user);
+                            }
+                        }
+                    }
+                }
 
                 Resolver.UnitOfWork.SaveChanges();
             }
@@ -369,6 +408,7 @@ namespace CPL.TransactionService
 
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
             NumberOfConfirmsForUnreversedBTCTransaction = int.Parse(Configuration["NumberOfConfirmsForUnreversedBTCTransaction"]);
+            NumberOfDaysFailBTCTransaction = int.Parse(Configuration["NumberOfDaysFailBTCTransaction"]);
             ConnectionString = Configuration["ConnectionString"];
             ServiceEnvironment = Configuration["Environment"];
         }
