@@ -5,7 +5,6 @@
     },
     bindLogOut: function () {
         $('a#logout-confirmation').on('click', function () {
-            alert(1);
             var _this = this;
             $.ajax({
                 url: "/Authentication/GetConfirm/",
