@@ -38,7 +38,7 @@ namespace CPL.TransactionService
         public int RunningIntervalInMilliseconds { get; set; }
         public string ServiceEnvironment { get; set; }
         public int NumberOfConfirmsForUnreversedBTCTransaction { get; set; }
-        public int NumberOfDaysFailBTCTransaction { get; set; }
+        public int NumberOfDaysFailTransaction { get; set; }
 
         public static AuthenticationService.AuthenticationClient _authentication = new AuthenticationService.AuthenticationClient();
         public static ETransactionService.ETransactionClient _eTransaction = new ETransactionService.ETransactionClient();
@@ -249,17 +249,10 @@ namespace CPL.TransactionService
                     var transactionDetail = _bTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
                     transactionDetail.Wait();
 
-                    if (transactionDetail.Result.Confirmations >= 1)
-                    {
-                        // update record to coin transaction
-                        transaction.Status = true;
-                        Resolver.CoinTransactionService.Update(transaction);
-                    }
-
                     if (transactionDetail == null)
                     {
                         var diff = DateTime.Now - transaction.CreatedDate;
-                        if (diff.Days >= NumberOfDaysFailBTCTransaction)
+                        if (diff.Days >= NumberOfDaysFailTransaction)
                         {
                             // update record to coin transaction
                             transaction.Status = false;
@@ -272,6 +265,15 @@ namespace CPL.TransactionService
                             Resolver.SysUserService.Update(user);
                         }
                     }
+
+                    else if (transactionDetail.Result.Confirmations >= 1)
+                    {
+                        // update record to coin transaction
+                        transaction.Status = true;
+                        Resolver.CoinTransactionService.Update(transaction);
+                    }
+
+                    
                 }
 
                 Resolver.UnitOfWork.SaveChanges();
@@ -317,7 +319,7 @@ namespace CPL.TransactionService
                         else
                         {
                             var diff = DateTime.Now - transaction.CreatedDate;
-                            if (diff.Days >= NumberOfDaysFailBTCTransaction)
+                            if (diff.Days >= NumberOfDaysFailTransaction)
                             {
                                 // update record to coin transaction
                                 transaction.Status = false;
@@ -326,7 +328,7 @@ namespace CPL.TransactionService
                                 // update record to sysuser
                                 var user = Resolver.SysUserService.Queryable()
                                     .FirstOrDefault(x => x.Id == transaction.SysUserId);
-                                user.BTCAmount += transaction.CoinAmount;
+                                user.ETHAmount += transaction.CoinAmount;
                                 Resolver.SysUserService.Update(user);
                             }
                         }
@@ -410,7 +412,7 @@ namespace CPL.TransactionService
 
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
             NumberOfConfirmsForUnreversedBTCTransaction = int.Parse(Configuration["NumberOfConfirmsForUnreversedBTCTransaction"]);
-            NumberOfDaysFailBTCTransaction = int.Parse(Configuration["NumberOfDaysFailBTCTransaction"]);
+            NumberOfDaysFailTransaction = int.Parse(Configuration["NumberOfDaysFailTransaction"]);
             ConnectionString = Configuration["ConnectionString"];
             ServiceEnvironment = Configuration["Environment"];
         }
