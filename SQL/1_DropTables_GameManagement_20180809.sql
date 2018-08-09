@@ -1,4 +1,0 @@
-Use CPL;
-
-DROP TABLE IF EXISTS Game;
-DROP TABLE IF EXISTS GameHistory;
