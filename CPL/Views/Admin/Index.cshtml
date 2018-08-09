@@ -39,21 +39,21 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-4 col-12">
-                                        <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllGames")</strong></p>
+                                        <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames")</strong></p>
                                         <h1>@Model.TotalLotteryGame</h1>
                                         <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
                                     </div>
                                     <div class="col-lg-8 col-12">
-                                        <div class="row text-center">
-                                            <div class="col-lg-4 col-12">
+                                        <div class="row text-center pt-1">
+                                            <div class="col-4">
                                                 <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")</h6>
                                                 <h4>@Model.TotalLotteryGamePending</h4>
                                             </div>
-                                            <div class="col-lg-4 col-12">
+                                            <div class="col-4">
                                                 <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Active")</h6>
                                                 <h4>@Model.TotalLotteryGameActive</h4>
                                             </div>
-                                            <div class="col-lg-4 col-12">
+                                            <div class="col-4">
                                                 <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Completed")</h6>
                                                 <h4>@Model.TotalLotteryGameCompleted</h4>
                                             </div>

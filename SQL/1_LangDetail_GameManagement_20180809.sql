@@ -6,6 +6,9 @@ Insert Into LangDetail Values (2, N'GameManagement', N'ゲームの管理');
 Insert Into LangDetail Values (1, N'AllGames', N'All Games');
 Insert Into LangDetail Values (2, N'AllGames', N'すべてのゲーム');
 
+Insert Into LangDetail Values (1, N'LotteryGames', N'Lottery Games');
+Insert Into LangDetail Values (2, N'LotteryGames', N'宝くじゲーム');
+
 Insert Into LangDetail Values (1, N'Active', N'Active');
 Insert Into LangDetail Values (2, N'Active', N'アクティブ');
 
