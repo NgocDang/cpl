@@ -1,0 +1,22 @@
+﻿<div class="row">
+    <div id="recent-transactions" class="col-12">
+        <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameHistory")</h6>
+        <div class="card">
+            <div class="card-content">
+                <table id="dt-history" class="table responsive table-hover table-xl mb-0">
+                    <thead>
+                        <tr>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Date")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Time")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameType")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

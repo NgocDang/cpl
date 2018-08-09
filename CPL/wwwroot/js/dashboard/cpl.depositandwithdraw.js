@@ -14,62 +14,66 @@
         }
     },
     bindMax: function () {
-        $("#dipositwithdraw-content").on("click", ".btn-max", function () {
+        $("#depositwithdraw-content").on("click", ".btn-max", function () {
             if ($(this).parents("form").find("input.max-amount").length) {
                 $(this).parents("form").find(".amount-value").val($(this).parents("form").find(".max-amount").val());
             }
         });
     },
     bindDoWithdraw: function () {
-        $("#dipositwithdraw-content").on("click", ".btn-do-withdraw", function () {
-            $(this).parents("form").valid();
+        $("#depositwithdraw-content").on("click", ".btn-do-withdraw", function () {
             var _this = this;
-            $.ajax({
-                url: "/DepositAndWithdraw/DoDepositWithdraw/",
-                type: "POST",
-                data: {
-                    Currency: $(_this).parents("form").find(".currency").val(),
-                    Amount: $(_this).parents("form").find(".amount-value").val(),
-                    Address: $(_this).parents("form").find(".address-value").val(),
-                },
-                success: function (data) {
-                    if (data.success) {
-                        $(_this).parents("form").find(".address-error").hide();
-                        $(_this).parents("form").find(".amount-error").hide();
-                        toastr.success(data.message, 'Success!');
-                        DepositAndWithdraw.bindLoadViewComponent("withdraw");
-                    }
-                    else {
-                        if (data.requireProfile != null && !data.requireProfile) {
-                            DepositAndWithdraw.loadRequireProfileViewComponent();
+            var isFormValid = $(_this).parents("form")[0].checkValidity();
+            $(_this).parents("form").addClass('was-validated');
+            if (isFormValid) {
+                $.ajax({
+                    url: "/DepositAndWithdraw/DoWithdraw/",
+                    type: "POST",
+                    data: {
+                        Currency: $(_this).parents("form").find(".currency").val(),
+                        Amount: $(_this).parents("form").find(".amount-value").val(),
+                        Address: $(_this).parents("form").find(".address-value").val(),
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            $(_this).parents("form").find(".address-error").hide();
+                            $(_this).parents("form").find(".amount-error").hide();
+                            toastr.success(data.message, 'Success!');
+                            DepositAndWithdraw.bindLoadViewComponent("withdraw");
                         }
-                        else if (data.requireKyc != null && !data.requireKyc) {
-                            DepositAndWithdraw.loadRequireKYCViewComponent();
-                        } else {
-                            if (data.name === "wallet") {
-                                $(_this).parents("form").find(".amount-error").hide();
-                                $(_this).parents("form").find(".address-error").show();
-                                $(_this).parents("form").find(".address-error").html(data.message);
+                        else {
+                            if (data.requireProfile != null && !data.requireProfile) {
+                                DepositAndWithdraw.loadRequireProfileViewComponent();
                             }
-                            if (data.name === "amount") {
-                                $(_this).parents("form").find(".address-error").hide();
-                                $(_this).parents("form").find(".amount-error").html(data.message);
-                                $(_this).parents("form").find(".amount-error").show();
+                            else if (data.requireKyc != null && !data.requireKyc) {
+                                DepositAndWithdraw.loadRequireKYCViewComponent();
+                            } else {
+                                if (data.name === "wallet") {
+                                    $(_this).parents("form").find(".amount-error").hide();
+                                    $(_this).parents("form").find(".address-error").show();
+                                    $(_this).parents("form").find(".address-error").html(data.message);
+                                }
+                                if (data.name === "amount") {
+                                    $(_this).parents("form").find(".address-error").hide();
+                                    $(_this).parents("form").find(".amount-error").html(data.message);
+                                    $(_this).parents("form").find(".amount-error").show();
+                                }
                             }
-                        }
 
+                        }
                     }
-                }
-            });
+                });
+            }
+           
             return false;
         });
     },
     bindReadQrCode: function () {
-        $("#dipositwithdraw-content").on("click", ".btn-qrcode", function () {
+        $("#depositwithdraw-content").on("click", ".btn-qrcode", function () {
             $(this).parents("form").find(".file-qrcode").click();
         });
 
-        $("#dipositwithdraw-content").on("change", ".file-qrcode", function () {
+        $("#depositwithdraw-content").on("change", ".file-qrcode", function () {
             var _this = this;
             var image = $(_this).parents("form").find(".file-qrcode")[0].files[0];
             if (image.size > 0) {
@@ -104,7 +108,7 @@
             processData: false,
             contentType: false,
             success: function (data) {
-                $("#dipositwithdraw-content").html(data);
+                $("#depositwithdraw-content").html(data);
                 if (tab == "withdraw") {
                     $("#deposit-nav-tab").removeClass("active");
                     $("#deposit-nav").removeClass("active");

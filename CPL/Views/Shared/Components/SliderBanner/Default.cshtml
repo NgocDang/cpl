@@ -1,0 +1,45 @@
+﻿@model HomeViewModel
+@{
+    Layout = null;
+}
+
+<section id="slider-banner">
+    <div class="mt-2 content-mobile">
+        <div class="owl-carousel owl-theme owl-loaded">
+            <div class="owl-stage-outer">
+                <div class="owl-stage">
+                    @if (Model.Slides != null)
+                    {
+                        @foreach (var slide in Model.Slides)
+                        {
+                            <div class="owl-item">
+                                <a asp-controller="Lottery" asp-action="Index" asp-route-id="@slide.Id"><img src="~/images/lottery/@slide.SlideImage" class="img-fluid img-border" /></a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="scroll-game-info">
+    <div id="navbar-scroll-game-info" class="content-mobile navbar navbar-shadow mt-1">
+        <div class="container">
+            <marquee behavior="scroll" scrollamount="5" direction="left" width="100%">
+                <p class="clearfix darken-2 text-sm-center mb-0 px-2 container center-layout">
+                    @if (Model.Lotteries != null)
+                    {
+                        @foreach (var lottery in Model.Lotteries)
+                        {
+                            <span class="d-md-inline-block pr-4">
+                                <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id">@lottery.Title, @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase") @lottery.Phase</a> -
+                                @lottery.NumberOfTicketLeft.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
+                            </span>
+                        }
+                    }
+                </p>
+            </marquee>
+        </div>
+    </div>
+</section>
+

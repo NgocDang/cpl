@@ -1,48 +1,9 @@
 ﻿html body {
-    background: linear-gradient(to bottom, #fff6cc, #ffffff);
+    background: linear-gradient(to bottom, #fff6cc, #ffffff) fixed !important;
     background-repeat: no-repeat;
 }
 
-#exchange-page .nav,
-#token-calculator .nav {
-    border: none;
-}
-
-#exchange-page .tab-content,
-#token-calculator .tab-content {
-    background-color: #ffd300 !important;
-}
-
-#exchange-page .nav-link,
-#token-calculator .nav-link {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    padding-left: 25px;
-    padding-right: 25px;
-    outline: none;
-    border: none;
-    font-weight: bolder;
-    font-size: 20px;
-    background: #e6e6e6;
-    color: white;
-}
-
-    #exchange-page .nav-link.active,
-    #token-calculator .nav-link.active {
-        background: #ffd300 !important;
-        color: #f93147 !important;
-    }
-
-#exchange-page .tab-content,
-#token-calculator .tab-content{
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-#exchange-page .la {
+.tab-component-custom .la {
     font-size: 15px;
 }
 

@@ -16,11 +16,13 @@ namespace CPL.ViewComponents
     {
         private readonly ISysUserService _sysUserService;
         private readonly ILangService _langService;
+        private readonly INewsService _newsService;
 
-        public HeaderViewComponent(ISysUserService sysUserService, ILangService langService)
+        public HeaderViewComponent(ISysUserService sysUserService, ILangService langService, INewsService newsService)
         {
             _sysUserService = sysUserService;
             _langService = langService;
+            _newsService = newsService;
         }
 
         public IViewComponentResult Invoke()
@@ -31,6 +33,9 @@ namespace CPL.ViewComponents
             viewModel.Langs = _langService.Queryable()
                 .Select(x => Mapper.Map<LangViewModel>(x))
                 .ToList();
+
+            var lastNews = _newsService.Queryable().LastOrDefault();
+            viewModel.News = Mapper.Map<NewsViewModel>(lastNews);
 
             var langId = HttpContext.Session.GetInt32("LangId");
 

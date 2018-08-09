@@ -10,14 +10,6 @@
     border-top-right-radius: 0px !important;
 }
 
-.card-header-custom {
-    text-align: right !important;
-}
-
-.card-body-custom {
-    text-align: right !important;
-}
-
 .progress-custom {
     height: 3px;
     width: 65%;

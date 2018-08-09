@@ -5,131 +5,92 @@
 }
 @section styles
     {
-    <style type="text/css">
-        @@media (min-width: 1024px) and (max-width: 1440px) {
-            .col-custom-two-factor {
-                flex: 100%;
-                max-width: 100%;
-            }
-        }
-        .btn-file {
-            position: relative;
-            overflow: hidden;
-        }
-
-            .btn-file input[type=file] {
-                position: absolute;
-                top: 0;
-                right: 0;
-                min-width: 100%;
-                min-height: 100%;
-                font-size: 100px;
-                text-align: right;
-                filter: alpha(opacity=0);
-                opacity: 0;
-                outline: none;
-                background: white;
-                cursor: inherit;
-                display: block;
-            }
-    </style>
+    <link href="~/css/dashboard/cpl.editsecurity.css" rel="stylesheet" asp-append-version="true" />
 }
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+            <div class="content-header-left col-md-12 col-12 breadcrumb-new">
                 @await Component.InvokeAsync("TokenBalance")
-            </div>
-            <div class="content-header-left col-md-8 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecurityEdit")</h3>
-                <div class="row breadcrumbs-top d-inline-block">
-                    <div class="breadcrumb-wrapper col-12">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecurityEdit")
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-            <div class="content-header-right col-md-4 col-12 d-none d-md-inline-block">
-                <div class="btn-group float-md-right"><a class="btn btn-success" asp-controller="Lottery" asp-action="Index"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PlayGame")</span> <i class="la la-angle-double-right"></i></a></div>
             </div>
         </div>
         <div class="content-body">
             <div class="row pull">
                 <div class="col-lg-12 col-md-12 col-sm-12">
-                    <!-- User Profile -->
-                    <section id="user-profile" class="card">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="col-md-2 col-12">
-                                            <img src="~/images/avatar-1.jpeg" class="rounded-circle height-70" @*alt="@Model.FirstName @Model.LastName" *@ />
-                                        </div>
-                                        <div class="col-md-10 col-12">
-                                            <h5>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditSecurity")</h5>
-                                            <hr />
+                    <div id="user-profile" class="tab-component-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="kyc-nav-tab" data-toggle="tab" href="#kyc-nav" aria-controls="kyc-nav" aria-expanded="true">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecurityEdit")
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content px-2 py-1 mb-2">
+                            <div role="tabpanel" class="tab-pane active" id="kyc-nav" aria-labelledby="kyc-nav-tab" aria-expanded="true">
+                                    <div class="card mb-0">
+                                        <div class="card-content">
                                             <form id="form-edit-account" class="form-horizontal form-user-profile mt-2" action="">
-                                                @if (!Model.KYCVerified.HasValue)
-                                                {
-                                                    <div class="row mb-1" id="kyc-verify">
-                                                        <p id="kyc-message" class="text-muted col-sm-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyIdentityDesc")</p>
-                                                        <div class="col-md-6 col-sm-12">
-                                                            <fieldset class="form-label-group">
-                                                                <input id="FrontSideImage" type="file" value="@Model.FrontSideImage" class="form-control" name="FrontSideImage" required maxlength="30">
-                                                                <label for="FrontSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FrontSide")</label>
-                                                            </fieldset>
+                                                <div class="card-body">
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-md-2 col-12">
+                                                                <img src="~/images/avatar-1.jpeg" class="rounded-circle height-70" @*alt="@Model.FirstName @Model.LastName" *@ />
+                                                            </div>
+                                                            <div class="col-md-10 col-12">
+                                                                @if (!Model.KYCVerified.HasValue)
+                                                                {
+                                                                    <div class="row mb-1" id="kyc-verify">
+                                                                        <p id="kyc-message" class="text-muted col-sm-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyIdentityDesc")</p>
+                                                                        <div class="col-md-6 col-sm-12">
+                                                                            <fieldset class="form-label-group">
+                                                                                <input id="FrontSideImage" type="file" value="@Model.FrontSideImage" class="form-control" name="FrontSideImage" required maxlength="30">
+                                                                                <label for="FrontSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FrontSide")</label>
+                                                                            </fieldset>
+                                                                        </div>
+                                                                        <div class="col-md-6 col-sm-12">
+                                                                            <fieldset class="form-label-group">
+                                                                                <input id="BackSideImage" type="file" value="@Model.BackSideImage" class="form-control" name="BackSideImage" required maxlength="30">
+                                                                                <label for="BackSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BackSide")</label>
+                                                                            </fieldset>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                                else if (Model.KYCVerified.Value)
+                                                                {
+                                                                    <div class="row mb-1 col-sm-12" id="kyc-verify">
+                                                                        <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCConfirmed")</p>
+                                                                        <span class="badge badge-success h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verified")</span>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="row mb-1 col-sm-12" id="kyc-verify">
+                                                                        <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCReceived")</p>
+                                                                        <span class="badge badge-info h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")</span>
+                                                                    </div>
+                                                                }
+                                                                @Html.HiddenFor(x => x.Id)
+                                                                @Html.HiddenFor(x => x.KYCVerified)
+                                                            </div>
                                                         </div>
-                                                        <div class="col-md-6 col-sm-12">
-                                                            <fieldset class="form-label-group">
-                                                                <input id="BackSideImage" type="file" value="@Model.BackSideImage" class="form-control" name="BackSideImage" required maxlength="30">
-                                                                <label for="BackSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BackSide")</label>
-                                                            </fieldset>
-                                                        </div>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-12 text-right">
-                                                            <button type="button" id="btn-save-account" class="btn btn-danger my-1"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
-                                                        </div>
-                                                    </div>
-                                                }
-                                                else if (Model.KYCVerified.Value)
-                                                {
-                                                    <div class="row mb-1 col-sm-12" id="kyc-verify">
-                                                        <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCConfirmed")</p>
-                                                        <span class="badge badge-success h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verified")</span>
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    <div class="row mb-1 col-sm-12" id="kyc-verify">
-                                                        <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCReceived")</p>
-                                                        <span class="badge badge-info h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")</span>
-                                                    </div>
-                                                }
-                                                @Html.HiddenFor(x => x.Id)
-                                                @Html.HiddenFor(x => x.KYCVerified)
+                                                </div>
+                                                <div class="card-footer py-0">
+                                                    <button type="button" id="btn-save-account" class="btn btn-danger my-1 pull-right"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
+                                                </div>
                                             </form>
-
                                         </div>
                                     </div>
-                                </div>
+
                             </div>
                         </div>
-                    </section>
-                    
+                    </div>
                 </div>
-                
             </div>
         </div>
     </div>
 </div>
 @section scripts
     {
-    <script src="~/js/dashboard/cpl.editsecurity.js"></script>
+    <script src="~/js/dashboard/cpl.editsecurity.js" asp-append-version="true"></script>
 }

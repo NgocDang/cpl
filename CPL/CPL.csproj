@@ -96,6 +96,7 @@
     <None Include="wwwroot\js\dashboard\plugins\tinymce\themes\inlite\theme.min.js" />
     <None Include="wwwroot\js\dashboard\plugins\tinymce\themes\mobile\theme.min.js" />
     <None Include="wwwroot\js\dashboard\plugins\tinymce\themes\modern\theme.min.js" />
+    <Folder Include="wwwroot\images\news\" />
   </ItemGroup>
 
   <ItemGroup>

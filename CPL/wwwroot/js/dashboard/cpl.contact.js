@@ -5,7 +5,9 @@
     bindSend: function () {
         $("#btn-send").on("click", function () {
             var _this = this;
-            var isFormValid = $("#form-contact").valid();
+            var isFormValid = $("#form-contact")[0].checkValidity();
+            $("#form-contact").addClass('was-validated');
+
             var isCategoryValid = $("#Category").val() != "";
             if (isCategoryValid)
                 $("#category-error").hide();
