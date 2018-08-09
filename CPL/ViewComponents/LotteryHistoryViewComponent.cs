@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CPL.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CPL.ViewComponents
 {
