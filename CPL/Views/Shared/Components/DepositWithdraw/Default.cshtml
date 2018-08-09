@@ -140,7 +140,7 @@
                                             <button type="button" class="btn btn-sm  mr-1 mt-1 btn-qrcode"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
                                             <input type="file" class="file-qrcode" hidden />
                                         </div>
-                                        <input type="hidden" class="currency" value="BTC" />
+                                        <input type="hidden" class="currency" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")" />
                                     </div>
                                 </div>
                             </div>
@@ -189,7 +189,7 @@
                                             <button type="button" class="btn btn-sm  mr-1 mt-1 btn-qrcode"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
                                             <input type="file" class="file-qrcode" hidden />
                                         </div>
-                                        <input type="hidden" class="currency" value="BTC" />
+                                        <input type="hidden" class="currency" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")" />
                                     </div>
                                 </div>
                             </div>
