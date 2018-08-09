@@ -24,12 +24,18 @@ namespace CPL.ViewComponents
 
         public IViewComponentResult Invoke()
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
-            var viewModel = Mapper.Map<TokenBalanceViewModel>(user);
-            var ethToBTCRate = CoinExchangeExtension.CoinExchanging();
-            viewModel.ETHToTokenRate = (1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value)) / ethToBTCRate;
-            viewModel.BTCToTokenRate = 1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
-            return View(viewModel);
+            if (HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser") != null)
+            {
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
+                var viewModel = Mapper.Map<TokenBalanceViewModel>(user);
+                var ethToBTCRate = CoinExchangeExtension.CoinExchanging();
+                viewModel.ETHToTokenRate = (1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value)) / ethToBTCRate;
+                viewModel.BTCToTokenRate = 1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
+                return View(viewModel);
+            } else
+            {
+                return Content(string.Empty);
+            }
         }
     }
 }

@@ -3,13 +3,12 @@
         ForgotPassword.bindForgotPasswordForm();
     },
     bindForgotPasswordForm: function () {
-        $("#form-forgot-password").validate();
         $("#btn-forgot-password").on("click", function () {
-            var isFormValid = $("#form-forgot-password").valid();
+            var isFormValid = $("#form-forgot-password")[0].checkValidity();
             $("#form-forgot-password").addClass('was-validated');
 
             if (isFormValid) {
-                $(".forgot-password-error").hide();
+                $("#forgot-password-error").hide();
                 $.ajax({
                     url: "/Authentication/ForgotPassword/",
                     type: "POST",
@@ -26,8 +25,8 @@
                             $("#forgot-password-message").show();
                             $("#form-forgot-password").hide();
                         } else {
-                            $(".forgot-password-error").html(data.message);
-                            $(".forgot-password-error").show();
+                            $("#forgot-password-error").html(data.message);
+                            $("#forgot-password-error").show();
                         }
                     },
                     complete: function (data) {
