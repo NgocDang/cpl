@@ -7,9 +7,9 @@ namespace CPL.ViewComponents
     {
         public LotteryHistoryViewComponent() { }
 
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(int? sysUserId)
         {
-            return View();
+            return View(sysUserId);
         }
     }
 }

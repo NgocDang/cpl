@@ -5,12 +5,13 @@
         LogIn.bindResetTabIndex();
     },
     bindLoginForm: function () {
-        $("#form-log-in").validate();
         $("body").on("click", "#btn-log-in", function () {
-            var isFormValid = $("#form-log-in").valid();
+            var isFormValid = $("#form-log-in")[0].checkValidity();
+            $("#form-log-in").addClass('was-validated');
+
             if (!checkValidReCaptchaV2()) {
-                $(".login-error").html($('#captchaMessage').val());
-                $(".login-error").show();
+                $("#login-error").html($('#captchaMessage').val());
+                $("#login-error").show();
                 return false;
             }
 
@@ -31,9 +32,6 @@
                     success: function (data) {
                         if (data.success) {
                             if (data.twofactor) {
-                                $("div.card-login-page").removeClass("height-500");
-                                $("div.card-login-page").addClass("height-200");
-                                $("img#img-logo").css("margin-top", "-5%");
                                 $("#login").hide();
                                 $("#two-factor").show();
                             } else if ($("#login-modal").length > 0) {
@@ -50,8 +48,8 @@
                             //    $("#log-in").hide();
                             //    $("#mobile-verify").show();
                             //} else {
-                            $(".login-error").html(data.message);
-                            $(".login-error").show();
+                            $("#login-error").html(data.message);
+                            $("#login-error").show();
                             //}
                         }
                     },

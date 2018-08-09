@@ -61,7 +61,7 @@
                                                     <input type="text" name="Subject" class="form-control" maxlength="200" id="Subject" required autofocus="">
                                                     <label for="Subject">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Subject")</label>
                                                     <div class="invalid-feedback">
-                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SubjectIsRequired")
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SubjectRequired")
                                                     </div>
                                                 </fieldset>
                                             </div>
@@ -79,7 +79,7 @@
                                                     }
                                                     <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
                                                     <div class="invalid-feedback">
-                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailIsRequired")
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
                                                     </div>
                                                 </fieldset>
                                             </div>
@@ -100,7 +100,7 @@
                                                         }
                                                     </select>
                                                     <div class="invalid-feedback" id="category-error">
-                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CategoryIsRequired")
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CategoryRequired")
                                                     </div>
                                                 </fieldset>
                                             </div>
@@ -111,7 +111,7 @@
                                                     <label for="Description">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Description")</label>
                                                     <textarea name="Description" class="form-control" row="5" id="Description" required autofocus=""></textarea>
                                                     <div class="invalid-feedback">
-                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DescriptionIsRequired")
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DescriptionRequired")
                                                     </div>
                                                 </fieldset>
                                             </div>
