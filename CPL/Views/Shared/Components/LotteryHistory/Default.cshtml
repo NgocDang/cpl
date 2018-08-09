@@ -1,7 +1,7 @@
-﻿@model LotteryGameViewModel
+﻿@model int?
 
 <div class="row">
-    <div id="lottery-history" class="col-12 @(Model.SysUserId.HasValue ? "" : "d-none")">
+    <div id="lottery-history" class="col-12 @(Model.HasValue ? "" : "d-none")">
         <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
         <div class="card">
             <div class="card-content">

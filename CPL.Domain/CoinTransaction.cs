@@ -18,6 +18,7 @@ namespace CPL.Domain
         public float? Rate { get; set; }
         public int Type { get; set; }
         public string TxHashId { get; set; }
+        public bool? Status { get; set; }
 
         public virtual SysUser SysUser { get; set; }
         public virtual Currency Currency { get; set; }

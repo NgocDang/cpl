@@ -81,7 +81,7 @@
                      if (data.success) {
                          $("#div-confirm-lottery").hide();
                          $("#div-thankyou-lottery").show();
-                         $("#span-txHashId").html("<a class='text-success' target='_blank' href = https://rinkeby.etherscan.io/tx/" + data.txHashId + "><u>" + data.txHashId + "</u></a>");
+                         $("#p-txHashId").html("<a class='text-success' target='_blank' href='https://rinkeby.etherscan.io/tx/" + data.txHashId + "'><small><u>" + data.txHashId + "</u></small></a>");
                          toastr.success(data.message, 'Success!');
                          LotteryHistory.historyDatatable.ajax.reload();
                      }

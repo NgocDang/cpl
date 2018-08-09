@@ -45,5 +45,15 @@ namespace CPL.Controllers
 
             return View(viewModels);
         }
+
+        public IActionResult NewsDetail(int id)
+        {
+            var viewModels = _newsService
+                              .Queryable()
+                              .Select(x => Mapper.Map<NewsViewModel>(x))
+                              .FirstOrDefault(x => x.Id == id);
+
+            return View(viewModels);
+        }
     }
 }
