@@ -301,14 +301,14 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _lotteryService.Queryable()
-                        .Where(x => x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy))
+                        .Where(x => x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.Title.Contains(searchBy) )
                         .Count();
 
                 totalResultsCount = _lotteryService.Queryable()
                         .Count();
 
                 return _lotteryService.Queryable()
-                        .Where(x => x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy))
+                        .Where(x => x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.Title.Contains(searchBy))
                         .Select(x => Mapper.Map<LotteryViewModel>(x))
                         .OrderBy(sortBy, sortDir)
                         .Skip(skip)
