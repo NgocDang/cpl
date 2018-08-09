@@ -1,9 +1,4 @@
-﻿html body {
-    background: linear-gradient(to bottom, #fff6cc, #ffffff) fixed !important;
-    background-repeat: no-repeat;
-}
-
-.word-wrap {
+﻿.word-wrap {
     word-wrap: break-word !important;
 }
 

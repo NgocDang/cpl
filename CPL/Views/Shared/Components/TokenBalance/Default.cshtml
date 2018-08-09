@@ -1,33 +1,35 @@
 ﻿@model TokenBalanceViewModel
 <div class="row">
-    <div class="col-12">
-        <section class="card bg-cpl">
+    <div class="col-sm-6 col-12">
+        <div class="card">
             <div class="card-content">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6 col-12">
-                            <div class="col-12 bg-white txt-box-lottery">
-                                <div class="float-lg-left float-md-none text-lg-left text-center mt-1">
-                                    <span class="font-medium-1 font-weight-bold text-danger">CPL Amount</span>
-                                    <br/>
-                                    <span class="font-large-1 font-weight-bold">@Model.TokenAmount.ToString("#,##0.########") CPL</span>
-                                </div>
-                                <div class="float-lg-right float-md-none text-lg-right text-center mt-0 mt-lg-2 mb-1 mb-lg-0">
-                                    <span class="font-medium-2 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice") = @Model.BTCToTokenRate.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span>
-                                    <br/>
-                                    <span class="font-medium-2 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice") = @Model.ETHToTokenRate.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</span>
-                                </div>
+                        <div class="col-xl-5 col-12 pl-sm-1 pr-sm-1 pl-0 pr-0">
+                            <div class="text-xl-left text-center">
+                                <p style="margin-bottom:5px;">CPL @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</p>
+                                <h1 class="font-weight-bold mb-0">@Model.TokenAmount.ToString("#,##0.########") CPL</h1>
                             </div>
                         </div>
-                        <div class="col-md-6 col-12 mt-lg-0 mt-2 mt-sm-0">
-                            <img class="img-fluid d-block" src="~/images/lottery/1.png"/>
-                            <div id="img-2" class="font-medium-4 txt-stroke text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTotteryText")</div>
-                            <img class="img-fluid d-block" src="~/images/lottery/3.png"/>
+                        <div class="col-xl-7 col-12 pl-sm-1 pr-sm-1 pl-0 pr-0">
+                            <div class="text-xl-right text-center">
+                                <p class="font-medium-2 cpl-rate"><span class="w-25 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice")</span> = <span class="w-50 d-xl-inline-block font-weight-bold">@Model.BTCToTokenRate.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span></p>
+                                <p class="font-medium-2 mb-0"><span class="w-25 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice")</span> = <span class="w-50 d-xl-inline-block font-weight-bold">@Model.ETHToTokenRate.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
+    <div class="col-sm-6 col-12 mb-2">
+        <div class="text-center">
+            <img class="img-fluid d-block" src="~/images/lottery/1.png" />
+            <div id="img-2" class="font-large-1 txt-stroke text-center">
+                <div class="mx-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTotteryText")</div>
+            </div>
+            <img class="img-fluid d-block" src="~/images/lottery/3.png" />
+        </div>
     </div>
 </div>
 

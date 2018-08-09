@@ -16,20 +16,31 @@
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-12 col-12 breadcrumb-new">
-                @await Component.InvokeAsync("TokenBalance")
+            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="breadcrumb-wrapper col-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Dashboard" asp-action="Index" >@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")
+                            </li>
+                        </ol>
+                    </div>
+                </div>
             </div>
         </div>
+        @await Component.InvokeAsync("TokenBalance")
+
         <input type="hidden" value="@Model.BTCToTokenrate" class="btc-token-rate" />
         <input type="hidden" value="@Model.ETHToBTCRate" class="eth-btc-rate" />
+
         <div class="content-detached">
             <div class="content-body">
-                <div id="token-calculate-content">
-                    @await Component.InvokeAsync("TokenCalculator")
-                </div>
-                <div id="exchange-content">
-                    @await Component.InvokeAsync("Exchange")
-                </div>
+                @await Component.InvokeAsync("TokenCalculator")
+                @await Component.InvokeAsync("Exchange")
             </div>
         </div>
     </div>

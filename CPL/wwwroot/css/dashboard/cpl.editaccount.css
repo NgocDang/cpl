@@ -1,9 +1,4 @@
-﻿html body {
-    background: linear-gradient(to bottom, #fff6cc, #ffffff) fixed !important;
-    background-repeat: no-repeat;
-}
-
-#Year-error, #Month-error, #Day-error, #Country-error {
+﻿#Year-error, #Month-error, #Day-error, #Country-error {
     display: none !important;
 }
 
