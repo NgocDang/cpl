@@ -23,12 +23,12 @@ namespace CPL.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-        private readonly IGameHistoryService _gameHistoryService;
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
+        private readonly ILotteryService _lotteryService;
 
         public AdminController(
             ILangService langService,
@@ -39,8 +39,8 @@ namespace CPL.Controllers
             ITeamService teamService,
             ITemplateService templateService,
             ISysUserService sysUserService,
-            IGameHistoryService gameHistoryService,
             ILotteryHistoryService lotteryHistoryService,
+            ILotteryService lotteryService,
             IPricePredictionHistoryService pricePredictionHistoryService)
         {
             this._langService = langService;
@@ -51,17 +51,27 @@ namespace CPL.Controllers
             this._teamService = teamService;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
-            this._gameHistoryService = gameHistoryService;
             this._lotteryHistoryService = lotteryHistoryService;
+            this._lotteryService = lotteryService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
         }
 
         public IActionResult Index()
         {
             var viewModel = new AdminViewModel();
+
+            // User management
             viewModel.TotalKYCPending = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && !x.KYCVerified.Value);
             viewModel.TotalKYCVerified = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && x.KYCVerified.Value);
             viewModel.TotalUser = _sysUserService.Queryable().Count();
+
+            // Game management
+            var lotteryGames = _lotteryService.Queryable();
+            viewModel.TotalLotteryGame = lotteryGames.Count();
+            viewModel.TotalLotteryGamePending = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.PENDING).Count();
+            viewModel.TotalLotteryGameActive = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.ACTIVE).Count();
+            viewModel.TotalLotteryGameCompleted = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.COMPLETED).Count();
+
             return View(viewModel);
         }
 
