@@ -1459,8 +1459,10 @@ ul.game-menu li.active {
 }
 /*End <== Token balance view component*/
 
-/*Start ==> Word Break*/
 .word-break {
     word-break: break-word;
 }
-/*End <== Word Break*/
+
+.news-link:hover {
+    text-decoration:underline;
+}

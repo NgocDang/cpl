@@ -10,6 +10,6 @@ namespace CPL.Models
         public SysUserViewModel User { get; set; }
         public IList<LangViewModel> Langs { get; set; }
         public LangViewModel Lang { get; set; }
-        public NewsViewModel NewsViewComponent {get;set;}
+        public NewsViewModel News {get;set;}
     }
 }
