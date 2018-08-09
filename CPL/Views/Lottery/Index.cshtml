@@ -61,7 +61,7 @@
                         <div class="card" id="buy-lottery-bg">
                             <div class="card-content">
                                 <div class="card-body p-lg-5">
-                                    <form id="form-purchase-lottery">
+                                    <form id="form-purchase-lottery" novalidate>
                                         <div class="form-group row text-white">
                                             <div class="col-12 text-center font-large-2 font-weight-bold mb-5">
                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BuyLottery")
@@ -70,6 +70,7 @@
                                                 <fieldset class="form-label-group">
                                                     <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" required aria-describedby="basic-addon4">
                                                     <label for="number-of-ticket">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SelectNumberTicket")</label>
+                                                    <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
                                                 </fieldset>
                                             </div>
                                             <div class="col-12">
@@ -141,7 +142,7 @@
                                     <div class="col-lg-6 col-12 text-left font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPrice")</div>
                                     <div class="col-lg-6 col-12 text-lg-right font-weight-bold font-large-1 total-price"></div>
                                 </div>
-                                <p class="mb-0 mt-0 font-italic"><small>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HintThankYouLottery1")</small></p> 
+                                <p class="mb-0 mt-0 font-italic"><small>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HintThankYouLottery1")</small></p>
                                 <p class="text-primary mb-0 font-italic" id="p-txHashId"></p>
                                 <p class="mt-0 mb-0 font-italic"><small>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HintThankYouLottery2")</small></p>
                             </div>
@@ -163,11 +164,11 @@
 </div>
 @section scripts
     {
-    <script src="~/js/dashboard/cpl.login.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.lottery.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.lotteryhistory.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/cpl.login.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.lottery.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.lotteryhistory.js" asp-append-version="true"></script>
 }

@@ -7,7 +7,9 @@
     bindPurchaseTicket: function () {
         $('#form-purchase-lottery').on('click', '#btn-purchase-lottery', function () {
             var _this = this;
-            var isFromValid = $('#form-purchase-lottery').valid();
+            var isFromValid = $('#form-purchase-lottery')[0].checkValidity();
+            $("#form-purchase-lottery").addClass('was-validated');
+
             if (isFromValid) {
                 $.ajax({
                     url: "/Lottery/GetConfirmPurchaseTicket/",

@@ -11,25 +11,23 @@
                 <div class="modal-body text-center">
                     <label for="Name">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ConfirmExchangeWarning")</label>
                     <div class="card-body">
-                        <form class="form-horizontal form-purchase-token" action="buy-ico.html">
-                            <div class="row">
-                                <div class="col-md-5 col-12 text-left">
-                                    <fieldset class="form-label-group mb-0">
-                                        <input type="text" class="form-control" id="from-currency" value="@Model.FromAmount.ToString("#,##0.#########")" readonly>
-                                        <label for="from-currency">@Model.FromCurrency</label>
-                                    </fieldset>
-                                </div>
-                                <div class="col-md-2 col-12 text-center pt-1">
-                                    <span class="la la-arrow-right"></span>
-                                </div>
-                                <div class="col-md-5 col-12 text-left">
-                                    <fieldset class="form-label-group mb-0">
-                                        <input type="text" class="form-control" id="to-currency" value="@Model.ToAmount.ToString("#,##0.#########")" readonly>
-                                        <label for="to-currency">@Model.ToCurrency</label>
-                                    </fieldset>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-5 col-12 text-left">
+                                <fieldset class="form-label-group mb-0">
+                                    <input type="text" class="form-control" id="from-currency" value="@Model.FromAmount.ToString("#,##0.#########")" readonly>
+                                    <label for="from-currency">@Model.FromCurrency</label>
+                                </fieldset>
                             </div>
-                        </form>
+                            <div class="col-md-2 col-12 text-center pt-1">
+                                <span class="la la-arrow-right"></span>
+                            </div>
+                            <div class="col-md-5 col-12 text-left">
+                                <fieldset class="form-label-group mb-0">
+                                    <input type="text" class="form-control" id="to-currency" value="@Model.ToAmount.ToString("#,##0.#########")" readonly>
+                                    <label for="to-currency">@Model.ToCurrency</label>
+                                </fieldset>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
