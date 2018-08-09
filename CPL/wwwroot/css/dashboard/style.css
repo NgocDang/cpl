@@ -25,26 +25,6 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     color: #FF4961;
 }
 
-#account-login .card-account-left {
-    background: -webkit-gradient(linear, left top, right top, from(#266db9), to(#153b71));
-    background: -webkit-linear-gradient(left, #266db9, #153b71);
-    background: -moz-linear-gradient(left, #266db9, #153b71);
-    background: -o-linear-gradient(left, #266db9, #153b71);
-    background: linear-gradient(90deg, #266db9, #153b71);
-    border-radius: 5px 0 0 5px;
-}
-
-    #account-login .card-account-left .card-account-img {
-        position: relative;
-        top: -webkit-calc(200px - 125px);
-        top: -moz-calc(200px - 125px);
-        top: calc(200px - 125px);
-    }
-
-#account-login .card-account-right {
-    border-radius: 0 5px 5px 0;
-}
-
 @media screen and (max-width: 768px) {
     .g-recaptcha {
         transform: scale(0.9);
@@ -90,7 +70,6 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     }
 }
 
-
 .dataTables_info, .dataTables_paginate {
     padding-top: 1rem;
     padding-bottom: 1.5rem;
@@ -126,10 +105,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:b
 
 table.dataTable {
     width:100% !important;
-}
-
-.txt-welcome {
-    padding-bottom: 20px;
 }
 
 #btc-card {
@@ -1459,67 +1434,54 @@ ul.game-menu li.active {
 }
 /*End <== Token balance view component*/
 
-/*Start ==> Word Break*/
 .word-break {
     word-break: break-word;
 }
 /*End <== Word Break*/
 
-/*Start ==> Dashboard*/
-.word-break {
-    word-break: break-word;
+/*Tab components*/
+
+.tab-component-custom .nav {
+    border: none !important;
 }
 
-.card-footer-my-profile {
-    margin-top: 20px;
-    padding: 10px;
-    text-align: center;
+.tab-component-custom .tab-content {
+    background-color: #ffd300 !important;
 }
 
-.border-bottom-card {
-    border-bottom: 1px solid #EEE;
+.tab-component-custom .nav-link {
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+    padding-bottom: 10px !important;
+    padding-top: 10px !important;
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+    outline: none !important;
+    border: none !important;
+    font-weight: bolder !important;
+    font-size: 20px !important;
+    background: #e6e6e6 !important;
+    color: white !important;
 }
 
-.mb-3px {
-    margin-bottom: 3px;
-}
-
-.nav-cpl {
-    border: none;
-}
-
-.nav-link-cpl {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    padding-left: 25px;
-    padding-right: 25px;
-    outline: none;
-    border: none;
-    font-weight: bolder;
-    font-size: 20px;
-    background: #e6e6e6;
-    color: white;
-}
-
-    .nav-link-cpl.active-cpl,
-    .nav-link-cpl.active-cpl {
+    .tab-component-custom .nav-link.active {
         background: #ffd300 !important;
         color: #f93147 !important;
     }
 
-.tab-content-cpl {
-    background-color: #ffd300 !important;
+.tab-component-custom .tab-content {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
-.la-cpl {
-    font-size: 15px;
-}
-
-@media (max-width: 425px) {
-    .small-hidden {
-        display: none !important;
+@media (max-width: 426px){
+    .tab-component-custom .tab-content {
+        padding: 0px !important;
+        background-color: transparent !important;
     }
 }
-/*End <== DashBoard*/
+
+.news-link:hover {
+    text-decoration:underline;
+}

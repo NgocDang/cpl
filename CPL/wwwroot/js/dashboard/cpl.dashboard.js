@@ -160,6 +160,8 @@
             loop: true,
             margin: 10,
             auto: true,
+            dots: false,
+            autoplay: true,
             responsiveClass: true,
             responsive: {
                 0: {

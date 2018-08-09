@@ -5,7 +5,7 @@
 
 <div class="modal" role="dialog" id="login-modal">
     <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content" id="account-login">
+        <div class="modal-content">
             <div class="card-body" id="login">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
                 <div class="text-center mb-3">
@@ -16,12 +16,18 @@
                     <fieldset class="form-label-group">
                         <input id="Email" class="form-control" name="Email" type="email" tabindex="1" autofocus required />
                         <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                        <div class="invalid-feedback">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
+                        </div>
                     </fieldset>
                     <fieldset class="form-label-group">
                         <input type="password" id="Password" class="form-control" tabindex="2" required />
                         <label for="password">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
+                        <div class="invalid-feedback">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
+                        </div>
                     </fieldset>
-                    <div class="form-group">
+                    <div class="form-group mb-0">
                         <label for="captcha" class="text-light d-block">
                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Captcha")
                         </label>
@@ -29,7 +35,7 @@
                             <div class="g-recaptcha" data-tabindex="3" data-sitekey="@Model.GCaptchaKey"></div>
                         </div>
                     </div>
-                    <div class="invalid-feedback invalid-feedback-login login-error">
+                    <div class="invalid-feedback" id="login-error">
                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidEmailPassword")
                     </div>
                     <button type="submit" id="btn-log-in" class="btn btn-primary btn-block my-1"><i class="fas fa-sign-in-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</button>
@@ -38,14 +44,14 @@
             </div>
             <div class="card-body" id="two-factor" style="display:none;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
-                <p class="text-center h5 text-capitalize txt-welcome">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</p>
-                <div class="invalid-feedback text-danger two-factor-error" style="display:none;">
-                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidPIN")
-                </div>
+                <h5 class="text-center text-capitalize pb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</h5>
                 <form id="form-two-factor" method="POST" class="form-horizontal form-signin form needs-validation">
                     <fieldset class="form-label-group">
                         <input id="PIN" class="form-control" name="PIN" type="text" autofocus required />
                         <label for="PIN">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PIN")</label>
+                        <div class="invalid-feedback" id="two-factor-error">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidPIN")
+                        </div>
                     </fieldset>
                     <button type="submit" id="btn-two-factor" class="btn btn-primary btn-block my-1"><i class="fas fa-key"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verify")</button>
                 </form>

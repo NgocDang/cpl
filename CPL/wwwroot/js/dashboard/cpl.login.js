@@ -5,12 +5,13 @@
         LogIn.bindResetTabIndex();
     },
     bindLoginForm: function () {
-        $("#form-log-in").validate();
         $("body").on("click", "#btn-log-in", function () {
-            var isFormValid = $("#form-log-in").valid();
+            var isFormValid = $("#form-log-in")[0].checkValidity();
+            $("#form-log-in").addClass('was-validated');
+
             if (!checkValidReCaptchaV2()) {
-                $(".login-error").html($('#captchaMessage').val());
-                $(".login-error").show();
+                $("#login-error").html($('#captchaMessage').val());
+                $("#login-error").show();
                 return false;
             }
 
@@ -31,9 +32,6 @@
                     success: function (data) {
                         if (data.success) {
                             if (data.twofactor) {
-                                $("div.card-login-page").removeClass("height-500");
-                                $("div.card-login-page").addClass("height-200");
-                                $("img#img-logo").css("margin-top", "-5%");
                                 $("#login").hide();
                                 $("#two-factor").show();
                             } else if ($("#login-modal").length > 0) {
@@ -43,16 +41,8 @@
                             }
                             
                         } else {
-                            //if (data.name == "mobile-verify") {
-                            //    $("#mobile-verify-message").html(data.message);
-                            //    $("#mobile-verify-message").removeClass("text-muted").addClass("invalid-feedback").show();
-                            //    $("#Id").val(data.id);
-                            //    $("#log-in").hide();
-                            //    $("#mobile-verify").show();
-                            //} else {
-                            $(".login-error").html(data.message);
-                            $(".login-error").show();
-                            //}
+                            $("#login-error").html(data.message);
+                            $("#login-error").show();
                         }
                     },
                     complete: function (data) {
@@ -77,11 +67,10 @@
     bindVerify: function () {
         $("form-two-factor").validate();
         $("body").on("click", "#btn-two-factor", function () {
-            var isFormValid = $("#form-two-factor").valid();
+            var isFormValid = $("#form-two-factor")[0].checkValidity();
             $("#form-two-factor").addClass('was-validated');
             if (isFormValid) {
                 $("#two-factor-error").hide();
-                $(".two-factor-error").removeClass("border-danger");
                 $.ajax({
                     url: "/Authentication/VerifyPIN/",
                     type: "POST",
@@ -101,9 +90,8 @@
                                 window.location.replace(data.url);
                             }
                         } else {
-                            $(".two-factor-error").addClass("danger");
-                            $(".two-factor-error").html(data.message);
-                            $(".two-factor-error").show();
+                            $("#two-factor-error").html(data.message);
+                            $("#two-factor-error").show();
                         }
                     },
                     complete: function (data) {

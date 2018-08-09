@@ -46,7 +46,7 @@ namespace CPL.Controllers
             return View(viewModels);
         }
 
-        public IActionResult NewsDetail(int id)
+        public IActionResult Detail(int id)
         {
             var viewModels = _newsService
                               .Queryable()
