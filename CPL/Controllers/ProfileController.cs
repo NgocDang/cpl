@@ -31,9 +31,9 @@ namespace CPL.Controllers
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
         private readonly ISysUserService _sysUserService;
-        private readonly IGameHistoryService _gameHistoryService;
         private readonly ICoinTransactionService _coinTransactionService;
         private readonly ITemplateService _templateService;
+        private readonly ILotteryHistoryService _lotteryHistoryService;
 
         public ProfileController(
             IHostingEnvironment hostingEnvironment,
@@ -44,8 +44,8 @@ namespace CPL.Controllers
             ISettingService settingService,
             ISysUserService sysUserService,
             ICoinTransactionService coinTransactionService,
-            IGameHistoryService gameHistoryService,
             ITeamService teamService,
+            ILotteryHistoryService lotteryHistoryService,
             ITemplateService templateService)
         {
             this._hostingEnvironment = hostingEnvironment;
@@ -54,10 +54,10 @@ namespace CPL.Controllers
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
             this._coinTransactionService = coinTransactionService;
-            this._gameHistoryService = gameHistoryService;
             this._sysUserService = sysUserService;
             this._unitOfWork = unitOfWork;
             this._templateService = templateService;
+            this._lotteryHistoryService = lotteryHistoryService;
         }
 
         public IActionResult EditAccount()
@@ -65,7 +65,9 @@ namespace CPL.Controllers
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             var viewModel = Mapper.Map<EditAccountViewModel>(user);
 
-            viewModel.NumberOfGameHistories = _gameHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
+            var numberOfLotteryGame = _lotteryHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
+
+            viewModel.NumberOfGameHistories = numberOfLotteryGame;
             viewModel.NumberOfTransactions = _coinTransactionService.Queryable().Count(x => x.SysUserId == viewModel.Id);
             return View("EditAccount", viewModel);
         }
