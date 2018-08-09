@@ -193,6 +193,12 @@
                     }
                 },
                 {
+                    "data": "Image",
+                    "render": function (data, type, full, meta) {
+                        return "<a href='/images/news/" + full.image + "' ><img src=/images/news/" + full.image + " class='img-thumbnail' alt='document-" + full.image + "'> </a>";
+                    }
+                },
+                {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
                         return "<a style='line-height:12px;' href='' data-id='" + full.id + "' class='btn btn-sm btn-info btn-edit'><i class='la la-pencil'></i></a> <button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-primary btn-delete'><i class='la la-trash'></i></button>";
