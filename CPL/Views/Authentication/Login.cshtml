@@ -11,7 +11,7 @@
                 <div class="card border-grey border-lighten-3 m-0 box-shadow-0">
                     <div class="card-content">
                         <div class="card-body" id="login">
-                            <p class="text-center h5 text-capitalize txt-welcome">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Welcome")</p>
+                            <p class="text-center h5 text-capitalize pb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Welcome")</p>
                             <p class="mb-2 text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EnterLogin")</p>
                             <form id="form-log-in" class="form-horizontal form-signin form needs-validation" novalidate>
                                 <fieldset class="form-label-group">
@@ -45,14 +45,15 @@
                             </form>
                         </div>
                         <div class="card-body" id="two-factor" style="display:none;">
-                            <p class="text-center h5 text-capitalize txt-welcome">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</p>
-                            <div class="invalid-feedback text-danger two-factor-error" style="display:none;">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidPIN")
-                            </div>
+                            <p class="text-center h5 text-capitalize pb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</p>
+                            
                             <form id="form-two-factor" method="POST" class="form-horizontal form-signin form needs-validation">
                                 <fieldset class="form-label-group">
                                     <input id="PIN" class="form-control" name="PIN" type="text" tabindex="1" autofocus required />
                                     <label for="PIN">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PIN")</label>
+                                    <div class="invalid-feedback" id="two-factor-error">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidPIN")
+                                    </div>
                                 </fieldset>
                                 <button type="submit" id="btn-two-factor" class="btn btn-danger btn-block my-1"><i class="fas fa-key"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verify")</button>
                             </form>

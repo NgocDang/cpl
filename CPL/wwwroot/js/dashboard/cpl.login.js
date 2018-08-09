@@ -41,16 +41,8 @@
                             }
                             
                         } else {
-                            //if (data.name == "mobile-verify") {
-                            //    $("#mobile-verify-message").html(data.message);
-                            //    $("#mobile-verify-message").removeClass("text-muted").addClass("invalid-feedback").show();
-                            //    $("#Id").val(data.id);
-                            //    $("#log-in").hide();
-                            //    $("#mobile-verify").show();
-                            //} else {
                             $("#login-error").html(data.message);
                             $("#login-error").show();
-                            //}
                         }
                     },
                     complete: function (data) {
@@ -75,11 +67,10 @@
     bindVerify: function () {
         $("form-two-factor").validate();
         $("body").on("click", "#btn-two-factor", function () {
-            var isFormValid = $("#form-two-factor").valid();
+            var isFormValid = $("#form-two-factor")[0].checkValidity();
             $("#form-two-factor").addClass('was-validated');
             if (isFormValid) {
                 $("#two-factor-error").hide();
-                $(".two-factor-error").removeClass("border-danger");
                 $.ajax({
                     url: "/Authentication/VerifyPIN/",
                     type: "POST",
@@ -99,9 +90,8 @@
                                 window.location.replace(data.url);
                             }
                         } else {
-                            $(".two-factor-error").addClass("danger");
-                            $(".two-factor-error").html(data.message);
-                            $(".two-factor-error").show();
+                            $("#two-factor-error").html(data.message);
+                            $("#two-factor-error").show();
                         }
                     },
                     complete: function (data) {

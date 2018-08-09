@@ -107,10 +107,6 @@ table.dataTable {
     width:100% !important;
 }
 
-.txt-welcome {
-    padding-bottom: 20px;
-}
-
 #btc-card {
     background: linear-gradient(#193E8E,#130E3B) !important;
     color: #fff
