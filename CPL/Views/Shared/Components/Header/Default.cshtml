@@ -138,6 +138,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
+                                <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="fas fa-tachometer-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            </li>
+                            <li>
                                 <a class="dropdown-item" asp-controller="Profile" asp-action="EditCredential"><i class="la la-key"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit")</a>
                             </li>
                             <li>
