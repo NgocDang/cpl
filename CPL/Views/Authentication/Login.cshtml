@@ -11,7 +11,7 @@
                 <div class="card border-grey border-lighten-3 m-0 box-shadow-0">
                     <div class="card-content">
                         <div class="card-body" id="login">
-                            <p class="text-center h5 text-capitalize pb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Welcome")</p>
+                            <h5 class="text-center text-capitalize pb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Welcome")</h5>
                             <p class="mb-2 text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EnterLogin")</p>
                             <form id="form-log-in" class="form-horizontal form-signin form needs-validation" novalidate>
                                 <fieldset class="form-label-group">
@@ -45,8 +45,7 @@
                             </form>
                         </div>
                         <div class="card-body" id="two-factor" style="display:none;">
-                            <p class="text-center h5 text-capitalize pb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</p>
-                            
+                            <h5 class="text-center text-capitalize pb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</h5>
                             <form id="form-two-factor" method="POST" class="form-horizontal form-signin form needs-validation">
                                 <fieldset class="form-label-group">
                                     <input id="PIN" class="form-control" name="PIN" type="text" tabindex="1" autofocus required />
@@ -67,10 +66,9 @@
     </div>
 </div>
 
-<!-- ////////////////////////////////////////////////////////////////////////////-->
 @section scripts
     {
     <script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
-    <script src="~/js/dashboard/cpl.login.js"></script>
+    <script src="~/js/dashboard/cpl.login.js" asp-append-version="true"></script>
 }
 
