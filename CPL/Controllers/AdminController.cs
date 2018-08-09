@@ -6,11 +6,13 @@ using CPL.Misc;
 using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace CPL.Controllers
@@ -30,6 +32,7 @@ namespace CPL.Controllers
         private readonly ILotteryHistoryService _lotteryHistoryService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
         private readonly INewsService _newsService;
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IDictionary<string, string> countryDict = new Dictionary<string, string>();
 
         public AdminController(
@@ -44,7 +47,8 @@ namespace CPL.Controllers
             IGameHistoryService gameHistoryService,
             ILotteryHistoryService lotteryHistoryService,
             IPricePredictionHistoryService pricePredictionHistoryService,
-            INewsService newsService)
+            INewsService newsService,
+            IHostingEnvironment hostingEnvironment)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -58,6 +62,7 @@ namespace CPL.Controllers
             this._lotteryHistoryService = lotteryHistoryService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._newsService = newsService;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         public IActionResult Index()
@@ -139,6 +144,7 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
 
+        [HttpPost]
         public JsonResult SearchAllUser(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -264,6 +270,7 @@ namespace CPL.Controllers
             return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "CancelSuccessfully") });
         }
 
+        [HttpPost]
         public JsonResult SearchKYCVerify(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -350,12 +357,73 @@ namespace CPL.Controllers
 
         public IActionResult EditNews(int id)
         {
-            var news = _newsService.Queryable()
-                .FirstOrDefault(x => x.Id == id);
-
-            return PartialView("_EditNews", Mapper.Map<NewsViewModel>(news));
+            var news = new NewsViewModel();
+            if (id > 0)
+            {
+                news = Mapper.Map<NewsViewModel>(_newsService.Queryable().FirstOrDefault(x => x.Id == id));
+            }
+            return PartialView("_EditNews", news);
         }
 
+        [HttpPost]
+        public JsonResult SaveEditNews(NewsViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var news = _newsService.Queryable()
+                .FirstOrDefault(x => x.Id == viewModel.Id);
+                if (viewModel.FileImage != null)
+                {
+                    var newsPath = Path.Combine(_hostingEnvironment.WebRootPath, @"images\news");
+                    var image = $"{viewModel.FileImage.FileName}";
+                    var frontSidePath = Path.Combine(newsPath, image);
+                    viewModel.FileImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
+                    news.Image = image;
+                }
+
+                news.Title = viewModel.Title;
+                news.ShortDescription = viewModel.ShortDescription;
+                news.Description = viewModel.Description;
+                _newsService.Update(news);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
+
+        [HttpPost]
+        public JsonResult AddNews(NewsViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if(viewModel.FileImage != null)
+                    _newsService.Insert(new Domain.News { Title = viewModel.Title , CreatedDate = DateTime.Now, Description = viewModel.Description, ShortDescription = viewModel.ShortDescription, Image = viewModel.FileImage.FileName});
+                else
+                    _newsService.Insert(new Domain.News { Title = viewModel.Title, CreatedDate = DateTime.Now, Description = viewModel.Description, ShortDescription = viewModel.ShortDescription });
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+            }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteNews(int id)
+        {
+            var news = _newsService.Queryable()
+            .FirstOrDefault(x => x.Id == id);
+            if (news != null)
+            {
+                _newsService.Delete(news);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
+            }
+            else
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
+
+        [HttpPost]
         public JsonResult SearchNews(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller

@@ -6,6 +6,7 @@
 
 @section styles
     {
+    <link href="~/css/dashboard/plugins/tinymce/tinymce.min.css" rel="stylesheet" />
     <link href="~/js/dashboard/plugins/lightbox/ekko-lightbox.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
@@ -17,7 +18,7 @@
             <div class="row">
                 <div class="col-12">
                     <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</h6>
-                    <div class="card">
+                    <div class="card" id="news-management">
                         <div class="card-content">
                             <table id="dt-news" class="table responsive table-hover table-xl mb-0">
                                 <thead>
@@ -45,6 +46,10 @@
     <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/jquery.validate.min.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/plugins/tinymce/jquery.tinymce.min.js"></script>
+    <script src="~/js/dashboard/plugins/tinymce/tinymce.min.js"></script>
+    <script src="~/js/dashboard/plugins/tinymce/editor-tinymce.min.js"></script>
     <script src="~/js/dashboard/cpl.news.js"></script>
 }
