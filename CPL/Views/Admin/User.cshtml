@@ -227,28 +227,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div id="recent-transactions" class="col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameHistory")</h6>
-                    <div class="card">
-                        <div class="card-content">
-                            <table id="dt-history" class="table responsive table-hover table-xl mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Date")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Time")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameType")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @await Component.InvokeAsync("GameHistory");
         </div>
     </div>
 </div>
@@ -260,6 +239,7 @@
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
-    <script src="~/js/dashboard/cpl.userdashboard.js"></script>
+    <script src="~/js/dashboard/cpl.userdashboard.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.gamehistory.js" asp-append-version="true"></script>
 }
 

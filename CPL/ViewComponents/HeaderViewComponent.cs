@@ -35,7 +35,7 @@ namespace CPL.ViewComponents
                 .ToList();
 
             var lastNews = _newsService.Queryable().LastOrDefault();
-            viewModel.NewsViewComponent = Mapper.Map<NewsViewModel>(lastNews);
+            viewModel.News = Mapper.Map<NewsViewModel>(lastNews);
 
             var langId = HttpContext.Session.GetInt32("LangId");
 

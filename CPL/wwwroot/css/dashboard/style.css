@@ -1459,7 +1459,6 @@ ul.game-menu li.active {
 }
 /*End <== Token balance view component*/
 
-/*Start ==> Word Break*/
 .word-break {
     word-break: break-word;
 }
@@ -1506,4 +1505,8 @@ ul.game-menu li.active {
         padding: 0px !important;
         background-color: transparent !important;
     }
+}
+
+.news-link:hover {
+    text-decoration:underline;
 }
