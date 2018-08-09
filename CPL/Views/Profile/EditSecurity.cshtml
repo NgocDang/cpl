@@ -23,7 +23,6 @@
                                 <a class="nav-link active" id="kyc-nav-tab" data-toggle="tab" href="#kyc-nav" aria-controls="kyc-nav" aria-expanded="true">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecurityEdit")
                                 </a>
-
                             </li>
                         </ul>
                         <div class="tab-content px-2 py-1 mb-2">
@@ -31,7 +30,6 @@
                                     <div class="card mb-0">
                                         <div class="card-content">
                                             <form id="form-edit-account" class="form-horizontal form-user-profile mt-2" action="">
-
                                                 <div class="card-body">
                                                     <div class="col-12">
                                                         <div class="row">
@@ -39,8 +37,6 @@
                                                                 <img src="~/images/avatar-1.jpeg" class="rounded-circle height-70" @*alt="@Model.FirstName @Model.LastName" *@ />
                                                             </div>
                                                             <div class="col-md-10 col-12">
-                                                                <h5>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditSecurity")</h5>
-                                                                <hr />
                                                                 @if (!Model.KYCVerified.HasValue)
                                                                 {
                                                                     <div class="row mb-1" id="kyc-verify">
