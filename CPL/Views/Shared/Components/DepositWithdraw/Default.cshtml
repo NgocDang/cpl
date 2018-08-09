@@ -1,6 +1,6 @@
 ﻿@model DepositAndWithdrawViewModel
 
-<div id="depositandwithdraw">
+<div id="depositandwithdraw" class="tab-component-custom">
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link active" id="deposit-nav-tab" data-toggle="tab" href="#deposit-nav" aria-controls="deposit-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</a>
