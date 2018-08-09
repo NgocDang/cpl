@@ -3,10 +3,10 @@
         ResetPassword.bindResetPasswordForm();
     },
     bindResetPasswordForm: function () {
-        $("#form-reset-password").validate();
         $("#btn-reset-password").on("click", function () {
-            var isFormValid = $("#form-reset-password").valid();
+            var isFormValid = $("#form-reset-password")[0].checkValidity();
             $("#form-reset-password").addClass('was-validated');
+
             var isPasswordValid = $("#Password").val() == $("#PasswordConfirm").val();
             if (!isPasswordValid) {
                 $("#password-confirm-message").show();
