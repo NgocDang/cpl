@@ -31,7 +31,6 @@ namespace CPL.Misc.MapperCreate
 
             CreateMap<SysUser, DashboardViewModel>();
             CreateMap<SysUser, HoldingPercentageViewModel>();
-            CreateMap<GameHistory, GameHistoryViewModel>();
 
             CreateMap<SysUser, ExchangeViewModel>();
             CreateMap<SysUser, TokenBalanceViewModel>();

@@ -22,7 +22,6 @@ namespace CPL.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-        private readonly IGameHistoryService _gameHistoryService;
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
@@ -37,8 +36,7 @@ namespace CPL.Controllers
             ITeamService teamService,
             ITemplateService templateService,
             ISysUserService sysUserService,
-            ICoinTransactionService coinTransactionService,
-            IGameHistoryService gameHistoryService)
+            ICoinTransactionService coinTransactionService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -49,7 +47,6 @@ namespace CPL.Controllers
             this._templateService = templateService;
             this._sysUserService = sysUserService;
             this._coinTransactionService = coinTransactionService;
-            this._gameHistoryService = gameHistoryService;
         }
 
         public IActionResult Index()

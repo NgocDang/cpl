@@ -1,8 +1,8 @@
 ﻿@{
     Layout = "_Layout";
-    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllUsers");
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames");
 }
-@model AllUserViewModel
+@model LotteryGameViewModel
 
 @section styles
     {
@@ -18,26 +18,32 @@
         <div class="content-body">
             <div class="row">
                 <div id="recent-transactions" class="col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllUsers")</h6>
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames")</h6>
                     <div class="card">
                         <div class="card-content">
-                            <table id="dt-all-user" class="table responsive table-hover table-xl mb-0">
+                            <table id="dt-all-lottery-game" class="table responsive table-hover table-xl mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Mobile")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenAmount")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsDeleted")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Volume")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlideImage")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopListingImage")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileListingImage")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
                                     </tr>
                                 </thead>
                             </table>
                         </div>
                     </div>
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View")" id="view" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")" id="edit" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Delete")" id="delete" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")" id="pending" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Active")" id="active" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Completed")" id="completed" />
                 </div>
             </div>
         </div>
@@ -54,5 +60,5 @@
     <script src="~/js/dashboard/plugins/intl-tel-input/js/intlTelInput.js"></script>
     <script src="~/js/dashboard/plugins/intl-tel-input/js/utils.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.alluser.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.alllotterygame.js" asp-append-version="true"></script>
 }

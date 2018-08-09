@@ -29,7 +29,6 @@ namespace CPL.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-        private readonly IGameHistoryService _gameHistoryService;
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
@@ -48,7 +47,6 @@ namespace CPL.Controllers
             ITeamService teamService,
             ITemplateService templateService,
             ISysUserService sysUserService,
-            IGameHistoryService gameHistoryService,
             IPricePredictionService pricePredictionService,
             IPricePredictionHistoryService pricePredictionHistoryService,
             IQuartzSchedulerService quartzSchedulerService,
@@ -63,7 +61,6 @@ namespace CPL.Controllers
             this._teamService = teamService;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
-            this._gameHistoryService = gameHistoryService;
             this._pricePredictionService = pricePredictionService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._quartzSchedulerService = quartzSchedulerService;

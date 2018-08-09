@@ -27,7 +27,6 @@ namespace CPL.Controllers
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
-        private readonly IGameHistoryService _gameHistoryService;
 
 
         public DashboardController(
@@ -40,8 +39,7 @@ namespace CPL.Controllers
             ITemplateService templateService,
             ISysUserService sysUserService,
             ILotteryHistoryService lotteryHistoryService,
-            IPricePredictionHistoryService pricePredictionHistoryService,
-            IGameHistoryService gameHistoryService)
+            IPricePredictionHistoryService pricePredictionHistoryService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -53,7 +51,6 @@ namespace CPL.Controllers
             this._sysUserService = sysUserService;
             this._lotteryHistoryService = lotteryHistoryService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
-            this._gameHistoryService = gameHistoryService;
         }
 
         public IActionResult Index()
