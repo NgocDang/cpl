@@ -57,7 +57,6 @@ namespace CPL.Controllers
             else
                 viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
 
-            HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
             return View(viewModel);
         }
 
