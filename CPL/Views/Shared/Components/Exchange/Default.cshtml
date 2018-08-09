@@ -18,7 +18,7 @@
                             </div>
                             <div class="col-lg-4 col-12 pt-2">
                                 <fieldset class="form-label-group">
-                                    <input type="number" class="form-control from-amount" min="0" required>
+                                    <input type="number" class="form-control from-amount" min="0.00000001" required>
                                     <input type="hidden" value="@Model.BTCAmount" class="max-amount" />
                                     <input type="hidden" value="BTC" class="from-currency" />
                                     <label for="from-amount" id="from-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCAmount")</label>
@@ -26,12 +26,12 @@
                                 </fieldset>
                                 <button type="button" for="btc" class="btn btn-sm btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
                             </div>
-                            <div class="btn btn-sm round col-lg-1 col-12 pt-2 text-center">
+                            <div class="col-lg-1 col-12 pt-2 text-center">
                                 <button type="button" class="btn btn-md btn-swap"><i class="fas fa-exchange-alt"></i></button>
                             </div>
                             <div class="col-lg-4 col-sm-12 col-12 pt-2">
                                 <fieldset class="form-label-group">
-                                    <input type="number" class="form-control to-amount" readonly min="0" required>
+                                    <input type="number" class="form-control to-amount" readonly min="1" required>
                                     <input type="hidden" value="@Model.TokenAmount" class="max-amount" />
                                     <input type="hidden" value="CPL" class="to-currency" />
                                     <label for="to-amount" id="to-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenAmount")</label>
