@@ -28,7 +28,7 @@
                     tinymce.remove();
                     tinymce.init({
                         selector: '.tinymce',
-                        height: 500,
+                        height: 300,
                         plugins: 'print preview fullpage powerpaste searchreplace autolink directionality advcode visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount tinymcespellchecker imagetools  contextmenu colorpicker textpattern help',
                         toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
                         image_advtab: true,
@@ -64,7 +64,7 @@
                     tinymce.remove();
                     tinymce.init({
                         selector: '.tinymce',
-                        height: 500,
+                        height: 300,
                         plugins: 'print preview fullpage powerpaste searchreplace autolink directionality advcode visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount tinymcespellchecker imagetools  contextmenu colorpicker textpattern help',
                         toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
                         image_advtab: true,
@@ -83,9 +83,10 @@
     },
     bindSaveButton: function () {
         $("#modal").on("click", "#btn-save", function () {
-            var isFormValid = $("#modal").find("#form-update-news").valid();
-            $("#modal").find("#form-update-news").addClass('was-validated');
             var _this = this;
+            var isFormValid = $("#form-news")[0].checkValidity();
+            $("#form-news").addClass('was-validated');
+
             if (tinymce.EditorManager.activeEditor.plugins.wordcount.getCount() == 0) {
                 $("#full-desc").find(".invalid-feedback").show();
                 return false;
@@ -134,9 +135,9 @@
     },
     bindSubmitButton: function () {
         $("#modal").on("click", "#btn-submit", function () {
-            var isFormValid = $("#modal").find("#form-update-news").valid();
-            $("#modal").find("#form-update-news").addClass('was-validated');
             var _this = this;
+            var isFormValid = $("#form-news")[0].checkValidity();
+            $("#form-news").addClass('was-validated');
             if (tinymce.EditorManager.activeEditor.plugins.wordcount.getCount() == 0) {
                 $("#full-desc").find(".invalid-feedback").show();
                 return false;
