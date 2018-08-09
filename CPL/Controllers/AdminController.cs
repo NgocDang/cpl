@@ -81,6 +81,12 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
+        public IActionResult LotteryGame()
+        {
+            var viewModel = new LotteryGameViewModel();
+            return View(viewModel);
+        }
+
         public new IActionResult User(int id)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
@@ -173,6 +179,7 @@ namespace CPL.Controllers
             }
         }
 
+        [HttpPost]
         public JsonResult SearchAllUser(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -235,6 +242,74 @@ namespace CPL.Controllers
                         .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
                         .Select(x => Mapper.Map<SysUserViewModel>(x))
+                        .OrderBy(sortBy, sortDir)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToList();
+            }
+        }
+
+        [HttpPost]
+        public JsonResult SearchLotteryGame(DataTableAjaxPostModel viewModel)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchLotteryGameFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        public IList<LotteryViewModel> SearchLotteryGameFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            // search the dbase taking into consideration table sorting and paging
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = _lotteryService.Queryable()
+                        .Count();
+
+                totalResultsCount = _lotteryService.Queryable()
+                        .Count();
+
+                return _lotteryService.Queryable()
+                            .Select(x => Mapper.Map<LotteryViewModel>(x))
+                            .OrderBy(sortBy, sortDir)
+                            .Skip(skip)
+                            .Take(take)
+                            .ToList();
+            }
+            else
+            {
+                filteredResultsCount = _lotteryService.Queryable()
+                        .Where(x => x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy))
+                        .Count();
+
+                totalResultsCount = _lotteryService.Queryable()
+                        .Count();
+
+                return _lotteryService.Queryable()
+                        .Where(x => x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy))
+                        .Select(x => Mapper.Map<LotteryViewModel>(x))
                         .OrderBy(sortBy, sortDir)
                         .Skip(skip)
                         .Take(take)
