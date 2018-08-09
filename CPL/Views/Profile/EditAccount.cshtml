@@ -57,12 +57,14 @@
                                                                         <fieldset class="form-label-group">
                                                                             <input type="text" name="FirstName" class="form-control" maxlength="30" id="FirstName" value="@Model.FirstName" required autofocus="">
                                                                             <label for="FirstName">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</label>
+                                                                            <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstNameRequired")</div>
                                                                         </fieldset>
                                                                     </div>
                                                                     <div class="col-md-6 col-sm-12">
                                                                         <fieldset class="form-label-group">
                                                                             <input type="text" class="form-control" name="LastName" id="LastName" maxlength="30" value="@Model.LastName" required autofocus="">
                                                                             <label for="LastName">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</label>
+                                                                            <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastNameRequired")</div>
                                                                         </fieldset>
                                                                     </div>
                                                                 </div>
@@ -348,16 +350,22 @@
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-6 col-sm-12">
                                                                         <fieldset class="form-label-group">
-                                                                            <input type="text" class="form-control" name="City" value="@Model.City" id="City" required="" autofocus="">
+                                                                            <input type="text" class="form-control" name="City" value="@Model.City" id="City" required autofocus="">
                                                                             <label for="City">
                                                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "City")
                                                                             </label>
+                                                                            <div class="invalid-feedback">
+                                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CityRequired")
+                                                                            </div>
                                                                         </fieldset>
                                                                     </div>
                                                                     <div class="col-lg-4 col-md-6 col-sm-12">
                                                                         <fieldset class="form-label-group">
                                                                             <input type="text" class="form-control" name="StreetAddress" value="@Model.StreetAddress" id="StreetAddress" required="" autofocus="">
                                                                             <label for="StreetAddress">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StreetAddress")</label>
+                                                                            <div class="invalid-feedback">
+                                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StreetAddressRequired")
+                                                                            </div>
                                                                         </fieldset>
                                                                     </div>
                                                                 </div>

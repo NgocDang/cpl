@@ -7,7 +7,9 @@
     },
     bindSaveEmail: function () {
         $("#btn-save-email").on("click", function () {
-            var isFormValid = $("#form-edit-email").valid();
+            var isFormValid = $('#form-edit-email')[0].checkValidity();
+            $("#form-edit-email").addClass('was-validated');
+
             var isConfirmEmailValid = $("#NewEmail").val() == $("#NewEmailConfirm").val();
             if (!isConfirmEmailValid) {
                 $("#new-email-confirm-msg").show();
@@ -50,7 +52,9 @@
     },
     bindSavePassword: function () {
         $("#btn-save-password").on("click", function () {
-            var isFormValid = $("#form-edit-password").valid();
+            var isFormValid = $('#form-edit-password')[0].checkValidity();
+            $("#form-edit-password").addClass('was-validated');
+
             var isConfirmPasswordValid = $("#NewPassword").val() == $("#NewPasswordConfirm").val();
             if (!isConfirmPasswordValid) {
                 $("#new-password-confirm-msg").show();
@@ -60,7 +64,6 @@
 
             if (isFormValid && isConfirmPasswordValid) {
                 $("#current-password-msg").hide();
-
                 $.ajax({
                     url: "/Profile/EditPassword/",
                     type: "POST",
@@ -127,11 +130,9 @@
                 }
             });
         });
-        $("#form-two-factor-enable").validate();
         $("#two-factor-authenticator").on("click", "#btn-two-factor-enable", function () {
-            var isFormValid = $("#form-two-factor-enable").valid();
+            var isFormValid = $('#form-two-factor-enable')[0].checkValidity();
             $("#form-two-factor-enable").addClass('was-validated');
-            $("#PIN").remove("border-danger");
             if (isFormValid) {
                 $.ajax({
                     url: "/Profile/UpdateTwoFactorAuthentication/",
@@ -150,7 +151,6 @@
                             $("#form-two-factor-disable").show();
                             $("#form-two-factor-enable").hide();
                         } else {
-                            $("#PIN").addClass("border-danger");
                             toastr.error(data.message, 'Error!');
                         }
                     },
@@ -160,6 +160,7 @@
                     }
                 });
             }
+            return false;
         });
     }
 };

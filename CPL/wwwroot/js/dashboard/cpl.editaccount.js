@@ -110,7 +110,8 @@
     },
     bindSaveButton: function () {
         $("#btn-save-account").on("click", function () {
-            var isFormValid = $("#form-edit-account").valid();
+            var isFormValid = $('#form-edit-account')[0].checkValidity();
+            $("#form-edit-account").addClass('was-validated');
 
             //Validate for Mobile
             var isMobileValid = $("#Mobile").intlTelInput("isValidNumber");

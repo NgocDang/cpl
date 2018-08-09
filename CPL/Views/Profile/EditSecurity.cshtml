@@ -27,61 +27,75 @@
                         </ul>
                         <div class="tab-content px-2 py-1 mb-2">
                             <div role="tabpanel" class="tab-pane active" id="kyc-nav" aria-labelledby="kyc-nav-tab" aria-expanded="true">
-                                    <div class="card mb-0">
-                                        <div class="card-content">
-                                            <form id="form-edit-account" class="form-horizontal form-user-profile mt-2" action="">
-                                                <div class="card-body">
-                                                    <div class="col-12">
-                                                        <div class="row">
-                                                            <div class="col-md-2 col-12">
-                                                                <img src="~/images/avatar-1.jpeg" class="rounded-circle height-70" @*alt="@Model.FirstName @Model.LastName" *@ />
-                                                            </div>
-                                                            <div class="col-md-10 col-12">
-                                                                @if (!Model.KYCVerified.HasValue)
-                                                                {
-                                                                    <div class="row mb-1" id="kyc-verify">
-                                                                        <p id="kyc-message" class="text-muted col-sm-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyIdentityDesc")</p>
-                                                                        <div class="col-md-6 col-sm-12">
-                                                                            <fieldset class="form-label-group">
-                                                                                <input id="FrontSideImage" type="file" value="@Model.FrontSideImage" class="form-control" name="FrontSideImage" required maxlength="30">
-                                                                                <label for="FrontSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FrontSide")</label>
-                                                                            </fieldset>
+                                <div class="card mb-0">
+                                    <div class="card-content">
+                                        <form id="form-edit-kyc" class="form-horizontal form-user-profile mt-2" action="">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-2 col-12">
+                                                        <img src="~/images/avatar-1.jpeg" class="rounded-circle height-70"/>
+                                                    </div>
+                                                    <div class="col-md-10 col-12">
+                                                        @if (!Model.KYCVerified.HasValue)
+                                                        {
+                                                            <div class="row mb-1" id="kyc-verify">
+                                                                <p id="kyc-message" class="text-muted col-sm-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyIdentityDesc")</p>
+                                                                <div class="col-md-6 col-sm-12">
+                                                                    <fieldset class="form-label-group">
+                                                                        <input id="FrontSideImage" type="file" value="@Model.FrontSideImage" class="form-control" name="FrontSideImage" required maxlength="30">
+                                                                        <label for="FrontSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FrontSide")</label>
+                                                                        <div class="invalid-feedback">
+                                                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FrontSideImageRequired")
                                                                         </div>
-                                                                        <div class="col-md-6 col-sm-12">
-                                                                            <fieldset class="form-label-group">
-                                                                                <input id="BackSideImage" type="file" value="@Model.BackSideImage" class="form-control" name="BackSideImage" required maxlength="30">
-                                                                                <label for="BackSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BackSide")</label>
-                                                                            </fieldset>
+                                                                    </fieldset>
+                                                                </div>
+                                                                <div class="col-md-6 col-sm-12">
+                                                                    <fieldset class="form-label-group">
+                                                                        <input id="BackSideImage" type="file" value="@Model.BackSideImage" class="form-control" name="BackSideImage" required maxlength="30">
+                                                                        <label for="BackSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BackSide")</label>
+                                                                        <div class="invalid-feedback">
+                                                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BackSideImageRequired")
                                                                         </div>
-                                                                    </div>
-                                                                }
-                                                                else if (Model.KYCVerified.Value)
-                                                                {
-                                                                    <div class="row mb-1 col-sm-12" id="kyc-verify">
-                                                                        <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCConfirmed")</p>
-                                                                        <span class="badge badge-success h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verified")</span>
-                                                                    </div>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <div class="row mb-1 col-sm-12" id="kyc-verify">
-                                                                        <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCReceived")</p>
-                                                                        <span class="badge badge-info h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")</span>
-                                                                    </div>
-                                                                }
-                                                                @Html.HiddenFor(x => x.Id)
-                                                                @Html.HiddenFor(x => x.KYCVerified)
+                                                                    </fieldset>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        }
+                                                        else if (Model.KYCVerified.Value)
+                                                        {
+                                                            <div class="row mb-1 col-sm-12" id="kyc-verify">
+                                                                <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCConfirmed")</p>
+                                                                <span class="badge badge-success h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verified")</span>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="row mb-1 col-sm-12" id="kyc-verify">
+                                                                <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCReceived")</p>
+                                                                <span class="badge badge-info h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")</span>
+                                                            </div>
+                                                        }
                                                     </div>
                                                 </div>
+                                            </div>
+                                            @if (!Model.KYCVerified.HasValue)
+                                            {
                                                 <div class="card-footer py-0">
                                                     <button type="button" id="btn-save-account" class="btn btn-danger my-1 pull-right"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
                                                 </div>
-                                            </form>
+                                            }
+                                        </form>
+                                        <div class="card-body" id="kyc-response" style="display:none;">
+                                            <div class="row">
+                                                <div class="col-md-2 col-12">
+                                                    <img src="~/images/avatar-1.jpeg" class="rounded-circle height-70" @*alt="@Model.FirstName @Model.LastName" *@ />
+                                                </div>
+                                                 <div class="col-md-10 col-12">
+                                                    <p class='text-muted'>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCReceived")<span class='badge badge-info h-50'>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")</span></p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-
+                                </div>
                             </div>
                         </div>
                     </div>
