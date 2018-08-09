@@ -1464,3 +1464,46 @@ ul.game-menu li.active {
     word-break: break-word;
 }
 /*End <== Word Break*/
+
+/*Tab components*/
+
+.tab-component-custom .nav {
+    border: none !important;
+}
+
+.tab-component-custom .tab-content {
+    background-color: #ffd300 !important;
+}
+
+.tab-component-custom .nav-link {
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+    padding-bottom: 10px !important;
+    padding-top: 10px !important;
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+    outline: none !important;
+    border: none !important;
+    font-weight: bolder !important;
+    font-size: 20px !important;
+    background: #e6e6e6 !important;
+    color: white !important;
+}
+
+    .tab-component-custom .nav-link.active {
+        background: #ffd300 !important;
+        color: #f93147 !important;
+    }
+
+.tab-component-custom .tab-content {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+@media (max-width: 426px){
+    .tab-component-custom .tab-content {
+        padding: 0px !important;
+        background-color: transparent !important;
+    }
+}
