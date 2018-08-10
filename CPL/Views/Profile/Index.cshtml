@@ -383,7 +383,6 @@
                                                     </fieldset>
                                                 </div>
                                             </div>
-
                                         }
                                         else
                                         {
@@ -450,7 +449,7 @@
                                             <div class="col-12 text-right">
                                                 <hr />
                                                 <button type="button" id="btn-save-account" class="btn btn-primary"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
-                                                <a id="btn-continue-verify-kyc" class="btn btn-success" asp-controller="Profile" asp-action="EditSecurity" style="display: none"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContinueVerifyKYC") Continue verify KYC<i class="la la-angle-right"></i></a>
+                                                <a id="btn-continue-verify-kyc" class="btn btn-success " asp-controller="Profile" asp-action="KYC" style="display: none"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContinueVerifyKYC")<i class="la la-angle-right la-button-size"></i></a>
                                             </div>
                                         </div>
                                     </div>
