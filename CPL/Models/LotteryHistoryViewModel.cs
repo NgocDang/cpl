@@ -11,16 +11,17 @@ namespace CPL.Models
         public int LotteryId { get; set; }
         public int SysUserId { get; set; }
         public int LotteryPhase { get; set; }
-        public string LotteryPhaseInString { get; set; }
         public string Result { get; set; }
         public string TicketNumber { get; set; }
         public DateTime CreatedDate { get; set; }
-        public string CreatedDateInString { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public string UpdatedDateInString { get; set; }
         public decimal? Award { get; set; }
-        public string AwardInString { get; set; }
         public int? LotteryPrizeId { get; set; }
         public int TicketIndex { get; set; }
+
+        public string LotteryPhaseInString { get; set; }
+        public string CreatedDateInString { get; set; }
+        public string UpdatedDateInString { get; set; }
+        public string AwardInString { get; set; }
     }
 }
