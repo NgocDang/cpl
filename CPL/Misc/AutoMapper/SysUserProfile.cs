@@ -29,7 +29,8 @@ namespace CPL.Misc.MapperCreate
             CreateMap<SysUserViewModel, DashboardNavbarViewModel>();
             CreateMap<SysUserViewModel, EditSecurityViewModel>();
 
-            CreateMap<SysUser, DashboardViewModel>();
+            CreateMap<SysUser, DashboardViewModel>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
             CreateMap<SysUser, HoldingPercentageViewModel>();
             CreateMap<GameHistory, GameHistoryViewModel>();
 

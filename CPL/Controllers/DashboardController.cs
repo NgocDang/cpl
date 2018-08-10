@@ -63,6 +63,21 @@ namespace CPL.Controllers
             decimal coinRate = CoinExchangeExtension.CoinExchanging();
             var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value;
             viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
+
+            // Mapping KYC status
+            if (!user.KYCVerified.HasValue)
+            {
+                viewModel.KYCStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotVerifiedYet");
+            }
+            else if (user.KYCVerified == true)
+            {
+                viewModel.KYCStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Verified");
+            }
+            else // viewModel.KYCVerified == false
+            {
+                viewModel.KYCStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending");
+            }
+
             return View(viewModel);
         }
 

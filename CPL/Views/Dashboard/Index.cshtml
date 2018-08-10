@@ -18,7 +18,7 @@
             <div class="row">
                 <div class="col-lg-6 col-12">
                     <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllAsset") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
-                    <div class="card pull-up">
+                    <div class="card">
                         <div class="card-content">
                             <div class="card-body">
                                 <div class="col-12">
@@ -95,39 +95,35 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-12">
-                    <ul class="nav nav-cpl nav-tabs">
-                        <li class="nav-item">
-                            <span class="nav-link-cpl active-cpl" data-toggle="tab" aria-expanded="true">
-                                User profile
-                            </span>
-                        </li>
-                    </ul>
-                    <div class="tab-content-cpl px-2 py-1 mb-2">
-                        <div role="tabpanel" class="tab-pane-cpl active-cpl" aria-expanded="true">
-                            <div class="card mb-0">
-                                <div class="card-header border-bottom-card">
-                                    <span class="h4 mr-2">My profile</span>
-                                    <a href="/Profile/Index#edit-profile-btn" class="btn btn-primary btn-sm"><i class="far fa-edit"></i> Edit</a>
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UserProfile")</h6>
+                    <div class="card mb-0">
+                        <div class="card-header border-bottom-card">
+                            <span class="h4 mr-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyProfile")</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-group col-lg-4 col-md-4 col-12 col-sm-12 mb-0">
+                                    <h6 class="text-muted">Name</h6>
+                                    <h4>@Model.Name</h4>
                                 </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="form-group col-lg-4 col-md-4 col-12 col-sm-12 mb-0">
-                                            <h6 class="text-muted">Name</h6>
-                                            <h4>Bin</h4>
-                                        </div>
-                                        <div class="form-group col-lg-4 col-md-4 col-12 col-sm-12">
-                                            <h6 class="text-muted">First name</h6>
-                                            <h4>Bin</h4>
-                                        </div>
-                                        <div class="form-group col-lg-4 col-md-4 col-12 col-sm-12">
-                                            <h6 class="text-muted">First name</h6>
-                                            <h4>Bin</h4>
-                                        </div>
-                                    </div>
+                                <div class="form-group col-lg-4 col-md-4 col-12 col-sm-12">
+                                    <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</h6>
+                                    <h4>@Model.Email</h4>
                                 </div>
-                                <div class="card-footer card-footer-my-profile"><a href="/Profile">more info <i class="fa fa-angle-right"></i></a></div>
+                                <div class="form-group col-lg-4 col-md-4 col-12 col-sm-12">
+                                    <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</h6>
+                                    <h4>@Model.KYCStatus</h4>
+                                </div>
                             </div>
                         </div>
+                        @if (Model.KYCVerified == true)
+                        {
+                            <div class="card-footer card-footer-my-profile"><a asp-controller="Profile" asp-action="EditAccount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MoreInfo")<i class="fa fa-angle-right"></i></a></div>
+                        }
+                        else
+                        {
+                            <div class="card-footer card-footer-my-profile"><a asp-controller="Profile" asp-action="EditAccount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit")<i class="fa fa-angle-right"></i></a></div>
+                        }
                     </div>
                 </div>
             </div>

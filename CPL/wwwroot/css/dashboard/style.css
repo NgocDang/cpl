@@ -1485,3 +1485,19 @@ ul.game-menu li.active {
 .news-link:hover {
     text-decoration:underline;
 }
+
+/*Start ==> Dashboard*/
+.card-footer-my-profile {
+    margin-top: 20px;
+    padding: 10px;
+    text-align: center;
+}
+
+.border-bottom-card {
+    border-bottom: 1px solid #EEE;
+}
+
+.mb-3px {
+    margin-bottom: 3px;
+}
+/*End <== DashBoard*/
