@@ -9,6 +9,10 @@ NOTE:
 ------
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+html body {
+    background: linear-gradient(to bottom, #fff6cc, #ffffff) fixed !important;
+    background-repeat: no-repeat;
+}
 
 .top-1 {
     padding-left: 1rem;
@@ -1484,4 +1488,13 @@ ul.game-menu li.active {
 
 .news-link:hover {
     text-decoration:underline;
+}
+
+.cpl-rate {
+    margin-top: 5px;
+    margin-bottom: 3px;
+}
+
+.cpl-balance {
+    margin-bottom: 5px;
 }

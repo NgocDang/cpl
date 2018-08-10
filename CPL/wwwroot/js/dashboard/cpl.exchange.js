@@ -9,8 +9,10 @@
     bindNext: function () {
         $('#exchange-content').on('click', '.btn-next', function () {
             var _this = this;
-            if (parseFloat($(_this).parents(".section-exchange").find(".from-amount").val()) > 0 && parseFloat($(_this).parents(".section-exchange").find(".from-amount").val()) <= parseFloat($(_this).parents(".section-exchange").find(".from-amount").siblings(".max-amount").val())) {
-                $(_this).parents(".section-exchange").find("#from-amount-error").hide();
+            var isFormValid = $(_this).parents("form")[0].checkValidity();
+            $(_this).parents("form").addClass('was-validated');
+
+            if (isFormValid) {
                 $.ajax({
                     url: "/Exchange/GetConfirm/",
                     type: "GET",
@@ -34,9 +36,7 @@
                     }
                 });
             }
-            else
-                $(_this).parents(".section-exchange").find("#from-amount-error").show();
-        })
+        });
     },
     bindConfirmExchange: function () {
         $('#modal').on('click', '#btn-confirm-exchange', function () {
@@ -57,11 +57,9 @@
                 success: function (data) {
                     if (data.success) {
                         $("#exchange").modal("hide");
-                        //alert("Success!");
                         toastr.success(data.message, "Success!");
                         Exchange.loadViewComponent();
                     } else {
-                        //alert("Error!");
                         toastr.error(data.message, "Error!");
                     }
                 },
@@ -70,7 +68,7 @@
                     $(_this).html($(_this).text());
                 }
             });
-        })
+        });
     },
     bindSwap: function () {
         $('#exchange-content').on('click', '.btn-swap', function () {

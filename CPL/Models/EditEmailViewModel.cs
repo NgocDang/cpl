@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class EditEmailViewModel
+    public class UpdateEmailViewModel
     {
         public string CurrentEmail { get; set; }
         public string NewEmail { get; set; }

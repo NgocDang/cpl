@@ -15,6 +15,8 @@ namespace CPL.Models
         public string SlideImage { get; set; }
         public string DesktopListingImage { get; set; }
         public string MobileListingImage { get; set; }
+        public string Title { get; set; }
+        public string CreatedDateInString { get; set; }
 
         public List<LotteryHistoryViewModel> LotteryHistories { get; set; }
         public List<LotteryPrizeViewModel> LotteryPrizes { get; set; }

@@ -28,13 +28,14 @@
                     </div>
                     <div class="col-lg-12 col-md-12 col-12 col-sm-12">
                         <div class="form-group">
+                            <label for="ShortDescription" class="small">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescription")</label>
                             @if (Model != null)
                             {
-                                <textarea class="form-control textarea-maxlength" id="short-desc" rows="5" required>@Model.ShortDescription</textarea>
+                                <textarea class="form-control textarea-maxlength" id="short-desc" rows="5" name="ShortDescription" required>@Model.ShortDescription</textarea>
                             }
                             else
                             {
-                                <textarea class="form-control textarea-maxlength" id="short-desc" rows="5" placeholder="Short description..." required>@Model.ShortDescription</textarea>
+                                <textarea class="form-control textarea-maxlength" id="short-desc" rows="5" name="ShortDescription" required>@Model.ShortDescription</textarea>
                             }
                             <div class="invalid-feedback">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescriptionRequired")
@@ -43,13 +44,14 @@
                     </div>
                     <div class="col-lg-12 col-md-12 col-12 col-sm-12">
                         <div class="form-group" id="full-desc">
+                            <label for="Description" class="small">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Description")</label>
                             @if (Model != null)
                             {
-                            <textarea class="tinymce" id="full-desc" required>@Model.Description</textarea>
+                                <textarea class="tinymce" id="full-desc" name="Description" required>@Model.Description</textarea>
                             }
                             else
                             {
-                            <textarea class="tinymce" id="full-desc" required>Full description</textarea>
+                                <textarea class="tinymce" id="full-desc" name="Description" required></textarea>
                             }
                             <div class="invalid-feedback">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DescriptionRequired")

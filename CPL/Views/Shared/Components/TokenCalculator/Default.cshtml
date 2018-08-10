@@ -1,73 +1,63 @@
 ﻿@model TokenCalculatorViewModel
 
-<div id="token-calculator" class="tab-component-custom">
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active" id="calculate-nav-tab" data-toggle="tab" href="#calculate-nav" aria-controls="calculate-nav" aria-expanded="true">
-                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Calculator")
-            </a>
-        </li>
-    </ul>
-    <div class="tab-content px-2 py-1 mb-2">
-        <div role="tabpanel" class="tab-pane active" id="calculate-nav" aria-labelledby="calculate-nav-tab" aria-expanded="true">
-            <div class="card mb-0">
-                <div class="card-content collapse show">
-                    <div class="card-body pb-1">
-                        <div class="form-body token-calculator">
-                            <div class="row m-0">
-                                <div class="col-lg-3 col-12 px-0">
-                                    <div class="form-group mb-0">
-                                        <fieldset class="col-12 px-0">
-                                            <div class="input-group">
-                                                <input type="number" class="form-control" id="btc-amount" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")" min="0" aria-describedby="basic-addon4">
-                                                <input type="hidden" value="@Model.BTCToTokenRate" class="btc-token-rate" />
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text" id="basic-addon4"><i class="cc BTC-alt"></i></span>
-                                                </div>
-                                            </div>
-                                        </fieldset>
+<div id="token-calculator">
+    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Calculator")</h6>
+    <div class="card">
+        <div class="card-content collapse show">
+            <div class="card-body pb-1">
+                <div class="form-body token-calculator">
+                    <div class="row m-0">
+                        <div class="col-lg-3 col-12 px-0">
+                            <div class="form-group mb-0">
+                                <fieldset class="col-12 px-0">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="btc-amount" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")" min="0" aria-describedby="basic-addon4">
+                                        <input type="hidden" value="@Model.BTCToTokenRate" class="btc-token-rate" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="basic-addon4"><i class="cc BTC-alt"></i></span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-1 col-12 px-0">
-                                    <div class="form-group mb-0">
-                                        <fieldset class="col-12 text-center px-0 py-1">
-                                            <p class="mb-0 small-hidden">+</p>
-                                        </fieldset>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-12 px-0">
+                            <div class="form-group mb-0">
+                                <fieldset class="col-12 text-center px-0 py-1">
+                                    <p class="mb-0 small-hidden">+</p>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-12 px-0">
+                            <div class="form-group mb-0">
+                                <fieldset class="col-12 px-0">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="eth-amount" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")" min="0" aria-describedby="basic-addon4">
+                                        <input type="hidden" value="@Model.ETHToTokenRate" class="eth-token-rate" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="basic-addon4"><i class="cc ETH-alt"></i></span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-3 col-12 px-0">
-                                    <div class="form-group mb-0">
-                                        <fieldset class="col-12 px-0">
-                                            <div class="input-group">
-                                                <input type="number" class="form-control" id="eth-amount" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")" min="0" aria-describedby="basic-addon4">
-                                                <input type="hidden" value="@Model.ETHToTokenRate" class="eth-token-rate" />
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text" id="basic-addon4"><i class="cc ETH-alt"></i></span>
-                                                </div>
-                                            </div>
-                                        </fieldset>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-12 px-0">
+                            <div class="form-group mb-0">
+                                <fieldset class="col-12 text-center px-0 py-1">
+                                    <p class="mb-0">=</p>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-12 px-0">
+                            <div class="form-group mb-0">
+                                <fieldset class="col-12 px-0">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="token-amount" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")" min="0" aria-describedby="basic-addon4" readonly>
+                                        <div class="invalid-feedback invalid-eth-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidAmount")</div>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="basic-addon4"><i class="cpl-token-grey-sm"></i></span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-1 col-12 px-0">
-                                    <div class="form-group mb-0">
-                                        <fieldset class="col-12 text-center px-0 py-1">
-                                            <p class="mb-0">=</p>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-12 px-0">
-                                    <div class="form-group mb-0">
-                                        <fieldset class="col-12 px-0">
-                                            <div class="input-group">
-                                                <input type="number" class="form-control" id="token-amount" placeholder="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")" min="0" aria-describedby="basic-addon4" readonly>
-                                                <div class="invalid-feedback invalid-eth-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidAmount")</div>
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text" id="basic-addon4"><i class="cpl-token-grey-sm"></i></span>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
+                                </fieldset>
                             </div>
                         </div>
                     </div>

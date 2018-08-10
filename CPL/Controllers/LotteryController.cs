@@ -23,7 +23,6 @@ namespace CPL.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-        private readonly IGameHistoryService _gameHistoryService;
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
@@ -42,8 +41,7 @@ namespace CPL.Controllers
             ISysUserService sysUserService,
             ILotteryService lotteryService,
             ILotteryPrizeService lotteryPrizeService,
-            ILotteryHistoryService lotteryHistoryService,
-            IGameHistoryService gameHistoryService)
+            ILotteryHistoryService lotteryHistoryService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -56,7 +54,6 @@ namespace CPL.Controllers
             this._lotteryService = lotteryService;
             this._lotteryPrizeService = lotteryPrizeService;
             this._lotteryHistoryService = lotteryHistoryService;
-            this._gameHistoryService = gameHistoryService;
         }
 
         public IActionResult Index(int? id)

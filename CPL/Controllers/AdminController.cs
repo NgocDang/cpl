@@ -25,7 +25,6 @@ namespace CPL.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-        private readonly IGameHistoryService _gameHistoryService;
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
@@ -34,6 +33,7 @@ namespace CPL.Controllers
         private readonly INewsService _newsService;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IDictionary<string, string> countryDict = new Dictionary<string, string>();
+        private readonly ILotteryService _lotteryService;
 
         public AdminController(
             ILangService langService,
@@ -44,11 +44,11 @@ namespace CPL.Controllers
             ITeamService teamService,
             ITemplateService templateService,
             ISysUserService sysUserService,
-            IGameHistoryService gameHistoryService,
             ILotteryHistoryService lotteryHistoryService,
             IPricePredictionHistoryService pricePredictionHistoryService,
             INewsService newsService,
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment,
+            ILotteryService lotteryService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -58,8 +58,8 @@ namespace CPL.Controllers
             this._teamService = teamService;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
-            this._gameHistoryService = gameHistoryService;
             this._lotteryHistoryService = lotteryHistoryService;
+            this._lotteryService = lotteryService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._newsService = newsService;
             this._hostingEnvironment = hostingEnvironment;
@@ -68,9 +68,19 @@ namespace CPL.Controllers
         public IActionResult Index()
         {
             var viewModel = new AdminViewModel();
+
+            // User management
             viewModel.TotalKYCPending = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && !x.KYCVerified.Value);
             viewModel.TotalKYCVerified = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && x.KYCVerified.Value);
             viewModel.TotalUser = _sysUserService.Queryable().Count();
+
+            // Game management
+            var lotteryGames = _lotteryService.Queryable();
+            viewModel.TotalLotteryGame = lotteryGames.Count();
+            viewModel.TotalLotteryGamePending = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.PENDING).Count();
+            viewModel.TotalLotteryGameActive = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.ACTIVE).Count();
+            viewModel.TotalLotteryGameCompleted = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.COMPLETED).Count();
+
             viewModel.TotalNews = _newsService.Queryable().Count();
             return View(viewModel);
         }
@@ -79,6 +89,12 @@ namespace CPL.Controllers
         public IActionResult AllUser()
         {
             var viewModel = new AllUserViewModel();
+            return View(viewModel);
+        }
+
+        public IActionResult LotteryGame()
+        {
+            var viewModel = new LotteryGameViewModel();
             return View(viewModel);
         }
 
@@ -354,6 +370,75 @@ namespace CPL.Controllers
             var viewModel = new NewsViewModel();
             return View(viewModel);
         }
+
+        [HttpPost]
+        public JsonResult SearchLotteryGame(DataTableAjaxPostModel viewModel)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchLotteryGameFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        public IList<LotteryViewModel> SearchLotteryGameFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            // search the dbase taking into consideration table sorting and paging
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = _lotteryService.Queryable()
+                        .Count();
+
+                totalResultsCount = _lotteryService.Queryable()
+                        .Count();
+
+                return _lotteryService.Queryable()
+                            .Select(x => Mapper.Map<LotteryViewModel>(x))
+                            .OrderBy(sortBy, sortDir)
+                            .Skip(skip)
+                            .Take(take)
+                            .ToList();
+            }
+            else
+            {
+                filteredResultsCount = _lotteryService.Queryable()
+                        .Where(x => x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.Title.Contains(searchBy) )
+                        .Count();
+
+                totalResultsCount = _lotteryService.Queryable()
+                        .Count();
+
+                return _lotteryService.Queryable()
+                        .Where(x => x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.Title.Contains(searchBy))
+                        .Select(x => Mapper.Map<LotteryViewModel>(x))
+                        .OrderBy(sortBy, sortDir)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToList();
+            }
+        }
+
 
         public IActionResult EditNews(int id)
         {
