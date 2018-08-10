@@ -118,11 +118,11 @@
                         </div>
                         @if (Model.KYCVerified == true)
                         {
-                            <div class="card-footer card-footer-my-profile"><a asp-controller="Profile" asp-action="EditAccount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MoreInfo")<i class="fa fa-angle-right"></i></a></div>
+                            <div class="card-footer card-footer-my-profile"><a asp-controller="Profile" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MoreInfo")<i class="fa fa-angle-right"></i></a></div>
                         }
                         else
                         {
-                            <div class="card-footer card-footer-my-profile"><a asp-controller="Profile" asp-action="EditAccount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit")<i class="fa fa-angle-right"></i></a></div>
+                            <div class="card-footer card-footer-my-profile"><a asp-controller="Profile" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit") <i class="fa fa-angle-right"></i></a></div>
                         }
                     </div>
                 </div>
