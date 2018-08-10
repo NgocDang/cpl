@@ -22,11 +22,15 @@ namespace CPL.Controllers
         public HistoryController(
             ILotteryHistoryService lotteryHistoryService,
             ISysUserService sysUserService,
-            IPricePredictionHistoryService pricePredictionHistoryService,
+            ISettingService settingService,
+            ICoinTransactionService coinTransactionService,
+            IPricePredictionHistoryService pricePredictionHistoryService)
         {
             this._lotteryHistoryService = lotteryHistoryService;
             this._sysUserService = sysUserService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
+            this._settingService = settingService;
+            this._coinTransactionService = coinTransactionService;
         }
 
         public IActionResult Game()
