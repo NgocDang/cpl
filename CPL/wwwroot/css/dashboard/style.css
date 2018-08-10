@@ -1498,3 +1498,7 @@ ul.game-menu li.active {
 .cpl-balance {
     margin-bottom: 5px;
 }
+
+.la-button-size {
+    font-size:15px !important;
+}

@@ -94,7 +94,6 @@
         $("#PostalCode").on("blur", function () {
             $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address=" + $("#PostalCode").val())
                 .done(function (data) {
-                    debugger;
                     if (data.status == "OK") {
                         var country = data.results[0].address_components[data.results[0].address_components.length - 1].short_name;
                         $("#Country option").removeAttr("selected");

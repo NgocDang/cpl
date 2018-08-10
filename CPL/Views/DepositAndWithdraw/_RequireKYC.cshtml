@@ -1,7 +1,7 @@
 ﻿@model ConfirmExchangeViewModel
 
 <div class="modal" tabindex="-1" role="dialog" id="depositandwithdraw-kyc" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-dialog modal-sm mx-auto" role="document">
         <div class="modal-content">
                 <div class="modal-header text-center">
                     <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WithdrawRequireKYC")</h5>
@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a id="btn-confirm-depositandwithdraw-kyc" class="btn btn-sm btn-primary" href="/Profile/EditSecurity/?returnUrl=/DepositAndWithdraw/Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yes")</a>
+                    <a id="btn-confirm-depositandwithdraw-kyc" class="btn btn-sm btn-primary" href="/Profile/KYC/?returnUrl=/DepositAndWithdraw/Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yes")</a>
                     <a class="btn btn-sm btn-secondary" href="" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</a>
                 </div>
         </div>
