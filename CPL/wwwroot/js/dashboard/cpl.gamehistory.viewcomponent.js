@@ -33,7 +33,7 @@
                     "render": function (data, type, full, meta) {
                         if (full.gameType == "LOTTERY")
                             return "Lottery";
-                        else
+                        else if (full.gameType == "PRICE_PREDICTION")
                             return "Price Prediction"
                     }
                 },
@@ -67,6 +67,16 @@
                     "render": function (data, type, full, meta) {
                         return full.balanceInString;
                     }
+                },
+                {
+                    "data": "Action",
+                    "render": function (data, type, full, meta) {
+                        if (full.gameType == "LOTTERY")
+                            return "<a style='line-height:12px;' href='/History/LotteryHistoryDetail?createdDate=" + full.createdDate + "&id=" + full.gameId + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-info btn-view'>View</a>";
+                        else if (full.gameType == "PRICE_PREDICTION")
+                            return "<a style='line-height:12px;' href='/History/PricePredictionHistoryDetail?id=" + full.gameId + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-info btn-view'>View</a>";
+                    },
+                    "orderable": false
                 }
             ],
         });

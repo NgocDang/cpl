@@ -14,6 +14,9 @@
             "ajax": {
                 url: "/History/SearchLotteryHistory",
                 type: 'POST'
+                data: {
+                    id
+                }
             },
             "language": DTLang.getLang(),
             "columns": [

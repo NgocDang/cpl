@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using CPL.Common.Enums;
@@ -40,12 +41,12 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
-        public JsonResult SearchLotteryHistory(DataTableAjaxPostModel viewModel)
+        public JsonResult SearchLotteryHistory(DataTableAjaxPostModel viewModel, DateTime? createdDate, int? id)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchLotteryHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            var res = SearchLotteryHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, createdDate, id);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -56,8 +57,12 @@ namespace CPL.Controllers
             });
         }
 
-        public IList<LotteryHistoryViewModel> SearchLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        public IList<LotteryHistoryViewModel> SearchLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, DateTime? createdDate, int? id)
         {
+            if(createdDate.HasValue && id.HasValue)
+            {
+
+            }
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             var searchBy = (model.search != null) ? model.search.value?.ToLower() : null;
             var take = model.length;
@@ -196,7 +201,8 @@ namespace CPL.Controllers
                             CreatedDate = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault(),
                             CreatedDateInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("yyyy/MM/dd"),
                             CreatedTimeInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("HH:mm:ss"),
-                            GameType = EnumGameId.LOTTERY.ToString(),
+                            GameType = EnumGameType.LOTTERY.ToString(),
+                            GameId = y.Select(x=>x.LotteryId).FirstOrDefault(),
                             Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : EnumGameResult.LOSE.ToString()),
                             AmountInString = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0"),
                             Amount = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice),
@@ -235,7 +241,8 @@ namespace CPL.Controllers
                             CreatedDate = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault(),
                             CreatedDateInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("yyyy/MM/dd"),
                             CreatedTimeInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("HH:mm:ss"),
-                            GameType = EnumGameId.LOTTERY.ToString(),
+                            GameType = EnumGameType.LOTTERY.ToString(),
+                            GameId = y.Select(x => x.LotteryId).FirstOrDefault(),
                             Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : EnumGameResult.LOSE.ToString()),
                             AmountInString = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0"),
                             Amount = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice),
@@ -278,7 +285,8 @@ namespace CPL.Controllers
                             CreatedDate = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault(),
                             CreatedDateInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("yyyy/MM/dd"),
                             CreatedTimeInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("HH:mm:ss"),
-                            GameType = EnumGameId.LOTTERY.ToString(),
+                            GameType = EnumGameType.LOTTERY.ToString(),
+                            GameId = y.Select(x => x.LotteryId).FirstOrDefault(),
                             Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : EnumGameResult.LOSE.ToString()),
                             AmountInString = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0"),
                             Amount = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice),
@@ -390,6 +398,12 @@ namespace CPL.Controllers
 
             var mess = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
             return new JsonResult(new { success = true, message = mess });
+        }
+
+        public IActionResult LotteryHistoryDetail(DateTime createdDate, int id)
+        {
+            var viewModel = new LotteryHistoryViewModel();
+            return View(viewModel);
         }
     }
 }
