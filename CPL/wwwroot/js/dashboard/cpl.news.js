@@ -195,13 +195,13 @@
                 {
                     "data": "Image",
                     "render": function (data, type, full, meta) {
-                        return "<a href='/images/news/" + full.image + "' ><img src=/images/news/" + full.image + " class='img-thumbnail' alt='document-" + full.image + "'> </a>";
+                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "'  href='/images/news/" + full.image + "' ><img src=/images/news/" + full.image + " class='img-thumbnail img-fluid border-0' alt='document-" + full.image + "'> </a>";
                     }
                 },
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a style='line-height:12px;' href='' data-id='" + full.id + "' class='btn btn-sm btn-info btn-edit'><i class='la la-pencil'></i></a> <button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-primary btn-delete'><i class='la la-trash'></i></button>";
+                        return "<a style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-info btn-edit'><i class='text-white la la-pencil'></i></a> <button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-primary btn-delete'><i class='la la-trash'></i></button>";
                     },
                     "orderable": false
                 }
