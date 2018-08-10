@@ -1,7 +1,7 @@
 ﻿@model ConfirmExchangeViewModel
 
 <div class="modal" tabindex="-1" role="dialog" id="depositandwithdraw-kyc" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-dialog modal-sm mx-auto" role="document">
         <div class="modal-content">
                 <div class="modal-header text-center">
                     <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WithdrawRequireKYC")</h5>
