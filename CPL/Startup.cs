@@ -180,19 +180,19 @@ namespace CPL
             authentication.Wait();
             Authentication.Token = authentication.Result.Token;
 
-            var eToken = ServiceClient.ETokenClient.SetAsync(Authentication.Token, new ETokenService.ETokenSetting { Abi = CPLConstant.Abi, ContractAddress = CPLConstant.SmartContractAddress, Environment = ETokenService.Environment.TESTNET, Platform = ETokenService.Platform.ETH });
+            var eToken = ServiceClient.ETokenClient.SetAsync(Authentication.Token, new ETokenService.ETokenSetting { Abi = CPLConstant.Abi, ContractAddress = CPLConstant.SmartContractAddress, Environment = (ETokenService.Environment)((int)CPLConstant.Environment), Platform = ETokenService.Platform.ETH });
             eToken.Wait();
 
-            var eWallet = ServiceClient.EWalletClient.SetAsync(Authentication.Token, new EWalletService.EWalletSetting { Environment = EWalletService.Environment.TESTNET });
+            var eWallet = ServiceClient.EWalletClient.SetAsync(Authentication.Token, new EWalletService.EWalletSetting { Environment = (EWalletService.Environment)((int)CPLConstant.Environment) });
             eWallet.Wait();
 
-            var bWallet = ServiceClient.BWalletClient.SetAsync(Authentication.Token, new BWalletService.BWalletSetting { Environment = BWalletService.Environment.TESTNET });
+            var bWallet = ServiceClient.BWalletClient.SetAsync(Authentication.Token, new BWalletService.BWalletSetting { Environment = (BWalletService.Environment)((int)CPLConstant.Environment) });
             bWallet.Wait();
 
-            var eAccount = ServiceClient.EAccountClient.SetAsync(Authentication.Token, new EAccountService.EAccountSetting { Environment = EAccountService.Environment.TESTNET, Platform = EAccountService.Platform.ETH});
+            var eAccount = ServiceClient.EAccountClient.SetAsync(Authentication.Token, new EAccountService.EAccountSetting { Environment = (EAccountService.Environment)((int)CPLConstant.Environment), Platform = EAccountService.Platform.ETH});
             eAccount.Wait();
 
-            var bAccount = ServiceClient.BAccountClient.SetAsync(Authentication.Token, new BAccountService.BAccountSetting { Environment = BAccountService.Environment.TESTNET, Platform = BAccountService.Platform.BTC});
+            var bAccount = ServiceClient.BAccountClient.SetAsync(Authentication.Token, new BAccountService.BAccountSetting { Environment = (BAccountService.Environment)((int)CPLConstant.Environment), Platform = BAccountService.Platform.BTC});
             bAccount.Wait();
         }
 
