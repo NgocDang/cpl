@@ -139,6 +139,16 @@
                             <span>Hi, @Model.User.FirstName @Model.User.LastName</span>
                         </a>
                         <ul class="dropdown-menu">
+                            @if (Model.User.IsAdmin)
+                            {
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Admin" asp-action="Index"><i class="la la-file-o"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
+                                </li>
+
+                            }
+                            <li>
+                                <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="la la-file-o"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            </li>
                             <li>
                                 <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="fas fa-tachometer-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             </li>
