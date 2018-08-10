@@ -85,6 +85,8 @@ namespace CPL.TransactionService
                 Authentication.Token = authentication.Result.Token;
                 Utils.FileAppendThreadSafe(BTCDepositFileName, String.Format("BTC Deposit Thread - Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
                 Utils.FileAppendThreadSafe(ETHDepositFileName, String.Format("ETH Deposit Thread - Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
+                Utils.FileAppendThreadSafe(BTCWithdrawFileName, String.Format("BTC Withdraw Thread - Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
+                Utils.FileAppendThreadSafe(ETHWithdrawFileName, String.Format("ETH Withdraw Thread - Authenticate successfully. Token {0}{1}", authentication.Result.Token, Environment.NewLine));
                 var bTransaction = _bTransaction.SetAsync(Authentication.Token, new BTransactionService.BTransactionSetting { Environment = (BTransactionService.Environment)((int)CPLConstant.Environment), Platform = BTransactionService.Platform.BTC });
                 bTransaction.Wait();
                 var eTransaction = _eTransaction.SetAsync(Authentication.Token, new ETransactionService.ETransactionSetting { Environment = (ETransactionService.Environment)((int)CPLConstant.Environment), Platform = ETransactionService.Platform.ETH, ApiKey = CPLConstant.ETransactionAPIKey });
@@ -94,6 +96,8 @@ namespace CPL.TransactionService
             {
                 Utils.FileAppendThreadSafe(BTCDepositFileName, String.Format("BTC Deposit Thread - Authenticate failed. Error {0}{1}", authentication.Result.Status.Text, Environment.NewLine));
                 Utils.FileAppendThreadSafe(ETHDepositFileName, String.Format("ETH Deposit Thread - Authenticate failed. Error {0}{1}", authentication.Result.Status.Text, Environment.NewLine));
+                Utils.FileAppendThreadSafe(BTCWithdrawFileName, String.Format("BTC Withdraw Thread - Authenticate failed. Error {0}{1}", authentication.Result.Status.Text, Environment.NewLine));
+                Utils.FileAppendThreadSafe(ETHWithdrawFileName, String.Format("ETH Withdraw Thread - Authenticate failed. Error {0}{1}", authentication.Result.Status.Text, Environment.NewLine));
             }
         }
 
