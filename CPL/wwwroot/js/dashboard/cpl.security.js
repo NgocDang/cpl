@@ -3,7 +3,7 @@
         Security.bindSaveEmail();
         Security.bindSavePassword();
         Security.bindTwoFactorAuthenticate();
-        Security.bindTwoFactorAuthenticateEnable();
+        Security.bindTwoFactorEnableDisable();
     },
     bindSaveEmail: function () {
         $("#btn-save-email").on("click", function () {
@@ -103,7 +103,7 @@
             $("#form-two-factor-disable").show();
         }
     },
-    bindTwoFactorAuthenticateEnable: function () {
+    bindTwoFactorEnableDisable: function () {
         $("#two-factor-authenticator").on("click", "#btn-two-factor-disable", function () {
             $.ajax({
                 url: "/Profile/UpdateTwoFactorAuthentication/",

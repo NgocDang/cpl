@@ -1,7 +1,7 @@
 ﻿@model SecurityViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit");
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Security");
 }
 @section styles
     {
@@ -168,7 +168,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                                                    <button type="submit" id="btn-two-factor-enable" class="btn btn-danger my-1 btn-block">
+                                                    <button type="submit" id="btn-two-factor-enable" class="btn btn-primary my-1 btn-block">
                                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Enable")
                                                     </button>
                                                 </div>
