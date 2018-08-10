@@ -1,0 +1,19 @@
+﻿@model NewsViewModel
+
+<div class="modal" tabindex="-1" role="dialog" id="edit-lottery-game" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="form-edit-lottery-game" method="POST" action="#" class="needs-validation" novalidate="">
+                <div class="modal-header">
+                    <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGame")</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
