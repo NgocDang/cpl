@@ -1,8 +1,4 @@
-﻿html body {
-    background: linear-gradient(to bottom, #fff6cc, #ffffff) fixed !important;
-    background-repeat: no-repeat;
-}
-
+﻿
 @media (min-width: 1024px) and (max-width: 1440px) {
     .col-custom-two-factor {
         flex: 100%;

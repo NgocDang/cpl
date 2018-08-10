@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class EditCredentialViewModel
+    public class SecurityViewModel
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

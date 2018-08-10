@@ -26,7 +26,7 @@ namespace CPL.Common.Enums
 
     public enum EnumLotteryGameStatus
     {
-        OPEN = 1,
+        PENDING = 1,
         ACTIVE = 2,
         COMPLETED = 3
     }

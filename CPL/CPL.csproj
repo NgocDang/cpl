@@ -68,7 +68,7 @@
     <Content Update="Views\Lottery\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Profile\EditCredential.cshtml">
+    <Content Update="Views\Profile\Security.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Shared\Components\Footer\Default.cshtml">

@@ -22,23 +22,22 @@ namespace CPL.Misc.MapperCreate
             CreateMap<SysUser, KYCVerifyEmailTemplateViewModel>();
             CreateMap<SysUser, ForgotPasswordEmailTemplateViewModel>();
             CreateMap<SysUserViewModel, SysUser>();
-            CreateMap<SysUserViewModel, EditAccountViewModel>();
-            CreateMap<SysUserViewModel, EditCredentialViewModel>()
+            CreateMap<SysUserViewModel, ProfileViewModel>();
+            CreateMap<SysUserViewModel, SecurityViewModel>()
                 .ForMember(dest => dest.CurrentEmail, opt => opt.MapFrom(src => src.Email));
 
             CreateMap<SysUserViewModel, DashboardNavbarViewModel>();
-            CreateMap<SysUserViewModel, EditSecurityViewModel>();
+            CreateMap<SysUserViewModel, KYCViewModel>();
 
             CreateMap<SysUser, DashboardViewModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
             CreateMap<SysUser, HoldingPercentageViewModel>();
-            CreateMap<GameHistory, GameHistoryViewModel>();
 
             CreateMap<SysUser, ExchangeViewModel>();
             CreateMap<SysUser, TokenBalanceViewModel>();
 
-            CreateMap<SysUser, EditAccountViewModel>();
-            CreateMap<SysUser, EditSecurityViewModel>();
+            CreateMap<SysUser, ProfileViewModel>();
+            CreateMap<SysUser, KYCViewModel>();
             CreateMap<SysUser, UserDashboardAdminViewModel>();
         }
     }

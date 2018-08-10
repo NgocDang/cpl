@@ -1,13 +1,4 @@
-﻿html body {
-    background: linear-gradient(to bottom, #fff6cc, #ffffff) fixed !important;
-    background-repeat: no-repeat;
-}
-
-
-@media (max-width: 425px){
-    .tab-component-custom .col-sm-center {
-        text-align: center !important;
-    }
+﻿@media (max-width: 425px){
     .tab-component-custom .text-sm-bigger {
         font-size: 25px !important;
     }

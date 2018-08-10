@@ -31,9 +31,9 @@ namespace CPL.Controllers
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
         private readonly ISysUserService _sysUserService;
-        private readonly IGameHistoryService _gameHistoryService;
         private readonly ICoinTransactionService _coinTransactionService;
         private readonly ITemplateService _templateService;
+        private readonly ILotteryHistoryService _lotteryHistoryService;
 
         public ProfileController(
             IHostingEnvironment hostingEnvironment,
@@ -44,8 +44,8 @@ namespace CPL.Controllers
             ISettingService settingService,
             ISysUserService sysUserService,
             ICoinTransactionService coinTransactionService,
-            IGameHistoryService gameHistoryService,
             ITeamService teamService,
+            ILotteryHistoryService lotteryHistoryService,
             ITemplateService templateService)
         {
             this._hostingEnvironment = hostingEnvironment;
@@ -54,24 +54,26 @@ namespace CPL.Controllers
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
             this._coinTransactionService = coinTransactionService;
-            this._gameHistoryService = gameHistoryService;
             this._sysUserService = sysUserService;
             this._unitOfWork = unitOfWork;
             this._templateService = templateService;
+            this._lotteryHistoryService = lotteryHistoryService;
         }
 
-        public IActionResult EditAccount()
+        public IActionResult Index()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
-            var viewModel = Mapper.Map<EditAccountViewModel>(user);
+            var viewModel = Mapper.Map<ProfileViewModel>(user);
 
-            viewModel.NumberOfGameHistories = _gameHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
+            var numberOfLotteryGame = _lotteryHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
+
+            viewModel.NumberOfGameHistories = numberOfLotteryGame;
             viewModel.NumberOfTransactions = _coinTransactionService.Queryable().Count(x => x.SysUserId == viewModel.Id);
-            return View("EditAccount", viewModel);
+            return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult EditAccount(EditAccountViewModel viewModel)
+        public IActionResult Update(ProfileViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
@@ -126,10 +128,10 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
 
-        public IActionResult EditCredential()
+        public IActionResult Security()
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            var viewModel = Mapper.Map<EditCredentialViewModel>(user);
+            var viewModel = Mapper.Map<SecurityViewModel>(user);
             var tfa = new TwoFactorAuthenticator();
             var setupInfo = tfa.GenerateSetupCode(CPLConstant.AppName, user.Email, CPLConstant.TwoFactorAuthenticationSecretKey, 300, 300);
             viewModel.QrCodeSetupImageUrl = setupInfo.QrCodeSetupImageUrl;
@@ -137,7 +139,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditEmail(EditEmailViewModel viewModel)
+        public IActionResult UpdateEmail(UpdateEmailViewModel viewModel)
         {
             var isEmailExisting = _sysUserService.Queryable().Any(x => x.Email == viewModel.NewEmail && x.IsDeleted == false);
             if (isEmailExisting)
@@ -157,7 +159,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditPassword(EditPasswordViewModel viewModel)
+        public IActionResult UpdatePassword(UpdatePasswordViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
@@ -175,11 +177,11 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
 
-        public IActionResult EditSecurity()
+        public IActionResult KYC()
         {
             var user = _sysUserService.Queryable().Where(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).FirstOrDefault();
-            var viewModel = Mapper.Map<EditSecurityViewModel>(user);
-            return View("EditSecurity", viewModel);
+            var viewModel = Mapper.Map<KYCViewModel>(user);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -216,7 +218,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateKYC(EditSecurityViewModel viewModel)
+        public IActionResult UpdateKYC(KYCViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
@@ -248,9 +250,7 @@ namespace CPL.Controllers
                 return new JsonResult(new
                 {
                     success = true,
-                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated"),
-                    kycconfirm = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "KYCReceived"),
-                    kycverify = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending")
+                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated")
                 });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
