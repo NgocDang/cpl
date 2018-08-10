@@ -15,7 +15,3 @@ INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'Image', N'画
 
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'AddSuccessfully', N'Add Successfully')
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'AddSuccessfully', N'追加に成功')
-
-select * from LangDetail where Name = 'Security';
-
-delete from LangDetail where Id in (1683,1684)
