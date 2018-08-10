@@ -21,6 +21,7 @@
         </div>
         <div class="content-body">
             @await Component.InvokeAsync("Amount", Model.Id)
+            @Html.HiddenFor(x => x.Id)
             <div id="profile-detail" class="row">
                 <div class="col-lg-12 col-md-12 col-12 col-sm-12">
                     <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</h6>
@@ -57,79 +58,78 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                                <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</p>
-                                                <p>
-                                                    <strong>
-                                                        @Model.Address
-                                                    </strong>
-                                                </p>
-                                            </div>
+                                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</p>
+                                            <p>
+                                                <strong>
+                                                    @Model.Address
+                                                </strong>
+                                            </p>
                                         </div>
-                                        <div class="row">
-                                            <div class="form-group col-lg-6 col-md-12 col-12 col-sm-12">
-                                                @if (Model.KYCVerified.HasValue)
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-lg-6 col-md-12 col-12 col-sm-12">
+                                            @if (Model.KYCVerified.HasValue)
+                                            {
+                                                if (Model.KYCVerified.Value)
                                                 {
-                                                    if (Model.KYCVerified.Value)
-                                                    {
-                                                        <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</p>
-                                                        <p>
-                                                            <strong> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SuccessfullyVerified")</strong>
-                                                        </p>
-
-                                                    }
-                                                    else
-                                                    {
-                                                        <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</p>
-                                                        <p>
-                                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCIsPending")</strong>
-                                                        </p>
-
-                                                    }
+                                                    <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</p>
+                                                    <p>
+                                                        <strong> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SuccessfullyVerified")</strong>
+                                                    </p>
 
                                                 }
                                                 else
                                                 {
                                                     <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</p>
                                                     <p>
-                                                        <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCNotVerified")</strong>
+                                                        <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCIsPending")</strong>
                                                     </p>
+
                                                 }
-                                            </div>
-                                            <div class="col-lg-6 col-md-12 col-12 col-sm-12">
-                                                @if (Model.TwoFactorAuthenticationEnable)
-                                                {
-                                                    <p class="text-muted mb-3px font-size-13px">
-                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")
-                                                    </p>
-                                                    <p>
-                                                        <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsEnabled")</strong>
-                                                    </p>
-                                                }
-                                                else
-                                                {
-                                                    <p class="text-muted mb-3px font-size-13px">
-                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")
-                                                    </p>
-                                                    <p>
-                                                        <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsNotEnabled")</strong>
-                                                    </p>
-                                                }
-                                            </div>
+
+                                            }
+                                            else
+                                            {
+                                                <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</p>
+                                                <p>
+                                                    <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCNotVerified")</strong>
+                                                </p>
+                                            }
                                         </div>
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                                <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHHDWalletAddress")</p>
-                                                <p>
-                                                    <strong> @Model.ETHHDWalletAddress</strong>
+                                        <div class="col-lg-6 col-md-12 col-12 col-sm-12">
+                                            @if (Model.TwoFactorAuthenticationEnable)
+                                            {
+                                                <p class="text-muted mb-3px font-size-13px">
+                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")
                                                 </p>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                                <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCHDWalletAddress")</p>
                                                 <p>
-                                                    <strong>@Model.BTCHDWalletAddress</strong>
+                                                    <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsEnabled")</strong>
                                                 </p>
-                                            </div>
+                                            }
+                                            else
+                                            {
+                                                <p class="text-muted mb-3px font-size-13px">
+                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")
+                                                </p>
+                                                <p>
+                                                    <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsNotEnabled")</strong>
+                                                </p>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHHDWalletAddress")</p>
+                                            <p>
+                                                <strong> @Model.ETHHDWalletAddress</strong>
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCHDWalletAddress")</p>
+                                            <p>
+                                                <strong>@Model.BTCHDWalletAddress</strong>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -137,8 +137,9 @@
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("GameHistory")
             </div>
+            @await Component.InvokeAsync("GameHistory")
+        </div>
         </div>
     </div>
 
