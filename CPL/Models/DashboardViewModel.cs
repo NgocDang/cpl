@@ -8,9 +8,6 @@ namespace CPL.Models
     public class DashboardViewModel
     {
         public decimal TotalBalance { get; set; }
-        public decimal ETHAmount { get; set; }
-        public decimal BTCAmount { get; set; }
-        public decimal TokenAmount { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public bool? KYCVerified { get; set; }

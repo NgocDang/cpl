@@ -15,114 +15,62 @@
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-body">
-            <div class="row">
-                <div class="col-lg-6 col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllAsset") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="col-md-6 col-12">
-                                            <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
-                                            <h1>@Model.TotalBalance.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h1>
-                                            <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bonus") <strong>+30%</strong> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ExpireIn") 21 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Days").</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="owl-carousel owl-theme">
-                        <div class="item">
-                            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</h6>
-                            <div class="card pull-up">
-                                <div class="card-content">
-                                    <div class="card-body" id="btc-card">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
-                                                    <h1>@Model.BTCAmount.ToString("#,##0.########")</h1>
-                                                    <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Increase") <strong>+10%</strong></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</h6>
-                            <div class="card pull-up">
-                                <div class="card-content">
-                                    <div class="card-body" id="eth-card">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
-                                                    <h1>@Model.ETHAmount.ToString("#,##0.########")</h1>
-                                                    <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View") <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transactions")</strong></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</h6>
-                            <div class="card pull-up">
-                                <div class="card-content">
-                                    <div class="card-body" id="cpl-card">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
-                                                    <h1>@Model.TokenAmount.ToString("#,##0.########")</h1>
-                                                    <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Check") <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameHistory")</strong></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @await Component.InvokeAsync("Amount")
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UserProfile")</h6>
+                    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UserProfile")</h6>
                     <div class="card mb-0">
                         <div class="card-header border-bottom-card">
                             <span class="h4 mr-2 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyProfile")</span>
+                            @if (!Model.KYCVerified.HasValue || Model.KYCVerified == false)
+                            {
+                                <a asp-controller="Profile" asp-action="Index" class="btn btn-primary btn-sm"><i class="far fa-edit"></i> Edit</a>
+                            }
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="form-group col-lg-4 col-md-4 col-12 col-sm-12 mb-0">
-                                    <h6 class="text-muted">Name</h6>
-                                    <h4>@Model.Name</h4>
+                                    <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</p>
+                                    <p>
+                                        <strong>@Model.Name</strong>
+                                    </p>
                                 </div>
                                 <div class="form-group col-lg-4 col-md-4 col-12 col-sm-12">
-                                    <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</h6>
-                                    <h4>@Model.Email</h4>
+                                    <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</p>
+                                    <p>
+                                        <strong>@Model.Email</strong>
+                                    </p>
                                 </div>
                                 <div class="form-group col-lg-4 col-md-4 col-12 col-sm-12">
-                                    <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</h6>
-                                    <h4>@Model.KYCStatus</h4>
+                                    <p class="text-muted mb-3px font-size-13px">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")
+                                        @if (!Model.KYCVerified.HasValue || Model.KYCVerified == false)
+                                        {
+                                            <i class="far fa-times-circle text-danger font-small-1"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-check-circle text-success"></i>
+                                        }
+                                    </p>
+                                    <p>
+                                        <strong>@Model.KYCStatus</strong>
+                                            @if (!Model.KYCVerified.HasValue)
+                                            {
+                                               @Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHereToChange"))
+                                            }
+                                        
+                                    </p>
                                 </div>
                             </div>
                         </div>
                         @if (Model.KYCVerified == true)
                         {
-                            <div class="card-footer card-footer-my-profile"><a asp-controller="Profile" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MoreInfo")<i class="fa fa-angle-right"></i></a></div>
+                            <div class="card-footer p-10px text-center"><a asp-controller="Profile" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MoreInfo")<i class="fa fa-angle-right"></i></a></div>
                         }
                         else
                         {
-                            <div class="card-footer card-footer-my-profile"><a asp-controller="Profile" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit") <i class="fa fa-angle-right"></i></a></div>
+                            <div class="card-footer p-10px text-center"><a asp-controller="Profile" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit") <i class="fa fa-angle-right"></i></a></div>
                         }
                     </div>
                 </div>

@@ -304,21 +304,26 @@ namespace CPL.Controllers
 
 
         #region Transaction History
-        public JsonResult SearchTransactionHistory(DataTableAjaxPostModel viewModel, int userId)
-        {
-            // action inside a standard controller
-            int filteredResultsCount;
-            int totalResultsCount;
-            var res = SearchGameHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, userId);
-            return Json(new
+            public IActionResult TransactionHistory()
             {
-                // this is what datatables wants sending back
-                draw = viewModel.draw,
-                recordsTotal = totalResultsCount,
-                recordsFiltered = filteredResultsCount,
-                data = res
-            });
-        }
+                 return View();
+            }
+
+            //public JsonResult SearchTransactionHistory(DataTableAjaxPostModel viewModel, int userId)
+            //{
+            //    // action inside a standard controller
+            //    int filteredResultsCount;
+            //    int totalResultsCount;
+            //    var res = SearchGameHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, userId);
+            //    return Json(new
+            //    {
+            //        // this is what datatables wants sending back
+            //        draw = viewModel.draw,
+            //        recordsTotal = totalResultsCount,
+            //        recordsFiltered = filteredResultsCount,
+            //        data = res
+            //    });
+            //}
 
         //public IList<LotteryHistoryViewModel> SearchTransactionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         //{
