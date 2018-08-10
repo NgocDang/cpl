@@ -6,7 +6,7 @@
 
 @section styles
     {
-    <link href="~/css/dashboard/cpl.admin.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/css/dashboard/cpl.admin.css" rel="stylesheet" asp-append-version="true" />
 }
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
@@ -85,41 +85,21 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verify")</h6>
-                    <div class="card pull-up">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</strong></p>
-                                <h1>@((Model.TotalKYCVerified + Model.TotalKYCPending).ToString("N0"))</h1>
-                                <p class="mb-0">@((Model.TotalKYCPending).ToString("N0")) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UsersArePending")</p>
-                            </div>
-                        </div>
-                        <div class="card-footer border-top-blue-grey border-top-lighten-5 text-muted">
-                            <span class="float-left"><a asp-controller="Admin" asp-action="KYCVerify" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ViewMore") <i class="fa fa-angle-right"></i></a></span>
-                        </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-12">
+            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</h6>
+            <div class="card pull-up">
+                <div class="card-content">
+                    <div class="card-body">
+                        <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</strong></p>
+                        <h1>@(Model.TotalNews.ToString("N0"))</h1>
+                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</h6>
-                    <div class="card pull-up">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</strong></p>
-                                <h1>@(Model.TotalNews.ToString("N0"))</h1>
-                                <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
-                            </div>
-                        </div>
-                        <div class="card-footer border-top-blue-grey border-top-lighten-5 text-muted">
-                            <span class="float-left"><a asp-controller="Admin" asp-action="News" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ViewMore") <i class="fa fa-angle-right"></i></a></span>
-                        </div>
-                    </div>
+                <div class="card-footer border-top-blue-grey border-top-lighten-5 text-muted">
+                    <span class="float-left"><a asp-controller="Admin" asp-action="News" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ViewMore") <i class="fa fa-angle-right"></i></a></span>
                 </div>
             </div>
         </div>
