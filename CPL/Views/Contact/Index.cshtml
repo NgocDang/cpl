@@ -11,107 +11,114 @@
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-12 col-12 breadcrumb-new">
-                @await Component.InvokeAsync("TokenBalance")
+            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block">
+                    @if (Model.SysUser == null)
+                    {
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")
+                    }
+                    else
+                    {
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Support")
+                    }
+                </h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="breadcrumb-wrapper col-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                @if (Model.SysUser == null)
+                                {
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")
+                                }
+                                else
+                                {
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Support")
+                                }
+                            </li>
+                        </ol>
+                    </div>
+                </div>
             </div>
         </div>
+        @await Component.InvokeAsync("TokenBalance")
+
         <div class="content-body">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div id="user-profile" class="tab-component-custom">
-                        <ul class="nav nav-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="profile-nav-tab" data-toggle="tab" href="#profile-nav" aria-controls="profile-nav" aria-expanded="true">
-                                    @if (Model.SysUser == null)
-                                    {
-                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")
-                                    }
-                                    else
-                                    {
-                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Support")
-                                    }
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content px-2 py-1 mb-2">
-                            <div role="tabpanel" class="tab-pane active" id="profile-nav" aria-labelledby="profile-nav-tab" aria-expanded="true">
-                                <div class="card mb-0">
-                                    <div class="card-content">
-                                        <form id="form-contact" class="form-horizontal mt-2" action="">
-                                            <div class="card-body">
-                                                <div class="row mb-1">
-                                                    <div class="col-12">
-                                                        <fieldset class="form-label-group">
-                                                            <input type="text" name="Subject" class="form-control" maxlength="200" id="Subject" required autofocus="">
-                                                            <label for="Subject">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Subject")</label>
-                                                            <div class="invalid-feedback">
-                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SubjectRequired")
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-1">
-                                                    <div class="col-md-6 col-12">
-                                                        <fieldset class="form-label-group">
-                                                            @if (Model.SysUser == null)
-                                                            {
-                                                                <input type="email" name="Email" class="form-control" maxlength="50" id="Email" required autofocus="">
-                                                            }
-                                                            else
-                                                            {
-                                                                <input type="email" name="Email" class="form-control" value="@Model.SysUser.Email" disabled maxlength="50" id="Email" required autofocus="">
-                                                            }
-                                                            <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
-                                                            <div class="invalid-feedback">
-                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-                                                    <div class="col-md-6 col-12">
-                                                        <fieldset class="form-label-group">
-                                                            <select data-value="@Model.Category" name="Category" id="Category" class="selectpicker" required data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Category")">
-                                                                @if (Model.SysUser == null)
-                                                                {
-                                                                    <option value="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</option>
-                                                                    <option value="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</option>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <option value="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</option>
-                                                                    <option value="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</option>
-                                                                    <option value="5">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</option>
-                                                                    <option value="6">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</option>
-                                                                }
-                                                            </select>
-                                                            <div class="invalid-feedback" id="category-error">
-                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CategoryRequired")
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-1">
-                                                    <div class="col-12">
-                                                        <fieldset class="form-group">
-                                                            <label for="Description">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Description")</label>
-                                                            <textarea name="Description" class="form-control" row="5" id="Description" required autofocus=""></textarea>
-                                                            <div class="invalid-feedback">
-                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DescriptionRequired")
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card-footer py-0">
-                                                <button type="button" id="btn-send" class="btn btn-primary my-1 pull-right"><i class='la la-check'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Submit")</button>
-                                            </div>
-                                        </form>
-                                        <div class="card-body">
-                                            <p class="text-muted" style="display:none;" id="contact-response">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ThankYouForYourContactMessage")</p>
+            <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AskUsAnything")</h6>
+            <div class="card">
+                <div class="card-content">
+                    <form id="form-contact" class="form-horizontal" action="">
+                        <div class="card-body">
+                            <div class="row mt-1 mb-1">
+                                <div class="col-12">
+                                    <fieldset class="form-label-group">
+                                        <input type="text" name="Subject" class="form-control" maxlength="200" id="Subject" required autofocus="">
+                                        <label for="Subject">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Subject")</label>
+                                        <div class="invalid-feedback">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SubjectRequired")
                                         </div>
-                                    </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-md-6 col-12">
+                                    <fieldset class="form-label-group">
+                                        @if (Model.SysUser == null)
+                                        {
+                                            <input type="email" name="Email" class="form-control" maxlength="50" id="Email" required autofocus="">
+                                        }
+                                        else
+                                        {
+                                            <input type="email" name="Email" class="form-control" value="@Model.SysUser.Email" disabled maxlength="50" id="Email" required autofocus="">
+                                        }
+                                        <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                                        <div class="invalid-feedback">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <fieldset class="form-label-group">
+                                        <select data-value="@Model.Category" name="Category" id="Category" class="selectpicker" required data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Category")">
+                                            @if (Model.SysUser == null)
+                                            {
+                                                <option value="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</option>
+                                                <option value="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</option>
+                                                <option value="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</option>
+                                                <option value="5">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</option>
+                                                <option value="6">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</option>
+                                            }
+                                        </select>
+                                        <div class="invalid-feedback" id="category-error">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CategoryRequired")
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <fieldset class="form-group">
+                                        <label for="Description">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Description")</label>
+                                        <textarea name="Description" class="form-control" row="5" id="Description" required autofocus=""></textarea>
+                                        <div class="invalid-feedback">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DescriptionRequired")
+                                        </div>
+                                    </fieldset>
                                 </div>
                             </div>
                         </div>
+                        <div class="card-footer py-0">
+                            <button type="button" id="btn-send" class="btn btn-primary my-1 pull-right"><i class='la la-check'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Submit")</button>
+                        </div>
+                    </form>
+                    <div class="card-body">
+                        <p class="text-muted" style="display:none;" id="contact-response">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ThankYouForYourContactMessage")</p>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,4 @@
 ﻿@media (max-width: 425px){
-    .tab-component-custom .col-sm-center {
-        text-align: center !important;
-    }
     .tab-component-custom .text-sm-bigger {
         font-size: 25px !important;
     }
