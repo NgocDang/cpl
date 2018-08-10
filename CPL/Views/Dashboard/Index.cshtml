@@ -75,25 +75,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row match-height">
-                <div class="col-xl-8 col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BetStatisticChart")</h6>
-                    <div class="card pull-up">
-                        <div class="card-body">
-                            <div id="bet-statistic-chart" class="height-300"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HoldingPercentage")</h6>
-                    <div class="card pull-up">
-                        <div class="card-body">
-                            <div id="holding-percentage-chart" class="height-300"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @await Component.InvokeAsync("GameHistory")
         </div>
     </div>
 </div>
@@ -110,5 +91,4 @@
     <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/cpl.dashboard.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.gamehistory.js" asp-append-version="true"></script>
 }

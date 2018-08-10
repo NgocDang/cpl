@@ -79,9 +79,9 @@ namespace CPL.SmartContractService
                 if (authentication.Result.Status.Code == 0)
                 {
                     Utils.FileAppendThreadSafe(FileName, string.Format("Successful authentication with token {0} at {1}{2}", authentication.Result.Token, DateTime.Now, Environment.NewLine));
-                    var eToken = new ETokenService.ETokenClient().SetAsync(authentication.Result.Token, new ETokenService.ETokenSetting { Abi = CPLConstant.Abi, ContractAddress = CPLConstant.SmartContractAddress, Environment = (ServiceEnvironment == ETokenService.Environment.MAINNET.ToString() ? ETokenService.Environment.MAINNET : ETokenService.Environment.TESTNET), Platform = ETokenService.Platform.ETH });
+                    var eToken = new ETokenService.ETokenClient().SetAsync(authentication.Result.Token, new ETokenService.ETokenSetting { Abi = CPLConstant.Abi, ContractAddress = CPLConstant.SmartContractAddress, Environment = (ETokenService.Environment)((int)CPLConstant.Environment), Platform = ETokenService.Platform.ETH });
                     eToken.Wait();
-                    var eTransaction = new ETransactionService.ETransactionClient().SetAsync(authentication.Result.Token, new ETransactionService.ETransactionSetting { ApiKey = CPLConstant.ETransactionAPIKey, Environment = (ServiceEnvironment == ETransactionService.Environment.MAINNET.ToString() ? ETransactionService.Environment.MAINNET : ETransactionService.Environment.TESTNET), Platform = ETransactionService.Platform.ETH });
+                    var eTransaction = new ETransactionService.ETransactionClient().SetAsync(authentication.Result.Token, new ETransactionService.ETransactionSetting { ApiKey = CPLConstant.ETransactionAPIKey, Environment = (ETransactionService.Environment)((int)CPLConstant.Environment), Platform = ETransactionService.Platform.ETH });
                     eTransaction.Wait();
 
                     do

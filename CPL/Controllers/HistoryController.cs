@@ -7,6 +7,7 @@ using CPL.Misc;
 using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CPL.Controllers
 {
@@ -15,18 +16,23 @@ namespace CPL.Controllers
         private readonly ILotteryHistoryService _lotteryHistoryService;
         private readonly ISysUserService _sysUserService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
+        private readonly ISettingService _settingService;
         private readonly ICoinTransactionService _coinTransactionService;
 
         public HistoryController(
             ILotteryHistoryService lotteryHistoryService,
             ISysUserService sysUserService,
             IPricePredictionHistoryService pricePredictionHistoryService,
-            ICoinTransactionService coinTransactionService)
         {
             this._lotteryHistoryService = lotteryHistoryService;
             this._sysUserService = sysUserService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
-            this._coinTransactionService = coinTransactionService;
+        }
+
+        public IActionResult Game()
+        {
+            var viewModel = new GameHistoryViewModel();
+            return View(viewModel);
         }
 
         #region Lottery History
@@ -135,7 +141,8 @@ namespace CPL.Controllers
             var user = new SysUserViewModel();
             if (userId > 0)
                 user = Mapper.Map<SysUserViewModel>(_sysUserService.Queryable().Where(x => x.Id == userId).FirstOrDefault());
-            user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            else
+                user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             var searchBy = (model.search != null) ? model.search.value : null;
             var take = model.length;
             var skip = model.start;
@@ -302,28 +309,27 @@ namespace CPL.Controllers
         }
         #endregion
 
-
         #region Transaction History
-            public IActionResult TransactionHistory()
-            {
-                 return View();
-            }
+        public IActionResult TransactionHistory()
+        {
+            return View();
+        }
 
-            //public JsonResult SearchTransactionHistory(DataTableAjaxPostModel viewModel, int userId)
-            //{
-            //    // action inside a standard controller
-            //    int filteredResultsCount;
-            //    int totalResultsCount;
-            //    var res = SearchGameHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, userId);
-            //    return Json(new
-            //    {
-            //        // this is what datatables wants sending back
-            //        draw = viewModel.draw,
-            //        recordsTotal = totalResultsCount,
-            //        recordsFiltered = filteredResultsCount,
-            //        data = res
-            //    });
-            //}
+        //public JsonResult SearchTransactionHistory(DataTableAjaxPostModel viewModel, int userId)
+        //{
+        //    // action inside a standard controller
+        //    int filteredResultsCount;
+        //    int totalResultsCount;
+        //    var res = SearchGameHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, userId);
+        //    return Json(new
+        //    {
+        //        // this is what datatables wants sending back
+        //        draw = viewModel.draw,
+        //        recordsTotal = totalResultsCount,
+        //        recordsFiltered = filteredResultsCount,
+        //        data = res
+        //    });
+        //}
 
         //public IList<LotteryHistoryViewModel> SearchTransactionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         //{
@@ -390,5 +396,88 @@ namespace CPL.Controllers
         //}
 
         #endregion
+
+
+        [HttpPost]
+        public IActionResult GetDataPieChart()
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
+            var viewModel = Mapper.Map<GameHistoryViewModel>(user);
+            decimal coinRate = CoinExchangeExtension.CoinExchanging();
+            var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value;
+            viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
+
+            // Holding Percentage
+            viewModel.HoldingPercentage = new HoldingPercentageViewModel();
+
+            if (user.TokenAmount > 0)
+            {
+                viewModel.HoldingPercentage.CPLPercentage = user.TokenAmount / decimal.Parse(tokenRate) / viewModel.TotalBalance * 100;
+            }
+            if (user.TokenAmount > 0)
+            {
+                viewModel.HoldingPercentage.ETHPercentage = user.ETHAmount * coinRate / viewModel.TotalBalance * 100;
+            }
+            if (user.BTCAmount > 0)
+            {
+                viewModel.HoldingPercentage.BTCPercentage = user.BTCAmount / viewModel.TotalBalance * 100;
+            }
+
+            var mess = JsonConvert.SerializeObject(viewModel.HoldingPercentage, Formatting.Indented);
+            return new JsonResult(new { success = true, message = mess });
+        }
+
+        [HttpPost]
+        public IActionResult GetDataLineChart()
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
+            var viewModel = Mapper.Map<GameHistoryViewModel>(user);
+
+            var lotteryHistory = _lotteryHistoryService
+                        .Query().Include(x => x.LotteryPrize).Select()
+                        .Where(x => x.SysUserId == user.Id)
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.LotteryPrize?.Value })
+                        .GroupBy(x => x.LotteryId)
+                        .Select(y => new GameHistoryViewModel
+                        {
+                            CreatedDate = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault(),
+                            Amount = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice),
+                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value.GetValueOrDefault(0))),
+                        })
+                        .AsQueryable()
+                        .ToList();
+
+            var pricePredictionHistory = _pricePredictionHistoryService
+                    .Queryable()
+                    .Where(x => x.SysUserId == user.Id)
+                    .Select(x => Mapper.Map<GameHistoryViewModel>(x))
+                    .ToList();
+
+            var gameHistoryList = lotteryHistory.Concat(pricePredictionHistory).ToList();
+
+            viewModel.MonthlyInvest = gameHistoryList.AsQueryable()
+                        .GroupBy(x => x.CreatedDate.Day)
+                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Amount) })
+                        .ToList();
+            viewModel.MonthlyInvest.Reverse();
+
+            viewModel.AssetChange = gameHistoryList.AsQueryable()
+                        .Where(x => x.Result != string.Empty)
+                        .GroupBy(x => x.CreatedDate.Day)
+                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => (x.Award.Value - x.Amount)) })
+                        .ToList();
+            viewModel.AssetChange.Reverse();
+
+            viewModel.BonusChange = gameHistoryList.AsQueryable()
+                        .Where(x => x.Result != string.Empty)
+                        .GroupBy(x => x.CreatedDate.Day)
+                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Award.Value) })
+                        .ToList();
+            viewModel.BonusChange.Reverse();
+
+
+            var mess = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
+            return new JsonResult(new { success = true, message = mess });
+        }
     }
 }

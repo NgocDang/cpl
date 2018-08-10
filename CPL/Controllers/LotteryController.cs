@@ -199,7 +199,7 @@ namespace CPL.Controllers
                         _sysUserService.Update(currentUser);
 
                         _unitOfWork.SaveChanges();
-                        return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully"), txHashId = ticketGenResult.Result.TxId.ToString() });
+                        return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully"), tx = string.Format(CPLConstant.Etherscan, ticketGenResult.Result.TxId.ToString()) });
                     }
                     else
                         return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseFailed") });

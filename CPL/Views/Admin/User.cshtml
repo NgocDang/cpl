@@ -15,7 +15,7 @@
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-12 col-12 mb-3 breadcrumb-new">
+            <div class="content-header-left col-md-12 col-12 mb-3">
                 <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
             </div>
         </div>
@@ -44,20 +44,10 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</p>
-                                            <p>
-                                                <strong>@Model.Email</strong>
-                                            </p>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Mobile")</p>
-                                            <p>
-                                                <strong>@Model.Mobile</strong>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</strong>
+                                                @Model.FirstName
+                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</strong>
+                                                @Model.LastName
                                             <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</p>
                                             <p>
                                                 <strong>
@@ -150,6 +140,6 @@
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/cpl.userdashboard.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.gamehistory.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.gamehistory.viewcomponent.js" asp-append-version="true"></script>
 }
 
