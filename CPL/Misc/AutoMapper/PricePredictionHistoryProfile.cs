@@ -16,7 +16,7 @@ namespace CPL.Misc.AutoMapper
             CreateMap<PricePredictionHistory, PricePredictionHistoryViewModel>();
             CreateMap<PricePredictionHistoryViewModel, PricePredictionHistory>();
             CreateMap<PricePredictionHistory, GameHistoryViewModel>()
-                .ForMember(dest => dest.GameType, opt => opt.MapFrom(src => CPLConstant.PricePredictionName))
+                .ForMember(dest => dest.GameType, opt => opt.MapFrom(src => EnumGameId.PRICE_PREDICTION.ToString()))
                 .ForMember(dest => dest.AmountInString, opt => opt.MapFrom(src => src.Amount.ToString("#,##0")))
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Amount))
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => src.CreatedDate))

@@ -82,10 +82,6 @@ namespace CPL.Common.Enums
         public static int LotteryTicketPrice = 500;
         public static int LotteryGroupSize = 10;
         public static int MaximumNumberOfWinnerPerGroup = 2;
-
-        //Game name
-        public static string LotteryName = "Lottery";
-        public static string PricePredictionName = "Price Prediction";
         public static string LotteryGameDrawingInHourOfDay = "LotteryGameDrawingTimeInHour";
 
         // High Chart
