@@ -25,6 +25,7 @@ namespace CPL.Mapping
             builder.Property(t => t.DesktopListingImage).HasColumnName("DesktopListingImage");
             builder.Property(t => t.MobileListingImage).HasColumnName("MobileListingImage");
             builder.Property(t => t.Title).HasColumnName("Title");
+            builder.Property(t => t.UnitPrice).HasColumnName("UnitPrice");
         }
     }
 }

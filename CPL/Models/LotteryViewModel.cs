@@ -16,6 +16,8 @@ namespace CPL.Models
         public string DesktopListingImage { get; set; }
         public string MobileListingImage { get; set; }
         public string Title { get; set; }
+        public decimal UnitPrice { get; set; }
+
         public string CreatedDateInString { get; set; }
 
         public List<LotteryHistoryViewModel> LotteryHistories { get; set; }

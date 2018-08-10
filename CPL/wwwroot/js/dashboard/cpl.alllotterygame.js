@@ -3,11 +3,29 @@
     init: function () {
         LotteryGames.lotteryGamesDataTable = LotteryGames.loadLotteryGamesDataTable();
         LotteryGames.loadLightBox();
-    },
-    loadLightBox: function () {
-        $(document).on('click', '[data-toggle="lightbox"]', function (event) {
-            event.preventDefault();
-            $(this).ekkoLightbox();
+        LotteryGames.bindAddButton();
+        LotteryGames.bindImagePreview("slide-image");
+        LotteryGames.bindImagePreview("desktop-image");
+        LotteryGames.bindImagePreview("mobile-image");
+
+        var _this = $("#lottery-game-management");
+        $.ajax({
+            url: "/Admin/EditLotteryGame",
+            type: "GET",
+            beforeSend: function () {
+                $(_this).attr("disabled", true);
+            },
+            data: {
+                id: $(_this).data().id
+            },
+            success: function (data) {
+                $("#modal").html(data);
+                $("#edit-lottery-game").modal("show");
+                $("#edit-lottery-game #btn-save").hide();
+            },
+            complete: function (data) {
+                $(_this).attr("disabled", false);
+            }
         });
     },
     loadLotteryGamesDataTable: function () {
@@ -55,6 +73,12 @@
                     },
                 },
                 {
+                    "data": "UnitPrice",
+                    "render": function (data, type, full, meta) {
+                        return full.unitPrice;
+                    }
+                },
+                {
                     "data": "Title",
                     "render": function (data, type, full, meta) {
                         return full.title;
@@ -98,6 +122,56 @@
             ],
         });
     },
+    loadLightBox: function () {
+        $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+            event.preventDefault();
+            $(this).ekkoLightbox();
+        });
+    },
+    bindAddButton: function () {
+        $("#lottery-game-management").on("click", "#btn-add", function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/EditLotteryGame",
+                type: "GET",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: {
+                    id: $(_this).data().id
+                },
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#edit-lottery-game").modal("show");
+                    $("#edit-lottery-game #btn-save").hide();
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                }
+            });
+            return false;
+        });
+    },
+    bindImagePreview: function (id) {
+        $("#modal").on("change", "#"+id, function () {
+            var _this = this;
+            if (_this.files && _this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('[data-toggle="popover-' + id + '"]').popover({
+                        html: true,
+                        trigger: 'hover',
+                        trigger: 'focus',
+                        content: function () {
+                            return '<img class="img-fluid" src="' + e.target.result + '" />';
+                        }
+                    }).popover('show');
+                }
+                reader.readAsDataURL(_this.files[0]);
+            }
+            return false;
+        });
+    }
 }
 
 $(document).ready(function () {

@@ -91,7 +91,7 @@ namespace CPL.Controllers
             var viewModel = new AllUserViewModel();
             return View(viewModel);
         }
-        
+
         public new IActionResult User(int id)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
@@ -364,7 +364,7 @@ namespace CPL.Controllers
             var viewModel = new NewsViewModel();
             return View(viewModel);
         }
-        
+
         public IActionResult EditNews(int id)
         {
             var news = new NewsViewModel();
@@ -407,8 +407,8 @@ namespace CPL.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(viewModel.FileImage != null)
-                    _newsService.Insert(new Domain.News { Title = viewModel.Title , CreatedDate = DateTime.Now, Description = viewModel.Description, ShortDescription = viewModel.ShortDescription, Image = viewModel.FileImage.FileName});
+                if (viewModel.FileImage != null)
+                    _newsService.Insert(new Domain.News { Title = viewModel.Title, CreatedDate = DateTime.Now, Description = viewModel.Description, ShortDescription = viewModel.ShortDescription, Image = viewModel.FileImage.FileName });
                 else
                     _newsService.Insert(new Domain.News { Title = viewModel.Title, CreatedDate = DateTime.Now, Description = viewModel.Description, ShortDescription = viewModel.ShortDescription });
                 _unitOfWork.SaveChanges();
@@ -577,6 +577,29 @@ namespace CPL.Controllers
             }
         }
 
+        public IActionResult EditLotteryGame(int id)
+        {
+            var lotteryGame = new LotteryViewModel();
+            return PartialView("_EditLotteryGame", lotteryGame);
+        }
+
+        [HttpPost]
+        public JsonResult UpdateEditLotteryGame(LotteryViewModel viewModel)
+        {
+            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+        }
+
+        [HttpPost]
+        public JsonResult AddLotteryGame(LotteryViewModel viewModel)
+        {
+            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteLotteryGame(int id)
+        {
+            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
+        }
         #endregion
 
     }

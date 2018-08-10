@@ -16,6 +16,7 @@ namespace CPL.Domain
         public string DesktopListingImage { get; set; }
         public string MobileListingImage { get; set; }
         public string SlideImage { get; set; }
+        public decimal UnitPrice { get; set; }
 
         public virtual ICollection<LotteryPrize> LotteryPrizes { get; set; }
         public virtual ICollection<LotteryHistory> LotteryHistories { get; set; }
