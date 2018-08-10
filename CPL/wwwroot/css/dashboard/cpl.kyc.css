@@ -1,12 +1,4 @@
-﻿
-@media (min-width: 1024px) and (max-width: 1440px) {
-    .col-custom-two-factor {
-        flex: 100%;
-        max-width: 100%;
-    }
-}
-
-.btn-file {
+﻿.btn-file {
     position: relative;
     overflow: hidden;
 }

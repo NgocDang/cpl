@@ -112,13 +112,16 @@
                                     </fieldset>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer py-0">
-                            <button type="button" id="btn-send" class="btn btn-primary my-1 pull-right"><i class='la la-check'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Submit")</button>
+                            <div class="row">
+                                <div class="col-12 text-right">
+                                    <hr />
+                                    <button type="button" id="btn-send" class="btn btn-primary"><i class='la la-check'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Submit")</button>
+                                </div>
+                            </div>
                         </div>
                     </form>
-                    <div class="card-body">
-                        <p class="text-muted" style="display:none;" id="contact-response">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ThankYouForYourContactMessage")</p>
+                    <div class="card-body" style="display:none;" id="contact-response">
+                        <p class="text-muted"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ThankYouForYourContactMessage")</p>
                     </div>
                 </div>
             </div>
