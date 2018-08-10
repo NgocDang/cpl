@@ -38,6 +38,7 @@ namespace CPL.Misc.MapperCreate
             CreateMap<SysUser, ProfileViewModel>();
             CreateMap<SysUser, KYCViewModel>();
             CreateMap<SysUser, UserDashboardAdminViewModel>();
+            CreateMap<SysUser, GameHistoryViewModel>();
         }
     }
 }

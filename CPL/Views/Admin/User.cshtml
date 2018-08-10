@@ -15,7 +15,7 @@
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-12 col-12 mb-3 breadcrumb-new">
+            <div class="content-header-left col-md-12 col-12 mb-3">
                 <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
             </div>
         </div>
@@ -106,20 +106,6 @@
                         <div class="card-content">
                             <div class="card-body">
                                 <div class="card-text">
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</strong>
-                                            <p>
-                                                @Model.FirstName
-                                            </p>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</strong>
-                                            <p>
-                                                @Model.LastName
-                                            </p>
-                                        </div>
-                                    </div>
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-12 col-sm-12">
                                             <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</strong>
@@ -240,6 +226,6 @@
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/cpl.userdashboard.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.gamehistory.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.gamehistory.viewcomponent.js" asp-append-version="true"></script>
 }
 
