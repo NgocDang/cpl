@@ -77,7 +77,7 @@ namespace CPL.TransactionService
 
         private void InitializeWCF()
         {
-            var authentication = new AuthenticationService.AuthenticationClient().AuthenticateAsync(TransactionServiceConstant.Email, TransactionServiceConstant.ProjectName);
+            var authentication = new AuthenticationService.AuthenticationClient().AuthenticateAsync(CPLConstant.ProjectEmail, CPLConstant.ProjectName);
             authentication.Wait();
 
             if (authentication.Result.Status.Code == 0)
@@ -119,7 +119,17 @@ namespace CPL.TransactionService
                         var transactionDetail = _bTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
                         transactionDetail.Wait();
 
-                        if (transactionDetail.Result.Confirmations >= NumberOfConfirmsForUnreversedBTCTransaction)
+                        if (transactionDetail == null)
+                        {
+                            var diff = DateTime.Now - transaction.CreatedDate;
+                            if (diff.Days >= NumberOfDaysFailTransaction)
+                            {
+                                // update record to eth transaction
+                                transaction.UpdatedTime = DateTime.Now;
+                                transaction.Status = false;
+                                Resolver.BTCTransactionService.Update(transaction);
+                            }
+                        } else if (transactionDetail.Result.Confirmations >= NumberOfConfirmsForUnreversedBTCTransaction)
                         {
                             var user = Resolver.SysUserService.Queryable()
                                 .FirstOrDefault(x => transactionDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
@@ -131,6 +141,7 @@ namespace CPL.TransactionService
 
                                 // update btc transaction so that it is not checked next time
                                 transaction.UpdatedTime = DateTime.Now;
+                                transaction.Status = true;
                                 Resolver.BTCTransactionService.Update(transaction);
 
                                 // add record to coin transaction
@@ -186,7 +197,18 @@ namespace CPL.TransactionService
                         var transactionDetail = _eTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
                         transactionDetail.Wait();
 
-                        if (transactionDetail.Result.TransactionStatus.HasValue && transactionDetail.Result.TransactionStatus.Value)
+                        if (transactionDetail == null)
+                        {
+                            var diff = DateTime.Now - transaction.CreatedDate;
+                            if (diff.Days >= NumberOfDaysFailTransaction)
+                            {
+                                // update record to eth transaction
+                                transaction.UpdatedTime = DateTime.Now;
+                                transaction.Status = false;
+                                Resolver.ETHTransactionService.Update(transaction);
+                            }
+                        }
+                        else if (transactionDetail.Result.TransactionStatus.HasValue && transactionDetail.Result.TransactionStatus.Value)
                         {
                             var user = Resolver.SysUserService.Queryable()
                                 .FirstOrDefault(x => x.ETHHDWalletAddress == transactionDetail.Result.ToAddress);
@@ -198,6 +220,7 @@ namespace CPL.TransactionService
 
                                 // update btc transaction so that it is not checked next time
                                 transaction.UpdatedTime = DateTime.Now;
+                                transaction.Status = true;
                                 Resolver.ETHTransactionService.Update(transaction);
 
                                 // add record to coin transaction
@@ -265,7 +288,6 @@ namespace CPL.TransactionService
                             Resolver.SysUserService.Update(user);
                         }
                     }
-
                     else if (transactionDetail.Result.Confirmations >= 1)
                     {
                         // update record to coin transaction

@@ -103,7 +103,8 @@
             processData: false,
             contentType: false,
             success: function (data) {
-                $("#header-content").html(data);
+                $("nav.header-navbar").remove();
+                $("div.main-menu").html(data);
             }
         });
     }

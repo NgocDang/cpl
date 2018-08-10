@@ -19,6 +19,8 @@ namespace CPL.Mapping
             builder.Property(t => t.Id).HasColumnName("Id");
             builder.Property(t => t.TxHashId).HasColumnName("TxHashId");
             builder.Property(t => t.UpdatedTime).HasColumnName("UpdatedTime");
+            builder.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
+            builder.Property(t => t.Status).HasColumnName("Status");
         }
     }
 }

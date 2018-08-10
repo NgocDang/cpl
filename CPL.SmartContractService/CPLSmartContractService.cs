@@ -73,7 +73,7 @@ namespace CPL.SmartContractService
             {
                 Utils.FileAppendThreadSafe(FileName, string.Format("Check Tx thread STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
 
-                var authentication = new AuthenticationService.AuthenticationClient().AuthenticateAsync(SmartContractServiceConstant.Email, SmartContractServiceConstant.ProjectName);
+                var authentication = new AuthenticationService.AuthenticationClient().AuthenticateAsync(CPLConstant.ProjectEmail, CPLConstant.ProjectName);
                 authentication.Wait();
 
                 if (authentication.Result.Status.Code == 0)

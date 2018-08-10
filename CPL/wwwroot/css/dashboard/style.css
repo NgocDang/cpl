@@ -1511,6 +1511,10 @@ ul.game-menu li.active {
     font-size: 13px;
 }
 
+.la-button-size {
+    font-size:15px !important;
+}
+
 /*Start ==> Dashboard*/
 .border-bottom-card {
     border-bottom: 1px solid #EEE;

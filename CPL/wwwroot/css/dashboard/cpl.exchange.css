@@ -1,9 +1,4 @@
-﻿
-.tab-component-custom .la {
-    font-size: 15px;
-}
-
-@media (max-width: 425px) {
+﻿@media (max-width: 425px) {
     .small-hidden {
         display: none !important;
     }
