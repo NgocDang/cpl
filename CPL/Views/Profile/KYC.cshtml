@@ -1,11 +1,11 @@
-﻿@model EditSecurityViewModel
+﻿@model KYCViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SecurityEdit");
 }
 @section styles
     {
-    <link href="~/css/dashboard/cpl.editsecurity.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/dashboard/cpl.kyc.css" rel="stylesheet" asp-append-version="true" />
 }
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
@@ -106,5 +106,5 @@
 </div>
 @section scripts
     {
-    <script src="~/js/dashboard/cpl.editsecurity.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.kyc.js" asp-append-version="true"></script>
 }

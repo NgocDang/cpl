@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class EditSecurityViewModel
+    public class KYCViewModel
     {
         public int Id { get; set; }
         public string FrontSide { get; set; }

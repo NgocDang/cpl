@@ -1,9 +1,9 @@
-﻿var EditCredential = {
+﻿var Security = {
     init: function () {
-        EditCredential.bindSaveEmail();
-        EditCredential.bindSavePassword();
-        EditCredential.bindTwoFactorAuthenticate();
-        EditCredential.bindTwoFactorAuthenticateEnable();
+        Security.bindSaveEmail();
+        Security.bindSavePassword();
+        Security.bindTwoFactorAuthenticate();
+        Security.bindTwoFactorAuthenticateEnable();
     },
     bindSaveEmail: function () {
         $("#btn-save-email").on("click", function () {
@@ -21,7 +21,7 @@
                 $("#new-email-msg").hide();
 
                 $.ajax({
-                    url: "/Profile/EditEmail/",
+                    url: "/Profile/UpdateEmail/",
                     type: "POST",
                     beforeSend: function () {
                         $("#btn-save-email").attr("disabled", true);
@@ -65,7 +65,7 @@
             if (isFormValid && isConfirmPasswordValid) {
                 $("#current-password-msg").hide();
                 $.ajax({
-                    url: "/Profile/EditPassword/",
+                    url: "/Profile/UpdatePassword/",
                     type: "POST",
                     beforeSend: function () {
                         $("#btn-save-password").attr("disabled", true);
@@ -167,5 +167,5 @@
 
 
 $(document).ready(function () {
-    EditCredential.init();
+    Security.init();
 });

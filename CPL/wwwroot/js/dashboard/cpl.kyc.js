@@ -1,6 +1,6 @@
-﻿var EditSecurity = {
+﻿var KYC = {
     init: function () {
-        EditSecurity.bindSaveKYCButton();
+        KYC.bindSaveKYCButton();
     },
     bindSaveKYCButton: function () {
         $("#btn-save-account").on("click", function () {
@@ -49,5 +49,5 @@
 };
 
 $(document).ready(function () {
-    EditSecurity.init();
+    KYC.init();
 });

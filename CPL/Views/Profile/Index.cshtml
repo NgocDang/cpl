@@ -1,4 +1,4 @@
-﻿@model EditAccountViewModel
+﻿@model ProfileViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditAccount");
@@ -7,7 +7,7 @@
     {
     <link rel="stylesheet" type="text/css" href="~/css/dashboard/plugins/switchery/switchery.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/intl-tel-input/css/intlTelInput.css" />
-    <link rel="stylesheet" type="text/css" href="~/css/dashboard/cpl.editaccount.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/dashboard/cpl.profile.css" asp-append-version="true" />
 }
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
@@ -470,5 +470,5 @@
     <script src="~/js/dashboard/plugins/intl-tel-input/js/utils.js"></script>
     <script src="~/js/dashboard/plugins/moment.min.js"></script>
     <script src="~/js/dashboard/plugins/bootstrap-selectpicker.js"></script>
-    <script src="~/js/dashboard/cpl.editaccount.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.profile.js" asp-append-version="true"></script>
 }

@@ -1,11 +1,11 @@
-﻿@model EditCredentialViewModel
+﻿@model SecurityViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit");
 }
 @section styles
     {
-    <link href="~/css/dashboard/cpl.editcredential.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/css/dashboard/cpl.security.css" rel="stylesheet" asp-append-version="true"/>
 }
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
@@ -196,5 +196,5 @@
 
 @section scripts
     {
-    <script src="~/js/dashboard/cpl.editcredential.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.security.js" asp-append-version="true"></script>
 }

@@ -60,10 +60,10 @@ namespace CPL.Controllers
             this._lotteryHistoryService = lotteryHistoryService;
         }
 
-        public IActionResult EditAccount()
+        public IActionResult Index()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
-            var viewModel = Mapper.Map<EditAccountViewModel>(user);
+            var viewModel = Mapper.Map<ProfileViewModel>(user);
 
             var numberOfLotteryGame = _lotteryHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
 
@@ -73,7 +73,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditAccount(EditAccountViewModel viewModel)
+        public IActionResult Update(ProfileViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
@@ -128,10 +128,10 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
 
-        public IActionResult EditCredential()
+        public IActionResult Security()
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            var viewModel = Mapper.Map<EditCredentialViewModel>(user);
+            var viewModel = Mapper.Map<SecurityViewModel>(user);
             var tfa = new TwoFactorAuthenticator();
             var setupInfo = tfa.GenerateSetupCode(CPLConstant.AppName, user.Email, CPLConstant.TwoFactorAuthenticationSecretKey, 300, 300);
             viewModel.QrCodeSetupImageUrl = setupInfo.QrCodeSetupImageUrl;
@@ -139,7 +139,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditEmail(EditEmailViewModel viewModel)
+        public IActionResult UpdateEmail(UpdateEmailViewModel viewModel)
         {
             var isEmailExisting = _sysUserService.Queryable().Any(x => x.Email == viewModel.NewEmail && x.IsDeleted == false);
             if (isEmailExisting)
@@ -159,7 +159,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditPassword(EditPasswordViewModel viewModel)
+        public IActionResult UpdatePassword(UpdatePasswordViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
@@ -177,10 +177,10 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
 
-        public IActionResult EditSecurity()
+        public IActionResult KYC()
         {
             var user = _sysUserService.Queryable().Where(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).FirstOrDefault();
-            var viewModel = Mapper.Map<EditSecurityViewModel>(user);
+            var viewModel = Mapper.Map<KYCViewModel>(user);
             return View("EditSecurity", viewModel);
         }
 
@@ -218,7 +218,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateKYC(EditSecurityViewModel viewModel)
+        public IActionResult UpdateKYC(KYCViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)

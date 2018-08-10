@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class EditAccountViewModel
+    public class ProfileViewModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
