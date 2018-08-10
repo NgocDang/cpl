@@ -7,6 +7,8 @@ namespace CPL.Common.Enums
 {
     public class CPLConstant
     {
+        public static EnumEnvironment Environment = EnumEnvironment.TESTNET;
+
         //Authentication
         public static string ActivateExpiredInDays = "ActivateExpiredInDays";
         public static string ResetPasswordExpiredInDays = "ResetPasswordExpiredInDays";
@@ -22,17 +24,10 @@ namespace CPL.Common.Enums
         //SMTP
         public struct SMTP
         {
-            public static string Host = "smtp.gmail.com";
-            public static int Port = 587;
-            public static bool IsSSLEnable = true;
             public static string Email = "info.cplcoin@gmail.com";
             public static string Contact = "info.cplcoin@gmail.com";
             public static string From = "info.cplcoin@gmail.com";
-            public static string Password = "aG31@ie20P!";
         }
-
-        //Notification
-        public static string AdminEmail = "info.cplcoin@gmail.com";
 
         // Maintenance
         public struct Maintenance
@@ -47,12 +42,10 @@ namespace CPL.Common.Enums
         public static string FacebookUrl = "FacebookUrl";
 
         //BWallet
-        //public static string BTCMnemonic = "violin cute bulb grunt hybrid uniform father chef antique lawsuit camp inherit"; // PROD
-        public static string BTCMnemonic = "cute violin bulb grunt hybrid uniform father chef antique lawsuit camp inherit"; // TEST
+        public static string BTCMnemonic { get { if (Environment == EnumEnvironment.MAINNET) return "violin cute bulb grunt hybrid uniform father chef antique lawsuit camp inherit"; else return "cute violin bulb grunt hybrid uniform father chef antique lawsuit camp inherit"; } }  // TEST
 
         //EWallet
-        //public static string ETHMnemonic = "stock fatigue leopard despair boat brother asset dizzy marriage drop fragile add"; // PROD
-        public static string ETHMnemonic = "fatigue stock leopard despair boat brother asset dizzy marriage drop fragile add"; // TEST
+        public static string ETHMnemonic { get { if (Environment == EnumEnvironment.MAINNET) return "stock fatigue leopard despair boat brother asset dizzy marriage drop fragile add"; else return "fatigue stock leopard despair boat brother asset dizzy marriage drop fragile add"; } }
 
         //ETransaction
         public static string ETransactionAPIKey = "3FMSCKJX5HUXF5D2HTZ5QVUFXRMJAJ4WSA";
@@ -95,33 +88,27 @@ namespace CPL.Common.Enums
         public static int PageSize = 5;
 
         // Smart Contract
-        //public static string SmartContractAddress = "0xFF7C0b51bc57DA70A484CEBE6a6258d77Fe38699"; // PROD
-        public static string SmartContractAddress = "0x6f47E11F5B9ec93BCC6947C13b9Fd1e5fcdD0FD0"; // TEST
-        public static string Environment = "Environment";
+        public static string SmartContractAddress { get { if (Environment == EnumEnvironment.MAINNET) return "0xFF7C0b51bc57DA70A484CEBE6a6258d77Fe38699"; else return "0x6f47E11F5B9ec93BCC6947C13b9Fd1e5fcdD0FD0"; } }
+        
         public static string OwnerAddress = "0xAc4bAc4CE2DCA3A8b1C9f2b81C25da04875134D0";
         public static string OwnerPassword = "ngocdang";
         public static string Platform = "Platform";
         public static string Abi = "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"name\":\"_phase\",\"type\":\"uint32\"},{\"name\":\"_playerAddress\",\"type\":\"address\"},{\"name\":\"_listTicketIndex\",\"type\":\"uint32[]\"}],\"name\":\"random\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_phase\",\"type\":\"uint32\"},{\"name\":\"_playerAddress\",\"type\":\"address\"},{\"name\":\"_listTicketIndex\",\"type\":\"uint32[]\"}],\"name\":\"reRandom\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"phaseNumber\",\"type\":\"uint32\"},{\"indexed\":true,\"name\":\"playerAddress\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"ticketIndex\",\"type\":\"uint32\"},{\"indexed\":false,\"name\":\"ticketNumber\",\"type\":\"uint32\"}],\"name\":\"TicketNumberGenerated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"phaseNumber\",\"type\":\"uint32\"},{\"indexed\":true,\"name\":\"playerAddress\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"ticketIndex\",\"type\":\"uint32\"},{\"indexed\":false,\"name\":\"oldTicketNumber\",\"type\":\"uint32\"},{\"indexed\":false,\"name\":\"newTicketNumber\",\"type\":\"uint32\"}],\"name\":\"TicketNumberReGenerated\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_phase\",\"type\":\"uint32\"},{\"name\":\"_playerAddress\",\"type\":\"address\"},{\"name\":\"_ticketIndex\",\"type\":\"uint32\"}],\"name\":\"getTicket\",\"outputs\":[{\"name\":\"\",\"type\":\"uint32\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]";
 
-        //public static int GasPriceMultiplicator = 1; // PROD
-        public static int GasPriceMultiplicator = 3; // TEST
+        public static int GasPriceMultiplicator { get { if (Environment == EnumEnvironment.MAINNET) return 1; else return 3; } }
 
         // Withdraw and deposit
         // BTC
-        //public static string BTCDepositAddress = ""; // PROD
-        public static string BTCDepositAddress = ""; // TEST
-        //public static string BTCWithdrawAddress = ""; // PROD
-        public static string BTCWithdrawAddress = ""; // TEST
-        //public static string BTCWithdrawPrivateKey = ""; // PROD
-        public static string BTCWithdrawPrivateKey = ""; // TEST
+        public static string BTCDepositAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
+        public static string BTCWithdrawAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
+        public static string BTCWithdrawPrivateKey { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
         // ETH
-        //public static string ETHDepositAddress = ""; //PROD
-        public static string ETHDepositAddress = ""; //TEST
-        //public static string ETHWithdrawAddress = ""; //PROD
-        public static string ETHWithdrawAddress = ""; //TEST
-        //public static string ETHWithdrawPrivateKey = ""; //PROD
-        public static string ETHWithdrawPrivateKey = ""; //TEST
+        public static string ETHDepositAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
+        public static string ETHWithdrawAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
+        public static string ETHWithdrawPrivateKey { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
 
+        public static string Etherscan { get { if (Environment == EnumEnvironment.MAINNET) return "https://etherscan.io/tx/{0}"; else return "https://rinkeby.etherscan.io/tx/{0}"; } }
+        public static string BlockInfo { get { if (Environment == EnumEnvironment.MAINNET) return "https://www.blockchain.com/btc/tx/{0}"; else return "https://testnet.blockchain.info/tx/{0}"; } }
 
         //Request to get BTC and ETH address count limit
         public static int RequestCountLimit = 5;
