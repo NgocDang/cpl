@@ -6,11 +6,13 @@ using CPL.Misc;
 using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace CPL.Controllers
@@ -28,6 +30,9 @@ namespace CPL.Controllers
         private readonly ISysUserService _sysUserService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
+        private readonly INewsService _newsService;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IDictionary<string, string> countryDict = new Dictionary<string, string>();
         private readonly ILotteryService _lotteryService;
 
         public AdminController(
@@ -40,8 +45,10 @@ namespace CPL.Controllers
             ITemplateService templateService,
             ISysUserService sysUserService,
             ILotteryHistoryService lotteryHistoryService,
-            ILotteryService lotteryService,
-            IPricePredictionHistoryService pricePredictionHistoryService)
+            IPricePredictionHistoryService pricePredictionHistoryService,
+            INewsService newsService,
+            IHostingEnvironment hostingEnvironment,
+            ILotteryService lotteryService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -54,6 +61,8 @@ namespace CPL.Controllers
             this._lotteryHistoryService = lotteryHistoryService;
             this._lotteryService = lotteryService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
+            this._newsService = newsService;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         public IActionResult Index()
@@ -72,9 +81,11 @@ namespace CPL.Controllers
             viewModel.TotalLotteryGameActive = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.ACTIVE).Count();
             viewModel.TotalLotteryGameCompleted = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.COMPLETED).Count();
 
+            viewModel.TotalNews = _newsService.Queryable().Count();
             return View(viewModel);
         }
 
+        #region User
         public IActionResult AllUser()
         {
             var viewModel = new AllUserViewModel();
@@ -97,12 +108,185 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
+        public IActionResult EditUser(int id)
+        {
+            var user = _sysUserService.Queryable()
+                .FirstOrDefault(x => x.Id == id);
+
+            return PartialView("_EditUser", Mapper.Map<SysUserViewModel>(user));
+        }
+
+        [HttpPost]
+        public IActionResult UpdateUser(SysUserViewModel viewModel)
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == viewModel.Id);
+            if (user != null)
+            {
+                var existingUser = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email);
+                if (existingUser != null && existingUser.Id != viewModel.Id)
+                    return new JsonResult(new { success = false, name = "email", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidOrExistingEmail") });
+
+                user.FirstName = viewModel.FirstName;
+                user.LastName = viewModel.LastName;
+                user.Mobile = viewModel.Mobile;
+                user.Email = viewModel.Email;
+                if (!string.IsNullOrEmpty(viewModel.Password))
+                    user.Password = viewModel.Password.ToBCrypt();
+                user.StreetAddress = viewModel.StreetAddress.ToLower();
+                user.TwoFactorAuthenticationEnable = viewModel.TwoFactorAuthenticationEnable;
+
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteUser(SysUserViewModel viewModel)
+        {
+            var user = _sysUserService.Queryable()
+                .FirstOrDefault(x => x.Id == viewModel.Id);
+
+            if (user != null)
+            {
+                user.IsDeleted = true;
+
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
+            }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+        }
+
+        [HttpPost]
+        public JsonResult SearchAllUser(DataTableAjaxPostModel viewModel)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchAllUserFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        public IList<SysUserViewModel> SearchAllUserFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            // search the dbase taking into consideration table sorting and paging
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = _sysUserService.Queryable()
+                        .Count();
+
+                totalResultsCount = _sysUserService.Queryable()
+                        .Count();
+
+                return _sysUserService.Queryable()
+                            .Select(x => Mapper.Map<SysUserViewModel>(x))
+                            .OrderBy(sortBy, sortDir)
+                            .Skip(skip)
+                            .Take(take)
+                            .ToList();
+            }
+            else
+            {
+                filteredResultsCount = _sysUserService.Queryable()
+                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
+                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
+                        .Count();
+
+                totalResultsCount = _sysUserService.Queryable()
+                        .Count();
+
+                return _sysUserService.Queryable()
+                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
+                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
+                        .Select(x => Mapper.Map<SysUserViewModel>(x))
+                        .OrderBy(sortBy, sortDir)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToList();
+            }
+        }
+        #endregion
+
+        #region KYC
         public IActionResult KYCVerify()
         {
             var viewModel = new KYCVerifyViewModel();
             return View(viewModel);
         }
 
+        [HttpPost]
+        public IActionResult UpdateKYCVerify(int id)
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
+            user.KYCVerified = true;
+
+            // Transfer prize
+            var lotteryHistorys = _lotteryHistoryService
+                              .Query().Include(x => x.LotteryPrize).Select()
+                              .Where(x => x.SysUserId == user.Id && x.Result == EnumGameResult.KYC_PENDING.ToString())
+                              .ToList();
+            foreach (var lotteryHistory in lotteryHistorys)
+            {
+                user.TokenAmount += lotteryHistory.LotteryPrize.Value;
+                // Update status
+                lotteryHistory.Result = EnumGameResult.WIN.ToString();
+                _lotteryHistoryService.Update(lotteryHistory);
+            }
+
+            // Save DB
+            _sysUserService.Update(user);
+            _unitOfWork.SaveChanges();
+
+            // Send email
+            var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.KYCVerify.ToString());
+            var kycVerifyEmailTemplateViewModel = Mapper.Map<KYCVerifyEmailTemplateViewModel>(user);
+
+            template.Body = _viewRenderService.RenderToStringAsync("/Views/Admin/_KYCVerifyEmailTemplate.cshtml", kycVerifyEmailTemplateViewModel).Result;
+            EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
+
+            return new JsonResult(new { success = true, message = user.FirstName + $" {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "KYCVerifiedEmailSent")}" });
+        }
+
+        [HttpPost]
+        public IActionResult CancelKYCVerify(int id)
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
+            user.KYCVerified = null;
+            user.KYCCreatedDate = null;
+            user.FrontSide = null;
+            user.BackSide = null;
+
+            _sysUserService.Update(user);
+            _unitOfWork.SaveChanges();
+
+            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "CancelSuccessfully") });
+        }
+
+        [HttpPost]
         public JsonResult SearchKYCVerify(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -178,75 +362,13 @@ namespace CPL.Controllers
                         .ToList();
             }
         }
+        #endregion
 
-        [HttpPost]
-        public JsonResult SearchAllUser(DataTableAjaxPostModel viewModel)
+        #region News
+        public IActionResult News()
         {
-            // action inside a standard controller
-            int filteredResultsCount;
-            int totalResultsCount;
-            var res = SearchAllUserFunc(viewModel, out filteredResultsCount, out totalResultsCount);
-            return Json(new
-            {
-                // this is what datatables wants sending back
-                draw = viewModel.draw,
-                recordsTotal = totalResultsCount,
-                recordsFiltered = filteredResultsCount,
-                data = res
-            });
-        }
-
-        public IList<SysUserViewModel> SearchAllUserFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
-        {
-            var searchBy = (model.search != null) ? model.search.value : null;
-            var take = model.length;
-            var skip = model.start;
-
-            string sortBy = "";
-            bool sortDir = true;
-
-            if (model.order != null)
-            {
-                // in this example we just default sort on the 1st column
-                sortBy = model.columns[model.order[0].column].data;
-                sortDir = model.order[0].dir.ToLower() == "asc";
-            }
-
-            // search the dbase taking into consideration table sorting and paging
-            if (string.IsNullOrEmpty(searchBy))
-            {
-                filteredResultsCount = _sysUserService.Queryable()
-                        .Count();
-
-                totalResultsCount = _sysUserService.Queryable()
-                        .Count();
-
-                return _sysUserService.Queryable()
-                            .Select(x => Mapper.Map<SysUserViewModel>(x))
-                            .OrderBy(sortBy, sortDir)
-                            .Skip(skip)
-                            .Take(take)
-                            .ToList();
-            }
-            else
-            {
-                filteredResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
-                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
-                        .Count();
-
-                totalResultsCount = _sysUserService.Queryable()
-                        .Count();
-
-                return _sysUserService.Queryable()
-                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
-                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
-                        .Select(x => Mapper.Map<SysUserViewModel>(x))
-                        .OrderBy(sortBy, sortDir)
-                        .Skip(skip)
-                        .Take(take)
-                        .ToList();
-            }
+            var viewModel = new NewsViewModel();
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -317,103 +439,142 @@ namespace CPL.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult UpdateKYCVerify(int id)
-        {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
-            user.KYCVerified = true;
 
-            // Transfer prize
-            var lotteryHistorys = _lotteryHistoryService
-                              .Query().Include(x => x.LotteryPrize).Select()
-                              .Where(x => x.SysUserId == user.Id && x.Result == EnumGameResult.KYC_PENDING.ToString())
-                              .ToList();
-            foreach (var lotteryHistory in lotteryHistorys)
+        public IActionResult EditNews(int id)
+        {
+            var news = new NewsViewModel();
+            if (id > 0)
             {
-                user.TokenAmount += lotteryHistory.LotteryPrize.Value;
-                // Update status
-                lotteryHistory.Result = EnumGameResult.WIN.ToString();
-                _lotteryHistoryService.Update(lotteryHistory);
+                news = Mapper.Map<NewsViewModel>(_newsService.Queryable().FirstOrDefault(x => x.Id == id));
             }
-
-            // Save DB
-            _sysUserService.Update(user);
-            _unitOfWork.SaveChanges();
-
-            // Send email
-            var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.KYCVerify.ToString());
-            var kycVerifyEmailTemplateViewModel = Mapper.Map<KYCVerifyEmailTemplateViewModel>(user);
-
-            template.Body = _viewRenderService.RenderToStringAsync("/Views/Admin/_KYCVerifyEmailTemplate.cshtml", kycVerifyEmailTemplateViewModel).Result;
-            EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
-
-            return new JsonResult(new { success = true, message = user.FirstName + $" {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "KYCVerifiedEmailSent")}" });
+            return PartialView("_EditNews", news);
         }
 
         [HttpPost]
-        public IActionResult CancelKYCVerify(int id)
+        public JsonResult SaveEditNews(NewsViewModel viewModel)
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
-            user.KYCVerified = null;
-            user.KYCCreatedDate = null;
-            user.FrontSide = null;
-            user.BackSide = null;
-
-            _sysUserService.Update(user);
-            _unitOfWork.SaveChanges();
-
-            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "CancelSuccessfully") });
-        }
-
-        public IActionResult EditUser(int id)
-        {
-            var user = _sysUserService.Queryable()
-                .FirstOrDefault(x => x.Id == id);
-
-            return PartialView("_EditUser", Mapper.Map<SysUserViewModel>(user));
-        }
-
-        [HttpPost]
-        public IActionResult UpdateUser(SysUserViewModel viewModel)
-        {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == viewModel.Id);
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                var existingUser = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email);
-                if (existingUser != null && existingUser.Id != viewModel.Id)
-                    return new JsonResult(new { success = false, name = "email", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidOrExistingEmail") });
+                var news = _newsService.Queryable()
+                .FirstOrDefault(x => x.Id == viewModel.Id);
+                if (viewModel.FileImage != null)
+                {
+                    var newsPath = Path.Combine(_hostingEnvironment.WebRootPath, @"images\news");
+                    var image = $"{viewModel.FileImage.FileName}";
+                    var frontSidePath = Path.Combine(newsPath, image);
+                    viewModel.FileImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
+                    news.Image = image;
+                }
 
-                user.FirstName = viewModel.FirstName;
-                user.LastName = viewModel.LastName;
-                user.Mobile = viewModel.Mobile;
-                user.Email = viewModel.Email;
-                if (!string.IsNullOrEmpty(viewModel.Password))
-                    user.Password = viewModel.Password.ToBCrypt();
-                user.TwoFactorAuthenticationEnable = viewModel.TwoFactorAuthenticationEnable;
-
-                _sysUserService.Update(user);
+                news.Title = viewModel.Title;
+                news.ShortDescription = viewModel.ShortDescription;
+                news.Description = viewModel.Description;
+                _newsService.Update(news);
                 _unitOfWork.SaveChanges();
+
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
             }
-
-            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
 
         [HttpPost]
-        public IActionResult DeleteUser(SysUserViewModel viewModel)
+        public JsonResult AddNews(NewsViewModel viewModel)
         {
-            var user = _sysUserService.Queryable()
-                .FirstOrDefault(x => x.Id == viewModel.Id);
-
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                user.IsDeleted = true;
+                if(viewModel.FileImage != null)
+                    _newsService.Insert(new Domain.News { Title = viewModel.Title , CreatedDate = DateTime.Now, Description = viewModel.Description, ShortDescription = viewModel.ShortDescription, Image = viewModel.FileImage.FileName});
+                else
+                    _newsService.Insert(new Domain.News { Title = viewModel.Title, CreatedDate = DateTime.Now, Description = viewModel.Description, ShortDescription = viewModel.ShortDescription });
+                _unitOfWork.SaveChanges();
 
-                _sysUserService.Update(user);
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+            }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteNews(int id)
+        {
+            var news = _newsService.Queryable()
+            .FirstOrDefault(x => x.Id == id);
+            if (news != null)
+            {
+                _newsService.Delete(news);
                 _unitOfWork.SaveChanges();
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
             }
-            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+            else
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
+
+        [HttpPost]
+        public JsonResult SearchNews(DataTableAjaxPostModel viewModel)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchNewsFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        public IList<NewsViewModel> SearchNewsFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            // search the dbase taking into consideration table sorting and paging
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = _newsService.Queryable()
+                        .Count();
+
+                totalResultsCount = _newsService.Queryable()
+                        .Count();
+
+                return _newsService.Queryable()
+                            .Select(x => Mapper.Map<NewsViewModel>(x))
+                            .OrderBy(sortBy, sortDir)
+                            .Skip(skip)
+                            .Take(take)
+                            .ToList();
+            }
+            else
+            {
+                filteredResultsCount = _newsService.Queryable()
+                        .Where(x => x.Title.Contains(searchBy) || x.ShortDescription.Contains(searchBy))
+                        .Count();
+
+                totalResultsCount = _newsService.Queryable()
+                        .Count();
+
+                return _newsService.Queryable()
+                        .Where(x => x.Title.Contains(searchBy) || x.ShortDescription.Contains(searchBy))
+                        .Select(x => Mapper.Map<NewsViewModel>(x))
+                        .OrderBy(sortBy, sortDir)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToList();
+            }
+        }
+        #endregion
     }
 }
