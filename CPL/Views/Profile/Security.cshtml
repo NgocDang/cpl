@@ -1,7 +1,7 @@
 ﻿@model SecurityViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CredentialEdit");
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Security");
 }
 @section styles
     {
@@ -26,7 +26,9 @@
                 </div>
             </div>
         </div>
+
         @await Component.InvokeAsync("TokenBalance")
+
         <div class="content-body">
             <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditEmail")</h6>
             <div class="card mb-1">
@@ -70,18 +72,21 @@
                                                 </fieldset>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-12 text-right">
+                                                <hr />
+                                                <button type="button" id="btn-save-email" class="btn btn-primary"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
+                                            </div>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <button type="button" id="btn-save-email" class="btn btn-primary my-1"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
-                    </div>
                 </div>
             </div>
 
-            <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditPassword")</h6>
+            <h6 class="my-2 mt-3  text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditPassword")</h6>
             <div class="card mb-1">
                 <div class="card-content">
                     <div class="card-body">
@@ -91,8 +96,6 @@
                                     <i class="font-large-4 la la-key"></i>
                                 </div>
                                 <div class="col-md-10 col-12">
-                                    <h5>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditPassword")</h5>
-                                    <hr />
                                     <form id="form-edit-password" class="form-horizontal form-user-profile mt-2" action="">
                                         <div class="row mb-1">
                                             <div class="col-md-6 col-sm-12">
@@ -126,8 +129,9 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-sm-12 text-right">
-                                                <button type="button" id="btn-save-password" class="btn btn-primary my-1"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
+                                            <div class="col-12 text-right">
+                                                <hr />
+                                                <button type="button" id="btn-save-password" class="btn btn-primary"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
                                             </div>
                                         </div>
                                     </form>
@@ -138,58 +142,53 @@
                 </div>
             </div>
 
-            <div id="two-factor-authenticator" class="card mb-0">
+            <h6 class="my-2 mt-3 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</h6>
+            <div id="two-factor-authenticator" class="card">
                 <div class="card-content">
                     <div class="card-body">
                         <div class="col-12">
                             <div class="row">
-                                <div class="col-md-12 col-12">
-                                    <h5>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</h5>
-                                    <hr />
+                                <div class="col-sm-12 col-md-6">
                                     <div class="row">
-                                        <div class="col-sm-12 col-md-6 col-lg-6">
-                                            <div class="row">
-                                                <div class="col-sm-12 col-md-12 col-custom-two-factor col-lg-6 mt-2">
-                                                    @Html.HiddenFor(x => x.TwoFactorAuthenticationEnable)
-                                                    <form id="form-two-factor-disable" method="POST" action="#" style="display:none;" class="needs-validation" novalidate="">
-                                                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                                                            <button type="submit" id="btn-two-factor-disable" class="btn btn-danger my-1 btn-block">
-                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Disable")
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                    <form id="form-two-factor-enable" method="POST" action="#" style="display:none;" class="needs-validation" novalidate="">
-                                                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                                                            <label for="PIN">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EnterPINToEnable")</label>
-                                                            <input id="PIN" type="text" class="form-control" name="PIN" tabindex="1" required>
-                                                            <div class="invalid-feedback">
-                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidPIN")
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                                                            <button type="submit" id="btn-two-factor-enable" class="btn btn-danger my-1 btn-block">
-                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Enable")
-                                                            </button>
-                                                        </div>
-                                                    </form>
+                                        <div class="col-sm-12 col-lg-6 mt-2">
+                                            @Html.HiddenFor(x => x.TwoFactorAuthenticationEnable)
+                                            <form id="form-two-factor-disable" method="POST" action="#" style="display:none;" class="needs-validation" novalidate="">
+                                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                                    <button type="submit" id="btn-two-factor-disable" class="btn btn-danger my-1 btn-block">
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Disable")
+                                                    </button>
                                                 </div>
-                                                <div class="col-sm-12 col-md-12 col-lg-6 col-custom-two-factor text-center">
-                                                    <img alt="QR Code" src="@Model.QrCodeSetupImageUrl" class="img-fluid">
+                                            </form>
+                                            <form id="form-two-factor-enable" method="POST" action="#" style="display:none;" class="needs-validation" novalidate="">
+                                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                                    <label for="PIN">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EnterPINToEnable")</label>
+                                                    <input id="PIN" type="text" class="form-control" name="PIN" tabindex="1" required>
+                                                    <div class="invalid-feedback">
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidPIN")
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                                    <button type="submit" id="btn-two-factor-enable" class="btn btn-primary my-1 btn-block">
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Enable")
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
-                                        <div class="col-sm-12 col-md-6 col-lg-6 mt-2">
-                                            <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationShortDescription")</p>
-                                            <ul>
-                                                <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep1")</li>
-                                                <li><a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep2")</a></li>
-                                                <li><a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep3")</a></li>
-                                                <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep4")</li>
-                                                <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep5")</li>
-                                                <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep6")</li>
-                                            </ul>
+                                        <div class="col-sm-12 col-md-12 col-lg-6 text-center">
+                                            <img alt="QR Code" src="@Model.QrCodeSetupImageUrl" class="img-fluid">
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6 col-lg-6 mt-2">
+                                    <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationShortDescription")</p>
+                                    <ul>
+                                        <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep1")</li>
+                                        <li><a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep2")</a></li>
+                                        <li><a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep3")</a></li>
+                                        <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep4")</li>
+                                        <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep5")</li>
+                                        <li>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthenticationStep6")</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
