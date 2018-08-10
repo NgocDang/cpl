@@ -69,7 +69,7 @@ namespace CPL.Controllers
 
             viewModel.NumberOfGameHistories = numberOfLotteryGame;
             viewModel.NumberOfTransactions = _coinTransactionService.Queryable().Count(x => x.SysUserId == viewModel.Id);
-            return View("EditAccount", viewModel);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -181,7 +181,7 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().Where(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).FirstOrDefault();
             var viewModel = Mapper.Map<KYCViewModel>(user);
-            return View("EditSecurity", viewModel);
+            return View(viewModel);
         }
 
         [HttpPost]
