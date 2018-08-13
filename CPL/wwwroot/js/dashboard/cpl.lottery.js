@@ -23,14 +23,14 @@
                     },
                     success: function (data) {
                         if (data.url == null) {
-                            $("#div-buy-lottery").hide();
+                            $("#div-buy-lottery").toggleClass("d-none");
                             $(".ticket-price").html(new Intl.NumberFormat('vn-VN').format(data.ticketPrice) + " CPL");
                             $(".ticket-price").val(data.ticketPrice); // Set value to calculate in contronller
                             $(".total-of-tiket").html(new Intl.NumberFormat('vn-VN').format(data.totalTickets));
                             $(".total-of-tiket").val(data.totalTickets); // Set value to calculate in contronller
                             $(".total-price").html(new Intl.NumberFormat('vn-VN').format(data.totalPriceOfTickets) + " CPL");
                             $(".total-price").val(data.totalPriceOfTickets); // Set value to calculate in contronller
-                            $("#div-confirm-lottery").show();
+                            $("#div-confirm-lottery").toggleClass("d-none");
                         }
                         else {
                             window.location.replace(data.url);
@@ -46,8 +46,8 @@
     },
     bindCancelPurchaseTicket: function () {
         $('#btn-cancel-purchase-lottery-ticket').click(function () {
-            $("#div-buy-lottery").show();
-            $("#div-confirm-lottery").hide();
+            $("#div-buy-lottery").toggleClass("d-none");
+            $("#div-confirm-lottery").toggleClass("d-none");
         });
     },
     bindConfirmPurchaseTicket: function () {
@@ -81,9 +81,9 @@
 
                      Lottery.loadHeaderViewComponent(); // Reloader header view component after login
                      if (data.success) {
-                         $("#div-confirm-lottery").hide();
-                         $("#div-thankyou-lottery").show();
-                         $("#p-txHashId").html("<a class='text-success' target='_blank' href='" + data.tx + "'><small><u>" + data.txHashId + "</u></small></a>");
+                         $("#div-confirm-lottery").toggleClass("d-none");
+                         $("#div-thankyou-lottery").toggleClass("d-none");
+                         $("#p-txHashId").html("<a class='text-success' target='_blank' href='" + data.tx + "'><small><u>" + data.tx + "</u></small></a>");
                          toastr.success(data.message, 'Success!');
                          LotteryHistory.historyDatatable.ajax.reload();
                      }
