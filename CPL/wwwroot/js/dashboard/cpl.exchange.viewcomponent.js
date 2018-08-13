@@ -1,10 +1,10 @@
-﻿var Exchange = {
+﻿var ExchangeViewComponent = {
     init: function () {
-        Exchange.bindSwap();
-        Exchange.bindMax();
-        Exchange.bindInputChange();
-        Exchange.bindNext();
-        Exchange.bindConfirmExchange();
+        ExchangeViewComponent.bindSwap();
+        ExchangeViewComponent.bindMax();
+        ExchangeViewComponent.bindInputChange();
+        ExchangeViewComponent.bindNext();
+        ExchangeViewComponent.bindConfirmExchange();
     },
     bindNext: function () {
         $('#exchange-content').on('click', '.btn-next', function () {
@@ -58,7 +58,7 @@
                     if (data.success) {
                         $("#exchange").modal("hide");
                         toastr.success(data.message, "Success!");
-                        Exchange.loadViewComponent();
+                        ExchangeViewComponent.loadViewComponent();
                     } else {
                         toastr.error(data.message, "Error!");
                     }
@@ -152,5 +152,5 @@
 }
 
 $(document).ready(function () {
-    Exchange.init();
+    ExchangeViewComponent.init();
 });
