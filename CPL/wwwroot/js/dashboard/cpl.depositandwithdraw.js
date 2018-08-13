@@ -15,9 +15,7 @@
     },
     bindMax: function () {
         $("#depositwithdraw-content").on("click", ".btn-max", function () {
-            if ($(this).parents("form").find("input.max-amount").length) {
-                $(this).parents("form").find(".amount-value").val($(this).parents("form").find(".max-amount").val());
-            }
+            $(this).parents("form").find(".amount-value").val($(this).parents("form").find(".amount-value").attr("max"));
         });
     },
     bindDoWithdraw: function () {
@@ -58,6 +56,8 @@
                                     $(_this).parents("form").find(".amount-error").html(data.message);
                                     $(_this).parents("form").find(".amount-error").show();
                                 }
+
+                                toastr.error(data.message, 'Error!');
                             }
 
                         }
