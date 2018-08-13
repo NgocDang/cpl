@@ -166,7 +166,7 @@
             if ($(this).parent("#" + wrapperId).length == 0) {
                     return wrapper;
             }
-});
+          });
 
           var stickyWrapper = stickyElement.parent();
 
@@ -193,7 +193,7 @@
         var element = $(stickyElement);
         var stickyWrapper = element.parent();
         if (stickyWrapper) {
-          stickyWrapper.css('height', element.outerHeight());
+          //stickyWrapper.css('height', element.outerHeight());
         }
       },
 
