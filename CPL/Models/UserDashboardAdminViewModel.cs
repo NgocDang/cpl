@@ -17,6 +17,7 @@ namespace CPL.Models
         public string Country { get; set; }
         public string City { get; set; }
         public bool? KYCVerified { get; set; }
+        public string Address { get; set; }
 
         public string BTCHDWalletAddress { get; set; }
         public string ETHHDWalletAddress { get; set; }
