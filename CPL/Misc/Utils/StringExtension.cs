@@ -18,5 +18,12 @@ namespace CPL.Misc.Utils
         {
             return BCrypt.Net.BCrypt.HashPassword(input);
         }
+
+        public static string ToTitleCase(this string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
+            return input.First().ToString().ToUpper() + input.ToLower().Substring(1);
+        }
     }
 }

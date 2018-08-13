@@ -15,5 +15,21 @@ namespace CPL.Misc.Utils
                 return null;
             else return value == EnumCoinstransactionStatus.SUCCESS;
         }
+
+        public static EnumCoinstransactionStatus ToEnumCoinstransactionStatus(this bool? value)
+        {
+            if (!value.HasValue)
+            {
+                return EnumCoinstransactionStatus.PENDING;
+            }
+            else if (value == false)
+            {
+                return EnumCoinstransactionStatus.FAIL;
+            }
+            else // value = true
+            {
+                return EnumCoinstransactionStatus.SUCCESS;
+            }
+        }
     }
 }
