@@ -371,11 +371,11 @@ namespace CPL.Controllers
                                           {
                                               Id = x.Id,
                                               CreatedDate = x.CreatedDate,
-                                              CreatedDateInString = x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss"),
+                                              CreatedDateInString = x.CreatedDate.ToString(Format.DateTime),
                                               FromWalletAddress = x.FromWalletAddress,
                                               ToWalletAddress = x.ToWalletAddress,
                                               CoinAmount = x.CoinAmount,
-                                              CoinAmountInString = x.CoinAmount.ToString("#,##0.########"),
+                                              CoinAmountInString = x.CoinAmount.ToString(Format.Amount),
                                               CurrencyId = x.CurrencyId,
                                               CurrencyInString = x.Currency.Name,
                                               Type = x.Type,
@@ -384,7 +384,7 @@ namespace CPL.Controllers
                                               StatusInString = x.Status.ToEnumCoinstransactionStatus().ToString(),
                                               Rate = x.Rate,
                                               TxHashId = x.TxHashId,
-                                              TokenAmount = x.TokenAmount
+                                              TokenAmountInString = x.TokenAmount.GetValueOrDefault(0).ToString(Format.Amount)
                                           });
 
             if (string.IsNullOrEmpty(searchBy))
