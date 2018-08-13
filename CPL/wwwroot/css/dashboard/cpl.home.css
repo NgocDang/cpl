@@ -1,5 +1,5 @@
-﻿body {
-    background-image: url('../../images/backgrounds/bg_02.jpg');
+﻿html body {
+    background-image: url('../../images/backgrounds/bg_02.jpg') !important;
 }
 
 #lottery-game .owl-nav .owl-prev {

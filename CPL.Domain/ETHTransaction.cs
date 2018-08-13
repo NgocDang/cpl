@@ -10,5 +10,7 @@ namespace CPL.Domain
         public int Id { get; set; }
         public string TxHashId { get; set; }
         public DateTime? UpdatedTime { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public bool? Status { get; set; }
     }
 }

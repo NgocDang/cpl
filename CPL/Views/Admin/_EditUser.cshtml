@@ -1,7 +1,7 @@
 ﻿@model SysUserViewModel
 
 <div class="modal" tabindex="-1" role="dialog" id="update-user" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg mx-auto" role="document">
         <div class="modal-content">
             <form id="form-update-user" method="POST" action="#" class="needs-validation" novalidate="">
                 <div class="modal-header">
@@ -51,7 +51,7 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12" style="padding-top:35px;">
+                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12 pt-1">
                             <input id="TwoFactorAuthenticationEnable" type="checkbox" checked="@Model.TwoFactorAuthenticationEnable" class="js-switch" name="TwoFactorAuthenticationEnable">
                             <label for="TwoFactorAuthenticationEnable" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsTwoFactorAuthenticationEnabled")  &nbsp; </label>
                         </div>

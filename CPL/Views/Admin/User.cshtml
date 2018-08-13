@@ -15,144 +15,55 @@
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-12 col-12 mb-3 breadcrumb-new">
+            <div class="content-header-left col-md-12 col-12 mb-3">
                 <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
             </div>
         </div>
         <div class="content-body">
-            <div class="row">
-                <div class="col-lg-6 col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllAsset") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
-                    <div class="card pull-up">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <div class="col-12">
-                                    <div class="row">
-                                        <div class="col-md-6 col-12">
-                                            <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
-                                            <h1>@Model.TotalBalance.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h1>
-                                            <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bonus") <strong>+30%</strong> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ExpireIn") 21 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Days").</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="owl-carousel owl-theme">
-                        <div class="item">
-                            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</h6>
-                            <div class="card pull-up">
-                                <div class="card-content">
-                                    <div class="card-body" id="btc-card">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
-                                                    <h1>@Model.BTCAmount.ToString("#,##0.########")</h1>
-                                                    <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Increase") <strong>+10%</strong></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</h6>
-                            <div class="card pull-up">
-                                <div class="card-content">
-                                    <div class="card-body" id="eth-card">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
-                                                    <h1>@Model.ETHAmount.ToString("#,##0.########")</h1>
-                                                    <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View") <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transactions")</strong></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</h6>
-                            <div class="card pull-up">
-                                <div class="card-content">
-                                    <div class="card-body" id="cpl-card">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance"): </strong></p>
-                                                    <h1>@Model.TokenAmount.ToString("#,##0.########")</h1>
-                                                    <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Check") <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameHistory")</strong></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @Html.HiddenFor(x => x.Id)
-            </div>
+            @await Component.InvokeAsync("Amount", Model.Id)
+            @Html.HiddenFor(x => x.Id)
             <div id="profile-detail" class="row">
                 <div class="col-lg-12 col-md-12 col-12 col-sm-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</h6>
-                    <div class="card pull-up">
+                    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</h6>
+                    <div class="card">
                         <div class="card-content">
                             <div class="card-body">
                                 <div class="card-text">
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</strong>
+                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</p>
                                             <p>
-                                                @Model.FirstName
+                                                <strong>@Model.FirstName</strong>
                                             </p>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</strong>
+                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</p>
                                             <p>
-                                                @Model.LastName
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</strong>
-                                            <p>
-                                                @Model.FirstName
-                                            </p>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</strong>
-                                            <p>
-                                                @Model.LastName
+                                                <strong>@Model.LastName</strong>
                                             </p>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</strong>
+                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</p>
                                             <p>
-                                                @Model.Email
+                                                <strong> @Model.Email </strong>
                                             </p>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Mobile")</strong>
+                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Mobile")</p>
                                             <p>
-                                                @Model.Mobile
+                                                <strong> @Model.Mobile </strong>
                                             </p>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</strong>
+                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</p>
                                             <p>
-                                                @Model.StreetAddress, @Model.City, @Model.Country
+                                                <strong>
+                                                    @Model.Address
+                                                </strong>
                                             </p>
                                         </div>
                                     </div>
@@ -162,17 +73,17 @@
                                             {
                                                 if (Model.KYCVerified.Value)
                                                 {
-                                                    <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</strong>
+                                                    <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</p>
                                                     <p>
-                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SuccessfullyVerified")
+                                                        <strong> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SuccessfullyVerified")</strong>
                                                     </p>
 
                                                 }
                                                 else
                                                 {
-                                                    <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</strong>
+                                                    <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</p>
                                                     <p>
-                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCIsPending")
+                                                        <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCIsPending")</strong>
                                                     </p>
 
                                                 }
@@ -180,44 +91,44 @@
                                             }
                                             else
                                             {
-                                                <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</strong>
+                                                <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</p>
                                                 <p>
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCNotVerified")
+                                                    <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCNotVerified")</strong>
                                                 </p>
                                             }
                                         </div>
                                         <div class="col-lg-6 col-md-12 col-12 col-sm-12">
                                             @if (Model.TwoFactorAuthenticationEnable)
                                             {
-                                                <strong>
+                                                <p class="text-muted mb-3px font-size-13px">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")
-                                                </strong>
+                                                </p>
                                                 <p>
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsEnabled")
+                                                    <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsEnabled")</strong>
                                                 </p>
                                             }
                                             else
                                             {
-                                                <strong>
+                                                <p class="text-muted mb-3px font-size-13px">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")
-                                                </strong>
+                                                </p>
                                                 <p>
-                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsNotEnabled")
+                                                    <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsNotEnabled")</strong>
                                                 </p>
                                             }
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHHDWalletAddress")</strong>
+                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHHDWalletAddress")</p>
                                             <p>
-                                                @Model.ETHHDWalletAddress
+                                                <strong> @Model.ETHHDWalletAddress</strong>
                                             </p>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCHDWalletAddress")</strong>
+                                            <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCHDWalletAddress")</p>
                                             <p>
-                                                @Model.BTCHDWalletAddress
+                                                <strong>@Model.BTCHDWalletAddress</strong>
                                             </p>
                                         </div>
                                     </div>
@@ -227,19 +138,19 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("GameHistory");
+            @await Component.InvokeAsync("GameHistory")
+        </div>
         </div>
     </div>
-</div>
 
-@section scripts
-    {
-    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
-    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
-    <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
-    <script src="~/js/dashboard/cpl.dtlang.js"></script>
-    <script src="~/js/dashboard/cpl.userdashboard.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.gamehistory.js" asp-append-version="true"></script>
-}
+    @section scripts
+        {
+        <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
+        <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+        <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+        <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
+        <script src="~/js/dashboard/cpl.dtlang.js"></script>
+        <script src="~/js/dashboard/cpl.userdashboard.js" asp-append-version="true"></script>
+        <script src="~/js/dashboard/cpl.gamehistory.viewcomponent.js" asp-append-version="true"></script>
+    }
 

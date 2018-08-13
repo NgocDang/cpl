@@ -1,18 +1,1 @@
-﻿.word-wrap {
-    word-wrap: break-word !important;
-}
-
-a{
-    color: black !important;
-}
-
-tbody td {
-    max-width: 10px !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-}
-
-tbody tr {
-    line-height: 5px !important;
-}
+﻿
