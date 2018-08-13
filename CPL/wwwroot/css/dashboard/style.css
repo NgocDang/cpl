@@ -1533,3 +1533,10 @@ div.wrapper {
 footer {
     flex-shrink: 0;
 }
+
+.badge-cpl {
+    padding: 7px 12px;
+    font-weight: 500;
+    letter-spacing: .5px;
+    border-radius: 30px;
+}

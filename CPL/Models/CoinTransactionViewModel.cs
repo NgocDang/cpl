@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CPL.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,5 +28,6 @@ namespace CPL.Models
         public string RateInString { get; set; }
         public string TypeInString { get; set; }
         public string StatusInString { get; set; }
+        public EnumCoinstransactionStatus StatusInEnum { get; set; }
     }
 }

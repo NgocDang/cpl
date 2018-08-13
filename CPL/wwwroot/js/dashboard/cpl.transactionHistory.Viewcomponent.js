@@ -38,7 +38,11 @@
                 {
                     "data": "CurrencyInString",
                     "render": function (data, type, full, meta) {
-                        return full.currencyInString;
+                        if (full.currencyInString == "ETH") {
+                            return "<div class='badge badge-cpl badge-secondary'><i class='cc ETH-alt'></i> ETH</div>";
+                        } else if (full.currencyInString == "BTC") {
+                            return "<div class='badge badge-cpl badge-secondary'><i class='cc BTC-alt'></i> BTC</div>";
+                        }
                     },
                     "className": "text-center",
                 },
@@ -66,7 +70,7 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a style='line-height:12px;' href='/History/TransactionDetail/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-info btn-view'>View</a>";
+                        return "<a style='line-height:12px;' href='/History/TransactionDetail/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>View</a>";
                     },
                     "orderable": false
                 }
