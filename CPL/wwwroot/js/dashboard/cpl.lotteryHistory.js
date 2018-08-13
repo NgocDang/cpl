@@ -6,16 +6,17 @@
     loadLotteryHistoryTable: function () {
         if ($("#lottery-history").hasClass("d-none"))
             return false;
-
+        var _this = this;
         return $("#dt-lottery-history").DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
             "ajax": {
                 url: "/History/SearchLotteryHistory",
-                type: 'POST'
+                type: 'POST',
                 data: {
-                    id
+                    id: $(_this).data().id,
+                    createdDate: $(_this).data.createdDate
                 }
             },
             "language": DTLang.getLang(),
