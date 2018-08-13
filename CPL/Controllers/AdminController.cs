@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
+using CPL.Domain;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
 using CPL.Misc.Enums;
@@ -34,6 +35,7 @@ namespace CPL.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IDictionary<string, string> countryDict = new Dictionary<string, string>();
         private readonly ILotteryService _lotteryService;
+        private readonly ILotteryPrizeService _lotteryPrizeService;
 
         public AdminController(
             ILangService langService,
@@ -48,7 +50,8 @@ namespace CPL.Controllers
             IPricePredictionHistoryService pricePredictionHistoryService,
             INewsService newsService,
             IHostingEnvironment hostingEnvironment,
-            ILotteryService lotteryService)
+            ILotteryService lotteryService,
+            ILotteryPrizeService lotteryPrizeService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -60,6 +63,7 @@ namespace CPL.Controllers
             this._sysUserService = sysUserService;
             this._lotteryHistoryService = lotteryHistoryService;
             this._lotteryService = lotteryService;
+            this._lotteryPrizeService = lotteryPrizeService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._newsService = newsService;
             this._hostingEnvironment = hostingEnvironment;
@@ -592,6 +596,80 @@ namespace CPL.Controllers
         [HttpPost]
         public JsonResult AddLotteryGame(LotteryViewModel viewModel)
         {
+            try
+            {
+                // Lottery game
+                var currentId = _lotteryService.Queryable().LastOrDefault().Id;
+                var lotteryGame = new Lottery();
+
+                lotteryGame.Title = viewModel.Title;
+                lotteryGame.Volume = viewModel.Volume;
+                lotteryGame.UnitPrice = viewModel.UnitPrice;
+                lotteryGame.Phase = currentId + 1;
+                lotteryGame.CreatedDate = DateTime.Now;
+
+                if (!viewModel.IsPublish)
+                    lotteryGame.Status = (int)EnumLotteryGameStatus.PENDING;
+                else
+                    lotteryGame.Status = (int)EnumLotteryGameStatus.ACTIVE;
+
+                if (viewModel.DesktopListingImageFile != null && viewModel.MobileListingImageFile != null && viewModel.SlideImageFile != null)
+                {
+                    var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
+                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                    // slider image
+                    var sliderImage = $"{lotteryGame.Phase.ToString()}_Slider_{timestamp}_{viewModel.SlideImageFile.FileName}";
+                    var sliderImagePath = Path.Combine(pathLottery, sliderImage);
+                    viewModel.SlideImageFile.CopyTo(new FileStream(sliderImagePath, FileMode.Create));
+                    lotteryGame.SlideImage = sliderImage;
+
+                    // desktop image
+                    var desktopImage = $"{lotteryGame.Phase.ToString()}_Desktop_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
+                    var desktopImagePath = Path.Combine(pathLottery, desktopImage);
+                    viewModel.DesktopListingImageFile.CopyTo(new FileStream(desktopImagePath, FileMode.Create));
+                    lotteryGame.DesktopListingImage = desktopImage;
+
+                    // mobile image
+                    var mobileImage = $"{lotteryGame.Phase.ToString()}_Mobile_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
+                    var mobileImagePath = Path.Combine(pathLottery, mobileImage);
+                    viewModel.MobileListingImageFile.CopyTo(new FileStream(mobileImagePath, FileMode.Create));
+                    lotteryGame.MobileListingImage = mobileImage;
+                }
+
+                _lotteryService.Insert(lotteryGame);
+
+                // Lottery prize
+                foreach (var prize in viewModel.LotteryPrizes)
+                {
+                    if (prize.Volume == 0 && prize.Value == 0) continue;
+                    var name = prize.Name.Substring(0, 3);
+                    var color = "";
+                    if (name == "1st")
+                        color = "bg-warning";
+                    else if (name == "2nd")
+                        color = "bg-primary";
+                    else if (name == "3rd")
+                        color = "bg-danger";
+                    else color = "bg-success";
+
+                    _lotteryPrizeService.Insert(new LotteryPrize()
+                    {
+                        Name = name,
+                        Value = prize.Value,
+                        Color = color,
+                        Volume = prize.Volume,
+                        LotteryId = currentId + 1
+                    });
+                }
+
+                _unitOfWork.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+
             return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
         }
 

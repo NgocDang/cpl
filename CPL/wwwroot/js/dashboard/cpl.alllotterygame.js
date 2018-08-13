@@ -4,29 +4,11 @@
         LotteryGames.lotteryGamesDataTable = LotteryGames.loadLotteryGamesDataTable();
         LotteryGames.loadLightBox();
         LotteryGames.bindAddButton();
-        LotteryGames.bindImagePreview("slide-image");
-        LotteryGames.bindImagePreview("desktop-image");
-        LotteryGames.bindImagePreview("mobile-image");
+        LotteryGames.bindAddNewPrize();
+        LotteryGames.bindRemovePrize();
+        LotteryGames.bindAddNewGame();
+        LotteryGames.bindAddAndPublishNewGame();
 
-        var _this = $("#lottery-game-management");
-        $.ajax({
-            url: "/Admin/EditLotteryGame",
-            type: "GET",
-            beforeSend: function () {
-                $(_this).attr("disabled", true);
-            },
-            data: {
-                id: $(_this).data().id
-            },
-            success: function (data) {
-                $("#modal").html(data);
-                $("#edit-lottery-game").modal("show");
-                $("#edit-lottery-game #btn-save").hide();
-            },
-            complete: function (data) {
-                $(_this).attr("disabled", false);
-            }
-        });
     },
     loadLotteryGamesDataTable: function () {
         return $('#dt-all-lottery-game').DataTable({
@@ -56,13 +38,13 @@
                     "data": "Status",
                     "render": function (data, type, full, meta) {
                         if (full.status == 1) {
-                            return "<p class='text-center'><span class='badge badge-warning'>" + $("#pending").val() + "</span></p>";
+                            return "<p class='text-center'><span class='badge badge-info'>" + $("#pending").val() + "</span></p>";
                         }
                         else if (full.status == 2) {
                             return "<p class='text-center'><span class='badge badge-success'>" + $("#active").val() + "</span></p>";
                         }
                         else if (full.status == 3) {
-                            return "<p class='text-center'><span class='badge badge-danger'>" + $("#completed").val() + "</span></p>";
+                            return "<p class='text-center'><span class='badge badge-secondary'>" + $("#completed").val() + "</span></p>";
                         }
                     }
                 },
@@ -98,24 +80,23 @@
                     },
                     "orderable": false
                 },
-                {
-                    "data": "MobileListingImage",
-                    "render": function (data, type, full, meta) {
-                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "'  href='/images/lottery/" + full.mobileListingImage + "' ><img src=/images/lottery/" + full.mobileListingImage + " class='img-thumbnail img-fluid border-0' alt='document-" + full.mobileListingImage + "'> </a>";
-                    },
-                    "orderable": false
-                },
-                
+                //{
+                //    "data": "MobileListingImage",
+                //    "render": function (data, type, full, meta) {
+                //        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "'  href='/images/lottery/" + full.mobileListingImage + "' ><img src=/images/lottery/" + full.mobileListingImage + " class='img-thumbnail img-fluid border-0' alt='document-" + full.mobileListingImage + "'> </a>";
+                //    },
+                //    "orderable": false
+                //},
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
                         if (full.status == 1) {
-                            return "<button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-primary btn-edit'>" + $("#edit").val()
-                                + "</button> <button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-success btn-active'>" + $("#active").val()
-                                + "</button><button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-warning btn-delete'>" + $("#delete").val() + "</button>";
+                            return "<button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val()
+                                + "</button> <button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-active'>" + $("#activate").val()
+                                + "</button><button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-delete'>" + $("#delete").val() + "</button>";
                         }
                         else
-                            return "<button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-info btn-view'>" + $("#view").val() + "</button>";
+                            return "<button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</button>";
                     },
                     "orderable": false
                 }
@@ -152,27 +133,194 @@
             return false;
         });
     },
-    bindImagePreview: function (id) {
-        $("#modal").on("change", "#"+id, function () {
+    bindAddNewPrize: function () {
+        $("#modal").on("click", ".btn-add-prize", function () {
             var _this = this;
-            if (_this.files && _this.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('[data-toggle="popover-' + id + '"]').popover({
-                        html: true,
-                        trigger: 'hover',
-                        trigger: 'focus',
-                        content: function () {
-                            return '<img class="img-fluid" src="' + e.target.result + '" />';
-                        }
-                    }).popover('show');
-                }
-                reader.readAsDataURL(_this.files[0]);
-            }
+
+            var _parent = $(_this).closest("div.row");
+            var _newPrize = _parent.clone();
+            var _uncles = $(_this).parents("#prize-lottery");
+
+            _parent.prev().find(".btn-remove-prize").addClass("d-none");
+
+            _parent.removeClass("new-prize");
+            _parent.find("div").removeClass("blurry-text");
+            _parent.find(".form-control").removeAttr("disabled");
+            _parent.find(".btn-add-prize").addClass("d-none");
+            _parent.find(".btn-remove-prize").removeClass("d-none");
+
+            _newPrize.find("h6").html(Utils.addOrdinal(_uncles[0].children.length + 1) + $("#prize-text").val());
+
+            _uncles.append('<div class="row pt-1 select new-prize">' + _newPrize.html()) + '</div>';
+
             return false;
+        });
+    },
+    bindRemovePrize: function () {
+        $("#modal").on("click", ".btn-remove-prize", function () {
+            var _this = this;
+            var _uncles = $(_this).parents("#prize-lottery");
+
+            
+
+            var _prevUncle = $(_this).closest("div.row").prev();
+            var _nextUncle = $(_this).closest("div.row").next();
+
+            $(_this).closest("div.row").remove();
+            if (_uncles[0].children.length > 2) {
+                _prevUncle.find(".btn-remove-prize").removeClass("d-none");
+            };
+
+            _nextUncle.find("h6").html(Utils.addOrdinal(_uncles[0].children.length) + $("#prize-text").val());
+
+            
+
+            return false;
+        });
+    },
+    bindAddNewGame: function () {
+        $('#modal').on('click', '.btn-add', function () {
+            var _this = this;
+            var isFormValid = $(_this).parents("form")[0].checkValidity();
+            $(_this).parents("form").addClass('was-validated');
+
+            if (isFormValid) {
+                var formData = new FormData();
+
+                var slideImage = $("#slide-image").get(0);
+                if (slideImage !== undefined && slideImage.files.length > 0) {
+                    formData.append('SlideImageFile', slideImage.files[0]);
+                }
+                var desktopImage = $("#desktop-image").get(0);
+                if (desktopImage !== undefined && desktopImage.files.length > 0) {
+                    formData.append('DesktopListingImageFile', desktopImage.files[0]);
+                }
+                var mobileImage = $("#mobile-image").get(0);
+                if (mobileImage !== undefined && mobileImage.files.length > 0) {
+                    formData.append('MobileListingImageFile', mobileImage.files[0]);
+                }
+
+                formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
+                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
+                formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
+                formData.append('IsPublish', false);
+
+                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.select").map(function (i, e) {
+                    formData.append('LotteryPrizes[' + i + '].Name', $(this).find("h6").text());
+                    formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
+                    formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
+                });
+
+                $.ajax({
+                    url: "/Admin/AddLotteryGame/",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
+                    },
+                    data: formData,
+                    success: function (data) {
+                        if (data.success) {
+                            $("#edit-lottery-game").modal("hide");
+                            toastr.success(data.message, 'Success!');
+                            LotteryGames.lotteryGamesDataTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text() + "<i class='la la-plus'></i>");
+                    }
+                });
+            }
+        });
+    },
+    bindAddAndPublishNewGame: function () {
+        $('#modal').on('click', '.btn-add-publish', function () {
+            var _this = this;
+            var isFormValid = $(_this).parents("form")[0].checkValidity();
+            $(_this).parents("form").addClass('was-validated');
+
+            if (isFormValid) {
+                var formData = new FormData();
+
+                var slideImage = $("#slide-image").get(0);
+                if (slideImage !== undefined && slideImage.files.length > 0) {
+                    formData.append('SlideImageFile', slideImage.files[0]);
+                }
+                var desktopImage = $("#desktop-image").get(0);
+                if (desktopImage !== undefined && desktopImage.files.length > 0) {
+                    formData.append('DesktopListingImageFile', desktopImage.files[0]);
+                }
+                var mobileImage = $("#mobile-image").get(0);
+                if (mobileImage !== undefined && mobileImage.files.length > 0) {
+                    formData.append('MobileListingImageFile', mobileImage.files[0]);
+                }
+
+                formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
+                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
+                formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
+                formData.append('IsPublish', true);
+
+                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.select").map(function (i, e) {
+                    formData.append('LotteryPrizes[' + i + '].Name', $(this).find("h6").text());
+                    formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
+                    formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
+                });
+
+                $.ajax({
+                    url: "/Admin/AddLotteryGame/",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
+                    },
+                    data: formData,
+                    success: function (data) {
+                        if (data.success) {
+                            $("#edit-lottery-game").modal("hide");
+                            toastr.success(data.message, 'Success!');
+                            LotteryGames.lotteryGamesDataTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text() + "<i class='la la-plus'></i>");
+                    }
+                });
+            }
         });
     }
 }
+
+var Utils = {
+    addOrdinal: function (num) {
+        if (num <= 0) return num.ToString();
+        switch (num % 100) {
+            case 11:
+            case 12:
+            case 13:
+                return num + "th ";
+        }
+        switch (num % 10) {
+            case 1:
+                return num + "st ";
+            case 2:
+                return num + "nd ";
+            case 3:
+                return num + "rd ";
+            default:
+                return num + "th ";
+        }
+    }
+};
 
 $(document).ready(function () {
     LotteryGames.init();
