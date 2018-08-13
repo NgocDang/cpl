@@ -140,17 +140,18 @@
             </div>
             @await Component.InvokeAsync("GameHistory")
         </div>
-        </div>
     </div>
+</div>
 
-    @section scripts
-        {
-        <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
-        <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
-        <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
-        <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
-        <script src="~/js/dashboard/cpl.dtlang.js"></script>
-        <script src="~/js/dashboard/cpl.userdashboard.js" asp-append-version="true"></script>
-        <script src="~/js/dashboard/cpl.gamehistory.viewcomponent.js" asp-append-version="true"></script>
-    }
+@section scripts
+    {
+    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
+    <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/cpl.amount.viewcomponent.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.userdashboard.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.gamehistory.viewcomponent.js" asp-append-version="true"></script>
+}
 

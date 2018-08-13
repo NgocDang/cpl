@@ -1,9 +1,9 @@
-﻿var DepositAndWithdraw = {
+﻿var DepositAndWithdrawViewComponent = {
     init: function () {
-        DepositAndWithdraw.bindCopy();
-        DepositAndWithdraw.bindMax();
-        DepositAndWithdraw.bindDoWithdraw();
-        DepositAndWithdraw.bindReadQrCode();
+        DepositAndWithdrawViewComponent.bindCopy();
+        DepositAndWithdrawViewComponent.bindMax();
+        DepositAndWithdrawViewComponent.bindDoWithdraw();
+        DepositAndWithdrawViewComponent.bindReadQrCode();
     },
     bindCopy: function () {
         if ($(".btn-copy").length > 0) {
@@ -37,14 +37,14 @@
                             $(_this).parents("form").find(".address-error").hide();
                             $(_this).parents("form").find(".amount-error").hide();
                             toastr.success(data.message, 'Success!');
-                            DepositAndWithdraw.bindLoadViewComponent("withdraw");
+                            DepositAndWithdrawViewComponent.bindLoadViewComponent("withdraw");
                         }
                         else {
                             if (data.requireProfile != null && !data.requireProfile) {
-                                DepositAndWithdraw.loadRequireProfileViewComponent();
+                                DepositAndWithdrawViewComponent.loadRequireProfileViewComponent();
                             }
                             else if (data.requireKyc != null && !data.requireKyc) {
-                                DepositAndWithdraw.loadRequireKYCViewComponent();
+                                DepositAndWithdrawViewComponent.loadRequireKYCViewComponent();
                             } else {
                                 if (data.name === "wallet") {
                                     $(_this).parents("form").find(".amount-error").hide();
@@ -145,5 +145,5 @@
 }
 
 $(document).ready(function () {
-    DepositAndWithdraw.init();
+    DepositAndWithdrawViewComponent.init();
 });

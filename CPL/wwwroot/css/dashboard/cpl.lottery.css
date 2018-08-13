@@ -90,10 +90,6 @@ body {
     margin-top: 14px;
 }
 
-.d-none-not-important{
-    display: none;
-}
-
 #number-of-ticket {
     border:none;
 }
