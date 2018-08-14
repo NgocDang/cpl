@@ -8,7 +8,6 @@ namespace CPL.Misc
     public class DataTableAjaxPostModel
     {
         // properties are not capital due to json mapping
-        public int? userId { get; set; }
         public int draw { get; set; }
         public int start { get; set; }
         public int length { get; set; }

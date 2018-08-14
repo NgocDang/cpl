@@ -9,26 +9,26 @@ namespace CPL.Misc.Utils
             return value == EnumPricePredictionStatus.UP;
         }
 
-        public static bool? ToBoolean(this EnumCoinstransactionStatus value)
+        public static bool? ToBoolean(this EnumCoinTransactionStatus value)
         {
-            if (value == EnumCoinstransactionStatus.PENDING)
+            if (value == EnumCoinTransactionStatus.PENDING)
                 return null;
-            else return value == EnumCoinstransactionStatus.SUCCESS;
+            else return value == EnumCoinTransactionStatus.SUCCESS;
         }
 
-        public static EnumCoinstransactionStatus ToEnumCoinstransactionStatus(this bool? value)
+        public static EnumCoinTransactionStatus ToEnumCoinstransactionStatus(this bool? value)
         {
             if (!value.HasValue)
             {
-                return EnumCoinstransactionStatus.PENDING;
+                return EnumCoinTransactionStatus.PENDING;
             }
             else if (value == false)
             {
-                return EnumCoinstransactionStatus.FAIL;
+                return EnumCoinTransactionStatus.FAIL;
             }
             else // value = true
             {
-                return EnumCoinstransactionStatus.SUCCESS;
+                return EnumCoinTransactionStatus.SUCCESS;
             }
         }
     }

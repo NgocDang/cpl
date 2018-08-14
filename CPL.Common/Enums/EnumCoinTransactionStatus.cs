@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Common.Enums
 {
-    public enum EnumCoinstransactionStatus
+    public enum EnumCoinTransactionStatus
     {
         PENDING,
         SUCCESS,

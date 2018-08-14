@@ -323,12 +323,12 @@ namespace CPL.Controllers
             return View();
         }
 
-        public JsonResult SearchTransactionHistory(DataTableAjaxPostModel viewModel)
+        public JsonResult SearchTransactionHistory(DataTableAjaxPostModel viewModel, int? userId)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchTransactionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            var res = SearchTransactionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, userId);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -339,9 +339,9 @@ namespace CPL.Controllers
             });
         }
 
-        public IList<CoinTransactionViewModel> SearchTransactionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        public IList<CoinTransactionViewModel> SearchTransactionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? userId)
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == (model.userId ?? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id));
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == (userId ?? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id));
             var searchBy = (model.search != null) ? model.search.value?.ToLower() : null;
             var take = model.length;
             var skip = model.start;
