@@ -31,17 +31,18 @@ namespace CPL.Misc.MapperCreate
 
             CreateMap<SysUser, DashboardViewModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
-            CreateMap<SysUser, AmountViewModel>();
+            CreateMap<SysUser, BalanceViewModel>();
             CreateMap<SysUser, HoldingPercentageViewModel>();
 
             CreateMap<SysUser, ExchangeViewModel>();
-            CreateMap<SysUser, TokenBalanceViewModel>();
+            CreateMap<SysUser, LotteryResultViewModel>();
 
             CreateMap<SysUser, ProfileViewModel>();
             CreateMap<SysUser, KYCViewModel>();
             CreateMap<SysUser, UserDashboardAdminViewModel>()
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.StreetAddress} {(!string.IsNullOrWhiteSpace(src.StreetAddress) ? "," : "")} {src.City + (!string.IsNullOrWhiteSpace(src.City) ? "," : "")} {src.Country}"));
             CreateMap<SysUser, GameHistoryViewModel>();
+            CreateMap<SysUser, GameHistoryIndexViewModel>();
         }
     }
 }

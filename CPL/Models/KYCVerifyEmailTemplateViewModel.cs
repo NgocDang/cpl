@@ -7,6 +7,19 @@ namespace CPL.Models
 {
     public class KYCVerifyEmailTemplateViewModel
     {
+        public string Email { get; set; }
+        public string RootUrl { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public TemplateViewModel Template { get; set; }
 
+        public string KYCVerifiedText { get; set; }
+        public string HiText { get; set; }
+        public string KYCVerifiedDescriptionText { get; set; }
+        public string CheersText { get; set; }
+        public string ContactInfoText { get; set; }
+        public string EmailText { get; set; }
+        public string WebsiteText { get; set; }
+        public string CPLTeamText { get; set; }
     }
 }

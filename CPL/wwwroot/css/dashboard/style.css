@@ -1533,3 +1533,9 @@ div.wrapper {
 footer {
     flex-shrink: 0;
 }
+
+@media (max-width: 489px) {
+    #logout .btn-mobile-version {
+        height: 40px;
+    }
+}

@@ -44,8 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\CSSAttribute.cs" />
     <Compile Include="Enums\CPLConstant.cs" />
-    <Compile Include="Enums\EnumCoinstransactionStatus.cs" />
+    <Compile Include="Enums\EnumCoinTransactionStatus.cs" />
     <Compile Include="Enums\EnumCoinTransactionType.cs" />
     <Compile Include="Enums\EnumCurrency.cs" />
     <Compile Include="Enums\EnumEnvironment.cs" />

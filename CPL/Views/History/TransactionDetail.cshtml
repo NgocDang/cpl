@@ -1,0 +1,106 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TransactionDetail");
+}
+
+@model CoinTransactionViewModel
+
+<div class="app-content container center-layout mt-2">
+    <div class="content-wrapper">
+        
+        <div class="content-header row">
+            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TransactionDetail")</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="breadcrumb-wrapper col-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a asp-controller="History" asp-action="transaction">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transaction")</a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="profile-detail" class="row">
+            <div class="col-lg-12 col-md-12 col-12 col-sm-12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="card-text">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                        <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FromWalletAddress")</p>
+                                        <p>
+                                            <strong>@Model.FromWalletAddress</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                        <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToWalletAddress")</p>
+                                        <p>
+                                            <strong>@Model.ToWalletAddress</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                        <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CoinAmount")</p>
+                                        <p>
+                                            <strong>@Model.CoinAmount</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                        <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Currency")</p>
+                                        <p>
+                                            <strong class="badge badge-secondary">@Model.CurrencyInString</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                        <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenAmount")</p>
+                                        <p>
+                                            <strong>@Model.TokenAmount</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                        <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Rate")</p>
+                                        <p>
+                                            <strong>@Model.Rate</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                        <p class="text-muted mb-3px font-size-13px">TxHashId</p>
+                                        <p>
+                                            <strong>@Model.TxHashId</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                        <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Type")</p>
+                                        <p>
+                                            <strong>@Model.TypeInString</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+                                        <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</p>
+                                        <p>
+                                            <strong><span class="badge @(EnumHelper<EnumCoinTransactionStatus>.GetCSS(Model.StatusInEnum))">@Model.StatusInString</span></strong>
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

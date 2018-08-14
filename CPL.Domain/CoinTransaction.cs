@@ -15,7 +15,7 @@ namespace CPL.Domain
         public DateTime CreatedDate { get; set; }
         public int CurrencyId { get; set; }
         public decimal? TokenAmount { get; set; }
-        public float? Rate { get; set; }
+        public double? Rate { get; set; }
         public int Type { get; set; }
         public string TxHashId { get; set; }
         public bool? Status { get; set; }

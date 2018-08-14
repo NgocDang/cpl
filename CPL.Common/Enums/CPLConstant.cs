@@ -114,7 +114,13 @@ namespace CPL.Common.Enums
         public static int RequestCountLimit = 5;
         public static int RequestCountIntervalInMiliseconds = 3000;
 
-        public static string RandomParamInJson = "{{\"1\":{{\"uint32\":\"{0}\"}},\"2\":{{\"address\":\"{1}\"}}, \"3\": {{\"uint32[]\":\"[{2}]\"}}}}"; // Replace { by {{ to fix bug invalid input string when using string.Format
-        public static string GetTicketParamInJson = "{\"1\":{\"uint32\":\"{0}\"},\"2\":{\"address\":\"{1}\"}, \"3\": {\"uint32\":\"{2}\"}}";
+        public static string RandomParamInJson = "{{'1':{{'uint32':'{0}'}},'2':{{'address':'{1}'}}, '3': {{'uint32[]':'[{2}]'}}}}"; // Replace { by {{ to fix bug invalid input string when using string.Format
+        public static string GetTicketParamInJson = "{{'1':{{'uint32':'{0}'}},'2':{{'address':'{1}'}}, '3': {{'uint32':'{2}'}}}}";
+
+        public struct Format
+        {
+            public static string Amount = "#,##0.########";
+            public static string DateTime = "yyyy/MM/dd hh:mm:ss";
+        }
     }
 }

@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="content-body">
-            @await Component.InvokeAsync("Amount", Model.Id)
+            @await Component.InvokeAsync("Balance", Model.Id)
             @Html.HiddenFor(x => x.Id)
             <div id="profile-detail" class="row">
                 <div class="col-lg-12 col-md-12 col-12 col-sm-12">
@@ -138,7 +138,7 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("GameHistory")
+            @await Component.InvokeAsync("GameHistory", Model.Id)
         </div>
     </div>
 </div>
