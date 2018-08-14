@@ -4,6 +4,7 @@ using AutoMapper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Misc;
+using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using Newtonsoft.Json;
 
 namespace CPL.Controllers
 {
+    [Permission(EnumRole.User)]
     public class HistoryController : Controller
     {
         private readonly ILotteryHistoryService _lotteryHistoryService;
