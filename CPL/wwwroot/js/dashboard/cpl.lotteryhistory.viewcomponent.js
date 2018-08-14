@@ -35,9 +35,9 @@
                     }
                 },
                 {
-                    "data": "StartDate",
+                    "data": "LotteryStartDate",
                     "render": function (data, type, full, meta) {
-                        return full.startDateInString;
+                        return full.lotteryStartDateInString;
                     }
                 },
                 {
