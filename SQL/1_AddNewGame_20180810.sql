@@ -1,7 +1,7 @@
 ﻿Use CPL;
 
 -- Add new column into Lottery table
-ALTER TABLE Lottery ADD UnitPrice Money NOT NULL DEFAULT '0';
+ALTER TABLE Lottery ADD UnitPrice INT NOT NULL DEFAULT '0';
 
 -- LangDetail
 INSERT INTO LangDetail VALUES (1, N'NumberOfLotteryTicket', N'Number of lottery tickets');
