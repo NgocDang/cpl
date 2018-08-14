@@ -7,13 +7,13 @@ using System.Linq;
 
 namespace CPL.ViewComponents
 {
-    public class TokenBalanceViewComponent: ViewComponent
+    public class LotteryResultViewComponent: ViewComponent
     {
         private readonly IMapper _mapper;
         private readonly ISettingService _settingService;
         private readonly ISysUserService _sysUserService;
 
-        public TokenBalanceViewComponent(IMapper mapper,
+        public LotteryResultViewComponent(IMapper mapper,
             ISettingService settingService,
             ISysUserService sysUserService)
         {
@@ -27,7 +27,7 @@ namespace CPL.ViewComponents
             if (HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser") != null)
             {
                 var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
-                var viewModel = Mapper.Map<TokenBalanceViewModel>(user);
+                var viewModel = Mapper.Map<LotteryResultViewModel>(user);
                 var ethToBTCRate = CoinExchangeExtension.CoinExchanging();
                 viewModel.ETHToTokenRate = (1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value)) / ethToBTCRate;
                 viewModel.BTCToTokenRate = 1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);

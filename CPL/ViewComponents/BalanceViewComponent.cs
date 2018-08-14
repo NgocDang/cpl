@@ -8,11 +8,11 @@ using System.Linq;
 
 namespace CPL.ViewComponents
 {
-    public class AmountViewComponent : ViewComponent
+    public class BalanceViewComponent : ViewComponent
     {
         private readonly ISysUserService _sysUserService;
 
-        public AmountViewComponent(ISysUserService sysUserService)
+        public BalanceViewComponent(ISysUserService sysUserService)
         {
             this._sysUserService = sysUserService;
         }
@@ -21,7 +21,7 @@ namespace CPL.ViewComponents
         {
             int userId = sysUserId ?? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == userId);
-            var viewModel = Mapper.Map<AmountViewModel>(user);
+            var viewModel = Mapper.Map<BalanceViewModel>(user);
             return View(viewModel);
         }
     }

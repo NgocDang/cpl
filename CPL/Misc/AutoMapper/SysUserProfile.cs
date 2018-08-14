@@ -31,11 +31,11 @@ namespace CPL.Misc.MapperCreate
 
             CreateMap<SysUser, DashboardViewModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
-            CreateMap<SysUser, AmountViewModel>();
+            CreateMap<SysUser, BalanceViewModel>();
             CreateMap<SysUser, HoldingPercentageViewModel>();
 
             CreateMap<SysUser, ExchangeViewModel>();
-            CreateMap<SysUser, TokenBalanceViewModel>();
+            CreateMap<SysUser, LotteryResultViewModel>();
 
             CreateMap<SysUser, ProfileViewModel>();
             CreateMap<SysUser, KYCViewModel>();
