@@ -11,7 +11,7 @@
                 "sInfoThousands": ",",
                 "sLengthMenu": "Show _MENU_ entries",
                 "sLoadingRecords": "Loading...",
-                "sProcessing": "",
+                "sProcessing": "<i class='la la-spinner spinner'></i>",
                 "sSearch": "Search:",
                 "sZeroRecords": "No matching records found",
                 "oPaginate": {
@@ -36,7 +36,7 @@
                 "sInfoThousands": ",",
                 "sLengthMenu": "_MENU_ 件表示",
                 "sLoadingRecords": "読み込み中...",
-                "sProcessing": "",
+                "sProcessing": "<i class='la la-spinner spinner'></i>",
                 "sSearch": "検索:",
                 "sZeroRecords": "一致するレコードがありません",
                 "oPaginate": {
@@ -61,7 +61,7 @@
                 "sInfoThousands": ",",
                 "sLengthMenu": "페이지당 줄수 _MENU_",
                 "sLoadingRecords": "읽는중...",
-                "sProcessing": "",
+                "sProcessing": "<i class='la la-spinner spinner'></i>",
                 "sSearch": "검색:",
                 "sZeroRecords": "검색 결과가 없습니다",
                 "oPaginate": {
@@ -78,7 +78,7 @@
         }
         else if ($("#LangId").val() == 4) { // Chinese 
             return {
-                "sProcessing": "",
+                "sProcessing": "<i class='la la-spinner spinner'></i>",
                 "sLengthMenu": "显示 _MENU_ 项结果",
                 "sZeroRecords": "没有匹配结果",
                 "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
@@ -104,7 +104,7 @@
         }
         else if ($("#LangId").val() == 5) { // Chinese 
             return {
-                "sProcessing": "",
+                "sProcessing": "<i class='la la-spinner spinner'></i>",
                 "sLengthMenu": "显示 _MENU_ 项结果",
                 "sZeroRecords": "没有匹配结果",
                 "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
