@@ -451,9 +451,8 @@ namespace CPL.Controllers
                                               CoinAmountInString = x.CoinAmount.ToString(Format.Amount),
                                               CurrencyId = x.CurrencyId,
                                               CurrencyInString = x.Currency.Name,
-                                              Type = x.Type,
-                                              TypeInString = ((EnumCoinTransactionType)x.Type).ToString().Replace("_", " "),
-                                              Status = x.Status,
+                                              TypeInString = EnumHelper<EnumCoinTransactionType>.GetDisplayValue((EnumCoinTransactionType)x.Type),
+                                              StatusInEnum = x.Status.ToEnumCoinstransactionStatus(),
                                               StatusInString = x.Status.ToEnumCoinstransactionStatus().ToString(),
                                               Rate = x.Rate,
                                               TxHashId = x.TxHashId,
@@ -470,8 +469,9 @@ namespace CPL.Controllers
                                         .Where(x => x.CreatedDateInString.ToLower().Contains(searchBy)
                                                     || x.ToWalletAddress.ToLower().Contains(searchBy)
                                                     || x.CoinAmountInString.ToLower().Contains(searchBy)
+                                                    || x.TypeInString.ToLower().Contains(searchBy)
                                                     || x.CurrencyInString.ToLower().Contains(searchBy)
-                                                    || x.StatusInString.ToLower().Contains(searchBy));
+                                                    || x.StatusInEnum.ToString().ToLower().Contains(searchBy));
 
                 filteredResultsCount = transactionHistory.Count();
             }
@@ -498,9 +498,8 @@ namespace CPL.Controllers
                                         CoinAmountInString = x.CoinAmount.ToString(Format.Amount),
                                         CurrencyId = x.CurrencyId,
                                         CurrencyInString = x.Currency.Name,
-                                        Type = x.Type,
-                                        TypeInString = ((EnumCoinTransactionType)x.Type).ToString().Replace("_", " "),
-                                        Status = x.Status,
+                                        TypeInString = EnumHelper<EnumCoinTransactionType>.GetDisplayValue((EnumCoinTransactionType)x.Type),
+                                        StatusInEnum = x.Status.ToEnumCoinstransactionStatus(),
                                         StatusInString = x.Status.ToEnumCoinstransactionStatus().ToString(),
                                         Rate = x.Rate,
                                         TxHashId = x.TxHashId,

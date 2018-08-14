@@ -54,7 +54,7 @@
                     "className": "text-center",
                 },
                 {
-                    "data": "StatusInString",
+                    "data": "StatusInEnum",
                     "render": function (data, type, full, meta) {
                         if (full.statusInString == "PENDING")
                             return "<div class='badge badge-info w-100'>Pending</div>";
