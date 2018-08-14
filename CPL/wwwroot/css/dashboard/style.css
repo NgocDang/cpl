@@ -1520,3 +1520,16 @@ ul.game-menu li.active {
     border-bottom: 1px solid #EEE;
 }
 /*End <== DashBoard*/
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+div.wrapper {
+    flex: 1 0 auto;
+}
+
+footer {
+    flex-shrink: 0;
+}

@@ -1,6 +1,6 @@
-﻿var Calculator = {
+﻿var TokenCalculator = {
     init: function () {
-        Calculator.bindCalculator();
+        TokenCalculator.bindCalculator();
     },
     bindCalculator: function () {
         $('#token-calculator').on('change paste keyup input', '#btc-amount', function () {
@@ -41,5 +41,5 @@
 }
 
 $(document).ready(function () {
-    Calculator.init();
+    TokenCalculator.init();
 });
