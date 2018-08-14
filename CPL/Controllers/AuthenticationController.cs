@@ -99,7 +99,7 @@ namespace CPL.Controllers
             {
                 var user = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email);
                 HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
-                return RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Dashboard")}");
+                return RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Home")}");
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidPIN") });
         }
@@ -226,18 +226,26 @@ namespace CPL.Controllers
                 else
                 {
                     var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Member.ToString());
-                    var memberViewModel = Mapper.Map<MemberEmailTemplateViewModel>(user);
-                    memberViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                    var memberEmailTemplateViewModel = Mapper.Map<MemberEmailTemplateViewModel>(user);
+                    memberEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
 
                     // Populate language
-                    memberViewModel.ActivationSuccessfulText = @LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ActivationSuccessful");
+                    memberEmailTemplateViewModel.ActivationSuccessfulText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ActivationSuccessful");
+                    memberEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+                    memberEmailTemplateViewModel.TeamMemberNowText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "TeamMemberNow");
+                    memberEmailTemplateViewModel.PlayGameNowText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PlayGameNow");
+                    memberEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+                    memberEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+                    memberEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+                    memberEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+                    memberEmailTemplateViewModel.CPLTeamText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "CPLTeam");
 
-                    template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_MemberEmailTemplate.cshtml", memberViewModel).Result;
+                    template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_MemberEmailTemplate.cshtml", memberEmailTemplateViewModel).Result;
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
 
                     // Log in
                     HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
-                    return new JsonResult(new { success = true, activated = true, url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Dashboard")}" });
+                    return new JsonResult(new { success = true, activated = true, url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Home")}" });
                 }
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
@@ -300,25 +308,25 @@ namespace CPL.Controllers
                 _unitOfWork.SaveChanges();
                 var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.ForgotPassword.ToString());
 
-                var forgotPasswordViewModel = Mapper.Map<ForgotPasswordEmailTemplateViewModel>(user);
-                forgotPasswordViewModel.ResetPasswordUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("ResetPassword", "Authentication", new { token = forgotPasswordViewModel.ResetPasswordToken, id = forgotPasswordViewModel.Id })}";
-                forgotPasswordViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                var forgotPasswordEmailTemplateViewModel = Mapper.Map<ForgotPasswordEmailTemplateViewModel>(user);
+                forgotPasswordEmailTemplateViewModel.ResetPasswordUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("ResetPassword", "Authentication", new { token = forgotPasswordEmailTemplateViewModel.ResetPasswordToken, id = forgotPasswordEmailTemplateViewModel.Id })}";
+                forgotPasswordEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
 
                 // Populate language
-                forgotPasswordViewModel.ResetYourPasswordText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ResetYourPassword");
-                forgotPasswordViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
-                forgotPasswordViewModel.ResetPasswordRequestText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ResetPasswordRequest");
-                forgotPasswordViewModel.ButtonClickBelowText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ButtonClickBelow");
-                forgotPasswordViewModel.NotWorkUrlText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotWorkUrl");
-                forgotPasswordViewModel.NotYourRequestText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotYourRequest");
-                forgotPasswordViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
-                forgotPasswordViewModel.ConnectWithUsText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ConnectWithUs");
-                forgotPasswordViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
-                forgotPasswordViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
-                forgotPasswordViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
-                forgotPasswordViewModel.ExpiredEmail24hText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExpiredEmail24h");
+                forgotPasswordEmailTemplateViewModel.ResetYourPasswordText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ResetYourPassword");
+                forgotPasswordEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+                forgotPasswordEmailTemplateViewModel.ResetPasswordRequestText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ResetPasswordRequest");
+                forgotPasswordEmailTemplateViewModel.ButtonClickBelowText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ButtonClickBelow");
+                forgotPasswordEmailTemplateViewModel.NotWorkUrlText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotWorkUrl");
+                forgotPasswordEmailTemplateViewModel.NotYourRequestText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotYourRequest");
+                forgotPasswordEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+                forgotPasswordEmailTemplateViewModel.ConnectWithUsText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ConnectWithUs");
+                forgotPasswordEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+                forgotPasswordEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+                forgotPasswordEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+                forgotPasswordEmailTemplateViewModel.ExpiredEmail24hText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExpiredEmail24h");
 
-                template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_ForgotPasswordEmailTemplate.cshtml", forgotPasswordViewModel).Result;
+                template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_ForgotPasswordEmailTemplate.cshtml", forgotPasswordEmailTemplateViewModel).Result;
                 EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ResetPasswordEmailSent") });
             }
