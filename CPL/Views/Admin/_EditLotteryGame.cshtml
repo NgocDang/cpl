@@ -60,34 +60,52 @@
                         </div>
                         <div class="col-12 pt-1">
                             <fieldset class="form-label-group">
-                                <input id="slide-image" type="file" value="@Model.SlideImage" class="form-control pt-2" accept="image/*" name="slide-image" required maxlength="200">
+                                @if (Model != null)
+                                {
+                                    <input id="slide-image" type="file" value="@Model.SlideImage" class="form-control pt-2" accept="image/*" name="slide-image" maxlength="200">
+                                }
+                                else
+                                {
+                                    <input id="slide-image" type="file" value="@Model.SlideImage" class="form-control pt-2" accept="image/*" name="slide-image" required maxlength="200">
+                                }
                                 <label for="slide-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlideImage")</label>
                                 <div class="invalid-feedback">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SliderImageRequired")
                                 </div>
-                                <img class="img-fluid d-none" src="" id="slide-image-preview" />
                             </fieldset>
                         </div>
                         <div class="col-12 pt-1">
                             <div class="row">
                                 <div class="col-lg-6 col-12">
                                     <fieldset class="form-label-group">
-                                        <input id="desktop-image" type="file" value="@Model.DesktopListingImage" class="form-control pt-2" accept="image/*" name="slide-image" required maxlength="200">
+                                        @if (Model != null)
+                                        {
+                                            <input id="desktop-image" type="file" value="@Model.DesktopListingImage" class="form-control pt-2" accept="image/*" name="slide-image" maxlength="200">
+                                        }
+                                        else
+                                        {
+                                            <input id="desktop-image" type="file" value="@Model.DesktopListingImage" class="form-control pt-2" accept="image/*" name="slide-image" required maxlength="200">
+                                        }
                                         <label for="desktop-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopListingImage")</label>
                                         <div class="invalid-feedback">
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopImageRequired")
                                         </div>
-                                        <img class="img-fluid d-none" src="" id="desktop-image-preview" />
                                     </fieldset>
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <fieldset class="form-label-group">
-                                        <input id="mobile-image" type="file" value="@Model.MobileListingImage" class="form-control pt-2" accept="image/*" name="slide-image" required maxlength="200">
+                                        @if (Model != null)
+                                        {
+                                            <input id="mobile-image" type="file" value="@Model.MobileListingImage" class="form-control pt-2" accept="image/*" name="slide-image" maxlength="200">
+                                        }
+                                        else
+                                        {
+                                            <input id="mobile-image" type="file" value="@Model.MobileListingImage" class="form-control pt-2" accept="image/*" name="slide-image" required maxlength="200">
+                                        }
                                         <label for="mobile-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileListingImage")</label>
                                         <div class="invalid-feedback">
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileImageRequired")
                                         </div>
-                                        <img class="img-fluid d-none" src="" id="mobile-image-preview" />
                                     </fieldset>
                                 </div>
                             </div>
@@ -104,15 +122,15 @@
                                     @foreach (var prize in Model.LotteryPrizes)
                                     {
                                         <div class="row pt-1 row-prize">
-                                            <div class="col-12 blurry-text">
+                                            <div class="col-12">
                                                 <h6 id="prize-title"></h6>
-                                                <input type="number" value="@Model.LotteryPrizes.IndexOf(prize) + 1" hidden id="prize-title-id" />
+                                                <input type="number" value="@(Model.LotteryPrizes.IndexOf(prize) + 1)" hidden id="prize-title-id" />
                                             </div>
-                                            <div class="col-10 blurry-text">
+                                            <div class="col-10">
                                                 <div class="row ml-0">
                                                     <div class="col-5 px-0">
                                                         <fieldset class="form-label-group mb-0">
-                                                            <input name="prize-award" id="prize-award" type="number" min="1" value="0" class="form-control" required disabled />
+                                                            <input name="prize-award" id="prize-award" type="number" min="1" value="@prize.Value" step="1" class="form-control" required />
                                                             <label for="prize-award" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</label>
                                                             <div class="invalid-feedback">
                                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrizeAwardRequired")
@@ -124,7 +142,7 @@
                                                     </div>
                                                     <div class="col-5 px-0">
                                                         <fieldset class="form-label-group mb-0">
-                                                            <input name="prize-number-of-ticket" id="prize-number-of-ticket" type="number" min="1" value="0" class="form-control" required disabled />
+                                                            <input name="prize-number-of-ticket" id="prize-number-of-ticket" type="number" min="1" step="1" value="@prize.Volume" class="form-control" required />
                                                             <label for="prize-number-of-ticket" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets")</label>
                                                             <div class="invalid-feedback">
                                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrizeNumberOfTicketRequired")
@@ -142,12 +160,13 @@
                                     <div class="row pt-1 row-prize new-prize">
                                         <div class="col-12 blurry-text">
                                             <h6 id="prize-title"></h6>
+                                            <input type="number" value="@(Model.LotteryPrizes.Count + 1)" hidden id="prize-title-id" />
                                         </div>
                                         <div class="col-10 blurry-text">
                                             <div class="row ml-0">
                                                 <div class="col-5 px-0">
                                                     <fieldset class="form-label-group mb-0">
-                                                        <input name="prize-award" id="prize-award" type="number" min="1" value="0" class="form-control" required disabled />
+                                                        <input name="prize-award" id="prize-award" type="number" min="1" value="0" step="1" class="form-control" required disabled />
                                                         <label for="prize-award" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</label>
                                                         <div class="invalid-feedback">
                                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrizeAwardRequired")
@@ -159,7 +178,7 @@
                                                 </div>
                                                 <div class="col-5 px-0">
                                                     <fieldset class="form-label-group mb-0">
-                                                        <input name="prize-number-of-ticket" id="prize-number-of-ticket" type="number" min="1" value="0" class="form-control" required disabled />
+                                                        <input name="prize-number-of-ticket" id="prize-number-of-ticket" type="number" min="1" value="0" step="1" class="form-control" required disabled />
                                                         <label for="prize-number-of-ticket" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets")</label>
                                                         <div class="invalid-feedback">
                                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrizeNumberOfTicketRequired")
@@ -185,7 +204,7 @@
                                             <div class="row ml-0">
                                                 <div class="col-5 px-0">
                                                     <fieldset class="form-label-group mb-0">
-                                                        <input name="prize-award" id="prize-award" type="number" min="1" value="0" class="form-control" required disabled />
+                                                        <input name="prize-award" id="prize-award" type="number" min="1" value="0" step="1" class="form-control" required disabled />
                                                         <label for="prize-award" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</label>
                                                         <div class="invalid-feedback">
                                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrizeAwardRequired")
@@ -197,7 +216,7 @@
                                                 </div>
                                                 <div class="col-5 px-0">
                                                     <fieldset class="form-label-group mb-0">
-                                                        <input name="prize-number-of-ticket" id="prize-number-of-ticket" type="number" min="1" value="0" class="form-control" required disabled />
+                                                        <input name="prize-number-of-ticket" id="prize-number-of-ticket" type="number" min="1" value="0" step="1" class="form-control" required disabled />
                                                         <label for="prize-number-of-ticket" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets")</label>
                                                         <div class="invalid-feedback">
                                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrizeNumberOfTicketRequired")
@@ -217,10 +236,14 @@
                     </div>
                 </div>
                 <div class="modal-footer text-right">
+                    <button type="button" class="btn btn-success btn-sm btn-save-publish">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SaveAndPublish")<i class="la la-external-link font-size-15px"></i></button>
+                    <button type="button" class="btn btn-primary btn-sm btn-save">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save") <i class="la la-save font-size-15px"></i></button>
+
                     <button type="button" class="btn btn-success btn-sm btn-add-publish">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AddAndPublish")<i class="la la-external-link font-size-15px"></i></button>
                     <button type="button" class="btn btn-primary btn-sm btn-add">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Add") <i class="la la-plus font-size-15px"></i></button>
                     <button type="button" class="btn btn-secondary btn-sm btn-cancel" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
                 </div>
+                <input type="number" value="@Model.Id" hidden id="lottery-id" />
             </form>
         </div>
     </div>

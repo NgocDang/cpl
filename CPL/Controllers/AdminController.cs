@@ -585,13 +585,147 @@ namespace CPL.Controllers
         public IActionResult EditLotteryGame(int id)
         {
             var lotteryGame = new LotteryViewModel();
+
+            if (id > 0)
+            {
+                lotteryGame = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
+                                                            .Include(x => x.LotteryPrizes)
+                                                            .Select()
+                                                            .FirstOrDefault(x => x.Id == id));
+            }
+
             return PartialView("_EditLotteryGame", lotteryGame);
         }
 
         [HttpPost]
         public JsonResult UpdateEditLotteryGame(LotteryViewModel viewModel)
         {
-            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            try
+            {
+                var lotteryGame = _lotteryService.Queryable().FirstOrDefault(x => x.Id == viewModel.Id);
+
+                // lottery game
+                lotteryGame.Title = viewModel.Title;
+                lotteryGame.Volume = viewModel.Volume;
+                lotteryGame.UnitPrice = viewModel.UnitPrice;
+
+                if (!viewModel.IsPublish)
+                    lotteryGame.Status = (int)EnumLotteryGameStatus.PENDING;
+                else
+                    lotteryGame.Status = (int)EnumLotteryGameStatus.ACTIVE;
+
+                // slider image
+                if (viewModel.DesktopListingImageFile != null)
+                {
+                    var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
+                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                    var sliderImage = $"{lotteryGame.Phase.ToString()}_Slider_{timestamp}_{viewModel.SlideImageFile.FileName}";
+                    var sliderImagePath = Path.Combine(pathLottery, sliderImage);
+                    viewModel.SlideImageFile.CopyTo(new FileStream(sliderImagePath, FileMode.Create));
+                    lotteryGame.SlideImage = sliderImage;
+                }
+
+                // desktop image
+                if (viewModel.MobileListingImageFile != null)
+                {
+                    var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
+                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                    var desktopImage = $"{lotteryGame.Phase.ToString()}_Desktop_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
+                    var desktopImagePath = Path.Combine(pathLottery, desktopImage);
+                    viewModel.DesktopListingImageFile.CopyTo(new FileStream(desktopImagePath, FileMode.Create));
+                    lotteryGame.DesktopListingImage = desktopImage;
+                }
+
+                // mobile image
+                if (viewModel.SlideImageFile != null)
+                {
+                    var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
+                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                    var mobileImage = $"{lotteryGame.Phase.ToString()}_Mobile_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
+                    var mobileImagePath = Path.Combine(pathLottery, mobileImage);
+                    viewModel.MobileListingImageFile.CopyTo(new FileStream(mobileImagePath, FileMode.Create));
+                    lotteryGame.MobileListingImage = mobileImage;
+                }
+
+                _lotteryService.Update(lotteryGame);
+
+                // lottery prize
+                var lotteryGamePrize = _lotteryPrizeService.Queryable().Where(x => x.LotteryId == viewModel.Id).ToList();
+                var numberOfOldPrize = lotteryGamePrize.Count();
+                var numberOfNewPrize = viewModel.LotteryPrizes.Count - 1;
+
+                if (numberOfOldPrize >= numberOfNewPrize)
+                {
+                    for (var i = 0; i < numberOfOldPrize; i++)
+                    {
+                        if (i < numberOfNewPrize)
+                        {
+                            var newPrize = lotteryGamePrize[i];
+                            newPrize.Value = viewModel.LotteryPrizes[i].Value;
+                            newPrize.Volume = viewModel.LotteryPrizes[i].Volume;
+                            _lotteryPrizeService.Update(newPrize);
+                        }
+                        else
+                        {
+                            var deletedPrize = lotteryGamePrize[i];
+                            _lotteryPrizeService.Delete(deletedPrize);
+                        }
+                    }
+                }
+                else
+                {
+                    for (var i = 0; i < numberOfNewPrize; i++)
+                    {
+                        if (i < numberOfOldPrize)
+                        {
+                            var newPrize = lotteryGamePrize[i];
+                            newPrize.Value = viewModel.LotteryPrizes[i].Value;
+                            newPrize.Volume = viewModel.LotteryPrizes[i].Volume;
+                            _lotteryPrizeService.Update(newPrize);
+                        }
+                        else
+                        {
+                            var prize = viewModel.LotteryPrizes[i];
+                            if (prize.Volume == 0 && prize.Value == 0) continue;
+                            var color = "";
+                            switch (i)
+                            {
+                                case 0:
+                                    color = "bg-warning";
+                                    break;
+                                case 1:
+                                    color = "bg-primary";
+                                    break;
+                                case 2:
+                                    color = "bg-danger";
+                                    break;
+                                default:
+                                    color = "bg-success";
+                                    break;
+                            }
+
+                            _lotteryPrizeService.Insert(new LotteryPrize()
+                            {
+                                Name = Utils.AddOrdinal(i + 1),
+                                Value = prize.Value,
+                                Color = color,
+                                Volume = prize.Volume,
+                                LotteryId = viewModel.Id
+                            });
+                        }
+                    }
+                }
+
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
         }
 
         [HttpPost]
@@ -645,7 +779,6 @@ namespace CPL.Controllers
                 {
                     if (prize.Volume == 0 && prize.Value == 0) continue;
                     var index = viewModel.LotteryPrizes.IndexOf(prize);
-                    var name = prize.Name.Substring(0, 4).Trim();
                     var color = "";
                     switch (index)
                     {
@@ -665,7 +798,7 @@ namespace CPL.Controllers
 
                     _lotteryPrizeService.Insert(new LotteryPrize()
                     {
-                        Name = name,
+                        Name = Utils.AddOrdinal(index + 1),
                         Value = prize.Value,
                         Color = color,
                         Volume = prize.Volume,
@@ -674,19 +807,58 @@ namespace CPL.Controllers
                 }
 
                 _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
             }
             catch (Exception ex)
             {
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
             }
+        }
 
-            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+        public IActionResult DeleteLotteryGameConfirm(int id)
+        {
+            ViewData["gameId"] = id;
+            return PartialView("_DeleteLotteryGameConfirm");
         }
 
         [HttpPost]
         public JsonResult DeleteLotteryGame(int id)
         {
-            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
+            try
+            {
+                var lotteryGame = _lotteryService.Queryable().FirstOrDefault(x => x.Id == id);
+                var lotteryGamePrize = _lotteryPrizeService.Queryable().Where(x => x.LotteryId == id);
+
+                foreach (var prize in lotteryGamePrize)
+                {
+                    _lotteryPrizeService.Delete(prize);
+                }
+
+                _lotteryService.Delete(lotteryGame);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult ActivateLotteryGame(int id)
+        {
+            try
+            {
+                var lotteryGame = _lotteryService.Queryable().FirstOrDefault(x => x.Id == id);
+                lotteryGame.Status = (int)EnumLotteryGameStatus.ACTIVE;
+                _lotteryService.Update(lotteryGame);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ActivateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
         }
         #endregion
 

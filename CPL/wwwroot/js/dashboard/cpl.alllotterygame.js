@@ -4,10 +4,16 @@
         LotteryGames.lotteryGamesDataTable = LotteryGames.loadLotteryGamesDataTable();
         LotteryGames.loadLightBox();
         LotteryGames.bindAddButton();
+        LotteryGames.bindEditButton();
+        LotteryGames.bindDeleteButton();
         LotteryGames.bindAddNewPrize();
         LotteryGames.bindRemovePrize();
         LotteryGames.bindAddNewGame();
         LotteryGames.bindAddAndPublishNewGame();
+        LotteryGames.bindUpdateGame();
+        LotteryGames.bindUpdateAndPublishGame();
+        LotteryGames.bindActivateGame();
+        LotteryGames.bindDeleteGame();
     },
     loadLotteryGamesDataTable: function () {
         return $('#dt-all-lottery-game').DataTable({
@@ -123,12 +129,67 @@
                 success: function (data) {
                     $("#modal").html(data);
                     $("#edit-lottery-game").modal("show");
-                    $("#edit-lottery-game #btn-save").hide();
+                    $("#edit-lottery-game .btn-save").hide();
+                    $("#edit-lottery-game .btn-save-publish").hide();
                     $("#prize-lottery")
                         .find("div.row.row-prize")
                         .map(function () {
-                            $(this).find("#prize-title").html(Utils.addOrdinalSuffix(parseInt($("#prize-title-id").val())) + " " + $("#prize-text").val());
+                            $(this).find("#prize-title").html(Utils.addOrdinalSuffix(parseInt($(this).find("#prize-title-id").val())) + " " + $("#prize-text").val());
                         });
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                }
+            });
+            return false;
+        });
+    },
+    bindEditButton: function () {
+        $("#dt-all-lottery-game").on("click", ".btn-edit", function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/EditLotteryGame",
+                type: "GET",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: {
+                    id: $(_this).data().id
+                },
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#edit-lottery-game").modal("show");
+                    $("#edit-lottery-game .btn-add").hide();
+                    $("#edit-lottery-game .btn-add-publish").hide();
+                    $("#prize-lottery")
+                        .find("div.row.row-prize")
+                        .map(function () {
+                            $(this).find("#prize-title").html(Utils.addOrdinalSuffix(parseInt($(this).find("#prize-title-id").val())) + " " + $("#prize-text").val());
+                        });
+                    $($("#prize-lottery").find("div.row.row-prize").last().prev()).find(".btn-remove-prize").removeClass("d-none");
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                }
+            });
+            return false;
+        });
+    },
+    bindDeleteButton: function () {
+        $("#dt-all-lottery-game").on("click", ".btn-delete", function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/DeleteLotteryGameConfirm",
+                type: "GET",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: {
+                    id: $(_this).data().id
+                },
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#delete-lottery-game").modal("show");
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
@@ -153,9 +214,9 @@
             _parent.find(".btn-add-prize").addClass("d-none");
             _parent.find(".btn-remove-prize").removeClass("d-none");
 
-            _newPrize.find("h6").html(Utils.addOrdinalSuffix(_uncles[0].children.length + 1) + " " + $("#prize-text").val());
+            _newPrize.find("h6#prize-title").html(Utils.addOrdinalSuffix(_uncles[0].children.length + 1) + " " + $("#prize-text").val());
 
-            _uncles.append('<div class="row pt-1 select new-prize">' + _newPrize.html()) + '</div>';
+            _uncles.append('<div class="row pt-1 row-prize new-prize">' + _newPrize.html()) + '</div>';
 
             return false;
         });
@@ -173,7 +234,7 @@
                 _prevUncle.find(".btn-remove-prize").removeClass("d-none");
             };
 
-            _nextUncle.find("h6").html(Utils.addOrdinalSuffix(parseInt(_uncles[0].children.length)) + " " + $("#prize-text").val());
+            _nextUncle.find("h6#prize-title").html(Utils.addOrdinalSuffix(parseInt(_uncles[0].children.length)) + " " + $("#prize-text").val());
 
             return false;
         });
@@ -183,8 +244,8 @@
             var _this = this;
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
-            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.select").length;
-            if (prizeCounter < 1) {
+            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").length;
+            if (prizeCounter <= 1) {
                 $("#prize-required").addClass("d-block");
                 return false;
             }
@@ -212,8 +273,7 @@
                 formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
                 formData.append('IsPublish', false);
 
-                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.select").map(function (i, e) {
-                    formData.append('LotteryPrizes[' + i + '].Name', $(this).find("h6").text());
+                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
                     formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
                 });
@@ -243,6 +303,7 @@
                     }
                 });
             }
+            return false;
         });
     },
     bindAddAndPublishNewGame: function () {
@@ -250,8 +311,8 @@
             var _this = this;
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
-            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.select").length;
-            if (prizeCounter < 1) {
+            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").length;
+            if (prizeCounter <= 1) {
                 $("#prize-required").addClass("d-block");
                 return false;
             }
@@ -279,8 +340,7 @@
                 formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
                 formData.append('IsPublish', true);
 
-                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.select").map(function (i, e) {
-                    formData.append('LotteryPrizes[' + i + '].Name', $(this).find("h6").text());
+                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
                     formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
                 });
@@ -310,11 +370,203 @@
                     }
                 });
             }
+            return false;
+        });
+    },
+    bindUpdateGame: function () {
+        $('#modal').on('click', '.btn-save', function () {
+            var _this = this;
+            var isFormValid = $(_this).parents("form")[0].checkValidity();
+            $(_this).parents("form").addClass('was-validated');
+            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").length;
+            if (prizeCounter <= 1) {
+                $("#prize-required").addClass("d-block");
+                return false;
+            }
+            else {
+                $("#prize-required").removeClass("d-block");
+            }
+            if (isFormValid) {
+                var formData = new FormData();
+
+                var slideImage = $("#slide-image").get(0);
+                if (slideImage !== undefined && slideImage.files.length > 0) {
+                    formData.append('SlideImageFile', slideImage.files[0]);
+                }
+                var desktopImage = $("#desktop-image").get(0);
+                if (desktopImage !== undefined && desktopImage.files.length > 0) {
+                    formData.append('DesktopListingImageFile', desktopImage.files[0]);
+                }
+                var mobileImage = $("#mobile-image").get(0);
+                if (mobileImage !== undefined && mobileImage.files.length > 0) {
+                    formData.append('MobileListingImageFile', mobileImage.files[0]);
+                }
+
+                formData.append('Id', $(_this).parents("#form-edit-lottery-game").find("#lottery-id").val());
+                formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
+                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
+                formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
+                formData.append('IsPublish', false);
+
+                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
+                    formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
+                    formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
+                });
+
+                $.ajax({
+                    url: "/Admin/UpdateEditLotteryGame/",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
+                    },
+                    data: formData,
+                    success: function (data) {
+                        if (data.success) {
+                            $("#edit-lottery-game").modal("hide");
+                            toastr.success(data.message, 'Success!');
+                            LotteryGames.lotteryGamesDataTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text() + "<i class='la la-plus'></i>");
+                    }
+                });
+            }
+            return false;
+        });
+    },
+    bindUpdateAndPublishGame: function () {
+        $('#modal').on('click', '.btn-save-publish', function () {
+            var _this = this;
+            var isFormValid = $(_this).parents("form")[0].checkValidity();
+            $(_this).parents("form").addClass('was-validated');
+            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").length;
+            if (prizeCounter <= 1) {
+                $("#prize-required").addClass("d-block");
+                return false;
+            }
+            else {
+                $("#prize-required").removeClass("d-block");
+            }
+            if (isFormValid) {
+                var formData = new FormData();
+
+                var slideImage = $("#slide-image").get(0);
+                if (slideImage !== undefined && slideImage.files.length > 0) {
+                    formData.append('SlideImageFile', slideImage.files[0]);
+                }
+                var desktopImage = $("#desktop-image").get(0);
+                if (desktopImage !== undefined && desktopImage.files.length > 0) {
+                    formData.append('DesktopListingImageFile', desktopImage.files[0]);
+                }
+                var mobileImage = $("#mobile-image").get(0);
+                if (mobileImage !== undefined && mobileImage.files.length > 0) {
+                    formData.append('MobileListingImageFile', mobileImage.files[0]);
+                }
+
+                formData.append('Id', $(_this).parents("#form-edit-lottery-game").find("#lottery-id").val());
+                formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
+                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
+                formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
+                formData.append('IsPublish', true);
+
+                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
+                    formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
+                    formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
+                });
+
+                $.ajax({
+                    url: "/Admin/UpdateEditLotteryGame/",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
+                    },
+                    data: formData,
+                    success: function (data) {
+                        if (data.success) {
+                            $("#edit-lottery-game").modal("hide");
+                            toastr.success(data.message, 'Success!');
+                            LotteryGames.lotteryGamesDataTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text() + "<i class='la la-plus'></i>");
+                    }
+                });
+            }
+            return false;
+        });
+    },
+    bindActivateGame: function () {
+        $('#dt-all-lottery-game').on('click', '.btn-active', function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/ActivateLotteryGame/",
+                type: "POST",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: {
+                    id: $(_this).data().id
+                },
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message, 'Success!');
+                        LotteryGames.lotteryGamesDataTable.ajax.reload();
+                    } else {
+                        toastr.error(data.message, 'Error!');
+                    }
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                    $(_this).html($(_this).text());
+                }
+            });
+            return false;
+        });
+    },
+    bindDeleteGame: function () {
+        $('#modal').on('click', '.btn-delete', function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/DeleteLotteryGame/",
+                type: "POST",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: {
+                    id: $(_this).parents("#delete-lottery-game").find("#game-id").val()
+                },
+                success: function (data) {
+                    if (data.success) {
+                        $("#delete-lottery-game").modal("hide");
+                        toastr.success(data.message, 'Success!');
+                        LotteryGames.lotteryGamesDataTable.ajax.reload();
+                    } else {
+                        toastr.error(data.message, 'Error!');
+                    }
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                    $(_this).html($(_this).text());
+                }
+            });
+            return false;
         });
     }
 }
-
-
 
 $(document).ready(function () {
     LotteryGames.init();

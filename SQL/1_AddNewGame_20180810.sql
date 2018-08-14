@@ -36,3 +36,12 @@ INSERT INTO LangDetail VALUES (2, N'Activate', N'活性化する');
 
 INSERT INTO LangDetail VALUES (1, N'AddPrizeRequired', N'Please add prize for lottery game!');
 INSERT INTO LangDetail VALUES (2, N'AddPrizeRequired', N'宝くじゲームの賞を追加してください！');
+
+INSERT INTO LangDetail VALUES (1, N'SaveAndPublish', N'Save And Publish');
+INSERT INTO LangDetail VALUES (2, N'SaveAndPublish', N'保存して公開する');
+
+INSERT INTO LangDetail VALUES (1, N'ActivateSuccessfully', N'Activated Successfully');
+INSERT INTO LangDetail VALUES (2, N'ActivateSuccessfully', N'有効に成功しました');
+
+INSERT INTO LangDetail VALUES (1, N'DeleteLotteryGameConfirmation', N'Are you sure you want to delete this game?');
+INSERT INTO LangDetail VALUES (2, N'DeleteLotteryGameConfirmation', N'このゲームを削除してもよろしいですか？');
