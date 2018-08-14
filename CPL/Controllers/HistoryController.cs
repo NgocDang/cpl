@@ -8,8 +8,10 @@ using CPL.Misc;
 using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
+using CPL.ViewComponents;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Controllers
 {
@@ -389,91 +391,125 @@ namespace CPL.Controllers
         #endregion
 
         #region Transaction History
-        public IActionResult TransactionHistory()
+        public IActionResult Transaction()
         {
             return View();
         }
 
-        //public JsonResult SearchTransactionHistory(DataTableAjaxPostModel viewModel, int userId)
-        //{
-        //    // action inside a standard controller
-        //    int filteredResultsCount;
-        //    int totalResultsCount;
-        //    var res = SearchGameHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, userId);
-        //    return Json(new
-        //    {
-        //        // this is what datatables wants sending back
-        //        draw = viewModel.draw,
-        //        recordsTotal = totalResultsCount,
-        //        recordsFiltered = filteredResultsCount,
-        //        data = res
-        //    });
-        //}
+        public JsonResult SearchTransactionHistory(DataTableAjaxPostModel viewModel, int? userId)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchTransactionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, userId);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
 
-        //public IList<LotteryHistoryViewModel> SearchTransactionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
-        //{
-        //    var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-        //    var searchBy = (model.search != null) ? model.search.value?.ToLower() : null;
-        //    var take = model.length;
-        //    var skip = model.start;
+        public IList<CoinTransactionViewModel> SearchTransactionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? userId)
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == (userId ?? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id));
+            var searchBy = (model.search != null) ? model.search.value?.ToLower() : null;
+            var take = model.length;
+            var skip = model.start;
 
-        //    string sortBy = "";
-        //    bool sortDir = true;
+            string sortBy = "";
+            bool sortDir = true;
 
-        //    if (model.order != null)
-        //    {
-        //        // in this example we just default sort on the 1st column
-        //        sortBy = model.columns[model.order[0].column].data;
-        //        sortDir = model.order[0].dir.ToLower() == "desc";
-        //    }
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "desc";
+            }
 
-        //    totalResultsCount = _coinTransactionService
-        //                         .Queryable()
-        //                         .Where(x => x.SysUserId == user.Id)
-        //                         .Count();
+            totalResultsCount = _coinTransactionService
+                                 .Queryable()
+                                 .Where(x => x.SysUserId == user.Id)
+                                 .Count();
 
-        //    // search the dbase taking into consideration table sorting and paging
-        //    var lotteryHistory = _coinTransactionService
-        //                                  .Queryable()
-        //                                  .Where(x => x.SysUserId == user.Id)
-        //                                  .Select(x => new CoinTransactionViewModel
-        //                                  {
-        //                                      FromWalletAddress = x.FromWalletAddress,
-        //                                      ToWalletAddress = x.ToWalletAddress,
-        //                                      CoinAmount = x.CoinAmount,
-        //                                      CoinAmountInString = x.CoinAmount.ToString()
-        //                                      //CreatedDate = x.CreatedDate,
-        //                                      //CreatedDateInString = x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss"),
-        //                                      //LotteryPhase = x.Lottery.Phase,
-        //                                      //LotteryPhaseInString = x.Lottery.Phase.ToString("D3"),
-        //                                      //Result = x.Result == EnumGameResult.WIN.ToString() ? "Win" : (x.Result == EnumGameResult.LOSE.ToString() ? "Lose" : (x.Result == EnumGameResult.KYC_PENDING.ToString() ? "KYC Pending" : string.Empty)),
-        //                                      //Award = x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0,
-        //                                      //AwardInString = x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value.ToString("#,##0.##") : 0.ToString("#,##0.##"),
-        //                                      //TicketNumber = !string.IsNullOrEmpty(x.TicketNumber) ? $"{x.Lottery.Phase.ToString("D3")}{CPLConstant.ProjectName}{x.TicketNumber}" : string.Empty,
-        //                                      //UpdatedDate = x.UpdatedDate,
-        //                                      //UpdatedDateInString = x.UpdatedDate.HasValue ? x.UpdatedDate.Value.ToString("yyyy/MM/dd hh:mm:ss") : string.Empty,
-        //                                  });
+            // search the dbase taking into consideration table sorting and paging
+            var transactionHistory = _coinTransactionService
+                                          .Query()
+                                          .Include(x => x.Currency)
+                                          .Select()
+                                          .Where(x => x.SysUserId == user.Id)
+                                          .Select(x => new CoinTransactionViewModel
+                                          {
+                                              Id = x.Id,
+                                              CreatedDate = x.CreatedDate,
+                                              CreatedDateInString = x.CreatedDate.ToString(Format.DateTime),
+                                              FromWalletAddress = x.FromWalletAddress,
+                                              ToWalletAddress = x.ToWalletAddress,
+                                              CoinAmount = x.CoinAmount,
+                                              CoinAmountInString = x.CoinAmount.ToString(Format.Amount),
+                                              CurrencyId = x.CurrencyId,
+                                              CurrencyInString = x.Currency.Name,
+                                              Type = x.Type,
+                                              TypeInString = ((EnumCoinTransactionType)x.Type).ToString().Replace("_", " "),
+                                              Status = x.Status,
+                                              StatusInString = x.Status.ToEnumCoinstransactionStatus().ToString(),
+                                              Rate = x.Rate,
+                                              TxHashId = x.TxHashId,
+                                              TokenAmountInString = x.TokenAmount.GetValueOrDefault(0).ToString(Format.Amount)
+                                          });
 
-        //    if (string.IsNullOrEmpty(searchBy))
-        //    {
-        //        filteredResultsCount = totalResultsCount;
-        //    }
-        //    else
-        //    {
-        //        lotteryHistory = lotteryHistory
-        //                                .Where(x => x.CreatedDateInString.ToLower().Contains(searchBy)
-        //                                            || x.LotteryPhaseInString.ToLower().Contains(searchBy)
-        //                                            || x.Result.ToLower().Contains(searchBy)
-        //                                            || x.AwardInString.ToLower().Contains(searchBy)
-        //                                            || x.TicketNumber.ToLower().Contains(searchBy)
-        //                                            || x.UpdatedDateInString.ToLower().Contains(searchBy));
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = totalResultsCount;
+            }
+            else
+            {
+                transactionHistory = transactionHistory
+                                        .Where(x => x.CreatedDateInString.ToLower().Contains(searchBy)
+                                                    || x.ToWalletAddress.ToLower().Contains(searchBy)
+                                                    || x.CoinAmountInString.ToLower().Contains(searchBy)
+                                                    || x.CurrencyInString.ToLower().Contains(searchBy)
+                                                    || x.StatusInString.ToLower().Contains(searchBy));
 
-        //        filteredResultsCount = lotteryHistory.Count();
-        //    }
+                filteredResultsCount = transactionHistory.Count();
+            }
 
-        //    return lotteryHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
-        //}
-
+            return transactionHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
+        }
+       
+        public IActionResult TransactionDetail(int id)
+        {
+            var sysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
+            var viewModel = _coinTransactionService
+                                    .Query()
+                                    .Include(x => x.Currency)
+                                    .Select()
+                                    .Where(x => x.SysUserId == sysUserId && x.Id == id)
+                                    .Select(x => new CoinTransactionViewModel
+                                    {
+                                        Id = x.Id,
+                                        CreatedDate = x.CreatedDate,
+                                        CreatedDateInString = x.CreatedDate.ToString(Format.DateTime),
+                                        FromWalletAddress = x.FromWalletAddress,
+                                        ToWalletAddress = x.ToWalletAddress,
+                                        CoinAmount = x.CoinAmount,
+                                        CoinAmountInString = x.CoinAmount.ToString(Format.Amount),
+                                        CurrencyId = x.CurrencyId,
+                                        CurrencyInString = x.Currency.Name,
+                                        Type = x.Type,
+                                        TypeInString = ((EnumCoinTransactionType)x.Type).ToString().Replace("_", " "),
+                                        Status = x.Status,
+                                        StatusInString = x.Status.ToEnumCoinstransactionStatus().ToString(),
+                                        Rate = x.Rate,
+                                        TxHashId = x.TxHashId,
+                                        TokenAmount = x.TokenAmount,
+                                        TokenAmountInString = x.TokenAmount.GetValueOrDefault(0).ToString(Format.Amount)
+                                    })
+                                    .FirstOrDefault();
+            return View(viewModel);
+        }
         #endregion
 
 

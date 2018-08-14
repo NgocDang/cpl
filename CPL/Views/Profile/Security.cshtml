@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        @await Component.InvokeAsync("TokenBalance")
+        @await Component.InvokeAsync("LotteryResult")
 
         <div class="content-body">
             <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EditEmail")</h6>

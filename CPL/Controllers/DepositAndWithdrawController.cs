@@ -118,7 +118,7 @@ namespace CPL.Controllers
                             CoinAmount = viewModel.Amount,
                             CreatedDate = DateTime.Now,
                             CurrencyId = (int)EnumCurrency.BTC,
-                            Status = EnumCoinstransactionStatus.PENDING.ToBoolean(),
+                            Status = EnumCoinTransactionStatus.PENDING.ToBoolean(),
                             TxHashId = txHashId,
                             Type = (int)EnumCoinTransactionType.WITHDRAW_BTC
                         });
@@ -165,7 +165,7 @@ namespace CPL.Controllers
                             CoinAmount = viewModel.Amount,
                             CreatedDate = DateTime.Now,
                             CurrencyId = (int)EnumCurrency.ETH,
-                            Status = EnumCoinstransactionStatus.PENDING.ToBoolean(),
+                            Status = EnumCoinTransactionStatus.PENDING.ToBoolean(),
                             TxHashId = txHashId,
                             Type = (int)EnumCoinTransactionType.WITHDRAW_ETH
                         });

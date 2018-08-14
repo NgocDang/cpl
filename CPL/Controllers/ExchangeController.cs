@@ -84,7 +84,7 @@ namespace CPL.Controllers
                         CurrencyId = (int)EnumCurrency.BTC,
                         TokenAmount = tokenAmount,
                         Rate = btcToTokenRate,
-                        Status = EnumCoinstransactionStatus.SUCCESS.ToBoolean(),
+                        Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
                         Type = (int)EnumCoinTransactionType.EXCHANGE_BTC_TO_CPL
                     });
 
@@ -106,7 +106,7 @@ namespace CPL.Controllers
                         CurrencyId = (int)EnumCurrency.ETH,
                         TokenAmount = tokenAmount,
                         Rate = btcToTokenRate * (float)CoinExchangeExtension.CoinExchanging(),
-                        Status = EnumCoinstransactionStatus.SUCCESS.ToBoolean(),
+                        Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
                         Type = (int)EnumCoinTransactionType.EXCHANGE_ETH_TO_CPL
                     });
 
@@ -130,7 +130,7 @@ namespace CPL.Controllers
                             CurrencyId = (int)EnumCurrency.BTC,
                             TokenAmount = viewModel.FromAmount,
                             Rate = btcToTokenRate,
-                            Status = EnumCoinstransactionStatus.SUCCESS.ToBoolean(),
+                            Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
                             Type = (int)EnumCoinTransactionType.EXCHANGE_CPL_TO_BTC
                         });
 
@@ -152,7 +152,7 @@ namespace CPL.Controllers
                             CurrencyId = (int)EnumCurrency.ETH,
                             TokenAmount = viewModel.FromAmount,
                             Rate = btcToTokenRate * (float)CoinExchangeExtension.CoinExchanging(),
-                            Status = EnumCoinstransactionStatus.SUCCESS.ToBoolean(),
+                            Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
                             Type = (int)EnumCoinTransactionType.EXCHANGE_CPL_TO_ETH
                         });
 

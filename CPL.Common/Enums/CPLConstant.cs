@@ -100,12 +100,12 @@ namespace CPL.Common.Enums
         // Withdraw and deposit
         // BTC
         public static string BTCDepositAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
-        public static string BTCWithdrawAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
-        public static string BTCWithdrawPrivateKey { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
+        public static string BTCWithdrawAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return "mzobLqk3DwwhLnirjjjm7Xmzqxh2xtU6ew"; } }
+        public static string BTCWithdrawPrivateKey { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return "cVB6Q5EZoWRTNfNnVpCuwLaZ8DeSxPJNPXJc5uM9gMbBM9WkUckY"; } }
         // ETH
         public static string ETHDepositAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
-        public static string ETHWithdrawAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
-        public static string ETHWithdrawPrivateKey { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
+        public static string ETHWithdrawAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return "0xB43eA1802458754A122d02418Fe71326030C6412"; } }
+        public static string ETHWithdrawPrivateKey { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return "118dface57cbfc63874c0158964d7f810154feb3ddd08277636cd591e3638e60"; } }
 
         public static string Etherscan { get { if (Environment == EnumEnvironment.MAINNET) return "https://etherscan.io/tx/{0}"; else return "https://rinkeby.etherscan.io/tx/{0}"; } }
         public static string BlockInfo { get { if (Environment == EnumEnvironment.MAINNET) return "https://www.blockchain.com/btc/tx/{0}"; else return "https://testnet.blockchain.info/tx/{0}"; } }
@@ -116,5 +116,11 @@ namespace CPL.Common.Enums
 
         public static string RandomParamInJson = "{{\"1\":{{\"uint32\":\"{0}\"}},\"2\":{{\"address\":\"{1}\"}}, \"3\": {{\"uint32[]\":\"[{2}]\"}}}}"; // Replace { by {{ to fix bug invalid input string when using string.Format
         public static string GetTicketParamInJson = "{\"1\":{\"uint32\":\"{0}\"},\"2\":{\"address\":\"{1}\"}, \"3\": {\"uint32\":\"{2}\"}}";
+
+        public struct Format
+        {
+            public static string Amount = "#,##0.########";
+            public static string DateTime = "yyyy/MM/dd hh:mm:ss";
+        }
     }
 }

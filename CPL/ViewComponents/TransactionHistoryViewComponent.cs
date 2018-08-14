@@ -2,9 +2,9 @@
 
 namespace CPL.ViewComponents
 {
-    public class TranscationHistoryViewComponent : ViewComponent
+    public class TransactionHistoryViewComponent : ViewComponent
     {
-        public TranscationHistoryViewComponent() { }
+        public TransactionHistoryViewComponent() { }
 
         public IViewComponentResult Invoke()
         {

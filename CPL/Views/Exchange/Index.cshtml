@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
-    <link href="~/css/dashboard/cpl.exchange.css" rel="stylesheet" asp-append-version="true" />
 }
 
 <div class="app-content container center-layout mt-2">
@@ -32,7 +31,7 @@
                 </div>
             </div>
         </div>
-        @await Component.InvokeAsync("TokenBalance")
+        @await Component.InvokeAsync("LotteryResult")
 
         <input type="hidden" value="@Model.BTCToTokenrate" class="btc-token-rate" />
         <input type="hidden" value="@Model.ETHToBTCRate" class="eth-btc-rate" />
@@ -52,6 +51,6 @@
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
-    <script src="~/js/dashboard/cpl.exchange.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.tokencalculator.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.exchange.viewcomponent.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.tokencalculator.viewcomponent.js" asp-append-version="true"></script>
 }

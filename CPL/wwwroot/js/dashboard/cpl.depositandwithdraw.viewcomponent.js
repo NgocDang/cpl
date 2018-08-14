@@ -1,9 +1,9 @@
-﻿var DepositAndWithdraw = {
+﻿var DepositAndWithdrawViewComponent = {
     init: function () {
-        DepositAndWithdraw.bindCopy();
-        DepositAndWithdraw.bindMax();
-        DepositAndWithdraw.bindDoWithdraw();
-        DepositAndWithdraw.bindReadQrCode();
+        DepositAndWithdrawViewComponent.bindCopy();
+        DepositAndWithdrawViewComponent.bindMax();
+        DepositAndWithdrawViewComponent.bindDoWithdraw();
+        DepositAndWithdrawViewComponent.bindReadQrCode();
     },
     bindCopy: function () {
         if ($(".btn-copy").length > 0) {
@@ -15,9 +15,7 @@
     },
     bindMax: function () {
         $("#depositwithdraw-content").on("click", ".btn-max", function () {
-            if ($(this).parents("form").find("input.max-amount").length) {
-                $(this).parents("form").find(".amount-value").val($(this).parents("form").find(".max-amount").val());
-            }
+            $(this).parents("form").find(".amount-value").val($(this).parents("form").find(".amount-value").attr("max"));
         });
     },
     bindDoWithdraw: function () {
@@ -39,14 +37,14 @@
                             $(_this).parents("form").find(".address-error").hide();
                             $(_this).parents("form").find(".amount-error").hide();
                             toastr.success(data.message, 'Success!');
-                            DepositAndWithdraw.bindLoadViewComponent("withdraw");
+                            DepositAndWithdrawViewComponent.bindLoadViewComponent("withdraw");
                         }
                         else {
                             if (data.requireProfile != null && !data.requireProfile) {
-                                DepositAndWithdraw.loadRequireProfileViewComponent();
+                                DepositAndWithdrawViewComponent.loadRequireProfileViewComponent();
                             }
                             else if (data.requireKyc != null && !data.requireKyc) {
-                                DepositAndWithdraw.loadRequireKYCViewComponent();
+                                DepositAndWithdrawViewComponent.loadRequireKYCViewComponent();
                             } else {
                                 if (data.name === "wallet") {
                                     $(_this).parents("form").find(".amount-error").hide();
@@ -58,6 +56,8 @@
                                     $(_this).parents("form").find(".amount-error").html(data.message);
                                     $(_this).parents("form").find(".amount-error").show();
                                 }
+
+                                toastr.error(data.message, 'Error!');
                             }
 
                         }
@@ -145,5 +145,5 @@
 }
 
 $(document).ready(function () {
-    DepositAndWithdraw.init();
+    DepositAndWithdrawViewComponent.init();
 });
