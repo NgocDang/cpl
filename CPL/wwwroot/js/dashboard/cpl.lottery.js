@@ -1,8 +1,19 @@
 ﻿var Lottery = {
     init: function () {
+        Lottery.bindSpinTicketNumber();
         Lottery.bindPurchaseTicket();
         Lottery.bindConfirmPurchaseTicket();
         Lottery.bindCancelPurchaseTicket();
+    },
+    bindSpinTicketNumber: function () {
+        $('#form-purchase-lottery').on('change paste keyup input', '#number-of-ticket', function () {
+            var isFormValid = $('#form-purchase-lottery')[0].checkValidity();
+            $("#form-purchase-lottery").addClass('was-validated');
+            if (isFormValid) {
+                $("#total-amount").html(new Intl.NumberFormat('vn-VN').format($("#number-of-ticket").data().unitPrice * $("#number-of-ticket").val()));
+            } else 
+                $("#total-amount").html(0);
+        });
     },
     bindPurchaseTicket: function () {
         $('#form-purchase-lottery').on('click', '#btn-purchase-lottery', function () {

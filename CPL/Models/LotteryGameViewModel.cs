@@ -5,10 +5,14 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class LotteryGameViewModel
+    public class LotteryIndexViewModel
     {
-        public LotteryViewModel Lottery { get; set; }
+        public int Id { get; set; }
+        public int Volume { get; set; }
+        public List<LotteryHistoryViewModel> LotteryHistories { get; set; }
+
         public int? SysUserId { get; set; }
         public string PrecentOfPerchasedTickets { get; set; }
+        public int UnitPrice { get; set; }
     }
 }

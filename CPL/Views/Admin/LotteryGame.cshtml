@@ -2,8 +2,6 @@
     Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames");
 }
-@model LotteryGameViewModel
-
 @section styles
     {
     <link href="~/js/dashboard/plugins/lightbox/ekko-lightbox.css" rel="stylesheet" />

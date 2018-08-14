@@ -14,6 +14,7 @@ namespace CPL.Misc.AutoMapper
         {
             CreateMap<Lottery, LotteryViewModel>()
                 .ForMember(dest => dest.CreatedDateInString, opt => opt.MapFrom(src => src.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss")));
+            CreateMap<Lottery, LotteryIndexViewModel>();
             CreateMap<LotteryViewModel, Lottery>();
             CreateMap<Lottery, HomeLotteryViewModel>()
                 .ForMember(dest => dest.NumberOfTicketLeft, opt => opt.MapFrom(src => src.Volume - src.LotteryHistories.Count));

@@ -514,7 +514,7 @@ namespace CPL.Controllers
         #region LotteryGame
         public IActionResult LotteryGame()
         {
-            var viewModel = new LotteryGameViewModel();
+            var viewModel = new LotteryIndexViewModel();
             return View(viewModel);
         }
 
