@@ -510,6 +510,7 @@ namespace CPL.Controllers
         public IActionResult LotteryGame()
         {
             var viewModel = new LotteryGameViewModel();
+            viewModel.LangId = HttpContext.Session.GetInt32("LangId").Value;
             return View(viewModel);
         }
 
@@ -643,15 +644,24 @@ namespace CPL.Controllers
                 foreach (var prize in viewModel.LotteryPrizes)
                 {
                     if (prize.Volume == 0 && prize.Value == 0) continue;
-                    var name = prize.Name.Substring(0, 3);
+                    var index = viewModel.LotteryPrizes.IndexOf(prize);
+                    var name = prize.Name.Substring(0, 4).Trim();
                     var color = "";
-                    if (name == "1st")
-                        color = "bg-warning";
-                    else if (name == "2nd")
-                        color = "bg-primary";
-                    else if (name == "3rd")
-                        color = "bg-danger";
-                    else color = "bg-success";
+                    switch (index)
+                    {
+                        case 0:
+                            color = "bg-warning";
+                            break;
+                        case 1:
+                            color = "bg-primary";
+                            break;
+                        case 2:
+                            color = "bg-danger";
+                            break;
+                        default:
+                            color = "bg-success";
+                            break;
+                    }
 
                     _lotteryPrizeService.Insert(new LotteryPrize()
                     {

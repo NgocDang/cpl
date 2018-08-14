@@ -33,3 +33,6 @@ INSERT INTO LangDetail VALUES (2, N'MobileImageRequired', N'ゲーム用のモ�
 
 INSERT INTO LangDetail VALUES (1, N'Activate', N'Activate');
 INSERT INTO LangDetail VALUES (2, N'Activate', N'活性化する');
+
+INSERT INTO LangDetail VALUES (1, N'AddPrizeRequired', N'Please add prize for lottery game!');
+INSERT INTO LangDetail VALUES (2, N'AddPrizeRequired', N'宝くじゲームの賞を追加してください！');

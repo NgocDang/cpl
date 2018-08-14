@@ -50,7 +50,7 @@
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Activate")" id="activate" />
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Active")" id="active" />
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Completed")" id="completed" />
-                    <input type="text" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")" hidden id="prize-text" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")" hidden id="prize-text" />
                 </div>
             </div>
         </div>
@@ -67,5 +67,6 @@
     <script src="~/js/dashboard/plugins/intl-tel-input/js/intlTelInput.js"></script>
     <script src="~/js/dashboard/plugins/intl-tel-input/js/utils.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/cpl.utils.js"></script>
     <script src="~/js/dashboard/cpl.alllotterygame.js" asp-append-version="true"></script>
 }

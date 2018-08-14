@@ -8,7 +8,6 @@
         LotteryGames.bindRemovePrize();
         LotteryGames.bindAddNewGame();
         LotteryGames.bindAddAndPublishNewGame();
-
     },
     loadLotteryGamesDataTable: function () {
         return $('#dt-all-lottery-game').DataTable({
@@ -125,6 +124,11 @@
                     $("#modal").html(data);
                     $("#edit-lottery-game").modal("show");
                     $("#edit-lottery-game #btn-save").hide();
+                    $("#prize-lottery")
+                        .find("div.row.row-prize")
+                        .map(function () {
+                            $(this).find("#prize-title").html(Utils.addOrdinalSuffix(parseInt($("#prize-title-id").val())) + " " + $("#prize-text").val());
+                        });
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
@@ -149,7 +153,7 @@
             _parent.find(".btn-add-prize").addClass("d-none");
             _parent.find(".btn-remove-prize").removeClass("d-none");
 
-            _newPrize.find("h6").html(Utils.addOrdinal(_uncles[0].children.length + 1) + $("#prize-text").val());
+            _newPrize.find("h6").html(Utils.addOrdinalSuffix(_uncles[0].children.length + 1) + " " + $("#prize-text").val());
 
             _uncles.append('<div class="row pt-1 select new-prize">' + _newPrize.html()) + '</div>';
 
@@ -161,8 +165,6 @@
             var _this = this;
             var _uncles = $(_this).parents("#prize-lottery");
 
-            
-
             var _prevUncle = $(_this).closest("div.row").prev();
             var _nextUncle = $(_this).closest("div.row").next();
 
@@ -171,9 +173,7 @@
                 _prevUncle.find(".btn-remove-prize").removeClass("d-none");
             };
 
-            _nextUncle.find("h6").html(Utils.addOrdinal(_uncles[0].children.length) + $("#prize-text").val());
-
-            
+            _nextUncle.find("h6").html(Utils.addOrdinalSuffix(parseInt(_uncles[0].children.length)) + " " + $("#prize-text").val());
 
             return false;
         });
@@ -183,7 +183,14 @@
             var _this = this;
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
-
+            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.select").length;
+            if (prizeCounter < 1) {
+                $("#prize-required").addClass("d-block");
+                return false;
+            }
+            else {
+                $("#prize-required").removeClass("d-block");
+            }
             if (isFormValid) {
                 var formData = new FormData();
 
@@ -243,7 +250,14 @@
             var _this = this;
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
-
+            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.select").length;
+            if (prizeCounter < 1) {
+                $("#prize-required").addClass("d-block");
+                return false;
+            }
+            else {
+                $("#prize-required").removeClass("d-block");
+            }
             if (isFormValid) {
                 var formData = new FormData();
 
@@ -300,27 +314,7 @@
     }
 }
 
-var Utils = {
-    addOrdinal: function (num) {
-        if (num <= 0) return num.ToString();
-        switch (num % 100) {
-            case 11:
-            case 12:
-            case 13:
-                return num + "th ";
-        }
-        switch (num % 10) {
-            case 1:
-                return num + "st ";
-            case 2:
-                return num + "nd ";
-            case 3:
-                return num + "rd ";
-            default:
-                return num + "th ";
-        }
-    }
-};
+
 
 $(document).ready(function () {
     LotteryGames.init();
