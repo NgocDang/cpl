@@ -3,6 +3,7 @@
         GameHistoryViewComponent.loadHistoryDatatable();
     },
     loadHistoryDatatable: function () {
+        var sysUserId = $("#game-history-view-component #Id").val();
         $('#dt-history').DataTable({
             "processing": true,
             "serverSide": true,
@@ -33,7 +34,7 @@
                     "render": function (data, type, full, meta) {
                         if (full.gameType == "LOTTERY")
                             return "Lottery";
-                        else
+                        else if (full.gameType == "PRICE_PREDICTION")
                             return "Price Prediction"
                     }
                 },
@@ -67,6 +68,16 @@
                     "render": function (data, type, full, meta) {
                         return full.balanceInString;
                     }
+                },
+                {
+                    "data": "Action",
+                    "render": function (data, type, full, meta) {
+                        if (full.gameType == "LOTTERY")
+                            return "<a style='line-height:12px;' href='/History/Lottery?createdDate=" + full.createdDate + "&lotteryId=" + full.gameId + "&sysUserId=" + sysUserId + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>View</a>";
+                        else if (full.gameType == "PRICE_PREDICTION")
+                            return "<a style='line-height:12px;' href='/History/PricePrediction?id=" + full.gameId + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>View</a>";
+                    },
+                    "orderable": false
                 }
             ],
         });

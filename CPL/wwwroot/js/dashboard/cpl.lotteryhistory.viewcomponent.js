@@ -1,4 +1,4 @@
-var LotteryHistory = {
+﻿var LotteryHistory = {
     historyDatatable: null,
     init: function () {
         LotteryHistory.historyDatatable = LotteryHistory.loadLotteryHistoryTable();
@@ -6,14 +6,19 @@ var LotteryHistory = {
     loadLotteryHistoryTable: function () {
         if ($("#lottery-history").hasClass("d-none"))
             return false;
-
+        var _this = this;
         return $("#dt-lottery-history").DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
             "ajax": {
                 url: "/History/SearchLotteryHistory",
-                type: 'POST'
+                type: 'POST',
+                data: {
+                    lotteryId: $("#LotteryId").val(),
+                    createdDate: $("#CreatedDate").val(),
+                    sysUserId: $("#SysUserId").val()
+                }
             },
             "language": DTLang.getLang(),
             "columns": [
@@ -27,6 +32,12 @@ var LotteryHistory = {
                     "data": "LotteryPhase",
                     "render": function (data, type, full, meta) {
                         return full.lotteryPhaseInString;
+                    }
+                },
+                {
+                    "data": "StartDate",
+                    "render": function (data, type, full, meta) {
+                        return full.startDateInString;
                     }
                 },
                 {
