@@ -15,8 +15,9 @@
                 url: "/History/SearchLotteryHistory",
                 type: 'POST',
                 data: {
-                    id: $(_this).data().id,
-                    createdDate: $(_this).data.createdDate
+                    lotteryId: $("#LotteryId").val(),
+                    createdDate: $("#CreatedDate").val(),
+                    sysUserId: $("#SysUserId").val()
                 }
             },
             "language": DTLang.getLang(),
@@ -31,6 +32,12 @@
                     "data": "LotteryPhase",
                     "render": function (data, type, full, meta) {
                         return full.lotteryPhaseInString;
+                    }
+                },
+                {
+                    "data": "StartDate",
+                    "render": function (data, type, full, meta) {
+                        return full.startDateInString;
                     }
                 },
                 {

@@ -201,7 +201,7 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a style='line-height:12px;' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-info btn-view'>View</a> <button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-primary btn-edit'>Edit</button>";
+                        return "<a style='line-height:12px;' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-info btn-view'>View</a> <button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-primary btn-edit'>Edit</button>";
                     },
                     "orderable": false
                 }

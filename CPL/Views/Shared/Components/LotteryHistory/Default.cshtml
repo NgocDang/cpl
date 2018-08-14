@@ -10,6 +10,7 @@
                         <tr>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StartDate")</th>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTicketNumber")</th>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
@@ -17,6 +18,7 @@
                         </tr>
                     </thead>
                 </table>
+                @Html.Hidden("Id", Model)
             </div>
         </div>
     </div>

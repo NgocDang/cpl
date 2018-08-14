@@ -5,6 +5,7 @@ using AutoMapper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Misc;
+using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using Newtonsoft.Json;
 
 namespace CPL.Controllers
 {
+    [Permission(EnumRole.User)]
     public class HistoryController : Controller
     {
         private readonly ILotteryHistoryService _lotteryHistoryService;
@@ -36,17 +38,27 @@ namespace CPL.Controllers
 
         public IActionResult Game()
         {
-            var viewModel = new GameHistoryViewModel();
-            return View(viewModel);
+            return View(Mapper.Map<GameHistoryIndexViewModel>(_sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id)));
         }
 
         #region Lottery History
-        public JsonResult SearchLotteryHistory(DataTableAjaxPostModel viewModel)
+        public IActionResult Lottery(DateTime? createdDate, int? lotteryId, int sysUserId)
+        {
+            var viewModel = new LotteryHistoryIndexViewModel
+            {
+                CreatedDate = createdDate,
+                LotteryId = lotteryId,
+                SysUserId = sysUserId
+            };
+            return View(viewModel);
+        }
+
+        public JsonResult SearchLotteryHistory(DataTableAjaxPostModel viewModel, DateTime? createdDate, int? lotteryId, int sysUserId)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchLotteryHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, createdDate, id);
+            var res = SearchLotteryHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, createdDate, lotteryId, sysUserId);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -57,9 +69,13 @@ namespace CPL.Controllers
             });
         }
 
-        public IList<LotteryHistoryViewModel> SearchLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, DateTime? createdDate, int? id)
+        public IList<LotteryHistoryViewModel> SearchLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, 
+            DateTime? createdDate, int? lotteryId, int sysUserId)
         {
-            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            if (sysUserId == 0)
+            {
+                sysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
+            }
             var searchBy = (model.search != null) ? model.search.value?.ToLower() : null;
             var take = model.length;
             var skip = model.start;
@@ -74,14 +90,14 @@ namespace CPL.Controllers
                 sortDir = model.order[0].dir.ToLower() == "desc";
             }
 
-            if (createdDate.HasValue && id.HasValue)
+            if (createdDate.HasValue && lotteryId.HasValue)
             {
                 totalResultsCount = _lotteryHistoryService
                                  .Query()
                                  .Include(x => x.Lottery)
                                  .Include(x => x.LotteryPrize)
                                  .Select()
-                                 .Where(x => x.SysUserId == user.Id && x.LotteryId == id.Value && x.CreatedDate.Date == createdDate.Value.Date)
+                                 .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && x.CreatedDate.Date == createdDate.Value.Date)
                                  .Count();
 
                 // search the dbase taking into consideration table sorting and paging
@@ -90,11 +106,13 @@ namespace CPL.Controllers
                                               .Include(x => x.Lottery)
                                               .Include(x => x.LotteryPrize)
                                               .Select()
-                                              .Where(x => x.SysUserId == user.Id && x.LotteryId == id.Value && x.CreatedDate.Date == createdDate.Value.Date)
+                                              .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && x.CreatedDate.Date == createdDate.Value.Date)
                                               .Select(x => new LotteryHistoryViewModel
                                               {
                                                   CreatedDate = x.CreatedDate,
                                                   CreatedDateInString = x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss"),
+                                                  StartDate = x.Lottery.CreatedDate,
+                                                  StartDateInString = x.Lottery.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss"),
                                                   LotteryPhase = x.Lottery.Phase,
                                                   LotteryPhaseInString = x.Lottery.Phase.ToString("D3"),
                                                   Result = x.Result == EnumGameResult.WIN.ToString() ? "Win" : (x.Result == EnumGameResult.LOSE.ToString() ? "Lose" : (x.Result == EnumGameResult.KYC_PENDING.ToString() ? "KYC Pending" : string.Empty)),
@@ -131,7 +149,7 @@ namespace CPL.Controllers
                                  .Include(x => x.Lottery)
                                  .Include(x => x.LotteryPrize)
                                  .Select()
-                                 .Where(x => x.SysUserId == user.Id)
+                                 .Where(x => x.SysUserId == sysUserId)
                                  .Count();
 
                 // search the dbase taking into consideration table sorting and paging
@@ -140,7 +158,7 @@ namespace CPL.Controllers
                                               .Include(x => x.Lottery)
                                               .Include(x => x.LotteryPrize)
                                               .Select()
-                                              .Where(x => x.SysUserId == user.Id)
+                                              .Where(x => x.SysUserId == sysUserId)
                                               .Select(x => new LotteryHistoryViewModel
                                               {
                                                   CreatedDate = x.CreatedDate,
@@ -175,6 +193,7 @@ namespace CPL.Controllers
                 return lotteryHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
             }
         }
+        #endregion
 
         #region Game History
         public JsonResult SearchGameHistory(DataTableAjaxPostModel viewModel, int userId)
@@ -243,7 +262,7 @@ namespace CPL.Controllers
                 var lotteryHistory = _lotteryHistoryService
                         .Query().Include(x => x.LotteryPrize).Select()
                         .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.LotteryPrize?.Value })
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.LotteryPrize?.Value})
                         .GroupBy(x => x.LotteryId)
                         .Select(y => new GameHistoryViewModel
                         {
@@ -283,7 +302,7 @@ namespace CPL.Controllers
                 filteredResultsCount = _lotteryHistoryService.Query()
                         .Include(x => x.LotteryPrize).Select()
                         .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.LotteryPrize?.Value })
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.LotteryPrize?.Value})
                         .GroupBy(x => x.LotteryId)
                         .Select(y => new GameHistoryViewModel
                         {
@@ -327,7 +346,7 @@ namespace CPL.Controllers
                 var lotteryHistory = _lotteryHistoryService.Query()
                         .Include(x => x.LotteryPrize).Select()
                         .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.LotteryPrize?.Value })
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.LotteryPrize?.Value})
                         .GroupBy(x => x.LotteryId)
                         .Select(y => new GameHistoryViewModel
                         {
@@ -538,12 +557,6 @@ namespace CPL.Controllers
 
             var mess = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
             return new JsonResult(new { success = true, message = mess });
-        }
-
-        public IActionResult LotteryHistoryDetail(DateTime createdDate, int id)
-        {
-            var viewModel = new LotteryHistoryViewModel();
-            return View(viewModel);
         }
     }
 }

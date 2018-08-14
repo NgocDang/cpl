@@ -1,8 +1,9 @@
-﻿@model LotteryHistoryViewModel
-@{
+﻿@{
     Layout = "_Layout";
-    ViewData["Title"] = "LotteryHistoryDetail";
+    ViewData["Title"] = "LotteryHistory";
 }
+
+@model LotteryHistoryIndexViewModel
 
 @section styles
     {
@@ -15,8 +16,11 @@
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-body">
-            @await Component.InvokeAsync("LotteryHistory")
+            @await Component.InvokeAsync("LotteryHistory", Model.SysUserId)
         </div>
+        @Html.HiddenFor(x => x.CreatedDate)
+        @Html.HiddenFor(x => x.LotteryId)
+        @Html.HiddenFor(x => x.SysUserId)
     </div>
 </div>
 
@@ -27,7 +31,7 @@
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
-    <script src="~/js/dashboard/cpl.lotteryhistory.js"></script>
+    <script src="~/js/dashboard/cpl.lotteryhistory.viewcomponent.js"></script>
 }
 
 
