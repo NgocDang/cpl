@@ -1,4 +1,4 @@
-﻿var TransactionHistory = {
+var TransactionHistory = {
     historyDatatable: null,
     init: function () {
         TransactionHistory.historyDatatable = TransactionHistory.loadLotteryHistoryTable();
