@@ -14,5 +14,13 @@ namespace CPL.Models
         public TemplateViewModel Template { get; set; }
 
         public string ActivationSuccessfulText { get; set; }
+        public string HiText { get; set; }
+        public string TeamMemberNowText { get; set; }
+        public string PlayGameNowText { get; set; }
+        public string CheersText { get; set; }
+        public string ContactInfoText { get; set; }
+        public string EmailText { get; set; }
+        public string WebsiteText { get; set; }
+        public string CPLTeamText { get; set; }
     }
 }

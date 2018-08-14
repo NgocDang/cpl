@@ -186,7 +186,7 @@ namespace CPL.SmartContractService
             }
             catch(Exception ex)
             {
-                if (ex.InnerException.Message != null)
+                if (ex.InnerException != null)
                     Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                 else
                     Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));

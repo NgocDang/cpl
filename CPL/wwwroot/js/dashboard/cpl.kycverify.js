@@ -152,8 +152,8 @@
                     "render": function (data, type, full, meta) {
                         if (!full.kycVerified) {
                             return "<div class='kyc-action-" + full.id + "'>" +
-                                "<button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-primary btn-kyc-verify'><i class='fas fa-check'></i></button> " +
-                                "<button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-danger btn-kyc-cancel'><i class='fas fa-ban'></i></button>" +
+                                "<button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-kyc-verify'><i class='fas fa-check'></i></button> " +
+                                "<button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-kyc-cancel'><i class='fas fa-ban'></i></button>" +
                                 "</div>";
                         }
                         return "";

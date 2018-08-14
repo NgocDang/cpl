@@ -55,13 +55,13 @@
             return false;
         });
         var checkValidReCaptchaV2 = function () {
-            var v = grecaptcha.getResponse();
-            if (v === '') {
-                return false;
-            }
-            else {
+            //var v = grecaptcha.getResponse();
+            //if (v === '') {
+            //    return false;
+            //}
+            //else {
                 return true;
-            }
+            //}
         }
     },
     bindVerify: function () {

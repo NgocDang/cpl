@@ -62,7 +62,8 @@ namespace CPL.Controllers
             {
                 var viewModel = new LotteryGameViewModel();
                 var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-                viewModel.SysUserId = user?.Id;
+                if (user != null)
+                    viewModel.SysUserId = user.Id;
 
                 var lottery = _lotteryService
                                 .Query()

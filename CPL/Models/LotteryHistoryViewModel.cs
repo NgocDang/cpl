@@ -18,9 +18,11 @@ namespace CPL.Models
         public decimal? Award { get; set; }
         public int? LotteryPrizeId { get; set; }
         public int TicketIndex { get; set; }
+        public DateTime LotteryStartDate { get; set; }
 
         public string LotteryPhaseInString { get; set; }
         public string CreatedDateInString { get; set; }
+        public string LotteryStartDateInString { get; set; }
         public string UpdatedDateInString { get; set; }
         public string AwardInString { get; set; }
     }

@@ -42,6 +42,7 @@ namespace CPL.Misc.MapperCreate
             CreateMap<SysUser, UserDashboardAdminViewModel>()
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.StreetAddress} {(!string.IsNullOrWhiteSpace(src.StreetAddress) ? "," : "")} {src.City + (!string.IsNullOrWhiteSpace(src.City) ? "," : "")} {src.Country}"));
             CreateMap<SysUser, GameHistoryViewModel>();
+            CreateMap<SysUser, GameHistoryIndexViewModel>();
         }
     }
 }
