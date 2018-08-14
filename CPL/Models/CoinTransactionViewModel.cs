@@ -25,6 +25,7 @@ namespace CPL.Models
         public string RateInString { get; set; }
         public string TypeInString { get; set; }
         public EnumCoinTransactionStatus StatusInEnum { get; set; }
+        public EnumCurrency CurrencyInEnum { get; set; }
         public string StatusInString { get; set; }
     }
 }
