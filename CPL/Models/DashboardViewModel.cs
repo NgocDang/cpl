@@ -12,6 +12,5 @@ namespace CPL.Models
         public string Email { get; set; }
         public bool? KYCVerified { get; set; }
         public string KYCStatus { get; set; }
-        
     }
 }

@@ -60,7 +60,7 @@ namespace CPL.Controllers
             this._lotteryHistoryService = lotteryHistoryService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(bool? edit)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             var viewModel = Mapper.Map<ProfileViewModel>(user);
@@ -69,6 +69,33 @@ namespace CPL.Controllers
 
             viewModel.NumberOfGameHistories = numberOfLotteryGame;
             viewModel.NumberOfTransactions = _coinTransactionService.Queryable().Count(x => x.SysUserId == viewModel.Id);
+            viewModel.Edit = false;
+
+            // Mapping KYC status
+            if (!user.KYCVerified.HasValue)
+            {
+                viewModel.KYCStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotVerifiedYet");
+                viewModel.Edit = edit ?? false; // only check when KYC is not commit yet
+            }
+            else if (user.KYCVerified == true)
+            {
+                viewModel.KYCStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Verified");
+            }
+            else // viewModel.KYCVerified == false
+            {
+                viewModel.KYCStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending");
+            }
+
+            // Mapping TwoFactorAuthenticationEnable status
+            if (user.TwoFactorAuthenticationEnable)
+            {
+                viewModel.TwoFactorAuthenticationEnableStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "IsEnabled");
+            }
+            else // viewModel.TwoFactorAuthenticationEnable == false
+            {
+                viewModel.TwoFactorAuthenticationEnableStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "IsNotEnabled");
+            }
+
             return View(viewModel);
         }
 

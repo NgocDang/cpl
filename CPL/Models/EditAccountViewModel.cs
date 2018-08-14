@@ -20,6 +20,13 @@ namespace CPL.Models
         public DateTime? DOB { get; set; }
         public bool? KYCVerified { get; set; }
         public DateTime? KYCCreatedDate { get; set; }
+        public string Email { get; set; }
+        public string KYCStatus { get; set; }
+        public string ETHHDWalletAddress { get; set; }
+        public string BTCHDWalletAddress { get; set; }
+        public bool TwoFactorAuthenticationEnable { get; set; }
+        public string TwoFactorAuthenticationEnableStatus { get; set; }
+        public bool Edit { get; set; }
 
         public int NumberOfTransactions { get; set; }
         public int NumberOfGameHistories { get; set; }

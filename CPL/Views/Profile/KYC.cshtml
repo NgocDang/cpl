@@ -40,27 +40,33 @@
                                 <div class="col-md-10 col-12">
                                     @if (!Model.KYCVerified.HasValue)
                                     {
-                                        <div class="row mb-1" id="kyc-verify">
-                                            <p id="kyc-message" class="text-muted col-sm-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyIdentityDesc")</p>
-                                            <div class="col-md-6 col-sm-12">
-                                                <fieldset class="form-label-group">
-                                                    <input id="FrontSideImage" type="file" value="@Model.FrontSideImage" class="form-control" name="FrontSideImage" required maxlength="30">
-                                                    <label for="FrontSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FrontSide")</label>
-                                                    <div class="invalid-feedback">
-                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FrontSideImageRequired")
-                                                    </div>
-                                                </fieldset>
-                                            </div>
-                                            <div class="col-md-6 col-sm-12">
-                                                <fieldset class="form-label-group">
-                                                    <input id="BackSideImage" type="file" value="@Model.BackSideImage" class="form-control" name="BackSideImage" required maxlength="30">
-                                                    <label for="BackSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BackSide")</label>
-                                                    <div class="invalid-feedback">
-                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BackSideImageRequired")
-                                                    </div>
-                                                </fieldset>
-                                            </div>
+                                    <div class="row mb-1" id="kyc-verify">
+                                        <div class="text-muted col-sm-12">
+                                            <p>
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCWarning")
+                                                <br />
+                                                <span id="kyc-message">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyIdentityDesc")</span>
+                                            </p>
                                         </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <fieldset class="form-label-group">
+                                                <input id="FrontSideImage" type="file" value="@Model.FrontSideImage" class="form-control" name="FrontSideImage" required maxlength="30">
+                                                <label for="FrontSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FrontSide")</label>
+                                                <div class="invalid-feedback">
+                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FrontSideImageRequired")
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12">
+                                            <fieldset class="form-label-group">
+                                                <input id="BackSideImage" type="file" value="@Model.BackSideImage" class="form-control" name="BackSideImage" required maxlength="30">
+                                                <label for="BackSideImage" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BackSide")</label>
+                                                <div class="invalid-feedback">
+                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BackSideImageRequired")
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
                                     }
                                     else if (Model.KYCVerified.Value)
                                     {
