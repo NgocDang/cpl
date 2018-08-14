@@ -1,18 +1,18 @@
 ﻿<div class="row">
     <div id="recent-transactions" class="col-12">
-        <h6 class="my-2">Transaction History</h6>
+        @*<h6 class="my-2 text-uppercase">Transaction History</h6>*@
         <div class="card">
             <div class="card-content">
-                <table id="dt-history" class="table responsive table-hover table-xl mb-0">
+                <table id="dt-transaction-history" class="table responsive table-hover table-xl mb-0">
                     <thead>
                         <tr>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Date")</th>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Time")</th>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameType")</th>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</th>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")</th>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToWalletAddress")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CoinAmount")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Currency")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Type")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
                         </tr>
                     </thead>
                 </table>
