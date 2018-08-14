@@ -92,22 +92,22 @@
                                     <p class="mt-2 text-lg-left text-center">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCWithdrawWarning"))</p>
                                     <div class="row">
                                         <div class="col-md-5 col-12">
-                                            <fieldset class="form-label-group mb-0">
-                                                <input type="number" name="btc-amount" class="form-control amount-value" value="0" required="" autofocus="" min="0.00000001" max="@Model.BTCAmount" step="any">
+                                            <fieldset class="form-group mb-0">
                                                 <label for="btc-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
+                                                <input type="number" name="btc-amount" class="form-control amount-value" value="0" required="" autofocus="" min="0.00000001" max="@Model.BTCAmount" step="any">
                                                 <div class="invalid-feedback amount-error">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidAmountOrInsufficientBalance")
                                                 </div>
                                             </fieldset>
-                                            <button type="button" class="btn btn-sm  mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
+                                            <button type="button" class="btn btn-sm mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
                                         </div>
-                                        <div class="col-md-2 col-12 mb-1 mt-1 text-center">
+                                        <div class="col-md-2 col-12 mb-sm-3 mt-sm-3 mb-1 mt-1 text-center">
                                             <span class="la la-arrow-right"></span>
                                         </div>
                                         <div class="col-md-5 col-12 mb-1">
-                                            <fieldset class="form-label-group mb-0">
-                                                <input type="text" class="form-control address-value" name="address-btc" required="" autofocus="">
+                                            <fieldset class="form-group mb-0">
                                                 <label for="address-btc">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</label>
+                                                <input type="text" class="form-control address-value" name="address-btc" required="" autofocus="">
                                                 <div class="invalid-feedback address-error">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ReceiveAddressRequired")
                                                 </div>
@@ -139,22 +139,22 @@
                                     <p class="mt-2 text-lg-left text-center">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHWithdrawWarning"))</p>
                                     <div class="row">
                                         <div class="col-md-5 col-12">
-                                            <fieldset class="form-label-group mb-0">
-                                                <input type="number" name="amount-eth" class="form-control amount-value" value="0" required="" autofocus="" min="0.00000001" max="@Model.ETHAmount" step="any">
+                                            <fieldset class="form-group mb-0">
                                                 <label for="amount-eth">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
+                                                <input type="number" name="amount-eth" class="form-control amount-value" value="0" required="" autofocus="" min="0.00000001" max="@Model.ETHAmount" step="any">
                                                 <div class="invalid-feedback amount-error">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidAmountOrInsufficientBalance")
                                                 </div>
                                             </fieldset>
                                             <button type="button" class="btn btn-sm mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
                                         </div>
-                                        <div class="col-md-2 col-12 mt-1 mb-1 text-center">
+                                        <div class="col-md-2 col-12 mb-sm-3 mt-sm-3 mb-1 mt-1 text-center">
                                             <span class="la la-arrow-right"></span>
                                         </div>
                                         <div class="col-md-5 col-12 mb-1">
-                                            <fieldset class="form-label-group mb-0">
-                                                <input type="text" class="form-control address-value" name="address-btc" required="" autofocus="">
+                                            <fieldset class="form-group mb-0">
                                                 <label for="eth-address">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</label>
+                                                <input type="text" class="form-control address-value" name="address-btc" required="" autofocus="">
                                                 <div class="invalid-feedback address-error">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ReceiveAddressRequired")
                                                 </div>

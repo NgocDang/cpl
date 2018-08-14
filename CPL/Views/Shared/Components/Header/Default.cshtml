@@ -23,18 +23,18 @@
                 </ul>
                 <ul class="nav navbar-nav mr-auto float-left game-menu">
                     <li class="nav-item active">
-                        <a class="navbar-lottery-desktop active" asp-controller="Home" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
+                        <a class="navbar-lottery-desktop active" asp-controller="Home" asp-action="Index"><img class="img-fluid w-75" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")"/> </a>
                     </li>
                     @*<li class="nav-item">
                         <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
                     </li>*@
                     @if (Model.News != null)
                     {
-                        <li class="nav-item pt-1 pl-1">
+                        <li class="nav-item pt-1 pl-1 d-xl-inline d-none">
                             <a class="bg-white hidden-sm text-primary" asp-controller="News" asp-action="Index">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")
                             </a> 
-                            <span class="black"><small> | </small></span> 
+                            <span class="black"><small> | </small></span>
                             <a asp-controller="News" asp-action="Detail" asp-route-id="@Model.News.Id" class="font-weight-bold black news-link"><small>@Model.News.CreatedDate.ToString("yyyy/MM/dd") @Model.News.Title</small></a>
                         </li>
                     }
@@ -141,11 +141,11 @@
                         @if (Model.User.IsAdmin)
                         {
                             <li>
-                                    <a class="dropdown-item" asp-controller="Admin" asp-action="Index"><i class="la la-user"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
+                                <a class="dropdown-item" asp-controller="Admin" asp-action="Index"><i class="la la-user"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
                             </li>
-                                <li>
-                                    <hr class="mt-0" />
-                                </li>
+                            <li>
+                                <hr class="mt-0" />
+                            </li>
                         }
                         <li>
                                 <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="fas fa-tachometer-alt font-small-4"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>

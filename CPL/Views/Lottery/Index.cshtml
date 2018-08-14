@@ -66,12 +66,9 @@
                                             <div class="col-12 text-center font-large-2 font-weight-bold mb-5">
                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BuyLottery")
                                             </div>
-                                            <div class="col-12">
-                                                <fieldset class="form-label-group">
-                                                    <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" required aria-describedby="basic-addon4">
-                                                    <label for="number-of-ticket">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SelectNumberTicket")</label>
-                                                    <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
-                                                </fieldset>
+                                            <div class="form-group col-12">
+                                                <input type="number" name="number-of-ticket" class="form-control" id="number-of-ticket" value="0" min="1" max="5000" required aria-describedby="basic-addon4">
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
                                             </div>
                                             <div class="col-12">
                                                 <button type="button" class="btn btn-primary btn-block mb-lg-3" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>

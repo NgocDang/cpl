@@ -1315,7 +1315,7 @@ footer {
 
 .navbar-lottery-desktop {
     display: inline-block;
-    padding: 1rem 2rem;
+    padding: 0.5rem 1rem;
     text-align: center;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
@@ -1332,7 +1332,7 @@ footer {
 
 .navbar-price-prediction-desktop {
     display: inline-block;
-    padding: 1rem 2rem;
+    padding: 0.5rem 1rem;
     text-align: center;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
@@ -1538,4 +1538,23 @@ footer {
     #logout .btn-mobile-version {
         height: 40px;
     }
+}
+
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    cursor: pointer;
+    display: block;
+    width: 15px;
+    color: #000;
+    text-align: center;
+    position: relative;
+}
+
+input[type=number]:hover::-webkit-inner-spin-button {
+    background: #eee url('../../images/number_spin.png') no-repeat 50% 50%;
+    width: 30px;
+    height: 42px;
+    padding: 0px;
+    position: relative;
+    right: -1rem;
 }
