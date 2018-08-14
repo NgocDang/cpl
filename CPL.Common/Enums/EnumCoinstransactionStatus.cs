@@ -9,7 +9,6 @@ namespace CPL.Common.Enums
 {
     public enum EnumCoinstransactionStatus
     {
-        [Display(Name = "Pending")]
         PENDING,
         SUCCESS,
         FAIL

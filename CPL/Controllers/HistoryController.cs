@@ -382,7 +382,6 @@ namespace CPL.Controllers
                                               TypeInString = ((EnumCoinTransactionType)x.Type).ToString().Replace("_", " "),
                                               Status = x.Status,
                                               StatusInString = x.Status.ToEnumCoinstransactionStatus().ToString(),
-                                              StatusInEnum = x.Status.ToEnumCoinstransactionStatus(),
                                               Rate = x.Rate,
                                               TxHashId = x.TxHashId,
                                               TokenAmountInString = x.TokenAmount.GetValueOrDefault(0).ToString(Format.Amount)
@@ -429,7 +428,7 @@ namespace CPL.Controllers
                                         Type = x.Type,
                                         TypeInString = ((EnumCoinTransactionType)x.Type).ToString().Replace("_", " "),
                                         Status = x.Status,
-                                        StatusInString = x.Status.ToEnumCoinstransactionStatus().ToString().ToTitleCase(),
+                                        StatusInString = x.Status.ToEnumCoinstransactionStatus().ToString(),
                                         Rate = x.Rate,
                                         TxHashId = x.TxHashId,
                                         TokenAmount = x.TokenAmount,

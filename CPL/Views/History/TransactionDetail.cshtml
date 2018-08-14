@@ -55,7 +55,7 @@
                                     <div class="col-lg-6 col-md-6 col-12 col-sm-12">
                                         <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Currency")</p>
                                         <p>
-                                            <strong class="badge-cpl badge badge-secondary">@Model.CurrencyInString</strong>
+                                            <strong class="badge badge-secondary">@Model.CurrencyInString</strong>
                                         </p>
                                     </div>
                                 </div>
@@ -83,8 +83,7 @@
                                     <div class="col-lg-6 col-md-6 col-12 col-sm-12">
                                         <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Type")</p>
                                         <p>
-                                            @*<strong>@Model.TypeInString</strong>*@
-                                            <strong>@Html.DisplayFor(x => x.StatusInEnum)</strong>
+                                            <strong>@Model.TypeInString</strong>
                                         </p>
                                     </div>
                                 </div>
