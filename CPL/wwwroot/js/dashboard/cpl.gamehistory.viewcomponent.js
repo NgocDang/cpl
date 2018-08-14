@@ -52,7 +52,7 @@
                         else if (full.result == "LOSE")
                             return "<div class='badge badge-danger'>Lose</div>";
                         else if (full.result == "KYC_PENDING")
-                            return "<div class='badge badge-warning'>KYC Pending</div>";
+                            return "<div class='badge badge-info'>KYC Pending</div>";
                         else
                             return "";
                     }

@@ -160,6 +160,7 @@
         </div>
         @await Component.InvokeAsync("LotteryHistory", Model.SysUserId)
         @Html.HiddenFor(x => x.Lottery.Id)
+        @Html.Hidden("LotteryId", Model.Lottery.Id)
     </div>
 </div>
 @section scripts

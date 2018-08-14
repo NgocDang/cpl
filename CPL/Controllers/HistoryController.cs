@@ -92,14 +92,14 @@ namespace CPL.Controllers
                 sortDir = model.order[0].dir.ToLower() == "desc";
             }
 
-            if (createdDate.HasValue && lotteryId.HasValue)
+            if (createdDate.HasValue || lotteryId.HasValue)
             {
                 totalResultsCount = _lotteryHistoryService
                                  .Query()
                                  .Include(x => x.Lottery)
                                  .Include(x => x.LotteryPrize)
                                  .Select()
-                                 .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && x.CreatedDate.Date == createdDate.Value.Date)
+                                 .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && (createdDate.HasValue ? x.CreatedDate.Date == createdDate.Value.Date : true))
                                  .Count();
 
                 // search the dbase taking into consideration table sorting and paging
@@ -108,7 +108,7 @@ namespace CPL.Controllers
                                               .Include(x => x.Lottery)
                                               .Include(x => x.LotteryPrize)
                                               .Select()
-                                              .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && x.CreatedDate.Date == createdDate.Value.Date)
+                                              .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && (createdDate.HasValue ? x.CreatedDate.Date == createdDate.Value.Date : true))
                                               .Select(x => new LotteryHistoryViewModel
                                               {
                                                   CreatedDate = x.CreatedDate,
