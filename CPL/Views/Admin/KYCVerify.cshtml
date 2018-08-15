@@ -36,6 +36,8 @@
                                 </thead>
                             </table>
                         </div>
+                        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")" id="cancel" />
+                        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Accept")" id="accept" />
                     </div>
                 </div>
             </div>

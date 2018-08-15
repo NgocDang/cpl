@@ -96,9 +96,9 @@
                     "data": "Action",
                     "render": function (data, type, full, meta) {
                         if (full.status == 1) {
-                            return "<button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val()
-                                + "</button> <button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-active'>" + $("#activate").val()
-                                + "</button><button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-delete'>" + $("#delete").val() + "</button>";
+                            return "<button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val()
+                                + "</button> <button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-active'>" + $("#activate").val()
+                                + "</button><button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-delete'>" + $("#delete").val() + "</button>";
                         }
                         else
                             return "<button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</button>";
