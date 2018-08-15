@@ -24,7 +24,8 @@
         @await Component.InvokeAsync("Header")
         @RenderBody()
     </div>
-  
+    @Context.Session.GetInt32("LangId")
+    @(int)CPL.Misc.Enums.EnumLang.ENGLISH
     @await Component.InvokeAsync("Footer")
     <div id="modal"></div>
     <script src="~/js/dashboard/vendors.min.js" type="text/javascript"></script>
