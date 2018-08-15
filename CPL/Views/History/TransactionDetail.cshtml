@@ -20,6 +20,9 @@
                             <li class="breadcrumb-item">
                                 <a asp-controller="History" asp-action="transaction">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transaction")</a>
                             </li>
+                            <li class="breadcrumb-item active">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TransactionDetail")
+                            </li>
                         </ol>
                     </div>
                 </div>
@@ -55,7 +58,7 @@
                                     <div class="col-lg-6 col-md-6 col-12 col-sm-12">
                                         <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Currency")</p>
                                         <p>
-                                            <strong class="badge badge-secondary">@Model.CurrencyInString</strong>
+                                            <strong class="badge badge-secondary"><i class="cc @(EnumHelper<EnumCurrency>.GetCSS(Model.CurrencyInEnum))"></i> @Model.CurrencyInString</strong>
                                         </p>
                                     </div>
                                 </div>
@@ -69,7 +72,17 @@
                                     <div class="col-lg-6 col-md-6 col-12 col-sm-12">
                                         <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Rate")</p>
                                         <p>
-                                            <strong>@Model.Rate</strong>
+                                            @if (Model.Rate != null)
+                                            {
+                                                @if (Model.CurrencyId == (int)EnumCurrency.BTC)
+                                                {
+                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice") = @((1 / Model.Rate.Value).ToString("#,##0.########")) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</strong>
+                                                }
+                                                else
+                                                {
+                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToETHPrice") = @((1 / Model.Rate.Value).ToString("#,##0.########")) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</strong>
+                                                }
+                                            }
                                         </p>
                                     </div>
                                 </div>
@@ -91,7 +104,7 @@
                                     <div class="col-lg-6 col-md-6 col-12 col-sm-12">
                                         <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</p>
                                         <p>
-                                            <strong><span class="badge @(EnumHelper<EnumCoinTransactionStatus>.GetCSS(Model.StatusInEnum))">@Model.StatusInString</span></strong>
+                                            <strong><span class="badge @(EnumHelper<EnumCoinTransactionStatus>.GetCSS(Model.StatusInEnum)) text-capitalize">@Model.StatusInString.ToLower()</span></strong>
                                         </p>
                                     </div>
                                 </div>

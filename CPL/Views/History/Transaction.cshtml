@@ -24,7 +24,7 @@
                                 <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             </li>
                             <li class="breadcrumb-item active">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transaction")
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TransactionHistory")
                             </li>
                         </ol>
                     </div>
@@ -35,6 +35,7 @@
         @Html.Hidden("SysUserId", Model.SysUserId)
         @Html.Hidden("CurrencyId", Model.CurrencyId)
     </div>
+    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View")" id="view" />
 </div>
 
 @section scripts

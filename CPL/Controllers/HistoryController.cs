@@ -506,7 +506,7 @@ namespace CPL.Controllers
                                         ToWalletAddress = x.ToWalletAddress,
                                         CoinAmount = x.CoinAmount,
                                         CoinAmountInString = x.CoinAmount.ToString(Format.Amount),
-                                        CurrencyId = x.CurrencyId,
+                                        CurrencyInEnum = (EnumCurrency)x.CurrencyId,
                                         CurrencyInString = x.Currency.Name,
                                         TypeInString = EnumHelper<EnumCoinTransactionType>.GetDisplayValue((EnumCoinTransactionType)x.Type),
                                         StatusInEnum = x.Status.ToEnumCoinstransactionStatus(),

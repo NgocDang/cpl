@@ -162,7 +162,10 @@
                 {
                     "data": "Address",
                     "render": function (data, type, full, meta) {
-                        return full.streetAddress + " " + full.city + " " + full.country;
+                        if (full.streetAddress != null && full.city != null && full.country != null) {
+                            return full.streetAddress + " " + full.city + " " + full.country;
+                        }
+                        else return "";
                     },
                     "orderable": false
                 },
@@ -201,7 +204,7 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a style='line-height:12px;' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>View</a> <button style='line-height:12px;' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>Edit</button>";
+                        return "<a style='line-height:12px;margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a> <button style='line-height:12px;margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() +"</button>";
                     },
                     "orderable": false
                 }
