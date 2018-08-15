@@ -589,6 +589,18 @@ namespace CPL.Controllers
             }
         }
 
+        public IActionResult ViewLottery(int id)
+        {
+            var lottery = new LotteryViewModel();
+
+            lottery = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
+                                                        .Include(x => x.LotteryPrizes)
+                                                        .Select()
+                                                        .FirstOrDefault(x => x.Id == id));
+
+            return PartialView("_ViewLottery", lottery);
+        }
+
         public IActionResult EditLottery(int id)
         {
             var lottery = new LotteryViewModel();
@@ -704,16 +716,16 @@ namespace CPL.Controllers
                             switch (i)
                             {
                                 case 0:
-                                    color = "bg-warning";
+                                    color = "warning";
                                     break;
                                 case 1:
-                                    color = "bg-primary";
+                                    color = "primary";
                                     break;
                                 case 2:
-                                    color = "bg-danger";
+                                    color = "danger";
                                     break;
                                 default:
-                                    color = "bg-success";
+                                    color = "success";
                                     break;
                             }
 
@@ -796,16 +808,16 @@ namespace CPL.Controllers
                     switch (index)
                     {
                         case 0:
-                            color = "bg-warning";
+                            color = "warning";
                             break;
                         case 1:
-                            color = "bg-primary";
+                            color = "primary";
                             break;
                         case 2:
-                            color = "bg-danger";
+                            color = "danger";
                             break;
                         default:
-                            color = "bg-success";
+                            color = "success";
                             break;
                     }
 

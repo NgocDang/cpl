@@ -14,6 +14,7 @@
         LotteryGames.bindUpdateAndPublishGame();
         LotteryGames.bindActivateGame();
         LotteryGames.bindDeleteGame();
+        LotteryGames.bindViewButton();
     },
     loadLotteryGamesDataTable: function () {
         return $('#dt-all-lottery-game').DataTable({
@@ -141,6 +142,53 @@
             return false;
         });
     },
+    bindViewButton: function () {
+        $("#dt-all-lottery-game").on("click", ".btn-view", function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/ViewLottery",
+                type: "GET",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: {
+                    id: $(_this).data().id
+                },
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#edit-lottery-game").modal("show");
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                }
+            });
+            return false;
+        });
+    },
+    bindPrizeButton: function () {
+        $("#dt-all-lottery-game").on("click", ".btn-view", function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/ViewLottery",
+                type: "GET",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: {
+                    id: $(_this).data().id
+                },
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#edit-lottery-game").modal("show");
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                }
+            });
+            return false;
+        });
+    },
+
     bindEditButton: function () {
         $("#dt-all-lottery-game").on("click", ".btn-edit", function () {
             var _this = this;
