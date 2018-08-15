@@ -24,7 +24,7 @@
                             <span class="h4 mr-2 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyProfile")</span>
                             @if (!Model.KYCVerified.HasValue)
                             {
-                                <a asp-controller="Profile" asp-action="Index" asp-route-edit="true" class="btn btn-primary btn-sm" id="btn-edit-profile"><i class="far fa-edit"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")</a>
+                                <a href="~/Profile/Index#edit-profile-btn" class="btn btn-primary btn-sm" id="btn-edit-profile"><i class="far fa-edit"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")</a>
                             }
                         </div>
                         <div class="card-body">

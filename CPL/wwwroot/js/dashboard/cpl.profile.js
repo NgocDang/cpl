@@ -1,7 +1,7 @@
 ﻿var Profile = {
     init: function () {
-        Profile.bindInitForm();
         Profile.bindSaveButton();
+        Profile.bindEditProfile();
     },
     bindInitForm: function () {
         // Initiate country
@@ -11,6 +11,7 @@
         }
 
         // Initiate date of birth 
+        //$.getScript("/js/dashboard/plugins/moment.min.js");
         var year = moment().year();
         for (i = year; i >= year - 100; i--) {
             if ($("#DOB").val() != "" && moment($("#DOB").val()).year() == i)
@@ -107,7 +108,7 @@
         });
     },
     bindSaveButton: function () {
-        $("#btn-save-account").on("click", function () {
+        $("#profile-edit").on("click", "#btn-save-account", function () {
             var isFormValid = $('#form-edit-account')[0].checkValidity();
             $("#form-edit-account").addClass('was-validated');
 
@@ -155,7 +156,19 @@
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
-                            window.location.href = '/Profile/Index/?edit=true';
+                            $("#profile-edit").hide();
+                            $("#profile-detail").show();
+
+                            //Update value for profile detail
+                            $("#first-name-detail").html($("#FirstName").val());
+                            $("#last-name-detail").html($("#LastName").val());
+                            $("#gender-detail").html($('#Male').is(':checked'));
+                            $("#dob-detail").html($("#DOB").val());
+                            $("#postal-code-detail").html($("#PostalCode").val());
+                            $("#country-detail").html($("#Country").val());
+                            $("#city-detail").html($("#City").val());
+                            $("#street-address-detail").html($("#StreetAddress").val());
+                            $("#mobile-detail").html($("#Mobile").intlTelInput("getNumber"));
                         } else {
                             toastr.error(data.message, 'Error!');
                         }
@@ -169,6 +182,25 @@
             return false;
         });
     },
+    bindEditProfile: function () {
+        $("#btn-edit-profile").on("click", function () {
+            $.ajax({
+                url: "/Profile/Edit/",
+                type: "GET",
+                beforeSend: function () {
+                },
+                data: {
+                },
+                success: function (data) {
+                    $("#profile-edit").html(data);
+                    $("#profile-edit").show();
+                    $("#profile-detail").hide();
+                    Profile.bindInitForm();
+                }
+            });
+        });
+    },
+
     //getUrlParameter: function (sParam) {
     //    var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'), sParameterName, i;
 
@@ -184,4 +216,7 @@
 
 $(document).ready(function () {
     Profile.init();
+        if (location.hash == "#edit-profile-btn") {
+            $('#btn-edit-profile').click();
+    }
 });

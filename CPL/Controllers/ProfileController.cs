@@ -60,22 +60,18 @@ namespace CPL.Controllers
             this._lotteryHistoryService = lotteryHistoryService;
         }
 
-        public IActionResult Index(bool? edit)
+        public IActionResult Index()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             var viewModel = Mapper.Map<ProfileViewModel>(user);
 
-            var numberOfLotteryGame = _lotteryHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
-
-            viewModel.NumberOfGameHistories = numberOfLotteryGame;
+            viewModel.NumberOfGameHistories = _lotteryHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
             viewModel.NumberOfTransactions = _coinTransactionService.Queryable().Count(x => x.SysUserId == viewModel.Id);
-            viewModel.Edit = false;
 
             // Mapping KYC status
             if (!user.KYCVerified.HasValue)
             {
                 viewModel.KYCStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotVerifiedYet");
-                viewModel.Edit = edit ?? false; // only check when KYC is not commit yet
             }
             else if (user.KYCVerified == true)
             {
@@ -153,6 +149,16 @@ namespace CPL.Controllers
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated") });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+        }
+
+        public IActionResult Edit()
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+            var viewModel = Mapper.Map<ProfileViewModel>(user);
+            viewModel.NumberOfGameHistories = _lotteryHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
+            viewModel.NumberOfTransactions = _coinTransactionService.Queryable().Count(x => x.SysUserId == viewModel.Id);
+
+            return PartialView("_Edit", viewModel);
         }
 
         public IActionResult Security()

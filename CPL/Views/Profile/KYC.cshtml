@@ -43,7 +43,7 @@
                                     <div class="row mb-1" id="kyc-verify">
                                         <div class="text-muted col-sm-12">
                                             <p>
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCWarning")
+                                                @Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCWarning"))
                                                 <br />
                                                 <span id="kyc-message">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyIdentityDesc")</span>
                                             </p>

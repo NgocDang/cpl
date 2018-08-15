@@ -26,7 +26,6 @@ namespace CPL.Models
         public string BTCHDWalletAddress { get; set; }
         public bool TwoFactorAuthenticationEnable { get; set; }
         public string TwoFactorAuthenticationEnableStatus { get; set; }
-        public bool Edit { get; set; }
 
         public int NumberOfTransactions { get; set; }
         public int NumberOfGameHistories { get; set; }
