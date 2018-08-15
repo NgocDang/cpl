@@ -139,7 +139,7 @@
             @if (Model.SysUserId.HasValue)
             {
                 <div class="row">
-                    <div id="recent-transactions" class="col-12">
+                    <div id="transaction-history-view-component" class="col-12">
                         <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionHistory")</h6>
                         <div class="card">
                             <div class="card-content">

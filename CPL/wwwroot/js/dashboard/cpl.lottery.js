@@ -75,7 +75,7 @@
                  TicketPrice: parseInt($(".ticket-price").val()),
                  TotalTickets: parseInt($(".total-of-tiket").val()),
                  TotalPriceOfTickets: parseInt($(".total-price").val()),
-                 LotteryId: parseInt($("#Lottery_Id").val())
+                 LotteryId: parseInt($("#div-confirm-lottery #Id").val())
              },
              success: function (data) {
                  if (data.success === undefined) { // before log in
@@ -85,8 +85,8 @@
                  }
                  else { // after log in
                      $("#login-modal").modal("hide");
-                     if ($("#lottery-history").hasClass("d-none")) { // not login yet
-                         $("#lottery-history").removeClass("d-none");
+                     if ($("#lottery-history-view-component").hasClass("d-none")) { // not login yet
+                         $("#lottery-history-view-component").removeClass("d-none");
                          LotteryHistory.historyDatatable = LotteryHistory.loadLotteryHistoryTable();
                      }
 

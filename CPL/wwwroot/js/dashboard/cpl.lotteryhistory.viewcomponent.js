@@ -4,7 +4,7 @@
         LotteryHistory.historyDatatable = LotteryHistory.loadLotteryHistoryTable();
     },
     loadLotteryHistoryTable: function () {
-        if ($("#lottery-history").hasClass("d-none"))
+        if ($("#lottery-history-view-component").hasClass("d-none"))
             return false;
         var _this = this;
         return $("#dt-lottery-history").DataTable({
@@ -15,9 +15,9 @@
                 url: "/History/SearchLotteryHistory",
                 type: 'POST',
                 data: {
-                    lotteryId: $("#LotteryId").val(),
-                    createdDate: $("#CreatedDate").val(),
-                    sysUserId: $("#SysUserId").val()
+                    lotteryId: $("#lottery-history-view-component #LotteryId").val(),
+                    createdDate: $("#lottery-history-view-component #CreatedDate").val(),
+                    sysUserId: $("#lottery-history-view-component #SysUserId").val()
                 }
             },
             "language": DTLang.getLang(),
@@ -54,7 +54,7 @@
                         else if (full.result == "Lose")
                             return "<div class='badge badge-danger'>Lose</div>";
                         else if (full.result == "KYC Pending")
-                            return "<div class='badge badge-warning'>KYC Pending</div>";
+                            return "<div class='badge badge-info'>KYC Pending</div>";
                         else
                             return "";
                     }

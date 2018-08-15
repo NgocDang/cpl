@@ -35,12 +35,12 @@
                 {
                     <div class="owl-item col-3">
                         <div class="card card-game">
-                            <div class="card-header card-header-game font-weight-bold bg-secondary disabled text-secondary">
+                            <div class="card-header card-header-game font-weight-bold bg-secondary disabled text-white-50">
                                 0 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
                             </div>
                             <img class="card-img-top card-img-game img-fluid hidden-mobile" src="~/images/lottery/coming_soon_lottery.jpg" />
                             <div class="card-body">
-                                <span class="btn disabled bg-secondary text-secondary btn-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ComingSoon")</span>
+                                <span class="btn disabled bg-secondary text-white-50 btn-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ComingSoon")</span>
                             </div>
                         </div>
                     </div>

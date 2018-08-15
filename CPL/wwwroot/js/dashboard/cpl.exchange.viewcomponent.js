@@ -24,7 +24,7 @@
                         FromCurrency: $(_this).parents(".section-exchange").find(".from-currency").val(),
                         FromAmount: $(_this).parents(".section-exchange").find(".from-amount").val(),
                         ToCurrency: $(_this).parents(".section-exchange").find(".to-currency").val(),
-                        ToAmount: $(_this).parents(".section-exchange").find(".to-amount").val(),
+                        ToAmount: $(_this).parents(".section-exchange").find(".to-amount").val()
                     },
                     success: function (data) {
                         $("#modal").html(data);
@@ -52,7 +52,7 @@
                     FromCurrency: $(_this).parents("#modal").find("#FromCurrency").val(),
                     FromAmount: $(_this).parents("#modal").find("#FromAmount").val(),
                     ToCurrency: $(_this).parents("#modal").find("#ToCurrency").val(),
-                    ToAmount: $(_this).parents("#modal").find("#ToAmount").val(),
+                    ToAmount: $(_this).parents("#modal").find("#ToAmount").val()
                 },
                 success: function (data) {
                     if (data.success) {
@@ -75,6 +75,8 @@
             //Swap label
             if ($(this).parents(".section-exchange").length > 0) {
                 var section = $(this).parents(".section-exchange");
+
+                //Swap label
                 var label = section.find("#from-amount").text();
                 section.find("#from-amount").text(section.find("#to-amount").text());
                 section.find("#to-amount").text(label);
@@ -84,10 +86,16 @@
                 section.find(".from-amount").val(section.find(".to-amount").val());
                 section.find(".to-amount").val(value);
 
+                //Swap max value
+                var maxValue = section.find("input.from-amount").attr("max");
+                var minValue = section.find("input.from-amount").attr("min");
+                section.find("input.from-amount").attr({ "max": section.find("input.to-amount").attr("max"), "min": section.find("input.to-amount").attr("min") });
+                section.find("input.to-amount").attr({ "max": maxValue, "min": minValue });
+
                 //Swap max amount
-                var value = section.find(".from-amount").siblings(".max-amount").val();
+                var maxAmount = section.find(".from-amount").siblings(".max-amount").val();
                 section.find(".from-amount").siblings(".max-amount").val(section.find(".to-amount").siblings(".max-amount").val());
-                section.find(".to-amount").siblings(".max-amount").val(value);
+                section.find(".to-amount").siblings(".max-amount").val(maxAmount);
 
                 //Swap currency
                 var currency = section.find(".from-amount").siblings(".from-currency").val();
@@ -106,7 +114,7 @@
             }
         });
     },
-    bindInputChange: function(){
+    bindInputChange: function () {
         $('#exchange-content').on('change paste keyup input', '.from-amount', function () {
             if ($(this).parents(".section-exchange").length > 0) {
                 var section = $(this).parents(".section-exchange");
@@ -117,17 +125,17 @@
                         section.find(".to-amount").val(parseFloat(section.find(".from-amount").val()) * $(".btc-token-rate").val());
                     }
                     else if (fromCurrency == "ETH") {
-                        var btcAmount = parseFloat(section.find(".from-amount").val()) * $(".eth-btc-rate").val();
-                        section.find(".to-amount").val(btcAmount * $(".btc-token-rate").val());
+                        var fromEthAmount = parseFloat(section.find(".from-amount").val()) * $(".eth-btc-rate").val();
+                        section.find(".to-amount").val(fromEthAmount * $(".btc-token-rate").val());
                     }
                     else {
-                        var toCurrency = section.find(".to-amount").siblings(".to-currency").val()
+                        var toCurrency = section.find(".to-amount").siblings(".to-currency").val();
                         if (toCurrency == "BTC") {
                             section.find(".to-amount").val(parseFloat(section.find(".from-amount").val()) / $(".btc-token-rate").val());
                         }
                         else if (toCurrency == "ETH") {
-                            var btcAmount = parseFloat(section.find(".from-amount").val()) / $(".btc-token-rate").val();
-                            section.find(".to-amount").val(parseFloat(btcAmount / $(".eth-btc-rate").val()));
+                            var toEthAmount = parseFloat(section.find(".from-amount").val()) / $(".btc-token-rate").val();
+                            section.find(".to-amount").val(parseFloat(toEthAmount / $(".eth-btc-rate").val()));
                         }
                     }
                 }
@@ -149,7 +157,7 @@
             }
         });
     }
-}
+};
 
 $(document).ready(function () {
     ExchangeViewComponent.init();

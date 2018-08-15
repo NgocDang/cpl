@@ -14,6 +14,11 @@
 }
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block border-right-0"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
+            </div>
+        </div>
         <div class="content-body">
             @await Component.InvokeAsync("Balance")
             <div class="row">
@@ -22,9 +27,9 @@
                     <div class="card">
                         <div class="card-header border-bottom-card">
                             <span class="h4 mr-2 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyProfile")</span>
-                            @if (!Model.KYCVerified.HasValue || Model.KYCVerified == false)
+                            @if (!Model.KYCVerified.HasValue)
                             {
-                                <a asp-controller="Profile" asp-action="Index" class="btn btn-primary btn-sm"><i class="far fa-edit"></i> Edit</a>
+                                <a href="~/Profile/Index#edit-profile-btn" class="btn btn-primary btn-sm" id="btn-edit-profile"><i class="far fa-edit"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")</a>
                             }
                         </div>
                         <div class="card-body">
@@ -64,14 +69,7 @@
                                 </div>
                             </div>
                         </div>
-                        @if (Model.KYCVerified == true)
-                        {
-                            <div class="card-footer p-10px text-center"><a asp-controller="Profile" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MoreInfo")<i class="fa fa-angle-right"></i></a></div>
-                        }
-                        else
-                        {
-                            <div class="card-footer p-10px text-center"><a asp-controller="Profile" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ProfileEdit") <i class="fa fa-angle-right"></i></a></div>
-                        }
+                        <div class="card-footer p-10px text-center"><a asp-controller="Profile" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MoreInfo") <i class="fa fa-angle-right"></i></a></div>
                     </div>
                 </div>
             </div>
@@ -91,5 +89,5 @@
     <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/cpl.dashboard.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.amount.viewcomponent.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.balance.viewcomponent.js" asp-append-version="true"></script>
 }

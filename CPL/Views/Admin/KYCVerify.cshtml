@@ -14,9 +14,26 @@
 }
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCVerify")</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="breadcrumb-wrapper col-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCVerify")
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="content-body">
             <div class="row">
-                <div id="recent-transactions" class="col-12">
+                <div id="transaction-history-view-component" class="col-12">
                     <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCVerify")</h6>
                     <div class="card">
                         <div class="card-content">
@@ -36,6 +53,8 @@
                                 </thead>
                             </table>
                         </div>
+                        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")" id="cancel" />
+                        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Accept")" id="accept" />
                     </div>
                 </div>
             </div>

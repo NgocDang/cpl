@@ -1,4 +1,4 @@
-﻿@model int
+﻿@model GameHistoryViewComponentViewModel
 
 <div class="row">
     <div id="game-history-view-component" class="col-12">
@@ -19,7 +19,7 @@
                         </tr>
                     </thead>
                 </table>
-                @Html.Hidden("Id", Model)
+                @Html.Hidden("SysUserId", Model.SysUserId)
             </div>
         </div>
     </div>

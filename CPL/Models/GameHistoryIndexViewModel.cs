@@ -7,6 +7,6 @@ namespace CPL.Models
 {
     public class GameHistoryIndexViewModel
     {
-        public int Id { get; set; }
+        public int SysUserId { get; set; }
     }
 }

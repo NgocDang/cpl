@@ -12,7 +12,7 @@
                 url: "/History/SearchGameHistory",
                 type: 'POST',
                 data: {
-                    userId: $("#Id").val()
+                    sysUserId: $("#game-history-view-component #SysUserId").val()
                 }
             },
             "language": DTLang.getLang(),
@@ -52,7 +52,7 @@
                         else if (full.result == "LOSE")
                             return "<div class='badge badge-danger'>Lose</div>";
                         else if (full.result == "KYC_PENDING")
-                            return "<div class='badge badge-warning'>KYC Pending</div>";
+                            return "<div class='badge badge-info'>KYC Pending</div>";
                         else
                             return "";
                     }
@@ -73,9 +73,9 @@
                     "data": "Action",
                     "render": function (data, type, full, meta) {
                         if (full.gameType == "LOTTERY")
-                            return "<a style='line-height:12px;' href='/History/Lottery?createdDate=" + full.createdDate + "&lotteryId=" + full.gameId + "&sysUserId=" + sysUserId + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>View</a>";
+                            return "<a style='line-height:12px;' href='/History/Lottery?createdDate=" + full.createdDate + "&lotteryId=" + full.gameId + "&sysUserId=" + sysUserId + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() +"</a>";
                         else if (full.gameType == "PRICE_PREDICTION")
-                            return "<a style='line-height:12px;' href='/History/PricePrediction?id=" + full.gameId + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>View</a>";
+                            return "<a style='line-height:12px;' href='/History/PricePrediction?id=" + full.gameId + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() +"</a>";
                     },
                     "orderable": false
                 }

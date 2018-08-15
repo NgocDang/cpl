@@ -10,7 +10,11 @@ var TransactionHistory = {
             "autoWidth": false,
             "ajax": {
                 url: "/History/SearchTransactionHistory",
-                type: 'POST'
+                type: 'POST',
+                data: {
+                    sysUserId: $("#transaction-history-view-component #SysUserId").val(),
+                    currencyId: $("#transaction-history-view-component #CurrencyId").val()
+                }
             },
             "language": DTLang.getLang(),
             "columns": [
@@ -70,7 +74,7 @@ var TransactionHistory = {
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a style='line-height:12px;' href='/History/TransactionDetail/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>View</a>";
+                        return "<a style='line-height:12px;' href='/History/TransactionDetail/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() +"</a>";
                     },
                     "orderable": false
                 }

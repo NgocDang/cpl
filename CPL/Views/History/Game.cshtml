@@ -51,8 +51,9 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("GameHistory", Model.Id)
+            @await Component.InvokeAsync("GameHistory", new GameHistoryViewComponentViewModel { SysUserId = Model.SysUserId} )
         </div>
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View")" id="view" />
     </div>
 </div>
 

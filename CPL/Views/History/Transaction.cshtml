@@ -3,6 +3,8 @@
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transaction");
 }
 
+@model TransactionHistoryIndexViewModel
+
 @section styles
     {
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
@@ -22,15 +24,16 @@
                                 <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             </li>
                             <li class="breadcrumb-item active">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transaction")
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TransactionHistory")
                             </li>
                         </ol>
                     </div>
                 </div>
             </div>
         </div>
-        @await Component.InvokeAsync("TransactionHistory")
+        @await Component.InvokeAsync("TransactionHistory", new TransactionHistoryViewComponentViewModel { CurrencyId =  Model.CurrencyId, SysUserId = Model.SysUserId})
     </div>
+    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View")" id="view" />
 </div>
 
 @section scripts

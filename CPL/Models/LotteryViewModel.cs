@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,14 @@ namespace CPL.Models
         public string DesktopListingImage { get; set; }
         public string MobileListingImage { get; set; }
         public string Title { get; set; }
+        public int UnitPrice { get; set; }
+
         public string CreatedDateInString { get; set; }
+
+        public IFormFile SlideImageFile { get; set; }
+        public IFormFile DesktopListingImageFile { get; set; }
+        public IFormFile MobileListingImageFile { get; set; }
+        public bool IsPublished { get; set; }
 
         public List<LotteryHistoryViewModel> LotteryHistories { get; set; }
         public List<LotteryPrizeViewModel> LotteryPrizes { get; set; }

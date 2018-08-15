@@ -17,7 +17,7 @@
                                 <div class="col-lg-5 col-12">
                                     <fieldset class="form-group">
                                         <label for="from-amount" id="from-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCAmount")</label>
-                                        <input type="number" class="form-control from-amount" min="0.00000001" max="@Model.BTCAmount" required>
+                                        <input type="number" class="form-control from-amount" min="0.00000001" max="@Model.BTCAmount" step="any" required>
                                         <input type="hidden" value="@Model.BTCAmount" class="max-amount" />
                                         <input type="hidden" value="BTC" class="from-currency" />
                                         <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidAmountOrInsufficientFunds")</div>
@@ -31,7 +31,7 @@
                                 <div class="col-lg-5 col-sm-12 col-12">
                                     <fieldset class="form-group">
                                         <label for="to-amount" id="to-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenAmount")</label>
-                                        <input type="number" class="form-control to-amount" readonly min="1" max="@Model.TokenAmount" required>
+                                        <input type="number" class="form-control to-amount" readonly min="1" max="@Model.TokenAmount" step="any" required>
                                         <input type="hidden" value="@Model.TokenAmount" class="max-amount" />
                                         <input type="hidden" value="CPL" class="to-currency" />
                                     </fieldset>
