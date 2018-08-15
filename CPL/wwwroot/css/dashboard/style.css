@@ -127,7 +127,7 @@ table.dataTable {
         right: 20px;
         content: "\f15a";
         font-size: 3rem;
-        color: #000
+        color: #f79e36
     }
 
     #btc-card h1,
@@ -152,7 +152,7 @@ table.dataTable {
         right: 20px;
         content: "\f42e";
         font-size: 3rem;
-        color: #000
+        color: #4c4c4c
     }
 
     #eth-card h1,
