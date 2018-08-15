@@ -133,9 +133,11 @@
         {
             <ul class="nav navbar-nav main-menu-navigation" data-menu="menu-navigation">
                 <li class="dropdown nav-item" data-menu="dropdown">
-                    <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                    <a class="dropdown-toggle nav-link user-menu" href="#" data-toggle="dropdown">
                         <i class="la la-user"></i>
-                        <span>Hi, @Model.User.FirstName @Model.User.LastName</span>
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "User")</span>
+                        -
+                        <span class="font-weight-bold">@Model.User.TokenAmount.ToString("N0") CPL</span>
                     </a>
                     <ul class="dropdown-menu">
                         @if (Model.User.IsAdmin)
@@ -160,7 +162,7 @@
                             <a class="dropdown-item" asp-controller="Profile" asp-action="KYC"><i class="la la-credit-card"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</a>
                         </li>
                         <li>
-                                <hr class="mb-0"/>
+                            <hr class="mb-0"/>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#" id="logout-confirmation"><i class="la la-power-off"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>

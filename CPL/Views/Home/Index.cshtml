@@ -13,27 +13,39 @@
 @await Component.InvokeAsync("SliderBanner")
 
 <section id="lottery-game">
-    <div class="container owl-carousel owl-theme owl-loaded hidden-mobile mt-1">
-        <div class="owl-stage-outer">
-            <div class="owl-stage">
-                @if (Model.Lotteries != null)
+    <div class="container hidden-mobile mt-1">
+        <div class="row">
+            @if (Model.Lotteries != null)
+            {
+                @foreach (var lottery in Model.Lotteries)
                 {
-                    @foreach (var lottery in Model.Lotteries)
-                    {
-                        <div class="owl-item">
-                            <div class="card card-game">
-                                <div class="card-header card-header-game font-weight-bold">
-                                    @lottery.NumberOfTicketLeft.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
-                                </div>
-                                <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id"><img class="card-img-top card-img-game img-fluid hidden-mobile" src="~/images/lottery/@lottery.DesktopListingImage" /></a>
-                                <div class="card-body">
-                                    <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id" class="btn btn-primary btn-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</a>
-                                </div>
+                    <div class="owl-item col-3">
+                        <div class="card card-game">
+                            <div class="card-header card-header-game font-weight-bold">
+                                @lottery.NumberOfTicketLeft.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
+                            </div>
+                            <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id"><img class="card-img-top card-img-game img-fluid hidden-mobile" src="~/images/lottery/@lottery.DesktopListingImage" /></a>
+                            <div class="card-body">
+                                <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id" class="btn btn-primary btn-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</a>
                             </div>
                         </div>
-                    }
+                    </div>
                 }
-            </div>
+                @for (int i=0 ; i < (CPLConstant.LotteryGamePerRow - (Model.Lotteries.Count % CPLConstant.LotteryGamePerRow));i++)
+                {
+                    <div class="owl-item col-3">
+                        <div class="card card-game">
+                            <div class="card-header card-header-game font-weight-bold bg-secondary disabled text-secondary">
+                                0 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
+                            </div>
+                            <img class="card-img-top card-img-game img-fluid hidden-mobile" src="~/images/lottery/coming_soon_lottery.jpg" />
+                            <div class="card-body">
+                                <span class="btn disabled bg-secondary text-secondary btn-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ComingSoon")</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
         </div>
     </div>
     <div class="row content-mobile visible-mobile">

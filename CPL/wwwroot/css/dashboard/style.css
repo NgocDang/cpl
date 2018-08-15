@@ -1558,3 +1558,13 @@ input[type=number]:hover::-webkit-inner-spin-button {
     position: relative;
     right: -1rem;
 }
+
+.header-navbar .navbar-container ul.nav li > a.user-menu {
+    padding: 1.3rem 0.5rem !important;
+}
+
+.bg-secondary.disabled, .bg-secondary:disabled {
+    opacity:1;
+    background-color: #9fa2ae !important;
+    border-color: #9fa2ae !important;
+}
