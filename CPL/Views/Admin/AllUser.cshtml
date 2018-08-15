@@ -37,6 +37,8 @@
                                 </thead>
                             </table>
                         </div>
+                        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View")" id="view" />
+                        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")" id="edit" />
                     </div>
                 </div>
             </div>
