@@ -8,23 +8,24 @@
             margin: 10,
             auto: true,
             dots: false,
-            autoplay: true,
             responsiveClass: true,
             responsive: {
                 0: {
+                    autoplay: true,
                     items: 1
                 },
                 768: {
                     items: 2
                 },
                 1024: {
+                    autoplay: true,
                     items: 1
                 },
                 1440: {
                     items: 2
                 },
                 2560: {
-                    items: 3
+                    items: 2
                 }
             }
         });
