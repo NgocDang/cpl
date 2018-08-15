@@ -1,6 +1,6 @@
-﻿var AmountViewComponent = {
+﻿var BalanceViewComponent = {
     init: function () {
-        AmountViewComponent.loadSlider();
+        BalanceViewComponent.loadSlider();
     },
     loadSlider: function () {
         $('.owl-carousel').owlCarousel({
@@ -11,15 +11,15 @@
             responsiveClass: true,
             responsive: {
                 0: {
-                    autoplay: true,
-                    items: 1
+                    items: 1,
+                    autoplay: true
                 },
                 768: {
                     items: 2
                 },
                 1024: {
-                    autoplay: true,
-                    items: 1
+                    items: 1,
+                    autoplay: true
                 },
                 1440: {
                     items: 2
@@ -33,5 +33,5 @@
 }
 
 $(document).ready(function () {
-    AmountViewComponent.init();
+    BalanceViewComponent.init();
 });
