@@ -162,7 +162,7 @@
                             //Update value for profile detail
                             $("#first-name-detail").html($("#FirstName").val());
                             $("#last-name-detail").html($("#LastName").val());
-                            $("#gender-detail").html($('#Male').is(':checked'));
+                            $("#gender-detail").html(data.gender);
                             $("#dob-detail").html($("#DOB").val());
                             $("#postal-code-detail").html($("#PostalCode").val());
                             $("#country-detail").html($("#Country").val());
