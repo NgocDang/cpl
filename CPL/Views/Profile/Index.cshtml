@@ -31,9 +31,9 @@
         @await Component.InvokeAsync("LotteryResult")
         <div class="content-body">
             <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyProfile")</h6>
-            @if ((!Model.KYCVerified.HasValue || Model.KYCVerified == false) && Model.Edit)
+            @if (Model.Edit)
             {
-                <div class="card" id="edit-profile">
+                <div class="card">
                     <div class="card-content">
                         <form id="form-edit-account" class="form-horizontal mt-2" action="">
                             <div class="card-body">
@@ -397,7 +397,7 @@
             }
             else
             {
-                <div class="card" id="view-profile">
+                <div class="card">
                     <div class="card-content">
                         <div class="card-body mt-2">
                             <div class="row">
