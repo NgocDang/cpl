@@ -22,6 +22,7 @@ namespace CPL.ViewComponents
             int userId = sysUserId ?? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == userId);
             var viewModel = Mapper.Map<BalanceViewModel>(user);
+            viewModel.SysUserId = user.Id;
             return View(viewModel);
         }
     }

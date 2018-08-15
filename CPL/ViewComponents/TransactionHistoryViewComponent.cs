@@ -6,9 +6,9 @@ namespace CPL.ViewComponents
     {
         public TransactionHistoryViewComponent() { }
 
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(int? sysUserId)
         {
-            return View();
+            return View(sysUserId);
         }
     }
 }

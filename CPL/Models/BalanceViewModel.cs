@@ -10,5 +10,7 @@ namespace CPL.Models
         public decimal ETHAmount { get; set; }
         public decimal BTCAmount { get; set; }
         public decimal TokenAmount { get; set; }
+
+        public int SysUserId { get; set; }
     }
 }

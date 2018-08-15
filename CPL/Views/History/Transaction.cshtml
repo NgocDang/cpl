@@ -3,6 +3,8 @@
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transaction");
 }
 
+@model TransactionHistoryIndexViewModel
+
 @section styles
     {
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
@@ -29,7 +31,9 @@
                 </div>
             </div>
         </div>
-        @await Component.InvokeAsync("TransactionHistory")
+        @await Component.InvokeAsync("TransactionHistory", Model.SysUserId)
+        @Html.Hidden("SysUserId", Model.SysUserId)
+        @Html.Hidden("CurrencyId", Model.CurrencyId)
     </div>
 </div>
 

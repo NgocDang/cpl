@@ -10,7 +10,11 @@ var TransactionHistory = {
             "autoWidth": false,
             "ajax": {
                 url: "/History/SearchTransactionHistory",
-                type: 'POST'
+                type: 'POST',
+                data: {
+                    sysUserId: $("#SysUserId").val(),
+                    currencyId: $("#CurrencyId").val()
+                }
             },
             "language": DTLang.getLang(),
             "columns": [
