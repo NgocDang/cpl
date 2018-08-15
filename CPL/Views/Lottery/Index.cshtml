@@ -33,59 +33,49 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-12" id="div-buy-lottery">
-                    <div class="card" id="buy-lottery-bg">
+                    <div class="card">
                         <div class="card-content">
                             <div class="card-body">
                                 <form id="form-purchase-lottery" novalidate>
-                                    <div class="row text-white">
+                                    <div class="row mt-1 mb-xl-3 mb-2">
                                         <div class="form-group col-12 text-center font-large-1 font-weight-bold mb-0">
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePerOneTicket")
                                         </div>
-                                        <div class="form-group col-12 text-center font-large-2 font-weight-bold mb-0">
-                                            @Model.UnitPrice.ToString("N0")
+                                        <div class="form-group col-12 text-center font-large-1 font-weight-bold mb-1 text-primary">
+                                            @Model.UnitPrice.ToString("N0") CPL
                                         </div>
                                     </div>
-                                    <div class="row text-white mb-2">
-                                        <div class="col-md-6 col-12 font-medium-4">
+                                    <div class="row mb-3 text-md-left text-center">
+                                        <div class="col-md-6 col-12 font-medium-5 font-weight-bold">
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAmount")
                                         </div>
-                                        <div class="col-md-6 col-12 text-md-right font-medium-4 font-weight-bold">
+                                        <div class="col-md-6 col-12 text-md-right font-medium-5 font-weight-bold">
                                             <span id="total-amount">@Model.UnitPrice.ToString("N0")</span> CPL
                                         </div>
                                     </div>
-                                    <div class="row text-white">
+                                    <div class="row mb-2">
                                         <div class="form-group col-12">
                                             <input type="number" data-unit-price="@Model.UnitPrice" name="number-of-ticket" class="form-control" id="number-of-ticket" value="1" min="1" max="5000" required aria-describedby="basic-addon4">
                                             <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
                                         </div>
                                         <div class="col-12">
-                                            <button type="button" class="btn btn-primary btn-block mb-lg-3" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                                            <button type="button" class="btn btn-primary btn-block font-weight-bold" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-12">
+                                            <hr />
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="form-group col-12 text-center font-medium-5 font-weight-bold mb-0">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchasedTickets")
+                                        </div>
+                                        <div class="form-group col-12 text-center font-large-2 font-weight-bold mb-0">
+                                            <span class="font-weight-bold">@Model.LotteryHistories.Count()</span> / <span class="font-weight-bold">@Model.Volume.ToString("#,###")</span>
                                         </div>
                                     </div>
                                 </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="card-content">
-                                <div class="card-body">
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="col-md-8 col-12 font-medium-4">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchasedTickets")
-                                            </div>
-                                            <div class="col-md-4 col-12 text-md-right font-medium-4">
-                                                <span class="font-weight-bold">@Model.LotteryHistories.Count()</span> / <span class="font-weight-bold">@Model.Volume.ToString("#,###")</span>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-8px">
-                                            <div class="progress progress-custom">
-                                                <div class="progress-bar bg-cpl" id="process-lottery" style="width:@Model.PrecentOfPerchasedTickets%"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

@@ -61,12 +61,6 @@
     margin-right: 18px;
 }
 
-#buy-lottery-bg {
-    background: url('/images/lottery/new-hp-01_93.jpg') no-repeat;
-    background-position: center;
-    overflow: hidden;
-}
-
 body {
     background: url('/images/lottery/bg_lottery.jpg');
     background-repeat: repeat-x;
@@ -83,8 +77,4 @@ body {
 
 .mt-14px {
     margin-top: 14px;
-}
-
-#number-of-ticket {
-    border:none;
 }
