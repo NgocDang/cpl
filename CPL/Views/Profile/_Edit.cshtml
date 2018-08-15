@@ -80,13 +80,13 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4 col-md-4 col-sm-12 mb-1">
-                                        <select name="Year" id="Year" class="selectpicker" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Year")"></select>
+                                        <select name="Year" id="Year" class="selectpicker form-control" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Year")"></select>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-12 mb-1">
-                                        <select name="Month" id="Month" class="selectpicker" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Month")"></select>
+                                        <select name="Month" id="Month" class="selectpicker form-control" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Month")"></select>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-12 mb-1">
-                                        <select name="Day" id="Day" class="selectpicker" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Day")"></select>
+                                        <select name="Day" id="Day" class="selectpicker form-control" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Day")"></select>
                                     </div>
                                     @if (Model.DOB.HasValue)
                                     {

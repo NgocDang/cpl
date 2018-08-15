@@ -302,7 +302,7 @@ table.dataTable {
     }
 
 
-select.bs-select-hidden, select.selectpicker {
+select.bs-select-hidden {
     display: none !important
 }
 
