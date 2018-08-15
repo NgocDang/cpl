@@ -118,6 +118,7 @@ namespace CPL
             app.UseSession();
 
             LoadLangDetail(serviceProvider);
+            LoadLangMsgDetail(serviceProvider);
             LoadSetting(serviceProvider);
             LoadWCF(serviceProvider);
             LoadQuartz(serviceProvider);
@@ -199,6 +200,11 @@ namespace CPL
         private void LoadLangDetail(IServiceProvider serviceProvider)
         {
             LangDetailHelper.LangDetails = ((LangDetailService)serviceProvider.GetService(typeof(ILangDetailService))).Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
+        }
+
+        private void LoadLangMsgDetail(IServiceProvider serviceProvider)
+        {
+            LangMsgDetailHelper.LangMsgDetails = ((LangMsgDetailService)serviceProvider.GetService(typeof(ILangMsgDetailService))).Queryable().Select(x => Mapper.Map<LangMsgDetailViewModel>(x)).ToList();
         }
 
         private void LoadSetting(IServiceProvider serviceProvider)
