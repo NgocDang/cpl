@@ -163,7 +163,7 @@
                             $("#first-name-detail").html($("#FirstName").val());
                             $("#last-name-detail").html($("#LastName").val());
                             $("#gender-detail").html(data.gender);
-                            $("#dob-detail").html($("#DOB").val());
+                            $("#dob-detail").html(moment().date($("#Day").val()).month($("#Month").val() - 1).year($("#Year").val()).format("YYYY-MM-DD"));
                             $("#postal-code-detail").html($("#PostalCode").val());
                             $("#country-detail").html($("#Country").val());
                             $("#city-detail").html($("#City").val());
