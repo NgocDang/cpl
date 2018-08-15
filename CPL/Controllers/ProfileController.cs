@@ -65,10 +65,33 @@ namespace CPL.Controllers
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             var viewModel = Mapper.Map<ProfileViewModel>(user);
 
-            var numberOfLotteryGame = _lotteryHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
-
-            viewModel.NumberOfGameHistories = numberOfLotteryGame;
+            viewModel.NumberOfGameHistories = _lotteryHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
             viewModel.NumberOfTransactions = _coinTransactionService.Queryable().Count(x => x.SysUserId == viewModel.Id);
+
+            // Mapping KYC status
+            if (!user.KYCVerified.HasValue)
+            {
+                viewModel.KYCStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotVerifiedYet");
+            }
+            else if (user.KYCVerified == true)
+            {
+                viewModel.KYCStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Verified");
+            }
+            else // viewModel.KYCVerified == false
+            {
+                viewModel.KYCStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending");
+            }
+
+            // Mapping TwoFactorAuthenticationEnable status
+            if (user.TwoFactorAuthenticationEnable)
+            {
+                viewModel.TwoFactorAuthenticationEnableStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "IsEnabled");
+            }
+            else // viewModel.TwoFactorAuthenticationEnable == false
+            {
+                viewModel.TwoFactorAuthenticationEnableStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "IsNotEnabled");
+            }
+
             return View(viewModel);
         }
 
@@ -123,9 +146,25 @@ namespace CPL.Controllers
                         kycverify = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending")
                     });
                 }
-                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated") });
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated"),
+                    gender = viewModel?.Gender == true ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Male") : LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Female")
+                });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+        }
+
+        public IActionResult Edit()
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+            var viewModel = Mapper.Map<ProfileViewModel>(user);
+            viewModel.NumberOfGameHistories = _lotteryHistoryService.Queryable().Count(x => x.SysUserId == viewModel.Id);
+            viewModel.NumberOfTransactions = _coinTransactionService.Queryable().Count(x => x.SysUserId == viewModel.Id);
+
+            return PartialView("_Edit", viewModel);
         }
 
         public IActionResult Security()

@@ -1,7 +1,7 @@
 ﻿var Profile = {
     init: function () {
-        Profile.bindInitForm();
         Profile.bindSaveButton();
+        Profile.bindEditProfile();
     },
     bindInitForm: function () {
         // Initiate country
@@ -11,6 +11,7 @@
         }
 
         // Initiate date of birth 
+        //$.getScript("/js/dashboard/plugins/moment.min.js");
         var year = moment().year();
         for (i = year; i >= year - 100; i--) {
             if ($("#DOB").val() != "" && moment($("#DOB").val()).year() == i)
@@ -107,7 +108,7 @@
         });
     },
     bindSaveButton: function () {
-        $("#btn-save-account").on("click", function () {
+        $("#profile-edit").on("click", "#btn-save-account", function () {
             var isFormValid = $('#form-edit-account')[0].checkValidity();
             $("#form-edit-account").addClass('was-validated');
 
@@ -133,7 +134,7 @@
                 $("#country-msg").show();
 
             if (isFormValid && isMobileValid && isDOBValid && isCountryValid) {
-                var returnUrl = Profile.getUrlParameter("returnUrl");
+                //var returnUrl = Profile.getUrlParameter("returnUrl");
                 $.ajax({
                     url: "/Profile/Update/",
                     type: "POST",
@@ -155,10 +156,19 @@
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
-                            if (returnUrl == "/DepositAndWithdraw/Index") {
-                                $("#btn-save-account").hide();
-                                $("#btn-continue-verify-kyc").show();
-                            }
+                            $("#profile-edit").hide();
+                            $("#profile-detail").show();
+
+                            //Update value for profile detail
+                            $("#first-name-detail").html($("#FirstName").val());
+                            $("#last-name-detail").html($("#LastName").val());
+                            $("#gender-detail").html(data.gender);
+                            $("#dob-detail").html(moment().date($("#Day").val()).month($("#Month").val() - 1).year($("#Year").val()).format("YYYY-MM-DD"));
+                            $("#postal-code-detail").html($("#PostalCode").val());
+                            $("#country-detail").html($("#Country").val());
+                            $("#city-detail").html($("#City").val());
+                            $("#street-address-detail").html($("#StreetAddress").val());
+                            $("#mobile-detail").html($("#Mobile").intlTelInput("getNumber"));
                         } else {
                             toastr.error(data.message, 'Error!');
                         }
@@ -172,19 +182,41 @@
             return false;
         });
     },
-    getUrlParameter: function (sParam) {
-        var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'), sParameterName, i;
+    bindEditProfile: function () {
+        $("#btn-edit-profile").on("click", function () {
+            $.ajax({
+                url: "/Profile/Edit/",
+                type: "GET",
+                beforeSend: function () {
+                },
+                data: {
+                },
+                success: function (data) {
+                    $("#profile-edit").html(data);
+                    $("#profile-edit").show();
+                    $("#profile-detail").hide();
+                    Profile.bindInitForm();
+                }
+            });
+        });
+    },
 
-        for (i = 0; i < sURLVariables.length; i++) {
-            sParameterName = sURLVariables[i].split('=');
+    //getUrlParameter: function (sParam) {
+    //    var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'), sParameterName, i;
 
-            if (sParameterName[0] === sParam) {
-                return sParameterName[1] === undefined ? true : sParameterName[1];
-            }
-        }
-    }
+    //    for (i = 0; i < sURLVariables.length; i++) {
+    //        sParameterName = sURLVariables[i].split('=');
+
+    //        if (sParameterName[0] === sParam) {
+    //            return sParameterName[1] === undefined ? true : sParameterName[1];
+    //        }
+    //    }
+    //}
 };
 
 $(document).ready(function () {
     Profile.init();
+        if (location.hash == "#edit-profile-btn") {
+            $('#btn-edit-profile').click();
+    }
 });
