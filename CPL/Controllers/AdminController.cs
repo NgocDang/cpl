@@ -601,6 +601,19 @@ namespace CPL.Controllers
             return PartialView("_ViewLottery", lottery);
         }
 
+        public IActionResult ViewLotteryPrize(int id)
+        {
+            var lottery = new LotteryViewModel();
+
+            lottery = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
+                                                        .Include(x => x.LotteryPrizes)
+                                                        .Select()
+                                                        .FirstOrDefault(x => x.Id == id));
+
+            return PartialView("_ViewLotteryPrize");
+        }
+
+
         public IActionResult EditLottery(int id)
         {
             var lottery = new LotteryViewModel();

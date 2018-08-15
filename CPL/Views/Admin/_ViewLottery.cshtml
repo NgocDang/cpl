@@ -1,13 +1,14 @@
 ﻿@model LotteryViewModel
 
-<div class="modal" tabindex="-1" role="dialog" id="edit-lottery-game" style="display: none;" aria-hidden="true">
+<div class="modal" tabindex="-1" role="dialog" id="view-lottery-game" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames")</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-2">
+                <div id="view-lottery-prize-modal"></div>
                 <div class="row">
                     <div class="col-12">
                         <p class="text-muted mb-3px font-size-13px">
@@ -35,8 +36,9 @@
                     <div class="col-12">
                         <p class="text-muted mb-3px font-size-13px">
                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlideImage")
-                        </p><p>
-                            <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.SlideImage"><i class="fas fa-image"></i></a>
+                        </p>
+                        <p>
+                            <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.SlideImage"><img src="/images/lottery/@Model?.SlideImage" class="img-thumbnail img-fluid border-0 w-30-percent" alt="document-@Model?.SlideImage"></a>
                         </p>
                     </div>
                     <div class="col-12">
@@ -44,16 +46,17 @@
                             <div class="col-6">
                                 <p class="text-muted mb-3px font-size-13px">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopListingImage")
-                                </p><p>
-                                    @*<a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.DesktopListingImage"><img src="/images/lottery/@Model?.DesktopListingImage" class="img-thumbnail img-fluid border-0" alt="document-@Model?.DesktopListingImage"></a>*@
-                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.DesktopListingImage"><i class="fas fa-image"></i></a>
+                                </p>
+                                <p>
+                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.DesktopListingImage"><img src="/images/lottery/@Model?.DesktopListingImage" class="img-thumbnail img-fluid border-0 w-30-percent" alt="document-@Model?.DesktopListingImage"></a>
                                 </p>
                             </div>
                             <div class="col-6">
                                 <p class="text-muted mb-3px font-size-13px">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileListingImage")
-                                </p><p>
-                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.MobileListingImage"><i class="fas fa-image"></i></a>
+                                </p>
+                                <p>
+                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.MobileListingImage"><img src="/images/lottery/@Model?.MobileListingImage" class="img-thumbnail img-fluid border-0 w-30-percent" alt="document-@Model?.MobileListingImage"></i></a>
                                 </p>
                             </div>
                         </div>
@@ -101,16 +104,13 @@
                             @foreach (var prize in Model?.LotteryPrizes)
                             {
                                 <div class="col-4 mt-2">
-                                    <button type="button" class="btn btn-outline-@prize.Color w-100" id="btn-prize@prize.Name">@prize.Name Prize</button>
+                                    <button type="button" class="btn btn-outline-@prize.Color w-100 btn-prize" value="@prize.Id">@prize.Name Prize</button>
                                 </div>
                             }
                         </div>
 
                     </div>
                 </div>
-                <div class="modal-footer text-right">
-                </div>
-                <input type="number" value="@Model.Id" hidden id="lottery-id" />
-            </div>
         </div>
     </div>
+</div>

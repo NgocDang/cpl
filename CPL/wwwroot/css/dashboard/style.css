@@ -1507,6 +1507,10 @@ ul.game-menu li.active {
     padding: 10px;
 }
 
+.w-30-percent {
+    width: 30% !important;
+}
+
 .font-size-13px{
     font-size: 13px;
 }
