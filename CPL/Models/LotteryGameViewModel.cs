@@ -10,6 +10,5 @@ namespace CPL.Models
         public LotteryViewModel Lottery { get; set; }
         public int? SysUserId { get; set; }
         public string PrecentOfPerchasedTickets { get; set; }
-        public int LangId { get; set; }
     }
 }

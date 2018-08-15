@@ -515,21 +515,19 @@ namespace CPL.Controllers
         }
         #endregion
 
-        #region LotteryGame
-        public IActionResult LotteryGame()
+        #region Lottery
+        public IActionResult Lottery()
         {
-            var viewModel = new LotteryGameViewModel();
-            viewModel.LangId = HttpContext.Session.GetInt32("LangId").Value;
-            return View(viewModel);
+            return View();
         }
 
         [HttpPost]
-        public JsonResult SearchLotteryGame(DataTableAjaxPostModel viewModel)
+        public JsonResult SearchLottery(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchLotteryGameFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            var res = SearchLotteryFunc(viewModel, out filteredResultsCount, out totalResultsCount);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -540,7 +538,7 @@ namespace CPL.Controllers
             });
         }
 
-        public IList<LotteryViewModel> SearchLotteryGameFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        public IList<LotteryViewModel> SearchLotteryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
             var take = model.length;
@@ -591,37 +589,40 @@ namespace CPL.Controllers
             }
         }
 
-        public IActionResult EditLotteryGame(int id)
+        public IActionResult EditLottery(int id)
         {
-            var lotteryGame = new LotteryViewModel();
+            var lottery = new LotteryViewModel();
 
-            if (id > 0)
-            {
-                lotteryGame = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
-                                                            .Include(x => x.LotteryPrizes)
-                                                            .Select()
-                                                            .FirstOrDefault(x => x.Id == id));
-            }
+            lottery = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
+                                                        .Include(x => x.LotteryPrizes)
+                                                        .Select()
+                                                        .FirstOrDefault(x => x.Id == id));
 
-            return PartialView("_EditLotteryGame", lotteryGame);
+            return PartialView("_EditLottery", lottery);
+        }
+
+        public IActionResult AddLottery()
+        {
+            var lottery = new LotteryViewModel();
+            return PartialView("_EditLottery", lottery);
         }
 
         [HttpPost]
-        public JsonResult UpdateEditLotteryGame(LotteryViewModel viewModel)
+        public JsonResult UpdateLottery(LotteryViewModel viewModel)
         {
             try
             {
-                var lotteryGame = _lotteryService.Queryable().FirstOrDefault(x => x.Id == viewModel.Id);
+                var lottery = _lotteryService.Queryable().FirstOrDefault(x => x.Id == viewModel.Id);
 
                 // lottery game
-                lotteryGame.Title = viewModel.Title;
-                lotteryGame.Volume = viewModel.Volume;
-                lotteryGame.UnitPrice = viewModel.UnitPrice;
+                lottery.Title = viewModel.Title;
+                lottery.Volume = viewModel.Volume;
+                lottery.UnitPrice = viewModel.UnitPrice;
 
-                if (!viewModel.IsPublish)
-                    lotteryGame.Status = (int)EnumLotteryGameStatus.PENDING;
+                if (!viewModel.IsPublished)
+                    lottery.Status = (int)EnumLotteryGameStatus.PENDING;
                 else
-                    lotteryGame.Status = (int)EnumLotteryGameStatus.ACTIVE;
+                    lottery.Status = (int)EnumLotteryGameStatus.ACTIVE;
 
                 // slider image
                 if (viewModel.DesktopListingImageFile != null)
@@ -629,10 +630,10 @@ namespace CPL.Controllers
                     var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
                     string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
 
-                    var sliderImage = $"{lotteryGame.Phase.ToString()}_Slider_{timestamp}_{viewModel.SlideImageFile.FileName}";
+                    var sliderImage = $"{lottery.Phase.ToString()}_Slider_{timestamp}_{viewModel.SlideImageFile.FileName}";
                     var sliderImagePath = Path.Combine(pathLottery, sliderImage);
                     viewModel.SlideImageFile.CopyTo(new FileStream(sliderImagePath, FileMode.Create));
-                    lotteryGame.SlideImage = sliderImage;
+                    lottery.SlideImage = sliderImage;
                 }
 
                 // desktop image
@@ -641,10 +642,10 @@ namespace CPL.Controllers
                     var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
                     string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
 
-                    var desktopImage = $"{lotteryGame.Phase.ToString()}_Desktop_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
+                    var desktopImage = $"{lottery.Phase.ToString()}_Desktop_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
                     var desktopImagePath = Path.Combine(pathLottery, desktopImage);
                     viewModel.DesktopListingImageFile.CopyTo(new FileStream(desktopImagePath, FileMode.Create));
-                    lotteryGame.DesktopListingImage = desktopImage;
+                    lottery.DesktopListingImage = desktopImage;
                 }
 
                 // mobile image
@@ -653,17 +654,17 @@ namespace CPL.Controllers
                     var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
                     string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
 
-                    var mobileImage = $"{lotteryGame.Phase.ToString()}_Mobile_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
+                    var mobileImage = $"{lottery.Phase.ToString()}_Mobile_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
                     var mobileImagePath = Path.Combine(pathLottery, mobileImage);
                     viewModel.MobileListingImageFile.CopyTo(new FileStream(mobileImagePath, FileMode.Create));
-                    lotteryGame.MobileListingImage = mobileImage;
+                    lottery.MobileListingImage = mobileImage;
                 }
 
-                _lotteryService.Update(lotteryGame);
+                _lotteryService.Update(lottery);
 
                 // lottery prize
-                var lotteryGamePrize = _lotteryPrizeService.Queryable().Where(x => x.LotteryId == viewModel.Id).ToList();
-                var numberOfOldPrize = lotteryGamePrize.Count();
+                var lotteryPrize = _lotteryPrizeService.Queryable().Where(x => x.LotteryId == viewModel.Id).ToList();
+                var numberOfOldPrize = lotteryPrize.Count();
                 var numberOfNewPrize = viewModel.LotteryPrizes.Count - 1;
 
                 if (numberOfOldPrize >= numberOfNewPrize)
@@ -672,14 +673,14 @@ namespace CPL.Controllers
                     {
                         if (i < numberOfNewPrize)
                         {
-                            var newPrize = lotteryGamePrize[i];
+                            var newPrize = lotteryPrize[i];
                             newPrize.Value = viewModel.LotteryPrizes[i].Value;
                             newPrize.Volume = viewModel.LotteryPrizes[i].Volume;
                             _lotteryPrizeService.Update(newPrize);
                         }
                         else
                         {
-                            var deletedPrize = lotteryGamePrize[i];
+                            var deletedPrize = lotteryPrize[i];
                             _lotteryPrizeService.Delete(deletedPrize);
                         }
                     }
@@ -690,7 +691,7 @@ namespace CPL.Controllers
                     {
                         if (i < numberOfOldPrize)
                         {
-                            var newPrize = lotteryGamePrize[i];
+                            var newPrize = lotteryPrize[i];
                             newPrize.Value = viewModel.LotteryPrizes[i].Value;
                             newPrize.Volume = viewModel.LotteryPrizes[i].Volume;
                             _lotteryPrizeService.Update(newPrize);
@@ -738,24 +739,27 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public JsonResult AddLotteryGame(LotteryViewModel viewModel)
+        public JsonResult AddLottery(LotteryViewModel viewModel)
         {
             try
             {
                 // Lottery game
-                var currentId = _lotteryService.Queryable().LastOrDefault().Id;
-                var lotteryGame = new Lottery();
+                var latestLottery = _lotteryService.Queryable().LastOrDefault();
+                var currentPhase = latestLottery == null ? 0 : latestLottery.Phase;
+                var currentId = latestLottery == null ? 0 : latestLottery.Id;
 
-                lotteryGame.Title = viewModel.Title;
-                lotteryGame.Volume = viewModel.Volume;
-                lotteryGame.UnitPrice = viewModel.UnitPrice;
-                lotteryGame.Phase = currentId + 1;
-                lotteryGame.CreatedDate = DateTime.Now;
+                var lottery = new Lottery();
 
-                if (!viewModel.IsPublish)
-                    lotteryGame.Status = (int)EnumLotteryGameStatus.PENDING;
+                lottery.Title = viewModel.Title;
+                lottery.Volume = viewModel.Volume;
+                lottery.UnitPrice = viewModel.UnitPrice;
+                lottery.Phase = currentPhase + 1;
+                lottery.CreatedDate = DateTime.Now;
+
+                if (!viewModel.IsPublished)
+                    lottery.Status = (int)EnumLotteryGameStatus.PENDING;
                 else
-                    lotteryGame.Status = (int)EnumLotteryGameStatus.ACTIVE;
+                    lottery.Status = (int)EnumLotteryGameStatus.ACTIVE;
 
                 if (viewModel.DesktopListingImageFile != null && viewModel.MobileListingImageFile != null && viewModel.SlideImageFile != null)
                 {
@@ -763,25 +767,25 @@ namespace CPL.Controllers
                     string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
 
                     // slider image
-                    var sliderImage = $"{lotteryGame.Phase.ToString()}_Slider_{timestamp}_{viewModel.SlideImageFile.FileName}";
+                    var sliderImage = $"{lottery.Phase.ToString()}_Slider_{timestamp}_{viewModel.SlideImageFile.FileName}";
                     var sliderImagePath = Path.Combine(pathLottery, sliderImage);
                     viewModel.SlideImageFile.CopyTo(new FileStream(sliderImagePath, FileMode.Create));
-                    lotteryGame.SlideImage = sliderImage;
+                    lottery.SlideImage = sliderImage;
 
                     // desktop image
-                    var desktopImage = $"{lotteryGame.Phase.ToString()}_Desktop_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
+                    var desktopImage = $"{lottery.Phase.ToString()}_Desktop_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
                     var desktopImagePath = Path.Combine(pathLottery, desktopImage);
                     viewModel.DesktopListingImageFile.CopyTo(new FileStream(desktopImagePath, FileMode.Create));
-                    lotteryGame.DesktopListingImage = desktopImage;
+                    lottery.DesktopListingImage = desktopImage;
 
                     // mobile image
-                    var mobileImage = $"{lotteryGame.Phase.ToString()}_Mobile_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
+                    var mobileImage = $"{lottery.Phase.ToString()}_Mobile_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
                     var mobileImagePath = Path.Combine(pathLottery, mobileImage);
                     viewModel.MobileListingImageFile.CopyTo(new FileStream(mobileImagePath, FileMode.Create));
-                    lotteryGame.MobileListingImage = mobileImage;
+                    lottery.MobileListingImage = mobileImage;
                 }
 
-                _lotteryService.Insert(lotteryGame);
+                _lotteryService.Insert(lottery);
 
                 // Lottery prize
                 foreach (var prize in viewModel.LotteryPrizes)
@@ -824,26 +828,26 @@ namespace CPL.Controllers
             }
         }
 
-        public IActionResult DeleteLotteryGameConfirm(int id)
+        public IActionResult ConfirmDeleteLottery(int id)
         {
             ViewData["gameId"] = id;
-            return PartialView("_DeleteLotteryGameConfirm");
+            return PartialView("_ConfirmDeleteLottery");
         }
 
         [HttpPost]
-        public JsonResult DeleteLotteryGame(int id)
+        public JsonResult DeleteLottery(int id)
         {
             try
             {
-                var lotteryGame = _lotteryService.Queryable().FirstOrDefault(x => x.Id == id);
-                var lotteryGamePrize = _lotteryPrizeService.Queryable().Where(x => x.LotteryId == id);
+                var lottery = _lotteryService.Queryable().FirstOrDefault(x => x.Id == id);
+                var lotteryPrize = _lotteryPrizeService.Queryable().Where(x => x.LotteryId == id);
 
-                foreach (var prize in lotteryGamePrize)
+                foreach (var prize in lotteryPrize)
                 {
                     _lotteryPrizeService.Delete(prize);
                 }
 
-                _lotteryService.Delete(lotteryGame);
+                _lotteryService.Delete(lottery);
                 _unitOfWork.SaveChanges();
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
             }
@@ -854,13 +858,13 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public JsonResult ActivateLotteryGame(int id)
+        public JsonResult ActivateLottery(int id)
         {
             try
             {
-                var lotteryGame = _lotteryService.Queryable().FirstOrDefault(x => x.Id == id);
-                lotteryGame.Status = (int)EnumLotteryGameStatus.ACTIVE;
-                _lotteryService.Update(lotteryGame);
+                var lottery = _lotteryService.Queryable().FirstOrDefault(x => x.Id == id);
+                lottery.Status = (int)EnumLotteryGameStatus.ACTIVE;
+                _lotteryService.Update(lottery);
                 _unitOfWork.SaveChanges();
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ActivateSuccessfully") });
             }

@@ -22,7 +22,7 @@
             "autoWidth": false,
             "stateSave": true,
             "ajax": {
-                url: "/Admin/SearchLotteryGame",
+                url: "/Admin/SearchLottery",
                 type: 'POST',
             },
             "language": DTLang.getLang(),
@@ -118,13 +118,10 @@
         $("#lottery-game-management").on("click", "#btn-add", function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/EditLotteryGame",
+                url: "/Admin/AddLottery",
                 type: "GET",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);
-                },
-                data: {
-                    id: $(_this).data().id
                 },
                 success: function (data) {
                     $("#modal").html(data);
@@ -148,7 +145,7 @@
         $("#dt-all-lottery-game").on("click", ".btn-edit", function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/EditLotteryGame",
+                url: "/Admin/EditLottery",
                 type: "GET",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);
@@ -179,7 +176,7 @@
         $("#dt-all-lottery-game").on("click", ".btn-delete", function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/DeleteLotteryGameConfirm",
+                url: "/Admin/ConfirmDeleteLottery",
                 type: "GET",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);
@@ -271,7 +268,7 @@
                 formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
                 formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
                 formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
-                formData.append('IsPublish', false);
+                formData.append('IsPublished', false);
 
                 $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
@@ -279,7 +276,7 @@
                 });
 
                 $.ajax({
-                    url: "/Admin/AddLotteryGame/",
+                    url: "/Admin/AddLottery/",
                     type: "POST",
                     processData: false,
                     contentType: false,
@@ -338,7 +335,7 @@
                 formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
                 formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
                 formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
-                formData.append('IsPublish', true);
+                formData.append('IsPublished', true);
 
                 $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
@@ -346,7 +343,7 @@
                 });
 
                 $.ajax({
-                    url: "/Admin/AddLotteryGame/",
+                    url: "/Admin/AddLottery/",
                     type: "POST",
                     processData: false,
                     contentType: false,
@@ -406,7 +403,7 @@
                 formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
                 formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
                 formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
-                formData.append('IsPublish', false);
+                formData.append('IsPublished', false);
 
                 $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
@@ -414,7 +411,7 @@
                 });
 
                 $.ajax({
-                    url: "/Admin/UpdateEditLotteryGame/",
+                    url: "/Admin/UpdateLottery/",
                     type: "POST",
                     processData: false,
                     contentType: false,
@@ -474,7 +471,7 @@
                 formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
                 formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
                 formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
-                formData.append('IsPublish', true);
+                formData.append('IsPublished', true);
 
                 $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
@@ -482,7 +479,7 @@
                 });
 
                 $.ajax({
-                    url: "/Admin/UpdateEditLotteryGame/",
+                    url: "/Admin/UpdateLottery/",
                     type: "POST",
                     processData: false,
                     contentType: false,
@@ -513,7 +510,7 @@
         $('#dt-all-lottery-game').on('click', '.btn-active', function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/ActivateLotteryGame/",
+                url: "/Admin/ActivateLottery/",
                 type: "POST",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);
@@ -541,7 +538,7 @@
         $('#modal').on('click', '.btn-delete', function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/DeleteLotteryGame/",
+                url: "/Admin/DeleteLottery/",
                 type: "POST",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);

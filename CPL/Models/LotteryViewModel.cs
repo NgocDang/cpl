@@ -24,7 +24,7 @@ namespace CPL.Models
         public IFormFile SlideImageFile { get; set; }
         public IFormFile DesktopListingImageFile { get; set; }
         public IFormFile MobileListingImageFile { get; set; }
-        public bool IsPublish { get; set; }
+        public bool IsPublished { get; set; }
 
         public List<LotteryHistoryViewModel> LotteryHistories { get; set; }
         public List<LotteryPrizeViewModel> LotteryPrizes { get; set; }
