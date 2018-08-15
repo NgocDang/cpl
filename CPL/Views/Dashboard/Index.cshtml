@@ -16,18 +16,7 @@
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
-                <div class="row breadcrumbs-top d-inline-block">
-                    <div class="breadcrumb-wrapper col-12">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                            </li>
-                        </ol>
-                    </div>
-                </div>
+                <h3 class="content-header-title mb-0 d-inline-block border-right-0"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
             </div>
         </div>
         <div class="content-body">
@@ -100,5 +89,5 @@
     <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/cpl.dashboard.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.amount.viewcomponent.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.balance.viewcomponent.js" asp-append-version="true"></script>
 }
