@@ -88,7 +88,10 @@
                                         <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DOB")</p>
                                         <p>
                                             <strong id="dob-detail">
-                                                @Model.DOB.Value.ToString("yyyy/MM/dd")
+                                                @if (Model.DOB.HasValue)
+                                                {
+                                                    @Model.DOB.Value.ToString("yyyy/MM/dd")
+                                                }
                                             </strong>
                                         </p>
                                     </div>
