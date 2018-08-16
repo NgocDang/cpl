@@ -14,9 +14,9 @@ namespace CPL.ViewComponents
             this._sysUserService = sysUserService;
         }
 
-        public IViewComponentResult Invoke(int? sysUserId)
+        public IViewComponentResult Invoke(LotteryHistoryViewComponentViewModel viewModel)
         {
-            return View(sysUserId);
+            return View(viewModel);
         }
     }
 }

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class GameHistoryIndexViewModel
+    public class GameHistoryViewComponentViewModel
     {
-        public int SysUserId { get; set; }
+        public int? SysUserId { get; set; }
     }
 }

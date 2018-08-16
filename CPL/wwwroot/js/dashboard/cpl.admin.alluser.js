@@ -1,7 +1,7 @@
 ﻿var AllUser = {
-    allUserDataTable: null,
+    allUserDatatable: null,
     init: function () {
-        AllUser.allUserDataTable = AllUser.loadAllUserDatatable();
+        AllUser.allUserDatatable = AllUser.loadAllUserDatatable();
         AllUser.loadLightBox();
         AllUser.bindEditButton();
         AllUser.bindUpdateButton();
@@ -92,7 +92,7 @@
                             $("#email-" + $("#Id").val()).html($("#Email").val());
                             toastr.success(data.message, 'Success!');
                             $("#update-user").modal("hide");
-                            AllUser.allUserDataTable.ajax.reload();
+                            AllUser.allUserDatatable.ajax.reload();
                         } else {
                             if (data.name == "email") {
                                 $("#Email").addClass("border-danger");
@@ -204,7 +204,11 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a style='line-height:12px;margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a> <button style='line-height:12px;margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() +"</button>";
+                        var actions = "<a style='line-height:12px;margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
+                        if (!full.isDeleted) {
+                            actions += " <button style='line-height:12px;margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</button>";
+                        }
+                        return actions;
                     },
                     "orderable": false
                 }
@@ -229,7 +233,7 @@
                         if (data.success) {
                             $("#update-user").modal("hide");
                             toastr.success(data.message, 'Success!');
-                            AllUser.allUserDataTable.ajax.reload();
+                            AllUser.allUserDatatable.ajax.reload();
                         } else {
                             toastr.error(data.message, 'Error!');
                         }

@@ -60,19 +60,16 @@ namespace CPL.Controllers
         {
             if (id.HasValue)
             {
-                var viewModel = new LotteryGameViewModel();
-                var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-                if (user != null)
-                    viewModel.SysUserId = user.Id;
-
                 var lottery = _lotteryService
                                 .Query()
                                 .Include(x => x.LotteryHistories)
                                 //.Include(x => x.LotteryPrizes)
                                 .Select()
                                 .FirstOrDefault(x => x.Id == id);
-
-                viewModel.Lottery = Mapper.Map<LotteryViewModel>(lottery);
+                var viewModel = Mapper.Map<LotteryIndexViewModel>(lottery);
+                var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+                if (user != null)
+                    viewModel.SysUserId = user.Id;
 
                 // DO NOT DELETE! THIS BLOCK OF CODE TO CALCULATE THE WINNING POSSIBILITY
                 //foreach (var lottery in viewModel.Lotteries)
@@ -88,8 +85,10 @@ namespace CPL.Controllers
                 //    }
                 //}
 
-                if (viewModel.Lottery != null && viewModel.Lottery.Volume > 0)
-                    viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.Lottery.LotteryHistories.Count() / (decimal)viewModel.Lottery.Volume * 100m).ToString();
+                if (viewModel.Volume > 0)
+                    viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.LotteryHistories.Count() / (decimal)viewModel.Volume * 100m).ToString();
+
+                viewModel.UnitPrice = 1500;
 
                 return View(viewModel);
             }

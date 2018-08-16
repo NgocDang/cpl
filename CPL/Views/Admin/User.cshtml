@@ -15,7 +15,7 @@
 <div class="app-content container center-layout mt-2">
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-12 col-12 mb-3">
+            <div class="content-header-left col-md-12 col-12 mb-2">
                 <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</h3>
             </div>
         </div>
@@ -138,8 +138,9 @@
                     </div>
                 </div>
             </div>
-            @await Component.InvokeAsync("GameHistory", Model.Id)
+            @await Component.InvokeAsync("GameHistory", new GameHistoryViewComponentViewModel {SysUserId = Model.Id })
         </div>
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View")" id="view" />
     </div>
 </div>
 
@@ -150,7 +151,7 @@
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
-    <script src="~/js/dashboard/cpl.amount.viewcomponent.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.balance.viewcomponent.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.userdashboard.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.gamehistory.viewcomponent.js" asp-append-version="true"></script>
 }

@@ -1,5 +1,13 @@
 ﻿@media (max-width: 425px){
-    .tab-component-custom .text-sm-bigger {
+    .tab-component .text-sm-bigger {
         font-size: 25px !important;
     }
+}
+
+.nav-tabs #deposit-nav-tab.nav-link.active {
+    border-color: #BABFC7 #BABFC7 #fff;
+}
+
+#depositandwithdraw .nav-tabs .nav-item {
+    z-index: 9;
 }

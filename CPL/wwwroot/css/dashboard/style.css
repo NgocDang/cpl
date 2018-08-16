@@ -112,8 +112,12 @@ table.dataTable {
 }
 
 #btc-card {
-    background: linear-gradient(#193E8E,#130E3B) !important;
-    color: #fff
+    background: #fff !important;
+    color: #fff;
+    border-color: #f79e36 !important;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0px !important;
 }
 
     #btc-card:before {
@@ -123,15 +127,22 @@ table.dataTable {
         right: 20px;
         content: "\f15a";
         font-size: 3rem;
+        color: #f79e36
     }
 
-    #btc-card h1 {
-        color: #fff
+    #btc-card h1,
+    #btc-card strong,
+    #btc-card p {
+        color: #000
     }
 
 #eth-card {
-    background: linear-gradient(#193E8E,#130E3B) !important;
-    color: #fff
+    background: #fff !important;
+    color: #fff;
+    border-color: #4c4c4c !important;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0px !important;
 }
 
     #eth-card:before {
@@ -141,11 +152,15 @@ table.dataTable {
         right: 20px;
         content: "\f42e";
         font-size: 3rem;
+        color: #4c4c4c
     }
 
-    #eth-card h1 {
-        color: #fff
+    #eth-card h1,
+    #eth-card strong,
+    #eth-card p {
+        color: #000
     }
+
 
 #cpl-card {
     background: linear-gradient(#193E8E,#130E3B) !important;
@@ -302,7 +317,7 @@ table.dataTable {
     }
 
 
-select.bs-select-hidden, select.selectpicker {
+select.bs-select-hidden {
     display: none !important
 }
 
@@ -1315,7 +1330,7 @@ footer {
 
 .navbar-lottery-desktop {
     display: inline-block;
-    padding: 1rem 2rem;
+    padding: 0.5rem 1rem;
     text-align: center;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
@@ -1332,7 +1347,7 @@ footer {
 
 .navbar-price-prediction-desktop {
     display: inline-block;
-    padding: 1rem 2rem;
+    padding: 0.5rem 1rem;
     text-align: center;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
@@ -1542,4 +1557,33 @@ footer {
     #logout .btn-mobile-version {
         height: 40px;
     }
+}
+
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    cursor: pointer;
+    display: block;
+    width: 15px;
+    color: #000;
+    text-align: center;
+    position: relative;
+}
+
+input[type=number]:hover::-webkit-inner-spin-button {
+    background: #eee url('../../images/number_spin.png') no-repeat 50% 50%;
+    width: 30px;
+    height: 42px;
+    padding: 0px;
+    position: relative;
+    right: -1rem;
+}
+
+.header-navbar .navbar-container ul.nav li > a.user-menu {
+    padding: 1.3rem 0.5rem !important;
+}
+
+.bg-secondary.disabled, .bg-secondary:disabled {
+    opacity:1;
+    background-color: #9fa2ae !important;
+    border-color: #9fa2ae !important;
 }

@@ -40,7 +40,9 @@ namespace CPL.Controllers
 
         public IActionResult Game()
         {
-            return View(Mapper.Map<GameHistoryIndexViewModel>(_sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id)));
+            var viewModel = new GameHistoryIndexViewModel();
+            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
+            return View(viewModel);
         }
 
         #region Lottery History
@@ -198,12 +200,12 @@ namespace CPL.Controllers
         #endregion
 
         #region Game History
-        public JsonResult SearchGameHistory(DataTableAjaxPostModel viewModel, int userId)
+        public JsonResult SearchGameHistory(DataTableAjaxPostModel viewModel, int sysUserId)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchGameHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, userId);
+            var res = SearchGameHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, sysUserId);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -214,11 +216,11 @@ namespace CPL.Controllers
             });
         }
 
-        public IList<GameHistoryViewModel> SearchGameHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int userId = 0)
+        public IList<GameHistoryViewModel> SearchGameHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId)
         {
             var user = new SysUserViewModel();
-            if (userId > 0)
-                user = Mapper.Map<SysUserViewModel>(_sysUserService.Queryable().Where(x => x.Id == userId).FirstOrDefault());
+            if (sysUserId > 0)
+                user = Mapper.Map<SysUserViewModel>(_sysUserService.Queryable().Where(x => x.Id == sysUserId).FirstOrDefault());
             else
                 user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             var searchBy = (model.search != null) ? model.search.value : null;
@@ -391,17 +393,17 @@ namespace CPL.Controllers
         #endregion
 
         #region Transaction History
-        public IActionResult Transaction()
+        public IActionResult Transaction(TransactionHistoryIndexViewModel viewModel)
         {
-            return View();
+            return View(viewModel);
         }
 
-        public JsonResult SearchTransactionHistory(DataTableAjaxPostModel viewModel, int? userId)
+        public JsonResult SearchTransactionHistory(DataTableAjaxPostModel viewModel, int? sysUserId, int? currencyId)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchTransactionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, userId);
+            var res = SearchTransactionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, sysUserId, currencyId);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -412,9 +414,9 @@ namespace CPL.Controllers
             });
         }
 
-        public IList<CoinTransactionViewModel> SearchTransactionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? userId)
+        public IList<CoinTransactionViewModel> SearchTransactionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? sysUserId, int? currencyId)
         {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == (userId ?? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id));
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == (sysUserId ?? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id));
             var searchBy = (model.search != null) ? model.search.value?.ToLower() : null;
             var take = model.length;
             var skip = model.start;
@@ -429,9 +431,14 @@ namespace CPL.Controllers
                 sortDir = model.order[0].dir.ToLower() == "desc";
             }
 
+            // NULLABLE INT CANNOT BE USED IN LINQ, SO VALUE CAST IS A MUST
+            var _currencyId = 0;
+            if (currencyId.HasValue)
+                _currencyId = currencyId.Value;
+
             totalResultsCount = _coinTransactionService
                                  .Queryable()
-                                 .Where(x => x.SysUserId == user.Id)
+                                 .Where(x => x.SysUserId == user.Id && (_currencyId == 0 ? true : x.CurrencyId == _currencyId))
                                  .Count();
 
             // search the dbase taking into consideration table sorting and paging
@@ -439,7 +446,7 @@ namespace CPL.Controllers
                                           .Query()
                                           .Include(x => x.Currency)
                                           .Select()
-                                          .Where(x => x.SysUserId == user.Id)
+                                          .Where(x => x.SysUserId == user.Id && (_currencyId == 0 ? true : x.CurrencyId == _currencyId))
                                           .Select(x => new CoinTransactionViewModel
                                           {
                                               Id = x.Id,
@@ -481,12 +488,12 @@ namespace CPL.Controllers
        
         public IActionResult TransactionDetail(int id)
         {
-            var sysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
+            //var sysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
             var viewModel = _coinTransactionService
                                     .Query()
                                     .Include(x => x.Currency)
                                     .Select()
-                                    .Where(x => x.SysUserId == sysUserId && x.Id == id)
+                                    .Where(x => /*x.SysUserId == sysUserId &&*/ x.Id == id)
                                     .Select(x => new CoinTransactionViewModel
                                     {
                                         Id = x.Id,

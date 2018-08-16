@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-    @Html.Hidden("CopiedText", "Copied Successfully")
+    @Html.Hidden("CopiedSuccessfully", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CopiedSuccessfully"))
 </div>
 
 @section scripts
