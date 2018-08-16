@@ -641,13 +641,6 @@ namespace CPL.Controllers
                 sortDir = model.order[0].dir.ToLower() == "asc";
             }
 
-            var lottery = _lotteryHistoryService
-          .Query()
-          .Include(x => x.SysUser)
-          .Select()
-          .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId)
-          .Select(x => x.SysUser.Email).ToList();
-
             // search the dbase taking into consideration table sorting and paging
             if (string.IsNullOrEmpty(searchBy))
             {
