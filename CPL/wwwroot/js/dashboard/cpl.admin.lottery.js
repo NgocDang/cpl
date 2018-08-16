@@ -203,6 +203,7 @@
                     $("#modal").html(data);
                     $("#view-lottery-game").modal("show");
                     LotteryGames.bindViewLotteryPrizeButton();
+                    LotteryGames.bindViewLottery1stPrize();
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
@@ -236,6 +237,28 @@
             return false;
         });
     },
+    bindViewLottery1stPrize: function () {
+        if ($("#view-lottery-game .btn-prize").length > 1) {
+            $.ajax({
+                url: "/Admin/ViewLotteryPrize",
+                type: "GET",
+                beforeSend: function () {
+                },
+                data: {
+                    lotteryId: $("#Id").val(),
+                    lotteryPrizeId: 1,
+                },
+                success: function (data) {
+                    $("#lottery-result").html(data);
+                    LotteryGames.loadUserPrizeTable();
+                },
+                complete: function (data) {
+                    $("#prize-name").html($("#view-lottery-game .btn-prize").data().prizeName);
+                }
+            });
+        }
+    },
+
     bindEditButton: function () {
         $("#dt-all-lottery-game").on("click", ".btn-edit", function () {
             var _this = this;
