@@ -128,7 +128,7 @@
                 {
                     "data": "No",
                     "render": function (data, type, full, meta) {
-                        return "";
+                        return null;
                     },
                     "className": "text-center",
                     "orderable": false
