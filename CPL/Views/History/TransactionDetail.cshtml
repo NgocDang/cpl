@@ -76,11 +76,11 @@
                                             {
                                                 @if (Model.CurrencyId == (int)EnumCurrency.BTC)
                                                 {
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice") = @((1 / Model.Rate.Value).ToString("#,##0.########")) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</strong>
+                                                    <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice")</strong> <span>=</span> <strong>@((1 / Model.Rate.Value).ToString("#,##0.########")) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</strong>
                                                 }
                                                 else
                                                 {
-                                            <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToETHPrice") = @((1 / Model.Rate.Value).ToString("#,##0.########")) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</strong>
+                                                    <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToETHPrice")</strong> <span>=</span> <strong>@((1 / Model.Rate.Value).ToString("#,##0.########")) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</strong>
                                                 }
                                             }
                                         </p>

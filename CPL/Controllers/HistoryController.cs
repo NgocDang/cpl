@@ -393,13 +393,8 @@ namespace CPL.Controllers
         #endregion
 
         #region Transaction History
-        public IActionResult Transaction(int? sysUserId, int? currencyId)
+        public IActionResult Transaction(TransactionHistoryIndexViewModel viewModel)
         {
-            var viewModel = new TransactionHistoryIndexViewModel
-            {
-                SysUserId = sysUserId,
-                CurrencyId = currencyId
-            };
             return View(viewModel);
         }
 
