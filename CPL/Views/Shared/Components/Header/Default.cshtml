@@ -12,6 +12,23 @@
                 </li>
             </ul>
         </div>
+        @if (Model.User == null)
+        {
+            <div class="navbar-header navbar-header-mobile-authentication d-sm-none">
+                <ul class="nav navbar-nav text-center">
+                    <li class="nav-item mobile-menu d-md-none">
+                        <a class="btn btn-sm btn-danger mr-1" asp-controller="Authentication" asp-action="Register">
+                            <i class="la la-user-plus"></i>
+                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</span>
+                        </a>
+                        <a class="btn btn-sm btn-white ml-1" asp-controller="Authentication" asp-action="LogIn">
+                            <i class="la la-sign-in"></i>
+                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        }
         <div class="navbar-container container center-layout">
             <div class="collapse navbar-collapse" id="navbar-mobile">
                 <ul class="nav navbar-nav float-left navbar-left">
@@ -23,7 +40,7 @@
                 </ul>
                 <ul class="nav navbar-nav mr-auto float-left game-menu">
                     <li class="nav-item active">
-                        <a class="navbar-lottery-desktop active" asp-controller="Home" asp-action="Index"><img class="img-fluid w-75" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")"/> </a>
+                        <a class="navbar-lottery-desktop active" asp-controller="Home" asp-action="Index"><img class="img-fluid w-75" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")" /> </a>
                     </li>
                     @*<li class="nav-item">
                         <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
@@ -33,7 +50,7 @@
                         <li class="nav-item pt-1 pl-1 d-xl-inline d-none">
                             <a class="bg-white hidden-sm text-primary" asp-controller="News" asp-action="Index">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")
-                            </a> 
+                            </a>
                             <span class="black"><small> | </small></span>
                             <a asp-controller="News" asp-action="Detail" asp-route-id="@Model.News.Id" class="font-weight-bold black news-link"><small>@Model.News.CreatedDate.ToString("yyyy/MM/dd") @Model.News.Title</small></a>
                         </li>
@@ -188,3 +205,7 @@
         }
     </div>
 </div>
+@if(Model.User == null)
+{
+    <div class="mb-sm-0 mb-4"></div>
+}
