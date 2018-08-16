@@ -71,21 +71,21 @@
                                         @foreach (var prize in Model?.LotteryPrizes)
                                         {
                                             <div class="row">
-                                                <div class="col-4">
+                                                <div class="col-4 text-center">
                                                     <p class="text-muted mb-3px font-size-13px">
                                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")
                                                     </p><p>
                                                         <strong>@prize.Value.ToString("0.")</strong>
                                                     </p>
                                                 </div>
-                                                <div class="col-4">
+                                                <div class="col-4 text-center pl-0 pr-0">
                                                     <p class="text-muted mb-3px font-size-13px">
                                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets")
                                                     </p><p>
                                                         <strong>@prize.Volume</strong>
                                                     </p>
                                                 </div>
-                                                <div class="col-4">
+                                                <div class="col-4 text-center">
                                                     <p class="text-muted mb-3px font-size-13px">
                                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")
                                                     </p>
