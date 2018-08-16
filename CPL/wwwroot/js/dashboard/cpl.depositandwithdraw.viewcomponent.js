@@ -9,7 +9,7 @@
         if ($(".btn-copy").length > 0) {
             var clipboard = new ClipboardJS('.btn-copy');
             clipboard.on('success', function (e) {
-                toastr.success($("#CopiedText").val());
+                toastr.success($("#CopiedSuccessfully").val());
             });
         }
     },

@@ -1,15 +1,15 @@
 ﻿@model DepositAndWithdrawViewModel
 
-<div id="depositandwithdraw" class="tab-component-custom">
+<div id="depositandwithdraw" class="tab-component">
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link active" id="deposit-nav-tab" data-toggle="tab" href="#deposit-nav" aria-controls="deposit-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</a>
+            <a class="nav-link font-medium-2 font-weight-bold active px-2" id="deposit-nav-tab" data-toggle="tab" href="#deposit-nav" aria-controls="deposit-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="withdraw-nav-tab" data-toggle="tab" href="#withdraw-nav" aria-controls="withdraw-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</a>
+            <a class="nav-link font-medium-2 font-weight-bold px-2" id="withdraw-nav-tab" data-toggle="tab" href="#withdraw-nav" aria-controls="withdraw-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</a>
         </li>
     </ul>
-    <div class="tab-content px-2 py-1 mb-1">
+    <div class="tab-content mb-1">
         <div role="tabpanel" class="tab-pane active" id="deposit-nav" aria-labelledby="deposit-nav-tab" aria-expanded="true">
             <div class="card mb-1">
                 <div class="card-content">
@@ -41,12 +41,11 @@
                                 <img class="img-fluid" src=@Model.BTCQrCodeImage>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card mb-0">
-                <div class="card-content">
-                    <div class="card-body">
+                        <div class="row my-2">
+                            <div class="col-12">
+                                <hr/>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="pt-1 col-md-4 col-12 text-center">
                                 <h5 class="text-uppercase font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHName")</h5>
@@ -81,8 +80,8 @@
         <div class="tab-pane" id="withdraw-nav" role="tabpanel" aria-labelledby="withdraw-nav-tab" aria-expanded="false">
             <div class="card mb-1">
                 <div class="card-content">
-                    <form novalidate>
-                        <div class="card-body">
+                    <div class="card-body">
+                        <form novalidate>
                             <div class="row">
                                 <div class="col-lg-3 col-12 text-center pt-1">
                                     <h4 class="text-uppercase font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCName")</h4>
@@ -91,7 +90,7 @@
                                 <div class="col-lg-9 col-12">
                                     <p class="mt-2 text-lg-left text-center">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCWithdrawWarning"))</p>
                                     <div class="row">
-                                        <div class="col-md-5 col-12">
+                                        <div class="col-md-3 col-12">
                                             <fieldset class="form-group mb-0">
                                                 <label for="btc-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
                                                 <input type="number" name="btc-amount" class="form-control amount-value" value="0" required="" autofocus="" min="0.00000001" max="@Model.BTCAmount" step="any">
@@ -101,7 +100,7 @@
                                             </fieldset>
                                             <button type="button" class="btn btn-sm mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
                                         </div>
-                                        <div class="col-md-2 col-12 mb-sm-3 mt-sm-3 mb-1 mt-1 text-center">
+                                        <div class="col-md-1 col-12 mb-sm-3 mt-sm-3 mb-1 mt-1 text-center">
                                             <span class="la la-arrow-right"></span>
                                         </div>
                                         <div class="col-md-5 col-12 mb-1">
@@ -115,21 +114,23 @@
                                             <button type="button" class="btn btn-sm mr-1 mt-1 btn-qrcode"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
                                             <input type="file" class="file-qrcode" hidden />
                                         </div>
+                                        <div class="col-md-3 col-12">
+                                            <fieldset class="form-group mb-0 text-sm-center text-right">
+                                                <label class="d-sm-block d-none">&nbsp;</label>
+                                                <button type="submit" class="btn btn-primary btn-do-withdraw mb-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw") <i class="la la-angle-right"></i></button>
+                                            </fieldset>
+                                        </div>
                                         <input type="hidden" class="currency" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")" />
                                     </div>
                                 </div>
                             </div>
+                        </form>
+                        <div class="row my-2">
+                            <div class="col-12">
+                                <hr />
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary btn-do-withdraw pull-right mb-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw") <i class="la la-angle-right"></i></button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="card mb-1">
-                <div class="card-content">
-                    <form novalidate>
-                        <div class="card-body">
+                        <form novalidate>
                             <div class="row">
                                 <div class="col-lg-3 col-12 text-center pt-1">
                                     <h4 class="text-uppercase font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHName")</h4>
@@ -138,7 +139,7 @@
                                 <div class="col-lg-9 col-12 ">
                                     <p class="mt-2 text-lg-left text-center">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHWithdrawWarning"))</p>
                                     <div class="row">
-                                        <div class="col-md-5 col-12">
+                                        <div class="col-md-3 col-12">
                                             <fieldset class="form-group mb-0">
                                                 <label for="amount-eth">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
                                                 <input type="number" name="amount-eth" class="form-control amount-value" value="0" required="" autofocus="" min="0.00000001" max="@Model.ETHAmount" step="any">
@@ -148,7 +149,7 @@
                                             </fieldset>
                                             <button type="button" class="btn btn-sm mr-1 mt-1 btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
                                         </div>
-                                        <div class="col-md-2 col-12 mb-sm-3 mt-sm-3 mb-1 mt-1 text-center">
+                                        <div class="col-md-1 col-12 mb-sm-3 mt-sm-3 mb-1 mt-1 text-center">
                                             <span class="la la-arrow-right"></span>
                                         </div>
                                         <div class="col-md-5 col-12 mb-1">
@@ -162,15 +163,18 @@
                                             <button type="button" class="btn btn-sm  mr-1 mt-1 btn-qrcode"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
                                             <input type="file" class="file-qrcode" hidden />
                                         </div>
+                                        <div class="col-md-3 col-12">
+                                            <fieldset class="form-group mb-0 text-sm-center text-right">
+                                                <label class="d-sm-block d-none">&nbsp;</label>
+                                                <button type="submit" class="btn btn-primary btn-do-withdraw mb-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw") <i class="la la-angle-right"></i></button>
+                                            </fieldset>
+                                        </div>
                                         <input type="hidden" class="currency" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")" />
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary btn-do-withdraw pull-right mb-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw") <i class="la la-angle-right"></i></button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
