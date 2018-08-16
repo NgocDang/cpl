@@ -8,7 +8,6 @@
             margin: 10,
             auto: true,
             dots: false,
-            autoplay: false,
             responsiveClass: true,
             responsive: {
                 0: {
@@ -26,7 +25,7 @@
                     items: 2
                 },
                 2560: {
-                    items: 3
+                    items: 2
                 }
             }
         });

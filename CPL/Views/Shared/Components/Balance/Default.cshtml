@@ -21,15 +21,15 @@
         <div class="owl-carousel owl-theme">
             <div class="item">
                 <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</h6>
-                <div class="card pull-up">
+                <div class="card " id="btc-card">
                     <div class="card-content">
-                        <div class="card-body" id="btc-card">
+                        <div class="card-body" >
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-12">
                                         <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance")</strong></p>
                                         <h1>@Model.BTCAmount.ToString("#,##0.########")</h1>
-                                        <div class="mb-0"><a asp-controller="History" asp-action="Transaction" asp-route-currencyId="2" asp-route-sysUserId="@Model.SysUserId" class="text-white">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View") <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transactions")</strong></a></div>
+                                        <div class="mb-0"><a asp-controller="History" asp-action="Transaction" asp-route-currencyId="2" asp-route-sysUserId="@Model.SysUserId" class="text-dark">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View") <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transactions")</strong></a></div>
                                     </div>
                                 </div>
                             </div>
@@ -39,15 +39,15 @@
             </div>
             <div class="item">
                 <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</h6>
-                <div class="card pull-up">
+                <div class="card" id="eth-card">
                     <div class="card-content">
-                        <div class="card-body" id="eth-card">
+                        <div class="card-body" >
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-12">
                                         <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Balance") </strong></p>
                                         <h1>@Model.ETHAmount.ToString("#,##0.########")</h1>
-                                        <div class="mb-0"><a asp-controller="History" asp-action="Transaction" asp-route-currencyId="1" asp-route-sysUserId="@Model.SysUserId" class="text-white">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View") <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transactions")</strong></a></div>
+                                        <div class="mb-0"><a asp-controller="History" asp-action="Transaction" asp-route-currencyId="1" asp-route-sysUserId="@Model.SysUserId" class="text-dark">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View") <strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transactions")</strong></a></div>
                                     </div>
                                 </div>
                             </div>
