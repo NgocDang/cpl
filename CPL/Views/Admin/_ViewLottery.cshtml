@@ -1,14 +1,13 @@
 ﻿@model LotteryViewModel
 
-<div class="modal" tabindex="-1" role="dialog" id="view-lottery-game" aria-hidden="true">
-    <div class="modal-dialog modal-md" role="document">
+<div class="modal" tabindex="-1" id="view-lottery-game" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames")</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
             </div>
             <div class="modal-body p-2">
-                <div id="view-lottery-prize-modal"></div>
                 <div class="row">
                     <div class="col-12">
                         <p class="text-muted mb-3px font-size-13px">
@@ -100,17 +99,19 @@
                     <div class="col-12">
                         <h5 class="text-mute font-weight-bold pt-2">Result lottery</h5>
                         <hr class="mt-0" />
-                        <div class="row text-center pl-2 pr-2 pb-2">
+                        <div class="row text-center pl-2 pr-2 pb-2 mx-auto">
                             @foreach (var prize in Model?.LotteryPrizes)
                             {
-                                <div class="col-4 mt-2">
-                                    <button type="button" class="btn btn-outline-@prize.Color w-100 btn-prize" value="@prize.Id">@prize.Name Prize</button>
+                                <div class="mt-2 mr-1">
+                                    <button type="button" class="btn btn-outline-secondary w-100 btn-prize" value="@prize.Id" id="lottery-prize-id">@prize.Name Prize</button>
                                 </div>
                             }
                         </div>
 
                     </div>
                 </div>
+            </div>
         </div>
     </div>
+    @Html.HiddenFor(x => x.Id)
 </div>

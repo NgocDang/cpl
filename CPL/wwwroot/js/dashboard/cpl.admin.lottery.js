@@ -176,12 +176,15 @@
                     $(_this).attr("disabled", true);
                 },
                 data: {
-                    id: $(_this).data().id
+                    lotteryId: $("#Id").val(),
+                    lotteryPrizeId: $("#lottery-prize-id").val()
                 },
                 success: function (data) {
-                    $("#view-lottery-prize-modal").html(data);
-                    $("#view-lottery-game-prize").modal("show");
+                    $("#sub-modal").html(data);
+                    $("#view-lottery-game").modal("toggle");
+                    $("#view-lottery-game-prize").modal("toggle");
                     LotteryGames.bindClosePrizeModal();
+                    LotteryGames.LoadUserPrizeTable();
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
@@ -216,8 +219,9 @@
     },
     bindClosePrizeModal: function () {
         $("#view-lottery-game-prize").on("click", "#btn-close", function () {
-            $("#view-lottery-game-prize").modal("hide");
-        })
+            $("#view-lottery-game-prize").modal("toggle");
+            $("#view-lottery-game").modal("toggle");
+        });
     },
     bindEditButton: function () {
         $("#dt-all-lottery-game").on("click", ".btn-edit", function () {
@@ -640,7 +644,32 @@
             });
             return false;
         });
-    }
+    },
+
+    LoadUserPrizeTable: function () {
+        $("#dt-user-prize").DataTable({
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                url: "/Admin/SearchUserPrize",
+                type: 'POST',
+                data: {
+                    lotteryId: $("#LotteryId").val(),
+                    lotteryPrizeId: $("#LotteryPrizeId").val()
+                },
+                "language": DTLang.getLang(),
+                "columns": [
+                    {
+                        "data": "Email",
+                        "render": function (data, type, full, meta) {
+                            return full.email;
+                        }
+                    }
+                ]
+            }
+        });
+    },
 }
 
 $(document).ready(function () {

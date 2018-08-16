@@ -601,18 +601,95 @@ namespace CPL.Controllers
             return PartialView("_ViewLottery", lottery);
         }
 
-        public IActionResult ViewLotteryPrize(int id)
+        public IActionResult ViewLotteryPrize(UserPrizeViewModel viewModel)
         {
-            var lottery = new LotteryViewModel();
-
-            lottery = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
-                                                        .Include(x => x.LotteryPrizes)
-                                                        .Select()
-                                                        .FirstOrDefault(x => x.Id == id));
-
-            return PartialView("_ViewLotteryPrize");
+            return PartialView("_ViewLotteryPrize", viewModel);
         }
 
+        [HttpPost]
+        public JsonResult SearchUserPrize(DataTableAjaxPostModel viewModel, int lotteryId, int lotteryPrizeId)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchUserPrizeFunc(viewModel, out filteredResultsCount, out totalResultsCount, lotteryId, lotteryPrizeId);
+            var result = Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+
+            return result;
+        }
+
+        public IList<UserPrizeViewModel> SearchUserPrizeFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int lotteryId, int lotteryPrizeId)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            var lottery = _lotteryHistoryService
+          .Query()
+          .Include(x => x.SysUser)
+          .Select()
+          .Where(x => x.LotteryId == lotteryId && x.LotteryId == lotteryPrizeId)
+          .Select(x => x.SysUser.Email).ToList();
+
+            // search the dbase taking into consideration table sorting and paging
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = _lotteryHistoryService
+                    .Queryable()
+                    .Where(x => x.LotteryId == lotteryId && x.LotteryId == lotteryPrizeId)
+                    .Count();
+
+                totalResultsCount = filteredResultsCount;
+
+                var result = _lotteryHistoryService.Query()
+                    .Include(x => x.SysUser)
+                    .Select()
+                    .Where(x => x.LotteryId == lotteryId && x.LotteryId == lotteryPrizeId)
+                    .Select(x => Mapper.Map<UserPrizeViewModel>(x.SysUser))
+                    .Skip(skip)
+                    .Take(take)
+                    .ToList();
+
+                return result;
+            }
+            else
+            {
+                filteredResultsCount = _lotteryHistoryService.Query()
+                    .Include(x => x.SysUser)
+                    .Select()
+                    .Where(x => x.LotteryId == lotteryId && x.LotteryId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
+                    .Count();
+
+                totalResultsCount = _lotteryService.Queryable()
+                        .Count();
+
+                return _lotteryHistoryService.Query()
+                        .Include(x => x.SysUser)
+                        .Select()
+                        .Where(x => x.LotteryId == lotteryId && x.LotteryId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
+                        .Select(x => Mapper.Map<UserPrizeViewModel>(x.SysUser))
+                        .Skip(skip)
+                        .Take(take)
+                        .ToList();
+            }
+        }
 
         public IActionResult EditLottery(int id)
         {

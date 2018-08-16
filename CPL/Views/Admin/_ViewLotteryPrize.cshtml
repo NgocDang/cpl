@@ -1,17 +1,23 @@
-﻿<div class="modal" tabindex="-1" role="dialog" id="view-lottery-game-prize" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+﻿@model UserPrizeViewModel
+
+<div class="modal" tabindex="-1" role="dialog" id="view-lottery-game-prize" aria-hidden="false">
+    <div class="modal-lg modal-dialog-centered mx-auto" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames")</h5>
+                <h5 class="modal-title">Prize Result</h5>
                 <button type="button" class="close" id="btn-close"> <span aria-hidden="true">×</span> </button>
             </div>
             <div class="modal-body p-2">
-                aaaaaaaaaaaaaaa
-                bbbbbbbbbbbbbbb
-                ccccccccccccccc
-                ddddddddddddddd
-                eeeeeeeeeeeeeee
+                <table id="dt-user-prize" class="table responsive table-hover table-xl mb-0">
+                    <thead>
+                        <tr>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
+    @Html.HiddenFor(x => x.LotteryId)
+    @Html.HiddenFor(x => x.LotteryPrizeId)
 </div>
