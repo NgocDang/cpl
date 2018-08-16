@@ -637,7 +637,7 @@ namespace CPL.Controllers
             if (model.order != null)
             {
                 // in this example we just default sort on the 1st column
-                sortBy = model.columns[model.order[0].column].data;
+                sortBy = model.columns[1].data;
                 sortDir = model.order[0].dir.ToLower() == "asc";
             }
 
@@ -645,7 +645,7 @@ namespace CPL.Controllers
           .Query()
           .Include(x => x.SysUser)
           .Select()
-          .Where(x => x.LotteryId == lotteryId && x.LotteryId == lotteryPrizeId)
+          .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId)
           .Select(x => x.SysUser.Email).ToList();
 
             // search the dbase taking into consideration table sorting and paging
@@ -653,7 +653,7 @@ namespace CPL.Controllers
             {
                 filteredResultsCount = _lotteryHistoryService
                     .Queryable()
-                    .Where(x => x.LotteryId == lotteryId && x.LotteryId == lotteryPrizeId)
+                    .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId)
                     .Count();
 
                 totalResultsCount = filteredResultsCount;
@@ -661,8 +661,10 @@ namespace CPL.Controllers
                 var result = _lotteryHistoryService.Query()
                     .Include(x => x.SysUser)
                     .Select()
-                    .Where(x => x.LotteryId == lotteryId && x.LotteryId == lotteryPrizeId)
+                    .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId)
                     .Select(x => Mapper.Map<UserPrizeViewModel>(x.SysUser))
+                    .AsQueryable()
+                     .OrderBy(sortBy, sortDir)
                     .Skip(skip)
                     .Take(take)
                     .ToList();
@@ -674,7 +676,7 @@ namespace CPL.Controllers
                 filteredResultsCount = _lotteryHistoryService.Query()
                     .Include(x => x.SysUser)
                     .Select()
-                    .Where(x => x.LotteryId == lotteryId && x.LotteryId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
+                    .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
                     .Count();
 
                 totalResultsCount = _lotteryService.Queryable()
@@ -683,8 +685,10 @@ namespace CPL.Controllers
                 return _lotteryHistoryService.Query()
                         .Include(x => x.SysUser)
                         .Select()
-                        .Where(x => x.LotteryId == lotteryId && x.LotteryId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
+                        .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
                         .Select(x => Mapper.Map<UserPrizeViewModel>(x.SysUser))
+                        .AsQueryable()
+                        .OrderBy(sortBy, sortDir)
                         .Skip(skip)
                         .Take(take)
                         .ToList();

@@ -109,6 +109,51 @@
             ],
         });
     },
+
+    loadUserPrizeTable: function () {
+        var datatable = $("#dt-user-prize").DataTable({
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                url: "/Admin/SearchUserPrize",
+                type: 'POST',
+                data: {
+                    lotteryId: $("#LotteryId").val(),
+                    lotteryPrizeId: $("#LotteryPrizeId").val()
+                }
+            },
+            "language": DTLang.getLang(),
+            "columns": [
+                {
+                    "data": "No",
+                    "render": function (data, type, full, meta) {
+                        return "";
+                    },
+                    "className": "text-center",
+                    "orderable": false
+                },
+                {
+                     "data": "Email",
+                    "render": function (data, type, full, meta) {
+                        return full.email;
+                    },
+                    "className": "text-center",
+                    "orderable": false
+                },
+            ]
+        });
+
+        // Here we create the index column in jquery datatable
+        datatable.on('draw.dt', function () {
+            var info = datatable.page.info();
+            //debugger;
+            datatable.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1 + info.start;
+            });
+        });
+    },
+
     loadLightBox: function () {
         $(document).on('click', '[data-toggle="lightbox"]', function (event) {
             event.preventDefault();
@@ -177,17 +222,15 @@
                 },
                 data: {
                     lotteryId: $("#Id").val(),
-                    lotteryPrizeId: $("#lottery-prize-id").val()
+                    lotteryPrizeId: $(_this).data().prizeId
                 },
                 success: function (data) {
-                    $("#sub-modal").html(data);
-                    $("#view-lottery-game").modal("toggle");
-                    $("#view-lottery-game-prize").modal("toggle");
-                    LotteryGames.bindClosePrizeModal();
-                    LotteryGames.LoadUserPrizeTable();
+                    $("#lottery-result").html(data);
+                    LotteryGames.loadUserPrizeTable();
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
+                    $("#prize-name").html($(_this).data().prizeName);
                 }
             });
             return false;
@@ -215,12 +258,6 @@
                 }
             });
             return false;
-        });
-    },
-    bindClosePrizeModal: function () {
-        $("#view-lottery-game-prize").on("click", "#btn-close", function () {
-            $("#view-lottery-game-prize").modal("toggle");
-            $("#view-lottery-game").modal("toggle");
         });
     },
     bindEditButton: function () {
@@ -646,30 +683,6 @@
         });
     },
 
-    LoadUserPrizeTable: function () {
-        $("#dt-user-prize").DataTable({
-            "processing": true,
-            "serverSide": true,
-            "autoWidth": false,
-            "ajax": {
-                url: "/Admin/SearchUserPrize",
-                type: 'POST',
-                data: {
-                    lotteryId: $("#LotteryId").val(),
-                    lotteryPrizeId: $("#LotteryPrizeId").val()
-                },
-                "language": DTLang.getLang(),
-                "columns": [
-                    {
-                        "data": "Email",
-                        "render": function (data, type, full, meta) {
-                            return full.email;
-                        }
-                    }
-                ]
-            }
-        });
-    },
 }
 
 $(document).ready(function () {
