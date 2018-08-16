@@ -15,24 +15,25 @@
                             <p class="mt-2 text-lg-left text-center">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCExchangeWarning"))</p>
                             <div class="row">
                                 <div class="col-lg-5 col-12">
-                                    <fieldset class="form-label-group">
+                                    <fieldset class="form-group">
+                                        <label for="from-amount" id="from-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCAmount")</label>
                                         <input type="number" class="form-control from-amount" min="0.00000001" max="@Model.BTCAmount" step="any" required>
                                         <input type="hidden" value="@Model.BTCAmount" class="max-amount" />
                                         <input type="hidden" value="BTC" class="from-currency" />
-                                        <label for="from-amount" id="from-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCAmount")</label>
                                         <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidAmountOrInsufficientFunds")</div>
                                     </fieldset>
                                     <button type="button" for="btc" class="btn btn-sm btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
                                 </div>
-                                <div class="col-lg-2 col-12 my-lg-0 my-2  text-center">
+                                <div class="col-lg-2 col-12 mt-lg-0 mt-2 text-center form-group">
+                                    <label class="w-100 d-lg-inline-block d-none">&nbsp;</label>
                                     <button type="button" class="btn btn-md btn-swap"><i class="fas fa-exchange-alt"></i></button>
                                 </div>
                                 <div class="col-lg-5 col-sm-12 col-12">
-                                    <fieldset class="form-label-group">
+                                    <fieldset class="form-group">
+                                        <label for="to-amount" id="to-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenAmount")</label>
                                         <input type="number" class="form-control to-amount" readonly min="1" max="@Model.TokenAmount" step="any" required>
                                         <input type="hidden" value="@Model.TokenAmount" class="max-amount" />
                                         <input type="hidden" value="CPL" class="to-currency" />
-                                        <label for="to-amount" id="to-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenAmount")</label>
                                     </fieldset>
                                 </div>
                             </div>
@@ -62,24 +63,25 @@
                             <p class="mt-2 text-lg-left text-center">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHExchangeWarning"))</p>
                             <div class="row">
                                 <div class="col-lg-5 col-12">
-                                    <fieldset class="form-label-group">
+                                    <fieldset class="form-group">
+                                        <label for="from-amount" id="from-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHAmount")</label>
                                         <input type="number" class="form-control from-amount" min="0.00000001" max="@Model.ETHAmount" required>
                                         <input type="hidden" value="@Model.ETHAmount" class="max-amount" />
                                         <input type="hidden" value="ETH" class="from-currency" />
-                                        <label for="from-amount" id="from-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHAmount")</label>
                                         <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidAmountOrInsufficientFunds")</div>
                                     </fieldset>
                                     <button type="button" class="btn btn-sm btn-max"><i class="fas fa-angle-double-up"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Max")</button>
                                 </div>
-                                <div class="col-lg-2 col-12 my-lg-0 my-2 text-center">
+                                <div class="col-lg-2 col-12 mt-lg-0 mt-2 text-center form-group">
+                                    <label class="w-100 d-lg-inline-block d-none">&nbsp;</label>
                                     <button type="button" class="btn btn-md btn-swap"><i class="fas fa-exchange-alt"></i></button>
                                 </div>
                                 <div class="col-lg-5 col-12">
-                                    <fieldset class="form-label-group">
+                                    <fieldset class="form-group">
+                                        <label for="to-amount" id="to-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenAmount")</label>
                                         <input type="number" class="form-control to-amount" readonly min="1" max="@Model.TokenAmount" required>
                                         <input type="hidden" value="@Model.TokenAmount" class="max-amount" />
                                         <input type="hidden" value="CPL" class="to-currency" />
-                                        <label for="to-amount" id="to-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenAmount")</label>
                                     </fieldset>
                                 </div>
                             </div>

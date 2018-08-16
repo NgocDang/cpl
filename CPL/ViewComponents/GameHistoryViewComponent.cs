@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CPL.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CPL.ViewComponents
 {
@@ -6,9 +7,9 @@ namespace CPL.ViewComponents
     {
         public GameHistoryViewComponent() { }
 
-        public IViewComponentResult Invoke(int sysUserId)
+        public IViewComponentResult Invoke(GameHistoryViewComponentViewModel viewModel)
         {
-            return View(sysUserId);
+            return View(viewModel);
         }
     }
 }

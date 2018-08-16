@@ -2,7 +2,6 @@
     Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames");
 }
-
 @section styles
     {
     <link href="~/js/dashboard/plugins/lightbox/ekko-lightbox.css" rel="stylesheet" />
@@ -34,7 +33,7 @@
         </div>
         <div class="content-body">
             <div class="row">
-                <div id="recent-transactions" class="col-12">
+                <div id="transaction-history-view-component" class="col-12">
                     <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames")</h6>
                     <div class="card" id="lottery-game-management">
                         <div class="card-content">
@@ -66,7 +65,7 @@
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Activate")" id="activate" />
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Active")" id="active" />
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Completed")" id="completed" />
-                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")" hidden id="prize-text" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")" id="prize-text" />
                 </div>
             </div>
         </div>

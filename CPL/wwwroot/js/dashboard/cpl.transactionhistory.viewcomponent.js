@@ -12,8 +12,8 @@ var TransactionHistory = {
                 url: "/History/SearchTransactionHistory",
                 type: 'POST',
                 data: {
-                    sysUserId: $("#SysUserId").val(),
-                    currencyId: $("#CurrencyId").val()
+                    sysUserId: $("#transaction-history-view-component #SysUserId").val(),
+                    currencyId: $("#transaction-history-view-component #CurrencyId").val()
                 }
             },
             "language": DTLang.getLang(),

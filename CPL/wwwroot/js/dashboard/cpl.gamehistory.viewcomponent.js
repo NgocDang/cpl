@@ -12,7 +12,7 @@
                 url: "/History/SearchGameHistory",
                 type: 'POST',
                 data: {
-                    userId: $("#Id").val()
+                    sysUserId: $("#game-history-view-component #SysUserId").val()
                 }
             },
             "language": DTLang.getLang(),

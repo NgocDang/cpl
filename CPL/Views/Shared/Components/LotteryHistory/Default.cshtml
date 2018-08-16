@@ -1,7 +1,7 @@
-﻿@model int?
+﻿@model LotteryHistoryViewComponentViewModel
 
 <div class="row">
-    <div id="lottery-history" class="col-12 @(Model.HasValue ? "" : "d-none")">
+    <div id="lottery-history-view-component" class="col-12 @(Model.SysUserId.HasValue ? "" : "d-none")">
         <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
         <div class="card">
             <div class="card-content">
@@ -18,7 +18,9 @@
                         </tr>
                     </thead>
                 </table>
-                @Html.Hidden("Id", Model)
+                @Html.Hidden("SysUserId", Model.SysUserId)
+                @Html.Hidden("LotteryId", Model.LotteryId)
+                @Html.Hidden("CreatedDate", Model.CreatedDate)
             </div>
         </div>
     </div>

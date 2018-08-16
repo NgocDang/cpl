@@ -31,9 +31,7 @@
                 </div>
             </div>
         </div>
-        @await Component.InvokeAsync("TransactionHistory", Model.SysUserId)
-        @Html.Hidden("SysUserId", Model.SysUserId)
-        @Html.Hidden("CurrencyId", Model.CurrencyId)
+        @await Component.InvokeAsync("TransactionHistory", new TransactionHistoryViewComponentViewModel { CurrencyId =  Model.CurrencyId, SysUserId = Model.SysUserId})
     </div>
     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View")" id="view" />
 </div>

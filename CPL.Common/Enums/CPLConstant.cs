@@ -76,6 +76,7 @@ namespace CPL.Common.Enums
         public static int LotteryGroupSize = 10;
         public static int MaximumNumberOfWinnerPerGroup = 2;
         public static string LotteryGameDrawingInHourOfDay = "LotteryGameDrawingTimeInHour";
+        public static int LotteryGamePerRow  = 4;
 
         // High Chart
         public static int HourBeforeInChart = 12; // hour

@@ -1,8 +1,19 @@
 ﻿var Lottery = {
     init: function () {
+        Lottery.bindSpinTicketNumber();
         Lottery.bindPurchaseTicket();
         Lottery.bindConfirmPurchaseTicket();
         Lottery.bindCancelPurchaseTicket();
+    },
+    bindSpinTicketNumber: function () {
+        $('#form-purchase-lottery').on('change paste keyup input', '#number-of-ticket', function () {
+            var isFormValid = $('#form-purchase-lottery')[0].checkValidity();
+            $("#form-purchase-lottery").addClass('was-validated');
+            if (isFormValid) {
+                $("#total-amount").html(new Intl.NumberFormat('vn-VN').format($("#number-of-ticket").data().unitPrice * $("#number-of-ticket").val()));
+            } else 
+                $("#total-amount").html(0);
+        });
     },
     bindPurchaseTicket: function () {
         $('#form-purchase-lottery').on('click', '#btn-purchase-lottery', function () {
@@ -64,7 +75,7 @@
                  TicketPrice: parseInt($(".ticket-price").val()),
                  TotalTickets: parseInt($(".total-of-tiket").val()),
                  TotalPriceOfTickets: parseInt($(".total-price").val()),
-                 LotteryId: parseInt($("#Lottery_Id").val())
+                 LotteryId: parseInt($("#div-confirm-lottery #Id").val())
              },
              success: function (data) {
                  if (data.success === undefined) { // before log in
@@ -74,8 +85,8 @@
                  }
                  else { // after log in
                      $("#login-modal").modal("hide");
-                     if ($("#lottery-history").hasClass("d-none")) { // not login yet
-                         $("#lottery-history").removeClass("d-none");
+                     if ($("#lottery-history-view-component").hasClass("d-none")) { // not login yet
+                         $("#lottery-history-view-component").removeClass("d-none");
                          LotteryHistory.historyDatatable = LotteryHistory.loadLotteryHistoryTable();
                      }
 
