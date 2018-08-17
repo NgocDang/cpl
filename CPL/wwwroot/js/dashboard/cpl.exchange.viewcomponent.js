@@ -58,7 +58,8 @@
                     if (data.success) {
                         $("#exchange").modal("hide");
                         toastr.success(data.message, "Success!");
-                        ExchangeViewComponent.loadViewComponent();
+                        ExchangeViewComponent.loadExchangeViewComponent();
+                        ExchangeViewComponent.loadLotteryResultViewComponent();
                     } else {
                         toastr.error(data.message, "Error!");
                     }
@@ -146,7 +147,7 @@
             }
         });
     },
-    loadViewComponent: function () {
+    loadExchangeViewComponent: function () {
         $.ajax({
             url: "/Exchange/LoadExchangeViewComponent/",
             type: "GET",
@@ -154,6 +155,17 @@
             contentType: false,
             success: function (data) {
                 $("#exchange-content").html(data);
+            }
+        });
+    },
+    loadLotteryResultViewComponent: function () {
+        $.ajax({
+            url: "/Exchange/LoadLotteryResultViewComponent/",
+            type: "GET",
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#lottery-result").html(data);
             }
         });
     }
