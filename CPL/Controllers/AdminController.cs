@@ -130,7 +130,7 @@ namespace CPL.Controllers
                 user.Email = viewModel.Email;
                 if (!string.IsNullOrEmpty(viewModel.Password))
                     user.Password = viewModel.Password.ToBCrypt();
-                user.StreetAddress = viewModel.StreetAddress.ToLower();
+                //user.StreetAddress = viewModel.StreetAddress.ToLower();
                 user.TwoFactorAuthenticationEnable = viewModel.TwoFactorAuthenticationEnable;
 
                 _sysUserService.Update(user);
