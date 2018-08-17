@@ -657,7 +657,6 @@ namespace CPL.Controllers
                     .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId)
                     .Select(x => Mapper.Map<UserPrizeViewModel>(x.SysUser))
                     .AsQueryable()
-                     .OrderBy(sortBy, sortDir)
                     .Skip(skip)
                     .Take(take)
                     .ToList();
@@ -681,7 +680,6 @@ namespace CPL.Controllers
                         .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
                         .Select(x => Mapper.Map<UserPrizeViewModel>(x.SysUser))
                         .AsQueryable()
-                        .OrderBy(sortBy, sortDir)
                         .Skip(skip)
                         .Take(take)
                         .ToList();

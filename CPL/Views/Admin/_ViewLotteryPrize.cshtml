@@ -3,10 +3,12 @@
 <table id="dt-user-prize" class="table responsive table-hover table-xl mb-0">
     <thead>
         <tr>
-            <th class="border-top-0" style="width:50px;">#</th> 
+            <th class="border-top-0" style="width:50px;">#</th>
             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
+            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
         </tr>
     </thead>
 </table>
 @Html.HiddenFor(x => x.LotteryId)
 @Html.HiddenFor(x => x.LotteryPrizeId)
+

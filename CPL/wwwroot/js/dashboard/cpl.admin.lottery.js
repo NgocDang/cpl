@@ -112,6 +112,8 @@
 
     loadUserPrizeTable: function () {
         var datatable = $("#dt-user-prize").DataTable({
+            //"order": [[1, 'asc']], // keep this to be an example .
+            "order": [],
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
@@ -126,9 +128,9 @@
             "language": DTLang.getLang(),
             "columns": [
                 {
-                    "data": "No",
+                    "data": "#",
                     "render": function (data, type, full, meta) {
-                        return null;
+                        return "";
                     },
                     "className": "text-center",
                     "orderable": false
@@ -141,14 +143,21 @@
                     "className": "text-center",
                     "orderable": false
                 },
+                {
+                    "data": "Action",
+                    "render": function (data, type, full, meta) {
+                        return "<a class='btn btn-sm btn-outline-secondary btn-view' target='_blank' href='/history/lottery?sysUserId=" + (full.id) + "'" + ">" + $("#view").val() + "</a>";
+                        //return null;
+                    },
+                    "orderable": false
+                }
             ]
         });
 
         // Here we create the index column in jquery datatable
         datatable.on('draw.dt', function () {
             var info = datatable.page.info();
-            //debugger;
-            datatable.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+            datatable.column(0, { search: 'applied', order: 'removed', page: 'applied', }).nodes().each(function (cell, i) {
                 cell.innerHTML = i + 1 + info.start;
             });
         });
@@ -223,7 +232,7 @@
                 },
                 data: {
                     lotteryId: $("#Id").val(),
-                    lotteryPrizeId: $(_this).data().prizeId
+                    lotteryPrizeId: $(_this).data().prizeId,
                 },
                 success: function (data) {
                     $("#lottery-result").html(data);
