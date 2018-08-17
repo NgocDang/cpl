@@ -45,13 +45,13 @@
                     "data": "Status",
                     "render": function (data, type, full, meta) {
                         if (full.status == 1) {
-                            return "<p><span class='badge badge-info'>" + $("#pending").val() + "</span></p>";
+                            return "<p class='text-sm-center'><span class='badge badge-info'>" + $("#pending").val() + "</span></p>";
                         }
                         else if (full.status == 2) {
-                            return "<p><span class='badge badge-success'>" + $("#active").val() + "</span></p>";
+                            return "<p class='text-sm-center><span class='badge badge-success'>" + $("#active").val() + "</span></p>";
                         }
                         else if (full.status == 3) {
-                            return "<p><span class='badge badge-secondary'>" + $("#completed").val() + "</span></p>";
+                            return "<p class='text-sm-center><span class='badge badge-secondary'>" + $("#completed").val() + "</span></p>";
                         }
                     }
                 },
@@ -186,7 +186,7 @@
                     $("#prize-lottery")
                         .find("div.row.row-prize")
                         .map(function () {
-                            $(this).find("#prize-title").html(Utils.addOrdinalSuffix(parseInt($(this).find("#prize-title-id").val())) + " " + $("#prize-text").val());
+                            $(this).find("#prize-title").html("#" + $(this).find("#prize-title-id").val());
                         });
                 },
                 complete: function (data) {
@@ -288,7 +288,7 @@
                     $("#prize-lottery")
                         .find("div.row.row-prize")
                         .map(function () {
-                            $(this).find("#prize-title").html(Utils.addOrdinalSuffix(parseInt($(this).find("#prize-title-id").val())) + " " + $("#prize-text").val());
+                            $(this).find("#prize-title").html("#" + $(this).find("#prize-title-id").val());
                         });
                     $($("#prize-lottery").find("div.row.row-prize").last().prev()).find(".btn-remove-prize").removeClass("d-none");
                 },
@@ -338,7 +338,7 @@
             _parent.find(".btn-add-prize").addClass("d-none");
             _parent.find(".btn-remove-prize").removeClass("d-none");
 
-            _newPrize.find("h6#prize-title").html(Utils.addOrdinalSuffix(_uncles[0].children.length + 1) + " " + $("#prize-text").val());
+            _newPrize.find("h6#prize-title").html("#" + (parseInt(_uncles[0].children.length) + 1));
 
             _uncles.append('<div class="row pt-1 row-prize new-prize">' + _newPrize.html()) + '</div>';
 
@@ -358,7 +358,8 @@
                 _prevUncle.find(".btn-remove-prize").removeClass("d-none");
             };
 
-            _nextUncle.find("h6#prize-title").html(Utils.addOrdinalSuffix(parseInt(_uncles[0].children.length)) + " " + $("#prize-text").val());
+            debugger;
+            _nextUncle.find("h6#prize-title").html("#" + parseInt(_uncles[0].children.length));
 
             return false;
         });

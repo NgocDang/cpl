@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.Core.Interfaces;
 using CPL.Domain;
 using CPL.Infrastructure.Interfaces;
@@ -822,9 +823,7 @@ namespace CPL.Controllers
 
                             _lotteryPrizeService.Insert(new LotteryPrize()
                             {
-                                Name = Utils.AddOrdinal(i + 1),
                                 Value = prize.Value,
-                                Color = color,
                                 Volume = prize.Volume,
                                 LotteryId = viewModel.Id
                             });
@@ -889,36 +888,18 @@ namespace CPL.Controllers
                 }
 
                 _lotteryService.Insert(lottery);
+                _unitOfWork.SaveChanges();
 
                 // Lottery prize
                 foreach (var prize in viewModel.LotteryPrizes)
                 {
                     if (prize.Volume == 0 && prize.Value == 0) continue;
                     var index = viewModel.LotteryPrizes.IndexOf(prize);
-                    var color = "";
-                    switch (index)
-                    {
-                        case 0:
-                            color = "warning";
-                            break;
-                        case 1:
-                            color = "primary";
-                            break;
-                        case 2:
-                            color = "danger";
-                            break;
-                        default:
-                            color = "success";
-                            break;
-                    }
-
                     _lotteryPrizeService.Insert(new LotteryPrize()
                     {
-                        Name = Utils.AddOrdinal(index + 1),
                         Value = prize.Value,
-                        Color = color,
                         Volume = prize.Volume,
-                        LotteryId = currentId + 1
+                        LotteryId = lottery.Id
                     });
                 }
 
