@@ -1,0 +1,16 @@
+﻿btn-add  -> bindAdd()  -> modal
+btn-do-add -> bindDoAdd() -> insert db
+btn-edit -> bindEdit() -> modal 
+btn-do-edit -> bindDoEdit() -> update db
+btn-delete -> bindDelete() -> modal
+btn-do-delete -> bindDoDelete() -> update db
+btn-view -> bindView() -> modal
+
+btn-add-lottery-prize -> ux
+btn-view-lottery-prize -> ux
+
+transactiondetail.cshtml
+lotteryhistorydetail.cshtml
+
+_EditUser.cshtml
+_Edit.cshtml

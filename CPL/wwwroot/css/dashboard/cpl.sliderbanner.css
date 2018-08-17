@@ -1,23 +1,7 @@
-﻿@media (max-width: 489px) {
-    .content-mobile {
-        margin-left: 15px !important;
-        margin-right: 15px !important;
-    }
-}
-
-
-img.img-border {
+﻿img.img-border {
     border: 1px solid #ddd;
     width: 150px;
     background-color: #fff;
-}
-
-@media (max-width: 489px) {
-    img.img-border {
-        border: hidden;
-        width: 150px;
-        background-color: #fff;
-    }
 }
 
 #navbar-scroll-game-info {
@@ -68,18 +52,4 @@ img.img-border {
     padding-top: 5px;
     background-color: #ffd300;
     color: black;
-}
-
-.visible-mobile {
-    display: none !important;
-}
-
-@media (max-width: 489px) {
-    .visible-mobile {
-        display: inline !important;
-    }
-
-    .hidden-mobile {
-        display: none !important;
-    }
 }
