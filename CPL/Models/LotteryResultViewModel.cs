@@ -12,5 +12,10 @@ namespace CPL.Models
         public decimal TokenAmount { get; set; }
         public decimal BTCToTokenRate { get; set; }
         public decimal ETHToTokenRate { get; set; }
+
+        public bool? Status { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Result { get; set; }
     }
 }
