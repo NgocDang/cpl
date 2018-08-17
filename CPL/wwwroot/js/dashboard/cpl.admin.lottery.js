@@ -147,7 +147,6 @@
                     "data": "Action",
                     "render": function (data, type, full, meta) {
                         return "<a class='btn btn-sm btn-outline-secondary btn-view' target='_blank' href='/history/lottery?sysUserId=" + (full.id) + "'" + ">" + $("#view").val() + "</a>";
-                        //return null;
                     },
                     "orderable": false
                 }
@@ -242,7 +241,6 @@
                     $(_this).attr("disabled", false);
                     $("#view-lottery-game button").removeClass("active");
                     $(_this).addClass("active");
-                    $("#prize-name").html($(_this).data().prizeName);
                 }
             });
             return false;
@@ -264,7 +262,6 @@
                     LotteryGames.loadUserPrizeTable();
                 },
                 complete: function (data) {
-                    $("#prize-name").html($("#view-lottery-game .btn-prize").data().prizeName);
                 }
             });
         }
