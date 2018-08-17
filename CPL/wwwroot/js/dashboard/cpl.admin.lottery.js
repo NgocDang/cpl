@@ -240,6 +240,8 @@
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
+                    $("#view-lottery-game button").removeClass("active");
+                    $(_this).addClass("active");
                     $("#prize-name").html($(_this).data().prizeName);
                 }
             });

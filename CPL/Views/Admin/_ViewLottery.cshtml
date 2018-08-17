@@ -89,18 +89,14 @@
                                                     <p class="text-muted mb-3px font-size-13px">
                                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")
                                                     </p>
-                                                    <button type="button" class="btn btn-outline-secondary w-100 btn-prize pl-sm-auto pr-sm-auto pl-0 pr-0" data-prize-id="@prize.Id" data-prize-name="@prize.Name @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")" id="lottery-prize-id">@prize.Name</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary w-100 btn-prize pl-sm-auto pr-sm-auto pl-0 pr-0" data-prize-id="@prize.Id" id="lottery-prize-id">@prize.Name</button>
                                                 </div>
                                             </div>
                                             <hr />
                                         }
                                     </div>
                                     <div class="col-sm-8 col-12">
-                                        <div  class="font-weight-bold"></div>
-                                        <fieldset class="form-group"> 
-                                            <legend id="prize-name" class="blockquote border-right-danger border-left-3 blockquote-reverse pl-1 success"></legend>
-                                            <div id="lottery-result"></div>
-                                        </fieldset>
+                                        <div id="lottery-result"></div>
                                     </div>
                                 </div>
                             </div>
