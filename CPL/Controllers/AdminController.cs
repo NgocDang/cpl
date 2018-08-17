@@ -18,7 +18,7 @@ using System.Linq;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.Admin)]
+    
     public class AdminController : Controller
     {
         private readonly ILangService _langService;
@@ -69,6 +69,7 @@ namespace CPL.Controllers
             this._hostingEnvironment = hostingEnvironment;
         }
 
+        [Permission(EnumRole.Admin)]
         public IActionResult Index()
         {
             var viewModel = new AdminViewModel();
@@ -90,12 +91,14 @@ namespace CPL.Controllers
         }
 
         #region User
+        [Permission(EnumRole.Admin)]
         public IActionResult AllUser()
         {
             var viewModel = new AllUserViewModel();
             return View(viewModel);
         }
 
+        [Permission(EnumRole.Admin)]
         public new IActionResult User(int id)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
@@ -106,6 +109,7 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
+        [Permission(EnumRole.Admin)]
         public IActionResult EditUser(int id)
         {
             var user = _sysUserService.Queryable()
@@ -115,6 +119,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public IActionResult UpdateUser(SysUserViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == viewModel.Id);
@@ -142,10 +147,11 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteUser(SysUserViewModel viewModel)
+        [Permission(EnumRole.Admin, EnumEntity.SysUser, EnumAction.Delete)]
+        public IActionResult DeleteUser(int id)
         {
             var user = _sysUserService.Queryable()
-                .FirstOrDefault(x => x.Id == viewModel.Id);
+                .FirstOrDefault(x => x.Id == id);
 
             if (user != null)
             {

@@ -62,10 +62,10 @@
                     @if (!Model.IsDeleted)
                     {
                         <button type="button" id="btn-update-user" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
-                        @if (!Model.IsAdmin)
-                        {
+                        @*@if (!Model.IsAdmin)
+                        {*@
                             <button type="button" id="btn-delete-user" class="btn btn-sm btn-danger">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Delete")</button>
-                        }
+                        //}
                     }
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
                 </div>
