@@ -17,7 +17,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card p-lg-1">
-                        <img src="~/images/lottery/slide_lottery.jpg" class="img-fluid" alt="Lottery banner">
+                        <img src="~/images/lottery/@Model.SlideImage" class="img-fluid" alt="@Model.Title">
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                                     </div>
                                     <div class="row mb-2">
                                         <div class="form-group col-12">
-                                            <input type="number" data-unit-price="@Model.UnitPrice" name="number-of-ticket" class="form-control" id="number-of-ticket" value="1" min="1" max="5000" required aria-describedby="basic-addon4">
+                                            <input type="number" data-unit-price="@Model.UnitPrice" name="number-of-ticket" class="form-control" id="number-of-ticket" value="1" min="1" max="@(Model.Volume - @Model.LotteryHistories.Count())" required aria-describedby="basic-addon4">
                                             <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
                                         </div>
                                         <div class="col-12">
