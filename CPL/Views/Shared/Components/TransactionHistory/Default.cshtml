@@ -7,11 +7,11 @@
                 <table id="dt-transaction-history" class="table responsive table-hover table-xl mb-0">
                     <thead>
                         <tr>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
+                            <th class="border-top-0" data-priority="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToWalletAddress")</th>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CoinAmount")</th>
+                            <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CoinAmount")</th>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Currency")</th>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Type")</th>
+                            <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Type")</th>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
                         </tr>

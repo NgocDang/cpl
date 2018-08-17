@@ -142,6 +142,12 @@
             "language": DTLang.getLang(),
             "columns": [
                 {
+                    "data": "Email",
+                    "render": function (data, type, full, meta) {
+                        return full.email;
+                    }
+                },
+                {
                     "data": "FirstName",
                     "render": function (data, type, full, meta) {
                         return full.firstName;
@@ -151,12 +157,6 @@
                     "data": "LastName",
                     "render": function (data, type, full, meta) {
                         return full.lastName;
-                    }
-                },
-                {
-                    "data": "Email",
-                    "render": function (data, type, full, meta) {
-                        return full.email;
                     }
                 },
                 {

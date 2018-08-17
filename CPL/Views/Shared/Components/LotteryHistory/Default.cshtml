@@ -8,11 +8,11 @@
                 <table id="dt-lottery-history" class="table responsive table-hover table-xl mb-0">
                     <thead>
                         <tr>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
+                            <th class="border-top-0" data-priority="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreatedDate")</th>
+                            <th class="border-top-0" data-priority="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase")</th>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StartDate")</th>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTicketNumber")</th>
-                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                            <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTicketNumber")</th>
+                            <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
                             <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UpdatedDate")</th>
                         </tr>
