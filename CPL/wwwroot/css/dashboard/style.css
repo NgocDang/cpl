@@ -1369,7 +1369,7 @@ footer {
 
 .navbar-lottery-desktop {
     display: inline-block;
-    padding: 0.5rem 1rem;
+    padding: 0.19rem 1rem;
     text-align: center;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
@@ -1400,9 +1400,9 @@ footer {
         background-color: #ffd300;
         color: black;
     }
-@media screen and (min-width: 426px) {
+@media screen and (min-width: 740px) {
     #main-menu-navigation {
-        margin-left:170px;
+        margin-left: 170px;
     }
 }
 
@@ -1558,6 +1558,12 @@ ul.game-menu li.active {
 
 .font-size-15px {
     font-size:15px !important;
+}
+
+@media (max-width: 991px) and (min-width: 750px){
+    .font-sm-size-15px {
+        font-size: 15px !important;
+    }
 }
 
 /*Start ==> Dashboard*/

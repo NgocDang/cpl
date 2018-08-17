@@ -13,7 +13,7 @@
 @await Component.InvokeAsync("SliderBanner")
 
 <section id="lottery-game">
-    <div class="container d-sm-block d-none mt-1">
+    <div class="container d-md-block d-none mt-1">
         <div class="row">
             @if (Model.Lotteries != null)
             {
@@ -21,12 +21,12 @@
                 {
                     <div class="owl-item col-3">
                         <div class="card card-game">
-                            <div class="card-header card-header-game font-weight-bold">
+                            <div class="card-header card-header-game font-weight-bold font-sm-size-15px">
                                 @lottery.NumberOfTicketLeft.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
                             </div>
                             <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id"><img class="card-img-top card-img-game img-fluid" src="~/images/lottery/@lottery.DesktopListingImage" /></a>
                             <div class="card-body">
-                                <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id" class="btn btn-primary btn-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</a>
+                                <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id" class="btn btn-primary btn-block font-sm-size-15px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</a>
                             </div>
                         </div>
                     </div>
@@ -35,12 +35,12 @@
                 {
                     <div class="owl-item col-3">
                         <div class="card card-game">
-                            <div class="card-header card-header-game font-weight-bold bg-secondary disabled text-white-50">
+                            <div class="card-header card-header-game font-weight-bold bg-secondary disabled text-white-50 font-sm-size-15px">
                                 0 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
                             </div>
                             <img class="card-img-top card-img-game img-fluid" src="~/images/lottery/coming_soon_lottery.jpg" />
                             <div class="card-body">
-                                <span class="btn disabled bg-secondary text-white-50 btn-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ComingSoon")</span>
+                                <span class="btn disabled bg-secondary text-white-50 btn-block font-sm-size-15px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ComingSoon")</span>
                             </div>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
             }
         </div>
     </div>
-    <div class="row d-sm-none d-block mb-05">
+    <div class="row d-md-none d-block mb-05">
         @if (Model.Lotteries != null)
         {
             @foreach (var lottery in Model.Lotteries)

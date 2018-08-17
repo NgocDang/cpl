@@ -88,8 +88,6 @@ namespace CPL.Controllers
                 if (viewModel.Volume > 0)
                     viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.LotteryHistories.Count() / (decimal)viewModel.Volume * 100m).ToString();
 
-                viewModel.UnitPrice = 1500;
-
                 return View(viewModel);
             }
             else
@@ -206,7 +204,7 @@ namespace CPL.Controllers
 
                 }
                 else
-                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotEnoughCPL") });
             }
         }
     }
