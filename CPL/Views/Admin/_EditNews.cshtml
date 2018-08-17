@@ -35,7 +35,7 @@
                             }
                             else
                             {
-                                <textarea class="form-control textarea-maxlength" id="short-desc" rows="5" name="ShortDescription" required>@Model.ShortDescription</textarea>
+                                <textarea class="form-control textarea-maxlength" id="short-desc" rows="5" name="ShortDescription" required></textarea>
                             }
                             <div class="invalid-feedback">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescriptionRequired")
@@ -47,11 +47,11 @@
                             <label for="Description" class="small">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Description")</label>
                             @if (Model != null)
                             {
-                                <textarea class="tinymce" id="full-desc" name="Description" required>@Model.Description</textarea>
+                                <textarea class="tinymce" id="full-desc" name="Description">@Model.Description</textarea>
                             }
                             else
                             {
-                                <textarea class="tinymce" id="full-desc" name="Description" required></textarea>
+                                <textarea class="tinymce" id="full-desc" name="Description"></textarea>
                             }
                             <div class="invalid-feedback">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DescriptionRequired")
