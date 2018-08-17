@@ -601,18 +601,18 @@ namespace CPL.Controllers
             return PartialView("_ViewLottery", lottery);
         }
 
-        public IActionResult ViewLotteryPrize(UserPrizeViewModel viewModel)
+        public IActionResult ViewLotteryPrize(UserLotteryPrizeViewModel viewModel)
         {
             return PartialView("_ViewLotteryPrize", viewModel);
         }
 
         [HttpPost]
-        public JsonResult SearchUserPrize(DataTableAjaxPostModel viewModel, int lotteryId, int lotteryPrizeId)
+        public JsonResult SearchUserLotteryPrize(DataTableAjaxPostModel viewModel, int lotteryId, int lotteryPrizeId)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchUserPrizeFunc(viewModel, out filteredResultsCount, out totalResultsCount, lotteryId, lotteryPrizeId);
+            var res = SearchUserLotteryPrizeFunc(viewModel, out filteredResultsCount, out totalResultsCount, lotteryId, lotteryPrizeId);
             var result = Json(new
             {
                 // this is what datatables wants sending back
@@ -625,7 +625,7 @@ namespace CPL.Controllers
             return result;
         }
 
-        public IList<UserPrizeViewModel> SearchUserPrizeFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int lotteryId, int lotteryPrizeId)
+        public IList<UserLotteryPrizeViewModel> SearchUserLotteryPrizeFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int lotteryId, int lotteryPrizeId)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
             var take = model.length;
@@ -655,7 +655,7 @@ namespace CPL.Controllers
                     .Include(x => x.SysUser)
                     .Select()
                     .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId)
-                    .Select(x => Mapper.Map<UserPrizeViewModel>(x.SysUser))
+                    .Select(x => Mapper.Map<UserLotteryPrizeViewModel>(x.SysUser))
                     .AsQueryable()
                     .Skip(skip)
                     .Take(take)
@@ -678,7 +678,7 @@ namespace CPL.Controllers
                         .Include(x => x.SysUser)
                         .Select()
                         .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
-                        .Select(x => Mapper.Map<UserPrizeViewModel>(x.SysUser))
+                        .Select(x => Mapper.Map<UserLotteryPrizeViewModel>(x.SysUser))
                         .AsQueryable()
                         .Skip(skip)
                         .Take(take)

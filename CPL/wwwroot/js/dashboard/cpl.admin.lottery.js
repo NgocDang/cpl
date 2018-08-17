@@ -15,6 +15,7 @@
         LotteryGames.bindActivateGame();
         LotteryGames.bindDeleteGame();
         LotteryGames.bindViewButton();
+        LotteryGames.bindViewLotteryPrizeButton();
     },
     loadLotteryGamesDataTable: function () {
         return $('#dt-all-lottery-game').DataTable({
@@ -118,7 +119,7 @@
             "serverSide": true,
             "autoWidth": false,
             "ajax": {
-                url: "/Admin/SearchUserPrize",
+                url: "/Admin/SearchUserLotteryPrize",
                 type: 'POST',
                 data: {
                     lotteryId: $("#LotteryId").val(),
@@ -209,9 +210,8 @@
                 },
                 success: function (data) {
                     $("#modal").html(data);
-                    $("#view-lottery-game").modal("show");
-                    LotteryGames.bindViewLotteryPrizeButton();
-                    LotteryGames.bindViewLottery1stPrize();
+                    $("#view-lottery").modal("show");
+                    LotteryGames.LoadLottery1stPrize();
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
@@ -221,7 +221,7 @@
         });
     },
     bindViewLotteryPrizeButton: function () {
-        $("#view-lottery-game").on("click", ".btn-prize", function () {
+        $("#modal").on("click", "#view-lottery .btn-prize", function () {
             var _this = this;
             $.ajax({
                 url: "/Admin/ViewLotteryPrize",
@@ -239,15 +239,15 @@
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
-                    $("#view-lottery-game button").removeClass("active");
+                    $("#view-lottery .btn-prize").removeClass("active");
                     $(_this).addClass("active");
                 }
             });
             return false;
         });
     },
-    bindViewLottery1stPrize: function () {
-        if ($("#view-lottery-game .btn-prize").length > 1) {
+    LoadLottery1stPrize: function () {
+        if ($("#modal #view-lottery .btn-prize").length > 1) {
             $.ajax({
                 url: "/Admin/ViewLotteryPrize",
                 type: "GET",
@@ -259,6 +259,7 @@
                 },
                 success: function (data) {
                     $("#lottery-result").html(data);
+                    $("#view-lottery .btn-prize:first").addClass("active");
                     LotteryGames.loadUserPrizeTable();
                 },
                 complete: function (data) {

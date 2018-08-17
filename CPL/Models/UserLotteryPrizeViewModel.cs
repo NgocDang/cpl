@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class UserPrizeViewModel
+    public class UserLotteryPrizeViewModel
     {
         public int Id { get; set; }
         public int LotteryId { get; set; }
