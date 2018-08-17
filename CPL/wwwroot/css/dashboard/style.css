@@ -1573,6 +1573,12 @@ ul.game-menu li.active {
     font-size:15px !important;
 }
 
+@media (max-width: 991px){
+    .font-sm-size-15px {
+        font-size: 15px !important;
+    }
+}
+
 /*Start ==> Dashboard*/
 .border-bottom-card {
     border-bottom: 1px solid #EEE;
