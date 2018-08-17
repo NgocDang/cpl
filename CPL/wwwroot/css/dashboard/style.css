@@ -1400,11 +1400,11 @@ footer {
         background-color: #ffd300;
         color: black;
     }
-/*@media screen and (min-width: 426px) {
+@media screen and (min-width: 740px) {
     #main-menu-navigation {
-        margin-left:170px;
+        margin-left: 170px;
     }
-}*/
+}
 
 .main-menu .btn-sm span {
     padding-top:.4rem;
@@ -1573,7 +1573,7 @@ ul.game-menu li.active {
     font-size:15px !important;
 }
 
-@media (max-width: 991px){
+@media (max-width: 991px) and (min-width: 750px){
     .font-sm-size-15px {
         font-size: 15px !important;
     }
