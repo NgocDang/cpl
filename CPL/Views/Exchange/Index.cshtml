@@ -31,7 +31,9 @@
                 </div>
             </div>
         </div>
-        @await Component.InvokeAsync("LotteryResult")
+        <div id="lottery-result">
+            @await Component.InvokeAsync("LotteryResult")
+        </div>
 
         <input type="hidden" value="@Model.BTCToTokenrate" class="btc-token-rate" />
         <input type="hidden" value="@Model.ETHToBTCRate" class="eth-btc-rate" />

@@ -134,7 +134,7 @@
                 $("#country-msg").show();
 
             if (isFormValid && isMobileValid && isDOBValid && isCountryValid) {
-                //var returnUrl = Profile.getUrlParameter("returnUrl");
+                var returnUrl = Profile.getUrlParameter("returnUrl");
                 $.ajax({
                     url: "/Profile/Update/",
                     type: "POST",
@@ -156,6 +156,8 @@
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
+                            if (returnUrl == "/DepositAndWithdraw/Index")
+                                window.location.href = "/Profile/KYC";
                             $("#profile-edit").hide();
                             $("#profile-detail").show();
 
@@ -200,18 +202,17 @@
             });
         });
     },
+    getUrlParameter: function (sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'), sParameterName, i;
 
-    //getUrlParameter: function (sParam) {
-    //    var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'), sParameterName, i;
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
 
-    //    for (i = 0; i < sURLVariables.length; i++) {
-    //        sParameterName = sURLVariables[i].split('=');
-
-    //        if (sParameterName[0] === sParam) {
-    //            return sParameterName[1] === undefined ? true : sParameterName[1];
-    //        }
-    //    }
-    //}
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    }
 };
 
 $(document).ready(function () {

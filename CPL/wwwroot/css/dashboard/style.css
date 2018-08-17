@@ -111,6 +111,12 @@ table.dataTable {
     width:100% !important;
 }
 
+    table.dataTable > tbody > tr.child {
+        word-wrap: break-word;
+        word-break: break-all;
+        white-space: normal;
+    }
+
 #btc-card {
     background: #fff !important;
     color: #fff;

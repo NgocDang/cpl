@@ -172,5 +172,10 @@ namespace CPL.Controllers
         {
             return ViewComponent("Exchange");
         }
+
+        public IActionResult LoadLotteryResultViewComponent()
+        {
+            return ViewComponent("LotteryResult");
+        }
     }
 }

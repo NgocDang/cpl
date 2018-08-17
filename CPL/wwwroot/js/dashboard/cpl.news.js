@@ -64,8 +64,8 @@
     bindSaveButton: function () {
         $("#modal").on("click", "#btn-save", function () {
             var _this = this;
-            var isFormValid = $("#form-news")[0].checkValidity();
-            $("#form-news").addClass('was-validated');
+            var isFormValid = $("#form-update-news")[0].checkValidity();
+            $("#form-update-news").addClass('was-validated');
 
             if (tinymce.EditorManager.activeEditor.plugins.wordcount.getCount() == 0) {
                 $("#full-desc").find(".invalid-feedback").show();
@@ -116,8 +116,8 @@
     bindSubmitButton: function () {
         $("#modal").on("click", "#btn-submit", function () {
             var _this = this;
-            var isFormValid = $("#form-news")[0].checkValidity();
-            $("#form-news").addClass('was-validated');
+            var isFormValid = $("#form-update-news")[0].checkValidity();
+            $("#form-update-news").addClass('was-validated');
             if (tinymce.EditorManager.activeEditor.plugins.wordcount.getCount() == 0) {
                 $("#full-desc").find(".invalid-feedback").show();
                 return false;
