@@ -61,11 +61,11 @@ var TransactionHistory = {
                     "data": "StatusInEnum",
                     "render": function (data, type, full, meta) {
                         if (full.statusInString == "PENDING")
-                            return "<div class='badge badge-info w-100'>Pending</div>";
+                            return "<div class='badge badge-info'>Pending</div>";
                         else if (full.statusInString == "FAIL")
-                            return "<div class='badge badge-danger w-100'>Fail</div>";
+                            return "<div class='badge badge-danger'>Fail</div>";
                         else if (full.statusInString == "SUCCESS")
-                            return "<div class='badge badge-success w-100'>Success</div>";
+                            return "<div class='badge badge-success'>Success</div>";
                         else
                             return "";
                     },
