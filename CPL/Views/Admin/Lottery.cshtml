@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "_Layout";
-    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames");
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery");
 }
 @section styles
     {
@@ -16,7 +16,7 @@
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames")</h3>
+                <h3 class="content-header-title mb-0 d-inline-block"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</h3>
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
@@ -24,7 +24,7 @@
                                 <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             </li>
                             <li class="breadcrumb-item active">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames")
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")
                             </li>
                         </ol>
                     </div>
@@ -34,7 +34,7 @@
         <div class="content-body">
             <div class="row">
                 <div id="transaction-history-view-component" class="col-12">
-                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGames")</h6>
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</h6>
                     <div class="card" id="lottery-game-management">
                         <div class="card-content">
                             <table id="dt-all-lottery-game" class="table responsive table-hover table-xl mb-0">

@@ -1,0 +1,110 @@
+﻿@model LotteryViewModel
+
+<div class="modal" tabindex="-1" id="view-lottery" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+            </div>
+            <div class="modal-body p-2">
+                <div class="row">
+                    <div class="col-sm-4 col-12">
+                        <p class="text-muted mb-3px font-size-13px">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")
+                        </p>
+                        <p>
+                            <strong>@Model?.Title</strong>
+                        </p>
+                    </div>
+                    <div class="col-sm-4 col-12">
+                        <p class="text-muted mb-3px font-size-13px">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfLotteryTicket")
+                        </p><p>
+
+                            <strong>@Model?.Volume</strong>
+                        </p>
+                    </div>
+                    <div class="col-sm-4 col-12">
+                        <p class="text-muted mb-3px font-size-13px">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketPrice")
+                        </p><p>
+                            <strong>@Model?.UnitPrice</strong>
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-sm-4 col-12">
+                                <p class="text-muted mb-3px font-size-13px">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlideImage")
+                                </p>
+                                <p>
+                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.SlideImage"><img src="/images/lottery/@Model?.SlideImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model?.SlideImage"></a>
+                                </p>
+                            </div>
+                            <div class="col-sm-4 col-12">
+                                <p class="text-muted mb-3px font-size-13px">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopListingImage")
+                                </p>
+                                <p>
+                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.DesktopListingImage"><img src="/images/lottery/@Model?.DesktopListingImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model?.DesktopListingImage"></a>
+                                </p>
+                            </div>
+                            <div class="col-sm-4 col-12">
+                                <p class="text-muted mb-3px font-size-13px">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileListingImage")
+                                </p>
+                                <p>
+                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.MobileListingImage"><img src="/images/lottery/@Model?.MobileListingImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model?.MobileListingImage"></i></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.Status == (int)EnumLotteryGameStatus.COMPLETED)
+                    {
+                        <div class="col-12">
+                            <h5 class="text-mute font-weight-bold pt-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")</h5>
+                            <hr class="mt-0" />
+                            <div id="prize-lottery">
+                                <div class="row">
+                                    <div class="col-sm-4 col-12">
+                                        @foreach (var prize in Model?.LotteryPrizes)
+                                        {
+                                            <div class="row">
+                                                <div class="col-4 text-center">
+                                                    <p class="text-muted mb-3px font-size-13px">
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")
+                                                    </p><p>
+                                                        <strong>@prize.Value.ToString("0.")</strong>
+                                                    </p>
+                                                </div>
+                                                <div class="col-4 text-center pl-0 pr-0">
+                                                    <p class="text-muted mb-3px font-size-13px">
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalOfTickets")
+                                                    </p><p>
+                                                        <strong>@prize.Volume</strong>
+                                                    </p>
+                                                </div>
+                                                <div class="col-4 text-center">
+                                                    <p class="text-muted mb-3px font-size-13px">
+                                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")
+                                                    </p>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary w-100 btn-prize pl-sm-auto pr-sm-auto pl-0 pr-0" data-prize-id="@prize.Id" id="lottery-prize-id">@prize.Name</button>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                        }
+                                    </div>
+                                    <div class="col-sm-8 col-12">
+                                        <div id="lottery-result"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(x => x.Id)
+</div>

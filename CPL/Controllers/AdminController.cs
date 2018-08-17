@@ -589,6 +589,103 @@ namespace CPL.Controllers
             }
         }
 
+        public IActionResult ViewLottery(int id)
+        {
+            var lottery = new LotteryViewModel();
+
+            lottery = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
+                                                        .Include(x => x.LotteryPrizes)
+                                                        .Select()
+                                                        .FirstOrDefault(x => x.Id == id));
+
+            return PartialView("_ViewLottery", lottery);
+        }
+
+        public IActionResult ViewLotteryPrize(UserLotteryPrizeViewModel viewModel)
+        {
+            return PartialView("_ViewLotteryPrize", viewModel);
+        }
+
+        [HttpPost]
+        public JsonResult SearchUserLotteryPrize(DataTableAjaxPostModel viewModel, int lotteryId, int lotteryPrizeId)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchUserLotteryPrizeFunc(viewModel, out filteredResultsCount, out totalResultsCount, lotteryId, lotteryPrizeId);
+            var result = Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+
+            return result;
+        }
+
+        public IList<UserLotteryPrizeViewModel> SearchUserLotteryPrizeFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int lotteryId, int lotteryPrizeId)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[1].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            // search the dbase taking into consideration table sorting and paging
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = _lotteryHistoryService
+                    .Queryable()
+                    .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId)
+                    .Count();
+
+                totalResultsCount = filteredResultsCount;
+
+                var result = _lotteryHistoryService.Query()
+                    .Include(x => x.SysUser)
+                    .Select()
+                    .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId)
+                    .Select(x => Mapper.Map<UserLotteryPrizeViewModel>(x.SysUser))
+                    .AsQueryable()
+                    .Skip(skip)
+                    .Take(take)
+                    .ToList();
+
+                return result;
+            }
+            else
+            {
+                filteredResultsCount = _lotteryHistoryService.Query()
+                    .Include(x => x.SysUser)
+                    .Select()
+                    .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
+                    .Count();
+
+                totalResultsCount = _lotteryService.Queryable()
+                        .Count();
+
+                return _lotteryHistoryService.Query()
+                        .Include(x => x.SysUser)
+                        .Select()
+                        .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
+                        .Select(x => Mapper.Map<UserLotteryPrizeViewModel>(x.SysUser))
+                        .AsQueryable()
+                        .Skip(skip)
+                        .Take(take)
+                        .ToList();
+            }
+        }
+
         public IActionResult EditLottery(int id)
         {
             var lottery = new LotteryViewModel();
@@ -704,16 +801,16 @@ namespace CPL.Controllers
                             switch (i)
                             {
                                 case 0:
-                                    color = "bg-warning";
+                                    color = "warning";
                                     break;
                                 case 1:
-                                    color = "bg-primary";
+                                    color = "primary";
                                     break;
                                 case 2:
-                                    color = "bg-danger";
+                                    color = "danger";
                                     break;
                                 default:
-                                    color = "bg-success";
+                                    color = "success";
                                     break;
                             }
 
@@ -796,16 +893,16 @@ namespace CPL.Controllers
                     switch (index)
                     {
                         case 0:
-                            color = "bg-warning";
+                            color = "warning";
                             break;
                         case 1:
-                            color = "bg-primary";
+                            color = "primary";
                             break;
                         case 2:
-                            color = "bg-danger";
+                            color = "danger";
                             break;
                         default:
-                            color = "bg-success";
+                            color = "success";
                             break;
                     }
 
