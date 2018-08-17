@@ -17,7 +17,7 @@
            && ViewContext.RouteData.Values["Action"].ToString() != "LogIn"
            && ViewContext.RouteData.Values["Action"].ToString() != "Register")
         {
-            <div class="navbar-header navbar-header-mobile-authentication d-sm-none">
+            <div class="navbar-header navbar-header-mobile-authentication d-md-none">
                 <ul class="nav navbar-nav text-center">
                     <li class="nav-item mobile-menu d-md-none">
                         <a class="btn btn-sm btn-danger mr-1" asp-controller="Authentication" asp-action="Register">
@@ -136,7 +136,7 @@
                     }
                 </a>
             </li>
-            <li class="dropdown nav-item d-sm-none" data-menu="dropdown">
+            <li class="dropdown nav-item d-md-none" data-menu="dropdown">
                 <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
                     <i class="la la-language"></i>
                     <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Language")</span>
@@ -152,7 +152,7 @@
         @if (Model.User != null)
         {
             <ul class="nav navbar-nav main-menu-navigation" data-menu="menu-navigation">
-                <li class="dropdown nav-item d-sm-block d-none" data-menu="dropdown">
+                <li class="dropdown nav-item d-md-block d-none" data-menu="dropdown">
                     <a class="dropdown-toggle nav-link user-menu" href="#" data-toggle="dropdown">
                         <i class="la la-user"></i>
                         <span class="font-weight-bold">@Model.User.TokenAmount.ToString("N0") CPL</span>
@@ -192,13 +192,13 @@
         else
         {
             <ul class="nav navbar-nav" data-menu="menu-navigation">
-                <li class="nav-item d-sm-block d-none">
+                <li class="nav-item d-md-block d-none">
                     <a class="btn btn-sm btn-danger" asp-controller="Authentication" asp-action="Register">
                         <i class="la la-user-plus"></i>
                         <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</span>
                     </a>
                 </li>
-                <li class="nav-item d-sm-block d-none">
+                <li class="nav-item d-md-block d-none">
                     <a class="btn btn-sm btn-white" asp-controller="Authentication" asp-action="LogIn">
                         <i class="la la-sign-in"></i>
                         <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</span>
@@ -213,5 +213,5 @@
     && ViewContext.RouteData.Values["Action"].ToString() != "LogIn"
     && ViewContext.RouteData.Values["Action"].ToString() != "Register")
 {
-    <div class="mb-sm-0 mb-4"></div>
+    <div class="mb-md-0 mb-4"></div>
 }

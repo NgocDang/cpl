@@ -13,7 +13,7 @@
 @await Component.InvokeAsync("SliderBanner")
 
 <section id="lottery-game">
-    <div class="container d-sm-block d-none mt-1">
+    <div class="container d-md-block d-none mt-1">
         <div class="row">
             @if (Model.Lotteries != null)
             {
@@ -48,7 +48,7 @@
             }
         </div>
     </div>
-    <div class="row d-sm-none d-block mb-05">
+    <div class="row d-md-none d-block mb-05">
         @if (Model.Lotteries != null)
         {
             @foreach (var lottery in Model.Lotteries)
