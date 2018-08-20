@@ -38,24 +38,21 @@ namespace CPL.ViewComponents
                 viewModel.ETHToTokenRate = (1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value)) / ethToBTCRate;
                 viewModel.BTCToTokenRate = 1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
 
-                // Get lastest game
-                var lastestLottery = _lotteryService
-                    .Queryable()
-                    .Where(x => x.UpdatedDate.HasValue)
-                    .OrderByDescending(x => x.UpdatedDate)
+                // Get lastest game which user used join
+                var lastestLottery = _lotteryHistoryService
+                    .Query()
+                    .Include(x => x.Lottery)
+                    .Select()
+                    .Where(x => x.SysUserId == user.Id)
+                    .OrderByDescending(x => x.Lottery.UpdatedDate)
                     .FirstOrDefault();
 
                 if (lastestLottery != null)
                 {
-                    // Get lottery result
-                    var status = _lotteryHistoryService
-                        .Queryable()
-                        .Where(x => x.SysUserId == user.Id && x.LotteryId == lastestLottery.Id)
-                        .Any();
-
                     // set status
-                    if (status)
+                    if (lastestLottery != null)
                     {
+                        // Get lottery prize
                         var lotteryHistory = _lotteryHistoryService
                             .Query()
                             .Include(x => x.LotteryPrize)
@@ -65,8 +62,8 @@ namespace CPL.ViewComponents
                             .FirstOrDefault();
 
                         viewModel.LastestLotteryStatus = lotteryHistory != null ? true : false;
-                        viewModel.LastestLotteryTitle = lastestLottery.Title;
-                        viewModel.LastestLotteryId = lastestLottery.Id;
+                        viewModel.LastestLotteryTitle = lastestLottery.Lottery.Title;
+                        viewModel.LastestLotteryId = lastestLottery.Lottery.Id;
                         viewModel.LastestLotteryResult = lotteryHistory?.LotteryPrize.Index.ToString();
                     }
                 }
