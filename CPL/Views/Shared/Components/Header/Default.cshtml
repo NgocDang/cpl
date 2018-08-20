@@ -26,7 +26,7 @@
                             <a class="dropdown-item" asp-controller="Profile" asp-action="KYC"><i class="la la-credit-card"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</a>
                             <hr class="mb-0" />
                             <div class="dropdown-submenu">
-                                <button class="dropdown-item" type="button">
+                                <button id="btn-dropdown-item" class="dropdown-item" type="button">
                                     <i class="la la-language"></i>
                                     <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Language")</span>
                                 </button>
@@ -45,11 +45,11 @@
             </ul>
         </div>
         @if (Model.User == null
-       && ViewContext.RouteData.Values["Controller"].ToString() != "Authentication"
-       && ViewContext.RouteData.Values["Action"].ToString() != "LogIn"
-       && ViewContext.RouteData.Values["Action"].ToString() != "Register")
+                    && ViewContext.RouteData.Values["Controller"].ToString() != "Authentication"
+                    && ViewContext.RouteData.Values["Action"].ToString() != "LogIn"
+                    && ViewContext.RouteData.Values["Action"].ToString() != "Register")
         {
-            <div class="navbar-header navbar-header-mobile-authentication d-md-none">
+            <div class="navbar-header navbar-header-mobile-authentication d-md-none position-static">
                 <ul class="nav navbar-nav text-center">
                     <li class="nav-item mobile-menu d-md-none">
                         <a class="btn btn-sm btn-danger mr-1" asp-controller="Authentication" asp-action="Register">
@@ -63,7 +63,25 @@
                     </li>
                 </ul>
             </div>
+
         }
+        else
+        {
+            <div class="navbar-header navbar-header-mobile-authentication d-md-none position-static py-1">
+                <ul class="nav navbar-nav text-center">
+                    <li class="nav-item mobile-menu d-md-none">
+                        <a class="mr-3">
+                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Hi"), @Model.User.LastName</span>
+                        </a>
+                        <a class="ml-3">
+                            <span class="font-weight-bold">@Model.User.TokenAmount.ToString("N0") CPL</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+        }
+
         <div class="navbar-container container center-layout px-0">
             <div class="collapse navbar-collapse" id="navbar-mobile">
                 <ul class="nav navbar-nav float-left navbar-left">
@@ -78,8 +96,8 @@
                         <a class="navbar-lottery-desktop active" asp-controller="Home" asp-action="Index"><img class="img-fluid w-75" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")" /> </a>
                     </li>
                     @*<li class="nav-item">
-                            <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
-                        </li>*@
+                        <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
+                    </li>*@
                     @if (Model.News != null)
                     {
                         <li class="nav-item pt-1 pl-1 d-xl-inline d-none">
@@ -240,10 +258,4 @@
         }
     </div>
 </div>
-@if (Model.User == null
-&& ViewContext.RouteData.Values["Controller"].ToString() != "Authentication"
-&& ViewContext.RouteData.Values["Action"].ToString() != "LogIn"
-&& ViewContext.RouteData.Values["Action"].ToString() != "Register")
-{
-    <div class="mb-md-0 mb-4"></div>
-}
+<div class="mb-md-0 mb-4"></div>

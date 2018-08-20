@@ -1652,4 +1652,7 @@ input[type=number]:hover::-webkit-inner-spin-button {
         font-size: 1.2rem;
     }
 }
-   
+
+button#btn-dropdown-item:focus {
+    outline: none !important;
+}
