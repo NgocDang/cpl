@@ -10,6 +10,7 @@ namespace CPL.Domain
         public int Id { get; set; }
         public int Phase { get; set; }
         public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         public int Volume { get; set; }
         public int Status { get; set; }
         public string Title { get; set; }
