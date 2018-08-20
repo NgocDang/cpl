@@ -58,6 +58,7 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
+        [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
         public JsonResult SearchLotteryHistory(DataTableAjaxPostModel viewModel, DateTime? createdDate, int? lotteryId, int sysUserId)
         {
             // action inside a standard controller
@@ -74,6 +75,7 @@ namespace CPL.Controllers
             });
         }
 
+        [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
         public IList<LotteryHistoryViewModel> SearchLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, 
             DateTime? createdDate, int? lotteryId, int sysUserId)
         {
@@ -201,6 +203,7 @@ namespace CPL.Controllers
         #endregion
 
         #region Game History
+        [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
         public JsonResult SearchGameHistory(DataTableAjaxPostModel viewModel, int sysUserId)
         {
             // action inside a standard controller
@@ -217,6 +220,7 @@ namespace CPL.Controllers
             });
         }
 
+        [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
         public IList<GameHistoryViewModel> SearchGameHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId)
         {
             var user = new SysUserViewModel();
@@ -400,6 +404,7 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
+        [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
         public JsonResult SearchTransactionHistory(DataTableAjaxPostModel viewModel, int? sysUserId, int? currencyId)
         {
             // action inside a standard controller
@@ -416,6 +421,7 @@ namespace CPL.Controllers
             });
         }
 
+        [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
         public IList<CoinTransactionViewModel> SearchTransactionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? sysUserId, int? currencyId)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == (sysUserId ?? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id));
