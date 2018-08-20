@@ -74,6 +74,7 @@ namespace CPL.Misc.Quartz.Jobs
                                         .Where(x => x.Id == lottery.Id)
                                         .FirstOrDefault();
                     dataLottery.Status = (int)EnumLotteryGameStatus.COMPLETED;
+                    dataLottery.UpdatedDate = DateTime.Now;
                     lotteryService.Update(dataLottery);
                 }
 

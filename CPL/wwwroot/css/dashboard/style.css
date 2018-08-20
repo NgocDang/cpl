@@ -1455,6 +1455,7 @@ ul.game-menu li.active {
     -webkit-text-fill-color: red;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: #fff;
+    font-weight: bolder;
 }
 
 .txt-box-lottery {
@@ -1470,26 +1471,12 @@ ul.game-menu li.active {
     text-align: center;
 }
 
-#img-2 {
-    background: url(/images/lottery/2.png) repeat;
-    background-size: 100%;
-}
-
-.txt-stroke {
-    -webkit-text-fill-color: red;
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: #fff;
-}
 
 .txt-box-lottery {
     display: inline-block;
     min-height: 82px;
 }
 
-#img-2 {
-    background: url(/images/lottery/2.png) repeat;
-    background-size: 100%;
-}
 /*End <== Token balance view component*/
 
 .word-break {
@@ -1604,6 +1591,7 @@ footer {
     }
 }
 
+
 input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     cursor: pointer;
@@ -1639,4 +1627,88 @@ input[type=number]:hover::-webkit-inner-spin-button {
 
 .mb-05 {
     margin-bottom: 0.5rem;
+}
+
+/*Extra small devices (portrait phones, less than 576px)*/
+@media (max-width: 575.98px) {
+    .font-size-lottery-result{
+        font-size: 15px;
+    }
+    .font-size-lottery-result-long {
+        font-size: 11px;
+    }
+}   
+
+/*Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .font-size-lottery-result {
+        font-size: 18px;
+    }
+    .font-size-lottery-result-long {
+        font-size: 11px;
+    }
+}
+
+/*Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .font-size-lottery-result {
+        font-size: 18px;
+    }
+    .font-size-lottery-result-long {
+        font-size: 12px;
+    }
+}
+
+/*Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .font-size-lottery-result {
+        font-size: 30px;
+    }
+    .font-size-lottery-result-long {
+        font-size: 20px;
+    }
+}
+
+/*Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) {
+    .font-size-lottery-result {
+        font-size: 30px;
+    }
+    .font-size-lottery-result-long {
+        font-size: 20px;
+    }
+}
+
+.top-center {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -10%);
+}
+
+.bottom-center {
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -75%);
+}
+
+.center-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bolder;
+}
+
+.top-right {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    transform: translate(-2%, -2%);
+}
+
+.img-container {
+    position: relative;
+    text-align: center;
 }
