@@ -764,6 +764,7 @@ namespace CPL.Controllers
                 var lotteryPrize = _lotteryPrizeService.Queryable().Where(x => x.LotteryId == viewModel.Id).ToList();
                 var numberOfOldPrize = lotteryPrize.Count();
 
+                // Order to set index of the prize
                 var orderedLotteryPrizes = viewModel.LotteryPrizes.OrderByDescending(x => x.Value).ToList();
                 for (int i = 0; i < orderedLotteryPrizes.Count; i++)
                 {
@@ -875,9 +876,8 @@ namespace CPL.Controllers
                 _lotteryService.Insert(lottery);
                 _unitOfWork.SaveChanges();
 
-
+                // Order to set index of the prize
                 var orderedLotteryPrizes = viewModel.LotteryPrizes.OrderByDescending(x => x.Value).ToList();
-                // Add index
                 for (int i = 0; i < orderedLotteryPrizes.Count; i++)
                 {
                     orderedLotteryPrizes[i].Index = i + 1;
