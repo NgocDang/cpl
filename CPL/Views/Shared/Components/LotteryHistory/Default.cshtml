@@ -2,9 +2,18 @@
 
 <div class="row">
     <div id="lottery-history-view-component" class="col-12 @(Model.SysUserId.HasValue ? "" : "d-none")">
-        <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
         <div class="card">
-            <div class="card-content">
+            @if (ViewContext.RouteData.Values["Controller"].ToString() == "Lottery" && ViewContext.RouteData.Values["Action"].ToString() == "Index")
+            {
+                <div class="card-header">
+                    <h4 class="card-title float-left text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h4>
+                    <ul class="list-inline mb-0 float-right">
+                        <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                    </ul>
+                </div>
+            }
+
+            <div class="card-content collapse show">
                 <table id="dt-lottery-history" class="table responsive table-hover table-xl mb-0">
                     <thead>
                         <tr>

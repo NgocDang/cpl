@@ -3,6 +3,17 @@
     init: function () {
         LotteryHistory.historyDatatable = LotteryHistory.loadLotteryHistoryTable();
     },
+    resizeOnMobile: function () {
+        if ($(window).width() < 767 && $("#lottery-history-view-component .card-header").length > 0) {
+            $('#lottery-history-view-component .card-content').removeClass('show');
+            $('#lottery-history-view-component .card-header i').removeClass('ft-minus');
+            $('#lottery-history-view-component .card-header i').addClass('ft-plus');
+        } else {
+            $('#lottery-history-view-component .card-content').addClass('show');
+            $('#lottery-history-view-component .card-header i').removeClass('ft-plus');
+            $('#lottery-history-view-component .card-header i').addClass('ft-minus');
+        }
+    },
     loadLotteryHistoryTable: function () {
         if ($("#lottery-history-view-component").hasClass("d-none"))
             return false;
@@ -78,4 +89,8 @@
 
 $(document).ready(function () {
     LotteryHistory.init();
+});
+
+$(window).bind('resize load', function () {
+    LotteryHistory.resizeOnMobile();
 });
