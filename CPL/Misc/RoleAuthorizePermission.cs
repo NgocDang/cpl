@@ -18,18 +18,17 @@ namespace CPL.Misc
 
     public class BaseAuthorizePermission : IAuthorizePermission
     {
-        public virtual PermissionStatus IsACL(ActionExecutingContext context, EnumEntity? entity, EnumAction? action)
-        {
-            throw new NotImplementedException();
-        }
-
         public virtual PermissionStatus IsLoggedIn(ActionExecutingContext context)
         {
             if (context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser") == null)
                 return new PermissionStatus { Code = PermissionStatus.UnLoggedInCode, Text = PermissionStatus.UnLoggedInText, Url = PermissionStatus.UnLoggedInUrl };
             else
                 return new PermissionStatus { Code = PermissionStatus.OkCode, Text = PermissionStatus.OkText };
+        }
 
+        public virtual PermissionStatus IsACL(ActionExecutingContext context, EnumEntity? entity, EnumAction? action)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -63,7 +62,7 @@ namespace CPL.Misc
                     var beingDeletedUser = sysUserService.Queryable().FirstOrDefault(x => x.Id == int.Parse(context.ActionArguments["id"].ToString()));
 
                     if (beingDeletedUser == null || !currentUser.IsAdmin || beingDeletedUser.IsAdmin)
-                        return new PermissionStatus { Code = PermissionStatus.UnAuthorizedCode, Text = PermissionStatus.UnAuthorizedText, Url = PermissionStatus.UnAuthorizedTextUrl };
+                        return new PermissionStatus { Code = PermissionStatus.UnAuthorizedCode, Text = PermissionStatus.UnAuthorizedText, Url = PermissionStatus.UnAuthorizedUrl };
                 }
             }
             return new PermissionStatus { Code = PermissionStatus.OkCode, Text = PermissionStatus.OkText };
@@ -80,20 +79,17 @@ namespace CPL.Misc
                 var transactionHistoryService = (ICoinTransactionService)context.HttpContext.RequestServices.GetService(typeof(ICoinTransactionService));
 
                 var currentUser = context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-                if (context.RouteData.Values["controller"].ToString() == "History" && context.RouteData.Values["action"].ToString() == "TransactionDetail")
+                if (context.RouteData.Values["id"] != null)
                 {
                     var currentUserTransactionIdList = transactionHistoryService.Queryable().Where(x => x.SysUserId == currentUser.Id).Select(x => x.Id).ToList();
                     var currentTransactionId = context.RouteData.Values["id"].ToString();
                     if (!currentUser.IsAdmin && !currentUserTransactionIdList.Contains(int.Parse(currentTransactionId)))
                         return new PermissionStatus { Code = PermissionStatus.UnAuthorizedCode, Text = PermissionStatus.UnAuthorizedText, Url = PermissionStatus.UnAuthorizedUrl };
                 }
-                else if (context.RouteData.Values["controller"].ToString() == "History" && context.RouteData.Values["action"].ToString() == "Transaction")
+                else if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["sysUserId"]))
                 {
-                    if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["sysUserId"]))
-                    {
-                        if (!currentUser.IsAdmin && currentUser.Id != int.Parse(context.HttpContext.Request.Query["sysUserId"]))
-                            return new PermissionStatus { Code = PermissionStatus.UnAuthorizedCode, Text = PermissionStatus.UnAuthorizedText, Url = PermissionStatus.UnAuthorizedUrl };
-                    }
+                    if (!currentUser.IsAdmin && currentUser.Id != int.Parse(context.HttpContext.Request.Query["sysUserId"]))
+                        return new PermissionStatus { Code = PermissionStatus.UnAuthorizedCode, Text = PermissionStatus.UnAuthorizedText, Url = PermissionStatus.UnAuthorizedUrl };
                 }
                 return new PermissionStatus { Code = PermissionStatus.OkCode, Text = PermissionStatus.OkText };
             }
