@@ -35,7 +35,8 @@
                                 $("#login").hide();
                                 $("#two-factor").show();
                             } else if ($("#login-modal").length > 0) {
-                                Lottery.loadAjaxConfirmPurchaseTicket();
+                                //Lottery.loadAjaxConfirmPurchaseTicket();
+                                location.reload();
                             } else {
                                 window.location.replace(data.url);
                             }
