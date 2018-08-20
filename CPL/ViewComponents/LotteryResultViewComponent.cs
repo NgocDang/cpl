@@ -52,7 +52,7 @@ namespace CPL.ViewComponents
                         .FirstOrDefault();
 
                     viewModel.Status = lotteryHistory != null ? true : false;
-                    viewModel.Result = lotteryHistory?.LotteryPrize.Name;
+                    viewModel.Result = lotteryHistory?.LotteryPrize.Index.ToString();
                 }
 
                 return View(viewModel);
