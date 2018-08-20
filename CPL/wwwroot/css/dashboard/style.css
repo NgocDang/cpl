@@ -1640,3 +1640,11 @@ input[type=number]:hover::-webkit-inner-spin-button {
 .mb-05 {
     margin-bottom: 0.5rem;
 }
+
+
+@media (max-width: 767.98px) {
+    .header-navbar .navbar-header .open-navbar-container i {
+        font-size: 2.5rem;
+    }
+}
+   
