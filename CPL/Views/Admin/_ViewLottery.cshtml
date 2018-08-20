@@ -34,31 +34,51 @@
                     </div>
                     <div class="col-12">
                         <div class="row">
-                            <div class="col-sm-4 col-12">
+                            <div class="col-sm-6 col-12">
                                 <p class="text-muted mb-3px font-size-13px">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlideImage")
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopSlideImage")
                                 </p>
                                 <p>
-                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.SlideImage"><img src="/images/lottery/@Model?.SlideImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model?.SlideImage"></a>
+                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model.DesktopSlideImage"><img src="/images/lottery/@Model.DesktopSlideImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model.DesktopSlideImage"></a>
                                 </p>
                             </div>
-                            <div class="col-sm-4 col-12">
+                            <div class="col-sm-6 col-12">
+                                <p class="text-muted mb-3px font-size-13px">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileSlideImage")
+                                </p>
+                                <p>
+                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model.MobileSlideImage"><img src="/images/lottery/@Model.MobileSlideImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model?.MobileSlideImage"></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-sm-6 col-12">
                                 <p class="text-muted mb-3px font-size-13px">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopListingImage")
                                 </p>
                                 <p>
-                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.DesktopListingImage"><img src="/images/lottery/@Model?.DesktopListingImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model?.DesktopListingImage"></a>
+                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model.DesktopListingImage"><img src="/images/lottery/@Model.DesktopListingImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model.DesktopListingImage"></a>
                                 </p>
                             </div>
-                            <div class="col-sm-4 col-12">
+                            <div class="col-sm-6 col-12">
                                 <p class="text-muted mb-3px font-size-13px">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileListingImage")
                                 </p>
                                 <p>
-                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model?.MobileListingImage"><img src="/images/lottery/@Model?.MobileListingImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model?.MobileListingImage"></i></a>
+                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model.MobileListingImage"><img src="/images/lottery/@Model.MobileListingImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model.MobileListingImage"></a>
                                 </p>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-12">
+                        <p class="text-muted mb-3px font-size-13px">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrizeImage")
+                        </p>
+                        <p>
+                            <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model.PrizeImage"><img src="/images/lottery/@Model.PrizeImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model.PrizeImage"></i></a>
+                        </p>
                     </div>
                     @if (Model.Status == (int)EnumLotteryGameStatus.COMPLETED)
                     {
@@ -68,7 +88,7 @@
                             <div id="prize-lottery">
                                 <div class="row">
                                     <div class="col-sm-4 col-12">
-                                        @for(var i=0;i<Model.LotteryPrizes.Count;i++)
+                                        @for (var i = 0; i < Model.LotteryPrizes.Count; i++)
                                         {
                                             <div class="row">
                                                 <div class="col-4 text-center">
@@ -86,9 +106,10 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-4 text-center">
-                                                    <p class="text-muted mb-0 font-size-13px">&nbsp;
+                                                    <p class="text-muted mb-0 font-size-13px">
+                                                        &nbsp;
                                                     </p>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary w-100 btn-prize pl-sm-auto pr-sm-auto pl-0 pr-0" data-prize-id="@Model.LotteryPrizes[i].Id" id="lottery-prize-id">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") #@(i+1)</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary w-100 btn-prize pl-sm-auto pr-sm-auto pl-0 pr-0" data-prize-id="@Model.LotteryPrizes[i].Id" id="lottery-prize-id">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") #@(i + 1)</button>
                                                 </div>
                                             </div>
                                             <hr />

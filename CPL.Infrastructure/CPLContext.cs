@@ -36,6 +36,7 @@ namespace CPL.Infrastructure
         public DbSet<BTCTransaction> BTCTransaction { get; set; }
         public DbSet<ETHTransaction> ETHTransaction { get; set; }
         public DbSet<Contact> Contact { get; set; }
+        public DbSet<LangContent> LangContent { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,7 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new SettingMap());
             modelBuilder.ApplyConfiguration(new LangMap());
             modelBuilder.ApplyConfiguration(new LangDetailMap());
+            modelBuilder.ApplyConfiguration(new LangContentMap());
             modelBuilder.ApplyConfiguration(new TemplateMap());
             modelBuilder.ApplyConfiguration(new CurrencyMap());
             modelBuilder.ApplyConfiguration(new LangMsgDetailMap());
