@@ -14,5 +14,8 @@ namespace CPL.Misc.Enums
         Contact,
         Dashboard,
         DepositAndWithdraw,
+        Home,
+        Info,
+        Lottery,
     }
 }
