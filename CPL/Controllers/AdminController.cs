@@ -763,7 +763,10 @@ namespace CPL.Controllers
                 // lottery prize
                 var lotteryPrize = _lotteryPrizeService.Queryable().Where(x => x.LotteryId == viewModel.Id).ToList();
                 var numberOfOldPrize = lotteryPrize.Count();
-                var numberOfNewPrize = viewModel.LotteryPrizes.Count - 1;
+
+                // Order to add index
+                var orderedLotteryPrizes = viewModel.LotteryPrizes.OrderByDescending(x => x.Value).ToList();
+                var numberOfNewPrize = orderedLotteryPrizes.Count - 1;
 
                 if (numberOfOldPrize >= numberOfNewPrize)
                 {
@@ -772,8 +775,9 @@ namespace CPL.Controllers
                         if (i < numberOfNewPrize)
                         {
                             var newPrize = lotteryPrize[i];
-                            newPrize.Value = viewModel.LotteryPrizes[i].Value;
-                            newPrize.Volume = viewModel.LotteryPrizes[i].Volume;
+                            newPrize.Index = i + 1;
+                            newPrize.Value = orderedLotteryPrizes[i].Value;
+                            newPrize.Volume = orderedLotteryPrizes[i].Volume;
                             _lotteryPrizeService.Update(newPrize);
                         }
                         else
@@ -790,33 +794,18 @@ namespace CPL.Controllers
                         if (i < numberOfOldPrize)
                         {
                             var newPrize = lotteryPrize[i];
-                            newPrize.Value = viewModel.LotteryPrizes[i].Value;
-                            newPrize.Volume = viewModel.LotteryPrizes[i].Volume;
+                            newPrize.Index = i + 1;
+                            newPrize.Value = orderedLotteryPrizes[i].Value;
+                            newPrize.Volume = orderedLotteryPrizes[i].Volume;
                             _lotteryPrizeService.Update(newPrize);
                         }
                         else
                         {
-                            var prize = viewModel.LotteryPrizes[i];
+                            var prize = orderedLotteryPrizes[i];
                             if (prize.Volume == 0 && prize.Value == 0) continue;
-                            var color = "";
-                            switch (i)
-                            {
-                                case 0:
-                                    color = "warning";
-                                    break;
-                                case 1:
-                                    color = "primary";
-                                    break;
-                                case 2:
-                                    color = "danger";
-                                    break;
-                                default:
-                                    color = "success";
-                                    break;
-                            }
-
                             _lotteryPrizeService.Insert(new LotteryPrize()
                             {
+                                Index = i + 1,
                                 Value = prize.Value,
                                 Volume = prize.Volume,
                                 LotteryId = viewModel.Id
@@ -824,7 +813,6 @@ namespace CPL.Controllers
                         }
                     }
                 }
-
                 _unitOfWork.SaveChanges();
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
             }
@@ -884,13 +872,21 @@ namespace CPL.Controllers
                 _lotteryService.Insert(lottery);
                 _unitOfWork.SaveChanges();
 
+
+                var orderedLotteryPrizes = viewModel.LotteryPrizes.OrderByDescending(x => x.Value).ToList();
+                // Add index
+                for (int i = 0; i < orderedLotteryPrizes.Count; i++)
+                {
+                    orderedLotteryPrizes[i].Index = i + 1;
+                }
+
                 // Lottery prize
-                foreach (var prize in viewModel.LotteryPrizes)
+                foreach (var prize in orderedLotteryPrizes)
                 {
                     if (prize.Volume == 0 && prize.Value == 0) continue;
-                    var index = viewModel.LotteryPrizes.IndexOf(prize);
                     _lotteryPrizeService.Insert(new LotteryPrize()
                     {
+                        Index = prize.Index,
                         Value = prize.Value,
                         Volume = prize.Volume,
                         LotteryId = lottery.Id

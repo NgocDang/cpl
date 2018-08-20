@@ -47,7 +47,7 @@
                 else
                 {
                     <img src="~/images/lottery/lottery_result_win.jpg" class="img-fluid" />
-                    <p class="font-size-lottery-result font-weight-bold txt-stroke bottom-center text-center">Win!: @Model.Result @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") !</p>
+                    <p class="font-size-lottery-result font-weight-bold bottom-center text-center text-white">Win!: @Model.Result @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") !</p>
                 }
             </div>
         </div>

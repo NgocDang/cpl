@@ -8,6 +8,7 @@ namespace CPL.Domain
     public class LotteryPrize: Entity
     {
         public int Id { get; set; }
+        public int Index { get; set; }
         public decimal Value { get; set; }
         public int LotteryId { get; set; }
         public int Volume { get; set; }

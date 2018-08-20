@@ -1662,7 +1662,7 @@ input[type=number]:hover::-webkit-inner-spin-button {
 /*Large devices (desktops, 992px and up)*/
 @media (min-width: 992px) and (max-width: 1199.98px) {
     .font-size-lottery-result {
-        font-size: 25px;
+        font-size: 30px;
     }
     .font-size-lottery-result-long {
         font-size: 20px;
@@ -1672,7 +1672,7 @@ input[type=number]:hover::-webkit-inner-spin-button {
 /*Extra large devices (large desktops, 1200px and up)*/
 @media (min-width: 1200px) {
     .font-size-lottery-result {
-        font-size: 25px;
+        font-size: 30px;
     }
     .font-size-lottery-result-long {
         font-size: 20px;
