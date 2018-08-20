@@ -19,6 +19,8 @@
                                 </div>
                             </fieldset>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-6 col-12 pt-1">
                             <fieldset class="form-group">
                                 <label for="volume" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfLotteryTicket")</label>
@@ -37,79 +39,77 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <div class="col-12 pt-1">
-                            <div class="row">
-                                <div class="col-lg-6 col-12">
-                                    <fieldset class="form-group">
-                                        <label for="desktop-slide-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopSlideImage")</label>
-                                        @if (!string.IsNullOrEmpty(Model.DesktopSlideImage))
-                                        {
-                                            <input id="desktop-slide-image" type="file" value="@Model.DesktopSlideImage" class="form-control" accept="image/*" name="desktop-slide-image" maxlength="200">
-                                        }
-                                        else
-                                        {
-                                            <input id="desktop-slide-image" type="file" value="@Model.DesktopSlideImage" class="form-control" accept="image/*" name="desktop-slide-image" required maxlength="200">
-                                        }
-                                        <div class="invalid-feedback">
-                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopSlideImageRequired")
-                                        </div>
-                                    </fieldset>
+                    </div>
+                    <div class="row pt-1">
+                        <div class="col-lg-6 col-12">
+                            <fieldset class="form-group">
+                                <label for="desktop-slide-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopSlideImage")</label>
+                                @if (!string.IsNullOrEmpty(Model.DesktopSlideImage))
+                                {
+                                    <input id="desktop-slide-image" type="file" value="@Model.DesktopSlideImage" class="form-control" accept="image/*" name="desktop-slide-image" maxlength="200">
+                                }
+                                else
+                                {
+                                    <input id="desktop-slide-image" type="file" value="@Model.DesktopSlideImage" class="form-control" accept="image/*" name="desktop-slide-image" required maxlength="200">
+                                }
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopSlideImageRequired")
                                 </div>
-                                <div class="col-lg-6 col-12">
-                                    <fieldset class="form-group">
-                                        <label for="mobile-slide-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileSlideImage")</label>
-                                        @if (!string.IsNullOrEmpty(Model.MobileSlideImage))
-                                        {
-                                            <input id="mobile-slide-image" type="file" value="@Model.MobileSlideImage" class="form-control" accept="image/*" name="mobile-slide-image" maxlength="200">
-                                        }
-                                        else
-                                        {
-                                            <input id="mobile-slide-image" type="file" value="@Model.MobileSlideImage" class="form-control" accept="image/*" name="mobile-slide-image" required maxlength="200">
-                                        }
-                                        <div class="invalid-feedback">
-                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileSlideImageRequired")
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </div>
+                            </fieldset>
                         </div>
-                        <div class="col-12 pt-1">
-                            <div class="row">
-                                <div class="col-lg-6 col-12">
-                                    <fieldset class="form-group">
-                                        <label for="desktop-listing-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopListingImage")</label>
-                                        @if (!string.IsNullOrEmpty(Model.DesktopListingImage))
-                                        {
-                                            <input id="desktop-listing-image" type="file" value="@Model.DesktopListingImage" class="form-control" accept="image/*" name="desktop-listing-image" maxlength="200">
-                                        }
-                                        else
-                                        {
-                                            <input id="desktop-listing-image" type="file" value="@Model.DesktopListingImage" class="form-control" accept="image/*" name="desktop-listing-image" required maxlength="200">
-                                        }
-                                        <div class="invalid-feedback">
-                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopListingImageRequired")
-                                        </div>
-                                    </fieldset>
+                        <div class="col-lg-6 col-12">
+                            <fieldset class="form-group">
+                                <label for="mobile-slide-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileSlideImage")</label>
+                                @if (!string.IsNullOrEmpty(Model.MobileSlideImage))
+                                {
+                                    <input id="mobile-slide-image" type="file" value="@Model.MobileSlideImage" class="form-control" accept="image/*" name="mobile-slide-image" maxlength="200">
+                                }
+                                else
+                                {
+                                    <input id="mobile-slide-image" type="file" value="@Model.MobileSlideImage" class="form-control" accept="image/*" name="mobile-slide-image" required maxlength="200">
+                                }
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileSlideImageRequired")
                                 </div>
-                                <div class="col-lg-6 col-12">
-                                    <fieldset class="form-group">
-                                        <label for="mobile-listing-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileListingImage")</label>
-                                        @if (!string.IsNullOrEmpty(Model.MobileListingImage))
-                                        {
-                                            <input id="mobile-listing-image" type="file" value="@Model.MobileListingImage" class="form-control" accept="image/*" name="mobile-listing-image" maxlength="200">
-                                        }
-                                        else
-                                        {
-                                            <input id="mobile-listing-image" type="file" value="@Model.MobileListingImage" class="form-control" accept="image/*" name="mobile-listing-image" required maxlength="200">
-                                        }
-                                        <div class="invalid-feedback">
-                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileListingImageRequired")
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </div>
+                            </fieldset>
                         </div>
-                        <div class="col-12 pt-1">
+                    </div>
+                    <div class="row pt-1">
+                        <div class="col-lg-6 col-12">
+                            <fieldset class="form-group">
+                                <label for="desktop-listing-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopListingImage")</label>
+                                @if (!string.IsNullOrEmpty(Model.DesktopListingImage))
+                                {
+                                    <input id="desktop-listing-image" type="file" value="@Model.DesktopListingImage" class="form-control" accept="image/*" name="desktop-listing-image" maxlength="200">
+                                }
+                                else
+                                {
+                                    <input id="desktop-listing-image" type="file" value="@Model.DesktopListingImage" class="form-control" accept="image/*" name="desktop-listing-image" required maxlength="200">
+                                }
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopListingImageRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            <fieldset class="form-group">
+                                <label for="mobile-listing-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileListingImage")</label>
+                                @if (!string.IsNullOrEmpty(Model.MobileListingImage))
+                                {
+                                    <input id="mobile-listing-image" type="file" value="@Model.MobileListingImage" class="form-control" accept="image/*" name="mobile-listing-image" maxlength="200">
+                                }
+                                else
+                                {
+                                    <input id="mobile-listing-image" type="file" value="@Model.MobileListingImage" class="form-control" accept="image/*" name="mobile-listing-image" required maxlength="200">
+                                }
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileListingImageRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row pt-1">
+                        <div class="col-12">
                             <fieldset class="form-group">
                                 <label for="prize-image">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrizeImage")</label>
                                 @if (!string.IsNullOrEmpty(Model.PrizeImage))
@@ -125,7 +125,9 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <div class="col-12 pt-2">
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-12">
                             <h5 class="text-mute font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")</h5>
                             <hr />
                             <div class="invalid-feedback" id="prize-required">
