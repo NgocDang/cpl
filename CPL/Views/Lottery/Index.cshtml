@@ -16,8 +16,9 @@
         <div class="content-body">
             <div class="row">
                 <div class="col-12">
-                    <div class="card p-lg-1">
-                        <img src="~/images/lottery/@Model.SlideImage" class="img-fluid" alt="@Model.Title">
+                    <div class="card mb-md-1 mb-05">
+                        <img src="~/images/lottery/@Model.DesktopSlideImage" class="img-fluid d-md-block d-none" alt="@Model.Title">
+                        <img src="~/images/lottery/@Model.MobileSlideImage" class="img-fluid d-md-none d-block" alt="@Model.Title">
                     </div>
                 </div>
             </div>
@@ -29,11 +30,11 @@
             <div class="row mb-1">
                 <div class="col-lg-6 col-12 order-lg-0 order-last">
                     <div class="card">
-                        <img class="img-fluid" src="~/images/lottery/NEW-HP-01_78.png" />
+                        <img class="img-fluid" src="~/images/lottery/@Model.PrizeImage" />
                     </div>
                 </div>
                 <div class="col-lg-6 col-12 order-lg-1 order-first" id="div-buy-lottery">
-                    <div class="card">
+                    <div class="card mb-md-1 mb-05">
                         <div class="card-content">
                             <div class="card-body">
                                 <form id="form-purchase-lottery" novalidate>

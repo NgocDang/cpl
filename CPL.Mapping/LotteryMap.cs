@@ -22,9 +22,11 @@ namespace CPL.Mapping
             builder.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
             builder.Property(t => t.Volume).HasColumnName("Volume");
             builder.Property(t => t.Status).HasColumnName("Status");
-            builder.Property(t => t.SlideImage).HasColumnName("SlideImage");
+            builder.Property(t => t.DesktopSlideImage).HasColumnName("DesktopSlideImage");
+            builder.Property(t => t.MobileSlideImage).HasColumnName("MobileSlideImage");
             builder.Property(t => t.DesktopListingImage).HasColumnName("DesktopListingImage");
             builder.Property(t => t.MobileListingImage).HasColumnName("MobileListingImage");
+            builder.Property(t => t.PrizeImage).HasColumnName("PrizeImage");
             builder.Property(t => t.Title).HasColumnName("Title");
             builder.Property(t => t.UnitPrice).HasColumnName("UnitPrice");
         }
