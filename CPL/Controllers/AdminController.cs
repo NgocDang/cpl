@@ -764,8 +764,11 @@ namespace CPL.Controllers
                 var lotteryPrize = _lotteryPrizeService.Queryable().Where(x => x.LotteryId == viewModel.Id).ToList();
                 var numberOfOldPrize = lotteryPrize.Count();
 
-                // Order to add index
                 var orderedLotteryPrizes = viewModel.LotteryPrizes.OrderByDescending(x => x.Value).ToList();
+                for (int i = 0; i < orderedLotteryPrizes.Count; i++)
+                {
+                    orderedLotteryPrizes[i].Index = i + 1;
+                }
                 var numberOfNewPrize = orderedLotteryPrizes.Count - 1;
 
                 if (numberOfOldPrize >= numberOfNewPrize)
@@ -775,7 +778,7 @@ namespace CPL.Controllers
                         if (i < numberOfNewPrize)
                         {
                             var newPrize = lotteryPrize[i];
-                            newPrize.Index = i + 1;
+                            newPrize.Index = orderedLotteryPrizes[i].Index;
                             newPrize.Value = orderedLotteryPrizes[i].Value;
                             newPrize.Volume = orderedLotteryPrizes[i].Volume;
                             _lotteryPrizeService.Update(newPrize);
@@ -794,7 +797,7 @@ namespace CPL.Controllers
                         if (i < numberOfOldPrize)
                         {
                             var newPrize = lotteryPrize[i];
-                            newPrize.Index = i + 1;
+                            newPrize.Index = orderedLotteryPrizes[i].Index;
                             newPrize.Value = orderedLotteryPrizes[i].Value;
                             newPrize.Volume = orderedLotteryPrizes[i].Volume;
                             _lotteryPrizeService.Update(newPrize);
@@ -805,7 +808,7 @@ namespace CPL.Controllers
                             if (prize.Volume == 0 && prize.Value == 0) continue;
                             _lotteryPrizeService.Insert(new LotteryPrize()
                             {
-                                Index = i + 1,
+                                Index = prize.Index,
                                 Value = prize.Value,
                                 Volume = prize.Volume,
                                 LotteryId = viewModel.Id
