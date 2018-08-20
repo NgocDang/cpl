@@ -63,7 +63,7 @@ namespace CPL.Misc
                     var beingDeletedUser = sysUserService.Queryable().FirstOrDefault(x => x.Id == int.Parse(context.ActionArguments["id"].ToString()));
 
                     if (beingDeletedUser == null || !currentUser.IsAdmin || beingDeletedUser.IsAdmin)
-                        return new PermissionStatus { Code = PermissionStatus.UnAuthorizedCode, Text = PermissionStatus.UnAuthorizedText, Url = PermissionStatus.UnLoggedInUrl };
+                        return new PermissionStatus { Code = PermissionStatus.UnAuthorizedCode, Text = PermissionStatus.UnAuthorizedText, Url = PermissionStatus.UnAuthorizedTextUrl };
                 }
             }
             return new PermissionStatus { Code = PermissionStatus.OkCode, Text = PermissionStatus.OkText };

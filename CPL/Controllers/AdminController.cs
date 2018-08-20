@@ -166,6 +166,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult SearchAllUser(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -182,6 +183,7 @@ namespace CPL.Controllers
             });
         }
 
+        [Permission(EnumRole.Admin)]
         public IList<SysUserViewModel> SearchAllUserFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
@@ -304,6 +306,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult SearchKYCVerify(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -320,6 +323,7 @@ namespace CPL.Controllers
             });
         }
 
+        [Permission(EnumRole.Admin)]
         public IList<SysUserViewModel> SearchKYCVerifyFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
@@ -462,6 +466,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult SearchNews(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -478,6 +483,7 @@ namespace CPL.Controllers
             });
         }
 
+        [Permission(EnumRole.Admin)]
         public IList<NewsViewModel> SearchNewsFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
@@ -538,6 +544,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult SearchLottery(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -554,6 +561,7 @@ namespace CPL.Controllers
             });
         }
 
+        [Permission(EnumRole.Admin)]
         public IList<LotteryViewModel> SearchLotteryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
@@ -625,6 +633,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult SearchUserLotteryPrize(DataTableAjaxPostModel viewModel, int lotteryId, int lotteryPrizeId)
         {
             // action inside a standard controller
@@ -643,6 +652,7 @@ namespace CPL.Controllers
             return result;
         }
 
+        [Permission(EnumRole.Admin)]
         public IList<UserLotteryPrizeViewModel> SearchUserLotteryPrizeFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int lotteryId, int lotteryPrizeId)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
