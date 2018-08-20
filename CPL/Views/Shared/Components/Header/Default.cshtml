@@ -44,44 +44,45 @@
                 }
             </ul>
         </div>
-        @if (Model.User == null
-                    && ViewContext.RouteData.Values["Controller"].ToString() != "Authentication"
-                    && ViewContext.RouteData.Values["Action"].ToString() != "LogIn"
-                    && ViewContext.RouteData.Values["Action"].ToString() != "Register")
+        @if (ViewContext.RouteData.Values["Controller"].ToString() != "Authentication"
+                && ViewContext.RouteData.Values["Action"].ToString() != "LogIn"
+                && ViewContext.RouteData.Values["Action"].ToString() != "Register")
         {
-            <div class="navbar-header navbar-header-mobile-authentication d-md-none position-static">
-                <ul class="nav navbar-nav text-center">
-                    <li class="nav-item mobile-menu d-md-none">
-                        <a class="btn btn-sm btn-danger mr-1" asp-controller="Authentication" asp-action="Register">
-                            <i class="la la-user-plus"></i>
-                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</span>
-                        </a>
-                        <a class="btn btn-sm btn-white ml-1" asp-controller="Authentication" asp-action="LogIn">
-                            <i class="la la-sign-in"></i>
-                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            @if (Model.User == null)
+            {
+                <div class="navbar-header navbar-header-mobile-authentication d-md-none position-static">
+                    <ul class="nav navbar-nav text-center">
+                        <li class="nav-item mobile-menu d-md-none">
+                            <a class="btn btn-sm btn-danger mr-1" asp-controller="Authentication" asp-action="Register">
+                                <i class="la la-user-plus"></i>
+                                <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</span>
+                            </a>
+                            <a class="btn btn-sm btn-white ml-1" asp-controller="Authentication" asp-action="LogIn">
+                                <i class="la la-sign-in"></i>
+                                <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-        }
-        else
-        {
-            <div class="navbar-header navbar-header-mobile-authentication d-md-none position-static py-1">
-                <ul class="nav navbar-nav text-center">
-                    <li class="nav-item mobile-menu d-md-none">
-                        <a class="mr-3">
-                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Hi"), @Model.User.LastName</span>
-                        </a>
-                        <a class="ml-3">
-                            <span class="font-weight-bold">@Model.User.TokenAmount.ToString("N0") CPL</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-        }
+            }
+            else
+            {
+                <div class="navbar-header navbar-header-mobile-authentication d-md-none position-static py-1">
+                    <ul class="nav navbar-nav text-center">
+                        <li class="nav-item mobile-menu d-md-none">
+                            <a class="mr-3">
+                                <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Hi"), @Model.User.LastName</span>
+                            </a>
+                            <a class="ml-3">
+                                <span class="font-weight-bold">@Model.User.TokenAmount.ToString("N0") CPL</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
+            }
+        }
         <div class="navbar-container container center-layout px-0">
             <div class="collapse navbar-collapse" id="navbar-mobile">
                 <ul class="nav navbar-nav float-left navbar-left">
