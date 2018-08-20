@@ -43,7 +43,7 @@ namespace CPL.ViewComponents
                     .Query()
                     .Include(x => x.Lottery)
                     .Select()
-                    .Where(x => x.SysUserId == user.Id)
+                    .Where(x => x.SysUserId == user.Id && x.Lottery.UpdatedDate.HasValue)
                     .OrderByDescending(x => x.Lottery.UpdatedDate)
                     .FirstOrDefault();
 
