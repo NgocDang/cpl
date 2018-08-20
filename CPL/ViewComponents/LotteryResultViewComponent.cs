@@ -42,9 +42,11 @@ namespace CPL.ViewComponents
                 var lastestLottery = _lotteryHistoryService
                     .Query()
                     .Include(x => x.Lottery)
+                    .Include(x => x.LotteryPrize)
                     .Select()
                     .Where(x => x.SysUserId == user.Id && x.Lottery.UpdatedDate.HasValue)
                     .OrderByDescending(x => x.Lottery.UpdatedDate)
+                    .ThenByDescending(x => x.LotteryPrize.Value)
                     .FirstOrDefault()?.Lottery;
 
                 if (lastestLottery != null)
