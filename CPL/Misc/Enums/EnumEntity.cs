@@ -11,5 +11,6 @@ namespace CPL.Misc.Enums
         LotteryHistory,
         SysUser,
         Authentication,
+        Contact,
     }
 }

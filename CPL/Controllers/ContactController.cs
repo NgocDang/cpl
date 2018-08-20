@@ -14,7 +14,6 @@ using CPL.Common.Enums;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.Guest)]
     public class ContactController : Controller
     {
         private readonly ILangService _langService;
@@ -38,6 +37,7 @@ namespace CPL.Controllers
             this._unitOfWork = unitOfWork;
         }
 
+        [Permission(EnumRole.Guest, EnumEntity.Contact, EnumAction.Read)]
         public IActionResult Index()
         {
             var viewModel = new ContactIndexViewModel();
@@ -46,6 +46,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Guest, EnumEntity.Contact, EnumAction.Read)]
         public IActionResult Send(ContactIndexViewModel viewModel)
         {
             // Ensure we have a valid viewModel to work with
