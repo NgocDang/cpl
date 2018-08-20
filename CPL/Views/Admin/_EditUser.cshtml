@@ -47,7 +47,7 @@
                                 <input type="text" class="form-control mobile-input" name="Mobile" value="@Model.Mobile" id="Mobile" required autofocus="">
                                 <label class="mobile-label" for="Mobile">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Mobile")</label>
                                 <div class="invalid-feedback" id="mobile-msg">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidMobileNumber")
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidMobile")
                                 </div>
                             </fieldset>
                         </div>
