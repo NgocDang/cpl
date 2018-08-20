@@ -13,5 +13,6 @@ namespace CPL.Misc.Enums
         Authentication,
         Contact,
         Dashboard,
+        DepositAndWithdraw,
     }
 }
