@@ -33,6 +33,7 @@
             </div>
         </div>
         <div class="content-body">
+            <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")</h6>
             @await Component.InvokeAsync("LotteryHistory", new LotteryHistoryViewComponentViewModel { CreatedDate = Model.CreatedDate, LotteryId = Model.LotteryId, SysUserId = Model.SysUserId })
         </div>
     </div>

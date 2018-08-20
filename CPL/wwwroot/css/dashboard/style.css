@@ -1453,7 +1453,7 @@ ul.game-menu li.active {
 /*Start ==> Token balance view component*/
 .txt-stroke {
     -webkit-text-fill-color: red;
-    -webkit-text-stroke-width: 1px;
+    /*-webkit-text-stroke-width: 1px;*/
     -webkit-text-stroke-color: #fff;
     font-weight: bolder;
 }
@@ -1635,7 +1635,7 @@ input[type=number]:hover::-webkit-inner-spin-button {
         font-size: 15px;
     }
     .font-size-lottery-result-long {
-        font-size: 11px;
+        font-size: 12px;
     }
 }   
 
@@ -1645,7 +1645,7 @@ input[type=number]:hover::-webkit-inner-spin-button {
         font-size: 18px;
     }
     .font-size-lottery-result-long {
-        font-size: 11px;
+        font-size: 12px;
     }
 }
 
