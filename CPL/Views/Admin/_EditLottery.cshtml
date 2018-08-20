@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-12">
                             <fieldset class="form-label-group">
-                                @if (Model != null)
+                                @if (Model.Title != null)
                                 {
                                     <input name="title" id="title" type="text" value="@Model.Title" class="form-control" required autofocus />
                                 }
@@ -29,7 +29,7 @@
                         <div class="col-lg-6 col-12 pt-1">
                             <fieldset class="form-group">
                                 <label for="volume" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfLotteryTicket")</label>
-                                @if (Model != null)
+                                @if (Model.Volume != null)
                                 {
                                     <input name="volume" id="volume" type="number" min="1" value="@Model.Volume" class="form-control" required autofocus />
                                 }
@@ -45,7 +45,7 @@
                         <div class="col-lg-6 col-12 pt-1">
                             <fieldset class="form-group">
                                 <label for="ticket-price" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketPrice")</label>
-                                @if (Model != null)
+                                @if (Model.UnitPrice != null)
                                 {
                                     <input name="ticket-price" id="ticket-price" type="number" min="1" value="@Model.UnitPrice" class="form-control" required autofocus />
                                 }
@@ -60,7 +60,7 @@
                         </div>
                         <div class="col-12 pt-1">
                             <fieldset class="form-label-group">
-                                @if (Model != null)
+                                @if (Model.SlideImage != null)
                                 {
                                     <input id="slide-image" type="file" value="@Model.SlideImage" class="form-control pt-2" accept="image/*" name="slide-image" maxlength="200">
                                 }
@@ -78,7 +78,7 @@
                             <div class="row">
                                 <div class="col-lg-6 col-12">
                                     <fieldset class="form-label-group">
-                                        @if (Model != null)
+                                        @if (Model.DesktopListingImage != null)
                                         {
                                             <input id="desktop-image" type="file" value="@Model.DesktopListingImage" class="form-control pt-2" accept="image/*" name="slide-image" maxlength="200">
                                         }
@@ -94,7 +94,7 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <fieldset class="form-label-group">
-                                        @if (Model != null)
+                                        @if (Model.MobileListingImage != null)
                                         {
                                             <input id="mobile-image" type="file" value="@Model.MobileListingImage" class="form-control pt-2" accept="image/*" name="slide-image" maxlength="200">
                                         }
