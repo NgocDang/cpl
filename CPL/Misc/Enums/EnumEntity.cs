@@ -12,5 +12,6 @@ namespace CPL.Misc.Enums
         SysUser,
         Authentication,
         Contact,
+        Dashboard,
     }
 }

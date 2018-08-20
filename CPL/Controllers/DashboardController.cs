@@ -14,7 +14,6 @@ using System.Linq;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.User)]
     public class DashboardController : Controller
     {
         private readonly ILangService _langService;
@@ -53,6 +52,7 @@ namespace CPL.Controllers
             this._pricePredictionHistoryService = pricePredictionHistoryService;
         }
 
+        [Permission(EnumRole.User, EnumEntity.Dashboard, EnumAction.Read)]
         public IActionResult Index()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
