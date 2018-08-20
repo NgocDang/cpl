@@ -9,6 +9,7 @@ namespace CPL.Misc.Enums
     {
         CoinTransaction,
         LotteryHistory,
-        SysUser
+        SysUser,
+        Authentication,
     }
 }

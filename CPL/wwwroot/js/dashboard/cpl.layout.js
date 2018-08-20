@@ -1,6 +1,7 @@
 ﻿var Layout = {
     init: function () {
         Layout.bindConfirmLogOut();
+        Layout.bindDropdownSubMenu();
     },
     bindLogOut: function () {
         $('a#logout-confirmation').on('click', function () {
@@ -47,6 +48,13 @@
                 complete: function (data) {
                 }
             });
+        });
+    },
+    bindDropdownSubMenu: function () {
+        $('.header-navbar').on("click", "#btn-dropdown-item", function (e) {
+            $(this).next('ul').toggle();
+            e.stopPropagation();
+            e.preventDefault();
         });
     }
 };
