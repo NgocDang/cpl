@@ -73,6 +73,16 @@ namespace CPL.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        public IActionResult Error403()
+        {
+            return View();
+        }
+
+        public IActionResult Error403Ajax()
+        {
+            return StatusCode(403);
+        }
+
         public void UpdateLangDetail()
         {
             LangDetailHelper.LangDetails = _langDetailService.Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
