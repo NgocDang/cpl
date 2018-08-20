@@ -25,9 +25,8 @@
     <div class="col-sm-6 col-12">
         <div class="text-center">
             <div class="img-container p-0">
-                <p class="font-size-lottery-result txt-stroke top-center text-center ">@Model.FirstName @Model.LastName</p>
 
-                @if (!Model.Status.HasValue)
+                @if (!Model.LastestLotteryStatus.HasValue)
                 {
                     // Let buy lottery
                     <img src="~/images/lottery/lottery_result_login.jpg" class="img-fluid" />
@@ -35,8 +34,9 @@
                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LetBuyLottery")
                     </p>
                 }
-                else if (Model.Status == false)
+                else if (Model.LastestLotteryStatus == false)
                 {
+                    <p class="font-size-lottery-result txt-stroke top-center text-center ">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name"): @Model.LastestLotteryTitle</p>
                     <img src="~/images/lottery/lottery_result_lose.jpg" class="img-fluid" />
                     <p class="font-size-lottery-result-long font-weight-bold text-white bottom-center text-center ">
                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SorryForThisTime"),
@@ -46,8 +46,10 @@
                 }
                 else
                 {
+                    <p class="font-size-lottery-result txt-stroke top-center text-center ">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name"): @Model.LastestLotteryTitle</p>
                     <img src="~/images/lottery/lottery_result_win.jpg" class="img-fluid" />
-                    <p class="font-size-lottery-result font-weight-bold bottom-center text-center text-white">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win"): @Model.Result# @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") !</p>
+                    <a href="/History/Lottery?lotteryId=@Model.LastestLotteryId" target="_blank" class="top-right text-right text-info"><u>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "OtherResult")</u></a>
+                    <p class="font-size-lottery-result font-weight-bold bottom-center text-center text-white">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win"): @Model.LastestLotteryResult# @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") !</p>
                 }
             </div>
         </div>

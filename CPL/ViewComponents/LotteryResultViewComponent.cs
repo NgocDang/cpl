@@ -13,16 +13,19 @@ namespace CPL.ViewComponents
         private readonly ISettingService _settingService;
         private readonly ISysUserService _sysUserService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
+        private readonly ILotteryService _lotteryService;
 
         public LotteryResultViewComponent(IMapper mapper,
             ISettingService settingService,
             ISysUserService sysUserService,
-            ILotteryHistoryService lotteryHistoryService)
+            ILotteryHistoryService lotteryHistoryService,
+            ILotteryService lotteryService)
         {
             this._mapper = mapper;
             this._settingService = settingService;
             this._sysUserService = sysUserService;
             this._lotteryHistoryService = lotteryHistoryService;
+            this._lotteryService = lotteryService;
         }
 
         public IViewComponentResult Invoke(int? lotteryId)
@@ -35,24 +38,37 @@ namespace CPL.ViewComponents
                 viewModel.ETHToTokenRate = (1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value)) / ethToBTCRate;
                 viewModel.BTCToTokenRate = 1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
 
-                // Get lottery result
-                var status = _lotteryHistoryService
+                // Get lastest game
+                var lastestLottery = _lotteryService
                     .Queryable()
-                    .Where(x => x.SysUserId == user.Id)
-                    .Any();
+                    .Where(x => x.UpdatedDate.HasValue)
+                    .OrderByDescending(x => x.UpdatedDate)
+                    .FirstOrDefault();
 
-                if (status)
+                if (lastestLottery != null)
                 {
-                    var lotteryHistory = _lotteryHistoryService
-                        .Query()
-                        .Include(x => x.LotteryPrize)
-                        .Select()
-                        .Where(x => x.SysUserId == user.Id && x.LotteryPrizeId.HasValue)
-                        .OrderByDescending(x => x.LotteryPrize.Value)
-                        .FirstOrDefault();
+                    // Get lottery result
+                    var status = _lotteryHistoryService
+                        .Queryable()
+                        .Where(x => x.SysUserId == user.Id && x.LotteryId == lastestLottery.Id)
+                        .Any();
 
-                    viewModel.Status = lotteryHistory != null ? true : false;
-                    viewModel.Result = lotteryHistory?.LotteryPrize.Index.ToString();
+                    // set status
+                    if (status)
+                    {
+                        var lotteryHistory = _lotteryHistoryService
+                            .Query()
+                            .Include(x => x.LotteryPrize)
+                            .Select()
+                            .Where(x => x.SysUserId == user.Id && x.LotteryPrizeId.HasValue && x.LotteryId == lastestLottery.Id)
+                            .OrderByDescending(x => x.LotteryPrize.Value)
+                            .FirstOrDefault();
+
+                        viewModel.LastestLotteryStatus = lotteryHistory != null ? true : false;
+                        viewModel.LastestLotteryTitle = lastestLottery.Title;
+                        viewModel.LastestLotteryId = lastestLottery.Id;
+                        viewModel.LastestLotteryResult = lotteryHistory?.LotteryPrize.Index.ToString();
+                    }
                 }
 
                 return View(viewModel);

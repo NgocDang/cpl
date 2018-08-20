@@ -13,9 +13,9 @@ namespace CPL.Models
         public decimal BTCToTokenRate { get; set; }
         public decimal ETHToTokenRate { get; set; }
 
-        public bool? Status { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Result { get; set; }
+        public int LastestLotteryId { get; set; }
+        public bool? LastestLotteryStatus { get; set; }
+        public string LastestLotteryTitle { get; set; }
+        public string LastestLotteryResult { get; set; }
     }
 }
