@@ -51,19 +51,25 @@ namespace CPL.Misc
 
             SetRole(Role);
 
-            var isAuthorized = AuthorizePermission.IsLoggedIn(context) && AuthorizePermission.IsACL(context, Entity, Action);
-
-
-
-
-            //var user = context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            //if (Role == EnumRole.User && user == null)
-            //    context.Result = new RedirectResult("/Authentication/LogIn");
-            //else if (Role == EnumRole.Admin && user == null)
-            //    context.Result = new RedirectResult("/Authentication/LogIn");
-            //else if (Role == EnumRole.Admin && user != null && !user.IsAdmin)
-            //    context.Result = new RedirectResult("/Error/Error403");
-            //base.OnActionExecuting(context);
+            var isAuthenticated = AuthorizePermission.IsLoggedIn(context);
+            if (isAuthenticated.Code == PermissionStatus.OkCode)
+            {
+                var isACL = AuthorizePermission.IsACL(context, Entity, Action);
+                if (isACL.Code == PermissionStatus.OkCode)
+                {
+                    base.OnActionExecuting(context);
+                }
+                else
+                {
+                    context.Result = new RedirectResult(isACL.Url);
+                    return;
+                }
+            }
+            else
+            {
+                context.Result = new RedirectResult(isAuthenticated.Url);
+                return;
+            }
         }
 
         public void SetRole(EnumRole role)
@@ -84,138 +90,6 @@ namespace CPL.Misc
         }
     }
 
-    public interface IAuthorizePermission
-    {
-        bool IsLoggedIn(ActionExecutingContext context);
-        bool IsACL(ActionExecutingContext context, EnumEntity? entity, EnumAction? action);
-    }
+    
 
-    public class BaseAuthorizePermission: IAuthorizePermission
-    {
-        public virtual bool IsACL(ActionExecutingContext context, EnumEntity? entity, EnumAction? action)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsLoggedIn(ActionExecutingContext context)
-        {
-            return context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser") != null;
-        }
-    }
-
-    public class GuestAuthorizePermission : BaseAuthorizePermission, IAuthorizePermission
-    {
-        public override bool IsACL(ActionExecutingContext context, EnumEntity? entity, EnumAction? action)
-        {
-            return true;
-        }
-    }
-
-    public class AdminAuthorizePermission : BaseAuthorizePermission, IAuthorizePermission
-    {
-        public override bool IsACL(ActionExecutingContext context, EnumEntity? entity, EnumAction? action)
-        {
-
-
-
-            return true;
-        }
-    }
-
-    public class UserAuthorizePermission : BaseAuthorizePermission, IAuthorizePermission
-    {
-        public override bool IsACL(ActionExecutingContext context, EnumEntity? entity, EnumAction? action)
-        {
-
-
-            return false;
-        }
-    }
-
-
-    public class TransactionAuthorize : IAuthorize
-    {
-        public ActionExecutingContext Context { get; set; }
-        public EnumAction? Action { get; set; }
-
-        public TransactionAuthorize(ActionExecutingContext context, EnumRole role, EnumAction? action)
-        {
-            this.Context = context;
-            this.Action = action;
-        }
-
-        public bool IsACL()
-        {
-            var sysUserService = (ISysUserService)Context.HttpContext.RequestServices.GetService(typeof(ISysUserService));
-            var transactionHistoryService = (ICoinTransactionService)Context.HttpContext.RequestServices.GetService(typeof(ICoinTransactionService));
-
-            var currentUser = Context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            if (Context.RouteData.Values["controller"].ToString() == "History" && Context.RouteData.Values["action"].ToString() == "TransactionDetail")
-            {
-                var currentUserTransactionIdList = transactionHistoryService.Queryable().Where(x => x.SysUserId == currentUser.Id).Select(x => x.Id).ToList();
-                var currentTransactionId = Context.RouteData.Values["id"].ToString();
-                if (!currentUser.IsAdmin && !string.IsNullOrEmpty(currentTransactionId) && !currentUserTransactionIdList.Contains(int.Parse(currentTransactionId)))
-                    return false;
-            }
-            else if (Context.RouteData.Values["controller"].ToString() == "History" && Context.RouteData.Values["action"].ToString() == "Transaction")
-            {
-                if (!string.IsNullOrEmpty(Context.HttpContext.Request.Query["sysUserId"]))
-                {
-                    if (!currentUser.IsAdmin && currentUser.Id != int.Parse(Context.HttpContext.Request.Query["sysUserId"]))
-                        return false;
-                }
-            }
-            return true;
-        }
-    }
-
-    public class LotteryHistoryAuthorize : IAuthorize
-    {
-        public ActionExecutingContext Context { get; set; }
-        public EnumAction? Action { get; set; }
-
-        public LotteryHistoryAuthorize(ActionExecutingContext context, EnumAction? action)
-        {
-            this.Context = context;
-            this.Action = action;
-        }
-
-        public bool IsAuthorize()
-        {
-            var sysUserService = (ISysUserService)Context.HttpContext.RequestServices.GetService(typeof(ISysUserService));
-            var transactionHistoryService = (ICoinTransactionService)Context.HttpContext.RequestServices.GetService(typeof(ICoinTransactionService));
-
-            var currentUser = Context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            if (!string.IsNullOrEmpty(Context.HttpContext.Request.Query["sysUserId"]) && !currentUser.IsAdmin && currentUser.Id != int.Parse(Context.HttpContext.Request.Query["sysUserId"].ToString()))
-                return false;
-            return true;
-        }
-    }
-
-    public class SysUserAuthorize : IAuthorize
-    {
-        public ActionExecutingContext Context { get; set; }
-        public EnumAction? Action { get; set; }
-
-        public SysUserAuthorize(ActionExecutingContext context, EnumAction? action)
-        {
-            this.Context = context;
-            this.Action = action;
-        }
-
-        public bool IsAuthorize()
-        {
-            var sysUserService = (ISysUserService)Context.HttpContext.RequestServices.GetService(typeof(ISysUserService));
-
-            var currentUser = Context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-
-            if (Action == EnumAction.Delete)
-            {
-                var beingDeletedUser = sysUserService.Queryable().FirstOrDefault(x => x.Id == int.Parse(Context.ActionArguments["id"].ToString()));
-                if (beingDeletedUser == null || !currentUser.IsAdmin || beingDeletedUser.IsAdmin)
-                    return false;
-            }
-            return true;
-        }
-    }
 }

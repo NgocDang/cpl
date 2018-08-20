@@ -237,6 +237,7 @@ namespace CPL.Controllers
         #endregion
 
         #region KYC
+        [Permission(EnumRole.Admin)]
         public IActionResult KYCVerify()
         {
             var viewModel = new KYCVerifyViewModel();
@@ -244,6 +245,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public IActionResult UpdateKYCVerify(int id)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
@@ -286,6 +288,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public IActionResult CancelKYCVerify(int id)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
@@ -379,12 +382,14 @@ namespace CPL.Controllers
         #endregion
 
         #region News
+        [Permission(EnumRole.Admin)]
         public IActionResult News()
         {
             var viewModel = new NewsViewModel();
             return View(viewModel);
         }
 
+        [Permission(EnumRole.Admin)]
         public IActionResult EditNews(int id)
         {
             var news = new NewsViewModel();
@@ -396,6 +401,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult SaveEditNews(NewsViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -423,6 +429,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult AddNews(NewsViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -439,6 +446,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult DeleteNews(int id)
         {
             var news = _newsService.Queryable()
@@ -523,6 +531,7 @@ namespace CPL.Controllers
         #endregion
 
         #region Lottery
+        [Permission(EnumRole.Admin)]
         public IActionResult Lottery()
         {
             return View();
@@ -596,6 +605,7 @@ namespace CPL.Controllers
             }
         }
 
+        [Permission(EnumRole.Admin)]
         public IActionResult ViewLottery(int id)
         {
             var lottery = new LotteryViewModel();
@@ -608,6 +618,7 @@ namespace CPL.Controllers
             return PartialView("_ViewLottery", lottery);
         }
 
+        [Permission(EnumRole.Admin)]
         public IActionResult ViewLotteryPrize(UserLotteryPrizeViewModel viewModel)
         {
             return PartialView("_ViewLotteryPrize", viewModel);
@@ -693,6 +704,7 @@ namespace CPL.Controllers
             }
         }
 
+        [Permission(EnumRole.Admin)]
         public IActionResult EditLottery(int id)
         {
             var lottery = new LotteryViewModel();
@@ -705,6 +717,7 @@ namespace CPL.Controllers
             return PartialView("_EditLottery", lottery);
         }
 
+        [Permission(EnumRole.Admin)]
         public IActionResult AddLottery()
         {
             var lottery = new LotteryViewModel();
@@ -712,6 +725,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult UpdateLottery(LotteryViewModel viewModel)
         {
             try
@@ -841,6 +855,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult AddLottery(LotteryViewModel viewModel)
         {
             try
@@ -912,6 +927,7 @@ namespace CPL.Controllers
             }
         }
 
+        [Permission(EnumRole.Admin)]
         public IActionResult ConfirmDeleteLottery(int id)
         {
             ViewData["gameId"] = id;
@@ -919,6 +935,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult DeleteLottery(int id)
         {
             try
@@ -942,6 +959,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult ActivateLottery(int id)
         {
             try
