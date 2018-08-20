@@ -45,7 +45,7 @@ namespace CPL.ViewComponents
                     .Select()
                     .Where(x => x.SysUserId == user.Id && x.Lottery.UpdatedDate.HasValue)
                     .OrderByDescending(x => x.Lottery.UpdatedDate)
-                    .FirstOrDefault();
+                    .FirstOrDefault().Lottery;
 
                 if (lastestLottery != null)
                 {
@@ -62,8 +62,8 @@ namespace CPL.ViewComponents
                             .FirstOrDefault();
 
                         viewModel.LastestLotteryStatus = lotteryHistory != null ? true : false;
-                        viewModel.LastestLotteryTitle = lastestLottery.Lottery.Title;
-                        viewModel.LastestLotteryId = lastestLottery.Lottery.Id;
+                        viewModel.LastestLotteryTitle = lastestLottery.Title;
+                        viewModel.LastestLotteryId = lastestLottery.Id;
                         viewModel.LastestLotteryResult = lotteryHistory?.LotteryPrize.Index.ToString();
                     }
                 }
