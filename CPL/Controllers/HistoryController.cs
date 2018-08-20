@@ -15,7 +15,6 @@ using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.User)]
     public class HistoryController : Controller
     {
         private readonly ILotteryHistoryService _lotteryHistoryService;
@@ -38,6 +37,7 @@ namespace CPL.Controllers
             this._coinTransactionService = coinTransactionService;
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult Game()
         {
             var viewModel = new GameHistoryIndexViewModel();
@@ -46,6 +46,7 @@ namespace CPL.Controllers
         }
 
         #region Lottery History
+        [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
         public IActionResult Lottery(DateTime? createdDate, int? lotteryId, int sysUserId)
         {
             var viewModel = new LotteryHistoryIndexViewModel
@@ -393,6 +394,7 @@ namespace CPL.Controllers
         #endregion
 
         #region Transaction History
+        [Permission(EnumRole.User, EnumEntity.CoinTransaction, EnumAction.Read)]
         public IActionResult Transaction(TransactionHistoryIndexViewModel viewModel)
         {
             return View(viewModel);
@@ -485,7 +487,8 @@ namespace CPL.Controllers
 
             return transactionHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
         }
-       
+
+        [Permission(EnumRole.User, EnumEntity.CoinTransaction, EnumAction.Read)]
         public IActionResult TransactionDetail(int id)
         {
             //var sysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
@@ -520,6 +523,7 @@ namespace CPL.Controllers
 
 
         [HttpPost]
+        [Permission(EnumRole.User)]
         public IActionResult GetDataPieChart()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
@@ -549,6 +553,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.User)]
         public IActionResult GetDataLineChart()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);

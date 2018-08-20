@@ -227,7 +227,7 @@
                         $("#btn-delete-user").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-delete-user").text());
                     },
                     data: {
-                        Id: $("#Id").val()
+                        id: $("#Id").val()
                     },
                     success: function (data) {
                         if (data.success) {
