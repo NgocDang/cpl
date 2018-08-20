@@ -1,8 +1,9 @@
-﻿@{
+﻿@using X.PagedList.Mvc.Core;
+@{
     Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News");
 }
-@using X.PagedList.Mvc.Core; @*import this so we get our HTML Helper*@
+
 @model X.PagedList.IPagedList<NewsViewModel>
 
 @section styles{

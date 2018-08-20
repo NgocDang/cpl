@@ -3,15 +3,28 @@
     <div class="owl-carousel owl-theme owl-loaded mt-sm-1 mt-0">
         <div class="owl-stage-outer">
             <div class="owl-stage">
-                @if (Model.Slides != null)
+                @*@if (Model.Slides != null)
                 {
                     @foreach (var slide in Model.Slides)
                     {
                         <div class="owl-item">
-                            <a asp-controller="Lottery" asp-action="Index" asp-route-id="@slide.Id"><img src="~/images/lottery/@slide.SlideImage" class="img-fluid img-border" /></a>
+                            <a class="d-md-block d-none" asp-controller="Lottery" asp-action="Index" asp-route-id="@slide.Id"><img src="~/images/lottery/@slide.DesktopSlideImage" class="img-fluid img-border" /></a>
+                            <a class="d-md-none d-block" asp-controller="Lottery" asp-action="Index" asp-route-id="@slide.Id"><img src="~/images/lottery/@slide.MobileSlideImage" class="img-fluid img-border" /></a>
                         </div>
                     }
-                }
+                }*@
+                <div class="owl-item">
+                    <img src="~/images/lottery/1_slide_probability.jpg" class="img-fluid img-border" />
+                </div>
+                <div class="owl-item">
+                    <img src="~/images/lottery/2_slide_crypto_lot.jpg" class="img-fluid img-border" />
+                </div>
+                <div class="owl-item">
+                    <img src="~/images/lottery/3_slide_lottery.jpg" class="img-fluid img-border" />
+                </div>
+                <div class="owl-item">
+                    <img src="~/images/lottery/4_slide_smartcontract.jpg" class="img-fluid img-border" />
+                </div>
             </div>
         </div>
     </div>

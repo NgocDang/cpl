@@ -48,10 +48,10 @@
                             return "<p class='text-sm-center'><span class='badge badge-info'>" + $("#pending").val() + "</span></p>";
                         }
                         else if (full.status == 2) {
-                            return "<p class='text-sm-center><span class='badge badge-success'>" + $("#active").val() + "</span></p>";
+                            return "<p class='text-sm-center'><span class='badge badge-success'>" + $("#active").val() + "</span></p>";
                         }
                         else if (full.status == 3) {
-                            return "<p class='text-sm-center><span class='badge badge-secondary'>" + $("#completed").val() + "</span></p>";
+                            return "<p class='text-sm-center'><span class='badge badge-secondary'>" + $("#completed").val() + "</span></p>";
                         }
                     }
                 },

@@ -14,7 +14,8 @@ namespace CPL.Models
     public class HomeSlideViewModel
     {
         public int Id { get; set; }
-        public string SlideImage { get; set; }
+        public string DesktopSlideImage { get; set; }
+        public string MobileSlideImage { get; set; }
     }
 
     public class HomeLotteryViewModel
