@@ -1646,5 +1646,10 @@ input[type=number]:hover::-webkit-inner-spin-button {
     .header-navbar .navbar-header .open-navbar-container i {
         font-size: 2.5rem;
     }
+
+    .dropdown-menu .dropdown-submenu > a:after, .dropdown-menu .dropdown-submenu > button:after {
+        right: 7px !important;
+        font-size: 1.2rem;
+    }
 }
    
