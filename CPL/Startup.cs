@@ -44,6 +44,7 @@ namespace CPL
             services
                 .AddScoped<IRepositoryAsync<LangDetail>, Repository<LangDetail>>()
                 .AddScoped<IRepositoryAsync<Lang>, Repository<Lang>>()
+                .AddScoped<IRepositoryAsync<LangContent>, Repository<LangContent>>()
                 .AddScoped<IRepositoryAsync<Setting>, Repository<Setting>>()
                 .AddScoped<IRepositoryAsync<SysUser>, Repository<SysUser>>()
                 .AddScoped<IRepositoryAsync<Template>, Repository<Template>>()
@@ -78,6 +79,7 @@ namespace CPL
             services
                 .AddTransient<ILangService, LangService>()
                 .AddTransient<ILangDetailService, LangDetailService>()
+                .AddTransient<ILangContentService, LangContentService>()
                 .AddTransient<ISysUserService, SysUserService>()
                 .AddTransient<ISettingService, SettingService>()
                 .AddTransient<ITemplateService, TemplateService>()

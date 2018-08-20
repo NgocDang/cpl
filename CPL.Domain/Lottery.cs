@@ -10,12 +10,15 @@ namespace CPL.Domain
         public int Id { get; set; }
         public int Phase { get; set; }
         public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         public int Volume { get; set; }
         public int Status { get; set; }
         public string Title { get; set; }
         public string DesktopListingImage { get; set; }
         public string MobileListingImage { get; set; }
-        public string SlideImage { get; set; }
+        public string DesktopSlideImage { get; set; }
+        public string MobileSlideImage { get; set; }
+        public string PrizeImage { get; set; }
         public int UnitPrice { get; set; }
 
         public virtual ICollection<LotteryPrize> LotteryPrizes { get; set; }

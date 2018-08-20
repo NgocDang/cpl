@@ -13,15 +13,19 @@ namespace CPL.Models
         public DateTime CreatedDate { get; set; }
         public int Volume { get; set; }
         public int Status { get; set; }
-        public string SlideImage { get; set; }
+        public string DesktopSlideImage { get; set; }
+        public string MobileSlideImage { get; set; }
         public string DesktopListingImage { get; set; }
         public string MobileListingImage { get; set; }
+        public string PrizeImage { get; set; }
         public string Title { get; set; }
         public int UnitPrice { get; set; }
 
         public string CreatedDateInString { get; set; }
 
-        public IFormFile SlideImageFile { get; set; }
+        public IFormFile DesktopSlideImageFile { get; set; }
+        public IFormFile MobileSlideImageFile { get; set; }
+        public IFormFile PrizeImageFile { get; set; }
         public IFormFile DesktopListingImageFile { get; set; }
         public IFormFile MobileListingImageFile { get; set; }
         public bool IsPublished { get; set; }

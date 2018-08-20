@@ -752,40 +752,52 @@ namespace CPL.Controllers
                 else
                     lottery.Status = (int)EnumLotteryGameStatus.ACTIVE;
 
-                // slider image
+                var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
+                string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                // Desktop slide image
+                if (viewModel.DesktopSlideImageFile != null)
+                {
+                    var desktopSlideImage = $"{lottery.Phase.ToString()}_ds_{timestamp}_{viewModel.DesktopSlideImageFile.FileName}";
+                    var desktopSlideImagePath = Path.Combine(pathLottery, desktopSlideImage);
+                    viewModel.DesktopSlideImageFile.CopyTo(new FileStream(desktopSlideImagePath, FileMode.Create));
+                    lottery.DesktopSlideImage = desktopSlideImage;
+                }
+
+                // Mobile slide image
+                if (viewModel.MobileSlideImageFile != null)
+                {
+                    var mobileSlideImage = $"{lottery.Phase.ToString()}_ms_{timestamp}_{viewModel.MobileSlideImageFile.FileName}";
+                    var mobileSlideImagePath = Path.Combine(pathLottery, mobileSlideImage);
+                    viewModel.MobileSlideImageFile.CopyTo(new FileStream(mobileSlideImagePath, FileMode.Create));
+                    lottery.MobileSlideImage = mobileSlideImage;
+                }
+
+                // desktop listing image
                 if (viewModel.DesktopListingImageFile != null)
                 {
-                    var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
-                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
-
-                    var sliderImage = $"{lottery.Phase.ToString()}_Slider_{timestamp}_{viewModel.SlideImageFile.FileName}";
-                    var sliderImagePath = Path.Combine(pathLottery, sliderImage);
-                    viewModel.SlideImageFile.CopyTo(new FileStream(sliderImagePath, FileMode.Create));
-                    lottery.SlideImage = sliderImage;
+                    var desktopListingImage = $"{lottery.Phase.ToString()}_dl_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
+                    var desktopListingImagePath = Path.Combine(pathLottery, desktopListingImage);
+                    viewModel.DesktopListingImageFile.CopyTo(new FileStream(desktopListingImagePath, FileMode.Create));
+                    lottery.DesktopListingImage = desktopListingImage;
                 }
 
-                // desktop image
+                // mobile listing image
                 if (viewModel.MobileListingImageFile != null)
                 {
-                    var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
-                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
-
-                    var desktopImage = $"{lottery.Phase.ToString()}_Desktop_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
-                    var desktopImagePath = Path.Combine(pathLottery, desktopImage);
-                    viewModel.DesktopListingImageFile.CopyTo(new FileStream(desktopImagePath, FileMode.Create));
-                    lottery.DesktopListingImage = desktopImage;
+                    var mobileListingImage = $"{lottery.Phase.ToString()}_ml_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
+                    var mobileListingImagePath = Path.Combine(pathLottery, mobileListingImage);
+                    viewModel.MobileListingImageFile.CopyTo(new FileStream(mobileListingImagePath, FileMode.Create));
+                    lottery.MobileListingImage = mobileListingImage;
                 }
 
-                // mobile image
-                if (viewModel.SlideImageFile != null)
+                // prize image
+                if (viewModel.PrizeImageFile != null)
                 {
-                    var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
-                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
-
-                    var mobileImage = $"{lottery.Phase.ToString()}_Mobile_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
-                    var mobileImagePath = Path.Combine(pathLottery, mobileImage);
-                    viewModel.MobileListingImageFile.CopyTo(new FileStream(mobileImagePath, FileMode.Create));
-                    lottery.MobileListingImage = mobileImage;
+                    var prizeImage = $"{lottery.Phase.ToString()}_p_{timestamp}_{viewModel.PrizeImageFile.FileName}";
+                    var prizeImagePath = Path.Combine(pathLottery, prizeImage);
+                    viewModel.PrizeImageFile.CopyTo(new FileStream(prizeImagePath, FileMode.Create));
+                    lottery.PrizeImage = prizeImage;
                 }
 
                 _lotteryService.Update(lottery);
@@ -793,7 +805,14 @@ namespace CPL.Controllers
                 // lottery prize
                 var lotteryPrize = _lotteryPrizeService.Queryable().Where(x => x.LotteryId == viewModel.Id).ToList();
                 var numberOfOldPrize = lotteryPrize.Count();
-                var numberOfNewPrize = viewModel.LotteryPrizes.Count - 1;
+
+                // Order to set index of the prize
+                var orderedLotteryPrizes = viewModel.LotteryPrizes.OrderByDescending(x => x.Value).ToList();
+                for (int i = 0; i < orderedLotteryPrizes.Count; i++)
+                {
+                    orderedLotteryPrizes[i].Index = i + 1;
+                }
+                var numberOfNewPrize = orderedLotteryPrizes.Count - 1;
 
                 if (numberOfOldPrize >= numberOfNewPrize)
                 {
@@ -802,8 +821,9 @@ namespace CPL.Controllers
                         if (i < numberOfNewPrize)
                         {
                             var newPrize = lotteryPrize[i];
-                            newPrize.Value = viewModel.LotteryPrizes[i].Value;
-                            newPrize.Volume = viewModel.LotteryPrizes[i].Volume;
+                            newPrize.Index = orderedLotteryPrizes[i].Index;
+                            newPrize.Value = orderedLotteryPrizes[i].Value;
+                            newPrize.Volume = orderedLotteryPrizes[i].Volume;
                             _lotteryPrizeService.Update(newPrize);
                         }
                         else
@@ -820,33 +840,18 @@ namespace CPL.Controllers
                         if (i < numberOfOldPrize)
                         {
                             var newPrize = lotteryPrize[i];
-                            newPrize.Value = viewModel.LotteryPrizes[i].Value;
-                            newPrize.Volume = viewModel.LotteryPrizes[i].Volume;
+                            newPrize.Index = orderedLotteryPrizes[i].Index;
+                            newPrize.Value = orderedLotteryPrizes[i].Value;
+                            newPrize.Volume = orderedLotteryPrizes[i].Volume;
                             _lotteryPrizeService.Update(newPrize);
                         }
                         else
                         {
-                            var prize = viewModel.LotteryPrizes[i];
+                            var prize = orderedLotteryPrizes[i];
                             if (prize.Volume == 0 && prize.Value == 0) continue;
-                            var color = "";
-                            switch (i)
-                            {
-                                case 0:
-                                    color = "warning";
-                                    break;
-                                case 1:
-                                    color = "primary";
-                                    break;
-                                case 2:
-                                    color = "danger";
-                                    break;
-                                default:
-                                    color = "success";
-                                    break;
-                            }
-
                             _lotteryPrizeService.Insert(new LotteryPrize()
                             {
+                                Index = prize.Index,
                                 Value = prize.Value,
                                 Volume = prize.Volume,
                                 LotteryId = viewModel.Id
@@ -854,7 +859,6 @@ namespace CPL.Controllers
                         }
                     }
                 }
-
                 _unitOfWork.SaveChanges();
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
             }
@@ -888,40 +892,71 @@ namespace CPL.Controllers
                 else
                     lottery.Status = (int)EnumLotteryGameStatus.ACTIVE;
 
-                if (viewModel.DesktopListingImageFile != null && viewModel.MobileListingImageFile != null && viewModel.SlideImageFile != null)
+                var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
+                string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                // Desktop slide image
+                if (viewModel.DesktopSlideImageFile != null)
                 {
-                    var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
-                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+                    var desktopSlideImage = $"{lottery.Phase.ToString()}_ds_{timestamp}_{viewModel.DesktopSlideImageFile.FileName}";
+                    var desktopSlideImagePath = Path.Combine(pathLottery, desktopSlideImage);
+                    viewModel.DesktopSlideImageFile.CopyTo(new FileStream(desktopSlideImagePath, FileMode.Create));
+                    lottery.DesktopSlideImage = desktopSlideImage;
+                }
 
-                    // slider image
-                    var sliderImage = $"{lottery.Phase.ToString()}_Slider_{timestamp}_{viewModel.SlideImageFile.FileName}";
-                    var sliderImagePath = Path.Combine(pathLottery, sliderImage);
-                    viewModel.SlideImageFile.CopyTo(new FileStream(sliderImagePath, FileMode.Create));
-                    lottery.SlideImage = sliderImage;
+                // Mobile slide image
+                if (viewModel.MobileSlideImageFile != null)
+                {
+                    var mobileSlideImage = $"{lottery.Phase.ToString()}_ms_{timestamp}_{viewModel.MobileSlideImageFile.FileName}";
+                    var mobileSlideImagePath = Path.Combine(pathLottery, mobileSlideImage);
+                    viewModel.MobileSlideImageFile.CopyTo(new FileStream(mobileSlideImagePath, FileMode.Create));
+                    lottery.MobileSlideImage = mobileSlideImage;
+                }
 
-                    // desktop image
-                    var desktopImage = $"{lottery.Phase.ToString()}_Desktop_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
-                    var desktopImagePath = Path.Combine(pathLottery, desktopImage);
-                    viewModel.DesktopListingImageFile.CopyTo(new FileStream(desktopImagePath, FileMode.Create));
-                    lottery.DesktopListingImage = desktopImage;
+                // desktop listing image
+                if (viewModel.DesktopListingImageFile != null)
+                {
+                    var desktopListingImage = $"{lottery.Phase.ToString()}_dl_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
+                    var desktopListingImagePath = Path.Combine(pathLottery, desktopListingImage);
+                    viewModel.DesktopListingImageFile.CopyTo(new FileStream(desktopListingImagePath, FileMode.Create));
+                    lottery.DesktopListingImage = desktopListingImage;
+                }
 
-                    // mobile image
-                    var mobileImage = $"{lottery.Phase.ToString()}_Mobile_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
-                    var mobileImagePath = Path.Combine(pathLottery, mobileImage);
-                    viewModel.MobileListingImageFile.CopyTo(new FileStream(mobileImagePath, FileMode.Create));
-                    lottery.MobileListingImage = mobileImage;
+                // mobile listing image
+                if (viewModel.MobileListingImageFile != null)
+                {
+                    var mobileListingImage = $"{lottery.Phase.ToString()}_ml_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
+                    var mobileListingImagePath = Path.Combine(pathLottery, mobileListingImage);
+                    viewModel.MobileListingImageFile.CopyTo(new FileStream(mobileListingImagePath, FileMode.Create));
+                    lottery.MobileListingImage = mobileListingImage;
+                }
+
+                // prize image
+                if (viewModel.PrizeImageFile != null)
+                {
+                    var prizeImage = $"{lottery.Phase.ToString()}_p_{timestamp}_{viewModel.PrizeImageFile.FileName}";
+                    var prizeImagePath = Path.Combine(pathLottery, prizeImage);
+                    viewModel.PrizeImageFile.CopyTo(new FileStream(prizeImagePath, FileMode.Create));
+                    lottery.PrizeImage = prizeImage;
                 }
 
                 _lotteryService.Insert(lottery);
                 _unitOfWork.SaveChanges();
 
+                // Order to set index of the prize
+                var orderedLotteryPrizes = viewModel.LotteryPrizes.OrderByDescending(x => x.Value).ToList();
+                for (int i = 0; i < orderedLotteryPrizes.Count; i++)
+                {
+                    orderedLotteryPrizes[i].Index = i + 1;
+                }
+
                 // Lottery prize
-                foreach (var prize in viewModel.LotteryPrizes)
+                foreach (var prize in orderedLotteryPrizes)
                 {
                     if (prize.Volume == 0 && prize.Value == 0) continue;
-                    var index = viewModel.LotteryPrizes.IndexOf(prize);
                     _lotteryPrizeService.Insert(new LotteryPrize()
                     {
+                        Index = prize.Index,
                         Value = prize.Value,
                         Volume = prize.Volume,
                         LotteryId = lottery.Id
@@ -986,6 +1021,5 @@ namespace CPL.Controllers
             }
         }
         #endregion
-
     }
 }
