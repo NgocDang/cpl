@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.Guest)]
+    [Permission(EnumRole.Guest, EnumEntity.Authentication, EnumAction.Read)]
     public class AuthenticationController : Controller
     {
         private readonly ILangService _langService;
@@ -41,6 +41,7 @@ namespace CPL.Controllers
             _viewRenderService = viewRenderService;
         }
 
+        [Permission(EnumRole.Guest, EnumEntity.Authentication, EnumAction.Read)]
         public IActionResult Login(string returnUrl)
         {
             ClearSession();
@@ -61,6 +62,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Guest, EnumEntity.Authentication, EnumAction.Update)]
         public IActionResult Login(AccountLoginModel viewModel)
         {
             if (ModelState.IsValid)
@@ -90,6 +92,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.User, EnumEntity.Authentication, EnumAction.Read)]
         public IActionResult VerifyPIN(AccountLoginModel viewModel)
         {
             var tfa = new TwoFactorAuthenticator();
@@ -103,7 +106,8 @@ namespace CPL.Controllers
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidPIN") });
         }
-        
+
+        [Permission(EnumRole.Guest, EnumEntity.Authentication, EnumAction.Read)]
         public ActionResult Register(int? id, string token)
         {
             ClearSession();
@@ -126,6 +130,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Guest, EnumEntity.Authentication, EnumAction.Read)]
         public IActionResult Register(AccountRegistrationModel viewModel)
         {
             //// Ensure we have a valid viewModel to work with
@@ -251,12 +256,14 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
 
+        [Permission(EnumRole.User, EnumEntity.Authentication, EnumAction.Read)]
         public IActionResult LogOut()
         {
             ClearSession();
             return RedirectToAction("Index", "Home");
         }
 
+        [Permission(EnumRole.User, EnumEntity.Authentication, EnumAction.Read)]
         public IActionResult GetConfirm()
         {
             return PartialView("_LogoutConfirm");
@@ -293,6 +300,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Guest, EnumEntity.Authentication, EnumAction.Read)]
         public ActionResult ForgotPassword(AccountForgotPasswordModel viewModel)
         {
             // Ensure we have a valid viewModel to work with
@@ -334,6 +342,7 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
 
+        [Permission(EnumRole.Guest, EnumEntity.Authentication, EnumAction.Read)]
         public ActionResult ForgotPassword()
         {
             // We do not want to use any existing identity information
@@ -352,6 +361,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.User, EnumEntity.Authentication, EnumAction.Read)]
         public ActionResult ResetPassword(AccountResetPasswordModel viewModel)
         {
             // Ensure we have a valid viewModel to work with
@@ -379,6 +389,7 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
 
+        [Permission(EnumRole.User, EnumEntity.Authentication, EnumAction.Read)]
         public ActionResult ResetPassword(int id, string token)
         {
             var viewmodel = new AccountResetPasswordModel();
