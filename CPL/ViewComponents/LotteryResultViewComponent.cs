@@ -45,7 +45,7 @@ namespace CPL.ViewComponents
                     .Select()
                     .Where(x => x.SysUserId == user.Id && x.Lottery.UpdatedDate.HasValue)
                     .OrderByDescending(x => x.Lottery.UpdatedDate)
-                    .FirstOrDefault().Lottery;
+                    .FirstOrDefault()?.Lottery;
 
                 if (lastestLottery != null)
                 {
