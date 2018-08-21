@@ -32,8 +32,8 @@
                                 <img src="~/images/what_is_CPL.jpg" class="img-fluid">
                             </div>
                             <h2 class="text-xxl mb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</h2>
-                            <p class="card-text" style="text-align:justify">
-                                @Html.Raw(LangMsgDetailHelper.Get(2, "TermsOfService"))
+                            <p class="card-text text-justify">
+                                @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService"))
                             </p>
                         </div>
                     </div>
