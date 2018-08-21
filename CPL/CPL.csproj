@@ -127,6 +127,9 @@
     <Content Update="Views\Shared\Components\Header\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Shared\Components\Rate\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

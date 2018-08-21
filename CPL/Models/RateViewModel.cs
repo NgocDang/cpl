@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class BalanceViewModel
+    public class RateViewModel
     {
-        public decimal ETHAmount { get; set; }
-        public decimal BTCAmount { get; set; }
+        public decimal BTCToTokenRate { get; set; }
+        public decimal ETHToTokenRate { get; set; }
+        public int TokenAmount { get; set; }
 
         public int SysUserId { get; set; }
     }

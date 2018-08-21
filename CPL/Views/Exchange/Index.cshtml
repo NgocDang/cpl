@@ -21,7 +21,7 @@
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a asp-controller="Dashboard" asp-action="Index" >@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             </li>
                             <li class="breadcrumb-item active">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")
@@ -31,8 +31,13 @@
                 </div>
             </div>
         </div>
-        <div id="lottery-result">
-            @await Component.InvokeAsync("LotteryResult")
+        <div class="row" id="lottery-result">
+            <div class="col-sm-6 col-12">
+                @await Component.InvokeAsync("Rate")
+            </div>
+            <div class="col-sm-6 col-12">
+                @await Component.InvokeAsync("LotteryResult")
+            </div>
         </div>
 
         <input type="hidden" value="@Model.BTCToTokenrate" class="btc-token-rate" />

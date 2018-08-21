@@ -34,9 +34,6 @@ namespace CPL.ViewComponents
             {
                 var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
                 var viewModel = Mapper.Map<LotteryResultViewModel>(user);
-                var ethToBTCRate = CoinExchangeExtension.CoinExchanging();
-                viewModel.ETHToTokenRate = (1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value)) / ethToBTCRate;
-                viewModel.BTCToTokenRate = 1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
 
                 // Get lastest game which user used join
                 var lastestLottery = _lotteryHistoryService
