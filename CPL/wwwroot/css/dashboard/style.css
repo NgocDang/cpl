@@ -1377,9 +1377,9 @@ footer {
     color: #464855;
 }
 
-.navbar-lottery-desktop>a, .navbar-price-prediction-desktop>a, .navbar-slot-desktop>a {
-    background: none !important;
-}
+    .navbar-lottery-desktop > a, .navbar-price-prediction-desktop > a, .navbar-slot-desktop > a {
+        background: none !important;
+    }
 
     .navbar-lottery-desktop.active, .navbar-price-prediction-desktop.active, .navbar-slot-desktop.active {
         background-color: #ffd300 !important;
@@ -1401,7 +1401,7 @@ footer {
         color: black;
     }
 
-.mt-7px{
+.mt-7px {
     margin-top: 7px !important;
 }
 
@@ -1773,10 +1773,22 @@ button#btn-dropdown-item:focus {
     }
 }
 
+#navbar-mobile {
+    position: relative;
+}
+
+@media (min-width: 1140px) {
+    .nav-language {
+        position: absolute !important;
+        top: 0px !important;
+        right: 0px !important;
+        z-index: 1000;
+    }
+}
 
 .nav-language {
     position: fixed;
     top: 0px !important;
-    right: 20px !important;
+    right: 30px !important;
     z-index: 1000;
 }
