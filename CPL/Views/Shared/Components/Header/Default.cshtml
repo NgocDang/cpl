@@ -2,7 +2,7 @@
 
 <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow navbar-static-top navbar-light navbar-brand-center">
     <div class="navbar-wrapper">
-        <div class="navbar-header d-md-none pt-1"  style="height: 56px">
+        <div class="navbar-header d-md-none pt-1"  style="height: 57px">
             <ul class="nav navbar-nav flex-row">
                 <li class="nav-item mobile-menu d-md-none mr-0"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
                 <li class="nav-item navbar-lottery-mobile w-25 @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active")">
@@ -109,12 +109,12 @@
                     </li>
                     <li class="nav-item navbar-price-prediction-desktop pl-md-0 pr-md-0 @(ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction" ? "active" : "")">
                         <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction" ? "active" : "")" asp-controller="PricePrediction" asp-action="Index">
-                            <img class="img-fluid w-75" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionTabImage")" />
+                            <img class="img-fluid w-75" style="margin-top:5px;"  src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionTabImage")" />
                         </a>
                     </li>
                     <li class="nav-item navbar-slot-desktop pl-md-0 pr-md-0 @(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")">
                         <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")" asp-controller="Slot" asp-action="Index">
-                            <img class="img-fluid w-75" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")" />
+                            <img class="img-fluid w-75" style="margin-top:7px;"  src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")" />
                         </a>
                     </li>
                     @*<li class="nav-item">
