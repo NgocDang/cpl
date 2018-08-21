@@ -8,7 +8,6 @@ using CPL.Misc;
 
 namespace CPL.Controllers
 {
-	[Permission(EnumRole.Guest, EnumEntity.Layout, EnumAction.Read)]
     public class LayoutController : Controller
     {
         private readonly ILangService _langService;
@@ -27,6 +26,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.Guest)]
         public IActionResult SwitchLang(int id)
         {
             HttpContext.Session.SetInt32("LangId", id);
