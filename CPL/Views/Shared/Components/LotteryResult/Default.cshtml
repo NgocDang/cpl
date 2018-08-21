@@ -1,58 +1,57 @@
 ﻿@model LotteryResultViewModel
-<div class="row mb-2">
-    <div class="col-sm-6 col-12 mb-2 d-md-block d-none">
-        <div class="card h-100">
-            <div class="card-content mb-md-2">
-                <div class="card-body mt-md-2">
-                    <div class="row">
-                        <div class="col-xl-5 col-12 pl-sm-1 pr-sm-1 pl-0 pr-0">
-                            <div class="text-xl-left text-center">
-                                <p class="cpl-balance">CPL @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</p>
-                                <h1 class="font-weight-bold mb-0">@Model.TokenAmount.ToString("#,##0.########") CPL</h1>
-                            </div>
-                        </div>
-                        <div class="col-xl-7 col-12 pl-sm-1 pr-sm-1 pl-0 pr-0">
-                            <div class="text-xl-right text-center">
-                                <p class="font-medium-2 cpl-rate"><span class="w-25 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice")</span> = <span class="w-50 d-xl-inline-block font-weight-bold">@Model.BTCToTokenRate.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span></p>
-                                <p class="font-medium-2 mb-0"><span class="w-25 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice")</span> = <span class="w-50 d-xl-inline-block font-weight-bold">@Model.ETHToTokenRate.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="text-center">
+    <div class="img-container p-0 d-none d-xl-block d-lg-block">
+        @if (!Model.LastestLotteryStatus.HasValue)
+        {
+            // Let buy lottery
+            <img src="~/images/lottery/lottery_result_login.jpg" class="img-fluid" />
+            <p class="font-size-lottery-result font-weight-bold center-center text-center  text-danger">
+                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LetBuyLottery")
+            </p>
+        }
+        else if (Model.LastestLotteryStatus == false)
+        {
+            <p class="font-size-lottery-result txt-stroke top-center text-center ">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name"): @Model.LastestLotteryTitle</p>
+            <img src="~/images/lottery/lottery_result_lose.jpg" class="img-fluid" />
+            <p class="font-size-lottery-result-long font-weight-bold text-white bottom-center text-center ">
+                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SorryForThisTime"),
+                <br>
+                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "YouHaveANextChance")
+            </p>
+        }
+        else
+        {
+            <p class="font-size-lottery-result txt-stroke top-center text-center ">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name"): @Model.LastestLotteryTitle</p>
+            <img src="~/images/lottery/lottery_result_win.jpg" class="img-fluid" />
+            <a href="/History/Lottery?lotteryId=@Model.LastestLotteryId" target="_blank" class="top-right text-right text-primary"><u>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "OtherResult")</u></a>
+            <p class="font-size-lottery-result font-weight-bold bottom-center text-center text-white">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win"): @Model.LastestLotteryResult# @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") !</p>
+        }
     </div>
-    <div class="col-sm-6 col-12">
-        <div class="text-center">
-            <div class="img-container p-0">
-
-                @if (!Model.LastestLotteryStatus.HasValue)
-                {
-                    // Let buy lottery
-                    <img src="~/images/lottery/lottery_result_login.jpg" class="img-fluid" />
-                    <p class="font-size-lottery-result font-weight-bold center-center text-center  text-white">
-                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LetBuyLottery")
-                    </p>
-                }
-                else if (Model.LastestLotteryStatus == false)
-                {
-                    <p class="font-size-lottery-result txt-stroke top-center text-center ">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name"): @Model.LastestLotteryTitle</p>
-                    <img src="~/images/lottery/lottery_result_lose.jpg" class="img-fluid" />
-                    <p class="font-size-lottery-result-long font-weight-bold text-white bottom-center text-center ">
-                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SorryForThisTime"),
-                        <br>
-                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "YouHaveANextChance")
-                    </p>
-                }
-                else
-                {
-                    <p class="font-size-lottery-result txt-stroke top-center text-center ">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name"): @Model.LastestLotteryTitle</p>
-                    <img src="~/images/lottery/lottery_result_win.jpg" class="img-fluid" />
-                    <a href="/History/Lottery?lotteryId=@Model.LastestLotteryId" target="_blank" class="top-right text-right text-info"><u>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "OtherResult")</u></a>
-                    <p class="font-size-lottery-result font-weight-bold bottom-center text-center text-white">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win"): @Model.LastestLotteryResult# @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") !</p>
-                }
-            </div>
-        </div>
+    <div class="img-container p-0 d-xl-none d-lg-none d-block">
+        @if (!Model.LastestLotteryStatus.HasValue)
+        {
+            // Let buy lottery
+            <img src="~/images/lottery/lottery_result_login1.jpg" class="img-fluid" />
+            <p class="font-size-lottery-result font-weight-bold center-center text-center  text-danger">
+                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LetBuyLottery")
+            </p>
+        }
+        else if (Model.LastestLotteryStatus == false)
+        {
+            <p class="font-size-lottery-result txt-stroke top-center text-center ">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name"): @Model.LastestLotteryTitle</p>
+            <img src="~/images/lottery/lottery_result_lose1.jpg" class="img-fluid" />
+            <p class="font-size-lottery-result-long font-weight-bold text-white bottom-center text-center ">
+                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SorryForThisTime"),
+                <br>
+                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "YouHaveANextChance")
+            </p>
+        }
+        else
+        {
+            <p class="font-size-lottery-result txt-stroke top-center text-center ">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name"): @Model.LastestLotteryTitle</p>
+            <img src="~/images/lottery/lottery_result_win1.jpg" class="img-fluid" />
+            <a href="/History/Lottery?lotteryId=@Model.LastestLotteryId" target="_blank" class="top-right text-right text-primary"><u>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "OtherResult")</u></a>
+            <p class="font-size-lottery-result font-weight-bold bottom-center text-center text-white">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win"): @Model.LastestLotteryResult# @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") !</p>
+        }
     </div>
 </div>
-

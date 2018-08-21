@@ -3,7 +3,9 @@
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction");
 }
 
-@model PricePredictionViewModel
+Comming soon
+
+@*@model PricePredictionViewModel
 
 @section styles
     {
@@ -55,7 +57,7 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <fieldset class="form-group">
-                                                        @*TODO - Max value should be user's CPL*@
+                                                        @*TODO - Max value should be user's CPL
                                                         <label for="Amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
                                                         <input type="number" name="Amount" class="form-control" min="1" id="bet-amount" value="0" required autofocus="">
                                                     </fieldset>
@@ -181,4 +183,4 @@
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
-}
+}*@
