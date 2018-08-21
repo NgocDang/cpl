@@ -4,10 +4,10 @@
     <div class="navbar-wrapper">
         <div class="navbar-header d-md-none pt-1 pb-0">
             <ul class="nav navbar-nav flex-row">
-                <li class="nav-item mobile-menu d-md-none mr-0"><a class="nav-link nav-menu-main menu-toggle hidden-xs pt-0" href="#"><i class="ft-menu font-large-1"></i></a></li>
+                <li class="nav-item d-md-none mr-0"><a class="nav-link nav-menu-main menu-toggle hidden-xs pt-0" href="#"><i class="ft-menu font-large-1"></i></a></li>
                 <li class="nav-item navbar-lottery-mobile w-25 @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active")">
                     <a asp-controller="Home" asp-action="Index">
-                        <img class="img-fluid w-75 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")"/>
+                        <img class="img-fluid w-75 mt-11px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")"/>
                     </a>
                 </li>
                 <li class="nav-item navbar-price-prediction-mobile w-25  @(ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction" ? "active" : "")">
@@ -23,8 +23,8 @@
                 </li>
                 @if (Model.User != null)
                 {
-                    <li class="nav-item mobile-menu ml-1 d-md-none text-right">
-                        <a class="nav-link dropdown-toggle open-navbar-container" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="la la-ellipsis-v font-medium-5 mr-0 font-weight-bold"></i></a>
+                    <li class="nav-item mobile-menu ml-1 d-md-none">
+                        <a class="nav-link dropdown-toggle open-navbar-container text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="la la-ellipsis-v font-medium-5 mr-0 font-weight-bold"></i></a>
                         <div class="dropdown-menu dropdown-menu-right">
                             @if (Model.User.IsAdmin)
                             {
@@ -51,7 +51,7 @@
             {
                 <div class="navbar-header navbar-header-mobile-authentication d-md-none position-static">
                     <ul class="nav navbar-nav text-center">
-                        <li class="nav-item mobile-menu d-md-none">
+                        <li class="nav-item d-md-none">
                             <a class="btn btn-sm btn-danger mr-1" asp-controller="Authentication" asp-action="Register">
                                 <i class="la la-user-plus"></i>
                                 <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</span>
@@ -69,7 +69,7 @@
             {
                 <div class="navbar-header navbar-header-mobile-authentication d-md-none position-static py-1">
                     <ul class="nav navbar-nav text-center">
-                        <li class="nav-item mobile-menu d-md-none">
+                        <li class="nav-item d-md-none">
                             <a class="mr-3">
                                 <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Hi"), @Model.User.LastName</span>
                             </a>
@@ -93,7 +93,7 @@
                 <ul class="nav navbar-nav float-left game-menu">
                     <li class="nav-item pl-md-0 pr-md-0 @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active")">
                         <a class="nav-item navbar-lottery-desktop ml-2rem @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active") " asp-controller="Home" asp-action="Index">
-                            <img class="img-fluid w-75 mt-5px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")" />
+                            <img class="img-fluid w-75 mt-5px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")"  />
                         </a>
                     </li>
                     <li class="nav-item navbar-price-prediction-desktop pl-md-0 pr-md-0 @(ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction" ? "active" : "")">
@@ -103,7 +103,7 @@
                     </li>
                     <li class="nav-item navbar-slot-desktop pl-md-0 pr-md-0 @(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")">
                         <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")" asp-controller="Slot" asp-action="Index">
-                            <img class="img-fluid w-75 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")" />
+                            <img class="img-fluid mt-7px" style="width: 43%;margin-left: 15px;margin-right: 15px;" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")" />
                         </a>
                     </li>
                 </ul>
@@ -128,7 +128,7 @@
 <div class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-fixed navbar-dark navbar-without-dd-arrow navbar-shadow" role="navigation" data-menu="menu-wrapper">
     <div class="navbar-container main-menu-content container center-layout" data-menu="menu-container">
         <ul class="nav navbar-nav main-menu-navigation" id="main-menu-navigation" data-menu="menu-navigation">
-            <li class="nav-item mobile-menu text-center">
+            <li class="nav-item text-center">
                 <a class="navbar-brand d-md-none" asp-controller="Home" asp-action="Index">
                     <img class="brand-logo w-50" alt="CPL" src="~/images/logo.png">
                 </a>

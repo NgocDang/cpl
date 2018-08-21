@@ -58,8 +58,8 @@ html body {
     }
 
     .main-menu.menu-fixed {
-        top: 3.6rem;
-        height: calc(100% - 3.6rem);
+        top: 4.1rem;
+        height: calc(100% - 4.1rem);
     }
 }
 
@@ -709,7 +709,8 @@ select.bs-select-hidden {
     box-shadow: 0 10px 50px 0 rgba(0,0,0,.2);
     border-radius: .125rem;
     transition: all .15s linear;
-    font-size: 14px
+    font-size: 14px;
+    margin-top: 6px !important;
 }
 
     .dropdown-menu.dropdown-menu-right:before {
@@ -1395,6 +1396,7 @@ footer {
     line-height: 1;
     background-color: #babfc7;
     color: #464855;
+    min-height:43px;
 }
 
     .navbar-lottery-mobile.active, .navbar-price-prediction-mobile.active, .navbar-slot-mobile.active {
@@ -1404,6 +1406,10 @@ footer {
 
 .mt-7px {
     margin-top: 7px !important;
+}
+
+.mt-11px {
+    margin-top: 11px !important;
 }
 
 .mt-5px {
@@ -1776,6 +1782,11 @@ button#btn-dropdown-item:focus {
 
 #navbar-mobile {
     position: relative;
+}
+
+.mobile-menu {
+    position:absolute !important;
+    right:10px !important;
 }
 
 @media (min-width: 1140px) {
