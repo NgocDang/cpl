@@ -29,6 +29,7 @@ namespace CPL.Controllers
         private readonly ISettingService _settingService;
         private readonly ILotteryService _lotteryService;
         private readonly ITemplateService _templateService;
+        private readonly INewsService _newsService;
 
         public HomeController(
             ILangService langService,
@@ -38,7 +39,8 @@ namespace CPL.Controllers
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
             ILotteryService lotteryService,
-            ITemplateService templateService)
+            ITemplateService templateService,
+            INewsService newsService)
         {
             this._langService = langService;
             this._langDetailService = langDetailService;
@@ -48,6 +50,7 @@ namespace CPL.Controllers
             this._unitOfWork = unitOfWork;
             this._lotteryService = lotteryService;
             this._templateService = templateService;
+            _newsService = newsService;
         }
 
         public IActionResult Index()
@@ -62,6 +65,9 @@ namespace CPL.Controllers
             viewModel.Lotteries = lotteries
                 .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
                 .ToList();
+
+            var lastNews = _newsService.Queryable().LastOrDefault();
+            viewModel.News = Mapper.Map<NewsViewModel>(lastNews);
 
             return View(viewModel);
         }

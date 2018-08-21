@@ -10,6 +10,17 @@
     <link href="~/css/dashboard/cpl.sliderbanner.css" rel="stylesheet" asp-append-version="true" />
 }
 
+@if (Model.News != null)
+{
+    <div class="container mt-md-1 mb-md-0 mb-1">
+        <a class="hidden-sm text-primary font-medium-3" asp-controller="News" asp-action="Index">
+            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")
+        </a>
+        <span class="black"> | </span>
+        <a asp-controller="News" asp-action="Detail" asp-route-id="@Model.News.Id" class="font-weight-bold black news-link">@Model.News.CreatedDate.ToString("yyyy/MM/dd") @Model.News.Title</a>
+    </div>
+}
+
 @await Component.InvokeAsync("SliderBanner")
 
 <section id="lottery-game">
