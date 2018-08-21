@@ -1,0 +1,13 @@
+﻿html body {
+    background: url('/images/backgrounds/coming-soon2.jpg') !important;
+    background-repeat: no-repeat;
+    background-color: white;
+}
+
+.img-coming-soon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -133px;
+    margin-top: -133px;
+}

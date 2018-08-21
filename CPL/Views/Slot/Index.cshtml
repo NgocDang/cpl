@@ -1,0 +1,13 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slot");
+}
+
+@section styles
+    {
+    <link href="~/css/dashboard/cpl.slot.css" rel="stylesheet" />
+}
+
+<div class="img-coming-soon">
+    <img src="~/images/comingsoon2.png" />
+</div>
