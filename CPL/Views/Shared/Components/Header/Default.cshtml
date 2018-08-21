@@ -2,12 +2,22 @@
 
 <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow navbar-static-top navbar-light navbar-brand-center">
     <div class="navbar-wrapper">
-        <div class="navbar-header d-md-none">
+        <div class="navbar-header d-md-none pt-1 pb-0">
             <ul class="nav navbar-nav flex-row">
-                <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
-                <li class="nav-item mobile-menu d-md-none mr-auto">
-                    <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                        <img class="brand-logo" alt="CPL" src="~/images/logo.png">
+                <li class="nav-item mobile-menu d-md-none mr-0"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
+                <li class="nav-item navbar-lottery-mobile w-25 @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active")">
+                    <a asp-controller="Home" asp-action="Index">
+                        <img class="img-fluid w-75 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")"/>
+                    </a>
+                </li>
+                <li class="nav-item navbar-price-prediction-mobile w-25  @(ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction" ? "active" : "")">
+                    <a asp-controller="PricePrediction" asp-action="Index">
+                        <img class="img-fluid w-75 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionTabImage")"/>
+                    </a>
+                </li>
+                <li class="nav-item navbar-slot-mobile w-25  @(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")">
+                    <a asp-controller="Slot" asp-action="Index">
+                        <img class="img-fluid w-50 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")"/>
                     </a>
                 </li>
                 @if (Model.User != null)
@@ -80,7 +90,6 @@
                         </li>
                     </ul>
                 </div>
-
             }
         }
         <div class="navbar-container container center-layout px-0">
@@ -93,12 +102,24 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav mr-auto float-left game-menu">
-                    <li class="nav-item active">
-                        <a class="navbar-lottery-desktop active" asp-controller="Home" asp-action="Index"><img class="img-fluid w-75" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")" /> </a>
+                    <li class="nav-item pl-md-0 pr-md-0 @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active")">
+                        <a class="nav-item navbar-lottery-desktop ml-2rem @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active") " asp-controller="Home" asp-action="Index">
+                            <img class="img-fluid w-75 mt-5px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")" />
+                        </a>
+                    </li>
+                    <li class="nav-item navbar-price-prediction-desktop pl-md-0 pr-md-0 @(ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction" ? "active" : "")">
+                        <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction" ? "active" : "")" asp-controller="PricePrediction" asp-action="Index">
+                            <img class="img-fluid w-75" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionTabImage")" />
+                        </a>
+                    </li>
+                    <li class="nav-item navbar-slot-desktop pl-md-0 pr-md-0 @(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")">
+                        <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")" asp-controller="Slot" asp-action="Index">
+                            <img class="img-fluid w-75 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")" />
+                        </a>
                     </li>
                     @*<li class="nav-item">
-                            <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
-                        </li>*@
+                        <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
+                    </li>
                     @if (Model.News != null)
                     {
                         <li class="nav-item pt-1 pl-1 d-xl-inline d-none">
@@ -108,7 +129,7 @@
                             <span class="black"><small> | </small></span>
                             <a asp-controller="News" asp-action="Detail" asp-route-id="@Model.News.Id" class="font-weight-bold black news-link"><small>@Model.News.CreatedDate.ToString("yyyy/MM/dd") @Model.News.Title</small></a>
                         </li>
-                    }
+                    }*@
                 </ul>
                 <ul class="nav navbar-nav float-right navbar-right">
                     <li class="dropdown dropdown-language nav-item">
@@ -131,6 +152,11 @@
 <div class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-fixed navbar-dark navbar-without-dd-arrow navbar-shadow" role="navigation" data-menu="menu-wrapper">
     <div class="navbar-container main-menu-content container center-layout" data-menu="menu-container">
         <ul class="nav navbar-nav main-menu-navigation" id="main-menu-navigation" data-menu="menu-navigation">
+            <li class="nav-item mobile-menu text-center">
+                <a class="navbar-brand d-md-none" asp-controller="Home" asp-action="Index">
+                    <img class="brand-logo w-50" alt="CPL" src="~/images/logo.png">
+                </a>
+            </li>
             <li class="dropdown nav-item" data-menu="dropdown">
                 <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
                     <i class="la la-newspaper-o"></i>
