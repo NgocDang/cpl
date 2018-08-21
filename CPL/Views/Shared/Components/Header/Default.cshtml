@@ -101,7 +101,7 @@
                         </a>
                     </li>
                 </ul>
-                <ul class="nav navbar-nav mr-auto float-left game-menu">
+                <ul class="nav navbar-nav float-left game-menu">
                     <li class="nav-item pl-md-0 pr-md-0 @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active")">
                         <a class="nav-item navbar-lottery-desktop ml-2rem @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active") " asp-controller="Home" asp-action="Index">
                             <img class="img-fluid w-75 mt-5px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")" />
@@ -117,21 +117,8 @@
                             <img class="img-fluid w-75 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")" />
                         </a>
                     </li>
-                    @*<li class="nav-item">
-                        <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
-                    </li>
-                    @if (Model.News != null)
-                    {
-                        <li class="nav-item pt-1 pl-1 d-xl-inline d-none">
-                            <a class="bg-white hidden-sm text-primary" asp-controller="News" asp-action="Index">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")
-                            </a>
-                            <span class="black"><small> | </small></span>
-                            <a asp-controller="News" asp-action="Detail" asp-route-id="@Model.News.Id" class="font-weight-bold black news-link"><small>@Model.News.CreatedDate.ToString("yyyy/MM/dd") @Model.News.Title</small></a>
-                        </li>
-                    }*@
                 </ul>
-                <ul class="nav navbar-nav float-right navbar-right">
+                <ul class="nav navbar-nav float-right nav-language">
                     <li class="dropdown dropdown-language nav-item">
                         <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="flag-icon @Model.Lang.Image"></i>
