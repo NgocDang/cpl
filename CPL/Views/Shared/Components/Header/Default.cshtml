@@ -103,7 +103,7 @@
                     </li>
                     <li class="nav-item navbar-slot-desktop pl-md-0 pr-md-0 @(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")">
                         <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")" asp-controller="Slot" asp-action="Index">
-                            <img class="img-fluid mt-7px" style="width: 43%;margin-left: 15px;margin-right: 15px;" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")" />
+                            <img class="img-fluid mt-7px" style="width: 53%;margin-left: 10px;margin-right: 10px;" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")" />
                         </a>
                     </li>
                 </ul>
