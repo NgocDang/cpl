@@ -14,7 +14,7 @@ using CPL.Common.Enums;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.Guest)]
+    [Permission(EnumRole.Guest, EnumEntity.Contact, EnumAction.Read)]
     public class ContactController : Controller
     {
         private readonly ILangService _langService;

@@ -11,5 +11,18 @@ namespace CPL.Misc.Enums
         LotteryHistory,
         SysUser,
         Authentication,
+        Contact,
+        Dashboard,
+        DepositAndWithdraw,
+        Home,
+        Info,
+        Lottery,
+        Admin,
+        KYC,
+        News,
+        Exchange,
+        Layout,
+        PricePrediction,
+        Profile,
     }
 }

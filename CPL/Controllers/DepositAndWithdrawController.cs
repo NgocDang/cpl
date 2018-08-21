@@ -15,7 +15,7 @@ using ZXing;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.User)]
+    [Permission(EnumRole.User, EnumEntity.DepositAndWithdraw, EnumAction.Read)]
     public class DepositAndWithdrawController : Controller
     {
         private readonly ILangService _langService;
