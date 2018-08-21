@@ -28,25 +28,13 @@
                             @if (Model.User.IsAdmin)
                             {
                                 <a class="dropdown-item" asp-controller="Admin" asp-action="Index"><i class="la la-user"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
-                                <hr class="mt-0" />
+                                <hr />
                             }
                             <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="fas fa-tachometer-alt font-small-4"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             <a class="dropdown-item" asp-controller="Profile" asp-action="Security"><i class="la la-key"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Security")</a>
                             <a class="dropdown-item" asp-controller="Profile" asp-action="Index"><i class="la la-user"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</a>
                             <a class="dropdown-item" asp-controller="Profile" asp-action="KYC"><i class="la la-credit-card"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</a>
-                            <hr class="mb-0" />
-                            <div class="dropdown-submenu">
-                                <button id="btn-dropdown-item" class="dropdown-item" type="button">
-                                    <i class="la la-language"></i>
-                                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Language")</span>
-                                </button>
-                                <div class="dropdown-menu" role="menu" aria-labelledby="dropdown-flag">
-                                    @foreach (var lang in Model.Langs)
-                                    {
-                                        <a data-id="@lang.Id" class="dropdown-item lang-item"><i class="flag-icon @lang.Image"></i> @lang.Name</a>
-                                    }
-                                </div>
-                            </div>
+                            
                             <hr class="mb-0" />
                             <a class="dropdown-item" href="#" id="logout-confirmation"><i class="la la-power-off"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
                         </div>
@@ -200,7 +188,7 @@
                     }
                 </a>
             </li>
-            <li class="dropdown nav-item d-none" data-menu="dropdown">
+            <li class="dropdown nav-item" data-menu="dropdown">
                 <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
                     <i class="la la-language"></i>
                     <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Language")</span>
