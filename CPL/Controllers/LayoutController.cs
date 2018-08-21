@@ -29,6 +29,7 @@ namespace CPL.Controllers
         [HttpPost]
         public IActionResult SwitchLang(int id)
         {
+            HttpContext.Session.SetInt32("LangId", id);
             return new JsonResult(new { success = true });
         }
     }

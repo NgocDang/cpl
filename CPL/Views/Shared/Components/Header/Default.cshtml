@@ -12,18 +12,19 @@
                 </li>
                 <li class="nav-item navbar-price-prediction-mobile w-25  @(ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction" ? "active" : "")">
                     <a asp-controller="PricePrediction" asp-action="Index">
-                        <img class="img-fluid w-75 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionTabImage")"/>
+                        <img class="img-fluid w-75 mt-7px d-md-inline-block d-none" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionTabImage")" />
+                        <img class="img-fluid w-75 mt-7px d-md-none d-inline-block" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionMobileTabImage")" />
                     </a>
                 </li>
-                <li class="nav-item navbar-slot-mobile w-25  @(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")">
+                <li class="nav-item navbar-slot-mobile @(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")" style="width:20%;">
                     <a asp-controller="Slot" asp-action="Index">
                         <img class="img-fluid w-50 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")"/>
                     </a>
                 </li>
                 @if (Model.User != null)
                 {
-                    <li class="nav-item mobile-menu d-md-none text-right">
-                        <a class="nav-link dropdown-toggle open-navbar-container" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="la la-ellipsis-v"></i></a>
+                    <li class="nav-item mobile-menu ml-1 d-md-none text-right">
+                        <a class="nav-link dropdown-toggle open-navbar-container" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="la la-ellipsis-v font-medium-5 mr-0 font-weight-bold"></i></a>
                         <div class="dropdown-menu dropdown-menu-right">
                             @if (Model.User.IsAdmin)
                             {
