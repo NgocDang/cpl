@@ -78,7 +78,17 @@ namespace CPL.Misc
             }
             else
             {
-                context.Result = new RedirectResult(isAuthenticated.Url);
+                var controller = context.RouteData.Values["controller"].ToString();
+                var action = context.RouteData.Values["action"].ToString();
+                if (controller == "Exchange" && action == "GetConfirm")
+                    context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + "Index");
+                else if (controller == "Lottery" && action == "ConfirmPurchaseTicket")
+                    context.Result = new RedirectResult(isAuthenticated.Url);
+                else if (controller == "DepositAndWithdraw" && action == "DoWithdraw")
+                    context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + "Index");
+                else
+                    context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + action);
+                return;
                 return;
             }
         }
