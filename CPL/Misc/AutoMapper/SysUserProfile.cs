@@ -32,6 +32,7 @@ namespace CPL.Misc.MapperCreate
             CreateMap<SysUser, DashboardViewModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
             CreateMap<SysUser, BalanceViewModel>();
+            CreateMap<SysUser, RateViewModel>();
             CreateMap<SysUser, HoldingPercentageViewModel>();
 
             CreateMap<SysUser, ExchangeViewModel>();

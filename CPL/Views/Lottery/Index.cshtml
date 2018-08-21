@@ -16,7 +16,7 @@
         <div class="content-body">
             <div class="row">
                 <div class="col-12">
-                    <div class="card mb-md-1 mb-05">
+                    <div class="card mb-md-2 mb-05">
                         <img src="~/images/lottery/@Model.DesktopSlideImage" class="img-fluid d-md-block d-none" alt="@Model.Title">
                         <img src="~/images/lottery/@Model.MobileSlideImage" class="img-fluid d-md-none d-block" alt="@Model.Title">
                     </div>
@@ -24,7 +24,15 @@
             </div>
             @if (Model.SysUserId.HasValue)
             {
-                @await Component.InvokeAsync("LotteryResult")
+                <div class="row">
+                    <div class="col-sm-6 col-12 d-none d-md-block d-lg-block d-xl-block">
+                        @await Component.InvokeAsync("Rate")
+                    </div>
+                    <div class="col-sm-6 col-12 mb-05">
+                        @await Component.InvokeAsync("LotteryResult")
+                    </div>
+
+                </div>
             }
 
             <div class="row mb-1">
@@ -115,7 +123,7 @@
                             <button type="button" id="btn-confirm-purchase-lottery-ticket" class="btn btn-primary btn-block font-medium-3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm") <i class="fa fa-arrow-right"></i></button>
                         </div>
                     </div>
-                    @Html.HiddenFor(x=> x.Id)
+                    @Html.HiddenFor(x => x.Id)
                 </div>
                 <div class="col-lg-6 col-12 d-none" id="div-thankyou-lottery">
                     <div class="card font-medium-2 pl-2 pr-2 pt-2">
