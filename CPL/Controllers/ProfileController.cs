@@ -21,7 +21,7 @@ using CPL.Common.Enums;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.User)]
+    [Permission(EnumRole.User, EnumEntity.Profile, EnumAction.Read)]
     public class ProfileController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;

@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.User)]
+    [Permission(EnumRole.User, EnumEntity.Exchange, EnumAction.Read)]
     public class ExchangeController : Controller
     {
         private readonly ILangService _langService;

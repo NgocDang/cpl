@@ -18,7 +18,7 @@ using LinqKit;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.Guest)]
+    [Permission(EnumRole.Guest, EnumEntity.Home, EnumAction.Read)]
     public class HomeController : Controller
     {
         private readonly ILangService _langService;

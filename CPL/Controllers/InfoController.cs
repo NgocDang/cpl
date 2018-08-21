@@ -2,6 +2,7 @@
 using CPL.Core.Interfaces;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
+using CPL.Misc.Enums;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Controllers
 {
+    [Permission(EnumRole.Guest, EnumEntity.Info, EnumAction.Read)]
     public class InfoController: Controller
     {
         public InfoController()

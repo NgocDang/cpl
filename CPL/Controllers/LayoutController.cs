@@ -8,6 +8,7 @@ using CPL.Misc;
 
 namespace CPL.Controllers
 {
+	[Permission(EnumRole.Guest, EnumEntity.Layout, EnumAction.Read)]
     public class LayoutController : Controller
     {
         private readonly ILangService _langService;

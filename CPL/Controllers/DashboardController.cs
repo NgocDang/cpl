@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.User)]
+    [Permission(EnumRole.User, EnumEntity.Dashboard, EnumAction.Read)]
     public class DashboardController : Controller
     {
         private readonly ILangService _langService;
@@ -27,7 +27,6 @@ namespace CPL.Controllers
         private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
-
 
         public DashboardController(
             ILangService langService,
