@@ -1726,15 +1726,15 @@ input[type=number]:hover::-webkit-inner-spin-button {
 .top-center {
     position: absolute;
     top: 10%;
-    left: 50%;
-    transform: translate(-50%, -10%);
+    left: 45%;
+    transform: translate(-30%, -10%);
 }
 
 .bottom-center {
     position: absolute;
-    top: 75%;
-    left: 50%;
-    transform: translate(-50%, -75%);
+    top: 80%;
+    left: 45%;
+    transform: translate(-30%, -75%);
 }
 
 .center-center {

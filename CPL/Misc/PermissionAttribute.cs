@@ -37,7 +37,7 @@ namespace CPL.Misc
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (context.HttpContext.Session.GetInt32("LangId") == null)
-                context.HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
+                context.HttpContext.Session.SetInt32("LangId", (int)EnumLang.JAPANESE);
 
             if ((context.RouteData.Values["action"].ToString() == "Maintenance") && (context.RouteData.Values["controller"].ToString() == "Home"))
             {
@@ -80,14 +80,22 @@ namespace CPL.Misc
             {
                 var controller = context.RouteData.Values["controller"].ToString();
                 var action = context.RouteData.Values["action"].ToString();
-                if (controller == "Exchange" && action == "GetConfirm")
-                    context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + "Index");
-                else if (controller == "Lottery" && action == "ConfirmPurchaseTicket")
-                    context.Result = new RedirectResult(isAuthenticated.Url);
-                else if (controller == "DepositAndWithdraw" && action == "DoWithdraw")
-                    context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + "Index");
+
+                if (context.HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest") // is Ajax request 
+                {
+                    context.Result = new RedirectResult(PermissionStatus.UnLoggedAjaxInUrl);
+                }
                 else
-                    context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + action);
+                {
+                    if (controller == "Exchange" && action == "GetConfirm")
+                        context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + "Index");
+                    else if (controller == "Lottery" && action == "ConfirmPurchaseTicket")
+                        context.Result = new RedirectResult(isAuthenticated.Url);
+                    else if (controller == "DepositAndWithdraw" && action == "DoWithdraw")
+                        context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + "Index");
+                    else
+                        context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + action);
+                }
                 return;
             }
         }
