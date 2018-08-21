@@ -87,6 +87,11 @@ namespace CPL.Controllers
             return StatusCode(403);
         }
 
+        public IActionResult Error401Ajax()
+        {
+            return StatusCode(401);
+        }
+
         public void UpdateLangDetail()
         {
             LangDetailHelper.LangDetails = _langDetailService.Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();

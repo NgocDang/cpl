@@ -89,7 +89,6 @@ namespace CPL.Misc
                 else
                     context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + action);
                 return;
-                return;
             }
         }
 
