@@ -15,7 +15,8 @@
                     autoplay: true
                 },
                 768: {
-                    items: 2
+                    items: 1,
+                    autoplay: true
                 },
                 1024: {
                     items: 1,

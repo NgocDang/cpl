@@ -55,8 +55,6 @@ namespace CPL.Controllers
 
         public IActionResult Index()
         {
-            if (!HttpContext.Session.GetInt32("LangId").HasValue)
-                HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
             var lotteries = _lotteryService.Query()
                 .Include(x => x.LotteryHistories)
                 .Select()

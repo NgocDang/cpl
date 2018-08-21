@@ -142,8 +142,6 @@ namespace CPL.Controllers
                 else
                     loginViewModel.Lang = loginViewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
 
-                HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
-
                 return PartialView("_Login", loginViewModel);
             }
             else

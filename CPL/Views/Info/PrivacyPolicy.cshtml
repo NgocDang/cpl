@@ -33,7 +33,7 @@
                             </div>
                             <h2 class="text-xxl mb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</h2>
                             <p class="card-text text-justify">
-                                @Html.Raw(LangMsgDetailHelper.Get(2, "PrivacyPolicy"))
+                                @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy"))
                             </p>
                         </div>
                     </div>
