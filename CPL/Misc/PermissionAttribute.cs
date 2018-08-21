@@ -3,6 +3,7 @@ using CPL.Core.Interfaces;
 using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
@@ -35,6 +36,9 @@ namespace CPL.Misc
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            if (context.HttpContext.Session.GetInt32("LangId") == null)
+                context.HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
+
             if ((context.RouteData.Values["action"].ToString() == "Maintenance") && (context.RouteData.Values["controller"].ToString() == "Home"))
             {
                 base.OnActionExecuting(context);
@@ -50,7 +54,6 @@ namespace CPL.Misc
             }
 
             SetRole(Role);
-
             
             var isAuthenticated = AuthorizePermission.IsLoggedIn(context);
             if (isAuthenticated.Code == PermissionStatus.OkCode)
