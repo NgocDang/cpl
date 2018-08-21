@@ -30,7 +30,7 @@ html body {
 }
 
 .header-navbar .navbar-header {
-    height: 4.5rem;
+    height: auto;
 }
 
 .header-navbar .navbar-header-mobile-authentication {
@@ -1388,7 +1388,6 @@ footer {
 
 .navbar-lottery-mobile, .navbar-price-prediction-mobile, .navbar-slot-mobile {
     display: inline-block;
-    padding: 0.4rem 0rem;
     text-align: center;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
