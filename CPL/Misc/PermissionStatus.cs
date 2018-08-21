@@ -22,7 +22,11 @@ namespace CPL.Misc
         public const string UnAuthorizedText = "Error, you are not authorized to do this!";
         public const string UnAuthorizedUrl = "/Home/Error403";
 
-        public const int ExceptionCode = UnAuthorizedCode + 1;
+        public const int UnAuthorizedAjaxCode = UnAuthorizedCode + 1;
+        public const string UnAuthorizedAjaxText = "Error, you are not authorized to do this via ajax!";
+        public const string UnAuthorizedAjaxUrl = "/Home/Error403Ajax";
+
+        public const int ExceptionCode = UnAuthorizedAjaxCode + 1;
         public const string ExceptionText = "";
         public const string ExceptionUrl = "/Home/Error";
     }

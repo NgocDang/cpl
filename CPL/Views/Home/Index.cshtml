@@ -48,17 +48,15 @@
             }
         </div>
     </div>
-    <div class="row d-md-none d-block mb-05">
+    <div class="d-md-none d-block mb-05">
         @if (Model.Lotteries != null)
         {
             @foreach (var lottery in Model.Lotteries)
             {
-                <div class="col-12">
-                    <div class="card card-game mt-05 mb-0">
-                        <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id"><img class="card-img-top card-img-game img-fluid visible-mobile" src="~/images/lottery/@lottery.MobileListingImage" /></a>
-                        <div class="card-header card-header-game-mobile font-weight-bold">
-                            @lottery.NumberOfTicketLeft.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
-                        </div>
+                <div class="card card-game mt-05 mb-0">
+                    <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id"><img class="card-img-top card-img-game img-fluid visible-mobile" src="~/images/lottery/@lottery.MobileListingImage" /></a>
+                    <div class="card-header card-header-game-mobile font-weight-bold">
+                        @lottery.NumberOfTicketLeft.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
                     </div>
                 </div>
             }

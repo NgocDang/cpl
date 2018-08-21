@@ -1,14 +1,14 @@
 ﻿
 @{
     Layout = "_Layout";
-    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCPL");
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService");
 }
 
 <div class="app-content container center-layout mt-2 px-0">
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCPL")</h3>
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</h3>
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
@@ -16,7 +16,7 @@
                                 <a asp-controller="Home" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Home")</a>
                             </li>
                             <li class="breadcrumb-item active">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCPL")
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")
                             </li>
                         </ol>
                     </div>
@@ -31,9 +31,9 @@
                             <div class="mb-3">
                                 <img src="~/images/what_is_CPL.jpg" class="img-fluid">
                             </div>
-                            <h2 class="text-xxl mb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "About")</h2>
-                            <p class="card-text text-justify">
-                                @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCPL"))
+                            <h2 class="text-xxl mb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</h2>
+                            <p class="card-text" style="text-align:justify">
+                                @Html.Raw(LangMsgDetailHelper.Get(2, "TermsOfService"))
                             </p>
                         </div>
                     </div>

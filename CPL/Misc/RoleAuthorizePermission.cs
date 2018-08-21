@@ -58,7 +58,7 @@ namespace CPL.Misc
                 {
                     var sysUserService = (ISysUserService)context.HttpContext.RequestServices.GetService(typeof(ISysUserService));
 
-                    var currentUser = context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+                    var currentUser = sysUserService.Queryable().FirstOrDefault(x=>x.Id == context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
                     var beingDeletedUser = sysUserService.Queryable().FirstOrDefault(x => x.Id == int.Parse(context.ActionArguments["id"].ToString()));
 
                     if (beingDeletedUser == null || !currentUser.IsAdmin || beingDeletedUser.IsAdmin)

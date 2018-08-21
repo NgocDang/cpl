@@ -59,11 +59,12 @@
     }
 };
 
-
 $(document).ready(function () {
     Layout.init();
 });
 
-window.onload = function () {
-   
-};
+$(document).ajaxError(function (event, jqxhr, settings, thrownError) {
+    if (jqxhr.status == 403) {
+        window.location.replace(location.protocol + '//' + location.host + "/Home/Error403");
+    }
+});

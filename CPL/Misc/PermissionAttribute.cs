@@ -51,6 +51,7 @@ namespace CPL.Misc
 
             SetRole(Role);
 
+            
             var isAuthenticated = AuthorizePermission.IsLoggedIn(context);
             if (isAuthenticated.Code == PermissionStatus.OkCode)
             {
@@ -61,7 +62,14 @@ namespace CPL.Misc
                 }
                 else
                 {
-                    context.Result = new RedirectResult(isACL.Url);
+                    if (context.HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest") // is Ajax request
+                    {
+                        context.Result = new RedirectResult(PermissionStatus.UnAuthorizedAjaxUrl);
+                    }
+                    else
+                    {
+                        context.Result = new RedirectResult(isACL.Url);
+                    }
                     return;
                 }
             }
@@ -89,7 +97,4 @@ namespace CPL.Misc
             }
         }
     }
-
-    
-
 }
