@@ -2,6 +2,7 @@
     background: url('/images/backgrounds/coming-soon2.jpg') !important;
     background-repeat: no-repeat;
     background-color: white;
+    background-position: center !important;
 }
 
 .img-coming-soon {
