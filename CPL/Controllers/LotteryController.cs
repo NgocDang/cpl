@@ -15,6 +15,7 @@ using System.Linq;
 
 namespace CPL.Controllers
 {
+    [Permission(EnumRole.User, EnumEntity.Lottery, EnumAction.Read)]
     public class LotteryController : Controller
     {
         private readonly ILangService _langService;
@@ -55,7 +56,6 @@ namespace CPL.Controllers
             this._lotteryHistoryService = lotteryHistoryService;
         }
 
-        [Permission(EnumRole.User, EnumEntity.Lottery, EnumAction.Read)]
         public IActionResult Index(int? id)
         {
             if (id.HasValue)
@@ -111,7 +111,6 @@ namespace CPL.Controllers
             }
         }
 
-        [Permission(EnumRole.User, EnumEntity.Lottery, EnumAction.Read)]
         public IActionResult GetConfirmPurchaseTicket(int amount)
         {
             var viewModel = new LotteryTicketPurchaseViewModel();
@@ -124,7 +123,6 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.User, EnumEntity.Lottery, EnumAction.Read)]
         public IActionResult ConfirmPurchaseTicket(LotteryTicketPurchaseViewModel viewModel)
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");

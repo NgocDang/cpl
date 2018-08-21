@@ -17,5 +17,12 @@ namespace CPL.Misc.Enums
         Home,
         Info,
         Lottery,
+        Admin,
+        KYC,
+        News,
+        Exchange,
+        Layout,
+        PricePrediction,
+        Profile,
     }
 }

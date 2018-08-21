@@ -12,19 +12,18 @@ using System.Threading.Tasks;
 
 namespace CPL.Controllers
 {
+    [Permission(EnumRole.Guest, EnumEntity.Info, EnumAction.Read)]
     public class InfoController: Controller
     {
         public InfoController()
         {
         }
 
-        [Permission(EnumRole.Guest, EnumEntity.Info, EnumAction.Read)]
         public IActionResult WhatIsCPL()
         {
             return View();
         }
 
-        [Permission(EnumRole.Guest, EnumEntity.Info, EnumAction.Read)]
         public IActionResult HowToPlay()
         {
             return View();

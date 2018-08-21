@@ -18,6 +18,7 @@ using LinqKit;
 
 namespace CPL.Controllers
 {
+    [Permission(EnumRole.Guest, EnumEntity.Home, EnumAction.Read)]
     public class HomeController : Controller
     {
         private readonly ILangService _langService;
@@ -49,7 +50,6 @@ namespace CPL.Controllers
             this._templateService = templateService;
         }
 
-        [Permission(EnumRole.Guest, EnumEntity.Home, EnumAction.Read)]
         public IActionResult Index()
         {
             if (!HttpContext.Session.GetInt32("LangId").HasValue)
@@ -68,19 +68,16 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
-        [Permission(EnumRole.Guest, EnumEntity.Home, EnumAction.Read)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [Permission(EnumRole.Guest, EnumEntity.Home, EnumAction.Read)]
         public void UpdateLangDetail()
         {
             LangDetailHelper.LangDetails = _langDetailService.Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
         }
 
-        [Permission(EnumRole.Guest, EnumEntity.Home, EnumAction.Read)]
         public IActionResult LoadHeaderViewComponent()
         {
             return ViewComponent("Header");
