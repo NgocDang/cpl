@@ -21,7 +21,6 @@ using CPL.Misc.Quartz.Interfaces;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.Guest)]
     public class PricePredictionController : Controller
     {
         private readonly ILangService _langService;
