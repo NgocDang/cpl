@@ -148,6 +148,7 @@ namespace CPL.Controllers
             //viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
 
             //return View(viewModel);
+
             return View();
         }
 
