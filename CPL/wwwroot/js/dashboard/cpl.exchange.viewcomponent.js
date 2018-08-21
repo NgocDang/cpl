@@ -59,7 +59,7 @@
                         $("#exchange").modal("hide");
                         toastr.success(data.message, "Success!");
                         ExchangeViewComponent.loadExchangeViewComponent();
-                        ExchangeViewComponent.loadLotteryResultViewComponent();
+                        ExchangeViewComponent.LoadRateViewComponent();
                     } else {
                         toastr.error(data.message, "Error!");
                     }
@@ -158,14 +158,14 @@
             }
         });
     },
-    loadLotteryResultViewComponent: function () {
+    LoadRateViewComponent: function () {
         $.ajax({
-            url: "/Exchange/LoadLotteryResultViewComponent/",
+            url: "/Exchange/LoadRateViewComponent/",
             type: "GET",
             processData: false,
             contentType: false,
             success: function (data) {
-                $("#lottery-result").html(data);
+                $("#rate-component").html(data);
             }
         });
     }
