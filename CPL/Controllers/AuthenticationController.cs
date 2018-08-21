@@ -394,9 +394,6 @@ namespace CPL.Controllers
             var viewmodel = new AccountResetPasswordModel();
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
 
-            if (!HttpContext.Session.GetInt32("LangId").HasValue)
-                HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
-
             if (user == null)
             {
                 viewmodel.Status = EnumAccountStatus.REQUEST_NOT_EXIST;
