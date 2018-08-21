@@ -58,7 +58,8 @@ html body {
     }
 
     .main-menu.menu-fixed {
-        top: 4.5rem;
+        top: 3.6rem;
+        height: calc(100% - 3.6rem);
     }
 }
 
@@ -1779,4 +1780,8 @@ button#btn-dropdown-item:focus {
     top: 0px !important;
     right: 20px !important;
     z-index: 1000;
+}
+
+.pl-05 {
+    padding-left: 0.5rem !important;
 }
