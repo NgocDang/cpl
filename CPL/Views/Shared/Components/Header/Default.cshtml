@@ -4,7 +4,7 @@
     <div class="navbar-wrapper">
         <div class="navbar-header d-md-none pt-1 pb-0">
             <ul class="nav navbar-nav flex-row">
-                <li class="nav-item mobile-menu d-md-none mr-0"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
+                <li class="nav-item mobile-menu d-md-none mr-0"><a class="nav-link nav-menu-main menu-toggle hidden-xs pt-0" href="#"><i class="ft-menu font-large-1"></i></a></li>
                 <li class="nav-item navbar-lottery-mobile w-25 @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active")">
                     <a asp-controller="Home" asp-action="Index">
                         <img class="img-fluid w-75 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")"/>
@@ -12,41 +12,30 @@
                 </li>
                 <li class="nav-item navbar-price-prediction-mobile w-25  @(ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction" ? "active" : "")">
                     <a asp-controller="PricePrediction" asp-action="Index">
-                        <img class="img-fluid w-75 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionTabImage")"/>
+                        <img class="img-fluid w-75 mt-7px d-md-inline-block d-none" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionTabImage")" />
+                        <img class="img-fluid w-75 mt-7px d-md-none d-inline-block" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionMobileTabImage")" />
                     </a>
                 </li>
-                <li class="nav-item navbar-slot-mobile w-25  @(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")">
+                <li class="nav-item navbar-slot-mobile @(ViewContext.RouteData.Values["Controller"].ToString() == "Slot" ? "active" : "")" style="width:20%;">
                     <a asp-controller="Slot" asp-action="Index">
                         <img class="img-fluid w-50 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")"/>
                     </a>
                 </li>
                 @if (Model.User != null)
                 {
-                    <li class="nav-item mobile-menu d-md-none text-right">
-                        <a class="nav-link dropdown-toggle open-navbar-container" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="la la-ellipsis-v"></i></a>
+                    <li class="nav-item mobile-menu ml-1 d-md-none text-right">
+                        <a class="nav-link dropdown-toggle open-navbar-container" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="la la-ellipsis-v font-medium-5 mr-0 font-weight-bold"></i></a>
                         <div class="dropdown-menu dropdown-menu-right">
                             @if (Model.User.IsAdmin)
                             {
                                 <a class="dropdown-item" asp-controller="Admin" asp-action="Index"><i class="la la-user"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
-                                <hr class="mt-0" />
+                                <hr />
                             }
                             <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="fas fa-tachometer-alt font-small-4"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             <a class="dropdown-item" asp-controller="Profile" asp-action="Security"><i class="la la-key"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Security")</a>
                             <a class="dropdown-item" asp-controller="Profile" asp-action="Index"><i class="la la-user"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</a>
                             <a class="dropdown-item" asp-controller="Profile" asp-action="KYC"><i class="la la-credit-card"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</a>
-                            <hr class="mb-0" />
-                            <div class="dropdown-submenu">
-                                <button id="btn-dropdown-item" class="dropdown-item" type="button">
-                                    <i class="la la-language"></i>
-                                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Language")</span>
-                                </button>
-                                <div class="dropdown-menu" role="menu" aria-labelledby="dropdown-flag">
-                                    @foreach (var lang in Model.Langs)
-                                    {
-                                        <a data-id="@lang.Id" class="dropdown-item lang-item"><i class="flag-icon @lang.Image"></i> @lang.Name</a>
-                                    }
-                                </div>
-                            </div>
+                            
                             <hr class="mb-0" />
                             <a class="dropdown-item" href="#" id="logout-confirmation"><i class="la la-power-off"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
                         </div>
@@ -101,7 +90,7 @@
                         </a>
                     </li>
                 </ul>
-                <ul class="nav navbar-nav mr-auto float-left game-menu">
+                <ul class="nav navbar-nav float-left game-menu">
                     <li class="nav-item pl-md-0 pr-md-0 @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active")">
                         <a class="nav-item navbar-lottery-desktop ml-2rem @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active") " asp-controller="Home" asp-action="Index">
                             <img class="img-fluid w-75 mt-5px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")" />
@@ -117,23 +106,10 @@
                             <img class="img-fluid w-75 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SlotTabImage")" />
                         </a>
                     </li>
-                    @*<li class="nav-item">
-                        <a class="navbar-price-prediction-desktop" asp-controller="PricePrediction" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
-                    </li>
-                    @if (Model.News != null)
-                    {
-                        <li class="nav-item pt-1 pl-1 d-xl-inline d-none">
-                            <a class="bg-white hidden-sm text-primary" asp-controller="News" asp-action="Index">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")
-                            </a>
-                            <span class="black"><small> | </small></span>
-                            <a asp-controller="News" asp-action="Detail" asp-route-id="@Model.News.Id" class="font-weight-bold black news-link"><small>@Model.News.CreatedDate.ToString("yyyy/MM/dd") @Model.News.Title</small></a>
-                        </li>
-                    }*@
                 </ul>
-                <ul class="nav navbar-nav float-right navbar-right">
+                <ul class="nav navbar-nav float-right nav-language">
                     <li class="dropdown dropdown-language nav-item">
-                        <a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="dropdown-toggle nav-link pr-0" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="flag-icon @Model.Lang.Image"></i>
                             <span class="font-small-3 selected-language">@Model.Lang.Name</span>
                         </a>
@@ -213,7 +189,7 @@
                     }
                 </a>
             </li>
-            <li class="dropdown nav-item d-none" data-menu="dropdown">
+            <li class="dropdown nav-item d-lg-none d-md-none" data-menu="dropdown">
                 <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
                     <i class="la la-language"></i>
                     <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Language")</span>

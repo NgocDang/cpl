@@ -30,7 +30,7 @@ html body {
 }
 
 .header-navbar .navbar-header {
-    height: 4.5rem;
+    height: auto;
 }
 
 .header-navbar .navbar-header-mobile-authentication {
@@ -58,7 +58,8 @@ html body {
     }
 
     .main-menu.menu-fixed {
-        top: 4.5rem;
+        top: 3.6rem;
+        height: calc(100% - 3.6rem);
     }
 }
 
@@ -1377,9 +1378,9 @@ footer {
     color: #464855;
 }
 
-.navbar-lottery-desktop>a, .navbar-price-prediction-desktop>a, .navbar-slot-desktop>a {
-    background: none !important;
-}
+    .navbar-lottery-desktop > a, .navbar-price-prediction-desktop > a, .navbar-slot-desktop > a {
+        background: none !important;
+    }
 
     .navbar-lottery-desktop.active, .navbar-price-prediction-desktop.active, .navbar-slot-desktop.active {
         background-color: #ffd300 !important;
@@ -1388,7 +1389,6 @@ footer {
 
 .navbar-lottery-mobile, .navbar-price-prediction-mobile, .navbar-slot-mobile {
     display: inline-block;
-    padding: 0.4rem 0rem;
     text-align: center;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
@@ -1402,7 +1402,7 @@ footer {
         color: black;
     }
 
-.mt-7px{
+.mt-7px {
     margin-top: 7px !important;
 }
 
@@ -1772,4 +1772,28 @@ button#btn-dropdown-item:focus {
         margin-bottom: 1.5rem !important;
         margin-top: 1.5rem !important;
     }
+}
+
+#navbar-mobile {
+    position: relative;
+}
+
+@media (min-width: 1140px) {
+    .nav-language {
+        position: absolute !important;
+        top: 0px !important;
+        right: 0px !important;
+        z-index: 1000;
+    }
+}
+
+.nav-language {
+    position: fixed;
+    top: 0px !important;
+    right: 30px !important;
+    z-index: 1000;
+}
+
+.pl-05 {
+    padding-left: 0.5rem !important;
 }

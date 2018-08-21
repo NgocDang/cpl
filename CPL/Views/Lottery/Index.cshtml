@@ -34,7 +34,7 @@
                 </div>
             }
 
-            <div class="row mb-1">
+            <div class="row mb-05">
                 <div class="col-lg-6 col-12 d-sm-block d-none">
                     <div class="card">
                         <img class="img-fluid" src="~/images/lottery/@Model.PrizeImage" />
@@ -88,7 +88,7 @@
                         </div>
                     </div>
                     <div class="d-none" id="div-confirm-lottery">
-                        <div class="card font-medium-2 pl-2 pr-2 pt-2">
+                        <div class="card font-medium-2 pl-2 pr-2 pt-2 mb-05">
                             <div class="card-header text-center font-large-1 font-weight-bold text-danger text-uppercase">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ConfirmYourTicket")
                             </div>
@@ -113,7 +113,7 @@
                                 <p class="mb-0"><small class="font-italic">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HintConfirmLottery2")</small></p>
                             </div>
                         </div>
-                        <div class="row mb-2">
+                        <div class="row mb-05">
                             <div class="col-6">
                                 <button type="button" id="btn-cancel-purchase-lottery-ticket" class="btn btn-secondary btn-block font-medium-3"><i class="fa fa-arrow-left"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Back")</button>
                             </div>

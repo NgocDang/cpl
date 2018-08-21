@@ -177,9 +177,9 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.User)]
-        public IActionResult LoadLotteryResultViewComponent()
+        public IActionResult LoadRateViewComponent()
         {
-            return ViewComponent("LotteryResult");
+            return ViewComponent("Rate");
         }
     }
 }

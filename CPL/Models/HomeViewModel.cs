@@ -9,6 +9,7 @@ namespace CPL.Models
     {
         public List<HomeSlideViewModel> Slides { get; set; }
         public List<HomeLotteryViewModel> Lotteries { get; set; }
+        public NewsViewModel News { get; set; }
     }
 
     public class HomeSlideViewModel

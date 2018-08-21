@@ -29,6 +29,7 @@ namespace CPL.Controllers
         [Permission(EnumRole.Guest)]
         public IActionResult SwitchLang(int id)
         {
+            HttpContext.Session.SetInt32("LangId", id);
             return new JsonResult(new { success = true });
         }
     }
