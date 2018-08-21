@@ -1407,6 +1407,10 @@ footer {
     margin-top: 7px !important;
 }
 
+.mt-5px {
+    margin-top: 5px !important;
+}
+
 .ml-2rem {
     margin-left: 2rem;
 }
