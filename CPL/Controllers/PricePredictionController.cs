@@ -21,6 +21,7 @@ using CPL.Misc.Quartz.Interfaces;
 
 namespace CPL.Controllers
 {
+    [Permission(EnumRole.Guest)]
     public class PricePredictionController : Controller
     {
         private readonly ILangService _langService;
@@ -67,7 +68,6 @@ namespace CPL.Controllers
             this._progressHubContext = progressHubContext;
         }
 
-        [Permission(EnumRole.User, EnumEntity.PricePrediction, EnumAction.Read)]
         public IActionResult Index()
         {
             // Test quartz job price prediction update result
@@ -175,7 +175,6 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Guest, EnumEntity.PricePrediction, EnumAction.Read)]
         public IActionResult GetBTCCurrentRate()
         {
             try
@@ -194,7 +193,6 @@ namespace CPL.Controllers
             }
         }
 
-        [Permission(EnumRole.User, EnumEntity.PricePrediction, EnumAction.Read)]
         public JsonResult SearchPricePredictionHistory(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -211,7 +209,6 @@ namespace CPL.Controllers
             });
         }
 
-        [Permission(EnumRole.User, EnumEntity.PricePrediction, EnumAction.Read)]
         public IList<PricePredictionHistoryViewModel> SearchPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
@@ -283,7 +280,6 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.User, EnumEntity.PricePrediction, EnumAction.Read)]
         public IActionResult ConfirmPrediction(int pricePredictionId, decimal betAmount, bool predictedTrend)
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");

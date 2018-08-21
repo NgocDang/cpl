@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.User, EnumEntity.Lottery, EnumAction.Read)]
+    [Permission(EnumRole.Guest, EnumEntity.Lottery, EnumAction.Read)]
     public class LotteryController : Controller
     {
         private readonly ILangService _langService;
