@@ -4,7 +4,7 @@
     <div class="navbar-wrapper">
         <div class="navbar-header d-md-none pt-1 pb-0">
             <ul class="nav navbar-nav flex-row">
-                <li class="nav-item mobile-menu d-md-none mr-0"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
+                <li class="nav-item mobile-menu d-md-none mr-0"><a class="nav-link nav-menu-main menu-toggle hidden-xs pt-0" href="#"><i class="ft-menu font-large-1"></i></a></li>
                 <li class="nav-item navbar-lottery-mobile w-25 @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active")">
                     <a asp-controller="Home" asp-action="Index">
                         <img class="img-fluid w-75 mt-7px" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")"/>
