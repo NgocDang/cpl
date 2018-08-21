@@ -1773,3 +1773,10 @@ button#btn-dropdown-item:focus {
         margin-top: 1.5rem !important;
     }
 }
+
+
+.nav-language {
+    position: fixed;
+    top: 0px !important;
+    right: 0px !important;
+}
