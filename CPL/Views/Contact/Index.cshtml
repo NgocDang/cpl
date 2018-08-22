@@ -95,15 +95,17 @@
                                         <select data-value="@Model.Category" name="Category" id="Category" class="selectpicker" required data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                             @if (Model.SysUser == null)
                                             {
-                                                <option value="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</option>
-                                                <option value="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</option>
+                                                <option value="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContactRegister")</option>
+                                                <option value="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContactLogIn")</option>
+                                                <option value="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContactOther")</option>
                                             }
                                             else
                                             {
-                                                <option value="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")</option>
-                                                <option value="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</option>
-                                                <option value="5">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</option>
-                                                <option value="6">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</option>
+                                                <option value="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContactDeposit")</option>
+                                                <option value="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContactWithdraw")</option>
+                                                <option value="5">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContactKYC")</option>
+                                                <option value="6">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContactLottery")</option>
+                                                <option value="7">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContactOther")</option>
                                             }
                                         </select>
                                         <div class="invalid-feedback" id="category-error">
