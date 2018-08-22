@@ -122,7 +122,7 @@ namespace CPL
             LoadLangDetail(serviceProvider);
             LoadLangMsgDetail(serviceProvider);
             LoadSetting(serviceProvider);
-            //LoadWCF(serviceProvider);
+            LoadWCF(serviceProvider);
             LoadQuartz(serviceProvider);
 
             app.UseMvc(routes =>
