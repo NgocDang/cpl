@@ -1,7 +1,7 @@
 ﻿@model ProfileViewModel
 
 <div class="card-content">
-    <form id="form-edit-account" class="form-horizontal mt-2" action="">
+    <form id="form-edit-profile" class="form-horizontal mt-2" action="">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-2 col-12 text-center">
@@ -351,8 +351,7 @@
                     <div class="row">
                         <div class="col-12 text-right">
                             <hr />
-                            <button type="button" id="btn-save-account" class="btn btn-primary"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
-                            @*<a id="btn-continue-verify-kyc" class="btn btn-success " asp-controller="Profile" asp-action="KYC"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ContinueVerifyKYC")<i class="la la-angle-right la-button-size"></i></a>*@
+                            <button type="button" id="btn-do-edit-profile" class="btn btn-primary"><i class='far fa-save'></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
                         </div>
                     </div>
                 </div>
