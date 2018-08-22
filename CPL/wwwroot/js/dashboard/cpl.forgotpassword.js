@@ -3,18 +3,18 @@
         ForgotPassword.bindDoSend();
     },
     bindDoSend: function () {
-        $("#btn-forgot-password").on("click", function () {
+        $("#btn-do-forgot-password").on("click", function () {
             var isFormValid = $("#form-forgot-password")[0].checkValidity();
             $("#form-forgot-password").addClass('was-validated');
 
             if (isFormValid) {
                 $("#forgot-password-error").hide();
                 $.ajax({
-                    url: "/Authentication/ForgotPassword/",
+                    url: "/Authentication/DoForgotPassword/",
                     type: "POST",
                     beforeSend: function () {
-                        $("#btn-forgot-password").attr("disabled", true);
-                        $("#btn-forgot-password").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-forgot-password").text());
+                        $("#btn-do-forgot-password").attr("disabled", true);
+                        $("#btn-do-forgot-password").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-do-forgot-password").text());
                     },
                     data: {
                         Email: $("#Email").val()
@@ -30,8 +30,8 @@
                         }
                     },
                     complete: function (data) {
-                        $("#btn-forgot-password").attr("disabled", false);
-                        $("#btn-forgot-password").html($("#btn-forgot-password").text());
+                        $("#btn-do-forgot-password").attr("disabled", false);
+                        $("#btn-do-forgot-password").html($("#btn-do-forgot-password").text());
                     }
                 });
             }

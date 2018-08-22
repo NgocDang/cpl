@@ -1,6 +1,7 @@
 ﻿@model AccountRegistrationModel
 @{
     Layout = "_Layout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register");
 }
 
 <!-- ////////////////////////////////////////////////////////////////////////////-->
