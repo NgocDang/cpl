@@ -1,9 +1,9 @@
 ﻿@model SysUserViewModel
 
-<div class="modal" tabindex="-1" role="dialog" id="update-user" style="display: none;" aria-hidden="true">
+<div class="modal" tabindex="-1" role="dialog" id="edit-user" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-lg mx-auto" role="document">
         <div class="modal-content">
-            <form id="form-update-user" method="POST" action="#" class="needs-validation" novalidate="">
+            <form id="form-edit-user" method="POST" action="#" class="needs-validation" novalidate="">
                 <div class="modal-header">
                     <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "User")</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
@@ -61,11 +61,8 @@
                 <div class="modal-footer">
                     @if (!Model.IsDeleted)
                     {
-                        <button type="button" id="btn-update-user" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
-                        @*@if (!Model.IsAdmin)
-                        {*@
-                            <button type="button" id="btn-delete-user" class="btn btn-sm btn-danger">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Delete")</button>
-                        //}
+                        <button type="button" id="btn-do-edit-user" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
+                        <button type="button" id="btn-do-delete-user" class="btn btn-sm btn-danger">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Delete")</button>
                     }
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
                 </div>

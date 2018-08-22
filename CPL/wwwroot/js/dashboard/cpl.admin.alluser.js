@@ -5,7 +5,7 @@
         AdminAllUser.loadLightBox();
         AdminAllUser.bindEdit();
         AdminAllUser.bindDoEdit();
-        AdminAllUser.bindDelete();
+        AdminAllUser.bindDoDelete();
     },
     bindEdit: function () {
         $("#dt-all-user").on("click", ".btn-edit", function () {
@@ -21,7 +21,7 @@
                 },
                 success: function (data) {
                     $("#modal").html(data);
-                    $("#update-user").modal("show");
+                    $("#edit-user").modal("show");
 
                     $.each($(".js-switch"), function (index, element) {
                         var switches = new Switchery(element, { size: 'small' });
@@ -47,9 +47,9 @@
         });
     },
     bindDoEdit: function () {
-        $("#modal").on("click", "#btn-update-user", function () {
-            var isFormValid = $("#form-update-user")[0].checkValidity();
-            $("#form-update-user").addClass('was-validated');
+        $("#modal").on("click", "#btn-do-edit-user", function () {
+            var isFormValid = $("#form-edit-user")[0].checkValidity();
+            $("#form-edit-user").addClass('was-validated');
             $("#Email").removeClass("border-danger");
             var isMobileValid = true;
             if ($("#Mobile").intlTelInput("getNumber") != "") {
@@ -67,11 +67,11 @@
 
             if (isFormValid && isMobileValid) {
                 $.ajax({
-                    url: "/Admin/UpdateUser/",
+                    url: "/Admin/DoEditUser/",
                     type: "POST",
                     beforeSend: function () {
-                        $("#btn-update-user").attr("disabled", true);
-                        $("#btn-update-user").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-update-user").text());
+                        $("#btn-do-edit-user").attr("disabled", true);
+                        $("#btn-do-edit-user").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-do-edit-user").text());
                     },
                     data: {
                         FirstName: $("#FirstName").val(),
@@ -91,7 +91,7 @@
                             $("#address-" + $("#Id").val()).html($("#Address").val());
                             $("#email-" + $("#Id").val()).html($("#Email").val());
                             toastr.success(data.message, 'Success!');
-                            $("#update-user").modal("hide");
+                            $("#edit-user").modal("hide");
                             AdminAllUser.allUserDataTable.ajax.reload();
                         } else {
                             if (data.name == "email") {
@@ -101,8 +101,8 @@
                         }
                     },
                     complete: function (data) {
-                        $("#btn-update-user").attr("disabled", false);
-                        $("#btn-update-user").html($("#btn-update-user").text());
+                        $("#btn-do-edit-user").attr("disabled", false);
+                        $("#btn-do-edit-user").html($("#btn-update-user").text());
                     }
                 });
             }
@@ -215,23 +215,23 @@
             ],
         });
     },
-    bindDelete: function () {
-        $("#modal").on("click", "#btn-delete-user", function () {
+    bindDoDelete: function () {
+        $("#modal").on("click", "#btn-do-delete-user", function () {
             var result = confirm("Do you really want to delete this user?");
             if (result) {
                 $.ajax({
-                    url: "/Admin/DeleteUser/",
+                    url: "/Admin/DoDeleteUser/",
                     type: "POST",
                     beforeSend: function () {
-                        $("#btn-delete-user").attr("disabled", true);
-                        $("#btn-delete-user").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-delete-user").text());
+                        $("#btn-do-delete-user").attr("disabled", true);
+                        $("#btn-do-delete-user").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-do-delete-user").text());
                     },
                     data: {
                         id: $("#Id").val()
                     },
                     success: function (data) {
                         if (data.success) {
-                            $("#update-user").modal("hide");
+                            $("#edit-user").modal("hide");
                             toastr.success(data.message, 'Success!');
                             AdminAllUser.allUserDataTable.ajax.reload();
                         } else {
@@ -239,8 +239,8 @@
                         }
                     },
                     complete: function (data) {
-                        $("#btn-delete-user").attr("disabled", false);
-                        $("#btn-delete-user").html($("#btn-delete-user").text());
+                        $("#btn-do-delete-user").attr("disabled", false);
+                        $("#btn-do-delete-user").html($("#btn-do-delete-user").text());
                     }
                 });
             }

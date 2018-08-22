@@ -121,7 +121,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult UpdateUser(SysUserViewModel viewModel)
+        public IActionResult DoEditUser(SysUserViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == viewModel.Id);
             if (user != null)
@@ -149,7 +149,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin, EnumEntity.SysUser, EnumAction.Delete)]
-        public IActionResult DeleteUser(int id)
+        public IActionResult DoDeleteUser(int id)
         {
             var user = _sysUserService.Queryable()
                 .FirstOrDefault(x => x.Id == id);
