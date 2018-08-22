@@ -406,7 +406,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult SaveEditNews(NewsViewModel viewModel)
+        public JsonResult DoEditNews(NewsViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -434,7 +434,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult AddNews(NewsViewModel viewModel)
+        public JsonResult DoAddNews(NewsViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -451,7 +451,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult DeleteNews(int id)
+        public JsonResult DoDeleteNews(int id)
         {
             var news = _newsService.Queryable()
             .FirstOrDefault(x => x.Id == id);

@@ -23,8 +23,8 @@
                 },
                 success: function (data) {
                     $("#modal").html(data);
-                    $("#update-news").modal("show");
-                    $("#update-news #btn-submit").hide();
+                    $("#edit-news").modal("show");
+                    $("#edit-news #btn-submit").hide();
                     tinymce.remove();
                     AdminNews.initTinyMCE();
                 },
@@ -49,8 +49,8 @@
                 },
                 success: function (data) {
                     $("#modal").html(data);
-                    $("#update-news").modal("show");
-                    $("#update-news #btn-save").hide();
+                    $("#edit-news").modal("show");
+                    $("#edit-news #btn-save").hide();
                     tinymce.remove();
                     AdminNews.initTinyMCE();
                 },
@@ -62,10 +62,10 @@
         });
     },
     bindDoEdit: function () {
-        $("#modal").on("click", "#btn-save", function () {
+        $("#modal").on("click", "#btn-do-edit", function () {
             var _this = this;
-            var isFormValid = $("#form-update-news")[0].checkValidity();
-            $("#form-update-news").addClass('was-validated');
+            var isFormValid = $("#form-edit-news")[0].checkValidity();
+            $("#form-edit-news").addClass('was-validated');
 
             if (tinymce.EditorManager.activeEditor.plugins.wordcount.getCount() == 0) {
                 $("#full-desc").find(".invalid-feedback").show();
@@ -85,7 +85,7 @@
                 formData.append('Description', tinymce.activeEditor.getContent());
 
                 $.ajax({
-                    url: "/Admin/SaveEditNews/",
+                    url: "/Admin/DoEditNews/",
                     type: "POST",
                     processData: false,
                     contentType: false,
@@ -96,7 +96,7 @@
                     data: formData,
                     success: function (data) {
                         if (data.success) {
-                            $("#update-news").modal("hide");
+                            $("#edit-news").modal("hide");
                             AdminNews.newsDataTable.ajax.reload();
                             toastr.success(data.message, "Success!");
                         } else {
@@ -114,10 +114,10 @@
         });
     },
     bindDoAdd: function () {
-        $("#modal").on("click", "#btn-submit", function () {
+        $("#modal").on("click", "#btn-do-add", function () {
             var _this = this;
-            var isFormValid = $("#form-update-news")[0].checkValidity();
-            $("#form-update-news").addClass('was-validated');
+            var isFormValid = $("#form-edit-news")[0].checkValidity();
+            $("#form-edit-news").addClass('was-validated');
             if (tinymce.EditorManager.activeEditor.plugins.wordcount.getCount() == 0) {
                 $("#full-desc").find(".invalid-feedback").show();
                 return false;
@@ -135,7 +135,7 @@
                 formData.append('Description', tinymce.activeEditor.getContent());
 
                 $.ajax({
-                    url: "/Admin/AddNews/",
+                    url: "/Admin/DoAddNews/",
                     type: "POST",
                     processData: false,
                     contentType: false,
@@ -146,7 +146,7 @@
                     data: formData,
                     success: function (data) {
                         if (data.success) {
-                            $("#update-news").modal("hide");
+                            $("#edit-news").modal("hide");
                             AdminNews.newsDataTable.ajax.reload();
                             toastr.success(data.message, "Success!");
                         } else {
@@ -201,7 +201,7 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a style='line-height:12px;margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</a> <button style='line-height:12px;margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-delete'>" + $("#delete").val() +"</button>";
+                        return "<a style='line-height:12px;margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</a> <button style='line-height:12px;margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-do-delete'>" + $("#delete").val() +"</button>";
                     },
                     "orderable": false
                 }
@@ -209,12 +209,12 @@
         });
     },
     bindDoDelete: function () {
-        $("#dt-news").on("click", ".btn-delete", function () {
+        $("#dt-news").on("click", ".btn-do-delete", function () {
             var result = confirm("Do you really want to delete this news?");
             if (result) {
                 var _this = this;
                 $.ajax({
-                    url: "/Admin/DeleteNews",
+                    url: "/Admin/DoDeleteNews",
                     type: "POST",
                     beforeSend: function () {
                         $(_this).attr("disabled", true);
@@ -231,8 +231,8 @@
                         }
                     },
                     complete: function (data) {
-                        $(".btn-delete").attr("disabled", false);
-                        $(".btn-delete").html($(".btn-delete").text());
+                        $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text());
                     }
                 });
                 return false;
