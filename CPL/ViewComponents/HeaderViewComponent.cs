@@ -26,7 +26,11 @@ namespace CPL.ViewComponents
         public IViewComponentResult Invoke()
         {
             var viewModel = new HeaderViewModel();
-            viewModel.User = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            if (user != null)
+                viewModel.User = _sysUserService.Queryable().Where(x => x.Id == user.Id).Select(x => Mapper.Map<SysUserViewModel>(x)).FirstOrDefault();
+            else
+                viewModel.User = user;
 
             viewModel.Langs = _langService.Queryable()
                 .Select(x => Mapper.Map<LangViewModel>(x))
