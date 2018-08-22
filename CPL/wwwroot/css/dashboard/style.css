@@ -1369,18 +1369,19 @@ footer {
 }
 
 .navbar-lottery-desktop, .navbar-price-prediction-desktop, .navbar-slot-desktop {
-    display: inline-block;
-    padding: 0.19rem 1rem;
-    text-align: center;
+    padding: 0.5rem 0rem;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     line-height: 1;
     background-color: #babfc7;
     color: #464855;
+    margin-top: -2.78rem;
+    height: 45px;
 }
 
     .navbar-lottery-desktop > a, .navbar-price-prediction-desktop > a, .navbar-slot-desktop > a {
         background: none !important;
+        display:inline-flex;
     }
 
     .navbar-lottery-desktop.active, .navbar-price-prediction-desktop.active, .navbar-slot-desktop.active {
@@ -1389,14 +1390,13 @@ footer {
     }
 
 .navbar-lottery-mobile, .navbar-price-prediction-mobile, .navbar-slot-mobile {
-    display: inline-block;
-    text-align: center;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     line-height: 1;
     background-color: #babfc7;
     color: #464855;
-    min-height:43px;
+    min-height: 43px;
+    display: inline-flex;
 }
 
     .navbar-lottery-mobile.active, .navbar-price-prediction-mobile.active, .navbar-slot-mobile.active {
@@ -1455,10 +1455,6 @@ footer {
     .main-menu .btn-sm.btn-white {
         color: #000 !important;
     }
-
-.game-menu {
-    padding-bottom: 2.3rem;
-}
 
 ul.game-menu li.active {
     z-index: 1000;
