@@ -1,9 +1,9 @@
 var TransactionHistoryViewComponent = {
     transactionHistoryDataTable: null,
     init: function () {
-        TransactionHistoryViewComponent.transactionHistoryDataTable = TransactionHistoryViewComponent.loadTransactionHistoryDataTable();
+        TransactionHistoryViewComponent.transactionHistoryDataTable = TransactionHistoryViewComponent.getTransactionHistoryDataTable();
     },
-    loadTransactionHistoryDataTable: function () {
+    getTransactionHistoryDataTable: function () {
         return $("#dt-transaction-history").DataTable({
             "processing": true,
             "serverSide": true,

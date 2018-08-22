@@ -1,9 +1,9 @@
 ﻿var Register = {
     init: function () {
-        Register.bindDoRegister();
+        Register.bindRegister();
     },
-    bindDoRegister: function () {
-        $("#btn-register").on("click", function () {
+    bindRegister: function () {
+        $("#btn-do-register").on("click", function () {
             var isFormValid = $("#form-register").valid();
             var isPasswordValid = $("#Password").val() == $("#PasswordConfirm").val();
             if (!isPasswordValid) {
@@ -21,11 +21,11 @@
                 $("#register-msg").hide();
                 $("#email-msg").hide();
                 $.ajax({
-                    url: "/Authentication/Register/",
+                    url: "/Authentication/DoRegister/",
                     type: "POST",
                     beforeSend: function () {
-                        $("#btn-register").attr("disabled", true);
-                        $("#btn-register").html("<i class='fa fa-spinner fa-spin'></i><i class='fas fa-user-plus'></i> " + $("#btn-register").text());
+                        $("#btn-do-register").attr("disabled", true);
+                        $("#btn-do-register").html("<i class='fa fa-spinner fa-spin'></i><i class='fas fa-user-plus'></i> " + $("#btn-do-register").text());
                     },
                     data: {
                         Email: $("#Email").val(),
@@ -51,8 +51,8 @@
                         }
                     },
                     complete: function (data) {
-                        $("#btn-register").attr("disabled", false);
-                        $("#btn-register").html("<i class='fas fa-user-plus'></i> "+ $("#btn-register").text());
+                        $("#btn-do-register").attr("disabled", false);
+                        $("#btn-do-register").html("<i class='fas fa-user-plus'></i> "+ $("#btn-do-register").text());
                     }
                 });
             }

@@ -6,7 +6,7 @@
         Security.bindDoEditTwoFactorAuthentication();
     },
     bindDoEditEmail: function () {
-        $("#btn-save-email").on("click", function () {
+        $("#btn-do-edit-email").on("click", function () {
             var isFormValid = $('#form-edit-email')[0].checkValidity();
             $("#form-edit-email").addClass('was-validated');
 
@@ -21,7 +21,7 @@
                 $("#new-email-msg").hide();
 
                 $.ajax({
-                    url: "/Profile/UpdateEmail/",
+                    url: "/Profile/DoEditEmail/",
                     type: "POST",
                     beforeSend: function () {
                         $("#btn-save-email").attr("disabled", true);
@@ -51,7 +51,7 @@
         });
     },
     bindDoEditPassword: function () {
-        $("#btn-save-password").on("click", function () {
+        $("#btn-do-edit-password").on("click", function () {
             var isFormValid = $('#form-edit-password')[0].checkValidity();
             $("#form-edit-password").addClass('was-validated');
 
@@ -65,7 +65,7 @@
             if (isFormValid && isConfirmPasswordValid) {
                 $("#current-password-msg").hide();
                 $.ajax({
-                    url: "/Profile/UpdatePassword/",
+                    url: "/Profile/DoEditPassword/",
                     type: "POST",
                     beforeSend: function () {
                         $("#btn-save-password").attr("disabled", true);
@@ -104,13 +104,13 @@
         }
     },
     bindDoEditTwoFactorAuthentication: function () {
-        $("#two-factor-authenticator").on("click", "#btn-two-factor-disable", function () {
+        $("#two-factor-authenticator").on("click", "#btn-do-disable-two-factor", function () {
             $.ajax({
-                url: "/Profile/UpdateTwoFactorAuthentication/",
+                url: "/Profile/DoEditTwoFactorAuthentication/",
                 type: "POST",
                 beforeSend: function () {
-                    $("#btn-two-factor-disable").attr("disabled", true);
-                    $("#btn-two-factor-disable").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-two-factor-disable").text());
+                    $("#btn-do-disable-two-factor").attr("disabled", true);
+                    $("#btn-do-disable-two-factor").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-do-disable-two-factor").text());
                 },
                 data: {
                     value: false
@@ -125,21 +125,21 @@
                     }
                 },
                 complete: function (data) {
-                    $("#btn-two-factor-disable").attr("disabled", false);
-                    $("#btn-two-factor-disable").html($("#btn-two-factor-disable").text());
+                    $("#btn-do-disable-two-factor").attr("disabled", false);
+                    $("#btn-do-disable-two-factor").html($("#btn-do-disable-two-factor").text());
                 }
             });
         });
-        $("#two-factor-authenticator").on("click", "#btn-two-factor-enable", function () {
+        $("#two-factor-authenticator").on("click", "#btn-do-enable-two-factor", function () {
             var isFormValid = $('#form-two-factor-enable')[0].checkValidity();
             $("#form-two-factor-enable").addClass('was-validated');
             if (isFormValid) {
                 $.ajax({
-                    url: "/Profile/UpdateTwoFactorAuthentication/",
+                    url: "/Profile/DoEditTwoFactorAuthentication/",
                     type: "POST",
                     beforeSend: function () {
-                        $("#btn-two-factor-enable").attr("disabled", true);
-                        $("#btn-two-factor-enable").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-two-factor-enable").text());
+                        $("#btn-do-enable-two-factor").attr("disabled", true);
+                        $("#btn-do-enable-two-factor").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-do-enable-two-factor").text());
                     },
                     data: {
                         value: true,
@@ -155,8 +155,8 @@
                         }
                     },
                     complete: function (data) {
-                        $("#btn-two-factor-enable").attr("disabled", false);
-                        $("#btn-two-factor-enable").html($("#btn-two-factor-enable").text());
+                        $("#btn-do-enable-two-factor").attr("disabled", false);
+                        $("#btn-do-enable-two-factor").html($("#btn-do-enable-two-factor").text());
                     }
                 });
             }

@@ -182,7 +182,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.User)]
-        public IActionResult UpdateEmail(UpdateEmailViewModel viewModel)
+        public IActionResult DoEditEmail(UpdateEmailViewModel viewModel)
         {
             var isEmailExisting = _sysUserService.Queryable().Any(x => x.Email == viewModel.NewEmail && x.IsDeleted == false);
             if (isEmailExisting)
@@ -203,7 +203,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.User)]
-        public IActionResult UpdatePassword(UpdatePasswordViewModel viewModel)
+        public IActionResult DoEditPassword(UpdatePasswordViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
@@ -231,7 +231,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.User)]
-        public IActionResult UpdateTwoFactorAuthentication(bool value, string pin)
+        public IActionResult DoEditTwoFactorAuthentication(bool value, string pin)
         {
             if (value)
             {

@@ -130,7 +130,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public IActionResult Register(AccountRegistrationModel viewModel)
+        public IActionResult DoRegister(AccountRegistrationModel viewModel)
         {
             //// Ensure we have a valid viewModel to work with
             if (ModelState.IsValid)
@@ -300,7 +300,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public ActionResult ForgotPassword(AccountForgotPasswordModel viewModel)
+        public ActionResult DoForgotPassword(AccountForgotPasswordModel viewModel)
         {
             // Ensure we have a valid viewModel to work with
             if (ModelState.IsValid)
@@ -361,7 +361,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public ActionResult ResetPassword(AccountResetPasswordModel viewModel)
+        public ActionResult DoResetPassword(AccountResetPasswordModel viewModel)
         {
             // Ensure we have a valid viewModel to work with
             if (ModelState.IsValid)

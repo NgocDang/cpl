@@ -3,7 +3,7 @@
         ResetPassword.bindDoResetPassword();
     },
     bindDoResetPassword: function () {
-        $("#btn-reset-password").on("click", function () {
+        $("#btn-do-reset-password").on("click", function () {
             var isFormValid = $("#form-reset-password")[0].checkValidity();
             $("#form-reset-password").addClass('was-validated');
 
@@ -17,11 +17,11 @@
             if (isFormValid && isPasswordValid) {
                 $("#reset-password-error").hide();
                 $.ajax({
-                    url: "/Authentication/ResetPassword/",
+                    url: "/Authentication/DoResetPassword/",
                     type: "POST",
                     beforeSend: function () {
-                        $("#btn-reset-password").attr("disabled", true);
-                        $("#btn-reset-password").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-reset-password").text());
+                        $("#btn-do-reset-password").attr("disabled", true);
+                        $("#btn-do-reset-password").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-do-reset-password").text());
                     },
                     data: {
                         Password: $("#Password").val(),
@@ -40,8 +40,8 @@
                         }
                     },
                     complete: function (data) {
-                        $("#btn-reset-password").attr("disabled", false);
-                        $("#btn-reset-password").html($("#btn-reset-password").text());
+                        $("#btn-do-reset-password").attr("disabled", false);
+                        $("#btn-do-reset-password").html($("#btn-do-reset-password").text());
                     }
                 });
             }
