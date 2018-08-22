@@ -1,15 +1,15 @@
 ﻿var News = {
     newsDataTable: null,
     init: function () {
-        News.newsDataTable = News.loadNewsDatatable();
+        News.newsDataTable = News.loadNewsDataTable();
         News.loadLightBox();
-        News.bindEditButton();
-        News.bindSaveButton();
-        News.bindDeleteButton();
-        News.bindAddButton();
-        News.bindSubmitButton();
+        News.bindEdit();
+        News.bindDoSave();
+        News.bindDoDelete();
+        News.bindAdd();
+        News.bindDoAdd();
     },
-    bindEditButton: function () {
+    bindEdit: function () {
         $("#dt-news").on("click", ".btn-edit", function () {
             var _this = this;
             $.ajax({
@@ -35,7 +35,7 @@
             return false;
         });
     },
-    bindAddButton: function () {
+    bindAdd: function () {
         $("#news-management").on("click", "#btn-add", function () {
             var _this = this;
             $.ajax({
@@ -61,7 +61,7 @@
             return false;
         });
     },
-    bindSaveButton: function () {
+    bindDoSave: function () {
         $("#modal").on("click", "#btn-save", function () {
             var _this = this;
             var isFormValid = $("#form-update-news")[0].checkValidity();
@@ -113,7 +113,7 @@
             return false;
         });
     },
-    bindSubmitButton: function () {
+    bindDoAdd: function () {
         $("#modal").on("click", "#btn-submit", function () {
             var _this = this;
             var isFormValid = $("#form-update-news")[0].checkValidity();
@@ -169,7 +169,7 @@
             $(this).ekkoLightbox();
         });
     },
-    loadNewsDatatable: function () {
+    loadNewsDataTable: function () {
         return $('#dt-news').DataTable({
             "processing": true,
             "serverSide": true,
@@ -208,7 +208,7 @@
             ],
         });
     },
-    bindDeleteButton: function () {
+    bindDoDelete: function () {
         $("#dt-news").on("click", ".btn-delete", function () {
             var result = confirm("Do you really want to delete this news?");
             if (result) {

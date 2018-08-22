@@ -4,7 +4,7 @@
         ExchangeViewComponent.bindMax();
         ExchangeViewComponent.bindInputChange();
         ExchangeViewComponent.bindNext();
-        ExchangeViewComponent.bindConfirmExchange();
+        ExchangeViewComponent.bindDoConfirm();
     },
     bindNext: function () {
         $('#exchange-content').on('click', '.btn-next', function () {
@@ -38,7 +38,7 @@
             }
         });
     },
-    bindConfirmExchange: function () {
+    bindDoConfirm: function () {
         $('#modal').on('click', '#btn-confirm-exchange', function () {
             var _this = this;
             $.ajax({

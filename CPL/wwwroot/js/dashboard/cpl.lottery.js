@@ -2,8 +2,8 @@
     init: function () {
         Lottery.bindSpinTicketNumber();
         Lottery.bindPurchaseTicket();
-        Lottery.bindConfirmPurchaseTicket();
-        Lottery.bindCancelPurchaseTicket();
+        Lottery.bindDoPurchaseTicket();
+        Lottery.bindCancel();
     },
     bindSpinTicketNumber: function () {
         $('#form-purchase-lottery').on('change paste keyup input', '#number-of-ticket', function () {
@@ -55,19 +55,19 @@
             }
         })
     },
-    bindCancelPurchaseTicket: function () {
+    bindCancel: function () {
         $('#btn-cancel-purchase-lottery-ticket').click(function () {
             $("#div-buy-lottery").toggleClass("d-none");
             $("#div-confirm-lottery").toggleClass("d-none");
         });
     },
-    bindConfirmPurchaseTicket: function () {
+    bindDoPurchaseTicket: function () {
         $('#btn-confirm-purchase-lottery-ticket').click(function () {
             Lottery.loadAjaxConfirmPurchaseTicket();
         })
 
     },
-    loadAjaxConfirmPurchaseTicket() {
+    loadAjaxConfirmPurchaseTicket: function () {
          $.ajax({
              url: "/Lottery/ConfirmPurchaseTicket/",
              type: "POST",
@@ -87,7 +87,7 @@
                      $("#login-modal").modal("hide");
                      if ($("#lottery-history-view-component").hasClass("d-none")) { // not login yet
                          $("#lottery-history-view-component").removeClass("d-none");
-                         LotteryHistory.historyDatatable = LotteryHistory.loadLotteryHistoryTable();
+                         LotteryHistoryViewComponent.historyDataTable = LotteryHistoryViewComponent.loadLotteryHistoryDataTable();
                      }
 
                      Lottery.loadHeaderViewComponent(); // Reloader header view component after login
@@ -96,7 +96,7 @@
                          $("#div-thankyou-lottery").toggleClass("d-none");
                          $("#p-txHashId").html("<a class='text-success' target='_blank' href='" + data.tx + "'><small><u>" + data.tx + "</u></small></a>");
                          toastr.success(data.message, 'Success!');
-                         LotteryHistory.historyDatatable.ajax.reload();
+                         LotteryHistoryViewComponent.historyDataTable.ajax.reload();
                      }
                      else {
                          toastr.error(data.message, 'Error!');

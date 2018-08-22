@@ -1,8 +1,8 @@
 ﻿var Contact = {
     init: function () {
-        Contact.bindSend();
+        Contact.bindDoSend();
     },
-    bindSend: function () {
+    bindDoSend: function () {
         $("#btn-send").on("click", function () {
             var _this = this;
             var isFormValid = $("#form-contact")[0].checkValidity();

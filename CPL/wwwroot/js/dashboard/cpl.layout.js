@@ -1,6 +1,6 @@
 ﻿var Layout = {
     init: function () {
-        Layout.bindConfirmLogOut();
+        Layout.bindDoLogOut();
         Layout.bindDropdownSubMenu();
     },
     bindLogOut: function () {
@@ -21,7 +21,7 @@
             return false;
         });
     },
-    bindConfirmLogOut: function () {
+    bindDoLogOut: function () {
         $('#modal').on('click', '#btn-confirm-logout', function () {
             window.location.href = '/Authentication/LogOut/';
         });

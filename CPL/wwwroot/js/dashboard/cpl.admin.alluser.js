@@ -1,13 +1,13 @@
-﻿var AllUser = {
-    allUserDatatable: null,
+﻿var AdminAllUser = {
+    allUserDataTable: null,
     init: function () {
-        AllUser.allUserDatatable = AllUser.loadAllUserDatatable();
-        AllUser.loadLightBox();
-        AllUser.bindEditButton();
-        AllUser.bindUpdateButton();
-        AllUser.bindDeleteButton();
+        AdminAllUser.allUserDataTable = AdminAllUser.loadAllUserDataTable();
+        AdminAllUser.loadLightBox();
+        AdminAllUser.bindEdit();
+        AdminAllUser.bindUpdate();
+        AdminAllUser.bindDelete();
     },
-    bindEditButton: function () {
+    bindEdit: function () {
         $("#dt-all-user").on("click", ".btn-edit", function () {
             var _this = this;
             $.ajax({
@@ -46,7 +46,7 @@
             return false;
         });
     },
-    bindUpdateButton: function () {
+    bindUpdate: function () {
         $("#modal").on("click", "#btn-update-user", function () {
             var isFormValid = $("#form-update-user")[0].checkValidity();
             $("#form-update-user").addClass('was-validated');
@@ -92,7 +92,7 @@
                             $("#email-" + $("#Id").val()).html($("#Email").val());
                             toastr.success(data.message, 'Success!');
                             $("#update-user").modal("hide");
-                            AllUser.allUserDatatable.ajax.reload();
+                            AdminAllUser.allUserDataTable.ajax.reload();
                         } else {
                             if (data.name == "email") {
                                 $("#Email").addClass("border-danger");
@@ -124,18 +124,18 @@
         });
         return result;
     },
-    loadAllUserDatatable: function () {
+    loadAllUserDataTable: function () {
         return $('#dt-all-user').DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
-            "stateSave": (AllUser.getJsonFromUrl().search == null) ? true : false,
+            "stateSave": (AdminAllUser.getJsonFromUrl().search == null) ? true : false,
             "ajax": {
                 url: "/Admin/SearchAllUser",
                 type: 'POST',
                 data: function (data) {
                     if (data.search.value == "") {
-                        data.search.value = AllUser.getJsonFromUrl().search;
+                        data.search.value = AdminAllUser.getJsonFromUrl().search;
                     }
                 },
             },
@@ -215,7 +215,7 @@
             ],
         });
     },
-    bindDeleteButton: function () {
+    bindDelete: function () {
         $("#modal").on("click", "#btn-delete-user", function () {
             var result = confirm("Do you really want to delete this user?");
             if (result) {
@@ -233,7 +233,7 @@
                         if (data.success) {
                             $("#update-user").modal("hide");
                             toastr.success(data.message, 'Success!');
-                            AllUser.allUserDatatable.ajax.reload();
+                            AdminAllUser.allUserDataTable.ajax.reload();
                         } else {
                             toastr.error(data.message, 'Error!');
                         }
@@ -250,5 +250,5 @@
 }
 
 $(document).ready(function () {
-    AllUser.init();
+    AdminAllUser.init();
 });

@@ -1,8 +1,8 @@
 ﻿var ForgotPassword = {
     init: function () {
-        ForgotPassword.bindForgotPasswordForm();
+        ForgotPassword.bindDoSend();
     },
-    bindForgotPasswordForm: function () {
+    bindDoSend: function () {
         $("#btn-forgot-password").on("click", function () {
             var isFormValid = $("#form-forgot-password")[0].checkValidity();
             $("#form-forgot-password").addClass('was-validated');

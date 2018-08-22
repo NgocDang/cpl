@@ -3,7 +3,7 @@
         DepositAndWithdrawViewComponent.bindCopy();
         DepositAndWithdrawViewComponent.bindMax();
         DepositAndWithdrawViewComponent.bindDoWithdraw();
-        DepositAndWithdrawViewComponent.bindReadQrCode();
+        DepositAndWithdrawViewComponent.bindDoReadQrCode();
     },
     bindCopy: function () {
         if ($(".btn-copy").length > 0) {
@@ -68,7 +68,7 @@
             return false;
         });
     },
-    bindReadQrCode: function () {
+    bindDoReadQrCode: function () {
         $("#depositwithdraw-content").on("click", ".btn-qrcode", function () {
             $(this).parents("form").find(".file-qrcode").click();
         });

@@ -1,10 +1,10 @@
 ﻿var LogIn = {
     init: function () {
-        LogIn.bindLoginForm();
-        LogIn.bindVerify();
+        LogIn.bindDoLogin();
+        LogIn.bindDoVerifyPIN();
         LogIn.bindResetTabIndex();
     },
-    bindLoginForm: function () {
+    bindDoLogin: function () {
         $("body").on("click", "#btn-log-in", function () {
             var isFormValid = $("#form-log-in")[0].checkValidity();
             $("#form-log-in").addClass('was-validated');
@@ -65,7 +65,7 @@
             //}
         }
     },
-    bindVerify: function () {
+    bindDoVerifyPIN: function () {
         $("form-two-factor").validate();
         $("body").on("click", "#btn-two-factor", function () {
             var isFormValid = $("#form-two-factor")[0].checkValidity();
@@ -85,7 +85,7 @@
                     success: function (data) {
                         if (data.success) {
                             if ($("#login-modal").length > 0) {
-                                Lottery.loadAjaxConfirmPurchaseTicket();
+                                AdminLottery.loadAjaxConfirmPurchaseTicket();
                             }
                             else {
                                 window.location.replace(data.url);

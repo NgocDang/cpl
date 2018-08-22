@@ -1,8 +1,8 @@
 ﻿var GameHistoryViewComponent = {
     init: function () {
-        GameHistoryViewComponent.loadHistoryDatatable();
+        GameHistoryViewComponent.loadGameHistoryDataTable();
     },
-    loadHistoryDatatable: function () {
+    loadGameHistoryDataTable: function () {
         var sysUserId = $("#game-history-view-component #Id").val();
         $('#dt-history').DataTable({
             "processing": true,

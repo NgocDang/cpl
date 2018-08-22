@@ -1,11 +1,11 @@
-﻿var KYCVerify = {
+﻿var AdminKYCVerify = {
     init: function () {
-        KYCVerify.loadKYCDatatable();
-        KYCVerify.loadLightBox();
-        KYCVerify.bindAccept();
-        KYCVerify.bindCancel();
+        AdminKYCVerify.loadKYCVerifyDataTable();
+        AdminKYCVerify.loadLightBox();
+        AdminKYCVerify.bindDoAccept();
+        AdminKYCVerify.bindDoCancel();
     },
-    bindAccept: function () {
+    bindDoAccept: function () {
         $("#dt-kyc").on("click", ".btn-kyc-verify", function () {
             var _this = this;
             $.ajax({
@@ -20,8 +20,8 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        KYCVerify.destroyKYCDatatable();
-                        KYCVerify.loadKYCDatatable();
+                        AdminKYCVerify.destroyKYCDatatable();
+                        AdminKYCVerify.loadKYCVerifyDataTable();
                         toastr.success(data.message, 'Success!');
                     } else {
                         toastr.error(data.message, 'Error!');
@@ -34,7 +34,7 @@
             });
         });
     },
-    bindCancel: function () {
+    bindDoCancel: function () {
         $("#dt-kyc").on("click", ".btn-kyc-cancel", function () {
             var _this = this;
             $.ajax({
@@ -49,8 +49,8 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        KYCVerify.destroyKYCDatatable();
-                        KYCVerify.loadKYCDatatable();
+                        AdminKYCVerify.destroyKYCDatatable();
+                        AdminKYCVerify.loadKYCVerifyDataTable();
                         toastr.success(data.message, 'Success!');
                     } else {
                         toastr.error(data.message, 'Error!');
@@ -69,7 +69,7 @@
             $(this).ekkoLightbox();
         });
     },
-    loadKYCDatatable: function () {
+    loadKYCVerifyDataTable: function () {
         $('#dt-kyc').DataTable({
             "processing": true,
             "serverSide": true,
@@ -172,5 +172,5 @@
 }
 
 $(document).ready(function () {
-    KYCVerify.init();
+    AdminKYCVerify.init();
 });

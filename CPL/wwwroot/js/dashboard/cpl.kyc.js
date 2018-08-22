@@ -1,8 +1,8 @@
 ﻿var KYC = {
     init: function () {
-        KYC.bindSaveKYCButton();
+        KYC.bindDoSave();
     },
-    bindSaveKYCButton: function () {
+    bindDoSave: function () {
         $("#btn-save-account").on("click", function () {
             var isFormValid = $('#form-edit-kyc')[0].checkValidity();
             $("#form-edit-kyc").addClass('was-validated');
