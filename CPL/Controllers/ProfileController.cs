@@ -265,7 +265,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.User)]
-        public IActionResult UpdateKYC(KYCViewModel viewModel)
+        public IActionResult DoEditKYC(KYCViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
