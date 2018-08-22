@@ -209,7 +209,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.User)]
-        public IActionResult LoadDepositWithdrawViewComponent()
+        public IActionResult GetDepositWithdrawViewComponent()
         {
             return ViewComponent("DepositWithdraw");
         }
