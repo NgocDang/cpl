@@ -3,10 +3,10 @@
         ExchangeViewComponent.bindSwap();
         ExchangeViewComponent.bindMax();
         ExchangeViewComponent.bindInputChange();
-        ExchangeViewComponent.bindNext();
-        ExchangeViewComponent.bindDoConfirm();
+        ExchangeViewComponent.bindExchange();
+        ExchangeViewComponent.bindDoExchange();
     },
-    bindNext: function () {
+    bindExchange: function () {
         $('#exchange-content').on('click', '.btn-next', function () {
             var _this = this;
             var isFormValid = $(_this).parents("form")[0].checkValidity();
@@ -38,7 +38,7 @@
             }
         });
     },
-    bindDoConfirm: function () {
+    bindDoExchange: function () {
         $('#modal').on('click', '#btn-confirm-exchange', function () {
             var _this = this;
             $.ajax({

@@ -1,13 +1,13 @@
-﻿var News = {
+﻿var AdminNews = {
     newsDataTable: null,
     init: function () {
-        News.newsDataTable = News.loadNewsDataTable();
-        News.loadLightBox();
-        News.bindEdit();
-        News.bindDoEdit();
-        News.bindDoDelete();
-        News.bindAdd();
-        News.bindDoAdd();
+        AdminNews.newsDataTable = AdminNews.loadNewsDataTable();
+        AdminNews.loadLightBox();
+        AdminNews.bindEdit();
+        AdminNews.bindDoEdit();
+        AdminNews.bindDoDelete();
+        AdminNews.bindAdd();
+        AdminNews.bindDoAdd();
     },
     bindEdit: function () {
         $("#dt-news").on("click", ".btn-edit", function () {
@@ -26,7 +26,7 @@
                     $("#update-news").modal("show");
                     $("#update-news #btn-submit").hide();
                     tinymce.remove();
-                    News.initTinyMCE();
+                    AdminNews.initTinyMCE();
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
@@ -52,7 +52,7 @@
                     $("#update-news").modal("show");
                     $("#update-news #btn-save").hide();
                     tinymce.remove();
-                    News.initTinyMCE();
+                    AdminNews.initTinyMCE();
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
@@ -97,7 +97,7 @@
                     success: function (data) {
                         if (data.success) {
                             $("#update-news").modal("hide");
-                            News.newsDataTable.ajax.reload();
+                            AdminNews.newsDataTable.ajax.reload();
                             toastr.success(data.message, "Success!");
                         } else {
                             toastr.error(data.message, "Error!");
@@ -147,7 +147,7 @@
                     success: function (data) {
                         if (data.success) {
                             $("#update-news").modal("hide");
-                            News.newsDataTable.ajax.reload();
+                            AdminNews.newsDataTable.ajax.reload();
                             toastr.success(data.message, "Success!");
                         } else {
                             toastr.error(data.message, "Error!");
@@ -225,7 +225,7 @@
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
-                            News.newsDataTable.ajax.reload();
+                            AdminNews.newsDataTable.ajax.reload();
                         } else {
                             toastr.error(data.message, 'Error!');
                         }
@@ -255,5 +255,5 @@
 }
 
 $(document).ready(function () {
-    News.init();
+    AdminNews.init();
 });

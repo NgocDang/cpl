@@ -1,8 +1,8 @@
 ﻿var Register = {
     init: function () {
-        Register.bindRegister();
+        Register.bindDoRegister();
     },
-    bindRegister: function () {
+    bindDoRegister: function () {
         $("#btn-register").on("click", function () {
             var isFormValid = $("#form-register").valid();
             var isPasswordValid = $("#Password").val() == $("#PasswordConfirm").val();
