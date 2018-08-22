@@ -33,7 +33,7 @@
                     <div class="owl-item col-3">
                         <div class="card card-game">
                             <div class="card-header card-header-game font-weight-bold font-sm-size-15px">
-                                @lottery.NumberOfTicketLeft.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
+                                @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"),@lottery.NumberOfTicketLeft.ToString("N0"))
                             </div>
                             <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id"><img class="card-img-top card-img-game img-fluid" src="~/images/lottery/@lottery.DesktopListingImage" /></a>
                             <div class="card-body">
@@ -47,7 +47,7 @@
                     <div class="owl-item col-3">
                         <div class="card card-game">
                             <div class="card-header card-header-game font-weight-bold bg-secondary disabled text-white-50 font-sm-size-15px">
-                                0 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
+                                @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @"0")
                             </div>
                             <img class="card-img-top card-img-game img-fluid" src="~/images/lottery/coming_soon_lottery.jpg" />
                             <div class="card-body">
@@ -67,7 +67,7 @@
                 <div class="card card-game mt-05 mb-0">
                     <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id"><img class="card-img-top card-img-game img-fluid visible-mobile" src="~/images/lottery/@lottery.MobileListingImage" /></a>
                     <div class="card-header card-header-game-mobile font-weight-bold">
-                        @lottery.NumberOfTicketLeft.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft")
+                        @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0"))
                     </div>
                 </div>
             }

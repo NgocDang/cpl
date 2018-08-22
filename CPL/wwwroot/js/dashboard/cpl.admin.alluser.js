@@ -56,13 +56,13 @@
                 isMobileValid = $("#Mobile").intlTelInput("isValidNumber");
                 if (!isMobileValid) {
                     $("#Mobile").addClass("border-danger");
-                    $("#Mobile").closest(".form-label-group").find(".invalid-feedback").show();
+                    $("#Mobile").closest(".form-group").find(".invalid-feedback").show();
                 } else {
                     $("#Mobile").removeClass("border-danger");
-                    $("#Mobile").closest(".form-label-group").find(".invalid-feedback").hide();
+                    $("#Mobile").closest(".form-group").find(".invalid-feedback").hide();
                 }
             } else {
-                $("#Mobile").closest(".form-label-group").find(".invalid-feedback").show();
+                $("#Mobile").closest(".form-group").find(".invalid-feedback").show();
             }
 
             if (isFormValid && isMobileValid) {

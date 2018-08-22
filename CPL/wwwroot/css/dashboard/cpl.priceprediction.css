@@ -4,11 +4,9 @@
     background-color: white;
     background-position: center !important;
 }
-
 .img-coming-soon {
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-left: -133px;
-    margin-top: -133px;
+    transform: translate(-50%, -50%);
 }
