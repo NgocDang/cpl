@@ -11,7 +11,7 @@
                 <div class="card-content">
                     <div class="card-body">
                         <p class="text-center h5 text-capitalize txt-welcome mb-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Welcome")</p>
-                        <form id="form-register" class="form-horizontal form-signin form needs-validation">
+                        <form id="form-register" class="form-horizontal form-signin form needs-validation" novalidate>
                             @*<p id="register-message" class="text-center text-light">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AccountInfoRequired")</p>*@
                             <fieldset class="form-group">
                                 <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
@@ -23,6 +23,9 @@
                             <fieldset class="form-group">
                                 <label for="Password">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
                                 <input type="password" name="Password" id="Password" class="form-control" tabindex="2" required />
+                                <div id="email-msg" class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
+                                </div>
                             </fieldset>
                             <fieldset class="form-group">
                                 <label for="PasswordConfirm">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordConfirm")</label>

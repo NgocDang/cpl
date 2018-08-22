@@ -4,8 +4,10 @@
     },
     bindRegister: function () {
         $("#btn-do-register").on("click", function () {
-            var isFormValid = $("#form-register").valid();
+            var isFormValid = $("#form-register")[0].checkValidity();
+            $("#form-register").addClass('was-validated');
             var isPasswordValid = $("#Password").val() == $("#PasswordConfirm").val();
+
             if (!isPasswordValid) {
                 $("#password-confirm-msg").show();
             } else {
