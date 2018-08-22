@@ -175,8 +175,8 @@
                 success: function (data) {
                     $("#modal").html(data);
                     $("#edit-lottery").modal("show");
-                    $("#edit-lottery .btn-do-save").hide();
-                    $("#edit-lottery .btn-do-save-publish").hide();
+                    $("#edit-lottery .btn-do-edit").hide();
+                    $("#edit-lottery .btn-do-edit-publish").hide();
                     $("#prize-lottery")
                         .find("div.row.row-prize")
                         .map(function () {
@@ -358,7 +358,6 @@
                 _prevUncle.find(".btn-delete-prize").removeClass("d-none");
             };
 
-            debugger;
             _nextUncle.find("h6#prize-title").html("#" + parseInt(_uncles[0].children.length));
 
             return false;
@@ -497,7 +496,7 @@
                 });
 
                 $.ajax({
-                    url: "/Admin/AddLottery/",
+                    url: "/Admin/DoAddLottery/",
                     type: "POST",
                     processData: false,
                     contentType: false,
