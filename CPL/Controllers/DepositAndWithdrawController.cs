@@ -57,13 +57,13 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.User)]
-        public IActionResult LoadRequireProfile(ConfirmExchangeViewModel viewModel)
+        public IActionResult GetRequireProfile(ConfirmExchangeViewModel viewModel)
         {
             return PartialView("_RequireProfile", viewModel);
         }
 
         [Permission(EnumRole.User)]
-        public IActionResult LoadRequireKYC(ConfirmExchangeViewModel viewModel)
+        public IActionResult GetRequireKYC(ConfirmExchangeViewModel viewModel)
         {
             return PartialView("_RequireKYC", viewModel);
         }
@@ -209,7 +209,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.User)]
-        public IActionResult LoadDepositWithdrawViewComponent()
+        public IActionResult GetDepositWithdrawViewComponent()
         {
             return ViewComponent("DepositWithdraw");
         }

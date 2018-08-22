@@ -103,7 +103,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Guest)]
-        public IActionResult LoadHeaderViewComponent()
+        public IActionResult GetHeaderViewComponent()
         {
             return ViewComponent("Header");
         }

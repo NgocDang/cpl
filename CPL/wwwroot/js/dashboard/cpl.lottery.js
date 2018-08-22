@@ -90,7 +90,7 @@
                          LotteryHistoryViewComponent.lotteryHistoryDataTable = LotteryHistoryViewComponent.loadLotteryHistoryDataTable();
                      }
 
-                     Lottery.loadHeaderViewComponent(); // Reloader header view component after login
+                     Lottery.getHeaderViewComponent(); // Reloader header view component after login
                      if (data.success) {
                          $("#div-confirm-lottery").toggleClass("d-none");
                          $("#div-thankyou-lottery").toggleClass("d-none");
@@ -107,9 +107,9 @@
              }
          });
     },
-    loadHeaderViewComponent: function () {
+    getHeaderViewComponent: function () {
         $.ajax({
-            url: "/Home/LoadHeaderViewComponent/",
+            url: "/Home/GetHeaderViewComponent/",
             type: "GET",
             processData: false,
             contentType: false,

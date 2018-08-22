@@ -92,7 +92,7 @@
                     "render": function (data, type, full, meta) {
                         if (full.status == 1) {
                             return "<button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val()
-                                + "</button> <button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-active'>" + $("#activate").val()
+                                + "</button> <button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val()
                                 + "</button><button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-delete'>" + $("#delete").val() + "</button>";
                         }
                         else
@@ -174,9 +174,9 @@
                 },
                 success: function (data) {
                     $("#modal").html(data);
-                    $("#edit-lottery-game").modal("show");
-                    $("#edit-lottery-game .btn-save").hide();
-                    $("#edit-lottery-game .btn-save-publish").hide();
+                    $("#edit-lottery").modal("show");
+                    $("#edit-lottery .btn-do-save").hide();
+                    $("#edit-lottery .btn-do-save-publish").hide();
                     $("#prize-lottery")
                         .find("div.row.row-prize")
                         .map(function () {
@@ -279,9 +279,9 @@
                 },
                 success: function (data) {
                     $("#modal").html(data);
-                    $("#edit-lottery-game").modal("show");
-                    $("#edit-lottery-game .btn-add").hide();
-                    $("#edit-lottery-game .btn-add-publish").hide();
+                    $("#edit-lottery").modal("show");
+                    $("#edit-lottery .btn-do-add").hide();
+                    $("#edit-lottery .btn-do-add-publish").hide();
                     $("#prize-lottery")
                         .find("div.row.row-prize")
                         .map(function () {
@@ -311,7 +311,7 @@
                 },
                 success: function (data) {
                     $("#modal").html(data);
-                    $("#delete-lottery-game").modal("show");
+                    $("#delete-lottery").modal("show");
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
@@ -329,13 +329,13 @@
             var _newPrize = _parent.clone();
             var _uncles = $(_this).parents("#prize-lottery");
 
-            _parent.prev().find(".btn-remove-prize").addClass("d-none");
+            _parent.prev().find(".btn-delete-prize").addClass("d-none");
 
             _parent.removeClass("new-prize");
             _parent.find("div").removeClass("blurry-text");
             _parent.find(".form-control").removeAttr("disabled");
             _parent.find(".btn-add-prize").addClass("d-none");
-            _parent.find(".btn-remove-prize").removeClass("d-none");
+            _parent.find(".btn-delete-prize").removeClass("d-none");
 
             _newPrize.find("h6#prize-title").html("#" + (parseInt(_uncles[0].children.length) + 1));
 
@@ -346,7 +346,7 @@
     },
 
     bindDeletePrize: function () {
-        $("#modal").on("click", ".btn-remove-prize", function () {
+        $("#modal").on("click", ".btn-delete-prize", function () {
             var _this = this;
             var _uncles = $(_this).parents("#prize-lottery");
 
@@ -355,7 +355,7 @@
 
             $(_this).closest("div.row").remove();
             if (_uncles[0].children.length > 2) {
-                _prevUncle.find(".btn-remove-prize").removeClass("d-none");
+                _prevUncle.find(".btn-delete-prize").removeClass("d-none");
             };
 
             debugger;
@@ -366,11 +366,11 @@
     },
 
     bindDoAddLottery: function () {
-        $('#modal').on('click', '.btn-add', function () {
+        $('#modal').on('click', '.btn-do-add', function () {
             var _this = this;
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
-            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").length;
+            var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
             if (prizeCounter <= 1) {
                 $("#prize-required").addClass("d-block");
                 return false;
@@ -406,18 +406,18 @@
                     formData.append('PrizeImageFile', prizeImage.files[0]);
                 }
 
-                formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
-                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
-                formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
+                formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
+                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery").find("#ticket-price").val());
+                formData.append('Volume', $(_this).parents("#form-edit-lottery").find("#volume").val());
                 formData.append('IsPublished', false);
 
-                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
+                $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").map(function (i, e) {
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
                     formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
                 });
 
                 $.ajax({
-                    url: "/Admin/AddLottery/",
+                    url: "/Admin/DoAddLottery/",
                     type: "POST",
                     processData: false,
                     contentType: false,
@@ -428,7 +428,7 @@
                     data: formData,
                     success: function (data) {
                         if (data.success) {
-                            $("#edit-lottery-game").modal("hide");
+                            $("#edit-lottery").modal("hide");
                             toastr.success(data.message, 'Success!');
                             AdminLottery.lotteryDataTable.ajax.reload();
                         } else {
@@ -446,11 +446,11 @@
     },
 
     bindDoAddAndPublishLottery: function () {
-        $('#modal').on('click', '.btn-add-publish', function () {
+        $('#modal').on('click', '.btn-do-add-publish', function () {
             var _this = this;
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
-            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").length;
+            var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
             if (prizeCounter <= 1) {
                 $("#prize-required").addClass("d-block");
                 return false;
@@ -486,12 +486,12 @@
                     formData.append('PrizeImageFile', prizeImage.files[0]);
                 }
 
-                formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
-                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
-                formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
+                formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
+                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery").find("#ticket-price").val());
+                formData.append('Volume', $(_this).parents("#form-edit-lottery").find("#volume").val());
                 formData.append('IsPublished', true);
 
-                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
+                $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").map(function (i, e) {
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
                     formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
                 });
@@ -508,7 +508,7 @@
                     data: formData,
                     success: function (data) {
                         if (data.success) {
-                            $("#edit-lottery-game").modal("hide");
+                            $("#edit-lottery").modal("hide");
                             toastr.success(data.message, 'Success!');
                             AdminLottery.lotteryDataTable.ajax.reload();
                         } else {
@@ -526,11 +526,11 @@
     },
 
     bindDoEditLottery: function () {
-        $('#modal').on('click', '.btn-save', function () {
+        $('#modal').on('click', '.btn-do-edit', function () {
             var _this = this;
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
-            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").length;
+            var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
             if (prizeCounter <= 1) {
                 $("#prize-required").addClass("d-block");
                 return false;
@@ -566,19 +566,19 @@
                     formData.append('PrizeImageFile', prizeImage.files[0]);
                 }
 
-                formData.append('Id', $(_this).parents("#form-edit-lottery-game").find("#lottery-id").val());
-                formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
-                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
-                formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
+                formData.append('Id', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
+                formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
+                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery").find("#ticket-price").val());
+                formData.append('Volume', $(_this).parents("#form-edit-lottery").find("#volume").val());
                 formData.append('IsPublished', false);
 
-                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
+                $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").map(function (i, e) {
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
                     formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
                 });
 
                 $.ajax({
-                    url: "/Admin/UpdateLottery/",
+                    url: "/Admin/DoEditLottery/",
                     type: "POST",
                     processData: false,
                     contentType: false,
@@ -589,7 +589,7 @@
                     data: formData,
                     success: function (data) {
                         if (data.success) {
-                            $("#edit-lottery-game").modal("hide");
+                            $("#edit-lottery").modal("hide");
                             toastr.success(data.message, 'Success!');
                             AdminLottery.lotteryDataTable.ajax.reload();
                         } else {
@@ -607,11 +607,11 @@
     },
 
     bindDoEditAndPublishLottery: function () {
-        $('#modal').on('click', '.btn-save-publish', function () {
+        $('#modal').on('click', '.btn-do-edit-publish', function () {
             var _this = this;
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
-            var prizeCounter = $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").length;
+            var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
             if (prizeCounter <= 1) {
                 $("#prize-required").addClass("d-block");
                 return false;
@@ -647,19 +647,19 @@
                     formData.append('PrizeImageFile', prizeImage.files[0]);
                 }
 
-                formData.append('Id', $(_this).parents("#form-edit-lottery-game").find("#lottery-id").val());
-                formData.append('Title', $(_this).parents("#form-edit-lottery-game").find("#title").val());
-                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery-game").find("#ticket-price").val());
-                formData.append('Volume', $(_this).parents("#form-edit-lottery-game").find("#volume").val());
+                formData.append('Id', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
+                formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
+                formData.append('UnitPrice', $(_this).parents("#form-edit-lottery").find("#ticket-price").val());
+                formData.append('Volume', $(_this).parents("#form-edit-lottery").find("#volume").val());
                 formData.append('IsPublished', true);
 
-                $(_this).parents("#form-edit-lottery-game").find("#prize-lottery div.row.row-prize").map(function (i, e) {
+                $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").map(function (i, e) {
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
                     formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
                 });
 
                 $.ajax({
-                    url: "/Admin/UpdateLottery/",
+                    url: "/Admin/DoEditLottery/",
                     type: "POST",
                     processData: false,
                     contentType: false,
@@ -670,7 +670,7 @@
                     data: formData,
                     success: function (data) {
                         if (data.success) {
-                            $("#edit-lottery-game").modal("hide");
+                            $("#edit-lottery").modal("hide");
                             toastr.success(data.message, 'Success!');
                             AdminLottery.lotteryDataTable.ajax.reload();
                         } else {
@@ -688,10 +688,10 @@
     },
 
     bindDoActivateLottery: function () {
-        $('#dt-all-lottery-game').on('click', '.btn-active', function () {
+        $('#dt-all-lottery-game').on('click', '.btn-activate', function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/ActivateLottery/",
+                url: "/Admin/DoActivateLottery/",
                 type: "POST",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);
@@ -717,20 +717,20 @@
     },
 
     bindDoDeleteLottery: function () {
-        $('#modal').on('click', '.btn-delete', function () {
+        $('#modal').on('click', '.btn-do-delete', function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/DeleteLottery/",
+                url: "/Admin/DoDeleteLottery/",
                 type: "POST",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);
                 },
                 data: {
-                    id: $(_this).parents("#delete-lottery-game").find("#game-id").val()
+                    id: $(_this).parents("#delete-lottery").find("#game-id").val()
                 },
                 success: function (data) {
                     if (data.success) {
-                        $("#delete-lottery-game").modal("hide");
+                        $("#delete-lottery").modal("hide");
                         toastr.success(data.message, 'Success!');
                         AdminLottery.lotteryDataTable.ajax.reload();
                     } else {

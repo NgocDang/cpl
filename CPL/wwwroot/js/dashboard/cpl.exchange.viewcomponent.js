@@ -58,8 +58,8 @@
                     if (data.success) {
                         $("#exchange").modal("hide");
                         toastr.success(data.message, "Success!");
-                        ExchangeViewComponent.loadExchangeViewComponent();
-                        ExchangeViewComponent.LoadRateViewComponent();
+                        ExchangeViewComponent.getExchangeViewComponent();
+                        ExchangeViewComponent.getRateViewComponent();
                     } else {
                         toastr.error(data.message, "Error!");
                     }
@@ -147,9 +147,9 @@
             }
         });
     },
-    loadExchangeViewComponent: function () {
+    getExchangeViewComponent: function () {
         $.ajax({
-            url: "/Exchange/LoadExchangeViewComponent/",
+            url: "/Exchange/GetExchangeViewComponent/",
             type: "GET",
             processData: false,
             contentType: false,
@@ -158,9 +158,9 @@
             }
         });
     },
-    LoadRateViewComponent: function () {
+    getRateViewComponent: function () {
         $.ajax({
-            url: "/Exchange/LoadRateViewComponent/",
+            url: "/Exchange/GetRateViewComponent/",
             type: "GET",
             processData: false,
             contentType: false,

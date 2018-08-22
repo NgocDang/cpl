@@ -37,14 +37,14 @@
                             $(_this).parents("form").find(".address-error").hide();
                             $(_this).parents("form").find(".amount-error").hide();
                             toastr.success(data.message, 'Success!');
-                            DepositAndWithdrawViewComponent.bindLoadViewComponent("withdraw");
+                            DepositAndWithdrawViewComponent.getDepositWithdrawViewComponent("withdraw");
                         }
                         else {
                             if (data.requireProfile != null && !data.requireProfile) {
-                                DepositAndWithdrawViewComponent.loadRequireProfileViewComponent();
+                                DepositAndWithdrawViewComponent.getRequireProfileViewComponent();
                             }
                             else if (data.requireKyc != null && !data.requireKyc) {
-                                DepositAndWithdrawViewComponent.loadRequireKYCViewComponent();
+                                DepositAndWithdrawViewComponent.getRequireKYCViewComponent();
                             } else {
                                 if (data.name === "wallet") {
                                     $(_this).parents("form").find(".amount-error").hide();
@@ -101,9 +101,9 @@
             return false;
         });
     },
-    bindLoadViewComponent: function (tab) {
+    getDepositWithdrawViewComponent: function (tab) {
         $.ajax({
-            url: "/DepositAndWithdraw/LoadDepositWithdrawViewComponent/",
+            url: "/DepositAndWithdraw/GetDepositWithdrawViewComponent/",
             type: "GET",
             processData: false,
             contentType: false,
@@ -118,9 +118,9 @@
             }
         });
     },
-    loadRequireProfileViewComponent: function () {
+    getRequireProfileViewComponent: function () {
         $.ajax({
-            url: "/DepositAndWithdraw/LoadRequireProfile/",
+            url: "/DepositAndWithdraw/GetRequireProfile/",
             type: "GET",
             processData: false,
             contentType: false,
@@ -130,9 +130,9 @@
             }
         });
     },
-    loadRequireKYCViewComponent: function () {
+    getRequireKYCViewComponent: function () {
         $.ajax({
-            url: "/DepositAndWithdraw/LoadRequireKYC/",
+            url: "/DepositAndWithdraw/GetRequireKYC/",
             type: "GET",
             processData: false,
             contentType: false,

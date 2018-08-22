@@ -47,7 +47,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public IActionResult Send(ContactIndexViewModel viewModel)
+        public IActionResult DoSend(ContactIndexViewModel viewModel)
         {
             // Ensure we have a valid viewModel to work with
             if (ModelState.IsValid)

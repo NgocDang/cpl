@@ -3,7 +3,7 @@
         Contact.bindDoSend();
     },
     bindDoSend: function () {
-        $("#btn-send").on("click", function () {
+        $("#btn-do-send").on("click", function () {
             var _this = this;
             var isFormValid = $("#form-contact")[0].checkValidity();
             $("#form-contact").addClass('was-validated');
@@ -16,7 +16,7 @@
 
             if (isFormValid && isCategoryValid) {
                 $.ajax({
-                    url: "/Contact/Send/",
+                    url: "/Contact/DoSend/",
                     type: "POST",
                     beforeSend: function () {
                         $(_this).attr("disabled", true);

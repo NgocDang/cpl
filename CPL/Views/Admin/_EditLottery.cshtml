@@ -1,9 +1,9 @@
 ﻿@model LotteryViewModel
 
-<div class="modal" tabindex="-1" role="dialog" id="edit-lottery-game" style="display: none;" aria-hidden="true">
+<div class="modal" tabindex="-1" role="dialog" id="edit-lottery" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form id="form-edit-lottery-game" method="POST" action="#" class="needs-validation" novalidate="">
+            <form id="form-edit-lottery" method="POST" action="#" class="needs-validation" novalidate="">
                 <div class="modal-header">
                     <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
@@ -252,7 +252,7 @@
                                             </div>
                                         </div>
                                         <div class="col-2 m-auto text-center">
-                                            <a class="btn btn-secondary btn-sm text-white p-0 btn-remove-prize d-none"><i class="la la-minus"></i></a>
+                                            <a class="btn btn-secondary btn-sm text-white p-0 btn-delete-prize d-none"><i class="la la-minus"></i></a>
                                             <a class="btn btn-primary btn-sm text-white p-0 btn-add-prize"><i class="la la-plus"></i></a>
                                         </div>
                                     </div>
@@ -262,12 +262,12 @@
                     </div>
                 </div>
                 <div class="modal-footer text-right">
-                    <button type="button" class="btn btn-success btn-sm btn-save-publish">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SaveAndPublish")<i class="la la-external-link font-size-15px"></i></button>
-                    <button type="button" class="btn btn-primary btn-sm btn-save">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save") <i class="la la-save font-size-15px"></i></button>
+                    <button type="button" class="btn btn-success btn-sm btn-do-edit-publish">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SaveAndPublish")<i class="la la-external-link font-size-15px"></i></button>
+                    <button type="button" class="btn btn-primary btn-sm btn-do-edit">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save") <i class="la la-save font-size-15px"></i></button>
 
-                    <button type="button" class="btn btn-success btn-sm btn-add-publish">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AddAndPublish")<i class="la la-external-link font-size-15px"></i></button>
-                    <button type="button" class="btn btn-primary btn-sm btn-add">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Add") <i class="la la-plus font-size-15px"></i></button>
-                    <button type="button" class="btn btn-secondary btn-sm btn-cancel" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
+                    <button type="button" class="btn btn-success btn-sm btn-do-add-publish">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SubmitAndPublish")<i class="la la-external-link font-size-15px"></i></button>
+                    <button type="button" class="btn btn-primary btn-sm btn-do-add">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Submit") <i class="la la-plus font-size-15px"></i></button>
+                    <button type="button" class="btn btn-secondary btn-sm btn-do-cancel" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
                 </div>
                 <input type="hidden" value="@Model.Id" id="lottery-id" />
             </form>

@@ -406,7 +406,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult SaveEditNews(NewsViewModel viewModel)
+        public JsonResult DoEditNews(NewsViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -434,7 +434,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult AddNews(NewsViewModel viewModel)
+        public JsonResult DoAddNews(NewsViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -451,7 +451,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult DeleteNews(int id)
+        public JsonResult DoDeleteNews(int id)
         {
             var news = _newsService.Queryable()
             .FirstOrDefault(x => x.Id == id);
@@ -736,7 +736,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult UpdateLottery(LotteryViewModel viewModel)
+        public JsonResult DoEditLottery(LotteryViewModel viewModel)
         {
             try
             {
@@ -870,7 +870,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult AddLottery(LotteryViewModel viewModel)
+        public JsonResult DoAddLottery(LotteryViewModel viewModel)
         {
             try
             {
@@ -981,7 +981,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult DeleteLottery(int id)
+        public JsonResult DoDeleteLottery(int id)
         {
             try
             {
@@ -1005,7 +1005,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult ActivateLottery(int id)
+        public JsonResult DoActivateLottery(int id)
         {
             try
             {
