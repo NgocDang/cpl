@@ -91,7 +91,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.User)]
+        [Permission(EnumRole.Guest)]
         public IActionResult VerifyPIN(AccountLoginModel viewModel)
         {
             var tfa = new TwoFactorAuthenticator();
@@ -360,7 +360,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.User)]
+        [Permission(EnumRole.Guest)]
         public ActionResult ResetPassword(AccountResetPasswordModel viewModel)
         {
             // Ensure we have a valid viewModel to work with
@@ -388,7 +388,7 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
 
-        [Permission(EnumRole.User)]
+        [Permission(EnumRole.Guest)]
         public ActionResult ResetPassword(int id, string token)
         {
             var viewmodel = new AccountResetPasswordModel();

@@ -10,7 +10,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="col-12">
-                        <fieldset class="form-label-group">
+                        <fieldset class="form-group">
+                            <label for="Title" class="small">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</label>
                             @if (Model != null)
                             {
                                 <input id="Title" type="text" value="@Model.Title" class="form-control" required name="Title" autofocus>
@@ -19,8 +20,6 @@
                             {
                                 <input id="Title" type="text" class="form-control" required name="Title" autofocus>
                             }
-
-                            <label for="Title" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</label>
                             <div class="invalid-feedback">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TitleRequired")
                             </div>
@@ -59,9 +58,9 @@
                         </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-12 col-sm-12">
-                        <fieldset class="form-label-group">
+                        <fieldset class="form-group">
+                            <label for="Image" class="small mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Image")</label>
                             <input id="Image" type="file" value="@Model.Image" class="form-control" name="Image" maxlength="200">
-                            <label for="Image" class="mt-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Image")</label>
                         </fieldset>
                     </div>
                     @Html.HiddenFor(x => x.Id)

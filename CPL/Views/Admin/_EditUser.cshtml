@@ -43,15 +43,15 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                            <fieldset class="form-label-group">
+                            <fieldset class="form-group">
+                                <label class="form-title" for="Mobile">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Mobile")</label>
                                 <input type="text" class="form-control mobile-input" name="Mobile" value="@Model.Mobile" id="Mobile" required autofocus="">
-                                <label class="mobile-label" for="Mobile">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Mobile")</label>
                                 <div class="invalid-feedback" id="mobile-msg">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidMobile")
                                 </div>
                             </fieldset>
                         </div>
-                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12 pt-1">
+                        <div class="form-group col-lg-6 col-md-6 col-12 col-sm-12 pt-lg-3 pt-1">
                             <input id="TwoFactorAuthenticationEnable" type="checkbox" checked="@Model.TwoFactorAuthenticationEnable" class="js-switch" name="TwoFactorAuthenticationEnable">
                             <label for="TwoFactorAuthenticationEnable" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsTwoFactorAuthenticationEnabled")  &nbsp; </label>
                         </div>
