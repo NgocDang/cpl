@@ -4,7 +4,7 @@
         AdminAllUser.allUserDataTable = AdminAllUser.loadAllUserDataTable();
         AdminAllUser.loadLightBox();
         AdminAllUser.bindEdit();
-        AdminAllUser.bindUpdate();
+        AdminAllUser.bindDoEdit();
         AdminAllUser.bindDelete();
     },
     bindEdit: function () {
@@ -46,7 +46,7 @@
             return false;
         });
     },
-    bindUpdate: function () {
+    bindDoEdit: function () {
         $("#modal").on("click", "#btn-update-user", function () {
             var isFormValid = $("#form-update-user")[0].checkValidity();
             $("#form-update-user").addClass('was-validated');

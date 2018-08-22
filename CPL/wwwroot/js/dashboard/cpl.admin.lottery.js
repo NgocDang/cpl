@@ -10,8 +10,8 @@
         AdminLottery.bindDeletePrize();
         AdminLottery.bindDoAddLottery();
         AdminLottery.bindDoAddAndPublishLottery();
-        AdminLottery.bindDoUpdateLottery();
-        AdminLottery.bindDoUpdateAndPublishLottery();
+        AdminLottery.bindDoEditLottery();
+        AdminLottery.bindDoEditAndPublishLottery();
         AdminLottery.bindDoActivateLottery();
         AdminLottery.bindDoDeleteLottery();
         AdminLottery.bindViewLottery();
@@ -525,7 +525,7 @@
         });
     },
 
-    bindDoUpdateLottery: function () {
+    bindDoEditLottery: function () {
         $('#modal').on('click', '.btn-save', function () {
             var _this = this;
             var isFormValid = $(_this).parents("form")[0].checkValidity();
@@ -606,7 +606,7 @@
         });
     },
 
-    bindDoUpdateAndPublishLottery: function () {
+    bindDoEditAndPublishLottery: function () {
         $('#modal').on('click', '.btn-save-publish', function () {
             var _this = this;
             var isFormValid = $(_this).parents("form")[0].checkValidity();

@@ -4,7 +4,7 @@
         News.newsDataTable = News.loadNewsDataTable();
         News.loadLightBox();
         News.bindEdit();
-        News.bindDoSave();
+        News.bindDoEdit();
         News.bindDoDelete();
         News.bindAdd();
         News.bindDoAdd();
@@ -61,7 +61,7 @@
             return false;
         });
     },
-    bindDoSave: function () {
+    bindDoEdit: function () {
         $("#modal").on("click", "#btn-save", function () {
             var _this = this;
             var isFormValid = $("#form-update-news")[0].checkValidity();
