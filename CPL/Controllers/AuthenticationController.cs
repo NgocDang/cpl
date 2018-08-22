@@ -91,7 +91,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.User)]
+        [Permission(EnumRole.Guest)]
         public IActionResult VerifyPIN(AccountLoginModel viewModel)
         {
             var tfa = new TwoFactorAuthenticator();

@@ -13,18 +13,18 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-5 col-12 text-left">
-                                <fieldset class="form-label-group mb-0">
-                                    <input type="text" class="form-control" id="from-currency" value="@Model.FromAmount.ToString("#,##0.#########")" readonly>
+                                <fieldset class="form-group mb-0">
                                     <label for="from-currency">@Model.FromCurrency</label>
+                                    <input type="text" class="form-control" id="from-currency" value="@Model.FromAmount.ToString("#,##0.#########")" readonly>
                                 </fieldset>
                             </div>
                             <div class="col-md-2 col-12 text-center pt-1">
-                                <span class="la la-arrow-right"></span>
+                                <span class="la la-arrow-right mt-1"></span>
                             </div>
                             <div class="col-md-5 col-12 text-left">
-                                <fieldset class="form-label-group mb-0">
-                                    <input type="text" class="form-control" id="to-currency" value="@Model.ToAmount.ToString("#,##0.#########")" readonly>
+                                <fieldset class="form-group mb-0">
                                     <label for="to-currency">@Model.ToCurrency</label>
+                                    <input type="text" class="form-control" id="to-currency" value="@Model.ToAmount.ToString("#,##0.#########")" readonly>
                                 </fieldset>
                             </div>
                         </div>

@@ -49,9 +49,9 @@
                                 <form id="form-edit-email" class="form-horizontal mt-1">
                                     <div class="row mb-1">
                                         <div class="col-md-6 col-sm-12">
-                                            <fieldset class="form-label-group">
-                                                <input type="email" name="CurrentEmail" readonly value="@Model.CurrentEmail" class="form-control" maxlength="30" id="CurrentEmail" required autofocus="">
+                                            <fieldset class="form-group">
                                                 <label for="CurrentEmail">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CurrentEmail")</label>
+                                                <input type="email" name="CurrentEmail" readonly value="@Model.CurrentEmail" class="form-control" maxlength="30" id="CurrentEmail" required autofocus="">
                                                 <div class="invalid-feedback">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CurrentEmailRequired")
                                                 </div>
@@ -60,18 +60,18 @@
                                     </div>
                                     <div class="row mb-1">
                                         <div class="col-md-6 col-sm-12">
-                                            <fieldset class="form-label-group">
-                                                <input type="email" name="NewEmail" class="form-control" maxlength="30" id="NewEmail" required autofocus="">
+                                            <fieldset class="form-group">
                                                 <label for="NewEmail">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NewEmail")</label>
+                                                <input type="email" name="NewEmail" class="form-control" maxlength="30" id="NewEmail" required autofocus="">
                                                 <div id="new-email-msg" class="invalid-feedback">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidOrExistingEmail")
                                                 </div>
                                             </fieldset>
                                         </div>
                                         <div class="col-md-6 col-sm-12">
-                                            <fieldset class="form-label-group">
-                                                <input type="email" name="NewEmailConfirm" class="form-control" maxlength="30" id="NewEmailConfirm" required autofocus="">
+                                            <fieldset class="form-group">
                                                 <label for="NewEmailConfirm">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NewEmailConfirm")</label>
+                                                <input type="email" name="NewEmailConfirm" class="form-control" maxlength="30" id="NewEmailConfirm" required autofocus="">
                                                 <div id="new-email-confirm-msg" class="invalid-feedback">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MismatchEmail")
                                                 </div>
@@ -104,9 +104,9 @@
                                     <form id="form-edit-password" class="form-horizontal mt-2" action="">
                                         <div class="row mb-1">
                                             <div class="col-md-6 col-sm-12">
-                                                <fieldset class="form-label-group">
-                                                    <input type="password" name="CurrentPassword" class="form-control" maxlength="30" id="CurrentPassword" required autofocus="">
+                                                <fieldset class="form-group">
                                                     <label for="CurrentPassword">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CurrentPassword")</label>
+                                                    <input type="password" name="CurrentPassword" class="form-control" maxlength="30" id="CurrentPassword" required autofocus="">
                                                     <div id="current-password-msg" class="invalid-feedback">
                                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidCurrentPassword")
                                                     </div>
@@ -115,18 +115,18 @@
                                         </div>
                                         <div class="row mb-1">
                                             <div class="col-md-6 col-sm-12">
-                                                <fieldset class="form-label-group">
-                                                    <input type="password" name="NewPassword" class="form-control" maxlength="30" id="NewPassword" required autofocus="">
+                                                <fieldset class="form-group">
                                                     <label for="NewPassword">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NewPassword")</label>
+                                                    <input type="password" name="NewPassword" class="form-control" maxlength="30" id="NewPassword" required autofocus="">
                                                     <div class="invalid-feedback">
                                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NewPasswordRequired")
                                                     </div>
                                                 </fieldset>
                                             </div>
                                             <div class="col-md-6 col-sm-12">
-                                                <fieldset class="form-label-group">
-                                                    <input type="password" name="NewPasswordConfirm" class="form-control" maxlength="30" id="NewPasswordConfirm" required autofocus="">
+                                                <fieldset class="form-group">
                                                     <label for="NewPasswordConfirm">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NewPasswordConfirm")</label>
+                                                    <input type="password" name="NewPasswordConfirm" class="form-control" maxlength="30" id="NewPasswordConfirm" required autofocus="">
                                                     <div id="new-password-confirm-msg" class="invalid-feedback">
                                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MismatchPassword")
                                                     </div>
