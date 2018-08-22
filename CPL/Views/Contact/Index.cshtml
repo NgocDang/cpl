@@ -63,9 +63,9 @@
                         <div class="card-body">
                             <div class="row mt-1 mb-1">
                                 <div class="col-12">
-                                    <fieldset class="form-label-group">
-                                        <input type="text" name="Subject" class="form-control" maxlength="200" id="Subject" required autofocus="">
+                                    <fieldset class="form-group">
                                         <label for="Subject">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Subject")</label>
+                                        <input type="text" name="Subject" class="form-control" maxlength="200" id="Subject" required autofocus="">
                                         <div class="invalid-feedback">
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "SubjectRequired")
                                         </div>
@@ -74,7 +74,8 @@
                             </div>
                             <div class="row mb-1">
                                 <div class="col-md-6 col-12">
-                                    <fieldset class="form-label-group">
+                                    <fieldset class="form-group">
+                                        <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
                                         @if (Model.SysUser == null)
                                         {
                                             <input type="email" name="Email" class="form-control" maxlength="50" id="Email" required autofocus="">
@@ -83,15 +84,15 @@
                                         {
                                             <input type="email" name="Email" class="form-control" value="@Model.SysUser.Email" disabled maxlength="50" id="Email" required autofocus="">
                                         }
-                                        <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
                                         <div class="invalid-feedback">
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
                                         </div>
                                     </fieldset>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <fieldset class="form-label-group">
-                                        <select data-value="@Model.Category" name="Category" id="Category" class="selectpicker" required data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Category")">
+                                    <label class="d-inline-block" for="Category">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Category")</label>
+                                    <fieldset class="form-group">
+                                        <select data-value="@Model.Category" name="Category" id="Category" class="selectpicker" required data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                             @if (Model.SysUser == null)
                                             {
                                                 <option value="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</option>
