@@ -149,7 +149,7 @@
     },
     loadExchangeViewComponent: function () {
         $.ajax({
-            url: "/Exchange/LoadExchangeViewComponent/",
+            url: "/Exchange/GetExchangeViewComponent/",
             type: "GET",
             processData: false,
             contentType: false,
@@ -160,7 +160,7 @@
     },
     LoadRateViewComponent: function () {
         $.ajax({
-            url: "/Exchange/LoadRateViewComponent/",
+            url: "/Exchange/GetRateViewComponent/",
             type: "GET",
             processData: false,
             contentType: false,

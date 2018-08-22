@@ -120,7 +120,7 @@
     },
     loadRequireProfileViewComponent: function () {
         $.ajax({
-            url: "/DepositAndWithdraw/LoadRequireProfile/",
+            url: "/DepositAndWithdraw/GetRequireProfile/",
             type: "GET",
             processData: false,
             contentType: false,
@@ -132,7 +132,7 @@
     },
     loadRequireKYCViewComponent: function () {
         $.ajax({
-            url: "/DepositAndWithdraw/LoadRequireKYC/",
+            url: "/DepositAndWithdraw/GetRequireKYC/",
             type: "GET",
             processData: false,
             contentType: false,

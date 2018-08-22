@@ -171,13 +171,13 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.User)]
-        public IActionResult LoadExchangeViewComponent()
+        public IActionResult GetExchangeViewComponent()
         {
             return ViewComponent("Exchange");
         }
 
         [Permission(EnumRole.User)]
-        public IActionResult LoadRateViewComponent()
+        public IActionResult GetRateViewComponent()
         {
             return ViewComponent("Rate");
         }
