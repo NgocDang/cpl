@@ -14,7 +14,6 @@ using System.Linq;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.User, EnumEntity.Exchange, EnumAction.Read)]
     public class ExchangeController : Controller
     {
         private readonly ILangService _langService;
@@ -49,6 +48,7 @@ namespace CPL.Controllers
             this._coinTransactionService = coinTransactionService;
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult Index()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
@@ -58,12 +58,14 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult GetConfirm(ConfirmExchangeViewModel viewModel)
         {
             return PartialView("_Confirm", viewModel);
         }
 
         [HttpPost]
+        [Permission(EnumRole.User)]
         public IActionResult Confirm(ConfirmExchangeViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
@@ -168,11 +170,13 @@ namespace CPL.Controllers
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult LoadExchangeViewComponent()
         {
             return ViewComponent("Exchange");
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult LoadRateViewComponent()
         {
             return ViewComponent("Rate");

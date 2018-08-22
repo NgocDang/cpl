@@ -18,7 +18,11 @@ namespace CPL.Misc
         public const string UnLoggedInText = "Error, you are not logged in yet!";
         public const string UnLoggedInUrl = "/Authentication/LogIn";
 
-        public const int UnAuthorizedCode = UnLoggedInCode + 1;
+        public const int UnLoggedAjaxInCode = UnLoggedInCode + 1;
+        public const string UnLoggedAjaxInText = "Error, you are sending ajax request and are not logged in yet!";
+        public const string UnLoggedAjaxInUrl = "/Home/Error401Ajax";
+
+        public const int UnAuthorizedCode = UnLoggedAjaxInCode + 1;
         public const string UnAuthorizedText = "Error, you are not authorized to do this!";
         public const string UnAuthorizedUrl = "/Home/Error403";
 

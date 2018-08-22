@@ -15,7 +15,6 @@ using ZXing;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.User, EnumEntity.DepositAndWithdraw, EnumAction.Read)]
     public class DepositAndWithdrawController : Controller
     {
         private readonly ILangService _langService;
@@ -51,22 +50,26 @@ namespace CPL.Controllers
             this._sysUserService = sysUserService;
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult Index()
         {
             return View();
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult LoadRequireProfile(ConfirmExchangeViewModel viewModel)
         {
             return PartialView("_RequireProfile", viewModel);
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult LoadRequireKYC(ConfirmExchangeViewModel viewModel)
         {
             return PartialView("_RequireKYC", viewModel);
         }
 
         [HttpPost]
+        [Permission(EnumRole.User)]
         public IActionResult DoWithdraw(WithdrawViewModel viewModel)
         {
             if (viewModel.Amount <= 0)
@@ -189,6 +192,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.User)]
         public IActionResult DecodeQR(DecodeQrViewModel viewModel)
         {
             System.DrawingCore.Bitmap bitmap = new System.DrawingCore.Bitmap(viewModel.FormFile.OpenReadStream());
@@ -204,6 +208,7 @@ namespace CPL.Controllers
             }
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult LoadDepositWithdrawViewComponent()
         {
             return ViewComponent("DepositWithdraw");

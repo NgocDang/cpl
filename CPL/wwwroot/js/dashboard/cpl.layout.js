@@ -66,5 +66,7 @@ $(document).ready(function () {
 $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     if (jqxhr.status == 403) {
         window.location.replace(location.protocol + '//' + location.host + "/Home/Error403");
-    }
+    } else if (jqxhr.status == 401) {
+        window.location.replace(location.protocol + '//' + location.host + "/Authentication/LogIn?returnUrl=" + window.location.pathname);
+    }   
 });

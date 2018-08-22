@@ -13,22 +13,22 @@
                 </div>
                 <p class="mb-2 text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EnterLogin")</p>
                 <form id="form-log-in" class="form-horizontal form-signin form needs-validation">
-                    <fieldset class="form-label-group">
-                        <input id="Email" class="form-control" name="Email" type="email" tabindex="1" autofocus required />
+                    <fieldset class="form-group">
                         <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                        <input id="Email" class="form-control" name="Email" type="email" tabindex="1" autofocus required />
                         <div class="invalid-feedback">
                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
                         </div>
                     </fieldset>
-                    <fieldset class="form-label-group">
-                        <input type="password" id="Password" class="form-control" tabindex="2" required />
+                    <fieldset class="form-group">
                         <label for="password">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Password")</label>
+                        <input type="password" id="Password" class="form-control" tabindex="2" required />
                         <div class="invalid-feedback">
                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
                         </div>
                     </fieldset>
                     <div class="form-group mb-0">
-                        <label for="captcha" class="text-light d-block">
+                        <label for="captcha" class="d-block">
                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Captcha")
                         </label>
                         <div class="box-captcha" id="box-captcha">
@@ -46,9 +46,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
                 <h5 class="text-center text-capitalize pb-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TwoFactorAuthentication")</h5>
                 <form id="form-two-factor" method="POST" class="form-horizontal form-signin form needs-validation">
-                    <fieldset class="form-label-group">
-                        <input id="PIN" class="form-control" name="PIN" type="text" autofocus required />
+                    <fieldset class="form-group">
                         <label for="PIN">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PIN")</label>
+                        <input id="PIN" class="form-control" name="PIN" type="text" autofocus required />
                         <div class="invalid-feedback" id="two-factor-error">
                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidPIN")
                         </div>

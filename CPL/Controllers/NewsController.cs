@@ -14,7 +14,6 @@ using X.PagedList;
 
 namespace CPL.Controllers
 {
-	[Permission(EnumRole.Guest, EnumEntity.News, EnumAction.Read)]
     public class NewsController : Controller
     {
         private readonly IMapper _mapper;
@@ -31,6 +30,7 @@ namespace CPL.Controllers
             this._unitOfWork = unitOfWork;
         }
 
+        [Permission(EnumRole.Guest)]
         public IActionResult Index(int? page)
         {
             var pageNumber = page ?? 1;
@@ -45,6 +45,7 @@ namespace CPL.Controllers
             return View(viewModels);
         }
 
+        [Permission(EnumRole.Guest)]
         public IActionResult Detail(int id)
         {
             var viewModels = _newsService

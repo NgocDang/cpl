@@ -70,7 +70,7 @@ namespace CPL.Controllers
             this._hostingEnvironment = hostingEnvironment;
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.Admin, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult Index()
         {
             var viewModel = new AdminViewModel();
@@ -92,14 +92,14 @@ namespace CPL.Controllers
         }
 
         #region User
-        [Permission(EnumRole.Admin, EnumEntity.SysUser, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult AllUser()
         {
             var viewModel = new AllUserViewModel();
             return View(viewModel);
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.SysUser, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public new IActionResult User(int id)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
@@ -110,7 +110,7 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.SysUser, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult EditUser(int id)
         {
             var user = _sysUserService.Queryable()
@@ -120,7 +120,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.SysUser, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult UpdateUser(SysUserViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == viewModel.Id);
@@ -166,7 +166,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.SysUser, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult SearchAllUser(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -183,7 +183,7 @@ namespace CPL.Controllers
             });
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.SysUser, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IList<SysUserViewModel> SearchAllUserFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
@@ -239,7 +239,7 @@ namespace CPL.Controllers
         #endregion
 
         #region KYC
-        [Permission(EnumRole.Admin, EnumEntity.KYC, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult KYCVerify()
         {
             var viewModel = new KYCVerifyViewModel();
@@ -247,7 +247,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.KYC, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult UpdateKYCVerify(int id)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
@@ -290,7 +290,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.KYC, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult CancelKYCVerify(int id)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
@@ -306,7 +306,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.KYC, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult SearchKYCVerify(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -323,7 +323,7 @@ namespace CPL.Controllers
             });
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.KYC, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IList<SysUserViewModel> SearchKYCVerifyFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
@@ -386,14 +386,14 @@ namespace CPL.Controllers
         #endregion
 
         #region News
-        [Permission(EnumRole.Admin, EnumEntity.News, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult News()
         {
             var viewModel = new NewsViewModel();
             return View(viewModel);
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.News, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult EditNews(int id)
         {
             var news = new NewsViewModel();
@@ -405,7 +405,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.News, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult SaveEditNews(NewsViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -433,7 +433,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.News, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult AddNews(NewsViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -450,7 +450,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.News, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult DeleteNews(int id)
         {
             var news = _newsService.Queryable()
@@ -466,7 +466,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.News, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult SearchNews(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -483,7 +483,7 @@ namespace CPL.Controllers
             });
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.News, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IList<NewsViewModel> SearchNewsFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
@@ -537,14 +537,14 @@ namespace CPL.Controllers
         #endregion
 
         #region Lottery
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult Lottery()
         {
             return View();
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult SearchLottery(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
@@ -561,7 +561,7 @@ namespace CPL.Controllers
             });
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IList<LotteryViewModel> SearchLotteryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
@@ -613,7 +613,7 @@ namespace CPL.Controllers
             }
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult ViewLottery(int id)
         {
             var lottery = new LotteryViewModel();
@@ -626,14 +626,14 @@ namespace CPL.Controllers
             return PartialView("_ViewLottery", lottery);
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult ViewLotteryPrize(UserLotteryPrizeViewModel viewModel)
         {
             return PartialView("_ViewLotteryPrize", viewModel);
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult SearchUserLotteryPrize(DataTableAjaxPostModel viewModel, int lotteryId, int lotteryPrizeId)
         {
             // action inside a standard controller
@@ -652,7 +652,7 @@ namespace CPL.Controllers
             return result;
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IList<UserLotteryPrizeViewModel> SearchUserLotteryPrizeFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int lotteryId, int lotteryPrizeId)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
@@ -714,7 +714,7 @@ namespace CPL.Controllers
             }
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult EditLottery(int id)
         {
             var lottery = new LotteryViewModel();
@@ -727,7 +727,7 @@ namespace CPL.Controllers
             return PartialView("_EditLottery", lottery);
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult AddLottery()
         {
             var lottery = new LotteryViewModel();
@@ -735,7 +735,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult UpdateLottery(LotteryViewModel viewModel)
         {
             try
@@ -869,7 +869,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult AddLottery(LotteryViewModel viewModel)
         {
             try
@@ -972,7 +972,7 @@ namespace CPL.Controllers
             }
         }
 
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public IActionResult ConfirmDeleteLottery(int id)
         {
             ViewData["gameId"] = id;
@@ -980,7 +980,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult DeleteLottery(int id)
         {
             try
@@ -1004,7 +1004,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Admin, EnumEntity.Lottery, EnumAction.Read)]
+        [Permission(EnumRole.Admin)]
         public JsonResult ActivateLottery(int id)
         {
             try

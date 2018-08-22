@@ -21,7 +21,6 @@ using CPL.Common.Enums;
 
 namespace CPL.Controllers
 {
-    [Permission(EnumRole.User, EnumEntity.Profile, EnumAction.Read)]
     public class ProfileController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;
@@ -60,6 +59,7 @@ namespace CPL.Controllers
             this._lotteryHistoryService = lotteryHistoryService;
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult Index()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
@@ -96,6 +96,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.User)]
         public IActionResult Update(ProfileViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
@@ -157,6 +158,7 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult Edit()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
@@ -167,6 +169,7 @@ namespace CPL.Controllers
             return PartialView("_Edit", viewModel);
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult Security()
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
@@ -178,6 +181,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.User)]
         public IActionResult UpdateEmail(UpdateEmailViewModel viewModel)
         {
             var isEmailExisting = _sysUserService.Queryable().Any(x => x.Email == viewModel.NewEmail && x.IsDeleted == false);
@@ -198,6 +202,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.User)]
         public IActionResult UpdatePassword(UpdatePasswordViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
@@ -216,6 +221,7 @@ namespace CPL.Controllers
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
 
+        [Permission(EnumRole.User)]
         public IActionResult KYC()
         {
             var user = _sysUserService.Queryable().Where(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).FirstOrDefault();
@@ -224,6 +230,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.User)]
         public IActionResult UpdateTwoFactorAuthentication(bool value, string pin)
         {
             if (value)
@@ -257,6 +264,7 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
+        [Permission(EnumRole.User)]
         public IActionResult UpdateKYC(KYCViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
