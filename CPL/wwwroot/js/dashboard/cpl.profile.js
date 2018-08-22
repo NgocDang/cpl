@@ -109,7 +109,7 @@
     },
     bindDoEdit: function () {
         $("#profile-edit").on("click", "#btn-do-edit-profile", function () {
-            var isFormValid = $('#form-edit-account')[0].checkValidity();
+            var isFormValid = $('#form-edit-profile')[0].checkValidity();
             $("#form-edit-account").addClass('was-validated');
 
             //Validate for Mobile
