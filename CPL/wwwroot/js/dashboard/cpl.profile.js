@@ -108,7 +108,7 @@
         });
     },
     bindDoEdit: function () {
-        $("#profile-edit").on("click", "#btn-save-account", function () {
+        $("#profile-edit").on("click", "#btn-do-edit-profile", function () {
             var isFormValid = $('#form-edit-account')[0].checkValidity();
             $("#form-edit-account").addClass('was-validated');
 
@@ -139,8 +139,8 @@
                     url: "/Profile/Update/",
                     type: "POST",
                     beforeSend: function () {
-                        $("#btn-save-account").attr("disabled", true);
-                        $("#btn-save-account").html("<i class='fa fa-spinner fa-spin'></i> <i class='far fa-save'></i> " + $("#btn-save-account").text());
+                        $("#btn-do-edit-profile").attr("disabled", true);
+                        $("#btn-do-edit-profile").html("<i class='fa fa-spinner fa-spin'></i> <i class='far fa-save'></i> " + $("#btn-do-edit-profile").text());
                     },
                     data: {
                         FirstName: $("#FirstName").val(),
@@ -176,8 +176,8 @@
                         }
                     },
                     complete: function (data) {
-                        $("#btn-save-account").attr("disabled", false);
-                        $("#btn-save-account").html("<i class='far fa-save'></i> " + $("#btn-save-account").text());
+                        $("#btn-do-edit-profile").attr("disabled", false);
+                        $("#btn-do-edit-profile").html("<i class='far fa-save'></i> " + $("#btn-do-edit-profile").text());
                     }
                 });
             }
