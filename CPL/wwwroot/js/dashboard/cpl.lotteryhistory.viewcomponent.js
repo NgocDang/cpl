@@ -1,7 +1,7 @@
 ﻿var LotteryHistoryViewComponent = {
-    historyDataTable: null,
+    lotteryHistoryDataTable: null,
     init: function () {
-        LotteryHistoryViewComponent.historyDataTable = LotteryHistoryViewComponent.loadLotteryHistoryDataTable();
+        LotteryHistoryViewComponent.lotteryHistoryDataTable = LotteryHistoryViewComponent.loadLotteryHistoryDataTable();
     },
     resizeOnMobile: function () {
         if ($(window).width() < 767 && $("#lottery-history-view-component .card-header").length > 0) {

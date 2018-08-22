@@ -87,7 +87,7 @@
                      $("#login-modal").modal("hide");
                      if ($("#lottery-history-view-component").hasClass("d-none")) { // not login yet
                          $("#lottery-history-view-component").removeClass("d-none");
-                         LotteryHistoryViewComponent.historyDataTable = LotteryHistoryViewComponent.loadLotteryHistoryDataTable();
+                         LotteryHistoryViewComponent.lotteryHistoryDataTable = LotteryHistoryViewComponent.loadLotteryHistoryDataTable();
                      }
 
                      Lottery.loadHeaderViewComponent(); // Reloader header view component after login
@@ -96,7 +96,7 @@
                          $("#div-thankyou-lottery").toggleClass("d-none");
                          $("#p-txHashId").html("<a class='text-success' target='_blank' href='" + data.tx + "'><small><u>" + data.tx + "</u></small></a>");
                          toastr.success(data.message, 'Success!');
-                         LotteryHistoryViewComponent.historyDataTable.ajax.reload();
+                         LotteryHistoryViewComponent.lotteryHistoryDataTable.ajax.reload();
                      }
                      else {
                          toastr.error(data.message, 'Error!');

@@ -1,7 +1,7 @@
 ﻿var Profile = {
     init: function () {
-        Profile.bindSaveButton();
-        Profile.bindEditProfile();
+        Profile.bindDoEdit();
+        Profile.bindEdit();
     },
     bindInitForm: function () {
         // Initiate country
@@ -107,7 +107,7 @@
                 });
         });
     },
-    bindSaveButton: function () {
+    bindDoEdit: function () {
         $("#profile-edit").on("click", "#btn-save-account", function () {
             var isFormValid = $('#form-edit-account')[0].checkValidity();
             $("#form-edit-account").addClass('was-validated');
@@ -184,7 +184,7 @@
             return false;
         });
     },
-    bindEditProfile: function () {
+    bindEdit: function () {
         $("#btn-edit-profile").on("click", function () {
             $.ajax({
                 url: "/Profile/Edit/",

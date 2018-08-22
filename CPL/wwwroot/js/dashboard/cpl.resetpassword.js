@@ -1,8 +1,8 @@
 ﻿var ResetPassword = {
     init: function () {
-        ResetPassword.bindResetPasswordForm();
+        ResetPassword.bindDoResetPassword();
     },
-    bindResetPasswordForm: function () {
+    bindDoResetPassword: function () {
         $("#btn-reset-password").on("click", function () {
             var isFormValid = $("#form-reset-password")[0].checkValidity();
             $("#form-reset-password").addClass('was-validated');

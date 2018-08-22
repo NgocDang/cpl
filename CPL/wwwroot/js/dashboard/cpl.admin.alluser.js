@@ -5,7 +5,7 @@
         AdminAllUser.loadLightBox();
         AdminAllUser.bindEdit();
         AdminAllUser.bindDoEdit();
-        AdminAllUser.bindDelete();
+        AdminAllUser.bindDoDelete();
     },
     bindEdit: function () {
         $("#dt-all-user").on("click", ".btn-edit", function () {

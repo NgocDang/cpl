@@ -1,11 +1,11 @@
 ﻿var Security = {
     init: function () {
-        Security.bindSaveEmail();
-        Security.bindSavePassword();
-        Security.bindTwoFactorAuthenticate();
-        Security.bindTwoFactorEnableDisable();
+        Security.bindDoEditEmail();
+        Security.bindDoEditPassword();
+        Security.bindLoadTwoFactorAuthentication();
+        Security.bindDoEditTwoFactorAuthentication();
     },
-    bindSaveEmail: function () {
+    bindDoEditEmail: function () {
         $("#btn-save-email").on("click", function () {
             var isFormValid = $('#form-edit-email')[0].checkValidity();
             $("#form-edit-email").addClass('was-validated');
@@ -50,7 +50,7 @@
             return false;
         });
     },
-    bindSavePassword: function () {
+    bindDoEditPassword: function () {
         $("#btn-save-password").on("click", function () {
             var isFormValid = $('#form-edit-password')[0].checkValidity();
             $("#form-edit-password").addClass('was-validated');
@@ -94,7 +94,7 @@
             return false;
         });
     },
-    bindTwoFactorAuthenticate: function () {
+    bindLoadTwoFactorAuthentication: function () {
         if ($("#TwoFactorAuthenticationEnable").val().toLowerCase() == "false") {
             $("#form-two-factor-enable").show();
             $("#form-two-factor-disable").hide();
@@ -103,7 +103,7 @@
             $("#form-two-factor-disable").show();
         }
     },
-    bindTwoFactorEnableDisable: function () {
+    bindDoEditTwoFactorAuthentication: function () {
         $("#two-factor-authenticator").on("click", "#btn-two-factor-disable", function () {
             $.ajax({
                 url: "/Profile/UpdateTwoFactorAuthentication/",

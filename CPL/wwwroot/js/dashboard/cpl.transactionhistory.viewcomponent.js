@@ -1,9 +1,9 @@
-var TransactionHistory = {
-    historyDatatable: null,
+var TransactionHistoryViewComponent = {
+    transactionHistoryDataTable: null,
     init: function () {
-        TransactionHistory.historyDatatable = TransactionHistory.loadLotteryHistoryTable();
+        TransactionHistoryViewComponent.transactionHistoryDataTable = TransactionHistoryViewComponent.loadTransactionHistoryDataTable();
     },
-    loadLotteryHistoryTable: function () {
+    loadTransactionHistoryDataTable: function () {
         return $("#dt-transaction-history").DataTable({
             "processing": true,
             "serverSide": true,
@@ -84,5 +84,5 @@ var TransactionHistory = {
 };
 
 $(document).ready(function () {
-    TransactionHistory.init();
+    TransactionHistoryViewComponent.init();
 });
