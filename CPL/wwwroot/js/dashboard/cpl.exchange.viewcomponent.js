@@ -60,6 +60,11 @@
                         toastr.success(data.message, "Success!");
                         ExchangeViewComponent.getExchangeViewComponent();
                         ExchangeViewComponent.getRateViewComponent();
+                        $(".user-token-amount").map(function (index, element) {
+                            debugger;
+                            $(element).text(data.token + " CPL");
+                        });
+                        
                     } else {
                         toastr.error(data.message, "Error!");
                     }

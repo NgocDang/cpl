@@ -70,6 +70,7 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             var btcToTokenRate = float.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
+            var rate = CoinExchangeExtension.CoinExchanging();
             if (user != null)
             {
                 if (viewModel.FromCurrency == EnumCurrency.BTC.ToString() && viewModel.FromAmount <= user.BTCAmount)
@@ -92,7 +93,10 @@ namespace CPL.Controllers
 
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully") });
+                    return new JsonResult(new { success = true,
+                        message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
+                        token = user.TokenAmount.ToString(CPLConstant.Format.Amount)
+                    });
                 }
                 else if (viewModel.FromCurrency == EnumCurrency.ETH.ToString() && viewModel.FromAmount <= user.ETHAmount)
                 {
@@ -107,14 +111,17 @@ namespace CPL.Controllers
                         CreatedDate = DateTime.Now,
                         CurrencyId = (int)EnumCurrency.ETH,
                         TokenAmount = tokenAmount,
-                        Rate = btcToTokenRate * (float)CoinExchangeExtension.CoinExchanging(),
+                        Rate = btcToTokenRate * (float)rate,
                         Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
                         Type = (int)EnumCoinTransactionType.EXCHANGE_ETH_TO_CPL
                     });
 
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully") });
+                    return new JsonResult(new { success = true,
+                        message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
+                        token = user.TokenAmount.ToString(CPLConstant.Format.Amount)
+                    });
                 }
                 else if (viewModel.FromCurrency == EnumCurrency.CPL.ToString() && viewModel.FromAmount <= user.TokenAmount)
                 {
@@ -138,12 +145,15 @@ namespace CPL.Controllers
 
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
-                        return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully") });
+                        return new JsonResult(new { success = true,
+                            message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
+                            token = user.TokenAmount.ToString(CPLConstant.Format.Amount)
+                        });
                     }
                     else
                     {
                         user.TokenAmount -= viewModel.FromAmount;
-                        var currencyAmount = viewModel.FromAmount / ((decimal)btcToTokenRate * CoinExchangeExtension.CoinExchanging());
+                        var currencyAmount = viewModel.FromAmount / (decimal)btcToTokenRate * rate;
                         user.ETHAmount += currencyAmount;
 
                         _coinTransactionService.Insert(new CoinTransaction()
@@ -153,14 +163,17 @@ namespace CPL.Controllers
                             CreatedDate = DateTime.Now,
                             CurrencyId = (int)EnumCurrency.ETH,
                             TokenAmount = viewModel.FromAmount,
-                            Rate = btcToTokenRate * (float)CoinExchangeExtension.CoinExchanging(),
+                            Rate = btcToTokenRate * (float)rate,
                             Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
                             Type = (int)EnumCoinTransactionType.EXCHANGE_CPL_TO_ETH
                         });
 
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
-                        return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully") });
+                        return new JsonResult(new { success = true,
+                            message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
+                            token = user.TokenAmount.ToString(CPLConstant.Format.Amount)
+                        });
                     }
                 }
                 else

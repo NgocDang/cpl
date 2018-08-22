@@ -74,7 +74,7 @@
                                 <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Hi"), @Model.User.LastName</span>
                             </a>
                             <a class="ml-3">
-                                <span class="font-weight-bold">@Model.User.TokenAmount.ToString("N0") CPL</span>
+                                <span class="font-weight-bold user-token-amount">@Model.User.TokenAmount.ToString("N0") CPL</span>
                             </a>
                         </li>
                     </ul>
@@ -215,7 +215,7 @@
                 <li class="dropdown nav-item d-md-block d-none" data-menu="dropdown">
                     <a class="dropdown-toggle nav-link user-menu" href="#" data-toggle="dropdown">
                         <i class="la la-user"></i>
-                        <span class="font-weight-bold">@Model.User.TokenAmount.ToString("N0") CPL</span>
+                        <span class="font-weight-bold user-token-amount">@Model.User.TokenAmount.ToString("N0") CPL</span>
                     </a>
                     <ul class="dropdown-menu">
                         @if (Model.User.IsAdmin)
