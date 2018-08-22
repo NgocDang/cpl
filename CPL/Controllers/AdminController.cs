@@ -248,7 +248,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult UpdateKYCVerify(int id)
+        public IActionResult DoAcceptKYCVerify(int id)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
             user.KYCVerified = true;
@@ -291,7 +291,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult CancelKYCVerify(int id)
+        public IActionResult DoCancelKYCVerify(int id)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
             user.KYCVerified = null;

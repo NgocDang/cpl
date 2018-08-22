@@ -6,10 +6,10 @@
         AdminKYCVerify.bindDoCancel();
     },
     bindDoAccept: function () {
-        $("#dt-kyc").on("click", ".btn-kyc-verify", function () {
+        $("#dt-kyc").on("click", ".btn-do-accept-kyc-verify", function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/UpdateKYCVerify/",
+                url: "/Admin/DoAcceptKYCVerify/",
                 type: "POST",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);
@@ -35,10 +35,10 @@
         });
     },
     bindDoCancel: function () {
-        $("#dt-kyc").on("click", ".btn-kyc-cancel", function () {
+        $("#dt-kyc").on("click", ".btn-do-cancel-kyc-verify", function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/CancelKYCVerify/",
+                url: "/Admin/DoCancelKYCVerify/",
                 type: "POST",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);
@@ -155,8 +155,8 @@
                     "render": function (data, type, full, meta) {
                         if (!full.kycVerified) {
                             return "<div class='kyc-action-" + full.id + "'>" +
-                                "<button style='line-height:12px;margin: 2px ' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-kyc-verify'>" + $("#accept").val()+"</button> " +
-                                "<button style='line-height:12px;margin: 2px ' data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-kyc-cancel'>" + $("#cancel").val() +"</button>" +
+                                "<button style='line-height:12px;margin: 2px ' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-do-accept-kyc-verify'>" + $("#accept").val()+"</button> " +
+                                "<button style='line-height:12px;margin: 2px ' data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-do-cancel-kyc-verify'>" + $("#cancel").val() +"</button>" +
                                 "</div>";
                         }
                         return "";
