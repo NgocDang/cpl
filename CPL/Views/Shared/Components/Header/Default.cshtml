@@ -118,9 +118,9 @@
                     <li class="dropdown dropdown-language nav-item">
                         <a class="dropdown-toggle nav-link pr-0" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="flag-icon @Model.Lang.Image"></i>
-                            <span class="font-small-3 selected-language">@Model.Lang.Name</span>
+                            <span class="font-small-3 selected-language d-lg-inline d-none">@Model.Lang.Name</span>
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown-flag">
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-flag">
                             @foreach (var lang in Model.Langs)
                             {
                                 <a data-id="@lang.Id" class="dropdown-item lang-item" href="#"><i class="flag-icon @lang.Image"></i> @lang.Name</a>
@@ -217,7 +217,7 @@
                         <i class="la la-user"></i>
                         <span class="font-weight-bold user-token-amount">@Model.User.TokenAmount.ToString("N0") CPL</span>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu dropdown-menu-right">
                         @if (Model.User.IsAdmin)
                         {
                             <li>
