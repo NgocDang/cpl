@@ -91,7 +91,6 @@ namespace CPL
                 .AddTransient<ICoinTransactionService, CoinTransactionService>()
                 .AddTransient<IPricePredictionService, PricePredictionService>()
                 .AddTransient<IPricePredictionHistoryService, PricePredictionHistoryService>()
-                .AddTransient<IRateService, RateService>()
                 .AddTransient<ILotteryService, LotteryService>()
                 .AddTransient<ILotteryHistoryService, LotteryHistoryService>()
                 .AddTransient<ILotteryPrizeService, LotteryPrizeService>()

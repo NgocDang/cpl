@@ -11,6 +11,5 @@ namespace CPL.Domain
         public string Name { get; set; }
 
         public virtual ICollection<CoinTransaction> CoinTransactions { get; set; }
-        public virtual ICollection<Rate> Rates { get; set; }
     }
 }

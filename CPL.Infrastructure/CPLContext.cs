@@ -25,7 +25,6 @@ namespace CPL.Infrastructure
         public DbSet<Team> Team { get; set; }
         public DbSet<Notification> Notification { get; set; }
         public DbSet<CoinTransaction> CoinTransaction { get; set; }
-        public DbSet<Rate> Rate { get; set; }
         public DbSet<PricePrediction> PricePrediction { get; set; }
         public DbSet<PricePredictionHistory> PricePredictionHistory { get; set; }
         public DbSet<Lottery> Lottery { get; set; }
@@ -52,7 +51,6 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new NotificationMap());
 
             modelBuilder.ApplyConfiguration(new CoinTransactionMap());
-            modelBuilder.ApplyConfiguration(new RateMap());
 
             modelBuilder.ApplyConfiguration(new PricePredictionMap());
             modelBuilder.ApplyConfiguration(new PricePredictionHistoryMap());
