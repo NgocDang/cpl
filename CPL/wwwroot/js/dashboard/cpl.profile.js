@@ -110,7 +110,7 @@
     bindDoEdit: function () {
         $("#profile-edit").on("click", "#btn-do-edit-profile", function () {
             var isFormValid = $('#form-edit-profile')[0].checkValidity();
-            $("#form-edit-account").addClass('was-validated');
+            $("#form-edit-profile").addClass('was-validated');
 
             //Validate for Mobile
             var isMobileValid = $("#Mobile").intlTelInput("isValidNumber");
