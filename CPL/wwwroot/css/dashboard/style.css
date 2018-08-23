@@ -1795,7 +1795,7 @@ button#btn-dropdown-item:focus {
 }
 
 .nav-language {
-    position: fixed;
+    position: absolute;
     top: 0px !important;
     right: 30px !important;
     z-index: 1000;
