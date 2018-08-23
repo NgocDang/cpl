@@ -1,0 +1,31 @@
+{
+  "name": "cpl.ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "scss": "webpack --config webpack.scss.config.js",
+    "ts": "webpack --config webpack.ts.config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bootstrap": "^4.1.2",
+    "@types/jquery": "^3.3.6",
+    "@types/jquery-validation-unobtrusive": "^3.2.32",
+    "@types/jquery.validation": "^1.16.4",
+    "bootstrap": "^4.1.3",
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "^1.0.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "source-map-loader": "^0.2.4",
+    "style-loader": "^0.22.1",
+    "ts-loader": "^4.5.0",
+    "typescript": "^3.0.1",
+    "webpack": "^4.17.1",
+    "webpack-command": "^0.4.1",
+    "webpack-merge": "^4.1.4"
+  }
+}
