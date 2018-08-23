@@ -85,7 +85,7 @@
                     success: function (data) {
                         if (data.success) {
                             if ($("#login-modal").length > 0) {
-                                AdminLottery.loadAjaxConfirmPurchaseTicket();
+                                Lottery.loadAjaxConfirmPurchaseTicket();
                             }
                             else {
                                 window.location.replace(data.url);
