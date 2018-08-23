@@ -10,11 +10,6 @@ namespace CPL.Common.ExchangePrice
     {
         public static decimal GetBTCPrice()
         {
-            // URL from hitBTC:
-            // https://api.hitbtc.com/api/2/public/ticker/BTCUSD
-            // URL from Binance:
-            // https://api.binance.com//api/v3/ticker/price?symbol=BTCUSDT
-
             var response = new HttpClient().GetAsync("https://api.binance.com//api/v3/ticker/price?symbol=BTCUSDT");
             response.Wait();
             if (response.Result.IsSuccessStatusCode)
@@ -24,5 +19,11 @@ namespace CPL.Common.ExchangePrice
             }
             return -1;
         }
+    }
+
+    public class Rate
+    {
+        public decimal Price { get; set; }
+        public DateTime Time { get; set; }
     }
 }
