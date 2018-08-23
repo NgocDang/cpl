@@ -12,6 +12,7 @@ namespace CPL.Models
         public string FrontSide { get; set; }
         public string BackSide { get; set; }
         public bool? KYCVerified { get; set; }
+        public bool IsProfileEmpty { get; set; }
         public DateTime? KYCCreatedDate { get; set; }
         public IFormFile FrontSideImage { set; get; }
         public IFormFile BackSideImage { set; get; }

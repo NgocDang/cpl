@@ -182,7 +182,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.User)]
-        public IActionResult DoEditEmail(UpdateEmailViewModel viewModel)
+        public IActionResult DoEditEmail(EditEmailViewModel viewModel)
         {
             var isEmailExisting = _sysUserService.Queryable().Any(x => x.Email == viewModel.NewEmail && x.IsDeleted == false);
             if (isEmailExisting)
@@ -203,7 +203,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.User)]
-        public IActionResult DoEditPassword(UpdatePasswordViewModel viewModel)
+        public IActionResult DoEditPassword(EditPasswordViewModel viewModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
@@ -226,6 +226,12 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().Where(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).FirstOrDefault();
             var viewModel = Mapper.Map<KYCViewModel>(user);
+            if (!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName)
+                && user.DOB.HasValue && !string.IsNullOrEmpty(user.Country) && !string.IsNullOrEmpty(user.City) && !string.IsNullOrEmpty(user.StreetAddress)
+                && !string.IsNullOrEmpty(user.Mobile))
+                viewModel.IsProfileEmpty = false;
+            else
+                viewModel.IsProfileEmpty = true;
             return View(viewModel);
         }
 

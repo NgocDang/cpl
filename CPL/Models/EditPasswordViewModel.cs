@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class UpdatePasswordViewModel
+    public class EditPasswordViewModel
     {
         public string CurrentPassword { get; set; }
         public string NewPassword { get; set; }
