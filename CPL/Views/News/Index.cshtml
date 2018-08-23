@@ -34,7 +34,7 @@
                         <div class="card-body">
                             <h4 class="card-title"><a asp-controller="News" class="text-dark" asp-action="Detail" asp-route-id="@item.Id">@item.Title</a></h4>
                             <h6 class="card-subtitle text-muted">@item.CreatedDate.ToString("MMMM dd, yyyy")</h6>
-                            <p class="card-text mt-2">@Html.Raw(item.ShortDescription)...<a asp-controller="News" asp-action="NewsDetail" asp-route-id="@item.Id" class="card-link blue darken-2 text-lowercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ReadMore")</a></p>
+                            <p class="card-text mt-2">@Html.Raw(item.ShortDescription)...<a asp-controller="News" asp-action="Detail" asp-route-id="@item.Id" class="card-link blue darken-2 text-lowercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ReadMore")</a></p>
                         </div>
                     </div>
                 </div>
