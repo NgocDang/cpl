@@ -8,7 +8,7 @@
 <div class="content-wrapper mt-2 mb-2">
     <div class="content-body">
         <div class="col-xl-3 col-lg-4 col-sm-5 col-12 p-0  mx-auto">
-            <div class="card border-grey border-lighten-3 m-0 box-shadow-0 card-account-right height-550">
+            <div class="card border-grey border-lighten-3 m-0 box-shadow-0 card-account-right height-570">
                 <div class="card-content">
                     <div class="card-body">
                         <p class="text-center h5 text-capitalize txt-welcome mb-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Welcome")</p>
@@ -62,5 +62,5 @@
 @section scripts
     {
     <script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
-    <script src="~/js/dashboard/cpl.register.js"></script>
+    <script src="~/js/dashboard/cpl.register.js" asp-append-version="true"></script>
 }

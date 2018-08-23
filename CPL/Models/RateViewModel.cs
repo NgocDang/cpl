@@ -9,7 +9,7 @@ namespace CPL.Models
     {
         public decimal BTCToTokenRate { get; set; }
         public decimal ETHToTokenRate { get; set; }
-        public int TokenAmount { get; set; }
+        public decimal TokenAmount { get; set; }
 
         public int SysUserId { get; set; }
     }
