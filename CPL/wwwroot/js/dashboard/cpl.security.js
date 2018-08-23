@@ -7,6 +7,7 @@
     },
     bindDoEditEmail: function () {
         $("#btn-do-edit-email").on("click", function () {
+            var newEmail = $("#NewEmail").val();
             var isFormValid = $('#form-edit-email')[0].checkValidity();
             $("#form-edit-email").addClass('was-validated');
 
@@ -35,6 +36,9 @@
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
+                            $("#form-edit-email")[0].reset();
+                            $("#CurrentEmail").val(newEmail);
+                            $("#form-edit-email").removeClass('was-validated');
                         } else {
                             if (data.name == "new-email") 
                                 $("#new-email-msg").show();
@@ -79,6 +83,8 @@
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
+                            $("#form-edit-password")[0].reset();
+                            $("#form-edit-password").removeClass('was-validated');
                         } else {
                             if (data.name == "current-password")
                                 $("#current-password-msg").show();
