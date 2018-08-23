@@ -141,7 +141,7 @@ namespace CPL.Controllers
                 }
 
                 var isAccountActivationEnable = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value);
-                var latestAddressIndex = _sysUserService.Queryable().LastOrDefault().ETHHDWalletAddressIndex;
+                var latestAddressIndex = _sysUserService.Queryable().LastOrDefault()?.ETHHDWalletAddressIndex ?? 0;
                 // Try to create a user with the given identity
                 var user = new SysUser
                 {

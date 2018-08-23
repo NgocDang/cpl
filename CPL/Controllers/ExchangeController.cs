@@ -95,7 +95,7 @@ namespace CPL.Controllers
                     _unitOfWork.SaveChanges();
                     return new JsonResult(new { success = true,
                         message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
-                        token = user.TokenAmount.ToString(CPLConstant.Format.Amount)
+                        token = user.TokenAmount.ToString("N0")
                     });
                 }
                 else if (viewModel.FromCurrency == EnumCurrency.ETH.ToString() && viewModel.FromAmount <= user.ETHAmount)
@@ -120,7 +120,7 @@ namespace CPL.Controllers
                     _unitOfWork.SaveChanges();
                     return new JsonResult(new { success = true,
                         message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
-                        token = user.TokenAmount.ToString(CPLConstant.Format.Amount)
+                        token = user.TokenAmount.ToString("N0")
                     });
                 }
                 else if (viewModel.FromCurrency == EnumCurrency.CPL.ToString() && viewModel.FromAmount <= user.TokenAmount)
@@ -147,7 +147,7 @@ namespace CPL.Controllers
                         _unitOfWork.SaveChanges();
                         return new JsonResult(new { success = true,
                             message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
-                            token = user.TokenAmount.ToString(CPLConstant.Format.Amount)
+                            token = user.TokenAmount.ToString("N0")
                         });
                     }
                     else
@@ -172,7 +172,7 @@ namespace CPL.Controllers
                         _unitOfWork.SaveChanges();
                         return new JsonResult(new { success = true,
                             message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
-                            token = user.TokenAmount.ToString(CPLConstant.Format.Amount)
+                            token = user.TokenAmount.ToString("N0")
                         });
                     }
                 }
