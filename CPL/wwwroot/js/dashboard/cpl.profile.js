@@ -109,22 +109,6 @@
     },
     bindDoEdit: function () {
         $("#profile-edit").on("click", "#btn-do-edit-profile", function () {
-            //Validate for firstName
-            if ($("#FirstName").val() == "") {
-                $("#FirstName").closest(".form-group").find(".invalid-feedback").show();
-            }
-            else {
-                $("#FirstName").closest(".form-group").find(".invalid-feedback").hide();
-            }
-
-            //Validate for lastName
-            if ($("#LastName").val() == "") {
-                $("#LastName").closest(".form-group").find(".invalid-feedback").show();
-            }
-            else {
-                $("#LastName").closest(".form-group").find(".invalid-feedback").hide();
-            }
-
             var isFormValid = $('#form-edit-profile')[0].checkValidity();
             $("#form-edit-profile").addClass('was-validated');
 
@@ -148,18 +132,6 @@
                 $("#country-msg").hide();
             else
                 $("#country-msg").show();
-
-            // Validate for city
-            if ($("#City").val() == "")
-                $("#City").closest(".form-group").find(".invalid-feedback").show();
-            else
-                $("#City").closest(".form-group").find(".invalid-feedback").hide();
-
-            // Validate for street
-            if ($("#StreetAddress").val() == "")
-                $("#StreetAddress").closest(".form-group").find(".invalid-feedback").show();
-            else
-                $("#StreetAddress").closest(".form-group").find(".invalid-feedback").hide();
 
             if (isFormValid && isMobileValid && isDOBValid && isCountryValid) {
                 var returnUrl = Profile.getUrlParameter("returnUrl");
