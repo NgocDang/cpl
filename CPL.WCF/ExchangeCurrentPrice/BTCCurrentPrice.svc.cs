@@ -1,4 +1,6 @@
-﻿using CPL.WCF.Misc;
+﻿using CPL.Common.BTCRateHelper;
+using CPL.Common.Enums;
+using CPL.WCF.Misc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,8 +45,8 @@ namespace CPL.WCF.ExchangeCurrentPrice
         {
             try
             {
-                var currentPrice = CPL.Common.ExchangePrice.ExchangeCurrentPrice.BTCCurrentPrice();
-                CPL.WCF.Misc.BTCCurrentPrice.Price = currentPrice.Price;
+                var currentPrice = BTCRateHelper.GetBTCRate(EnumCurrenciesPair.BTCUSDT.ToString());
+                CPL.WCF.Misc.BTCCurrentPrice.Price = currentPrice.Value;
                 CPL.WCF.Misc.BTCCurrentPrice.Time = currentPrice.Time;
                 return new SetBTCCurrentPriceResult
                 {

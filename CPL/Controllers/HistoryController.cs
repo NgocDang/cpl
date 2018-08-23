@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using CPL.Common.BTCRateHelper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Misc;
@@ -280,7 +281,7 @@ namespace CPL.Controllers
                             CreatedTimeInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("HH:mm:ss"),
                             GameType = EnumGameType.LOTTERY.ToString(),
                             GameId = y.Select(x=>x.LotteryId).FirstOrDefault(),
-                            Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : EnumGameResult.LOSE.ToString()),
+                            Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : (y.Any(x => x.Result == EnumGameResult.LOSE.ToString()) ? EnumGameResult.LOSE.ToString() : string.Empty)),
                             AmountInString = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice).ToString("#,##0"),
                             Amount = (y.Select(x => x).Count() * CPLConstant.LotteryTicketPrice),
                             AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value.GetValueOrDefault(0))).ToString("#,##0"),
@@ -534,7 +535,7 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
             var viewModel = Mapper.Map<GameHistoryViewModel>(user);
-            decimal coinRate = CoinExchangeExtension.CoinExchanging();
+            decimal coinRate = BTCRateHelper.GetBTCRate(EnumCurrenciesPair.ETHBTC.ToString()).Value;
             var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value;
             viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
 

@@ -48,14 +48,13 @@
     <Compile Include="Enums\CPLConstant.cs" />
     <Compile Include="Enums\EnumCoinTransactionStatus.cs" />
     <Compile Include="Enums\EnumCoinTransactionType.cs" />
+    <Compile Include="Enums\EnumCurrenciesPair.cs" />
     <Compile Include="Enums\EnumCurrency.cs" />
     <Compile Include="Enums\EnumEnvironment.cs" />
     <Compile Include="Enums\EnumGame.cs" />
     <Compile Include="Enums\EnumLangContentFieldName.cs" />
     <Compile Include="Enums\ObjectState.cs" />
-    <Compile Include="ExchangePrice\ExchangeCurrentPrice.cs" />
-    <Compile Include="ExchangePrice\ExchangeExtension.cs" />
-    <Compile Include="ExchangePrice\ExchangePrice.cs" />
+    <Compile Include="BTCRateHelper\BTCRateHelper.cs" />
     <Compile Include="Interfaces\IObjectState.cs" />
     <Compile Include="Misc\Utils.cs" />
     <Compile Include="Models\Entity.cs" />

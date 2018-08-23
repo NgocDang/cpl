@@ -1,4 +1,4 @@
-﻿using CPL.Common.ExchangePrice;
+﻿using CPL.Common.BTCRateHelper;
 using System;
 using System.Collections.Generic;
 using System.Text;
