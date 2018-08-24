@@ -52,16 +52,19 @@ namespace CPL.Misc
     {
         public override PermissionStatus IsACL(ActionExecutingContext context, EnumEntity? entity, EnumAction? action)
         {
+            var currentUser = context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            if (!currentUser.IsAdmin)
+                return new PermissionStatus { Code = PermissionStatus.UnAuthorizedCode, Text = PermissionStatus.UnAuthorizedText, Url = PermissionStatus.UnAuthorizedUrl };
+
             if (entity.HasValue && entity.Value == EnumEntity.SysUser)
             {
                 if (action.HasValue && action.Value == EnumAction.Delete)
                 {
                     var sysUserService = (ISysUserService)context.HttpContext.RequestServices.GetService(typeof(ISysUserService));
 
-                    var currentUser = sysUserService.Queryable().FirstOrDefault(x=>x.Id == context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
                     var beingDeletedUser = sysUserService.Queryable().FirstOrDefault(x => x.Id == int.Parse(context.ActionArguments["id"].ToString()));
 
-                    if (beingDeletedUser == null || !currentUser.IsAdmin || beingDeletedUser.IsAdmin)
+                    if (beingDeletedUser == null || beingDeletedUser.IsAdmin)
                         return new PermissionStatus { Code = PermissionStatus.UnAuthorizedCode, Text = PermissionStatus.UnAuthorizedText, Url = PermissionStatus.UnAuthorizedUrl };
                 }
             }
