@@ -1,10 +1,16 @@
 ﻿var LotteryHistoryViewComponent = {
     lotteryHistoryDataTable: null,
     init: function () {
-        LotteryHistoryViewComponent.lotteryHistoryDataTable = LotteryHistoryViewComponent.loadLotteryHistoryDataTable();
+        // Not implement yet
     },
     resizeOnMobile: function () {
         if ($(window).width() < 767 && $("#lottery-history-view-component .card-header").length > 0) {
+            $('#lottery-history-view-component').on('click', '#txt-collapse', function () {
+                if ($('#lottery-history-view-component .card-header .ft-minus').length === 1 && $("#dt-lottery-history").find("tbody").length === 0) {
+                    // Load 1 time when press on minus button in mobile version
+                    LotteryHistoryViewComponent.lotteryHistoryDataTable = LotteryHistoryViewComponent.loadLotteryHistoryDataTable();
+                }
+            })
             $('#lottery-history-view-component .card-content').removeClass('show');
             $('#lottery-history-view-component .card-header i').removeClass('ft-minus');
             $('#lottery-history-view-component .card-header i').addClass('ft-plus');
@@ -12,6 +18,7 @@
             $('#lottery-history-view-component .card-content').addClass('show');
             $('#lottery-history-view-component .card-header i').removeClass('ft-plus');
             $('#lottery-history-view-component .card-header i').addClass('ft-minus');
+            LotteryHistoryViewComponent.lotteryHistoryDataTable = LotteryHistoryViewComponent.loadLotteryHistoryDataTable();
         }
     },
     loadLotteryHistoryDataTable: function () {
@@ -91,6 +98,6 @@ $(document).ready(function () {
     LotteryHistoryViewComponent.init();
 });
 
-$(window).bind('resize load', function () {
+$(window).bind('load', function () {
     LotteryHistoryViewComponent.resizeOnMobile();
 });
