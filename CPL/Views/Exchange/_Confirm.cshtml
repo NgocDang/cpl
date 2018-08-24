@@ -1,7 +1,7 @@
 ﻿@model ConfirmExchangeViewModel
 
 <div class="modal" tabindex="-1" role="dialog" id="exchange" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-sm mx-auto" role="document">
+    <div class="modal-dialog modal-lg mx-auto" role="document">
         <div class="modal-content">
             <form id="form-exchange" method="POST" action="#" class="needs-validation" novalidate="">
                 <div class="modal-header text-center">
@@ -15,7 +15,7 @@
                             <div class="col-md-5 col-12 text-left">
                                 <fieldset class="form-group mb-0">
                                     <label for="from-currency">@Model.FromCurrency</label>
-                                    <input type="text" class="form-control" id="from-currency" value="@Model.FromAmount.ToString("#,##0.#########")" readonly>
+                                    <input type="text" class="form-control" id="from-currency" value="@Model.FromAmount" readonly>
                                 </fieldset>
                             </div>
                             <div class="col-md-2 col-12 text-center pt-1">
@@ -24,7 +24,7 @@
                             <div class="col-md-5 col-12 text-left">
                                 <fieldset class="form-group mb-0">
                                     <label for="to-currency">@Model.ToCurrency</label>
-                                    <input type="text" class="form-control" id="to-currency" value="@Model.ToAmount.ToString("#,##0.#########")" readonly>
+                                    <input type="text" class="form-control" id="to-currency" value="@Model.ToAmount" readonly>
                                 </fieldset>
                             </div>
                         </div>
