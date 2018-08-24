@@ -175,7 +175,7 @@ namespace CPL.Controllers
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             var viewModel = Mapper.Map<SecurityViewModel>(user);
             var tfa = new TwoFactorAuthenticator();
-            var setupInfo = tfa.GenerateSetupCode(CPLConstant.AppName, user.Email, CPLConstant.TwoFactorAuthenticationSecretKey, 300, 300);
+            var setupInfo = tfa.GenerateSetupCode(CPLConstant.AppName, user.Email, $"{CPLConstant.TwoFactorAuthenticationSecretKey}{user.Id}", 300, 300);
             viewModel.QrCodeSetupImageUrl = setupInfo.QrCodeSetupImageUrl;
             return View(viewModel);
         }
@@ -241,12 +241,12 @@ namespace CPL.Controllers
         {
             if (value)
             {
+                var userId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
                 var tfa = new TwoFactorAuthenticator();
-                bool isCorrectPIN = tfa.ValidateTwoFactorPIN(CPLConstant.TwoFactorAuthenticationSecretKey, pin);
+                bool isCorrectPIN = tfa.ValidateTwoFactorPIN($"{CPLConstant.TwoFactorAuthenticationSecretKey}{userId}", pin);
 
                 if (isCorrectPIN)
                 {
-                    var userId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
                     var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == userId);
                     user.TwoFactorAuthenticationEnable = value;
                     HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
