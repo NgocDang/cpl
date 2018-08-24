@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CPL.Common.BTCRateHelper;
+using CPL.Common.CurrenciesPairRateHelper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Misc.Utils;
@@ -31,7 +31,7 @@ namespace CPL.ViewComponents
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == userId);
             var viewModel = Mapper.Map<RateViewModel>(user);
 
-            var ethToBTCRate = BTCRateHelper.GetBTCRate(EnumCurrenciesPair.ETHBTC.ToString()).Value;
+            var ethToBTCRate = CurrenciesPairRateHelper.GetCurrenciesPairRate(EnumCurrenciesPair.ETHBTC.ToString()).Value;
             viewModel.ETHToTokenRate = (1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value)) / ethToBTCRate;
             viewModel.BTCToTokenRate = 1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == "BTCToTokenRate").Value);
 

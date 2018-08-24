@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CPL.Common.BTCRateHelper;
+using CPL.Common.CurrenciesPairRateHelper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Misc.Enums;
@@ -32,7 +32,7 @@ namespace CPL.ViewComponents
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             var viewModel = new TokenCalculatorViewModel(); ;
-            var ethToBTCRate = BTCRateHelper.GetBTCRate(EnumCurrenciesPair.ETHBTC.ToString()).Value;
+            var ethToBTCRate = CurrenciesPairRateHelper.GetCurrenciesPairRate(EnumCurrenciesPair.ETHBTC.ToString()).Value;
             viewModel.ETHToTokenRate = (decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value)) * ethToBTCRate;
             viewModel.BTCToTokenRate = 1 / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
             return View(viewModel);

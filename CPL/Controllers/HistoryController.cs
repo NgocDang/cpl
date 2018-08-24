@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using CPL.Common.BTCRateHelper;
+using CPL.Common.CurrenciesPairRateHelper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Misc;
@@ -535,7 +535,7 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
             var viewModel = Mapper.Map<GameHistoryViewModel>(user);
-            decimal coinRate = BTCRateHelper.GetBTCRate(EnumCurrenciesPair.ETHBTC.ToString()).Value;
+            decimal coinRate = CurrenciesPairRateHelper.GetCurrenciesPairRate(EnumCurrenciesPair.ETHBTC.ToString()).Value;
             var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value;
             viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
 
