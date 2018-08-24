@@ -18,7 +18,7 @@
                                 <label for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
                                 <input id="Email" class="form-control" name="Email" type="email" tabindex="1" autofocus required />
                                 <div id="email-msg" class="invalid-feedback">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ExistingEmail")
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidOrExistingEmail")
                                 </div>
                             </fieldset>
                             <fieldset class="form-group">

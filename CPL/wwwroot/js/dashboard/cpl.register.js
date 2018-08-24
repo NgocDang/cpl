@@ -45,7 +45,7 @@
                             }
                         } else {
                             if (data.name == "email")
-                                $("#email-msg").html(data.message).show();
+                                $("#email-msg").show();
                             else
                                 $("#register-message").html(data.message).show();
 
