@@ -6,6 +6,7 @@ namespace CPL.Common.Enums
 {
     public class CPLConstant
     {
+        //Change this environment setting will affect CPL globally including Web & Services!!!
         public static EnumEnvironment Environment = EnumEnvironment.TESTNET;
 
         //Authentication

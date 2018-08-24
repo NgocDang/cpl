@@ -94,12 +94,12 @@ namespace CPL.Controllers
         [Permission(EnumRole.Guest)]
         public IActionResult VerifyPIN(AccountLoginModel viewModel)
         {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email);
             var tfa = new TwoFactorAuthenticator();
-            bool isCorrectPIN = tfa.ValidateTwoFactorPIN(CPLConstant.TwoFactorAuthenticationSecretKey, viewModel.PIN);
+            bool isCorrectPIN = tfa.ValidateTwoFactorPIN($"{CPLConstant.TwoFactorAuthenticationSecretKey}{user.Id}", viewModel.PIN);
 
             if (isCorrectPIN)
             {
-                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email);
                 HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
                 return RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Home")}");
             }

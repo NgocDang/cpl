@@ -12,8 +12,8 @@
                 </div>
                 <div class="col-xl-7 col-12 pl-sm-1 pr-sm-1 pl-0 pr-0">
                     <div class="text-xl-right text-center">
-                        <p class="font-medium-2 cpl-rate"><span class="w-25 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice")</span> = <span class="w-50 d-xl-inline-block font-weight-bold">@Model.BTCToTokenRate.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span></p>
-                        <p class="font-medium-2 mb-0"><span class="w-25 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice")</span> = <span class="w-50 d-xl-inline-block font-weight-bold">@Model.ETHToTokenRate.ToString("#,##0.########") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</span></p>
+                        <p class="font-medium-2 cpl-rate"><span class="w-25 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice")</span> = <span class="w-50 d-xl-inline-block font-weight-bold">@Model.BTCToTokenRate.ToString("#,##0.00000000") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span></p>
+                        <p class="font-medium-2 mb-0"><span class="w-25 font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenToBTCPrice")</span> = <span class="w-50 d-xl-inline-block font-weight-bold">@Model.ETHToTokenRate.ToString("#,##0.00000000") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ETHSymbol")</span></p>
                     </div>
                 </div>
             </div>
