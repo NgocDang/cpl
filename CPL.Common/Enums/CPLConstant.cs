@@ -99,13 +99,14 @@ namespace CPL.Common.Enums
 
         // Withdraw and deposit
         // BTC
-        public static string BTCDepositAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
-        public static string BTCWithdrawAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return "mzobLqk3DwwhLnirjjjm7Xmzqxh2xtU6ew"; } }
-        public static string BTCWithdrawPrivateKey { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return "cVB6Q5EZoWRTNfNnVpCuwLaZ8DeSxPJNPXJc5uM9gMbBM9WkUckY"; } }
+        public static string BTCDepositAddress { get { if (Environment == EnumEnvironment.MAINNET) return "14AUtFRakncVdqy5b1qWmcFctjtRENgeDU"; else return "mzobLqk3DwwhLnirjjjm7Xmzqxh2xtU6ew"; } }
+        public static string BTCWithdrawAddress { get { if (Environment == EnumEnvironment.MAINNET) return "14AUtFRakncVdqy5b1qWmcFctjtRENgeDU"; else return "mzobLqk3DwwhLnirjjjm7Xmzqxh2xtU6ew"; } }
+        public static string BTCWithdrawPrivateKey { get { if (Environment == EnumEnvironment.MAINNET) return "Kza4W2kD8cqvpzD1ERMWQKGWjbDxRoWUXZEFa11fxVUtNwjXgfmi"; else return "cVB6Q5EZoWRTNfNnVpCuwLaZ8DeSxPJNPXJc5uM9gMbBM9WkUckY"; } }
+
         // ETH
-        public static string ETHDepositAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return ""; } }
-        public static string ETHWithdrawAddress { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return "0xB43eA1802458754A122d02418Fe71326030C6412"; } }
-        public static string ETHWithdrawPrivateKey { get { if (Environment == EnumEnvironment.MAINNET) return ""; else return "118dface57cbfc63874c0158964d7f810154feb3ddd08277636cd591e3638e60"; } }
+        public static string ETHDepositAddress { get { if (Environment == EnumEnvironment.MAINNET) return "0x1D6a318516d6a87699B6Bcc307506961589258fB"; else return "0xB43eA1802458754A122d02418Fe71326030C6412"; } }
+        public static string ETHWithdrawAddress { get { if (Environment == EnumEnvironment.MAINNET) return "0x1D6a318516d6a87699B6Bcc307506961589258fB"; else return "0xB43eA1802458754A122d02418Fe71326030C6412"; } }
+        public static string ETHWithdrawPrivateKey { get { if (Environment == EnumEnvironment.MAINNET) return "203e5543b0017638431bd334e91f5b7a39200596cd2e56799791c6bb3ffc4509"; else return "118dface57cbfc63874c0158964d7f810154feb3ddd08277636cd591e3638e60"; } }
 
         public static string Etherscan { get { if (Environment == EnumEnvironment.MAINNET) return "https://etherscan.io/tx/{0}"; else return "https://rinkeby.etherscan.io/tx/{0}"; } }
         public static string BlockInfo { get { if (Environment == EnumEnvironment.MAINNET) return "https://www.blockchain.com/btc/tx/{0}"; else return "https://testnet.blockchain.info/tx/{0}"; } }
