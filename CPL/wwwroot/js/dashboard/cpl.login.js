@@ -80,7 +80,7 @@
                     },
                     data: {
                         Email: $("#Email").val(),
-                        PIN: $("#PIN").val()
+                        PIN: $("#PIN").val().toString()
                     },
                     success: function (data) {
                         if (data.success) {

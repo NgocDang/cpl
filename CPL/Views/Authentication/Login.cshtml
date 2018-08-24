@@ -48,7 +48,7 @@
                         <form id="form-two-factor" method="POST" class="form-horizontal form-signin form needs-validation">
                             <fieldset class="form-group">
                                 <label for="PIN">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PIN")</label>
-                                <input id="PIN" class="form-control" name="PIN" type="text" tabindex="1" autofocus required />
+                                <input id="PIN" class="form-control" name="PIN" type="number" tabindex="1" autofocus required />
                                 <div class="invalid-feedback" id="two-factor-error">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidPIN")
                                 </div>
