@@ -170,6 +170,8 @@ namespace CPL.Controllers
                                               {
                                                   CreatedDate = x.CreatedDate,
                                                   CreatedDateInString = x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss"),
+                                                  LotteryStartDate = x.Lottery.CreatedDate,
+                                                  LotteryStartDateInString = x.Lottery.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss"),
                                                   LotteryPhase = x.Lottery.Phase,
                                                   LotteryPhaseInString = x.Lottery.Phase.ToString("D3"),
                                                   Result = x.Result == EnumGameResult.WIN.ToString() ? "Win" : (x.Result == EnumGameResult.LOSE.ToString() ? "Lose" : (x.Result == EnumGameResult.KYC_PENDING.ToString() ? "KYC Pending" : string.Empty)),
