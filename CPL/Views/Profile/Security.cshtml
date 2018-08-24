@@ -51,7 +51,7 @@
                                         <div class="col-md-6 col-sm-12">
                                             <fieldset class="form-group">
                                                 <label for="CurrentEmail">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CurrentEmail")</label>
-                                                <input type="email" name="CurrentEmail" readonly value="@Model.CurrentEmail" class="form-control" maxlength="30" id="CurrentEmail" required autofocus="">
+                                                <input type="email" name="CurrentEmail" readonly value="@Model.CurrentEmail" class="form-control" maxlength="30" id="CurrentEmail" required>
                                                 <div class="invalid-feedback">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CurrentEmailRequired")
                                                 </div>
@@ -71,7 +71,7 @@
                                         <div class="col-md-6 col-sm-12">
                                             <fieldset class="form-group">
                                                 <label for="NewEmailConfirm">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NewEmailConfirm")</label>
-                                                <input type="email" name="NewEmailConfirm" class="form-control" maxlength="30" id="NewEmailConfirm" required autofocus="">
+                                                <input type="email" name="NewEmailConfirm" class="form-control" maxlength="30" id="NewEmailConfirm" required>
                                                 <div id="new-email-confirm-msg" class="invalid-feedback">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MismatchEmail")
                                                 </div>
@@ -106,7 +106,7 @@
                                             <div class="col-md-6 col-sm-12">
                                                 <fieldset class="form-group">
                                                     <label for="CurrentPassword">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CurrentPassword")</label>
-                                                    <input type="password" name="CurrentPassword" class="form-control" maxlength="30" id="CurrentPassword" required autofocus="">
+                                                    <input type="password" name="CurrentPassword" class="form-control" maxlength="30" id="CurrentPassword" required>
                                                     <div id="current-password-msg" class="invalid-feedback">
                                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidCurrentPassword")
                                                     </div>
@@ -117,7 +117,7 @@
                                             <div class="col-md-6 col-sm-12">
                                                 <fieldset class="form-group">
                                                     <label for="NewPassword">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NewPassword")</label>
-                                                    <input type="password" name="NewPassword" class="form-control" maxlength="30" id="NewPassword" required autofocus="">
+                                                    <input type="password" name="NewPassword" class="form-control" maxlength="30" id="NewPassword" required>
                                                     <div class="invalid-feedback">
                                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NewPasswordRequired")
                                                     </div>
@@ -126,7 +126,7 @@
                                             <div class="col-md-6 col-sm-12">
                                                 <fieldset class="form-group">
                                                     <label for="NewPasswordConfirm">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NewPasswordConfirm")</label>
-                                                    <input type="password" name="NewPasswordConfirm" class="form-control" maxlength="30" id="NewPasswordConfirm" required autofocus="">
+                                                    <input type="password" name="NewPasswordConfirm" class="form-control" maxlength="30" id="NewPasswordConfirm" required>
                                                     <div id="new-password-confirm-msg" class="invalid-feedback">
                                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MismatchPassword")
                                                     </div>

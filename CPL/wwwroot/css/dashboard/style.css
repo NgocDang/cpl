@@ -1804,3 +1804,9 @@ button#btn-dropdown-item:focus {
 .pl-05 {
     padding-left: 0.5rem !important;
 }
+
+/*TOASTR*/
+.toastr-top-center {
+    top: 30%;
+    right:0;
+}

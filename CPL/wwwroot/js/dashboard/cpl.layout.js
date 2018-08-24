@@ -2,6 +2,10 @@
     init: function () {
         Layout.bindDoLogOut();
         Layout.bindDropdownSubMenu();
+        Layout.bindSetting();
+    },
+    bindSetting: function () {
+        toastr.options.positionClass = 'toastr-top-center';
     },
     bindLogOut: function () {
         $('a#logout-confirmation').on('click', function () {
