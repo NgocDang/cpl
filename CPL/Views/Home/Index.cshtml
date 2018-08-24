@@ -42,19 +42,22 @@
                         </div>
                     </div>
                 }
-                @for (int i=0 ; i < (CPLConstant.LotteryGamePerRow - (Model.Lotteries.Count % CPLConstant.LotteryGamePerRow));i++)
+                if (Model.Lotteries.Count % CPLConstant.LotteryGamePerRow != 0)
                 {
-                    <div class="owl-item col-3">
-                        <div class="card card-game">
-                            <div class="card-header card-header-game font-weight-bold bg-secondary disabled text-white-50 font-sm-size-15px">
-                                @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @"0")
-                            </div>
-                            <img class="card-img-top card-img-game img-fluid" src="~/images/lottery/coming_soon_lottery.jpg" />
-                            <div class="card-body">
-                                <span class="btn disabled bg-secondary text-white-50 btn-block font-sm-size-15px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ComingSoon")</span>
+                    @for (int i = 0; i < (CPLConstant.LotteryGamePerRow - (Model.Lotteries.Count % CPLConstant.LotteryGamePerRow)); i++)
+                    {
+                        <div class="owl-item col-3">
+                            <div class="card card-game">
+                                <div class="card-header card-header-game font-weight-bold bg-secondary disabled text-white-50 font-sm-size-15px">
+                                    @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @"0")
+                                </div>
+                                <img class="card-img-top card-img-game img-fluid" src="~/images/lottery/coming_soon_lottery.jpg" />
+                                <div class="card-body">
+                                    <span class="btn disabled bg-secondary text-white-50 btn-block font-sm-size-15px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ComingSoon")</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
             }
         </div>
