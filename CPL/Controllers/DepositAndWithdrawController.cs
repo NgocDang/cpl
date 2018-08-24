@@ -134,11 +134,6 @@ namespace CPL.Controllers
                             Type = (int)EnumCoinTransactionType.WITHDRAW_BTC
                         });
 
-                        _btcTransactionService.Insert(new BTCTransaction {
-                            CreatedDate = DateTime.Now,
-                            TxHashId = txHashId
-                        });
-
                         user.BTCAmount -= viewModel.Amount;
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
@@ -184,12 +179,6 @@ namespace CPL.Controllers
                             Status = EnumCoinTransactionStatus.PENDING.ToBoolean(),
                             TxHashId = txHashId,
                             Type = (int)EnumCoinTransactionType.WITHDRAW_ETH
-                        });
-
-                        _ethTransactionService.Insert(new ETHTransaction
-                        {
-                            CreatedDate = DateTime.Now,
-                            TxHashId = txHashId
                         });
 
                         user.ETHAmount -= viewModel.Amount;

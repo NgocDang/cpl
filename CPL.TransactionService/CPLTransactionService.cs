@@ -69,9 +69,9 @@ namespace CPL.TransactionService
             IsTransactionServiceRunning = true;
 
             Tasks.Clear();
-            Tasks.Add(Task.Run(() => DepositBTransaction()));
-            Tasks.Add(Task.Run(() => DepositETransaction()));
-            Tasks.Add(Task.Run(() => WithdrawBTransaction()));
+            //Tasks.Add(Task.Run(() => DepositBTransaction()));
+            //Tasks.Add(Task.Run(() => DepositETransaction()));
+            //Tasks.Add(Task.Run(() => WithdrawBTransaction()));
             Tasks.Add(Task.Run(() => WithdrawETransaction()));
         }
 
