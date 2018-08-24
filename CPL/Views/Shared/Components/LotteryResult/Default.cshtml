@@ -24,7 +24,7 @@
             <p class="font-size-lottery-result txt-stroke top-center text-center ">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name"): @Model.LastestLotteryTitle</p>
             <img src="~/images/lottery/lottery_result_win.jpg" class="img-fluid" />
             <a href="/History/Lottery?lotteryId=@Model.LastestLotteryId" target="_blank" class="top-right text-right text-primary"><u>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "OtherResult")</u></a>
-            <p class="font-size-lottery-result font-weight-bold bottom-center text-center text-white">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win"): @Model.LastestLotteryResult# @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") !</p>
+            <p class="font-size-lottery-result font-weight-bold bottom-center text-center text-white">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win"): @string.Format(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrizeNumber"), Model.LastestLotteryResult) !</p>
         }
     </div>
     <div class="img-container p-0 d-xl-none d-lg-none d-block">
@@ -51,7 +51,7 @@
             <p class="font-size-lottery-result txt-stroke top-center text-center ">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name"): @Model.LastestLotteryTitle</p>
             <img src="~/images/lottery/lottery_result_win1.jpg" class="img-fluid" />
             <a href="/History/Lottery?lotteryId=@Model.LastestLotteryId" target="_blank" class="top-right text-right text-primary"><u>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "OtherResult")</u></a>
-            <p class="font-size-lottery-result font-weight-bold bottom-center text-center text-white">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win"): @Model.LastestLotteryResult# @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") !</p>
+            <p class="font-size-lottery-result font-weight-bold bottom-center text-center text-white">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Win"): @string.Format(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrizeNumber"), Model.LastestLotteryResult) !</p>
         }
     </div>
 </div>

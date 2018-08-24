@@ -109,7 +109,7 @@
                                                     <p class="text-muted mb-0 font-size-13px">
                                                         &nbsp;
                                                     </p>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary w-100 btn-prize pl-sm-auto pr-sm-auto pl-0 pr-0" data-prize-id="@Model.LotteryPrizes[i].Id" id="lottery-prize-id">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize") #@(i + 1)</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary w-100 btn-prize pl-sm-auto pr-sm-auto pl-0 pr-0" data-prize-id="@Model.LotteryPrizes[i].Id" id="lottery-prize-id">@string.Format(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrizeNumber"),i + 1)</button>
                                                 </div>
                                             </div>
                                             <hr />
