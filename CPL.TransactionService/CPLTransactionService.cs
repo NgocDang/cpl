@@ -263,7 +263,9 @@ namespace CPL.TransactionService
                 var transactions = new List<CoinTransaction>();
                 do
                 {
-                    transactions = Resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue && x.CurrencyId == (int)EnumCurrency.BTC).ToList();
+                    transactions = Resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue 
+                    && x.Type == (int)EnumCoinTransactionType.WITHDRAW_BTC
+                    && x.CurrencyId == (int)EnumCurrency.BTC).ToList();
                     if (transactions.Count == 0)
                         Thread.Sleep(RunningIntervalInMilliseconds);
                 }
@@ -319,7 +321,9 @@ namespace CPL.TransactionService
                 var transactions = new List<CoinTransaction>();
                 do
                 {
-                    transactions = Resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue && x.CurrencyId == (int)EnumCurrency.ETH).ToList();
+                    transactions = Resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue
+                    && x.Type == (int)EnumCoinTransactionType.WITHDRAW_ETH
+                    && x.CurrencyId == (int)EnumCurrency.ETH).ToList();
                     if (transactions.Count == 0)
                         Thread.Sleep(RunningIntervalInMilliseconds);
                 }

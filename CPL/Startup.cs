@@ -61,7 +61,8 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<BTCPrice>, Repository<BTCPrice>>()
                 .AddScoped<IRepositoryAsync<News>, Repository<News>>()
                 .AddScoped<IRepositoryAsync<Contact>, Repository<Contact>>()
-
+                .AddScoped<IRepositoryAsync<BTCTransaction>, Repository<BTCTransaction>>()
+                .AddScoped<IRepositoryAsync<ETHTransaction>, Repository<ETHTransaction>>()
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
 
@@ -97,6 +98,9 @@ namespace CPL
                 .AddTransient<IQuartzSchedulerService, QuartzSchedulerService>()
                 .AddTransient<IBTCPriceService, BTCPriceService>()
                 .AddTransient<INewsService, NewsService>()
+                .AddTransient<IBTCTransactionService, BTCTransactionService>()
+                .AddTransient<IETHTransactionService, ETHTransactionService>()
+                .AddTransient<INewsService, NewsService>()
                 .AddTransient<IContactService, ContactService>();
 
             services.AddSignalR();
@@ -130,6 +134,7 @@ namespace CPL
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<UserPredictionProgressHub>("/predictedUserProgress");

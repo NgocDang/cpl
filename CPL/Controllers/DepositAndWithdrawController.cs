@@ -27,6 +27,8 @@ namespace CPL.Controllers
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
         private readonly ICoinTransactionService _coinTransactionService;
+        private readonly IETHTransactionService _ethTransactionService;
+        private readonly IBTCTransactionService _btcTransactionService;
 
         public DepositAndWithdrawController(
             ILangService langService,
@@ -37,6 +39,8 @@ namespace CPL.Controllers
             ITeamService teamService,
             ITemplateService templateService,
             ICoinTransactionService coinTransactionService,
+            IETHTransactionService ethTransactionService,
+            IBTCTransactionService btcTransactionService,
             ISysUserService sysUserService)
         {
             this._langService = langService;
@@ -47,6 +51,8 @@ namespace CPL.Controllers
             this._teamService = teamService;
             this._templateService = templateService;
             this._coinTransactionService = coinTransactionService;
+            this._ethTransactionService = ethTransactionService;
+            this._btcTransactionService = btcTransactionService;
             this._sysUserService = sysUserService;
         }
 
@@ -79,7 +85,9 @@ namespace CPL.Controllers
 
             var txHashId = "";
 
-            if (!CheckUserProfile(user))
+            if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName)
+                || !user.DOB.HasValue || string.IsNullOrEmpty(user.Country) || string.IsNullOrEmpty(user.City) || string.IsNullOrEmpty(user.StreetAddress)
+                || string.IsNullOrEmpty(user.Mobile))
                 return new JsonResult(new
                 {
                     success = false,
@@ -212,17 +220,6 @@ namespace CPL.Controllers
         public IActionResult GetDepositWithdrawViewComponent()
         {
             return ViewComponent("DepositWithdraw");
-        }
-
-        private bool CheckUserProfile(SysUser user)
-        {
-            if (user.FirstName == null || user.LastName == null
-                || user.Mobile == null || user.DOB == null
-                || user.Country == null || user.City == null
-                || user.StreetAddress == null
-                || user.Mobile == null)
-                return false;
-            else return true;
         }
     }
 }
