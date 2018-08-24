@@ -153,7 +153,7 @@ namespace CPL.Controllers
                     else
                     {
                         user.TokenAmount -= viewModel.FromAmount;
-                        var currencyAmount = viewModel.FromAmount / (decimal)btcToTokenRate * rate;
+                        var currencyAmount = viewModel.FromAmount / ((decimal)btcToTokenRate * rate);
                         user.ETHAmount += currencyAmount;
 
                         _coinTransactionService.Insert(new CoinTransaction()
