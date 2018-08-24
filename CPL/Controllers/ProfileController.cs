@@ -303,7 +303,7 @@ namespace CPL.Controllers
                 return new JsonResult(new
                 {
                     success = true,
-                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated")
+                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "KYCSubmitted")
                 });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
