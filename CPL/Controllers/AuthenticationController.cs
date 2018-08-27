@@ -216,14 +216,23 @@ namespace CPL.Controllers
                 if (isAccountActivationEnable)
                 {
                     var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Activate.ToString());
-                    var activateViewModel = Mapper.Map<ActivateEmailTemplateViewModel>(user);
-                    activateViewModel.ActivateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Activate", "Authentication", new { token = activateViewModel.ActivateToken, id = activateViewModel.Id })}";
-                    activateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                    var activateEmailTemplateViewModel = Mapper.Map<ActivateEmailTemplateViewModel>(user);
+                    activateEmailTemplateViewModel.ActivateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Activate", "Authentication", new { token = activateEmailTemplateViewModel.ActivateToken, id = activateEmailTemplateViewModel.Id })}";
+                    activateEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
 
                     //Populate language
-                    activateViewModel.RegistrationSuccessfulText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "RegistrationSuccessful");
+                    activateEmailTemplateViewModel.RegistrationSuccessfulText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "RegistrationSuccessful");
+                    activateEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+                    activateEmailTemplateViewModel.RegisterActivateText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "RegisterActivate");
+                    activateEmailTemplateViewModel.NotWorkUrlText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotWorkUrl");
+                    activateEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+                    activateEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+                    activateEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+                    activateEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+                    activateEmailTemplateViewModel.ExpiredEmail24hText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExpiredEmail24h");
+                    activateEmailTemplateViewModel.ActivateText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Activate");
 
-                    template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_ActivateEmailTemplate.cshtml", activateViewModel).Result;
+                    template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_ActivateEmailTemplate.cshtml", activateEmailTemplateViewModel).Result;
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
                     return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ActivateEmailSent") });
                 }
