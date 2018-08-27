@@ -183,17 +183,5 @@ namespace CPL.Controllers
             else
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
-
-        [Permission(EnumRole.User)]
-        public IActionResult GetExchangeViewComponent()
-        {
-            return ViewComponent("Exchange");
-        }
-
-        [Permission(EnumRole.User)]
-        public IActionResult GetRateViewComponent()
-        {
-            return ViewComponent("Rate");
-        }
     }
 }

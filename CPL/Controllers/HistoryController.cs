@@ -523,6 +523,7 @@ namespace CPL.Controllers
                                         StatusInString = x.Status.ToEnumCoinstransactionStatus().ToString(),
                                         Rate = x.Rate,
                                         TxHashId = x.TxHashId,
+                                        TxHashReference = x.CurrencyId == 1 ? string.Format(CPLConstant.Etherscan, x.TxHashId) : x.CurrencyId == 2 ? string.Format(CPLConstant.BlockInfo, x.TxHashId) : "#",
                                         TokenAmount = x.TokenAmount,
                                         TokenAmountInString = x.TokenAmount.GetValueOrDefault(0).ToString(Format.Amount)
                                     })

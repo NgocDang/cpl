@@ -215,11 +215,5 @@ namespace CPL.Controllers
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "GeneratedQRCodeError") });
             }
         }
-
-        [Permission(EnumRole.User)]
-        public IActionResult GetDepositWithdrawViewComponent()
-        {
-            return ViewComponent("DepositWithdraw");
-        }
     }
 }

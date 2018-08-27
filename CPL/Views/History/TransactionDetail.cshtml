@@ -51,7 +51,7 @@
                                     <div class="col-lg-6 col-md-6 col-12 col-sm-12">
                                         <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CoinAmount")</p>
                                         <p>
-                                            <strong>@Model.CoinAmount</strong>
+                                            <strong>@Model.CoinAmount.ToString("#,##0.########")</strong>
                                         </p>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-12 col-sm-12">
@@ -65,7 +65,10 @@
                                     <div class="col-lg-6 col-md-6 col-12 col-sm-12">
                                         <p class="text-muted mb-3px font-size-13px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenAmount")</p>
                                         <p>
-                                            <strong>@Model.TokenAmount</strong>
+                                            @if (Model.TokenAmount.HasValue)
+                                            {
+                                                <strong>@Model.TokenAmount.Value.ToString("N0")</strong>
+                                            }
                                         </p>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-12 col-sm-12">
@@ -89,7 +92,7 @@
                                     <div class="col-lg-6 col-md-6 col-12 col-sm-12">
                                         <p class="text-muted mb-3px font-size-13px">TxHashId</p>
                                         <p>
-                                            <strong>@Model.TxHashId</strong>
+                                            <a href="@Model.TxHashReference">@Model.TxHashId</a>
                                         </p>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-12 col-sm-12">
