@@ -19,9 +19,6 @@ INSERT INTO LangDetail Values (2, N'HowToPlayDesktopVersion', N'デスクトッ�
 INSERT INTO LangDetail Values (1, N'HowToPlayMobileVersion', N'Mobile Version');
 INSERT INTO LangDetail Values (2, N'HowToPlayMobileVersion', N'モバイル版');
 
-INSERT INTO LangDetail Values (1, N'RegisterActivate',  N'You are now registered. Please click on the button below to activate your account');
-INSERT INTO LangDetail Values (2, N'RegisterActivate',  N'この度はCPLプロジェクトへのご参加誠に有難うございます。お客様のご登録はまだ完了致しておりません。以下の「アクティブ化する」をクリックして頂きアカウントの本登録をお願い致します。');
-
 -- LangMsgDetail
 -- Desktop
 INSERT INTO LangMsgDetail Values (1, N'HowToRegisterDesktop', N'<p>CRYPTOLOT is a game site that anyone can participate using a cryptocurrency.</p>
