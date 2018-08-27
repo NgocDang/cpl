@@ -17,6 +17,7 @@ namespace CPL.Models
         public decimal? TokenAmount { get; set; }
         public double? Rate { get; set; }
         public string TxHashId { get; set; }
+        public string TxHashReference { get; set; }
 
         public string CoinAmountInString { get; set; }
         public string CreatedDateInString { get; set; }
