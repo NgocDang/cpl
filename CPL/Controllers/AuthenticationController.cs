@@ -45,17 +45,8 @@ namespace CPL.Controllers
         {
             ClearSession();
             var viewModel = new AccountLoginModel { ReturnUrl = returnUrl };
-            viewModel.Langs = _langService.Queryable()
-                .Select(x => Mapper.Map<LangViewModel>(x))
-                .ToList();
-
             var gcaptchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
             viewModel.GCaptchaKey = gcaptchaKey;
-
-            if (HttpContext.Session.GetInt32("LangId").HasValue)
-                viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-            else
-                viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
 
             return View(viewModel);
         }
@@ -112,19 +103,9 @@ namespace CPL.Controllers
             ClearSession();
 
             var viewModel = new AccountRegistrationModel();
-            //viewModel.Status = EnumAccountStatus.UNREGISTERED;
-            viewModel.Langs = _langService.Queryable()
-                .Select(x => Mapper.Map<LangViewModel>(x))
-                .ToList();
-				
             var gcaptchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
             viewModel.GCaptchaKey = gcaptchaKey;
 			
-            if (HttpContext.Session.GetInt32("LangId").HasValue)
-                viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-            else
-                viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
-
             return View(viewModel);
         }
 
@@ -209,21 +190,29 @@ namespace CPL.Controllers
                     return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
                 }
 
-
                 _sysUserService.Insert(user);
                 _unitOfWork.SaveChanges();
 
                 if (isAccountActivationEnable)
                 {
                     var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Activate.ToString());
-                    var activateViewModel = Mapper.Map<ActivateEmailTemplateViewModel>(user);
-                    activateViewModel.ActivateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Activate", "Authentication", new { token = activateViewModel.ActivateToken, id = activateViewModel.Id })}";
-                    activateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                    var activateEmailTemplateViewModel = Mapper.Map<ActivateEmailTemplateViewModel>(user);
+                    activateEmailTemplateViewModel.ActivateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Activate", "Authentication", new { token = activateEmailTemplateViewModel.ActivateToken, id = activateEmailTemplateViewModel.Id })}";
+                    activateEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
 
                     //Populate language
-                    activateViewModel.RegistrationSuccessfulText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "RegistrationSuccessful");
+                    activateEmailTemplateViewModel.RegistrationSuccessfulText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "RegistrationSuccessful");
+                    activateEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+                    activateEmailTemplateViewModel.RegisterActivateText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "RegisterActivate");
+                    activateEmailTemplateViewModel.NotWorkUrlText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotWorkUrl");
+                    activateEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+                    activateEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+                    activateEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+                    activateEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+                    activateEmailTemplateViewModel.ExpiredEmail24hText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExpiredEmail24h");
+                    activateEmailTemplateViewModel.ActivateText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Activate");
 
-                    template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_ActivateEmailTemplate.cshtml", activateViewModel).Result;
+                    template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_ActivateEmailTemplate.cshtml", activateEmailTemplateViewModel).Result;
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
                     return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ActivateEmailSent") });
                 }
@@ -252,6 +241,114 @@ namespace CPL.Controllers
                     return new JsonResult(new { success = true, activated = true, url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Home")}" });
                 }
             }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
+
+        [Permission(EnumRole.Guest)]
+        public ActionResult Activate(int id, string token)
+        {
+            var viewmodel = new AccountActivateModel();
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id && x.IsDeleted == false);
+
+            if (user == null)
+            {
+                viewmodel.Message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount");
+            }
+            else if (string.IsNullOrEmpty(user.ActivateToken))
+            {
+                viewmodel.Message = $"{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PreviouslyActivated")} {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ClickHereToReturnToTopPage")}";
+            }
+            else if (user.CreatedDate.AddDays(int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.ActivateExpiredInDays).Value)) > DateTime.Now)
+            {
+                if (user.ActivateToken == token)
+                {
+                    user.ActivateToken = null;
+                    _sysUserService.Update(user);
+                    _unitOfWork.SaveChanges();
+
+                    var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Member.ToString());
+                    var memberEmailTemplateViewModel = Mapper.Map<MemberEmailTemplateViewModel>(user);
+                    memberEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+
+                    // Populate language
+                    memberEmailTemplateViewModel.ActivationSuccessfulText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ActivationSuccessful");
+                    memberEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+                    memberEmailTemplateViewModel.TeamMemberNowText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "TeamMemberNow");
+                    memberEmailTemplateViewModel.PlayGameNowText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PlayGameNow");
+                    memberEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+                    memberEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+                    memberEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+                    memberEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+                    memberEmailTemplateViewModel.CPLTeamText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "CPLTeam");
+
+                    template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_MemberEmailTemplate.cshtml", memberEmailTemplateViewModel).Result;
+                    EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
+
+                    // Log in
+                    user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
+
+                    HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
+                    viewmodel.Message = $"{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AccountIsActivated")} {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ClickHereToReturnToTopPage")}";
+                }
+                else
+                {
+                    viewmodel.Message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidToken");
+                }
+            }
+            else
+            {
+                viewmodel.Message = $"{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExpiredActivateToken")} {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ClickHereToRequestNewActivateToken")}";
+                
+            }
+            return View(viewmodel);
+        }
+
+        public ActionResult Resend()
+        {
+            var viewModel = new AccountResendModel();
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Resend(AccountResendModel viewModel)
+        {
+            // Ensure we have a valid viewModel to work with
+            if (ModelState.IsValid)
+            {
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email);
+                if (user == null)
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+
+                if (string.IsNullOrEmpty(user.ActivateToken))
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PreviouslyActivated") });
+
+                user.CreatedDate = DateTime.Now;
+                user.ActivateToken = Guid.NewGuid().ToString();
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+                var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Activate.ToString());
+                var activateEmailTemplateViewModel = Mapper.Map<ActivateEmailTemplateViewModel>(user);
+                activateEmailTemplateViewModel.ActivateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Activate", "Authentication", new { token = activateEmailTemplateViewModel.ActivateToken, id = activateEmailTemplateViewModel.Id })}";
+                activateEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+
+                //Populate language
+                activateEmailTemplateViewModel.RegistrationSuccessfulText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "RegistrationSuccessful");
+                activateEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+                activateEmailTemplateViewModel.RegisterActivateText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "RegisterActivate");
+                activateEmailTemplateViewModel.NotWorkUrlText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotWorkUrl");
+                activateEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+                activateEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+                activateEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+                activateEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+                activateEmailTemplateViewModel.ExpiredEmail24hText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExpiredEmail24h");
+                activateEmailTemplateViewModel.ActivateText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Activate");
+
+                template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_ActivateEmailTemplate.cshtml", activateEmailTemplateViewModel).Result;
+                EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NewActivateCodeSent") });
+            }
+
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
 
@@ -348,14 +445,6 @@ namespace CPL.Controllers
             ClearSession();
 
             var viewModel = new AccountForgotPasswordModel();
-            viewModel.Langs = _langService.Queryable()
-                .Select(x => Mapper.Map<LangViewModel>(x))
-                .ToList();
-
-            if (HttpContext.Session.GetInt32("LangId").HasValue)
-                viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-            else
-                viewModel.Lang = viewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
             return View(viewModel);
         }
 
@@ -382,7 +471,12 @@ namespace CPL.Controllers
                     user.Password = viewModel.Password.ToBCrypt();
                     _sysUserService.Update(user);
                     _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true, message = $"{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PasswordResetSuccessfully")} {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Click")} <a href='{$"{ HttpContext.Request.Scheme }://{HttpContext.Request.Host}{Url.Action("LogIn", "Authentication")}"}'>{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Here")}</a> {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ToLogIn")}" });
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        message = $"{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PasswordResetSuccessfully")} " +
+                        $"{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ClickHereToLogIn")}"
+                    });
                 }
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
@@ -398,28 +492,12 @@ namespace CPL.Controllers
             {
                 viewmodel.Status = EnumAccountStatus.REQUEST_NOT_EXIST;
                 viewmodel.Message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount");
-                viewmodel.Langs = _langService.Queryable()
-                    .Select(x => Mapper.Map<LangViewModel>(x))
-                    .ToList();
-
-                if (HttpContext.Session.GetInt32("LangId").HasValue)
-                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-                else
-                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
                 return View(viewmodel);
             }
             else if (user.ResetPasswordDate == null)
             {
                 viewmodel.Status = EnumAccountStatus.REQUEST_NOT_EXIST;
-                viewmodel.Message = $"Request does not exist. Please try again.";
-                viewmodel.Langs = _langService.Queryable()
-                    .Select(x => Mapper.Map<LangViewModel>(x))
-                    .ToList();
-
-                if (HttpContext.Session.GetInt32("LangId").HasValue)
-                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-                else
-                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
+                viewmodel.Message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "RequestNotExist");
                 return View(viewmodel);
             }
             else if (user.ResetPasswordDate.Value.AddDays(int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.ResetPasswordExpiredInDays).Value)) > DateTime.Now)
@@ -428,43 +506,19 @@ namespace CPL.Controllers
                 {
                     viewmodel.Id = id;
                     viewmodel.Token = token;
-                    viewmodel.Langs = _langService.Queryable()
-                        .Select(x => Mapper.Map<LangViewModel>(x))
-                        .ToList();
-
-                    if (HttpContext.Session.GetInt32("LangId").HasValue)
-                        viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-                    else
-                        viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
                     return View(viewmodel);
                 }
                 else
                 {
                     viewmodel.Status = EnumAccountStatus.INVALID_TOKEN;
-                    viewmodel.Message = $"Invalid token. Please try again.";
-                    viewmodel.Langs = _langService.Queryable()
-                        .Select(x => Mapper.Map<LangViewModel>(x))
-                        .ToList();
-
-                    if (HttpContext.Session.GetInt32("LangId").HasValue)
-                        viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-                    else
-                        viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
+                    viewmodel.Message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidToken");
                     return View(viewmodel);
                 }
             }
             else
             {
                 viewmodel.Status = EnumAccountStatus.EXPIRED;
-                viewmodel.Message = $"{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExpiredResetPasswordToken")} {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Click")} <a href='{$"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("ForgotPassword", "Authentication")}"}'>{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Here")}</a> {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ToAskResetPassword")}";
-                viewmodel.Langs = _langService.Queryable()
-                    .Select(x => Mapper.Map<LangViewModel>(x))
-                    .ToList();
-
-                if (HttpContext.Session.GetInt32("LangId").HasValue)
-                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-                else
-                    viewmodel.Lang = viewmodel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
+                viewmodel.Message = $"{LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExpiredResetPasswordToken")} {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ClickHereToAskResetPassword")} ";
                 return View(viewmodel);
             }
         }
