@@ -47,9 +47,11 @@
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidEmailPassword")
                             </div>
                             <button type="submit" id="btn-do-register" class="btn btn-primary btn-block my-1"><i class="la la-user-plus"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</button>
+                            <p class="text-center">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHereToRequestNewActivateToken"))</p>
                             <p class="text-center">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AlreadyHaveAccount") <a asp-controller="Authentication" asp-action="LogIn">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHere")</a> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToLogIn")
                             </p>
+
                         </form>
                     </div>
                 </div>
