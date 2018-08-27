@@ -41,6 +41,8 @@
                                 window.location.href = data.url;
                             } else {
                                 $("#form-register").hide();
+                                $("#register-message").html(data.message);
+                                $("#register-message").show();
                                 toastr.success(data.message, 'Success!');
                             }
                         } else {

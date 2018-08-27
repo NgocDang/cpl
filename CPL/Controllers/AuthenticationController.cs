@@ -190,7 +190,6 @@ namespace CPL.Controllers
                     return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
                 }
 
-
                 _sysUserService.Insert(user);
                 _unitOfWork.SaveChanges();
 
@@ -302,6 +301,55 @@ namespace CPL.Controllers
                 
             }
             return View(viewmodel);
+        }
+
+        public ActionResult Resend()
+        {
+            var viewModel = new AccountResendModel();
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Resend(AccountResendModel viewModel)
+        {
+            // Ensure we have a valid viewModel to work with
+            if (ModelState.IsValid)
+            {
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email);
+                if (user == null)
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+
+                if (string.IsNullOrEmpty(user.ActivateToken))
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PreviouslyActivated") });
+
+                user.CreatedDate = DateTime.Now;
+                user.ActivateToken = Guid.NewGuid().ToString();
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+                var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Activate.ToString());
+                var activateEmailTemplateViewModel = Mapper.Map<ActivateEmailTemplateViewModel>(user);
+                activateEmailTemplateViewModel.ActivateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Activate", "Authentication", new { token = activateEmailTemplateViewModel.ActivateToken, id = activateEmailTemplateViewModel.Id })}";
+                activateEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+
+                //Populate language
+                activateEmailTemplateViewModel.RegistrationSuccessfulText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "RegistrationSuccessful");
+                activateEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+                activateEmailTemplateViewModel.RegisterActivateText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "RegisterActivate");
+                activateEmailTemplateViewModel.NotWorkUrlText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotWorkUrl");
+                activateEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+                activateEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+                activateEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+                activateEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+                activateEmailTemplateViewModel.ExpiredEmail24hText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExpiredEmail24h");
+                activateEmailTemplateViewModel.ActivateText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Activate");
+
+                template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_ActivateEmailTemplate.cshtml", activateEmailTemplateViewModel).Result;
+                EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NewActivateCodeSent") });
+            }
+
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
 
         [Permission(EnumRole.User)]
