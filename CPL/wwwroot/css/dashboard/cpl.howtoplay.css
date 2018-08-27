@@ -1,0 +1,17 @@
+﻿#how-to-play-desktop-version .nav.nav-tabs.nav-justified .nav-link.active,
+#how-to-play-desktop-version .nav.nav-tabs.nav-justified .nav-link.active:focus,
+#how-to-play-desktop-version .nav.nav-tabs.nav-justified .nav-link.active:hover {
+    background: #f93147;
+    color: #fff;
+}
+
+#how-to-play-mobile-version .nav.nav-tabs.nav-justified .nav-link.active,
+#how-to-play-mobile-version .nav.nav-tabs.nav-justified .nav-link.active:focus,
+#how-to-play-mobile-version .nav.nav-tabs.nav-justified .nav-link.active:hover {
+    background: #1E9FF2;
+    color: #fff;
+}
+
+#how-to-play-mobile-version a {
+    color: #1E9FF2;
+}
