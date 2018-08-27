@@ -48,3 +48,5 @@ insert into LangDetail values (2, N'NewActivateCodeSent',  N'新しいアカウ�
 
 update LangDetail set value = N'An activate link has been sent to your email. Please check and activate your account.' where Name = N'ActivateEmailSent' and LangId = 1;
 update LangDetail set value = N'確認メールが送信されました。 リンクをクリックしてアカウントを有効にしてください。' where Name = N'ActivateEmailSent' and LangId = 2;
+
+insert into Setting values ('ActivateExpiredInDays', 1, null);
