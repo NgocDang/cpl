@@ -32,7 +32,6 @@ namespace CPL.SmartContractService
         public string FileName { get; set; }
         public string ConnectionString { get; set; }
         public int RunningIntervalInMilliseconds { get; set; }
-        public string ServiceEnvironment { get; set; }
 
         public static AuthenticationService.AuthenticationClient _authentication = new AuthenticationService.AuthenticationClient();
         public static ETokenService.ETokenClient _eToken = new ETokenService.ETokenClient();
@@ -264,7 +263,6 @@ namespace CPL.SmartContractService
             FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
             ConnectionString = Configuration["ConnectionString"];
-            ServiceEnvironment = Configuration["Environment"];
         }
     }
 }

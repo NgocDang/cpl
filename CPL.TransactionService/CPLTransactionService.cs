@@ -442,7 +442,6 @@ namespace CPL.TransactionService
             NumberOfConfirmsForUnreversedBTCTransaction = int.Parse(Configuration["NumberOfConfirmsForUnreversedBTCTransaction"]);
             NumberOfDaysFailTransaction = int.Parse(Configuration["NumberOfDaysFailTransaction"]);
             ConnectionString = Configuration["ConnectionString"];
-            ServiceEnvironment = Configuration["Environment"];
         }
     }
 }
