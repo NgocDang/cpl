@@ -124,7 +124,7 @@
                         @Html.HiddenFor(x => x.Id)
                     </div>
                     <div class="d-none" id="div-thankyou-lottery">
-                        <div class="card font-medium-2 pl-2 pr-2 pt-2">
+                        <div class="card font-medium-2 pl-2 pr-2 pt-2 mb-md-2 mb-05">
                             <div class="card-header text-center font-large-1 font-weight-bold text-danger text-uppercase">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ThankYou") <br />
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "YouBought") <span class="total-price"></span>
@@ -153,7 +153,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-block mb-lg-3">
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-block mb-md-2 mb-05">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GoToTopPage")
                                 </a>
                             </div>

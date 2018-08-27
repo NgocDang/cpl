@@ -64,7 +64,7 @@
     bindDoPurchaseTicket: function () {
         $('#btn-confirm-purchase-lottery-ticket').click(function () {
             Lottery.loadAjaxConfirmPurchaseTicket();
-        })
+        });
 
     },
     loadAjaxConfirmPurchaseTicket: function () {
@@ -90,12 +90,14 @@
                          LotteryHistoryViewComponent.lotteryHistoryDataTable = LotteryHistoryViewComponent.loadLotteryHistoryDataTable();
                      }
 
-                     Lottery.getHeaderViewComponent(); // Reloader header view component after login
                      if (data.success) {
                          $("#div-confirm-lottery").toggleClass("d-none");
                          $("#div-thankyou-lottery").toggleClass("d-none");
                          $("#p-txHashId").html("<a class='text-success' target='_blank' href='" + data.tx + "'><small><u>" + data.tx + "</u></small></a>");
                          toastr.success(data.message, 'Success!');
+                         $(".user-token-amount").map(function (index, element) {
+                             $(element).text(data.token + " CPL");
+                         });
                          LotteryHistoryViewComponent.lotteryHistoryDataTable.ajax.reload();
                      }
                      else {
@@ -106,18 +108,6 @@
              complete: function (data) {
              }
          });
-    },
-    getHeaderViewComponent: function () {
-        $.ajax({
-            url: "/Home/GetHeaderViewComponent/",
-            type: "GET",
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                $("nav.header-navbar").remove();
-                $("div.main-menu").html(data);
-            }
-        });
     }
 };
 
