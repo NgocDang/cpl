@@ -28,6 +28,8 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "@types/datatables.net": "^1.10.13",
+    "@types/toastr": "^2.1.35",
     "webpack-cli": "^3.1.0"
   },
   "-vs-binding": {
