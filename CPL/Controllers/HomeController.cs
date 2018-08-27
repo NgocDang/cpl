@@ -101,11 +101,5 @@ namespace CPL.Controllers
         {
             LangDetailHelper.LangDetails = _langDetailService.Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
         }
-
-        [Permission(EnumRole.Guest)]
-        public IActionResult GetHeaderViewComponent()
-        {
-            return ViewComponent("Header");
-        }
     }
 }

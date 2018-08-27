@@ -98,6 +98,7 @@
                          $(".user-token-amount").map(function (index, element) {
                              $(element).text(data.token + " CPL");
                          });
+                         ViewComponent.getRateViewComponent();
                          LotteryHistoryViewComponent.lotteryHistoryDataTable.ajax.reload();
                      }
                      else {

@@ -58,8 +58,8 @@
                     if (data.success) {
                         $("#exchange").modal("hide");
                         toastr.success(data.message, "Success!");
-                        ExchangeViewComponent.getExchangeViewComponent();
-                        ExchangeViewComponent.getRateViewComponent();
+                        ViewComponent.getExchangeViewComponent();
+                        ViewComponent.getRateViewComponent();
                         $(".user-token-amount").map(function (index, element) {
                             $(element).text(data.token + " CPL");
                         });
@@ -148,28 +148,6 @@
                     $(this).parents(".section-exchange").find(".invalid-amount").show();
                     $(this).parents(".section-exchange").find(".to-amount").val(null);
                 }
-            }
-        });
-    },
-    getExchangeViewComponent: function () {
-        $.ajax({
-            url: "/Exchange/GetExchangeViewComponent/",
-            type: "GET",
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                $("#exchange-content").html(data);
-            }
-        });
-    },
-    getRateViewComponent: function () {
-        $.ajax({
-            url: "/Exchange/GetRateViewComponent/",
-            type: "GET",
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                $("#rate-component").html(data);
             }
         });
     }
