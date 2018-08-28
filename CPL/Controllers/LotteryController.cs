@@ -153,66 +153,72 @@ namespace CPL.Controllers
 
                     var totalPriceOfTickets = viewModel.TotalTickets * unitPrice;
 
-                    if (totalPriceOfTickets <= currentUser.TokenAmount)
+                    var currentLottery = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault();
+
+                    if (viewModel.TotalTickets <= currentLottery.Volume - lotteryRecordList.Count())
                     {
-                        /// Example paramsInJson: {"1":{"uint32":"4"},"2":{"address":"0xB43eA1802458754A122d02418Fe71326030C6412"}, "3": {"uint32[]":"[1, 2, 3]"}}
-                        var userAddress = user.ETHHDWalletAddress;
-                        var ticketIndexList = new List<int>[viewModel.TotalTickets / 10 + 1];
-                        var lotteryPhase = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault().Phase;
-
-                        var listIndex = 0;
-                        ticketIndexList[listIndex] = new List<int>();
-
-                        for (int i = 0; i < viewModel.TotalTickets; i++)
+                        if (totalPriceOfTickets <= currentUser.TokenAmount)
                         {
-                            if (i % 10 == 0 && i != 0)
+                            /// Example paramsInJson: {"1":{"uint32":"4"},"2":{"address":"0xB43eA1802458754A122d02418Fe71326030C6412"}, "3": {"uint32[]":"[1, 2, 3]"}}
+                            var userAddress = user.ETHHDWalletAddress;
+                            var ticketIndexList = new List<int>[viewModel.TotalTickets / 10 + 1];
+                            var lotteryPhase = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault().Phase;
+
+                            var listIndex = 0;
+                            ticketIndexList[listIndex] = new List<int>();
+
+                            for (int i = 0; i < viewModel.TotalTickets; i++)
                             {
-                                listIndex++;
-                                ticketIndexList[listIndex] = new List<int>();
-                            }
-                            lastTicketIndex += 1;
-                            ticketIndexList[listIndex].Add(lastTicketIndex);
-                        }
-
-                        var totalOfTicketSuccessful = 0;
-
-                        foreach (var ticket in ticketIndexList)
-                        {
-                            if (ticket == null) continue;
-
-                            var paramJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", ticket.ToArray()));
-
-                            var buyTime = DateTime.Now;
-                            var ticketGenResult = ServiceClient.ETokenClient.CallTransactionAsync(Authentication.Token, CPLConstant.OwnerAddress, CPLConstant.OwnerPassword, "random", CPLConstant.GasPriceMultiplicator, CPLConstant.DurationInSecond, paramJson);
-                            ticketGenResult.Wait();
-
-                            if (ticketGenResult.Result.Status.Code == 0)
-                            {
-                                for (int i = 0; i < ticket.Count; i++)
+                                if (i % 10 == 0 && i != 0)
                                 {
-                                    var lotteryRecord = new LotteryHistory
-                                    {
-                                        CreatedDate = buyTime,
-                                        LotteryId = lotteryId.Value,
-                                        SysUserId = user.Id,
-                                        TicketIndex = ticket[i],
-                                        TxHashId = ticketGenResult.Result.TxId
-                                    };
+                                    listIndex++;
+                                    ticketIndexList[listIndex] = new List<int>();
+                                }
+                                lastTicketIndex += 1;
+                                ticketIndexList[listIndex].Add(lastTicketIndex);
+                            }
 
-                                    _lotteryHistoryService.Insert(lotteryRecord);
-                                    totalOfTicketSuccessful++;
+                            var totalOfTicketSuccessful = 0;
+
+                            foreach (var ticket in ticketIndexList)
+                            {
+                                if (ticket == null) continue;
+
+                                var paramJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", ticket.ToArray()));
+
+                                var buyTime = DateTime.Now;
+                                var ticketGenResult = ServiceClient.ETokenClient.CallTransactionAsync(Authentication.Token, CPLConstant.OwnerAddress, CPLConstant.OwnerPassword, "random", CPLConstant.GasPriceMultiplicator, CPLConstant.DurationInSecond, paramJson);
+                                ticketGenResult.Wait();
+
+                                if (ticketGenResult.Result.Status.Code == 0)
+                                {
+                                    for (int i = 0; i < ticket.Count; i++)
+                                    {
+                                        var lotteryRecord = new LotteryHistory
+                                        {
+                                            CreatedDate = buyTime,
+                                            LotteryId = lotteryId.Value,
+                                            SysUserId = user.Id,
+                                            TicketIndex = ticket[i],
+                                            TxHashId = ticketGenResult.Result.TxId
+                                        };
+
+                                        _lotteryHistoryService.Insert(lotteryRecord);
+                                        totalOfTicketSuccessful++;
+                                    }
                                 }
                             }
+                            currentUser.TokenAmount -= totalOfTicketSuccessful * unitPrice;
+                            _sysUserService.Update(currentUser);
+
+                            _unitOfWork.SaveChanges();
+
+                            return new JsonResult(new { success = true, token = currentUser.TokenAmount.ToString("N0"), hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful), message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully") });
                         }
-                        currentUser.TokenAmount -= totalOfTicketSuccessful * unitPrice;
-                        _sysUserService.Update(currentUser);
-
-                        _unitOfWork.SaveChanges();
-
-                        return new JsonResult(new { success = true, token = currentUser.TokenAmount.ToString("N0"), hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful), message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully")});
-                    }
-                    else
-                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotEnoughCPL") });
+                        else
+                            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotEnoughCPL") });
+                    }else
+                        return new JsonResult(new { success = false, message = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NoTicketsLeft"), currentLottery.Volume - lotteryRecordList.Count())});
                 }
                 catch (Exception ex)
                 {
