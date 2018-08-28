@@ -260,51 +260,54 @@ namespace CPL.TransactionService
         {
             try
             {
-                //Init dependency transaction & dbcontext
-                var resolver = InitializeRepositories();
-                var transactions = new List<CoinTransaction>();
                 do
                 {
-                    transactions = resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue 
-                    && x.Type == (int)EnumCoinTransactionType.WITHDRAW_BTC
-                    && x.CurrencyId == (int)EnumCurrency.BTC).ToList();
-                    if (transactions.Count == 0)
-                        await Task.Delay(RunningIntervalInMilliseconds);
-                }
-                while (IsTransactionServiceRunning && transactions.Count == 0);
-
-                Utils.FileAppendThreadSafe(BTCWithdrawFileName, String.Format("BTC Withdraw Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
-
-                foreach (var transaction in transactions)
-                {
-                    var transactionDetail = _bTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
-                    transactionDetail.Wait();
-
-                    if (transactionDetail == null)
+                    //Init dependency transaction & dbcontext
+                    var resolver = InitializeRepositories();
+                    var transactions = new List<CoinTransaction>();
+                    do
                     {
-                        var diff = DateTime.Now - transaction.CreatedDate;
-                        if (diff.Days >= NumberOfDaysFailTransaction)
+                        transactions = resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue
+                        && x.Type == (int)EnumCoinTransactionType.WITHDRAW_BTC
+                        && x.CurrencyId == (int)EnumCurrency.BTC).ToList();
+                        if (transactions.Count == 0)
+                            await Task.Delay(RunningIntervalInMilliseconds);
+                    }
+                    while (IsTransactionServiceRunning && transactions.Count == 0);
+
+                    Utils.FileAppendThreadSafe(BTCWithdrawFileName, String.Format("BTC Withdraw Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
+
+                    foreach (var transaction in transactions)
+                    {
+                        var transactionDetail = _bTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
+                        transactionDetail.Wait();
+
+                        if (transactionDetail == null)
+                        {
+                            var diff = DateTime.Now - transaction.CreatedDate;
+                            if (diff.Days >= NumberOfDaysFailTransaction)
+                            {
+                                // update record to coin transaction
+                                transaction.Status = false;
+                                resolver.CoinTransactionService.Update(transaction);
+
+                                // update record to sysuser
+                                var user = resolver.SysUserService.Queryable()
+                                    .FirstOrDefault(x => x.Id == transaction.SysUserId);
+                                user.BTCAmount += transaction.CoinAmount;
+                                resolver.SysUserService.Update(user);
+                            }
+                        }
+                        else if (transactionDetail.Result.Confirmations >= 1)
                         {
                             // update record to coin transaction
-                            transaction.Status = false;
+                            transaction.Status = true;
                             resolver.CoinTransactionService.Update(transaction);
-
-                            // update record to sysuser
-                            var user = resolver.SysUserService.Queryable()
-                                .FirstOrDefault(x => x.Id == transaction.SysUserId);
-                            user.BTCAmount += transaction.CoinAmount;
-                            resolver.SysUserService.Update(user);
                         }
                     }
-                    else if (transactionDetail.Result.Confirmations >= 1)
-                    {
-                        // update record to coin transaction
-                        transaction.Status = true;
-                        resolver.CoinTransactionService.Update(transaction);
-                    }
+                    resolver.UnitOfWork.SaveChanges();
                 }
-
-                resolver.UnitOfWork.SaveChanges();
+                while (IsTransactionServiceRunning) ;
             }
             catch (Exception ex)
             {
@@ -320,54 +323,58 @@ namespace CPL.TransactionService
         {
             try
             {
-                //Init dependency transaction & dbcontext
-                var resolver = InitializeRepositories();
-                var transactions = new List<CoinTransaction>();
                 do
                 {
-                    transactions = resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue
-                    && x.Type == (int)EnumCoinTransactionType.WITHDRAW_ETH
-                    && x.CurrencyId == (int)EnumCurrency.ETH).ToList();
-                    if (transactions.Count == 0)
-                        await Task.Delay(RunningIntervalInMilliseconds);
-                }
-                while (IsTransactionServiceRunning && transactions.Count == 0);
-
-                Utils.FileAppendThreadSafe(ETHWithdrawFileName, String.Format("ETH Withdraw Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
-
-                foreach (var transaction in transactions)
-                {
-                    var transactionStatus = _eTransaction.GetTransactionStatusAsync(Authentication.Token, transaction.TxHashId);
-                    transactionStatus.Wait();
-
-                    if (transactionStatus.Result.Receipt.HasValue)
+                    //Init dependency transaction & dbcontext
+                    var resolver = InitializeRepositories();
+                    var transactions = new List<CoinTransaction>();
+                    do
                     {
-                        if (transactionStatus.Result.Receipt.Value)
+                        transactions = resolver.CoinTransactionService.Queryable().Where(x => !x.Status.HasValue
+                        && x.Type == (int)EnumCoinTransactionType.WITHDRAW_ETH
+                        && x.CurrencyId == (int)EnumCurrency.ETH).ToList();
+                        if (transactions.Count == 0)
+                            await Task.Delay(RunningIntervalInMilliseconds);
+                    }
+                    while (IsTransactionServiceRunning && transactions.Count == 0);
+
+                    Utils.FileAppendThreadSafe(ETHWithdrawFileName, String.Format("ETH Withdraw Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
+
+                    foreach (var transaction in transactions)
+                    {
+                        var transactionStatus = _eTransaction.GetTransactionStatusAsync(Authentication.Token, transaction.TxHashId);
+                        transactionStatus.Wait();
+
+                        if (transactionStatus.Result.Receipt.HasValue)
                         {
-                            // update record to coin transaction
-                            transaction.Status = true;
-                            resolver.CoinTransactionService.Update(transaction);
-                        }
-                        else
-                        {
-                            var diff = DateTime.Now - transaction.CreatedDate;
-                            if (diff.Days >= NumberOfDaysFailTransaction)
+                            if (transactionStatus.Result.Receipt.Value)
                             {
                                 // update record to coin transaction
-                                transaction.Status = false;
+                                transaction.Status = true;
                                 resolver.CoinTransactionService.Update(transaction);
+                            }
+                            else
+                            {
+                                var diff = DateTime.Now - transaction.CreatedDate;
+                                if (diff.Days >= NumberOfDaysFailTransaction)
+                                {
+                                    // update record to coin transaction
+                                    transaction.Status = false;
+                                    resolver.CoinTransactionService.Update(transaction);
 
-                                // update record to sysuser
-                                var user = resolver.SysUserService.Queryable()
-                                    .FirstOrDefault(x => x.Id == transaction.SysUserId);
-                                user.ETHAmount += transaction.CoinAmount;
-                                resolver.SysUserService.Update(user);
+                                    // update record to sysuser
+                                    var user = resolver.SysUserService.Queryable()
+                                        .FirstOrDefault(x => x.Id == transaction.SysUserId);
+                                    user.ETHAmount += transaction.CoinAmount;
+                                    resolver.SysUserService.Update(user);
+                                }
                             }
                         }
                     }
-                }
 
-                resolver.UnitOfWork.SaveChanges();
+                    resolver.UnitOfWork.SaveChanges();
+                }
+                while (IsTransactionServiceRunning);
             }
             catch (Exception ex)
             {
