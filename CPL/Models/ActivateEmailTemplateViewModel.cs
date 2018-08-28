@@ -16,7 +16,15 @@ namespace CPL.Models
         public string RootUrl { get; set; }
         public TemplateViewModel Template { get; set; }
 
-        // For multi languages
         public string RegistrationSuccessfulText { get; set; }
+        public string HiText { get; set; }
+        public string RegisterActivateText { get; set; }
+        public string ActivateText { get; set; }
+        public string NotWorkUrlText { get; set; }
+        public string CheersText { get; set; }
+        public string ContactInfoText { get; set; }
+        public string EmailText { get; set; }
+        public string WebsiteText { get; set; }
+        public string ExpiredEmail24hText { get; set; }
     }
 }

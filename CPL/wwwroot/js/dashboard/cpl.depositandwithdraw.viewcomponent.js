@@ -37,14 +37,14 @@
                             $(_this).parents("form").find(".address-error").hide();
                             $(_this).parents("form").find(".amount-error").hide();
                             toastr.success(data.message, 'Success!');
-                            DepositAndWithdrawViewComponent.getDepositWithdrawViewComponent("withdraw");
+                            ViewComponent.getDepositWithdrawViewComponent("withdraw");
                         }
                         else {
                             if (data.requireProfile != null && !data.requireProfile) {
-                                DepositAndWithdrawViewComponent.getRequireProfileViewComponent();
+                                DepositAndWithdrawViewComponent.getRequireProfilePartialView();
                             }
                             else if (data.requireKyc != null && !data.requireKyc) {
-                                DepositAndWithdrawViewComponent.getRequireKYCViewComponent();
+                                DepositAndWithdrawViewComponent.getRequireKYCPartialView();
                             } else {
                                 if (data.name === "wallet") {
                                     $(_this).parents("form").find(".amount-error").hide();
@@ -101,24 +101,7 @@
             return false;
         });
     },
-    getDepositWithdrawViewComponent: function (tab) {
-        $.ajax({
-            url: "/DepositAndWithdraw/GetDepositWithdrawViewComponent/",
-            type: "GET",
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                $("#depositwithdraw-content").html(data);
-                if (tab == "withdraw") {
-                    $("#deposit-nav-tab").removeClass("active");
-                    $("#deposit-nav").removeClass("active");
-                    $("#withdraw-nav-tab").addClass("active");
-                    $("#withdraw-nav").addClass("active");
-                }
-            }
-        });
-    },
-    getRequireProfileViewComponent: function () {
+    getRequireProfilePartialView: function () {
         $.ajax({
             url: "/DepositAndWithdraw/GetRequireProfile/",
             type: "GET",
@@ -130,7 +113,7 @@
             }
         });
     },
-    getRequireKYCViewComponent: function () {
+    getRequireKYCPartialView: function () {
         $.ajax({
             url: "/DepositAndWithdraw/GetRequireKYC/",
             type: "GET",

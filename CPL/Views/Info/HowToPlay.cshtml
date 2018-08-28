@@ -1,10 +1,12 @@
-﻿
-@{
+﻿@{
     Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlay");
 }
 
-<div class="app-content container center-layout mt-2 px-0">
+@section styles {
+    <link href="~/css/dashboard/cpl.howtoplay.css" rel="stylesheet" asp-append-version="true" />
+}
+<div class="app-content container center-layout mt-2 px-0" id="how-to-play">
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
@@ -23,5 +25,124 @@
                 </div>
             </div>
         </div>
+        <div class="row mb-1">
+            <div class="col-lg-6 col-12 py-1">
+                <a class="btn btn-outline-primary font-medium-2 font-weight-bold btn-desktop-version btn-block active" href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlayDesktopVersion")</a>
+            </div>
+            <div class="col-lg-6 col-12 py-1">
+                <a class="btn btn-outline-info font-medium-2 font-weight-bold btn-mobile-version btn-block" href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlayMobileVersion")</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12" id="how-to-play-desktop-version">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <ul class="nav nav-tabs nav-justified border-0">
+                                <li class="nav-item">
+                                    <a class="nav-link font-medium-2 font-weight-bold active px-2 border-0" id="how-to-register-desktop-tab" data-toggle="tab" href="#how-to-register-desktop" aria-controls="how-to-register-desktop" aria-expanded="true">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToRegister")
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="how-to-deposit-exchange-desktop-tab" data-toggle="tab" href="#how-to-deposit-exchange-desktop" aria-controls="how-to-deposit-exchange-desktop" aria-expanded="false">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToDepositAndExchange")
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="how-to-play-lottery-desktop-tab" data-toggle="tab" href="#how-to-play-lottery-desktop" aria-controls="how-to-play-lottery-desktop" aria-expanded="false">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlayLottery")
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="how-to-withdraw-desktop-tab" data-toggle="tab" href="#how-to-withdraw-desktop" aria-controls="how-to-withdraw-desktop" aria-expanded="false">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToWithDraw")
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content mb-1">
+                                <div role="tabpanel" class="tab-pane active" id="how-to-register-desktop" aria-labelledby="how-to-register-desktop-tab" aria-expanded="true">
+                                    <div class="mt-1 text-justify font-size-15px">
+                                        @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToRegisterDesktop"))
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="how-to-deposit-exchange-desktop" role="tabpanel" aria-labelledby="how-to-deposit-exchange-desktop-tab" aria-expanded="false">
+                                    <div class="mt-1 text-justify font-size-15px">
+                                        @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToDepositAndExchangeDesktop"))
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="how-to-play-lottery-desktop" role="tabpanel" aria-labelledby="how-to-play-lottery-desktop-tab" aria-expanded="false">
+                                    <div class="mt-1 text-justify font-size-15px">
+                                        @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlayLotteryDesktop"))
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="how-to-withdraw-desktop" role="tabpanel" aria-labelledby="how-to-withdraw-desktop-tab" aria-expanded="false">
+                                    <div class="mt-1 text-justify font-size-15px">
+                                        @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToWithDrawDesktop"))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12" id="how-to-play-mobile-version" style="display: none">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <ul class="nav nav-tabs nav-justified border-0">
+                                <li class="nav-item">
+                                    <a class="nav-link font-medium-2 font-weight-bold active px-2 border-0" id="how-to-register-mobile-tab" data-toggle="tab" href="#how-to-register-mobile" aria-controls="how-to-register-mobile" aria-expanded="true">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToRegister")
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="how-to-deposit-exchange-mobile-tab" data-toggle="tab" href="#how-to-deposit-exchange-mobile" aria-controls="how-to-deposit-exchange-mobile" aria-expanded="false">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToDepositAndExchange")
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="how-to-play-lottery-mobile-tab" data-toggle="tab" href="#how-to-play-lottery-mobile" aria-controls="how-to-play-lottery-mobile" aria-expanded="false">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlayLottery")
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="how-to-withdraw-mobile-tab" data-toggle="tab" href="#how-to-withdraw-mobile" aria-controls="how-to-withdraw-mobile" aria-expanded="false">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToWithDraw")
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content mb-1">
+                                <div role="tabpanel" class="tab-pane active" id="how-to-register-mobile" aria-labelledby="how-to-register-mobile-tab" aria-expanded="true">
+                                    <div class="mt-1 text-justify">
+                                        @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToRegisterMobile"))
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="how-to-deposit-exchange-mobile" role="tabpanel" aria-labelledby="how-to-deposit-exchange-mobile-tab" aria-expanded="false">
+                                    <div class="mt-1 text-justify">
+                                        @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToDepositAndExchangeMobile"))
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="how-to-play-lottery-mobile" role="tabpanel" aria-labelledby="how-to-play-lottery-mobile-tab" aria-expanded="false">
+                                    <div class="mt-1 text-justify">
+                                        @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlayLotteryMobile"))
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="how-to-withdraw-mobile" role="tabpanel" aria-labelledby="how-to-withdraw-mobile-tab" aria-expanded="false">
+                                    <div class="mt-1 text-justify">
+                                        @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToWithDrawMobile"))
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
+
+@section scripts {
+    <script src="~/js/dashboard/cpl.howtoplay.js" asp-append-version="true"></script>
+}

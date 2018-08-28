@@ -20,9 +20,6 @@ namespace CPL.Models
         public string ReturnUrl { get; set; }
         public bool RememberMe { get; set; }
 
-        public IList<LangViewModel> Langs { get; set; }
-        public LangViewModel Lang { get; set; }
-
         public string GCaptchaKey { get; set; }
     }
 
@@ -31,10 +28,6 @@ namespace CPL.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-        public EnumAccountStatus Status { get; set; }
-
-        public IList<LangViewModel> Langs { get; set; }
-        public LangViewModel Lang { get; set; }
     }
 
     public class AccountResetPasswordModel
@@ -51,9 +44,6 @@ namespace CPL.Models
         public string Token { get; set; }
         public string Message { get; set; }
         public EnumAccountStatus Status { get; set; }
-
-        public IList<LangViewModel> Langs { get; set; }
-        public LangViewModel Lang { get; set; }
     }
 
     public class AccountRegistrationModel
@@ -71,11 +61,7 @@ namespace CPL.Models
         [Compare("Password")]
         public string PasswordConfirm { get; set; }
 
-        public EnumAccountStatus Status { get; set; }
         public string Message { get; set; }
-
-        public IList<LangViewModel> Langs { get; set; }
-        public LangViewModel Lang { get; set; }
 
         public string GCaptchaKey { get; set; }
     }
@@ -85,11 +71,7 @@ namespace CPL.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-        public EnumAccountStatus Status { get; set; }
         public string Message { get; set; }
-
-        public IList<LangViewModel> Langs { get; set; }
-        public LangViewModel Lang { get; set; }
     }
 
     public class AccountResendModel
@@ -97,10 +79,5 @@ namespace CPL.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-
-        public EnumAccountStatus Status { get; set; }
-
-        public IList<LangViewModel> Langs { get; set; }
-        public LangViewModel Lang { get; set; }
     }
 }

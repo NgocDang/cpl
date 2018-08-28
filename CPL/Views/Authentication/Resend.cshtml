@@ -1,0 +1,37 @@
+﻿@model AccountResendModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResendActivateCode");
+}
+
+<div class="content-wrapper mt-2 mb-2">
+    <div class="content-body">
+        <div class="col-xl-3 col-lg-4 col-sm-5 col-12 p-0 mx-auto">
+            <div class="card card-primary mb-0">
+                <div class="card-body">
+                    <p class="text-center h5 text-capitalize txt-welcome mb-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Welcome")</p>
+                    <p id="resend-message" class="text-muted text-center">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResendActivateCodeDesc")</p>
+                    <form method="POST" id="form-resend" class="needs-validation" novalidate="">
+                        <div class="form-group">
+                            <label for="Email"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                            <input id="Email" type="email" class="form-control" name="Email" tabindex="1" required autofocus>
+                            <div class="invalid-feedback" id="resend-error">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidOrNonExistingEmail")
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" id="btn-resend" class="btn btn-primary btn-block" tabindex="4">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Resend")
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/js/dashboard/cpl.resend.js" asp-append-version="true"></script>
+}

@@ -132,18 +132,8 @@ namespace CPL.Controllers
             {
                 var loginViewModel = new AccountLoginModel();
 
-                loginViewModel.Langs = _langService.Queryable()
-                    .Select(x => Mapper.Map<LangViewModel>(x))
-                    .ToList();
-
                 var gcaptchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
                 loginViewModel.GCaptchaKey = gcaptchaKey;
-
-                if (HttpContext.Session.GetInt32("LangId").HasValue)
-                    loginViewModel.Lang = loginViewModel.Langs.FirstOrDefault(x => x.Id == HttpContext.Session.GetInt32("LangId").Value);
-                else
-                    loginViewModel.Lang = loginViewModel.Langs.FirstOrDefault(x => x.Id == (int)EnumLang.ENGLISH);
-
                 return PartialView("_Login", loginViewModel);
             }
             else
@@ -197,7 +187,7 @@ namespace CPL.Controllers
                         _sysUserService.Update(currentUser);
 
                         _unitOfWork.SaveChanges();
-                        return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully"), tx = string.Format(CPLConstant.Etherscan, ticketGenResult.Result.TxId.ToString()) });
+                        return new JsonResult(new { success = true, token= currentUser.TokenAmount.ToString("N0"), message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully"), tx = string.Format(CPLConstant.Etherscan, ticketGenResult.Result.TxId.ToString()) });
                     }
                     else
                         return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseFailed") });
