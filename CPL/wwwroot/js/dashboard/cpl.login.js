@@ -38,7 +38,7 @@
                                 //Lottery.loadAjaxConfirmPurchaseTicket();
                                 location.reload();
                             } else {
-                                window.location.replace(data.url);
+                                window.location.href = data.url;
                             }
                             
                         } else {

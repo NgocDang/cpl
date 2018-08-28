@@ -94,7 +94,10 @@ namespace CPL.Misc
                     else if (controller == "DepositAndWithdraw" && action == "DoWithdraw")
                         context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + "Index");
                     else
-                        context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + controller + "/" + action);
+                    {
+                        var returnUrl =$"{context.HttpContext.Request.Path}{context.HttpContext.Request.QueryString}";
+                        context.Result = new RedirectResult(isAuthenticated.Url + "?returnUrl=/" + returnUrl);
+                    }
                 }
                 return;
             }
