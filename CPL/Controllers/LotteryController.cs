@@ -112,11 +112,11 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Guest)]
-        public IActionResult GetConfirmPurchaseTicket(int amount)
+        public IActionResult GetConfirmPurchaseTicket(int amount, int lotteryId)
         {
             var viewModel = new LotteryTicketPurchaseViewModel();
 
-            viewModel.TicketPrice = CPLConstant.LotteryTicketPrice;
+            viewModel.TicketPrice = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault().UnitPrice;
             viewModel.TotalTickets = amount;
             viewModel.TotalPriceOfTickets = viewModel.TotalTickets * viewModel.TicketPrice;
 
@@ -138,63 +138,86 @@ namespace CPL.Controllers
             }
             else
             {
-                var currentUser = _sysUserService.Query().Select().Where(x => x.Id == user.Id).FirstOrDefault();
-                var lotteryId = viewModel.LotteryId;
-
-                var lotteryRecordList = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).ToList();
-                var lastTicketIndex = 0;
-
-                if (lotteryRecordList.Count > 0)
-                    lastTicketIndex = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).Max(x => x.TicketIndex);
-
-                var totalPriceOfTickets = viewModel.TotalTickets * CPLConstant.LotteryTicketPrice;
-
-                if(totalPriceOfTickets <= currentUser.TokenAmount)
+                try
                 {
-                    /// Example paramsInJson: {"1":{"uint32":"4"},"2":{"address":"0xB43eA1802458754A122d02418Fe71326030C6412"}, "3": {"uint32[]":"[1, 2, 3]"}}
-                    var userAddress = user.ETHHDWalletAddress;
-                    var ticketIndexList = new List<int>();
-                    var lotteryPhase = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault().Phase;
+                    var currentUser = _sysUserService.Query().Select().Where(x => x.Id == user.Id).FirstOrDefault();
+                    var lotteryId = viewModel.LotteryId;
 
-                    for (int i = 0; i < viewModel.TotalTickets; i++)
+                    var lotteryRecordList = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).ToList();
+                    var lastTicketIndex = 0;
+
+                    if (lotteryRecordList.Count > 0)
+                        lastTicketIndex = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).Max(x => x.TicketIndex);
+
+                    var unitPrice = _lotteryService.Queryable().Where(x => x.Id == lotteryId.Value).FirstOrDefault().UnitPrice;
+
+                    var totalPriceOfTickets = viewModel.TotalTickets * unitPrice;
+
+                    if (totalPriceOfTickets <= currentUser.TokenAmount)
                     {
-                        lastTicketIndex += 1;
-                        ticketIndexList.Add(lastTicketIndex);
-                    }
-                    var paramJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", ticketIndexList.ToArray()));
+                        /// Example paramsInJson: {"1":{"uint32":"4"},"2":{"address":"0xB43eA1802458754A122d02418Fe71326030C6412"}, "3": {"uint32[]":"[1, 2, 3]"}}
+                        var userAddress = user.ETHHDWalletAddress;
+                        var ticketIndexList = new List<int>[viewModel.TotalTickets / 10 + 1];
+                        var lotteryPhase = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault().Phase;
 
-                    var buyTime = DateTime.Now;
-                    var ticketGenResult = ServiceClient.ETokenClient.CallTransactionAsync(Authentication.Token, CPLConstant.OwnerAddress, CPLConstant.OwnerPassword, "random", CPLConstant.GasPriceMultiplicator, CPLConstant.DurationInSecond, paramJson);
-                    ticketGenResult.Wait();
+                        var listIndex = 0;
+                        ticketIndexList[listIndex] = new List<int>();
 
-                    if(ticketGenResult.Result.Status.Code == 0)
-                    {
                         for (int i = 0; i < viewModel.TotalTickets; i++)
                         {
-                            var lotteryRecord = new LotteryHistory
+                            if (i % 10 == 0 && i != 0)
                             {
-                                CreatedDate = buyTime,
-                                LotteryId = lotteryId.Value,
-                                SysUserId = user.Id,
-                                TicketIndex = ticketIndexList[i],
-                                TxHashId = ticketGenResult.Result.TxId
-                            };
-
-                            _lotteryHistoryService.Insert(lotteryRecord);
+                                listIndex++;
+                                ticketIndexList[listIndex] = new List<int>();
+                            }
+                            lastTicketIndex += 1;
+                            ticketIndexList[listIndex].Add(lastTicketIndex);
                         }
 
-                        currentUser.TokenAmount -= totalPriceOfTickets;
+                        var totalOfTicketSuccessful = 0;
+
+                        foreach (var ticket in ticketIndexList)
+                        {
+                            if (ticket == null) continue;
+
+                            var paramJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", ticket.ToArray()));
+
+                            var buyTime = DateTime.Now;
+                            var ticketGenResult = ServiceClient.ETokenClient.CallTransactionAsync(Authentication.Token, CPLConstant.OwnerAddress, CPLConstant.OwnerPassword, "random", CPLConstant.GasPriceMultiplicator, CPLConstant.DurationInSecond, paramJson);
+                            ticketGenResult.Wait();
+
+                            if (ticketGenResult.Result.Status.Code == 0)
+                            {
+                                for (int i = 0; i < ticket.Count; i++)
+                                {
+                                    var lotteryRecord = new LotteryHistory
+                                    {
+                                        CreatedDate = buyTime,
+                                        LotteryId = lotteryId.Value,
+                                        SysUserId = user.Id,
+                                        TicketIndex = ticket[i],
+                                        TxHashId = ticketGenResult.Result.TxId
+                                    };
+
+                                    _lotteryHistoryService.Insert(lotteryRecord);
+                                    totalOfTicketSuccessful++;
+                                }
+                            }
+                        }
+                        currentUser.TokenAmount -= totalOfTicketSuccessful * unitPrice;
                         _sysUserService.Update(currentUser);
 
                         _unitOfWork.SaveChanges();
-                        return new JsonResult(new { success = true, token= currentUser.TokenAmount.ToString("N0"), message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully"), tx = string.Format(CPLConstant.Etherscan, ticketGenResult.Result.TxId.ToString()) });
+
+                        return new JsonResult(new { success = true, token = currentUser.TokenAmount.ToString("N0"), hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful), message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully")});
                     }
                     else
-                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseFailed") });
-
+                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotEnoughCPL") });
                 }
-                else
-                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotEnoughCPL") });
+                catch (Exception ex)
+                {
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+                }
             }
         }
     }
