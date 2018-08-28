@@ -94,8 +94,9 @@
                 //Swap max value
                 var maxValue = section.find("input.from-amount").attr("max");
                 var minValue = section.find("input.from-amount").attr("min");
-                section.find("input.from-amount").attr({ "max": section.find("input.to-amount").attr("max"), "min": section.find("input.to-amount").attr("min") });
-                section.find("input.to-amount").attr({ "max": maxValue, "min": minValue });
+                var stepValue = section.find("input.from-amount").attr("step");
+                section.find("input.from-amount").attr({ "max": section.find("input.to-amount").attr("max"), "min": section.find("input.to-amount").attr("min"), "step": section.find("input.to-amount").attr("step") });
+                section.find("input.to-amount").attr({ "max": maxValue, "min": minValue, "step": stepValue });
 
                 //Swap max amount
                 var maxAmount = section.find(".from-amount").siblings(".max-amount").val();

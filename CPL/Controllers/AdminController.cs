@@ -415,8 +415,9 @@ namespace CPL.Controllers
                 .FirstOrDefault(x => x.Id == viewModel.Id);
                 if (viewModel.FileImage != null)
                 {
+                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
                     var newsPath = Path.Combine(_hostingEnvironment.WebRootPath, @"images\news");
-                    var image = $"{viewModel.FileImage.FileName}";
+                    var image = $"News_{timestamp}_{viewModel.FileImage.FileName}";
                     var frontSidePath = Path.Combine(newsPath, image);
                     viewModel.FileImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
                     news.Image = image;
@@ -440,7 +441,15 @@ namespace CPL.Controllers
             if (ModelState.IsValid)
             {
                 if (viewModel.FileImage != null)
-                    _newsService.Insert(new Domain.News { Title = viewModel.Title, CreatedDate = DateTime.Now, Description = viewModel.Description, ShortDescription = viewModel.ShortDescription, Image = viewModel.FileImage.FileName });
+                {
+                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+                    var newsPath = Path.Combine(_hostingEnvironment.WebRootPath, @"images\news");
+                    var image = $"News_{timestamp}_{viewModel.FileImage.FileName}";
+                    var frontSidePath = Path.Combine(newsPath, image);
+                    viewModel.FileImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
+
+                    _newsService.Insert(new Domain.News { Title = viewModel.Title, CreatedDate = DateTime.Now, Description = viewModel.Description, ShortDescription = viewModel.ShortDescription, Image = image });
+                }
                 else
                     _newsService.Insert(new Domain.News { Title = viewModel.Title, CreatedDate = DateTime.Now, Description = viewModel.Description, ShortDescription = viewModel.ShortDescription });
                 _unitOfWork.SaveChanges();
