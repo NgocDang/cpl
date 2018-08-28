@@ -132,42 +132,96 @@ namespace CPL.TransactionService
                                 transaction.UpdatedTime = DateTime.Now;
                                 transaction.Status = false;
                                 Resolver.BTCTransactionService.Update(transaction);
-                            }
-                        } else if (transactionDetail.Result.Confirmations >= NumberOfConfirmsForUnreversedBTCTransaction)
-                        {
-                            var user = Resolver.SysUserService.Queryable()
-                                .FirstOrDefault(x => transactionDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
-                            if (user != null)
-                            {
-                                // add BTC amount
-                                user.BTCAmount += transactionDetail.Result.Value;
-                                Resolver.SysUserService.Update(user);
 
-                                // update btc transaction so that it is not checked next time
-                                transaction.UpdatedTime = DateTime.Now;
-                                transaction.Status = true;
-                                Resolver.BTCTransactionService.Update(transaction);
-
-                                // add record to coin transaction
-                                Resolver.CoinTransactionService.Insert(new CoinTransaction
+                                // Record log in case of internal transfer error
+                                if (transaction.ParentId.HasValue)
                                 {
-                                    CoinAmount = transactionDetail.Result.Value,
-                                    CreatedDate = DateTime.Now,
-                                    CurrencyId = (int)EnumCurrency.BTC,
-                                    SysUserId = user.Id,
-                                    ToWalletAddress = user.BTCHDWalletAddress,
-                                    TxHashId = transaction.TxHashId,
-                                    Status = true,
-                                    Type = (int)EnumCoinTransactionType.DEPOSIT_BTC
-                                });
+                                    Utils.FileAppendThreadSafe(BTCDepositFileName, string.Format("BTC Deposit Thread - There was a error with txHashId {0}. So, user cannot receive the money at {1}{2}", transaction.TxHashId, DateTime.Now, Environment.NewLine));
+                                }
+                            }
+                        }
+                        else if (transactionDetail.Result.Confirmations >= NumberOfConfirmsForUnreversedBTCTransaction)
+                        {
+                            // user transfer
+                            if (!transaction.ParentId.HasValue)
+                            {
+                                var user = Resolver.SysUserService.Queryable()
+                                    .FirstOrDefault(x => transactionDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
+                                if (user != null)
+                                {
+                                    // update btc transaction so that it is not checked next time
+                                    transaction.UpdatedTime = DateTime.Now;
+                                    transaction.Status = true;
+                                    Resolver.BTCTransactionService.Update(transaction);
+
+                                    // do internal transfer
+                                    var transactionToDepositAddress = _bAccount.TransferByMnemonicAsync(Authentication.Token, CPLConstant.BTCMnemonic, user.BTCHDWalletAddressIndex.ToString(), CPLConstant.BTCDepositAddress, CPLConstant.DurationInSecond);
+                                    transactionToDepositAddress.Wait();
+                                    if (transactionToDepositAddress.Result.Status.Code == 0)
+                                    {
+                                        Resolver.BTCTransactionService.Insert(new BTCTransaction
+                                        {
+                                            TxHashId = transactionToDepositAddress.Result.TxId.FirstOrDefault(),
+                                            CreatedDate = DateTime.Now,
+                                            ParentId = transaction.Id
+                                        });
+                                    }
+                                }
+                                else // inserted by bitcoinD
+                                {
+                                    // update record to ignored check this transaction by the service
+                                    transaction.UpdatedTime = DateTime.Now;
+                                    transaction.Status = false;
+                                    Resolver.BTCTransactionService.Update(transaction);
+                                }
+                            }
+                            // internal transfer
+                            else
+                            {
+                                // find transaction parrent
+                                var transactionParent = Resolver.BTCTransactionService.Queryable().Where(x => x.Id == transaction.ParentId).FirstOrDefault();
+                                var transactionParentDetail = _bTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transactionParent.TxHashId);
+                                transactionParentDetail.Wait();
+
+                                if (transactionParentDetail.Result.Status.Code == 0)
+                                {
+                                    // find user to send money
+                                    var user = Resolver.SysUserService.Queryable()
+                                                                      .FirstOrDefault(x => transactionParentDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
+
+                                    // update BTC amount
+                                    var coinAmount = transactionParentDetail.Result.To.FirstOrDefault(x => x.Address == user.BTCHDWalletAddress).Value;
+                                    user.BTCAmount += coinAmount;
+                                    Resolver.SysUserService.Update(user);
+
+                                    // add record to coin transaction of user transfer (not internal transfer)
+                                    Resolver.CoinTransactionService.Insert(new CoinTransaction
+                                    {
+                                        CoinAmount = coinAmount,
+                                        CreatedDate = DateTime.Now,
+                                        CurrencyId = (int)EnumCurrency.BTC,
+                                        SysUserId = user.Id,
+                                        ToWalletAddress = user.BTCHDWalletAddress,
+                                        TxHashId = transactionParentDetail.Result.TxHashId,
+                                        Status = true,
+                                        Type = (int)EnumCoinTransactionType.DEPOSIT_BTC
+                                    });
+
+                                    // update btc transaction so that it is not checked next time
+                                    transaction.UpdatedTime = DateTime.Now;
+                                    transaction.Status = true;
+                                    Resolver.BTCTransactionService.Update(transaction);
+                                }
+                                else
+                                {
+                                    // this case will never be happened
+                                }
                             }
                         }
                     }
-
                     Resolver.UnitOfWork.SaveChanges();
                 }
                 while (IsTransactionServiceRunning);
-
             }
             catch (Exception ex)
             {
@@ -201,7 +255,7 @@ namespace CPL.TransactionService
                         var transactionDetail = _eTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
                         transactionDetail.Wait();
 
-                        if (transactionDetail == null)
+                        if (transactionDetail == null || !transactionDetail.Result.TransactionStatus.Value)
                         {
                             var diff = DateTime.Now - transaction.CreatedDate;
                             if (diff.Days >= NumberOfDaysFailTransaction)
@@ -210,35 +264,91 @@ namespace CPL.TransactionService
                                 transaction.UpdatedTime = DateTime.Now;
                                 transaction.Status = false;
                                 Resolver.ETHTransactionService.Update(transaction);
+
+                                // Record log in case of internal transfer error
+                                if (transaction.ParentId.HasValue)
+                                {
+                                    Utils.FileAppendThreadSafe(BTCDepositFileName, string.Format("BTC Deposit Thread - There was a error with txHashId {0}. So, user cannot receive the money at {1}{2}", transaction.TxHashId, DateTime.Now, Environment.NewLine));
+                                }
                             }
                         }
                         else if (transactionDetail.Result.TransactionStatus.HasValue && transactionDetail.Result.TransactionStatus.Value)
                         {
-                            var user = Resolver.SysUserService.Queryable()
-                                .FirstOrDefault(x => x.ETHHDWalletAddress == transactionDetail.Result.ToAddress);
-                            if (user != null)
+                            // user transfer
+                            if (!transaction.ParentId.HasValue)
                             {
-                                // add BTC amount
-                                user.ETHAmount += transactionDetail.Result.Value;
-                                Resolver.SysUserService.Update(user);
 
-                                // update btc transaction so that it is not checked next time
-                                transaction.UpdatedTime = DateTime.Now;
-                                transaction.Status = true;
-                                Resolver.ETHTransactionService.Update(transaction);
-
-                                // add record to coin transaction
-                                Resolver.CoinTransactionService.Insert(new CoinTransaction
+                                var user = Resolver.SysUserService.Queryable()
+                                .FirstOrDefault(x => x.ETHHDWalletAddress == transactionDetail.Result.ToAddress);
+                                if (user != null)
                                 {
-                                    CoinAmount = transactionDetail.Result.Value,
-                                    CreatedDate = DateTime.Now,
-                                    CurrencyId = (int)EnumCurrency.ETH,
-                                    SysUserId = user.Id,
-                                    ToWalletAddress = user.ETHHDWalletAddress,
-                                    TxHashId = transaction.TxHashId,
-                                    Status = true,
-                                    Type = (int)EnumCoinTransactionType.DEPOSIT_ETH
-                                });
+                                    // update eth transaction so that it is not checked next time
+                                    transaction.UpdatedTime = DateTime.Now;
+                                    transaction.Status = true;
+                                    Resolver.ETHTransactionService.Update(transaction);
+
+                                    // do internal transfer
+                                    var transactionToDepositAddress = _eAccount.TransferByMnemonicAsync(Authentication.Token, CPLConstant.ETHMnemonic, user.ETHHDWalletAddressIndex.ToString(), CPLConstant.ETHWithdrawAddress, CPLConstant.DurationInSecond);
+                                    transactionToDepositAddress.Wait();
+                                    if (transactionToDepositAddress.Result.Status.Code == 0)
+                                    {
+                                        Resolver.ETHTransactionService.Insert(new ETHTransaction
+                                        {
+                                            TxHashId = transactionToDepositAddress.Result.TxId.FirstOrDefault(),
+                                            CreatedDate = DateTime.Now,
+                                            ParentId = transaction.Id
+                                        });
+                                    }
+                                }
+                                else // inserted by bitcoinD
+                                {
+                                    // update record to ignored check this transaction by the service
+                                    transaction.UpdatedTime = DateTime.Now;
+                                    transaction.Status = false;
+                                    Resolver.ETHTransactionService.Update(transaction);
+                                }
+                            }
+                            // internal transfer
+                            else
+                            {
+                                // find transaction parrent
+                                var transactionParent = Resolver.ETHTransactionService.Queryable().Where(x => x.Id == transaction.ParentId).FirstOrDefault();
+                                var transactionParentDetail = _eTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transactionParent.TxHashId);
+                                transactionParentDetail.Wait();
+
+                                if (transactionParentDetail.Result.Status.Code == 0)
+                                {
+                                    // find user to send money
+                                    var user = Resolver.SysUserService.Queryable()
+                                        .FirstOrDefault(x => x.ETHHDWalletAddress == transactionParentDetail.Result.ToAddress);
+
+                                    // update ETH amount
+                                    var coinAmount = transactionParentDetail.Result.Value;
+                                    user.ETHAmount += coinAmount;
+                                    Resolver.SysUserService.Update(user);
+
+                                    // add record to coin transaction of user transfer (not internal transfer)
+                                    Resolver.CoinTransactionService.Insert(new CoinTransaction
+                                    {
+                                        CoinAmount = coinAmount,
+                                        CreatedDate = DateTime.Now,
+                                        CurrencyId = (int)EnumCurrency.ETH,
+                                        SysUserId = user.Id,
+                                        ToWalletAddress = user.ETHHDWalletAddress,
+                                        TxHashId = transactionParentDetail.Result.TxHashId,
+                                        Status = true,
+                                        Type = (int)EnumCoinTransactionType.DEPOSIT_ETH
+                                    });
+
+                                    // update eth transaction so that it is not checked next time
+                                    transaction.UpdatedTime = DateTime.Now;
+                                    transaction.Status = true;
+                                    Resolver.ETHTransactionService.Update(transaction);
+                                }
+                                else
+                                {
+                                    // this case will never be happened
+                                }
                             }
                         }
                     }
