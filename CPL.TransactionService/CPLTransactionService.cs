@@ -186,7 +186,7 @@ namespace CPL.TransactionService
                                 {
                                     // find user to send money
                                     var user = resolver.SysUserService.Queryable()
-                                                                      .FirstOrDefault(x => transactionParentDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
+                                        .FirstOrDefault(x => transactionParentDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
 
                                     // update BTC amount
                                     var coinAmount = transactionParentDetail.Result.To.FirstOrDefault(x => x.Address == user.BTCHDWalletAddress).Value;
@@ -210,10 +210,6 @@ namespace CPL.TransactionService
                                     transaction.UpdatedTime = DateTime.Now;
                                     transaction.Status = true;
                                     resolver.BTCTransactionService.Update(transaction);
-                                }
-                                else
-                                {
-                                    // this case will never be happened
                                 }
                             }
                         }
@@ -344,10 +340,6 @@ namespace CPL.TransactionService
                                     transaction.UpdatedTime = DateTime.Now;
                                     transaction.Status = true;
                                     resolver.ETHTransactionService.Update(transaction);
-                                }
-                                else
-                                {
-                                    // this case will never be happened
                                 }
                             }
                         }
