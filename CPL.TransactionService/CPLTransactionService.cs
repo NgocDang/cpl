@@ -269,7 +269,7 @@ namespace CPL.TransactionService
                                 // Record log in case of internal transfer error
                                 if (transaction.ParentId.HasValue)
                                 {
-                                    Utils.FileAppendThreadSafe(BTCDepositFileName, string.Format("BTC Deposit Thread - There was a error with txHashId {0}. So, user cannot receive the money at {1}{2}", transaction.TxHashId, DateTime.Now, Environment.NewLine));
+                                    Utils.FileAppendThreadSafe(BTCDepositFileName, string.Format("ETH Deposit Thread - There was a error with txHashId {0}. So, user cannot receive the money at {1}{2}", transaction.TxHashId, DateTime.Now, Environment.NewLine));
                                 }
                             }
                         }
