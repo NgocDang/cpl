@@ -1,4 +1,5 @@
-﻿using Nethereum.Hex.HexConvertors.Extensions;
+﻿using CPL.Common.Enums;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.Util;
 using Org.BouncyCastle.Crypto.Digests;
 using System;
@@ -28,17 +29,22 @@ namespace CPL.Misc
 
         public static bool IsValidBTCAddress(string address)
         {
-            char[] prefixes = new char[] { };
-            prefixes = new char[] { '1', '3' };
-            if (prefixes.Contains(address[0]))
+            if (CPLConstant.Environment == EnumEnvironment.TESTNET)
+                return true;
+            else
             {
-                byte[] hex = Base58CheckToByteArray(address);
-                if (hex == null || hex.Length != 21)
-                    return false;
-                else
-                    return true;
+                char[] prefixes = new char[] { };
+                prefixes = new char[] { '1', '3' };
+                if (prefixes.Contains(address[0]))
+                {
+                    byte[] hex = Base58CheckToByteArray(address);
+                    if (hex == null || hex.Length != 21)
+                        return false;
+                    else
+                        return true;
+                }
+                return false;
             }
-            return false;
         }
 
         /// <summary>
