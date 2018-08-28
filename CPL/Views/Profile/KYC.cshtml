@@ -100,7 +100,7 @@
                                     }
                                 </div>
                             </div>
-                            @if (!Model.KYCVerified.HasValue)
+                            @if (!Model.KYCVerified.HasValue && !Model.IsProfileEmpty)
                             {
                                 <div class="row">
                                     <div class="col-12 text-right">
