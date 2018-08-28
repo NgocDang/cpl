@@ -32,6 +32,11 @@
                 $("#Day").append($("<option></option>").val(i).html(i));
         }
 
+        $("#Year").selectpicker('refresh');
+        $("#Month").selectpicker('refresh');
+        $("#Day").selectpicker('refresh');
+
+
         $("#Year").on("change", function () {
             var date = moment($("#Year").val() + "-" + $("#Month").val(), "YYYY-MM");
             $("#Month").empty();
