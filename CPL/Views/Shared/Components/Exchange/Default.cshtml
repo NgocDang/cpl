@@ -32,7 +32,7 @@
                                 <div class="col-lg-5 col-sm-12 col-12">
                                     <fieldset class="form-group">
                                         <label for="to-amount" id="to-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenAmount")</label>
-                                        <input type="number" class="form-control to-amount" readonly min="1" max="@Model.TokenAmount" step="any" required>
+                                        <input type="number" class="form-control to-amount" readonly min="1" max="@Model.TokenAmount" step="1" required>
                                         <input type="hidden" value="@Model.TokenAmount" class="max-amount" />
                                         <input type="hidden" value="CPL" class="to-currency" />
                                     </fieldset>
@@ -81,7 +81,7 @@
                                 <div class="col-lg-5 col-12">
                                     <fieldset class="form-group">
                                         <label for="to-amount" id="to-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenAmount")</label>
-                                        <input type="number" class="form-control to-amount" readonly min="1" max="@Model.TokenAmount" step="any" required>
+                                        <input type="number" class="form-control to-amount" readonly min="1" max="@Model.TokenAmount" step="1" required>
                                         <input type="hidden" value="@Model.TokenAmount" class="max-amount" />
                                         <input type="hidden" value="CPL" class="to-currency" />
                                     </fieldset>
