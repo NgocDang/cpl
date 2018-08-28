@@ -12,5 +12,6 @@ namespace CPL.Domain
         public DateTime? UpdatedTime { get; set; }
         public DateTime CreatedDate { get; set; }
         public bool? Status { get; set; }
+        public int? ParentId { get; set; }
     }
 }

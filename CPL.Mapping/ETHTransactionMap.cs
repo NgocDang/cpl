@@ -21,6 +21,7 @@ namespace CPL.Mapping
             builder.Property(t => t.UpdatedTime).HasColumnName("UpdatedTime");
             builder.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
             builder.Property(t => t.Status).HasColumnName("Status");
+            builder.Property(t => t.ParentId).HasColumnName("ParentId");
         }
     }
 }
