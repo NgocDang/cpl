@@ -9,11 +9,23 @@ namespace CPL.TransactionService.Misc
 {
     public class Resolver
     {
-        public static IContainer Container { get; set; }
-        public static IUnitOfWorkAsync UnitOfWork { get; set; }
-        public static ISysUserService SysUserService { get; set; }
-        public static IBTCTransactionService BTCTransactionService { get; set; }
-        public static IETHTransactionService ETHTransactionService { get; set; }
-        public static ICoinTransactionService CoinTransactionService { get; set; }
+        public IContainer Container { get; }
+        public IUnitOfWorkAsync UnitOfWork { get; }
+        public ISysUserService SysUserService { get; }
+        public IBTCTransactionService BTCTransactionService { get; }
+        public IETHTransactionService ETHTransactionService { get; }
+        public ICoinTransactionService CoinTransactionService { get; }
+
+        public Resolver(IContainer container, IUnitOfWorkAsync unitOfWork, ISysUserService sysUserService, 
+            IBTCTransactionService btcTransactionService, IETHTransactionService ethTransactionService,
+            ICoinTransactionService coinTransactionService)
+        {
+            Container = container;
+            UnitOfWork = unitOfWork;
+            SysUserService = sysUserService;
+            BTCTransactionService = btcTransactionService;
+            ETHTransactionService = ethTransactionService;
+            CoinTransactionService = coinTransactionService;
+        }
     }
 }
