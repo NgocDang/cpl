@@ -41,52 +41,56 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-12">
-                    <div class="card mb-md-2 mb-05" id="div-buy-lottery">
-                        <div class="card-content">
-                            <div class="card-body">
-                                <form id="form-purchase-lottery" novalidate>
-                                    <div class="row mt-1 mb-xl-3 mb-2">
-                                        <div class="form-group col-12 text-center font-large-1 font-weight-bold mb-0">
-                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePerOneTicket")
+                    @if (Model.LotteryHistories.Count() < Model.Volume)
+                    {
+                        <div class="card mb-md-2 mb-05" id="div-buy-lottery">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <form id="form-purchase-lottery" novalidate>
+                                        <div class="row mt-1 mb-xl-3 mb-2">
+                                            <div class="form-group col-12 text-center font-large-1 font-weight-bold mb-0">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePerOneTicket")
+                                            </div>
+                                            <div class="form-group col-12 text-center font-large-1 font-weight-bold mb-1 text-primary">
+                                                @Model.UnitPrice.ToString("N0") CPL
+                                            </div>
                                         </div>
-                                        <div class="form-group col-12 text-center font-large-1 font-weight-bold mb-1 text-primary">
-                                            @Model.UnitPrice.ToString("N0") CPL
+                                        <div class="row mb-3 text-md-left text-center">
+                                            <div class="col-md-6 col-12 font-medium-5 font-weight-bold">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAmount")
+                                            </div>
+                                            <div class="col-md-6 col-12 text-md-right font-medium-5 font-weight-bold">
+                                                <span id="total-amount">@Model.UnitPrice.ToString("N0")</span> CPL
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row mb-3 text-md-left text-center">
-                                        <div class="col-md-6 col-12 font-medium-5 font-weight-bold">
-                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAmount")
+                                        <div class="row mb-2">
+                                            <div class="form-group col-12">
+                                                <input type="number" data-unit-price="@Model.UnitPrice" name="number-of-ticket" class="form-control" id="number-of-ticket" value="1" min="1" max="@(Model.Volume - @Model.LotteryHistories.Count())" required aria-describedby="basic-addon4">
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
+                                            </div>
+                                            <div class="col-12">
+                                                <button type="button" class="btn btn-primary btn-block font-weight-bold" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                                            </div>
                                         </div>
-                                        <div class="col-md-6 col-12 text-md-right font-medium-5 font-weight-bold">
-                                            <span id="total-amount">@Model.UnitPrice.ToString("N0")</span> CPL
+                                        <div class="row mb-1">
+                                            <div class="col-12">
+                                                <hr />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="form-group col-12">
-                                            <input type="number" data-unit-price="@Model.UnitPrice" name="number-of-ticket" class="form-control" id="number-of-ticket" value="1" min="1" max="@(Model.Volume - @Model.LotteryHistories.Count())" required aria-describedby="basic-addon4">
-                                            <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
+                                        <div class="row mt-2">
+                                            <div class="form-group col-12 text-center font-medium-5 font-weight-bold mb-0">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchasedTickets")
+                                            </div>
+                                            <div class="form-group col-12 text-center font-large-2 font-weight-bold mb-0">
+                                                <span class="font-weight-bold">@Model.LotteryHistories.Count()</span> / <span class="font-weight-bold">@Model.Volume.ToString("#,###")</span>
+                                            </div>
                                         </div>
-                                        <div class="col-12">
-                                            <button type="button" class="btn btn-primary btn-block font-weight-bold" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="col-12">
-                                            <hr />
-                                        </div>
-                                    </div>
-                                    <div class="row mt-2">
-                                        <div class="form-group col-12 text-center font-medium-5 font-weight-bold mb-0">
-                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchasedTickets")
-                                        </div>
-                                        <div class="form-group col-12 text-center font-large-2 font-weight-bold mb-0">
-                                            <span class="font-weight-bold">@Model.LotteryHistories.Count()</span> / <span class="font-weight-bold">@Model.Volume.ToString("#,###")</span>
-                                        </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
+
                     <div class="d-none" id="div-confirm-lottery">
                         <div class="card font-medium-2 pl-2 pr-2 pt-2 mb-md-2 mb-05">
                             <div class="card-header text-center font-large-1 font-weight-bold text-danger text-uppercase">
