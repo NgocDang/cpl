@@ -253,7 +253,7 @@ namespace CPL.TransactionService
                         var transactionDetail = _eTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transaction.TxHashId);
                         transactionDetail.Wait();
 
-                        if (transactionDetail == null || !transactionDetail.Result.TransactionStatus.Value)
+                        if (transactionDetail == null || transactionDetail.Result.TransactionStatus == null || !transactionDetail.Result.TransactionStatus.Value)
                         {
                             var diff = DateTime.Now - transaction.CreatedDate;
                             if (diff.Days >= NumberOfDaysFailTransaction)
@@ -275,9 +275,8 @@ namespace CPL.TransactionService
                             // user transfer
                             if (!transaction.ParentId.HasValue)
                             {
-
-                            var user = resolver.SysUserService.Queryable()
-                                .FirstOrDefault(x => x.ETHHDWalletAddress == transactionDetail.Result.ToAddress);
+                                var user = resolver.SysUserService.Queryable()
+                                    .FirstOrDefault(x => x.ETHHDWalletAddress == transactionDetail.Result.ToAddress);
                                 if (user != null)
                                 {
                                     // update eth transaction so that it is not checked next time
