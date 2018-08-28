@@ -24,9 +24,9 @@ namespace CPL.Common.Enums
         //SMTP
         public struct SMTP
         {
-            public static string Email = "info.cplcoin@gmail.com";
-            public static string Contact = "info.cplcoin@gmail.com";
-            public static string From = "info.cplcoin@gmail.com";
+            public static string Email { get { if (Environment == EnumEnvironment.MAINNET) return "info.cplchain@gmail.com"; else return "info.cplcoin@gmail.com"; } }
+            public static string Contact { get { if (Environment == EnumEnvironment.MAINNET) return "info.cplchain@gmail.com"; else return "info.cplcoin@gmail.com"; } }
+            public static string From { get { if (Environment == EnumEnvironment.MAINNET) return "info.cplchain@gmail.com"; else return "info.cplcoin@gmail.com"; } }
         }
 
         // Maintenance
@@ -37,9 +37,6 @@ namespace CPL.Common.Enums
             public static string MaintenanceAllowedIp { get; set; } = "14.161.32.23" + MaintenanceAllowedIpDelimiter + "::1";
             public static string IsOnMaintenanceSetting = "IsOnMaintenance";
         }
-
-        // Social Url
-        public static string FacebookUrl = "FacebookUrl";
 
         //BWallet
         public static string BTCMnemonic { get { if (Environment == EnumEnvironment.MAINNET) return "violin cute bulb grunt hybrid uniform father chef antique lawsuit camp inherit"; else return "cute violin bulb grunt hybrid uniform father chef antique lawsuit camp inherit"; } }  // TEST
