@@ -158,7 +158,7 @@ namespace CPL.TransactionService
                                     transactionToDepositAddress.Wait();
                                     if (transactionToDepositAddress.Result.Status.Code == 0)
                                     {
-                                        Resolver.BTCTransactionService.Insert(new BTCTransaction
+                                        resolver.BTCTransactionService.Insert(new BTCTransaction
                                         {
                                             TxHashId = transactionToDepositAddress.Result.TxId.FirstOrDefault(),
                                             CreatedDate = DateTime.Now,
@@ -171,27 +171,27 @@ namespace CPL.TransactionService
                                     // update record to ignored check this transaction by the service
                                     transaction.UpdatedTime = DateTime.Now;
                                     transaction.Status = false;
-                                    Resolver.BTCTransactionService.Update(transaction);
+                                    resolver.BTCTransactionService.Update(transaction);
                                 }
                             }
                             // internal transfer
                             else
                             {
                                 // find transaction parrent
-                                var transactionParent = Resolver.BTCTransactionService.Queryable().Where(x => x.Id == transaction.ParentId).FirstOrDefault();
+                                var transactionParent = resolver.BTCTransactionService.Queryable().Where(x => x.Id == transaction.ParentId).FirstOrDefault();
                                 var transactionParentDetail = _bTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transactionParent.TxHashId);
                                 transactionParentDetail.Wait();
 
                                 if (transactionParentDetail.Result.Status.Code == 0)
                                 {
                                     // find user to send money
-                                    var user = Resolver.SysUserService.Queryable()
+                                    var user = resolver.SysUserService.Queryable()
                                                                       .FirstOrDefault(x => transactionParentDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
 
                                     // update BTC amount
                                     var coinAmount = transactionParentDetail.Result.To.FirstOrDefault(x => x.Address == user.BTCHDWalletAddress).Value;
                                     user.BTCAmount += coinAmount;
-                                    Resolver.SysUserService.Update(user);
+                                    resolver.SysUserService.Update(user);
 
                                     // add record to coin transaction of user transfer (not internal transfer)
                                 	resolver.CoinTransactionService.Insert(new CoinTransaction
@@ -209,7 +209,7 @@ namespace CPL.TransactionService
                                     // update btc transaction so that it is not checked next time
                                     transaction.UpdatedTime = DateTime.Now;
                                     transaction.Status = true;
-                                    Resolver.BTCTransactionService.Update(transaction);
+                                    resolver.BTCTransactionService.Update(transaction);
                                 }
                                 else
                                 {
@@ -292,7 +292,7 @@ namespace CPL.TransactionService
                                     transactionToDepositAddress.Wait();
                                     if (transactionToDepositAddress.Result.Status.Code == 0)
                                     {
-                                        Resolver.ETHTransactionService.Insert(new ETHTransaction
+                                        resolver.ETHTransactionService.Insert(new ETHTransaction
                                         {
                                             TxHashId = transactionToDepositAddress.Result.TxId.FirstOrDefault(),
                                             CreatedDate = DateTime.Now,
@@ -305,27 +305,27 @@ namespace CPL.TransactionService
                                     // update record to ignored check this transaction by the service
                                     transaction.UpdatedTime = DateTime.Now;
                                     transaction.Status = false;
-                                    Resolver.ETHTransactionService.Update(transaction);
+                                    resolver.ETHTransactionService.Update(transaction);
                                 }
                             }
                             // internal transfer
                             else
                             {
                                 // find transaction parrent
-                                var transactionParent = Resolver.ETHTransactionService.Queryable().Where(x => x.Id == transaction.ParentId).FirstOrDefault();
+                                var transactionParent = resolver.ETHTransactionService.Queryable().Where(x => x.Id == transaction.ParentId).FirstOrDefault();
                                 var transactionParentDetail = _eTransaction.RetrieveTransactionDetailAsync(Authentication.Token, transactionParent.TxHashId);
                                 transactionParentDetail.Wait();
 
                                 if (transactionParentDetail.Result.Status.Code == 0)
                                 {
                                     // find user to send money
-                                    var user = Resolver.SysUserService.Queryable()
+                                    var user = resolver.SysUserService.Queryable()
                                         .FirstOrDefault(x => x.ETHHDWalletAddress == transactionParentDetail.Result.ToAddress);
 
                                     // update ETH amount
                                     var coinAmount = transactionParentDetail.Result.Value;
                                     user.ETHAmount += coinAmount;
-                                    Resolver.SysUserService.Update(user);
+                                    resolver.SysUserService.Update(user);
 
                                     // add record to coin transaction of user transfer (not internal transfer)
                                 	resolver.CoinTransactionService.Insert(new CoinTransaction
@@ -343,7 +343,7 @@ namespace CPL.TransactionService
                                     // update eth transaction so that it is not checked next time
                                     transaction.UpdatedTime = DateTime.Now;
                                     transaction.Status = true;
-                                    Resolver.ETHTransactionService.Update(transaction);
+                                    resolver.ETHTransactionService.Update(transaction);
                                 }
                                 else
                                 {
