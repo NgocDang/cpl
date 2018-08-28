@@ -30,7 +30,8 @@
                         $("#btn-purchase-lottery").html("<i class='fa fa-spinner fa-spin'></i> <i class='fas fa-money-bill-alt'></i> " + $(_this).text().trim());
                     },
                     data: {
-                        amount: parseInt($("#number-of-ticket").val())
+                        amount: parseInt($("#number-of-ticket").val()),
+                        lotteryId: parseInt($("#div-confirm-lottery #Id").val())
                     },
                     success: function (data) {
                         if (data.url == null) {
@@ -71,6 +72,10 @@
          $.ajax({
              url: "/Lottery/ConfirmPurchaseTicket/",
              type: "POST",
+             beforeSend: function () {
+                 $("#btn-confirm-purchase-lottery-ticket").attr("disabled", true);
+                 $("#btn-confirm-purchase-lottery-ticket").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-confirm-purchase-lottery-ticket").text());
+             },
              data: {
                  TicketPrice: parseInt($(".ticket-price").val()),
                  TotalTickets: parseInt($(".total-of-tiket").val()),
@@ -93,7 +98,8 @@
                      if (data.success) {
                          $("#div-confirm-lottery").toggleClass("d-none");
                          $("#div-thankyou-lottery").toggleClass("d-none");
-                         $("#p-txHashId").html("<a class='text-success' target='_blank' href='" + data.tx + "'><small><u>" + data.tx + "</u></small></a>");
+                         //$("#p-txHashId").html("<a class='text-success' target='_blank' href='" + data.tx + "'><small><u>" + data.tx + "</u></small></a>");
+                         $("#hint-thankyou-lottery").html("<small class='text-success'>" + data.hintThankyou + "</small>");
                          toastr.success(data.message, 'Success!');
                          $(".user-token-amount").map(function (index, element) {
                              $(element).text(data.token + " CPL");
@@ -103,6 +109,8 @@
                      }
                      else {
                          toastr.error(data.message, 'Error!');
+                         $("#btn-confirm-purchase-lottery-ticket").attr("disabled", false);
+                         $("#btn-confirm-purchase-lottery-ticket").html($("#btn-confirm-purchase-lottery-ticket").text().trim() + ' <i class="fa fa-arrow-right"></i>');
                      }
                  }
              },
