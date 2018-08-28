@@ -168,6 +168,7 @@ namespace CPL.TransactionService
                                 }
                                 else // inserted by bitcoinD
                                 {
+                                    // To be removed after implement bBlock
                                     // update record to ignored check this transaction by the service
                                     transaction.UpdatedTime = DateTime.Now;
                                     transaction.Status = false;
@@ -265,7 +266,7 @@ namespace CPL.TransactionService
                                 // Record log in case of internal transfer error
                                 if (transaction.ParentId.HasValue)
                                 {
-                                    Utils.FileAppendThreadSafe(BTCDepositFileName, string.Format("ETH Deposit Thread - There was a error with txHashId {0}. So, user cannot receive the money at {1}{2}", transaction.TxHashId, DateTime.Now, Environment.NewLine));
+                                    Utils.FileAppendThreadSafe(ETHDepositFileName, string.Format("ETH Deposit Thread - There was a error with txHashId {0}. So, user cannot receive the money at {1}{2}", transaction.TxHashId, DateTime.Now, Environment.NewLine));
                                 }
                             }
                         }
@@ -296,12 +297,9 @@ namespace CPL.TransactionService
                                         });
                                     }
                                 }
-                                else // inserted by bitcoinD
+                                else
                                 {
-                                    // update record to ignored check this transaction by the service
-                                    transaction.UpdatedTime = DateTime.Now;
-                                    transaction.Status = false;
-                                    resolver.ETHTransactionService.Update(transaction);
+                                    // This case will never be happened
                                 }
                             }
                             // internal transfer
