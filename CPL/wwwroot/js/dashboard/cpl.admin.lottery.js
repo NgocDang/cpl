@@ -76,14 +76,14 @@
                 {
                     "data": "DesktopSlideImage",
                     "render": function (data, type, full, meta) {
-                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "' href='/images/lottery/" + full.desktopSlideImage + "' ><img src=/images/lottery/" + full.desktopSlideImage + " class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopSlideImage + "'> </a>";
+                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "' href='/images/lottery/" + full.desktopSlideImage + "' ><img src='/images/lottery/" + full.desktopSlideImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopSlideImage + "'> </a>";
                     },
                     "orderable": false
                 },
                 {
                     "data": "DesktopListingImage",
                     "render": function (data, type, full, meta) {
-                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "'  href='/images/lottery/" + full.desktopListingImage + "' ><img src=/images/lottery/" + full.desktopListingImage + " class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopListingImage + "'> </a>";
+                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "'  href='/images/lottery/" + full.desktopListingImage + "' ><img src='/images/lottery/" + full.desktopListingImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopListingImage + "'> </a>";
                     },
                     "orderable": false
                 },

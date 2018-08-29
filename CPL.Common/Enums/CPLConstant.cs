@@ -65,7 +65,7 @@ namespace CPL.Common.Enums
         public static string BAccountServiceEndpoint = "Account/BAccount.svc";
 
         // FHCore Authentication
-        public static string ProjectEmail = "info.cplcoin@gmail.com";
+        public static string ProjectEmail { get { if (Environment == EnumEnvironment.MAINNET) return "info.cplchain@gmail.com"; else return "info.cplcoin@gmail.com"; } }
         public static string ProjectName = "CPL";
 
         //Lottery game
