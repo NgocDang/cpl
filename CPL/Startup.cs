@@ -63,6 +63,8 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<Contact>, Repository<Contact>>()
                 .AddScoped<IRepositoryAsync<BTCTransaction>, Repository<BTCTransaction>>()
                 .AddScoped<IRepositoryAsync<ETHTransaction>, Repository<ETHTransaction>>()
+                .AddScoped<IRepositoryAsync<Agency>, Repository<Agency>>()
+                .AddScoped<IRepositoryAsync<Affiliate>, Repository<Affiliate>>()
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
 
@@ -100,6 +102,8 @@ namespace CPL
                 .AddTransient<INewsService, NewsService>()
                 .AddTransient<IBTCTransactionService, BTCTransactionService>()
                 .AddTransient<IETHTransactionService, ETHTransactionService>()
+                .AddTransient<IAgencyService, AgencyService>()
+                .AddTransient<IAffiliateService, AffiliateService>()
                 .AddTransient<INewsService, NewsService>()
                 .AddTransient<IContactService, ContactService>();
 

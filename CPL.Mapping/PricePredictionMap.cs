@@ -28,6 +28,6 @@ namespace CPL.Mapping
             builder.Property(t => t.Volume).HasColumnName("Volume");
             builder.Property(t => t.Coinbase).HasColumnName("Coinbase");
             builder.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
-    }
+        }
     }
 }
