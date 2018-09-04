@@ -78,7 +78,7 @@
                                         <strong>@Model.KYCStatus</strong>
                                         @if (!Model.KYCVerified.HasValue)
                                         {
-                                            @Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHereToChange"))
+                                            @Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHereToChangeKYC"))
                                         }
 
                                     </p>

@@ -165,6 +165,7 @@
                                 window.location.href = "/Profile/KYC";
                             $("#profile-edit").hide();
                             $("#profile-detail").show();
+                            $("#profile-affiliate").show();
 
                             //Update value for profile detail
                             $("#first-name-detail").html($("#FirstName").val());
@@ -202,6 +203,7 @@
                     $("#profile-edit").html(data);
                     $("#profile-edit").show();
                     $("#profile-detail").hide();
+                    $("#profile-affiliate").hide();
                     Profile.bindInitForm();
                 }
             });
