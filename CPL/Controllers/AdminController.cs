@@ -80,8 +80,8 @@ namespace CPL.Controllers
             viewModel.TotalKYCPending = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && !x.KYCVerified.Value);
             viewModel.TotalKYCVerified = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && x.KYCVerified.Value);
             viewModel.TotalUser = _sysUserService.Queryable().Count();
-            viewModel.TodayUser = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy"));
-            viewModel.YesterdayUser = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.AddDays(-1).ToString("dd/MM/yyyy"));
+            viewModel.TotalUserToday = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy"));
+            viewModel.TotalUserYesterday = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.AddDays(-1).ToString("dd/MM/yyyy"));
 
             // Game management
             var lotteryGames = _lotteryService.Queryable();
