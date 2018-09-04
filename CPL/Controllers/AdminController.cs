@@ -35,10 +35,10 @@ namespace CPL.Controllers
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
         private readonly INewsService _newsService;
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly IDictionary<string, string> countryDict = new Dictionary<string, string>();
         private readonly ILotteryService _lotteryService;
         private readonly ILotteryPrizeService _lotteryPrizeService;
         private readonly IAgencyTokenService _agencyTokenService;
+        private readonly IAffiliateService _affiliateService;
 
         public AdminController(
             ILangService langService,
@@ -54,6 +54,7 @@ namespace CPL.Controllers
             INewsService newsService,
             IHostingEnvironment hostingEnvironment,
             ILotteryService lotteryService,
+            IAffiliateService affiliateService,
             ILotteryPrizeService lotteryPrizeService,
             IAgencyTokenService agencyTokenService)
         {
@@ -70,6 +71,7 @@ namespace CPL.Controllers
             this._lotteryPrizeService = lotteryPrizeService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._newsService = newsService;
+            this._affiliateService = affiliateService;
             this._hostingEnvironment = hostingEnvironment;
             this._agencyTokenService = agencyTokenService;
         }
@@ -108,18 +110,25 @@ namespace CPL.Controllers
             viewModel.AccountActivationEnable = bool.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value) ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "On") : LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Off");
             viewModel.CookieExpirations = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.CookieExpirations).Value);
 
-            viewModel.Tier1StandardAffiliate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.Tier1StandardAffiliate).Value);
-            viewModel.Tier2StandardAffiliate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.Tier2StandardAffiliate).Value);
-            viewModel.Tier3StandardAffiliate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.Tier3StandardAffiliate).Value);
+            viewModel.StandardAffiliate = new StandardAffiliateRateViewModel
+            {
+                Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier1DirectRate).Value),
+                Tier2SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier2SaleToTier1Rate).Value),
+                Tier3SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier3SaleToTier1Rate).Value)
+            };
 
-            viewModel.AgencyDirectSaleTier1 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyDirectSaleTier1).Value);
-            viewModel.AgencyDirectSaleTier2 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyDirectSaleTier2).Value);
-            viewModel.AgencyDirectSaleTier3 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyDirectSaleTier3).Value);
-            viewModel.AgencyTier2SaleToTier1 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyTier2SaleToTier1).Value);
-            viewModel.AgencyTier3SaleToTier1 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyTier3SaleToTier1).Value);
-            viewModel.AgencyTier3SaleToTier2 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyTier3SaleToTier2).Value);
+            viewModel.AgencyAffiliate = new AgencyAffiliateRateViewModel
+            {
+                Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier1DirectRate).Value),
+                Tier2DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier2DirectRate).Value),
+                Tier3DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3DirectRate).Value),
+                Tier2SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier2SaleToTier1Rate).Value),
+                Tier3SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3SaleToTier1Rate).Value),
+                Tier3SaleToTier2Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3SaleToTier2Rate).Value)
+            };
 
-            viewModel.TotalNews = _newsService.Queryable().Count();
+            viewModel.TotalAffiliateApplicationApproved = _sysUserService.Queryable().Count(x=>x.AffiliateId.HasValue && x.AffiliateId.Value != (int)EnumAffiliateApplicationStatus.PENDING);
+            viewModel.TotalAffiliateApplicationPending = _sysUserService.Queryable().Count(x => x.AffiliateId.HasValue && x.AffiliateId == (int)EnumAffiliateApplicationStatus.PENDING);
 
             viewModel.NumberOfAgencyAffiliateExpiredDays = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.NumberOfAgencyAffiliateExpiredDays).Value);
 
@@ -127,6 +136,46 @@ namespace CPL.Controllers
         }
 
         #region Affiliate
+        [HttpPost]
+        public IActionResult DoApproveAffiliateApplication(int id)
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
+
+            var affiliate = new Affiliate
+            {
+                Tier1DirectRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.Tier1StandardAffiliate)
+            };
+
+            _affiliateService.Insert(affiliate);
+
+            user.AffiliateId = true;
+
+            _sysUserService.Update(user);
+            _unitOfWork.SaveChanges();
+
+            var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.AffiliateVerify.ToString());
+            var affiliateVerifyEmailTemplateViewModel = Mapper.Map<AffiliateVerifyEmailTemplateViewModel>(user);
+            affiliateVerifyEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+            affiliateVerifyEmailTemplateViewModel.FacebookUrl = _settingService.Queryable().FirstOrDefault(x => x.Name == ETNConstant.FacebookUrl).Value;
+            // Populate languages
+            affiliateVerifyEmailTemplateViewModel.AffiliateProgramApprovedText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AffiliateProgramApproved");
+            affiliateVerifyEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+            affiliateVerifyEmailTemplateViewModel.AffiliateProgramFullDescText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AffiliateProgramFullDesc");
+            affiliateVerifyEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+            affiliateVerifyEmailTemplateViewModel.ConnectWithUsText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ConnectWithUs");
+            affiliateVerifyEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+            affiliateVerifyEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+            affiliateVerifyEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+            affiliateVerifyEmailTemplateViewModel.TeamText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Team");
+
+            template.Body = _viewRenderService.RenderToStringAsync("/Views/SysUser/AffiliateVerifyEmailTemplate.cshtml", affiliateVerifyEmailTemplateViewModel).Result;
+            EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
+
+            return new JsonResult(new { success = true, message = user.FirstName + $" {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AffiliateApprovedEmailSent")}" });
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
+
+
         [HttpPost]
         public IActionResult GenerateAgencyAffiliateUrl(AgencyViewModel viewModel)
         {
