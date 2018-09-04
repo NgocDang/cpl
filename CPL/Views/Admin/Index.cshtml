@@ -253,7 +253,7 @@
                 <div class="card-body">
                     <div class="col-12">
                         <label class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCVerificationActivated")</label>
-                        <p><span class="text-success font-weight-bold">@Model.KYCVerificationActivated</span></p>
+                        <p><span class="text-success font-weight-bold text-uppercase">@Model.KYCVerificationActivated</span></p>
                     </div>
                     <div class="col-12">
                         <label class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliateTiers")</label>
@@ -303,7 +303,7 @@
                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AccountActivationEnable")
                         </label>
                         <p>
-                            <span class="text-success font-weight-bold">
+                            <span class="text-success font-weight-bold text-uppercase">
                                 @Model.AccountActivationEnable
                             </span>
                         </p>
