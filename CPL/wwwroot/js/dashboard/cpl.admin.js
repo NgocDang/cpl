@@ -49,7 +49,7 @@
     bindDoGenerate: function () {
         $("#btn-generate").on("click", function () {
             var isFormValid = $("#form-agency-affiliate")[0].checkValidity();
-
+            $("#form-agency-affiliate").addClass('was-validated');
             if (isFormValid) {
                 $.ajax({
                     url: "/Admin/GenerateAgencyAffiliateUrl/",
