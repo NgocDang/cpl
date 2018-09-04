@@ -1,6 +1,5 @@
 Use CPL;
 
-INSERT INTO Setting VALUES (N'IsKYCVerificationActivated', N'false', NULL);
 
 INSERT INTO Setting VALUES (N'CookieExpirations', N'60', NULL);
 
