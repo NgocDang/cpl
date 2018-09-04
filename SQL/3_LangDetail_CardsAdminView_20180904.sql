@@ -71,3 +71,9 @@ INSERT INTO LangDetail VALUES (2, N'StandardCommissionTier2', N'2ティア1の�
 
 INSERT INTO LangDetail VALUES (1, N'StandardCommissionTier3', N'Tier 3 Commission​');
 INSERT INTO LangDetail VALUES (2, N'StandardCommissionTier3', N'3ティア1の報酬');
+
+INSERT INTO LangDetail VALUES (1, N'On', N'On');
+INSERT INTO LangDetail VALUES (2, N'On', N'オン');
+
+INSERT INTO LangDetail VALUES (1, N'Off', N'Off​');
+INSERT INTO LangDetail VALUES (2, N'Off', N'オフ');
