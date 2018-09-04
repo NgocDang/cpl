@@ -69,87 +69,86 @@ namespace CPL.Controllers
 
         public IActionResult Index()
         {
-            // Test quartz job price prediction update result
+            //Test quartz job price prediction update result
+            // Cmt out because of new PricePrediction logic
             //var scheduler = _quartzSchedulerService.GetScheduler<IScheduler, IPricePredictionUpdateResultFactory>();
             //QuartzHelper.AddJob<PricePredictionUpdateResultJob>(scheduler, new DateTime(2018, 07, 30, 12, 56, 0));
 
-            //var viewModel = new PricePredictionViewModel();
-            //viewModel.PricePredictionId = _pricePredictionService.Queryable().LastOrDefault(x => !x.UpdatedDate.HasValue)?.Id;
+            var viewModel = new PricePredictionViewModel();
+            viewModel.PricePredictionId = _pricePredictionService.Queryable().LastOrDefault(x => !x.UpdatedDate.HasValue)?.Id;
 
-            //if (viewModel.PricePredictionId.HasValue)
-            //{
-            //    decimal upPercentage;
-            //    decimal downPercentage;
-            //    this.CalculatePercentagePrediction(viewModel.PricePredictionId.Value, out upPercentage, out downPercentage);
-            //    // Set to Model
-            //    viewModel.UpPercentage = upPercentage;
-            //    viewModel.DownPercentage = downPercentage;
-            //}
+            if (viewModel.PricePredictionId.HasValue)
+            {
+                decimal upPercentage;
+                decimal downPercentage;
+                this.CalculatePercentagePrediction(viewModel.PricePredictionId.Value, out upPercentage, out downPercentage);
+                // Set to Model
+                viewModel.UpPercentage = upPercentage;
+                viewModel.DownPercentage = downPercentage;
+            }
 
-            //var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
-            //btcCurrentPriceResult.Wait();
-            //if (btcCurrentPriceResult.Result.Status.Code == 0)
-            //{
-            //    viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
-            //    viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
-            //}
+            var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
+            btcCurrentPriceResult.Wait();
+            if (btcCurrentPriceResult.Result.Status.Code == 0)
+            {
+                viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
+                viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
+            }
 
-            //// Get btc previous rates 12h before until now
-            //var btcPriceInLocals = _btcPriceService.Queryable().Where(x => x.Time >= ((DateTimeOffset)DateTime.UtcNow.AddHours(-CPLConstant.HourBeforeInChart)).ToUnixTimeSeconds())
-            //    .GroupBy(x => x.Time)
-            //    .Select(y => new PricePredictionHighChartViewModel
-            //    {
-            //        Time = y.Key,
-            //        Price = y.Select(x => x.Price).OrderByDescending(x => x).FirstOrDefault()
-            //    })
-            //    .ToList();
+            // Get btc previous rates 12h before until now
+            var btcPriceInLocals = _btcPriceService.Queryable().Where(x => x.Time >= ((DateTimeOffset)DateTime.UtcNow.AddHours(-CPLConstant.HourBeforeInChart)).ToUnixTimeSeconds())
+                .GroupBy(x => x.Time)
+                .Select(y => new PricePredictionHighChartViewModel
+                {
+                    Time = y.Key,
+                    Price = y.Select(x => x.Price).OrderByDescending(x => x).FirstOrDefault()
+                })
+                .ToList();
 
-            //var currentTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
-            //var listCurrentTime = new Dictionary<long, decimal>();
-            //var second = CPLConstant.HourBeforeInChart * 60 * 60 - 1; // currently 43200
-            //for (int i = -second; i <= 0; i++)
-            //{
-            //    listCurrentTime.Add(currentTime + i, 0); // Default Price is 0;
-            //}
+            var currentTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+            var listCurrentTime = new Dictionary<long, decimal>();
+            var second = CPLConstant.HourBeforeInChart * 60 * 60 - 1; // currently 43200
+            for (int i = -second; i <= 0; i++)
+            {
+                listCurrentTime.Add(currentTime + i, 0); // Default Price is 0;
+            }
 
-            //// Join 2 list
-            //var pricePredictionViewModels = (from left in listCurrentTime.Keys
-            //                                 join right in btcPriceInLocals on left equals right.Time into leftRight
-            //                                 from lr in leftRight.DefaultIfEmpty()
-            //                                 select new PricePredictionHighChartViewModel
-            //                                 {
-            //                                     Time = left,
-            //                                     Price = lr?.Price,
-            //                                 })
-            //                                .ToList();
+            // Join 2 list
+            var pricePredictionViewModels = (from left in listCurrentTime.Keys
+                                             join right in btcPriceInLocals on left equals right.Time into leftRight
+                                             from lr in leftRight.DefaultIfEmpty()
+                                             select new PricePredictionHighChartViewModel
+                                             {
+                                                 Time = left,
+                                                 Price = lr?.Price,
+                                             })
+                                            .ToList();
 
-            //decimal value = 0;
-            //for (int i = 0; i < pricePredictionViewModels.Count; i++)
-            //{
-            //    if (pricePredictionViewModels[i].Price != null)
-            //    {
-            //        value = pricePredictionViewModels[i].Price.GetValueOrDefault(0);
-            //    }
+            decimal value = 0;
+            for (int i = 0; i < pricePredictionViewModels.Count; i++)
+            {
+                if (pricePredictionViewModels[i].Price != null)
+                {
+                    value = pricePredictionViewModels[i].Price.GetValueOrDefault(0);
+                }
 
-            //    pricePredictionViewModels[i].Price = value;
-            //}
+                pricePredictionViewModels[i].Price = value;
+            }
 
-            //var previousTime = pricePredictionViewModels.FirstOrDefault().Time.ToString();
-            //var previousRate = string.Join(",", pricePredictionViewModels.Select(x => x.Price));
-            //var lowestRate = pricePredictionViewModels.Where(x => x.Price != 0).Min(x => x.Price).GetValueOrDefault(0) - CPLConstant.LowestRateBTCInterval;
-            //if (lowestRate < 0)
-            //    lowestRate = 0;
-            //var previousBtcRate = $"{previousTime};{previousRate}";
+            var previousTime = pricePredictionViewModels.FirstOrDefault().Time.ToString();
+            var previousRate = string.Join(",", pricePredictionViewModels.Select(x => x.Price));
+            var lowestRate = pricePredictionViewModels.Where(x => x.Price != 0).Min(x => x.Price).GetValueOrDefault(0) - CPLConstant.LowestRateBTCInterval;
+            if (lowestRate < 0)
+                lowestRate = 0;
+            var previousBtcRate = $"{previousTime};{previousRate}";
 
-            //viewModel.PreviousBtcRate = previousBtcRate;
-            //viewModel.LowestBtcRate = lowestRate;
+            viewModel.PreviousBtcRate = previousBtcRate;
+            viewModel.LowestBtcRate = lowestRate;
 
-            //// Get history game
-            //viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
+            // Get history game
+            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
 
-            //return View(viewModel);
-
-            return View();
+            return View(viewModel);
         }
 
         private void CalculatePercentagePrediction(int pricePredictionId, out decimal upPercentage, out decimal downPercentage)
@@ -242,12 +241,12 @@ namespace CPL.Controllers
                                           .Where(x => x.SysUserId == user.Id)
                                           .Select(x => new PricePredictionHistoryViewModel
                                           {
-                                              StartRate = x.PricePrediction.PredictionPrice,
-                                              StartRateInString = x.PricePrediction.PredictionPrice.ToString("#,##0.##"),
-                                              ResultRate = x.PricePrediction.ResultPrice,
-                                              ResultRateInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
-                                              ResultTime = x.PricePrediction.PredictionResultTime,
-                                              ResultTimeInString = x.PricePrediction.PredictionResultTime.ToString(),
+                                              ToBeComparedPrice = x.PricePrediction.ToBeComparedPrice,
+                                              ToBeComparedPriceInString = x.PricePrediction.ToBeComparedPrice.GetValueOrDefault(0).ToString("#,##0.##"),
+                                              ResultPrice = x.PricePrediction.ResultPrice,
+                                              ResultPriceInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
+                                              ResultTime = x.PricePrediction.ResultTime,
+                                              ResultTimeInString = x.PricePrediction.ResultTime.ToString(),
                                               Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
                                               Status = x.UpdatedDate.HasValue == true ? EnumLotteryGameStatus.COMPLETED.ToString() : EnumLotteryGameStatus.ACTIVE.ToString(),
                                               PurcharseTime = x.CreatedDate,
@@ -267,11 +266,11 @@ namespace CPL.Controllers
                 pricePredictionHistory = pricePredictionHistory
                                         .Where(x => x.PurcharseTimeInString.ToLower().Contains(searchBy)
                                                     || x.Bet.ToLower().Contains(searchBy)
-                                                    || x.StartRateInString.ToLower().Contains(searchBy)
+                                                    || x.ToBeComparedPriceInString.ToLower().Contains(searchBy)
                                                     || x.Status.ToLower().Contains(searchBy)
                                                     || x.AmountInString.ToLower().Contains(searchBy)
                                                     || x.BonusInString.ToLower().Contains(searchBy)
-                                                    || x.ResultRateInString.ToLower().Contains(searchBy)
+                                                    || x.ResultPriceInString.ToLower().Contains(searchBy)
                                                     || x.ResultTimeInString.ToLower().Contains(searchBy));
 
                 filteredResultsCount = pricePredictionHistory.Count();
@@ -327,8 +326,9 @@ namespace CPL.Controllers
                 // Update database
 
                 // Add quartz job
-                var scheduler = _quartzSchedulerService.GetScheduler<IScheduler, IPricePredictionUpdateResultFactory>();
-                QuartzHelper.AddJob<PricePredictionUpdateResultJob>(scheduler, viewModel.PredictionResultTime);
+                // Cmt out because of new PricePrediction logic
+                //var scheduler = _quartzSchedulerService.GetScheduler<IScheduler, IPricePredictionUpdateResultFactory>();
+                //QuartzHelper.AddJob<PricePredictionUpdateResultJob>(scheduler, viewModel.PredictionResultTime);
 
                 return new EmptyResult();
             }

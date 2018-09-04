@@ -43,7 +43,8 @@ namespace CPL.Misc.Quartz.Jobs
                 var listUserId = pricePrediction.PricePredictionHistories.Select(x => x.SysUserId).Distinct();
                 var lstSysUser = listOfSysUser.Where(x => listUserId.Contains(x.Id)).ToList();
 
-                var resultPrice = btcPriceService.Queryable()
+                // Cmt out because of new PricePrediction logic
+                /*var resultPrice = btcPriceService.Queryable()
                     .Where(x => x.Time == ((DateTimeOffset)pricePrediction.PredictionResultTime).ToUnixTimeSeconds())
                     .FirstOrDefault().Price;
 
@@ -77,7 +78,7 @@ namespace CPL.Misc.Quartz.Jobs
                 dataGame.Volume = pricePredictionStatisticed.NumberOfPredictors;
                 dataGame.UpdatedDate = DateTime.Now;
 
-                pricePredictionService.Update(dataGame);
+                pricePredictionService.Update(dataGame);*/
             }
 
             unitOfWork.SaveChanges();
@@ -87,7 +88,8 @@ namespace CPL.Misc.Quartz.Jobs
         {
             foreach (var history in pricePrediction.PricePredictionHistories)
             {
-                var isWinner = IsWinner(pricePrediction.PredictionPrice, resultPrice, history.Prediction);
+                // Cmt out because of new PricePrediction logic
+                /*var isWinner = IsWinner(pricePrediction.PredictionPrice, resultPrice, history.Prediction);
                 if (isWinner)
                 {
                     if (IsKYCVerified(listOfSysUser, history.SysUserId))
@@ -99,7 +101,7 @@ namespace CPL.Misc.Quartz.Jobs
                 {
                     history.Result = EnumGameResult.LOSE.ToString();
                     history.Award = 0.0m;
-                }
+                }*/
             }
 
             var numberOfLoser = pricePrediction.PricePredictionHistories.Count(x => x.Result.Equals(EnumGameResult.LOSE.ToString()));
