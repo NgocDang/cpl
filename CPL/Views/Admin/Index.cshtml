@@ -326,7 +326,7 @@
                             <div class="row">
                                 <div class="col-sm-5 col-12">
                                     <label class="text-muted" for="NumberOfExpiredDays">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ExpiredDayFromNow")</label>
-                                    <input value=@Model.NumberOfExpiredDays id="NumberOfExpiredDays" type="number" min="1" class="form-control" required="" name="NumberOfExpiredDays">
+                                    <input value=@Model.NumberOfAgencyAffiliateExpiredDays id="NumberOfAgencyAffiliateExpiredDays" type="number" min="1" class="form-control" required="" name="NumberOfAgencyAffiliateExpiredDays">
                                     <div class="invalid-feedback">
                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfDaysRequired")
                                     </div>

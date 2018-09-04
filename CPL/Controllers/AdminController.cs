@@ -121,7 +121,7 @@ namespace CPL.Controllers
 
             viewModel.TotalNews = _newsService.Queryable().Count();
 
-            viewModel.NumberOfExpiredDays = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.NumberOfAgencyAffiliateExpiredDays).Value);
+            viewModel.NumberOfAgencyAffiliateExpiredDays = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.NumberOfAgencyAffiliateExpiredDays).Value);
 
             return View(viewModel);
         }
@@ -134,7 +134,7 @@ namespace CPL.Controllers
             {
                 var agencyToken = new AgencyToken();
                 agencyToken.Token = Guid.NewGuid().ToString();
-                agencyToken.ExpiredDate = DateTime.Now.AddDays(viewModel.NumberOfExpiredDays);
+                agencyToken.ExpiredDate = DateTime.Now.AddDays(viewModel.NumberOfAgencyAffiliateExpiredDays);
                 _agencyTokenService.Insert(agencyToken);
                 _unitOfWork.SaveChanges();
 

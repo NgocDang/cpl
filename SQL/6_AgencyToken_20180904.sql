@@ -31,7 +31,7 @@ GO
 CREATE TABLE [dbo].[AgencyToken](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Token] [nvarchar](50) NOT NULL,
-	[ExpiredDate] [datetime] NULL,
+	[ExpiredDate] [datetime] NOT NULL,
 	[SysUserId] [int] NULL,
  CONSTRAINT [PK_AgencyToken] PRIMARY KEY CLUSTERED 
 (

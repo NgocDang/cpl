@@ -7,6 +7,6 @@ namespace CPL.Models
 {
     public class AgencyViewModel
     {
-        public int NumberOfExpiredDays { get; set; }
+        public int NumberOfAgencyAffiliateExpiredDays { get; set; }
     }
 }

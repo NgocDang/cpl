@@ -59,7 +59,7 @@
                         $("#btn-generate").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-generate").text());
                     },
                     data: {
-                        NumberOfExpiredDays: $("#NumberOfExpiredDays").val()
+                        NumberOfAgencyAffiliateExpiredDays: $("#NumberOfAgencyAffiliateExpiredDays").val()
                     },
                     success: function (data) {
                         if (data.success) {
