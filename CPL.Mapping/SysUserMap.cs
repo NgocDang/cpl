@@ -42,6 +42,7 @@ namespace CPL.Mapping
             builder.Property(t => t.ETHAmount).HasColumnName("ETHAmount");
             builder.Property(t => t.TokenAmount).HasColumnName("TokenAmount");
             builder.Property(t => t.AffiliateId).HasColumnName("AffiliateId");
+            builder.Property(t => t.AffiliateCreatedDate).HasColumnName("AffiliateCreatedDate");
             builder.Property(t => t.AgencyId).HasColumnName("AgencyId");
             builder.Property(t => t.IsIntroducedById).HasColumnName("IsIntroducedById");
             builder.Property(t => t.TwoFactorAuthenticationEnable).HasColumnName("TwoFactorAuthenticationEnable");

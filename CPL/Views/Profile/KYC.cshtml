@@ -87,14 +87,14 @@
                                         {
                                             <div class="row mb-1 col-sm-12" id="kyc-verify">
                                                 <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCConfirmed")</p>
-                                                <span class="badge badge-success h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verified")</span>
+                                                <span class="badge badge-success">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Verified")</span>
                                             </div>
                                         }
                                         else
                                         {
                                             <div class="row mb-1 col-sm-12" id="kyc-verify">
                                                 <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCReceived")</p>
-                                                <span class="badge badge-info h-50">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")</span>
+                                                <span class="badge badge-info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")</span>
                                             </div>
                                         }
                                     }

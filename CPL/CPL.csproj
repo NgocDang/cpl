@@ -119,6 +119,9 @@
     <Content Update="Views\Lottery\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Profile\Affiliate.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Profile\Security.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
