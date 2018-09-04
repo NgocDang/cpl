@@ -88,6 +88,15 @@ namespace CPL.Controllers
             viewModel.TotalLotteryGameActive = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.ACTIVE).Count();
             viewModel.TotalLotteryGameCompleted = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.COMPLETED).Count();
 
+            // Affiliate
+            // TODO: Get data from database
+            viewModel.TotalAgencyAffiliate = 1000;
+            viewModel.TotalAgencyAffiliateToday = 10;
+            viewModel.TotalAgencyAffiliateYesterday = 10;
+            viewModel.TotalStandardAffiliate = 1000;
+            viewModel.TotalStandardAffiliateToday = 10;
+            viewModel.TotalStandardAffiliateYesterday = 10;
+
             viewModel.TotalNews = _newsService.Queryable().Count();
             return View(viewModel);
         }
