@@ -29,6 +29,7 @@ namespace CPL.Models
 
         public string KYCVerificationActivated { get; set; }
         public string AccountActivationEnable { get; set; }
+        public int CookieExpirations { get; set; }
 
         public int Tier1StandardAffiliate { get; set; }
         public int Tier2StandardAffiliate { get; set; }
