@@ -113,7 +113,7 @@
     <Content Update="Views\DepositAndWithdraw\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\PricePrediction\Backup_Index.cshtml">
+    <Content Update="Views\PricePrediction\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Lottery\Index.cshtml">
