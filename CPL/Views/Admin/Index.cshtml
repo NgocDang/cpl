@@ -7,6 +7,7 @@
 @section styles
     {
     <link href="~/css/dashboard/cpl.admin.css" rel="stylesheet" asp-append-version="true" />
+
 }
 <div class="app-content container center-layout mt-2 px-0">
     <div class="content-wrapper">
@@ -165,7 +166,6 @@
                                         <hr class="mt-1 mb-0">
                                     </div>
                                 </div>
-
                                 <div class="row ml-0 mr-0 mt-1">
                                     <div class="col-12 pl-0">
                                         <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-file-o font-large-1"></i></a>
@@ -185,12 +185,53 @@
                     </div>
                 </div>
             </div>
-
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyURLGenerator")</h6>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyURLGeneratorDesc")</p>
+                                <form id="form-agency-affiliate" method="POST" action="#" novalidate="">
+                                    <div class="row">
+                                        <div class="col-sm-5 col-12">
+                                            <label class="text-muted" for="NumberOfExpiredDays">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ExpiredDayFromNow")</label>
+                                            <input value=@Model.NumberOfExpiredDays id="NumberOfExpiredDays" type="number" min="1" class="form-control" required="" name="NumberOfExpiredDays">
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfDaysRequired")
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-sm-5 col-12">
+                                            <button type="submit" id="btn-generate" class="btn btn-primary btn-block">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Generate")
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="row mt-3 d-none" id="agency-url">
+                                    <div class="col-sm-9 col-12 pr-sm-0">
+                                        <label class="text-muted" for="Url">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UrlGenerated")</label>
+                                        <input readonly="" type="text" min="1" class="form-control" id="Url" name="Url">
+                                    </div>
+                                    <div class="col-sm-3 col-12">
+                                        <label class="text-muted d-sm-block d-none" for="Url">&nbsp;</label>
+                                        <button type="button" class="btn btn-copy d-block mt-sm-0 mt-1 w-100" data-clipboard-target="#Url"><i class="fas fa-copy"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    @Html.Hidden("CopiedSuccessfully", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CopiedSuccessfully"))
 </div>
 
 @section scripts
     {
     <script src="~/js/dashboard/cpl.admin.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
 }

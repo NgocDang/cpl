@@ -18,5 +18,7 @@ namespace CPL.Models
         public int TotalLotteryGameActive { get; set; }
         public int TotalLotteryGameCompleted { get; set; }
         public int TotalNews { get; set; }
+
+        public int NumberOfExpiredDays { get; set; }
     }
 }
