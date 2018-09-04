@@ -26,5 +26,20 @@ namespace CPL.Models
         public int TotalAgencyAffiliate { get; set; }
         public int TotalAgencyAffiliateToday { get; set; }
         public int TotalAgencyAffiliateYesterday { get; set; }
+
+        public string KYCVerificationActivated { get; set; }
+        public string AccountActivationEnable { get; set; }
+        public int CookieExpirations { get; set; }
+
+        public int Tier1StandardAffiliate { get; set; }
+        public int Tier2StandardAffiliate { get; set; }
+        public int Tier3StandardAffiliate { get; set; }
+
+        public int AgencyDirectSaleTier1 { get; set; }
+        public int AgencyDirectSaleTier2 { get; set; }
+        public int AgencyDirectSaleTier3 { get; set; }
+        public int AgencyTier2SaleToTier1 { get; set; }
+        public int AgencyTier3SaleToTier1 { get; set; }
+        public int AgencyTier3SaleToTier2 { get; set; }
     }
 }
