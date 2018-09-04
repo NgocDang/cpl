@@ -35,10 +35,23 @@
                         <div class="card-content">
                             <div class="card-body">
                                 <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllUsers")</strong></p>
-                                <h1>@((Model.TotalUser).ToString("N0"))</h1>
-                                <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h1>@((Model.TotalUser).ToString("N0"))</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <h1>@((Model.TodayUser).ToString("N0"))</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Today")</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <h1>@((Model.YesterdayUser).ToString("N0"))</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yesterday")</p>
+                                    </div>
+
+                                </div>
                                 <div id="search-box">
-                                    <div class="form-group row" style="position:absolute; right:21px; top:21px"><label class="col-sm-4 col-form-label text-info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Search")</label><div class="col-sm-8"><input type="search" id="search-all-user" value="" onkeypress=(admin_search(event)) class="form-control form-control-sm"></div></div>
+                                    <div class="form-group row" style="position:absolute; right:12px; top:12px"><label class="col-sm-4 col-form-label text-info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Search")</label><div class="col-sm-8"><input type="search" id="search-all-user" value="" onkeypress=(admin_search(event)) class="form-control form-control-sm"></div></div>
                                 </div>
                             </div>
                         </div>
@@ -115,6 +128,64 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Links")</h6>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body pb-3">
+                                <div class="col-12 pl-0 mb-2">
+                                    <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Links")</strong></p>
+                                </div>
+                                <div class="row ml-0 mr-0 mt-1">
+                                    <div class="col-12 pl-0">
+                                        <a class="btn btn-primary mr-1 p-10px" href="/Admin/Banner"><i class="la la-image font-large-1 font-large-1"></i></a>
+                                        <a href="/Admin/Banner">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Banner")</a>
+                                        <hr class="mt-1 mb-0">
+                                    </div>
+                                </div>
+                                <div class="row ml-0 mr-0 mt-1">
+                                    <div class="col-12 pl-0">
+                                        <a class="btn btn-primary mr-1 p-10px" href="/Admin/News"><i class="la la-newspaper-o font-large-1"></i></a>
+                                        <a href="/Admin/News">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</a>
+                                        <hr class="mt-1 mb-0">
+                                    </div>
+                                </div>
+                                <div class="row ml-0 mr-0 mt-1">
+                                    <div class="col-12 pl-0">
+                                        <a class="btn btn-primary mr-1 p-10px" href="/Admin/Lottery"><i class="la la-gamepad font-large-1"></i></a>
+                                        <a href="/Admin/Lottery">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGame")</a>
+                                        <hr class="mt-1 mb-0">
+                                    </div>
+                                </div>
+                                <div class="row ml-0 mr-0 mt-1">
+                                    <div class="col-12 pl-0">
+                                        <a class="btn btn-primary mr-1 p-10px" href="/Admin/PricePrediction"><i class="la la-gamepad font-large-1"></i></a>
+                                        <a href="/Admin/PricePrediction">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionGame")</a>
+                                        <hr class="mt-1 mb-0">
+                                    </div>
+                                </div>
+
+                                <div class="row ml-0 mr-0 mt-1">
+                                    <div class="col-12 pl-0">
+                                        <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-file-o font-large-1"></i></a>
+                                        <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</a>
+                                        <hr class="mt-1 mb-0">
+                                    </div>
+                                </div>
+                                <div class="row ml-0 mr-0 mt-1">
+                                    <div class="col-12 pl-0">
+                                        <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-file-o font-large-1"></i></a>
+                                        <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</a>
+                                        <hr class="mt-1 mb-0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
