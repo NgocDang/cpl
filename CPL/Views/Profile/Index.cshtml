@@ -39,7 +39,7 @@
         </div>
         <div class="content-body">
             <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MyProfile")</h6>
-            <div class="card mb-0" id="profile-detail">
+            <div class="card mb-3" id="profile-detail">
                 <div class="card-content">
                     <div class="card-body mt-2">
                         <div class="row">
@@ -177,9 +177,34 @@
                                             <strong>@Model.KYCStatus</strong>
                                             @if (!Model.KYCVerified.HasValue)
                                             {
-                                                @Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHereToChange"))
+                                                @Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHereToChangeKYC"))
                                             }
                                         </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-12">
+                                        <p class="text-muted mb-3px font-size-13px">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")
+                                            @if (!Model.AffiliateId.HasValue || Model.AffiliateId.Value == (int)EnumAffiliateApplicationStatus.PENDING)
+                                            {
+                                                <i class="far fa-times-circle text-danger font-small-1"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-check-circle text-success"></i>
+                                            }
+                                        </p>
+                                        <p>
+                                            <strong>@Model.AffiliateStatus</strong>
+                                            @if (!Model.AffiliateId.HasValue)
+                                            {
+                                                @Html.Raw(LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHereToChangeAffiliate"))
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        
                                     </div>
                                 </div>
                                 <div class="row">
@@ -214,13 +239,17 @@
                     </div>
                 </div>
             </div>
+            @if (!Model.AffiliateId.HasValue)
+            {
+                <div id="profile-affiliate">
+                    <span class="h4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BecomeAnAffiliate")</span>
+                    <a asp-controller="Profile" asp-action="Affiliate" class="btn btn-primary btn-sm font-weight-bold font-medium-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Join")</a>
+                </div>
+            }
+            <div class="card" id="profile-edit">
+            </div>
         </div>
-
-        <div class="card" id="profile-edit">
-        </div>
-
     </div>
-</div>
 </div>
 @section scripts
     {

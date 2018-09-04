@@ -14,6 +14,9 @@ namespace CPL.Common.Enums
         public static string ResetPasswordExpiredInDays = "ResetPasswordExpiredInDays";
         public static string IsAccountActivationEnable = "IsAccountActivationEnable";
 
+        //Affiliate
+        public static string IsKYCVerificationActivated = "IsKYCVerificationActivated";
+
         //Setting
         public static string BTCToTokenRate = "BTCToTokenRate";
 
