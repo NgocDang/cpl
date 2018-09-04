@@ -83,8 +83,8 @@ namespace CPL.Controllers
             viewModel.TotalKYCPending = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && !x.KYCVerified.Value);
             viewModel.TotalKYCVerified = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && x.KYCVerified.Value);
             viewModel.TotalUser = _sysUserService.Queryable().Count();
-            viewModel.TodayUser = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy"));
-            viewModel.YesterdayUser = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.AddDays(-1).ToString("dd/MM/yyyy"));
+            viewModel.TotalUserToday = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy"));
+            viewModel.TotalUserYesterday = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.AddDays(-1).ToString("dd/MM/yyyy"));
 
             // Game management
             var lotteryGames = _lotteryService.Queryable();
@@ -92,6 +92,32 @@ namespace CPL.Controllers
             viewModel.TotalLotteryGamePending = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.PENDING).Count();
             viewModel.TotalLotteryGameActive = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.ACTIVE).Count();
             viewModel.TotalLotteryGameCompleted = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.COMPLETED).Count();
+
+            // Affiliate
+            // TODO: Get data from database
+            viewModel.TotalAgencyAffiliate = 1000;
+            viewModel.TotalAgencyAffiliateToday = 10;
+            viewModel.TotalAgencyAffiliateYesterday = 10;
+            viewModel.TotalStandardAffiliate = 1000;
+            viewModel.TotalStandardAffiliateToday = 10;
+            viewModel.TotalStandardAffiliateYesterday = 10;
+
+            //Setting
+            var settings = _settingService.Queryable();
+            viewModel.KYCVerificationActivated = bool.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value) ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "On") : LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Off");
+            viewModel.AccountActivationEnable = bool.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value) ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "On") : LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Off");
+            viewModel.CookieExpirations = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.CookieExpirations).Value);
+
+            viewModel.Tier1StandardAffiliate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.Tier1StandardAffiliate).Value);
+            viewModel.Tier2StandardAffiliate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.Tier2StandardAffiliate).Value);
+            viewModel.Tier3StandardAffiliate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.Tier3StandardAffiliate).Value);
+
+            viewModel.AgencyDirectSaleTier1 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyDirectSaleTier1).Value);
+            viewModel.AgencyDirectSaleTier2 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyDirectSaleTier2).Value);
+            viewModel.AgencyDirectSaleTier3 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyDirectSaleTier3).Value);
+            viewModel.AgencyTier2SaleToTier1 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyTier2SaleToTier1).Value);
+            viewModel.AgencyTier3SaleToTier1 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyTier3SaleToTier1).Value);
+            viewModel.AgencyTier3SaleToTier2 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyTier3SaleToTier2).Value);
 
             viewModel.TotalNews = _newsService.Queryable().Count();
 
