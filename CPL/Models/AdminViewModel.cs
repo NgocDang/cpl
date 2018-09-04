@@ -41,5 +41,7 @@ namespace CPL.Models
         public int AgencyTier2SaleToTier1 { get; set; }
         public int AgencyTier3SaleToTier1 { get; set; }
         public int AgencyTier3SaleToTier2 { get; set; }
+
+        public int NumberOfAgencyAffiliateExpiredDays { get; set; }
     }
 }

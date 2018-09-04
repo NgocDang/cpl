@@ -35,6 +35,7 @@ namespace CPL.Infrastructure
         public DbSet<ETHTransaction> ETHTransaction { get; set; }
         public DbSet<Contact> Contact { get; set; }
         public DbSet<Agency> Agency { get; set; }
+        public DbSet<AgencyToken> AgencyToken { get; set; }
         public DbSet<Affiliate> Affiliate { get; set; }
         public DbSet<LangContent> LangContent { get; set; }
 
@@ -64,6 +65,7 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new NewsMap());
 
             modelBuilder.ApplyConfiguration(new AgencyMap());
+            modelBuilder.ApplyConfiguration(new AgencyTokenMap());
             modelBuilder.ApplyConfiguration(new AffiliateMap());
 
             modelBuilder.ApplyConfiguration(new BTCTransactionMap());

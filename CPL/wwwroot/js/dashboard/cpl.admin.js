@@ -3,6 +3,8 @@
         Admin.bindAdminSearchAllUser();
         Admin.bindAdminSearchStandardAffiliate();
         Admin.bindAdminSearchAgencyAffiliate();
+        Admin.bindDoGenerate();
+        Admin.bindCopy();
     },
     bindAdminSearchAllUser: function () {
         $("#search-all-user").on("keypress", function (e) {
@@ -34,6 +36,47 @@
                     // TODO: Change xxxxx by Action for Agency Affiliate
                     window.location.href = "/Admin/xxxxx?search=" + searchstring.value.replace(/\s+/g, '');
             }
+        });
+    },
+    bindCopy: function () {
+        if ($(".btn-copy").length > 0) {
+            var clipboard = new ClipboardJS('.btn-copy');
+            clipboard.on('success', function (e) {
+                toastr.success($("#CopiedSuccessfully").val());
+            });
+        }
+    },
+    bindDoGenerate: function () {
+        $("#btn-generate").on("click", function () {
+            var isFormValid = $("#form-agency-affiliate")[0].checkValidity();
+            $("#form-agency-affiliate").addClass('was-validated');
+            if (isFormValid) {
+                $.ajax({
+                    url: "/Admin/GenerateAgencyAffiliateUrl/",
+                    type: "POST",
+                    beforeSend: function () {
+                        $("#btn-generate").attr("disabled", true);
+                        $("#btn-generate").html("<i class='fa fa-spinner fa-spin'></i> " + $("#btn-generate").text());
+                    },
+                    data: {
+                        NumberOfAgencyAffiliateExpiredDays: $("#NumberOfAgencyAffiliateExpiredDays").val()
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message, 'Success!');
+                            $("#Url").val(data.url);
+                            $("#agency-url").removeClass("d-none");
+                        } else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $("#btn-generate").attr("disabled", false);
+                        $("#btn-generate").html($("#btn-generate").text());
+                    }
+                });
+            }
+            return false;
         });
     }
 };
