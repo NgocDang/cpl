@@ -10,6 +10,8 @@ namespace CPL.Models
         public int TotalKYCVerified { get; set; }
         public int TotalKYCPending { get; set; }
         public int TotalUser { get; set; }
+        public int TodayUser { get; set; }
+        public int YesterdayUser { get; set; }
 
         public int TotalLotteryGame { get; set; }
         public int TotalLotteryGamePending { get; set; }
