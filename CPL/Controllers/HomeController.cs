@@ -28,6 +28,7 @@ namespace CPL.Controllers
         private readonly ISettingService _settingService;
         private readonly ILotteryService _lotteryService;
         private readonly ITemplateService _templateService;
+        private readonly ISysUserService _sysUserService;
         private readonly INewsService _newsService;
 
         public HomeController(
@@ -37,6 +38,7 @@ namespace CPL.Controllers
             IViewRenderService viewRenderService,
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
+            ISysUserService sysUserService,
             ILotteryService lotteryService,
             ITemplateService templateService,
             INewsService newsService)
@@ -44,12 +46,13 @@ namespace CPL.Controllers
             this._langService = langService;
             this._langDetailService = langDetailService;
             this._mapper = mapper;
+            this._sysUserService = sysUserService;
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
             this._unitOfWork = unitOfWork;
             this._lotteryService = lotteryService;
             this._templateService = templateService;
-            _newsService = newsService;
+            this._newsService = newsService;
         }
 
         [Permission(EnumRole.Guest)]
