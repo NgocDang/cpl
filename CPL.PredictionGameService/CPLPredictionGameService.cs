@@ -41,14 +41,14 @@ namespace CPL.PredictionGameService
             // ConfigurationBuilder
             ConfigurationBuilder();
 
+            //Init dependency transaction & dbcontext
+            Repository();
+
             // Initialize
             Initialize();
 
             // write log
             Utils.FileAppendThreadSafe(FileName, String.Format("{0} started at {1}{2}", PredictionGameServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
-
-            //Init dependency transaction & dbcontext
-            Repository();
 
             //Init setting
             IsCPLPredictionGameServiceRunning = true;
@@ -89,7 +89,7 @@ namespace CPL.PredictionGameService
                     Resolver.BTCPriceService.Insert(btcPrice);
                     Resolver.UnitOfWork.SaveChanges();
 
-                    Thread.Sleep(RunningIntervalInMilliseconds);
+                    Task.Delay(RunningIntervalInMilliseconds).Wait();
                 }
                 catch(Exception ex)
                 {
@@ -106,6 +106,7 @@ namespace CPL.PredictionGameService
         private void Repository()
         {
             var builder = new ContainerBuilder();
+            ConnectionString = Configuration["ConnectionString"];
 
             builder.Register(x =>
             {
@@ -143,7 +144,6 @@ namespace CPL.PredictionGameService
         {
             FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
-            ConnectionString = Configuration["ConnectionString"];
             var cplServiceEndpoint = Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
             BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(cplServiceEndpoint + CPLConstant.BTCCurrentPriceServiceEndpoint));
         }
