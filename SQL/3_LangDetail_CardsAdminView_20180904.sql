@@ -18,8 +18,8 @@ INSERT INTO LangDetail VALUES (2, N'Yesterday', N'昨日');
 INSERT INTO LangDetail VALUES (1, N'Links', N'Links');
 INSERT INTO LangDetail VALUES (2, N'Links', N'リンク');
 
-INSERT INTO LangDetail VALUES (1, N'Banner', N'Banner');
-INSERT INTO LangDetail VALUES (2, N'Banner', N'バナー');
+INSERT INTO LangDetail VALUES (1, N'Slider', N'Slider');
+INSERT INTO LangDetail VALUES (2, N'Slider', N'スライダー');
 
 INSERT INTO LangDetail VALUES (1, N'LotteryGame', N'Lottery Game');
 INSERT INTO LangDetail VALUES (2, N'LotteryGame', N'仮想通貨くじ');

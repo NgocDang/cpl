@@ -200,8 +200,8 @@
                     <div class="card-body pb-3">
                         <div class="row ml-0 mr-0 mt-1">
                             <div class="col-12 pl-0">
-                                <a class="btn btn-primary mr-1 p-10px" href="/Admin/Banner"><i class="la la-image font-large-1 font-large-1"></i></a>
-                                <a href="/Admin/Banner">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Banner")</a>
+                                <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-image font-large-1 font-large-1"></i></a>
+                                <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slider")</a>
                                 <hr class="mt-1 mb-0">
                             </div>
                         </div>
@@ -212,21 +212,6 @@
                                 <hr class="mt-1 mb-0">
                             </div>
                         </div>
-                        <div class="row ml-0 mr-0 mt-1">
-                            <div class="col-12 pl-0">
-                                <a class="btn btn-primary mr-1 p-10px" href="/Admin/Lottery"><i class="la la-gamepad font-large-1"></i></a>
-                                <a href="/Admin/Lottery">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryGame")</a>
-                                <hr class="mt-1 mb-0">
-                            </div>
-                        </div>
-                        <div class="row ml-0 mr-0 mt-1">
-                            <div class="col-12 pl-0">
-                                <a class="btn btn-primary mr-1 p-10px" href="/Admin/PricePrediction"><i class="la la-gamepad font-large-1"></i></a>
-                                <a href="/Admin/PricePrediction">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionGame")</a>
-                                <hr class="mt-1 mb-0">
-                            </div>
-                        </div>
-
                         <div class="row ml-0 mr-0 mt-1">
                             <div class="col-12 pl-0">
                                 <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-file-o font-large-1"></i></a>
@@ -248,8 +233,6 @@
         <div class="col-lg-6 col-12">
             <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Setting")</h6>
             <div class="card">
-                <div class="card-header">
-                </div>
                 <div class="card-body">
                     <div class="col-12">
                         <label class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCVerificationActivated")</label>
