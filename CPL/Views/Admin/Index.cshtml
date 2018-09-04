@@ -245,10 +245,77 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6 col-12">
+            <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Setting")</h6>
+            <div class="card">
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                    <div class="col-12">
+                        <label class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCVerificationActivated")</label>
+                        <p><span class="text-success font-weight-bold text-uppercase">@Model.KYCVerificationActivated</span></p>
+                    </div>
+                    <div class="col-12">
+                        <label class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliateTiers")</label>
+                        <div class="row">
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.Tier1StandardAffiliate %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier2")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.Tier2StandardAffiliate %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier3")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.Tier3StandardAffiliate %</span></div>
+                        </div>
+                    </div>
+                    <div class="col-12 pt-1">
+                        <label class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyAffiliateTiers")</label>
+                        <div class="row">
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyDirectSaleTier1 %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier2")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyDirectSaleTier2 %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier3")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyDirectSaleTier3 %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyTier2SaleToTier1 %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyTier3SaleToTier1 %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier2")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyTier3SaleToTier2 %</span></div>
+                        </div>
+                    </div>
+                    <div class="col-12 pt-1">
+                        <label class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CookieExpiredInDays")</label>
+                        <p>
+                            <span class="text-success font-weight-bold">
+                                @Model.CookieExpirations
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <label class="font-weight-bold">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AccountActivationEnable")
+                        </label>
+                        <p>
+                            <span class="text-success font-weight-bold text-uppercase">
+                                @Model.AccountActivationEnable
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="card-footer text-right">
+                    <a class="btn btn-primary btn-sm" href="/Setting">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")</a>
+                </div>
+            </div>
+        </div>
     </div>
 
-</div>
-    </div>
 </div>
 
 @section scripts

@@ -99,6 +99,23 @@ namespace CPL.Controllers
             viewModel.TotalStandardAffiliateToday = 10;
             viewModel.TotalStandardAffiliateYesterday = 10;
 
+            //Setting
+            var settings = _settingService.Queryable();
+            viewModel.KYCVerificationActivated = bool.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value) ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "On") : LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Off");
+            viewModel.AccountActivationEnable = bool.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value) ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "On") : LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Off");
+            viewModel.CookieExpirations = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.CookieExpirations).Value);
+
+            viewModel.Tier1StandardAffiliate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.Tier1StandardAffiliate).Value);
+            viewModel.Tier2StandardAffiliate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.Tier2StandardAffiliate).Value);
+            viewModel.Tier3StandardAffiliate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.Tier3StandardAffiliate).Value);
+
+            viewModel.AgencyDirectSaleTier1 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyDirectSaleTier1).Value);
+            viewModel.AgencyDirectSaleTier2 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyDirectSaleTier2).Value);
+            viewModel.AgencyDirectSaleTier3 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyDirectSaleTier3).Value);
+            viewModel.AgencyTier2SaleToTier1 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyTier2SaleToTier1).Value);
+            viewModel.AgencyTier3SaleToTier1 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyTier3SaleToTier1).Value);
+            viewModel.AgencyTier3SaleToTier2 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyTier3SaleToTier2).Value);
+
             viewModel.TotalNews = _newsService.Queryable().Count();
             return View(viewModel);
         }
