@@ -38,6 +38,7 @@ namespace CPL.Controllers
         private readonly IDictionary<string, string> countryDict = new Dictionary<string, string>();
         private readonly ILotteryService _lotteryService;
         private readonly ILotteryPrizeService _lotteryPrizeService;
+        private readonly IAgencyTokenService _agencyTokenService;
 
         public AdminController(
             ILangService langService,
@@ -53,7 +54,8 @@ namespace CPL.Controllers
             INewsService newsService,
             IHostingEnvironment hostingEnvironment,
             ILotteryService lotteryService,
-            ILotteryPrizeService lotteryPrizeService)
+            ILotteryPrizeService lotteryPrizeService,
+            IAgencyTokenService agencyTokenService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -69,6 +71,7 @@ namespace CPL.Controllers
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._newsService = newsService;
             this._hostingEnvironment = hostingEnvironment;
+            this._agencyTokenService = agencyTokenService;
         }
 
         [Permission(EnumRole.Admin)]
@@ -117,8 +120,31 @@ namespace CPL.Controllers
             viewModel.AgencyTier3SaleToTier2 = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyTier3SaleToTier2).Value);
 
             viewModel.TotalNews = _newsService.Queryable().Count();
+
+            viewModel.NumberOfAgencyAffiliateExpiredDays = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.NumberOfAgencyAffiliateExpiredDays).Value);
+
             return View(viewModel);
         }
+
+        #region Affiliate
+        [HttpPost]
+        public IActionResult GenerateAgencyAffiliateUrl(AgencyViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var agencyToken = new AgencyToken();
+                agencyToken.Token = Guid.NewGuid().ToString();
+                agencyToken.ExpiredDate = DateTime.Now.AddDays(viewModel.NumberOfAgencyAffiliateExpiredDays);
+                _agencyTokenService.Insert(agencyToken);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Register", "Authentication", new { token = agencyToken.Token })}", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AgencyAffiliateURLGenerated") });
+            }
+
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
+
+        #endregion
 
         #region User
         [Permission(EnumRole.Admin)]
