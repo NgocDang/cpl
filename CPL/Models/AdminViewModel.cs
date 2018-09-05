@@ -17,7 +17,9 @@ namespace CPL.Models
         public int TotalLotteryGamePending { get; set; }
         public int TotalLotteryGameActive { get; set; }
         public int TotalLotteryGameCompleted { get; set; }
-        public int TotalNews { get; set; }
+
+        public int TotalAffiliateApplicationApproved { get; set; }
+        public int TotalAffiliateApplicationPending { get; set; }
 
         public int TotalStandardAffiliate { get; set; }
         public int TotalStandardAffiliateToday { get; set; }
@@ -31,17 +33,26 @@ namespace CPL.Models
         public string AccountActivationEnable { get; set; }
         public int CookieExpirations { get; set; }
 
-        public int Tier1StandardAffiliate { get; set; }
-        public int Tier2StandardAffiliate { get; set; }
-        public int Tier3StandardAffiliate { get; set; }
-
-        public int AgencyDirectSaleTier1 { get; set; }
-        public int AgencyDirectSaleTier2 { get; set; }
-        public int AgencyDirectSaleTier3 { get; set; }
-        public int AgencyTier2SaleToTier1 { get; set; }
-        public int AgencyTier3SaleToTier1 { get; set; }
-        public int AgencyTier3SaleToTier2 { get; set; }
+        public StandardAffiliateRateViewModel StandardAffiliate { get; set; }
+        public AgencyAffiliateRateViewModel AgencyAffiliate { get; set; }
 
         public int NumberOfAgencyAffiliateExpiredDays { get; set; }
+    }
+
+    public class StandardAffiliateRateViewModel
+    {
+        public int Tier1DirectRate { get; set; }
+        public int Tier2SaleToTier1Rate { get; set; }
+        public int Tier3SaleToTier1Rate { get; set; }
+    }
+
+    public class AgencyAffiliateRateViewModel
+    {
+        public int Tier1DirectRate { get; set; }
+        public int Tier2DirectRate { get; set; }
+        public int Tier3DirectRate { get; set; }
+        public int Tier2SaleToTier1Rate { get; set; }
+        public int Tier3SaleToTier1Rate { get; set; }
+        public int Tier3SaleToTier2Rate { get; set; }
     }
 }

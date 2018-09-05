@@ -21,6 +21,8 @@ namespace CPL.Misc.MapperCreate
             CreateMap<SysUser, MemberEmailTemplateViewModel>();
             CreateMap<SysUser, KYCVerifyEmailTemplateViewModel>();
             CreateMap<SysUser, ForgotPasswordEmailTemplateViewModel>();
+            CreateMap<SysUser, AffiliateApproveEmailTemplateViewModel>();
+
             CreateMap<SysUserViewModel, SysUser>();
             CreateMap<SysUserViewModel, ProfileViewModel>();
             CreateMap<SysUserViewModel, SecurityViewModel>()
