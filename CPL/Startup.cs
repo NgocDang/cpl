@@ -74,11 +74,11 @@ namespace CPL
             services.AddMvc().AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSession();
 
-            services.AddSingleton<ILotteryDrawingFactory, LotteryDrawingFactory>()
-                    .AddSingleton<IPricePredictionUpdateResultFactory, PricePredictionUpdateResultFactory>();
+            services.AddSingleton<ILotteryDrawingFactory, LotteryDrawingFactory>();
+                    //.AddSingleton<IPricePredictionUpdateResultFactory, PricePredictionUpdateResultFactory>();
 
             services.UseQuartz<ILotteryDrawingFactory>(typeof(LotteryDrawingJob));
-            services.UseQuartz<IPricePredictionUpdateResultFactory>(typeof(PricePredictionUpdateResultJob));
+            //services.UseQuartz<IPricePredictionUpdateResultFactory>(typeof(PricePredictionUpdateResultJob));
 
             services
                 .AddTransient<ILangService, LangService>()
