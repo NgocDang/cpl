@@ -22,19 +22,19 @@ namespace CPL.Common.Enums
         //Affiliate
         public struct StandardAffiliate
         {
-            public static string Tier1DirectRate = "Affiliate.Tier1DirectRate";
-            public static string Tier2SaleToTier1Rate = "Affiliate.Tier2SaleToTier1Rate";
-            public static string Tier3SaleToTier1Rate = "Affiliate.Tier3SaleToTier1Rate";
+            public static string Tier1DirectRate = "StandardAffiliate.Tier1DirectRate";
+            public static string Tier2SaleToTier1Rate = "StandardAffiliate.Tier2SaleToTier1Rate";
+            public static string Tier3SaleToTier1Rate = "StandardAffiliate.Tier3SaleToTier1Rate";
         }
 
         public struct AgencyAffiliate
         {
-            public static string Tier1DirectRate = "Agency.Tier1DirectRate";
-            public static string Tier2DirectRate = "Agency.Tier2DirectRate";
-            public static string Tier3DirectRate = "Agency.Tier3DirectRate";
-            public static string Tier2SaleToTier1Rate = "Agency.Tier2SaleToTier1Rate";
-            public static string Tier3SaleToTier1Rate = "Agency.Tier3SaleToTier1Rate";
-            public static string Tier3SaleToTier2Rate = "Agency.Tier3SaleToTier2Rate";
+            public static string Tier1DirectRate = "AgencyAffiliate.Tier1DirectRate";
+            public static string Tier2DirectRate = "AgencyAffiliate.Tier2DirectRate";
+            public static string Tier3DirectRate = "AgencyAffiliate.Tier3DirectRate";
+            public static string Tier2SaleToTier1Rate = "AgencyAffiliate.Tier2SaleToTier1Rate";
+            public static string Tier3SaleToTier1Rate = "AgencyAffiliate.Tier3SaleToTier1Rate";
+            public static string Tier3SaleToTier2Rate = "AgencyAffiliate.Tier3SaleToTier2Rate";
         }
 
         //Two-factor authentication

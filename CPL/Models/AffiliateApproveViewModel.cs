@@ -7,6 +7,5 @@ namespace CPL.Models
 {
     public class AffiliateApproveViewModel
     {
-        public IList<SysUserViewModel> SysUsers { get; set; }
     }
 }

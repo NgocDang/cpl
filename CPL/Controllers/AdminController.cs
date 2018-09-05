@@ -136,47 +136,126 @@ namespace CPL.Controllers
         }
 
         #region Affiliate
+        [Permission(EnumRole.Admin)]
+        public IActionResult AffiliateApprove()
+        {
+            var viewModel = new AffiliateApproveViewModel();
+            return View(viewModel);
+        }
+
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public IActionResult DoApproveAffiliateApplication(int id)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
 
             var affiliate = new Affiliate
             {
-                Tier1DirectRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.Tier1StandardAffiliate)
+                Tier1DirectRate = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier1DirectRate).Value),
+                Tier2SaleToTier1Rate = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier2SaleToTier1Rate).Value),
+                Tier3SaleToTier1Rate = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier3SaleToTier1Rate).Value)
             };
 
             _affiliateService.Insert(affiliate);
+            _unitOfWork.SaveChanges();
 
-            user.AffiliateId = true;
-
+            user.AffiliateId = affiliate.Id;
             _sysUserService.Update(user);
             _unitOfWork.SaveChanges();
 
-            var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.AffiliateVerify.ToString());
-            var affiliateVerifyEmailTemplateViewModel = Mapper.Map<AffiliateVerifyEmailTemplateViewModel>(user);
-            affiliateVerifyEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
-            affiliateVerifyEmailTemplateViewModel.FacebookUrl = _settingService.Queryable().FirstOrDefault(x => x.Name == ETNConstant.FacebookUrl).Value;
+            var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.AffiliateApprove.ToString());
+            var affiliateApproveEmailTemplateViewModel = Mapper.Map<AffiliateApproveEmailTemplateViewModel>(user);
+            affiliateApproveEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
             // Populate languages
-            affiliateVerifyEmailTemplateViewModel.AffiliateProgramApprovedText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AffiliateProgramApproved");
-            affiliateVerifyEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
-            affiliateVerifyEmailTemplateViewModel.AffiliateProgramFullDescText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AffiliateProgramFullDesc");
-            affiliateVerifyEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
-            affiliateVerifyEmailTemplateViewModel.ConnectWithUsText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ConnectWithUs");
-            affiliateVerifyEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
-            affiliateVerifyEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
-            affiliateVerifyEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
-            affiliateVerifyEmailTemplateViewModel.TeamText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Team");
+            affiliateApproveEmailTemplateViewModel.AffiliateApplicationText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AffiliateApplication");
+            affiliateApproveEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+            affiliateApproveEmailTemplateViewModel.AffiliateApprovedDescriptionText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AffiliateApprovedDescription");
+            affiliateApproveEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+            affiliateApproveEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+            affiliateApproveEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+            affiliateApproveEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+            affiliateApproveEmailTemplateViewModel.CPLTeamText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "CPLTeam");
 
-            template.Body = _viewRenderService.RenderToStringAsync("/Views/SysUser/AffiliateVerifyEmailTemplate.cshtml", affiliateVerifyEmailTemplateViewModel).Result;
+            template.Body = _viewRenderService.RenderToStringAsync("/Views/Admin/_AffiliateApproveEmailTemplate.cshtml", affiliateApproveEmailTemplateViewModel).Result;
             EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
 
-            return new JsonResult(new { success = true, message = user.FirstName + $" {LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AffiliateApprovedEmailSent")}" });
-            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AffiliateIsApproved") });
         }
 
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult SearchAffiliateApplication(DataTableAjaxPostModel viewModel)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchAffiliateApplicationFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IList<SysUserViewModel> SearchAffiliateApplicationFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            // search the dbase taking into consideration table sorting and paging
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = totalResultsCount = _sysUserService.Queryable()
+                        .Count(x => x.AffiliateId.HasValue);
+
+                return _sysUserService.Queryable()
+                            .Where(x => x.AffiliateId.HasValue)
+                            .OrderBy("AffiliateCreatedDate", false)
+                            .Select(x => Mapper.Map<SysUserViewModel>(x))
+                            .OrderBy(sortBy, sortDir)
+                            .Skip(skip)
+                            .Take(take)
+                            .ToList();
+            }
+            else
+            {
+                filteredResultsCount = _sysUserService.Queryable()
+                        .Where(x => x.AffiliateId.HasValue)
+                        .Count(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
+                        || x.Email.Contains(searchBy));
+
+                totalResultsCount = _sysUserService.Queryable()
+                        .Count(x => x.AffiliateId.HasValue);
+
+                return _sysUserService.Queryable()
+                        .Where(x => x.AffiliateId.HasValue)
+                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
+                        || x.Email.Contains(searchBy))
+                        .Select(x => Mapper.Map<SysUserViewModel>(x))
+                        .OrderBy(sortBy, sortDir)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToList();
+            }
+        }
 
         [HttpPost]
+        [Permission(EnumRole.Admin)]
         public IActionResult GenerateAgencyAffiliateUrl(AgencyViewModel viewModel)
         {
             if (ModelState.IsValid)

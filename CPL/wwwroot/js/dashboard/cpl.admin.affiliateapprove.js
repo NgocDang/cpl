@@ -5,7 +5,7 @@
         AdminAffiliateApprove.bindDoApprove();
     },
     bindDoApprove: function () {
-        $("#dt-kyc").on("click", ".btn-do-approve-affiliate-application", function () {
+        $("#dt-affiliate-application").on("click", ".btn-do-approve-affiliate-application", function () {
             var _this = this;
             $.ajax({
                 url: "/Admin/DoApproveAffiliateApplication/",
@@ -19,8 +19,7 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        AdminKYCVerify.destroyKYCDatatable();
-                        AdminKYCVerify.loadKYCVerifyDataTable();
+                        AdminAffiliateApprove.affiliateApplicationDataTable.ajax.reload();
                         toastr.success(data.message, 'Success!');
                     } else {
                         toastr.error(data.message, 'Error!');
