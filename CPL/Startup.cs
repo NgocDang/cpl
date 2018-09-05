@@ -228,8 +228,8 @@ namespace CPL
         {
             // Drawing lottery job
             var scheduler = serviceProvider.GetScheduler<IScheduler, ILotteryDrawingFactory>();
-            var rawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameDrawingInHourOfDay).Value);
-            QuartzHelper.StartJob<LotteryDrawingJob>(scheduler, rawingTime);
+            var drawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameDrawingInHourOfDay).Value);
+            QuartzHelper.StartJob<LotteryDrawingJob>(scheduler, drawingTime);
         }
     }
 }

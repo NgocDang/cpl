@@ -12,6 +12,7 @@ namespace CPL.Models
         public bool? KYCVerified { get; set; }
         public int? AffiliateId { get; set; }
         public int? AgencyId { get; set; }
+        public string AffiliateUrl { get; set; }
 
         public bool IsKYCVerificationActivated { get; set; }
     }
