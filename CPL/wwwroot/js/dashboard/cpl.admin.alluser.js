@@ -180,9 +180,15 @@
                     }
                 },
                 {
-                    "data": "TokenAmount",
+                    "data": "TotalCPLUsed",
                     "render": function (data, type, full, meta) {
-                        return full.tokenAmount;
+                        return full.totalCPLUsedInString;
+                    }
+                },
+                {
+                    "data": "TotalCPLAwarded",
+                    "render": function (data, type, full, meta) {
+                        return full.totalCPLAwardedInString;
                     }
                 },
                 {
