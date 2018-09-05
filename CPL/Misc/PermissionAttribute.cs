@@ -37,7 +37,7 @@ namespace CPL.Misc
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (context.HttpContext.Session.GetInt32("LangId") == null)
-                context.HttpContext.Session.SetInt32("LangId", (int)EnumLang.JAPANESE);
+                context.HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
 
             if ((context.RouteData.Values["action"].ToString() == "Maintenance") && (context.RouteData.Values["controller"].ToString() == "Home"))
             {

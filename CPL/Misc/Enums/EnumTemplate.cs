@@ -12,7 +12,7 @@ namespace CPL.Misc.Enums
         ForgotPassword,
         Member,
         KYCVerify,
-        AffiliateVerify,
+        AffiliateApprove,
         Contact
     }
 }

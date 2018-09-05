@@ -39,6 +39,7 @@ namespace CPL.Domain
         public bool TwoFactorAuthenticationEnable { get; set; }
         public int? AgencyId { get; set; }
         public int? AffiliateId { get; set; }
+        public DateTime? AffiliateCreatedDate { get; set; }
         public int? IsIntroducedById { get; set; }
 
         public virtual ICollection<CoinTransaction> CoinTransactions { get; set; }

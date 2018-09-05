@@ -35,11 +35,22 @@
                         <div class="card-content">
                             <div class="card-body">
                                 <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllUsers")</strong></p>
-                                <h1>@((Model.TotalUser).ToString("N0"))</h1>
-                                <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
-                                <div id="search-box">
-                                    <div class="form-group row" style="position:absolute; right:21px; top:21px"><label class="col-sm-4 col-form-label text-info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Search")</label><div class="col-sm-8"><input type="search" id="search-all-user" value="" onkeypress=(admin_search(event)) class="form-control form-control-sm"></div></div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <h1>@((Model.TotalUser).ToString("N0"))</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <h1>@((Model.TotalUserToday).ToString("N0"))</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Today")</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <h1>@((Model.TotalUserYesterday).ToString("N0"))</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yesterday")</p>
+                                    </div>
+
                                 </div>
+                                <div class="form-group row search-box"><label class="col-sm-4 col-form-label text-info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Search")</label><div class="col-sm-8"><input type="search" id="search-all-user" value="" class="form-control form-control-sm"></div></div>
                             </div>
                         </div>
                         <div class="card-footer border-top-blue-grey border-top-lighten-5 text-muted">
@@ -63,17 +74,17 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-12">
-                    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</h6>
+                    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Approve")</h6>
                     <div class="card">
                         <div class="card-content">
                             <div class="card-body">
-                                <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</strong></p>
-                                <h1>@(Model.TotalNews.ToString("N0"))</h1>
-                                <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
+                                <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")</strong></p>
+                                <h1>@((Model.TotalAffiliateApplicationApproved + Model.TotalAffiliateApplicationPending).ToString("N0"))</h1>
+                                <p class="mb-0">@((Model.TotalAffiliateApplicationPending).ToString("N0")) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ApplicationArePending")</p>
                             </div>
                         </div>
                         <div class="card-footer border-top-blue-grey border-top-lighten-5 text-muted">
-                            <span class="float-left"><a asp-controller="Admin" asp-action="News" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ViewMore") <i class="fa fa-angle-right"></i></a></span>
+                            <span class="float-left"><a asp-controller="Admin" asp-action="AffiliateApprove" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ViewMore") <i class="fa fa-angle-right"></i></a></span>
                         </div>
                     </div>
                 </div>
@@ -115,11 +126,223 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <h6 class="my-2 text-uppercase col-12">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")</h6>
+                <div class="col-lg-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliate")</strong></p>
+                                <div class="row pt-1">
+                                    <div class="col-4">
+                                        <h1>@Model.TotalStandardAffiliate.ToString("N0")</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <h1>@Model.TotalStandardAffiliateToday.ToString("N0")</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Today")</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <h1>@Model.TotalStandardAffiliateYesterday.ToString("N0")</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yesterday")</p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row search-box">
+                                    <label class="col-sm-4 col-form-label text-info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Search")</label>
+                                    <div class="col-sm-8"><input type="search" id="search-standard-affiliate" value="" class="form-control form-control-sm"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer border-top-blue-grey border-top-lighten-5 text-muted">
+                            <span class="float-left"><a asp-controller="Admin" asp-action="" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ViewMore") <i class="fa fa-angle-right"></i></a></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyAffiliate")</strong></p>
+                                <div class="row pt-1">
+                                    <div class="col-4">
+                                        <h1>@Model.TotalAgencyAffiliate.ToString("N0")</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <h1>@Model.TotalAgencyAffiliateToday.ToString("N0")</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Today")</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <h1>@Model.TotalAgencyAffiliateYesterday.ToString("N0")</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yesterday")</p>
+                                    </div>
+                                </div>
+                                <div class="form-group row search-box">
+                                    <label class="col-sm-4 col-form-label text-info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Search")</label>
+                                    <div class="col-sm-8"><input type="search" id="search-agency-affiliate" value="" class="form-control form-control-sm"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer border-top-blue-grey border-top-lighten-5 text-muted">
+                            <span class="float-left"><a asp-controller="Admin" asp-action="" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ViewMore") <i class="fa fa-angle-right"></i></a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-6 col-12">
+            <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Links")</h6>
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body pb-3">
+                        <div class="row ml-0 mr-0 mt-1">
+                            <div class="col-12 pl-0">
+                                <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-image font-large-1 font-large-1"></i></a>
+                                <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slider")</a>
+                                <hr class="mt-1 mb-0">
+                            </div>
+                        </div>
+                        <div class="row ml-0 mr-0 mt-1">
+                            <div class="col-12 pl-0">
+                                <a class="btn btn-primary mr-1 p-10px" href="/Admin/News"><i class="la la-newspaper-o font-large-1"></i></a>
+                                <a href="/Admin/News">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</a>
+                                <hr class="mt-1 mb-0">
+                            </div>
+                        </div>
+                        <div class="row ml-0 mr-0 mt-1">
+                            <div class="col-12 pl-0">
+                                <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-file-o font-large-1"></i></a>
+                                <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</a>
+                                <hr class="mt-1 mb-0">
+                            </div>
+                        </div>
+                        <div class="row ml-0 mr-0 mt-1">
+                            <div class="col-12 pl-0">
+                                <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-file-o font-large-1"></i></a>
+                                <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</a>
+                                <hr class="mt-1 mb-0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-12">
+            <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Setting")</h6>
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-12">
+                        <label class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCVerificationActivated")</label>
+                        <p><span class="text-success font-weight-bold text-uppercase">@Model.KYCVerificationActivated</span></p>
+                    </div>
+                    <div class="col-12">
+                        <label class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliateTiers")</label>
+                        <div class="row">
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.StandardAffiliate.Tier1DirectRate %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier2")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.StandardAffiliate.Tier2SaleToTier1Rate %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier3")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.StandardAffiliate.Tier3SaleToTier1Rate %</span></div>
+                        </div>
+                    </div>
+                    <div class="col-12 pt-1">
+                        <label class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyAffiliateTiers")</label>
+                        <div class="row">
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyAffiliate.Tier1DirectRate %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier2")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyAffiliate.Tier2DirectRate %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier3")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyAffiliate.Tier3DirectRate %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyAffiliate.Tier2SaleToTier1Rate %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyAffiliate.Tier3SaleToTier1Rate %</span></div>
+                            <div class="w-100 py-01"></div>
+                            <div class="col-9"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier2")</span></div>
+                            <div class="col-3"><span class="font-weight-bold text-success"> @Model.AgencyAffiliate.Tier3SaleToTier2Rate %</span></div>
+                        </div>
+                    </div>
+                    <div class="col-12 pt-1">
+                        <label class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CookieExpiredInDays")</label>
+                        <p>
+                            <span class="text-success font-weight-bold">
+                                @Model.CookieExpirations
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <label class="font-weight-bold">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AccountActivationEnable")
+                        </label>
+                        <p>
+                            <span class="text-success font-weight-bold text-uppercase">
+                                @Model.AccountActivationEnable
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="card-footer text-right">
+                    <a class="btn btn-primary btn-sm" href="/Setting">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-12">
+            <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyURLGenerator")</h6>
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyURLGeneratorDesc")</p>
+                        <form id="form-agency-affiliate" method="POST" action="#" novalidate="">
+                            <div class="row">
+                                <div class="col-sm-5 col-12">
+                                    <label class="text-muted" for="NumberOfExpiredDays">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ExpiredDayFromNow")</label>
+                                    <input value=@Model.NumberOfAgencyAffiliateExpiredDays id="NumberOfAgencyAffiliateExpiredDays" type="number" min="1" class="form-control" required="" name="NumberOfAgencyAffiliateExpiredDays">
+                                    <div class="invalid-feedback">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfDaysRequired")
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-sm-5 col-12">
+                                    <button type="submit" id="btn-generate" class="btn btn-primary btn-block">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Generate")
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row mt-3 d-none" id="agency-url">
+                            <div class="col-sm-9 col-12 pr-sm-0">
+                                <label class="text-muted" for="Url">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UrlGenerated")</label>
+                                <input readonly="" type="text" min="1" class="form-control" id="Url" name="Url">
+                            </div>
+                            <div class="col-sm-3 col-12">
+                                <label class="text-muted d-sm-block d-none" for="Url">&nbsp;</label>
+                                <button type="button" class="btn btn-copy d-block mt-sm-0 mt-1 w-100" data-clipboard-target="#Url"><i class="fas fa-copy"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Hidden("CopiedSuccessfully", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CopiedSuccessfully"))
 </div>
 
 @section scripts
     {
     <script src="~/js/dashboard/cpl.admin.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
 }

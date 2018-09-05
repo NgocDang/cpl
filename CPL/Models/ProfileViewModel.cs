@@ -20,6 +20,8 @@ namespace CPL.Models
         public DateTime? DOB { get; set; }
         public bool? KYCVerified { get; set; }
         public DateTime? KYCCreatedDate { get; set; }
+        public int? AffiliateId { get; set; }
+        public string AffiliateStatus { get; set; }
         public string Email { get; set; }
         public string KYCStatus { get; set; }
         public string ETHHDWalletAddress { get; set; }

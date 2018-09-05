@@ -115,7 +115,7 @@ namespace CPL.PredictionGameService
                     resolver.BTCPriceService.Insert(btcPrice);
                     resolver.UnitOfWork.SaveChanges();
 
-                    Thread.Sleep(RunningIntervalInMilliseconds);
+                    Task.Delay(RunningIntervalInMilliseconds).Wait();
                 }
                 catch (Exception ex)
                 {
