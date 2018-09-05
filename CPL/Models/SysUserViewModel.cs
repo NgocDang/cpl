@@ -40,5 +40,9 @@ namespace CPL.Models
         public decimal ETHAmount { get; set; }
         public decimal TokenAmount { get; set; }
         public bool TwoFactorAuthenticationEnable { get; set; }
+        public int? AgencyId { get; set; }
+        public int? AffiliateId { get; set; }
+        public DateTime? AffiliateCreatedDate { get; set; }
+        public int? IsIntroducedById { get; set; }
     }
 }

@@ -19,17 +19,23 @@ namespace CPL.Common.Enums
         public static string IsKYCVerificationActivated = "IsKYCVerificationActivated";
         public static string CookieExpirations = "CookieExpirations";
 
-        //Stand
-        public static string Tier1StandardAffiliate = "Tier1StandardAffiliate";
-        public static string Tier2StandardAffiliate = "Tier2StandardAffiliate";
-        public static string Tier3StandardAffiliate = "Tier3StandardAffiliate";
+        //Affiliate
+        public struct StandardAffiliate
+        {
+            public static string Tier1DirectRate = "StandardAffiliate.Tier1DirectRate";
+            public static string Tier2SaleToTier1Rate = "StandardAffiliate.Tier2SaleToTier1Rate";
+            public static string Tier3SaleToTier1Rate = "StandardAffiliate.Tier3SaleToTier1Rate";
+        }
 
-        public static string AgencyDirectSaleTier1 = "AgencyDirectSaleTier1";
-        public static string AgencyDirectSaleTier2 = "AgencyDirectSaleTier2";
-        public static string AgencyDirectSaleTier3 = "AgencyDirectSaleTier3";
-        public static string AgencyTier2SaleToTier1 = "AgencyTier2SaleToTier1";
-        public static string AgencyTier3SaleToTier1 = "AgencyTier3SaleToTier1";
-        public static string AgencyTier3SaleToTier2 = "AgencyTier3SaleToTier2";
+        public struct AgencyAffiliate
+        {
+            public static string Tier1DirectRate = "AgencyAffiliate.Tier1DirectRate";
+            public static string Tier2DirectRate = "AgencyAffiliate.Tier2DirectRate";
+            public static string Tier3DirectRate = "AgencyAffiliate.Tier3DirectRate";
+            public static string Tier2SaleToTier1Rate = "AgencyAffiliate.Tier2SaleToTier1Rate";
+            public static string Tier3SaleToTier1Rate = "AgencyAffiliate.Tier3SaleToTier1Rate";
+            public static string Tier3SaleToTier2Rate = "AgencyAffiliate.Tier3SaleToTier2Rate";
+        }
 
         //Two-factor authentication
         public static string AppName = "CPL";
