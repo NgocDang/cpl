@@ -4,6 +4,7 @@ using CPL.Common.Enums;
 using CPL.Common.Misc;
 using CPL.Core.Interfaces;
 using CPL.Domain;
+using CPL.Infrastructure;
 using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
 using CPL.Misc.Enums;
@@ -12,15 +13,17 @@ using CPL.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Controllers
 {
-    
+
     public class AdminController : Controller
     {
         private readonly ILangService _langService;
@@ -127,7 +130,7 @@ namespace CPL.Controllers
                 Tier3SaleToTier2Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3SaleToTier2Rate).Value)
             };
 
-            viewModel.TotalAffiliateApplicationApproved = _sysUserService.Queryable().Count(x=>x.AffiliateId.HasValue && x.AffiliateId.Value != (int)EnumAffiliateApplicationStatus.PENDING);
+            viewModel.TotalAffiliateApplicationApproved = _sysUserService.Queryable().Count(x => x.AffiliateId.HasValue && x.AffiliateId.Value != (int)EnumAffiliateApplicationStatus.PENDING);
             viewModel.TotalAffiliateApplicationPending = _sysUserService.Queryable().Count(x => x.AffiliateId.HasValue && x.AffiliateId == (int)EnumAffiliateApplicationStatus.PENDING);
 
             viewModel.NumberOfAgencyAffiliateExpiredDays = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.NumberOfAgencyAffiliateExpiredDays).Value);
@@ -270,6 +273,147 @@ namespace CPL.Controllers
             }
 
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult StandardAffiliate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult SearchStandardAffiliate(DataTableAjaxPostModel viewModel)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchStandardAffiliateFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IList<StandardAffliateViewModel> SearchStandardAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            // search the dbase taking into consideration table sorting and paging
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount = totalResultsCount = _sysUserService.Queryable()
+                        .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AffiliateId.HasValue);
+
+                var standardAffliateaa = _sysUserService
+                        .Query()
+                        .Include(x => x.Affiliate)
+                        .Select()
+                        .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue).ToList();
+
+                var standardAffliate =
+                            ((CPLContext)HttpContext.RequestServices.GetService(typeof(IDataContextAsync))).SysUser
+                            .Include(x => x.Affiliate)
+                            .Include(x => x.LotteryHistories)
+                            .ThenInclude(x => x.LotteryPrize)
+                            .Include(x => x.DirectIntroducedUsers)
+                            .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
+                            .AsQueryable()
+                            .OrderBy("AffiliateCreatedDate", false)
+                            .Select(x => new StandardAffliateViewModel
+                            {
+                                Id = x.Id,
+                                FirstName = x.FirstName,
+                                LastName = x.LastName,
+                                Email = x.Email,
+                                IsBlocked = x.IsBlocked,
+                                TotalIntroducer = x.DirectIntroducedUsers.Count(y => y.IsIntroducedById == x.Id), // ?
+                                                                                                                  //DirectSale = x.DirectIntroducedUsers.Where(y => y.IsIntroducedById == x.Id).Select(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value * x.Affiliate.Tier1DirectRate)).ToList(),
+                                                                                                                  //Tier2DirectSale = x.DirectIntroducedUsers.Where(y => y.IsIntroducedById == x.Id).SelectMany(y => y.DirectIntroducedUsers).Select(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value * x.Affiliate.Tier1DirectRate)).ToList(),
+                                                                                                                  //DirectSale = x.DirectIntroducedUsers.Select(y => y.Id).ToList(),
+                                                                                                                  //Tier2DirectSale = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers.Select(z => z.Id)).ToList(),
+                                                                                                                  //Tier3DirectSale = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).SelectMany(y => y.DirectIntroducedUsers.Select(z => z.Id)).ToList(),
+                                                                                                                  //DirectSale = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value /** ((x.Affiliate != null) ? x.Affiliate.Tier1DirectRate : 0) / 100*/)),
+                                                                                                                  //Tier2DirectSale = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value /** ((x.Affiliate != null) ? x.Affiliate.Tier2SaleToTier1Rate : 0) / 100*/))),
+                                                                                                                  //Tier3DirectSale = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value /** ((x.Affiliate != null) ? x.Affiliate.Tier3SaleToTier1Rate : 0) / 100*/))),
+                                TotalDirectCPLUsed = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value)) * ((x.Affiliate != null) ? x.Affiliate.Tier1DirectRate : 0) / 100,
+                                TotalTier2DirectCPLUsed = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value))) * ((x.Affiliate != null) ? x.Affiliate.Tier2SaleToTier1Rate : 0) / 100,
+                                TotalTier3DirectCPLUsed = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value)) * ((x.Affiliate != null) ? x.Affiliate.Tier3SaleToTier1Rate : 0) / 100),
+
+                                AffiliateCreatedDate = x.AffiliateCreatedDate,
+                                AffiliateCreatedDateInString = x.AffiliateCreatedDate.GetValueOrDefault().ToString(Format.DateTime),
+                                Tier1DirectRate = (x.Affiliate != null) ? x.Affiliate.Tier1DirectRate : 0,
+                                Tier2SaleToTier1Rate = (x.Affiliate != null) ? x.Affiliate.Tier2SaleToTier1Rate : 0,
+                                Tier3SaleToTier1Rate = (x.Affiliate != null) ? x.Affiliate.Tier3SaleToTier1Rate : 0,
+
+                               TotalSale = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value)) * ((x.Affiliate != null) ? x.Affiliate.Tier1DirectRate : 0) / 100 + // DirectSale
+                                           x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value))) * ((x.Affiliate != null) ? x.Affiliate.Tier2SaleToTier1Rate : 0) / 100 + // Tier2DirectSale
+                                           x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value)) * ((x.Affiliate != null) ? x.Affiliate.Tier3SaleToTier1Rate : 0) / 100), // Tier3DirectSale
+                            })
+                            .OrderBy(sortBy, sortDir)
+                            .Skip(skip)
+                            .Take(take)
+                            .ToList();
+
+                return standardAffliate;
+            }
+            else
+            {
+                filteredResultsCount = _sysUserService.Queryable()
+                        .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
+                        .Count(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
+                        || x.Email.Contains(searchBy));
+
+                totalResultsCount = _sysUserService.Queryable()
+                        .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
+
+                return _sysUserService.Queryable()
+                        .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
+                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy) || x.Email.Contains(searchBy))
+                            .Select(x => new StandardAffliateViewModel
+                            {
+                                Id = x.Id,
+                                FirstName = x.FirstName,
+                                LastName = x.LastName,
+                                Email = x.Email,
+                                IsBlocked = x.IsBlocked,
+                                TotalIntroducer = x.DirectIntroducedUsers.Count(), // ?
+                                TotalDirectCPLUsed = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value)) * ((x.Affiliate != null) ? x.Affiliate.Tier1DirectRate : 0) / 100,
+                                TotalTier2DirectCPLUsed = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value))) * ((x.Affiliate != null) ? x.Affiliate.Tier2SaleToTier1Rate : 0) / 100,
+                                TotalTier3DirectCPLUsed = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value)) * ((x.Affiliate != null) ? x.Affiliate.Tier3SaleToTier1Rate : 0) / 100),
+
+                                AffiliateCreatedDate = x.AffiliateCreatedDate,
+                                AffiliateCreatedDateInString = x.AffiliateCreatedDate.GetValueOrDefault().ToString(Format.DateTime),
+                                Tier1DirectRate = (x.Affiliate != null) ? x.Affiliate.Tier1DirectRate : 0,
+                                Tier2SaleToTier1Rate = (x.Affiliate != null) ? x.Affiliate.Tier2SaleToTier1Rate : 0,
+                                Tier3SaleToTier1Rate = (x.Affiliate != null) ? x.Affiliate.Tier3SaleToTier1Rate : 0,
+
+                                TotalSale = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value)) * ((x.Affiliate != null) ? x.Affiliate.Tier1DirectRate : 0) / 100 + // DirectSale
+                                           x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value))) * ((x.Affiliate != null) ? x.Affiliate.Tier2SaleToTier1Rate : 0) / 100 + // Tier2DirectSale
+                                           x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value)) * ((x.Affiliate != null) ? x.Affiliate.Tier3SaleToTier1Rate : 0) / 100), // Tier3DirectSale
+                            })
+                            .OrderBy(sortBy, sortDir)
+                            .Skip(skip)
+                            .Take(take)
+                            .ToList();
+            }
         }
 
         #endregion

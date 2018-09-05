@@ -46,9 +46,10 @@ namespace CPL.Mapping
             builder.Property(t => t.AgencyId).HasColumnName("AgencyId");
             builder.Property(t => t.IsIntroducedById).HasColumnName("IsIntroducedById");
             builder.Property(t => t.TwoFactorAuthenticationEnable).HasColumnName("TwoFactorAuthenticationEnable");
+            builder.Property(t => t.IsBlocked).HasColumnName("IsBlocked");
 
             builder.HasOne(x => x.IsIntroducedByUser)
-                .WithMany(x => x.IntroducedUsers)
+                .WithMany(x => x.DirectIntroducedUsers)
                 .IsRequired(false)
                 .HasForeignKey(x => x.IsIntroducedById);
         }
