@@ -4,7 +4,7 @@
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate");
 }
 @section styles
-{
+    {
 }
 <div class="app-content container center-layout mt-2 px-0">
     <div class="content-wrapper">
@@ -35,21 +35,27 @@
         </div>
         <div class="content-body">
             <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")</h6>
-            <div class="card">
-                <div class="card-content">
-                    <div class="card-body">
-                        @if (Model.IsKYCVerificationActivated && (!Model.KYCVerified.HasValue || !Model.KYCVerified.Value))
-                        {
+            @if (Model.IsKYCVerificationActivated && (!Model.KYCVerified.HasValue || !Model.KYCVerified.Value))
+            {
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
                             <div class="row">
                                 <div class="col-12">
                                     <p class="text-muted">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCRequiredBeforeAffiliate"))</p>
                                 </div>
                             </div>
-                        }
-                        else
-                        {
-                            if (!Model.AffiliateId.HasValue) // Not joined yet
-                            {
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                if (!Model.AffiliateId.HasValue) // Not joined yet
+                {
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
                                 <form id="form-submit-affiliate" class="form-horizontal" action="">
                                     <div class="row px-1">
                                         <div class="col-12 mb-2 p-2" style="height: 300px;overflow-y: scroll;background-color: #e9ecef">@Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateProgramPolicy"))</div>
@@ -64,33 +70,51 @@
                                     <div class="col-12" id="affiliate-response">
                                     </div>
                                 </div>
-                            }
-                            else if (Model.AffiliateId.Value == (int)EnumAffiliateApplicationStatus.PENDING) // Pending
-                            {
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (Model.AffiliateId.Value == (int)EnumAffiliateApplicationStatus.PENDING) // Pending
+                {
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
                                         <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateApplicationReceived")</p>
                                         <span class="badge badge-info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending")</span>
                                     </div>
                                 </div>
-                            }
-                            else // Approved
-                            {
+                            </div>
+                        </div>
+                    </div>
+                }
+                else // Approved
+                {
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
                                 <div class="row">
-                                    <div class="col-12">
-                                        <p class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateApplicationApproved")</p>
-                                        <span class="badge badge-success">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Approved")</span>
+                                    <div class="col-lg-6 col-12 pr-sm-0">
+                                        <label class="text-muted d-sm-block d-none" for="Url">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffliateUrl")</label>
+                                        <input readonly type="text" id="Url" value="@Model.AffiliateUrl" class="form-control" name="Url">
+                                    </div>
+                                    <div class="col-lg-2 col-12">
+                                        <label class="text-muted d-sm-block d-none">&nbsp;</label>
+                                        <button type="button" class="btn btn-copy d-block mt-sm-0 mt-1 w-100" data-clipboard-target="#Url"><i class="fas fa-copy"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
                                     </div>
                                 </div>
-                            }
-                        }
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                }
+            }
         </div>
     </div>
+    @Html.Hidden("CopiedSuccessfully", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CopiedSuccessfully"))
 </div>
 @section scripts
     {
     <script src="~/js/dashboard/cpl.affiliate.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
 }

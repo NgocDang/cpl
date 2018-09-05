@@ -326,11 +326,11 @@
                         <div class="row mt-3 d-none" id="agency-url">
                             <div class="col-sm-9 col-12 pr-sm-0">
                                 <label class="text-muted" for="Url">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UrlGenerated")</label>
-                                <input readonly="" type="text" min="1" class="form-control" id="Url" name="Url">
+                                <input readonly="" type="text" class="form-control" id="Url" name="Url">
                             </div>
                             <div class="col-sm-3 col-12">
-                                <label class="text-muted d-sm-block d-none" for="Url">&nbsp;</label>
-                                <button type="button" class="btn btn-copy d-block mt-sm-0 mt-1 w-100" data-clipboard-target="#Url"><i class="fas fa-copy"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
+                                <label class="text-muted d-sm-block d-none">&nbsp;</label>
+                                <button type="button" class="btn btn-copy d-block mt-sm-0 mt-1 w-100" data-clipboard-target="#Url"><i class="fas fa-copy"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
                             </div>
                         </div>
                     </div>
@@ -344,5 +344,4 @@
 @section scripts
     {
     <script src="~/js/dashboard/cpl.admin.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
 }
