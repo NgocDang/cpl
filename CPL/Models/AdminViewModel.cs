@@ -13,10 +13,12 @@ namespace CPL.Models
         public int TotalUserToday { get; set; }
         public int TotalUserYesterday { get; set; }
 
+        public int TotalGame { get; set; }
+        public int TotalSaleInGame { get; set; }
+        public int TotalSaleInGameToday { get; set; }
+        public int TotalSaleInGameYesterday { get; set; }
         public int TotalLotteryGame { get; set; }
-        public int TotalLotteryGamePending { get; set; }
-        public int TotalLotteryGameActive { get; set; }
-        public int TotalLotteryGameCompleted { get; set; }
+        public int TotalPricePredictionGame { get; set; }
 
         public int TotalAffiliateApplicationApproved { get; set; }
         public int TotalAffiliateApplicationPending { get; set; }
