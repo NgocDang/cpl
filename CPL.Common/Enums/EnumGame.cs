@@ -30,4 +30,10 @@ namespace CPL.Common.Enums
         ACTIVE = 2,
         COMPLETED = 3
     }
+
+    public enum EnumPricePredictionGameStatus
+    {
+        ACTIVE = 1,
+        COMPLETED = 2
+    }
 }
