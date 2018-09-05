@@ -329,7 +329,7 @@
                     </div>
                 </div>
                 <div class="card-footer text-right">
-                    <a class="btn btn-primary btn-sm" href="/Setting">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")</a>
+                    <a class="btn btn-primary btn-sm" asp-controller="Admin" asp-action="Setting">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")</a>
                 </div>
             </div>
         </div>

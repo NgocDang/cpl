@@ -104,6 +104,9 @@
     <Content Update="Views\Admin\AffiliateApprove.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Admin\Setting.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Admin\KYCVerify.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
