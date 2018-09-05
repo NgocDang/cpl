@@ -9,11 +9,14 @@ using CPL.Infrastructure;
 using CPL.Infrastructure.Interfaces;
 using CPL.Infrastructure.Repositories;
 using CPL.PredictionGameService.Misc;
+using CPL.PredictionGameService.Misc.Quartz.Jobs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.PlatformAbstractions;
 using PeterKottas.DotNetCore.WindowsService.Base;
 using PeterKottas.DotNetCore.WindowsService.Interfaces;
+using Quartz;
+using Quartz.Impl;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,7 +36,6 @@ namespace CPL.PredictionGameService
         public static List<Task> Tasks = new List<Task>();
 
         public string FileName { get; set; }
-        public string ConnectionString { get; set; }
         public int RunningIntervalInMilliseconds { get; set; }
 
         public void Start()
@@ -47,25 +49,49 @@ namespace CPL.PredictionGameService
             // write log
             Utils.FileAppendThreadSafe(FileName, String.Format("{0} started at {1}{2}", PredictionGameServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
 
-            //Init dependency transaction & dbcontext
-            Repository();
-
             //Init setting
             IsCPLPredictionGameServiceRunning = true;
             Tasks.Clear();
+
             Tasks.Add(Task.Run(() => GetCurrentBTCPrice()));
+
+            Tasks.Add(Task.Run(async () =>
+            {
+                IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
+                await scheduler.Start();
+
+                IJobDetail job = JobBuilder.Create<PricePredictionCreatingJob>()
+                    .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
+                    .WithDescription("Job to create new PricePredictions daily automatically")
+                    .Build();
+
+                ITrigger trigger = TriggerBuilder.Create()
+                    .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
+                    .WithDescription("Job to create new PricePredictions daily automatically")
+                    .WithSchedule(PredictionGameServiceConstant.DailyStartTime)
+                    .Build();
+
+                await scheduler.ScheduleJob(job, trigger);
+            }));
         }
 
-        public void Stop()
+        public async void Stop()
         {
             IsCPLPredictionGameServiceRunning = false;
             Utils.FileAppendThreadSafe(FileName, string.Format("Stop main thread at : {0}{1}{2}", DateTime.Now, Environment.NewLine, Environment.NewLine));
+
+            IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
+            await scheduler.Shutdown();
+            Utils.FileAppendThreadSafe(FileName, string.Format("Scheduler shutdown ({0}) at : {1}{2}{3}", scheduler.IsShutdown, DateTime.Now, Environment.NewLine, Environment.NewLine));
+
             Task.WaitAll(Tasks.ToArray());
         }
 
         // Get current BTC price
         private void GetCurrentBTCPrice()
         {
+            var resolver = new Resolver();
+
             Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC thread on CPL window service STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
             while (IsCPLPredictionGameServiceRunning)
             {
@@ -86,46 +112,20 @@ namespace CPL.PredictionGameService
                         Time = btcCurrentPriceResult.Result.DateTime
                     };
 
-                    Resolver.BTCPriceService.Insert(btcPrice);
-                    Resolver.UnitOfWork.SaveChanges();
+                    resolver.BTCPriceService.Insert(btcPrice);
+                    resolver.UnitOfWork.SaveChanges();
 
                     Thread.Sleep(RunningIntervalInMilliseconds);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    if(ex.InnerException.Message != null)
+                    if (ex.InnerException.Message != null)
                         Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                     else
                         Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
                 }
             }
             Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC thread on CPL window service STOPPED at {0}{1}", DateTime.Now, Environment.NewLine));
-        }
-
-        //Init dependency transaction & dbcontext
-        private void Repository()
-        {
-            var builder = new ContainerBuilder();
-
-            builder.Register(x =>
-            {
-                var optionsBuilder = new DbContextOptionsBuilder<CPLContext>();
-                optionsBuilder.UseSqlServer(ConnectionString);
-                return optionsBuilder.Options;
-            }).InstancePerLifetimeScope();
-
-            builder.RegisterType<BTCPriceService>().As<IBTCPriceService>().InstancePerLifetimeScope();
-            builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWorkAsync>().InstancePerLifetimeScope();
-            builder.RegisterType<CPLContext>().As<IDataContextAsync>().InstancePerLifetimeScope();
-
-            builder.RegisterType<Repository<BTCPrice>>().As<IRepositoryAsync<BTCPrice>>().InstancePerLifetimeScope();
-            builder.RegisterType<Repository<Setting>>().As<IRepositoryAsync<Setting>>().InstancePerLifetimeScope();
-
-            Resolver.Container = builder.Build();
-            Resolver.BTCPriceService = Resolver.Container.Resolve<IBTCPriceService>();
-            Resolver.SettingService = Resolver.Container.Resolve<ISettingService>();
-            Resolver.UnitOfWork = Resolver.Container.Resolve<IUnitOfWorkAsync>();
         }
 
         // ConfigurationBuilder
@@ -143,8 +143,8 @@ namespace CPL.PredictionGameService
         {
             FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
-            ConnectionString = Configuration["ConnectionString"];
-            var cplServiceEndpoint = Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
+            var resolver = new Resolver();
+            var cplServiceEndpoint = resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
             BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(cplServiceEndpoint + CPLConstant.BTCCurrentPriceServiceEndpoint));
         }
     }
