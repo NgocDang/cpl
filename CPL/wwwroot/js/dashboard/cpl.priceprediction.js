@@ -4,7 +4,6 @@ var PricePrediction = {
     init: function () {
         PricePrediction.bindLoadPredictionResult();
         PricePrediction.loadBTCPriceChart();
-        PricePrediction.pricePredictionHistoryDatatable = PricePrediction.loadPricePredictionHistoryDatatable();
         PricePrediction.bindLoadBTCCurrentRate();
         PricePrediction.bindBet1000();
         PricePrediction.bindBet5000();
