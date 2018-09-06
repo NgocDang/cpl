@@ -42,13 +42,15 @@ namespace CPL.Models
         {
             get
             {
-                return 
+                var total = 
                     // Total sale in lottery
                     TotalDirectCPLUsedInLottery + TotalTier2DirectCPLUsedInLottery + TotalTier3DirectCPLUsedInLottery
                        - TotalDirectCPLAwardedInLottery - TotalTier2DirectCPLAwardedInLottery - TotalTier3DirectCPLAwardedInLottery
                     // Total sale in price prediction
                        + TotalDirectCPLUsedInPricePrediction + TotalTier2DirectCPLUsedInPricePrediction + TotalTier3DirectCPLUsedInPricePrediction
                        - TotalDirectCPLAwardedInPricePrediction - TotalTier2DirectCPLAwardedInPricePrediction - TotalTier3DirectCPLAwardedInPricePrediction;
+
+                return (total > 0) ? total : 0; 
             }
         }
 
