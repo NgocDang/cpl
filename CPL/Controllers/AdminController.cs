@@ -101,26 +101,27 @@ namespace CPL.Controllers
             var totalSaleInLotteryGame = _lotteryHistoryService.Query()
                                         .Include(x => x.Lottery)
                                         .Select(x => x.Lottery.UnitPrice).Sum();
+
             var totalSaleInLotteryGameToday = _lotteryHistoryService.Query()
                                         .Include(x => x.Lottery)
-                                        .Select().AsQueryable()
+                                        .Select()
                                         .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.Date))
-                                        .Select(x => x.Lottery.UnitPrice).Sum();
+                                        .Sum(x => x.Lottery.UnitPrice);
             var totalSaleInLotteryGameYesterday = _lotteryHistoryService.Query()
                                         .Include(x => x.Lottery)
-                                        .Select().AsQueryable()
+                                        .Select()
                                         .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.AddDays(-1).Date))
-                                        .Select(x => x.Lottery.UnitPrice).Sum();
+                                        .Sum(x => x.Lottery.UnitPrice);
             // price prediction game
             viewModel.TotalPricePredictionGame = pricePredictioNGames.Count();
             var totalSaleIPricePredictionGame = _pricePredictionHistoryService.Queryable()
-                                            .Select(x => x.Amount).Sum();
+                                            .Sum(x => x.Amount);
             var totalSaleIPricePredictionGameToday = _pricePredictionHistoryService.Queryable()
                                             .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.Date))
-                                            .Select(x => x.Amount).Sum();
+                                            .Sum(x => x.Amount);
             var totalSaleIPricePredictionGameYesterday = _pricePredictionHistoryService.Queryable()
                                             .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.AddDays(-1).Date))
-                                            .Select(x => x.Amount).Sum();
+                                            .Sum(x => x.Amount);
             // all game
             viewModel.TotalGame = viewModel.TotalLotteryGame + viewModel.TotalPricePredictionGame;
             viewModel.TotalSaleInGame = totalSaleInLotteryGame + (int)totalSaleIPricePredictionGame;
