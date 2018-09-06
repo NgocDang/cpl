@@ -26,3 +26,11 @@ INSERT INTO LangDetail VALUES (2, N'Tier2', N'ティア 2');
 
 INSERT INTO LangDetail VALUES (1, N'Tier3', N'Tier 3');
 INSERT INTO LangDetail VALUES (2, N'Tier3', N'ティア 3');
+
+INSERT INTO LangDetail VALUES (1, N'Lock', N'Lock');
+INSERT INTO LangDetail VALUES (2, N'Lock', N'ロック');
+
+INSERT INTO LangDetail VALUES (1, N'UnLock', N'UnLock');
+INSERT INTO LangDetail VALUES (2, N'UnLock', N'アンロック');
+
+
