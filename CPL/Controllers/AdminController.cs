@@ -335,7 +335,6 @@ namespace CPL.Controllers
                             .ThenInclude(x => x.LotteryPrize)
                             .ThenInclude(x => x.Lottery)
                             .Include(x => x.PricePredictionHistories)
-                            .ThenInclude(x => x.PricePrediction)
                             .Include(x => x.DirectIntroducedUsers)
                             .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
                             .AsQueryable()
@@ -358,12 +357,12 @@ namespace CPL.Controllers
                                 TotalTier3DirectCPLUsedInLottery = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.Lottery.UnitPrice))) * x.Affiliate.Tier3SaleToTier1Rate / 100,
 
                                 // price predciotn
-                                //TotalDirectCPLAwardedInPricePrediction = (decimal)(x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Award)) * x.Affiliate.Tier1DirectRate / 100),
-                                //TotalTier2DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))) * x.Affiliate.Tier2SaleToTier1Rate / 100,
-                                //TotalTier3DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))) * x.Affiliate.Tier3SaleToTier1Rate / 100,
-                                //TotalDirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.PricePrediction.Volume)) * x.Affiliate.Tier1DirectRate / 100,
-                                //TotalTier2DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.PricePrediction.Volume))) * x.Affiliate.Tier2SaleToTier1Rate / 100,
-                                //TotalTier3DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.PricePrediction.Volume))) * x.Affiliate.Tier3SaleToTier1Rate / 100,
+                                TotalDirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Award)).GetValueOrDefault(0) * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0) * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0) * x.Affiliate.Tier3SaleToTier1Rate / 100,
+                                TotalDirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Amount)) * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))) * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))) * x.Affiliate.Tier3SaleToTier1Rate / 100,
 
                                 AffiliateCreatedDate = x.AffiliateCreatedDate,
                                 AffiliateCreatedDateInString = x.AffiliateCreatedDate.GetValueOrDefault().ToString(Format.DateTime),
@@ -388,9 +387,15 @@ namespace CPL.Controllers
                 totalResultsCount = _sysUserService.Queryable()
                         .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
 
-                return _sysUserService.Queryable()
-                        .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
-                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy) || x.Email.Contains(searchBy))
+                var standardAffliate =
+                            ((CPLContext)HttpContext.RequestServices.GetService(typeof(IDataContextAsync))).SysUser
+                            .Include(x => x.Affiliate)
+                            .Include(x => x.LotteryHistories)
+                            .ThenInclude(x => x.LotteryPrize)
+                            .ThenInclude(x => x.Lottery)
+                            .Include(x => x.PricePredictionHistories)
+                            .Include(x => x.DirectIntroducedUsers)
+                            .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
                             .Select(x => new StandardAffliateViewModel
                             {
                                 Id = x.Id,
@@ -398,21 +403,38 @@ namespace CPL.Controllers
                                 LastName = x.LastName,
                                 Email = x.Email,
                                 IsBlocked = x.IsBlocked,
-                                TotalIntroducer = x.DirectIntroducedUsers.Count(), // ?
-                                TotalDirectCPLUsedInLottery = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value)) * ((x.Affiliate != null) ? x.Affiliate.Tier1DirectRate : 0) / 100,
-                                TotalTier2DirectCPLUsedInLottery = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value))) * ((x.Affiliate != null) ? x.Affiliate.Tier2SaleToTier1Rate : 0) / 100,
-                                TotalTier3DirectCPLUsedInLottery = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value)) * ((x.Affiliate != null) ? x.Affiliate.Tier3SaleToTier1Rate : 0) / 100),
+                                TotalIntroducer = x.DirectIntroducedUsers.Count(y => y.IsIntroducedById == x.Id),
+
+                                // lottery
+                                TotalDirectCPLAwardedInLottery = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value)) * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLAwardedInLottery = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value))) * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLAwardedInLottery = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value))) * x.Affiliate.Tier3SaleToTier1Rate / 100,
+                                TotalDirectCPLUsedInLottery = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.Lottery.UnitPrice)) * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLUsedInLottery = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.Lottery.UnitPrice))) * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLUsedInLottery = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.Lottery.UnitPrice))) * x.Affiliate.Tier3SaleToTier1Rate / 100,
+
+                                // price predciotn
+                                TotalDirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Award)).GetValueOrDefault(0) * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0) * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0) * x.Affiliate.Tier3SaleToTier1Rate / 100,
+                                TotalDirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Amount)) * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))) * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))) * x.Affiliate.Tier3SaleToTier1Rate / 100,
 
                                 AffiliateCreatedDate = x.AffiliateCreatedDate,
                                 AffiliateCreatedDateInString = x.AffiliateCreatedDate.GetValueOrDefault().ToString(Format.DateTime),
-                                Tier1DirectRate = (x.Affiliate != null) ? x.Affiliate.Tier1DirectRate : 0,
-                                Tier2SaleToTier1Rate = (x.Affiliate != null) ? x.Affiliate.Tier2SaleToTier1Rate : 0,
-                                Tier3SaleToTier1Rate = (x.Affiliate != null) ? x.Affiliate.Tier3SaleToTier1Rate : 0,
+                                Tier1DirectRate = x.Affiliate.Tier1DirectRate,
+                                Tier2SaleToTier1Rate = x.Affiliate.Tier2SaleToTier1Rate,
+                                Tier3SaleToTier1Rate = x.Affiliate.Tier3SaleToTier1Rate
                             })
+                            .Where(x => x.FirstName.ToLower().Contains(searchBy) || x.LastName.ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy))
+                            .AsQueryable()
                             .OrderBy(sortBy, sortDir)
                             .Skip(skip)
                             .Take(take)
                             .ToList();
+
+                return standardAffliate;
             }
         }
 
