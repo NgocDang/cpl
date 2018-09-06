@@ -20,7 +20,7 @@ namespace CPL.Models
         public int? Tier1DirectRate { get; set; }
         public int? Tier2SaleToTier1Rate { get; set; }
         public int? Tier3SaleToTier1Rate { get; set; }
-        public bool? IsBlocked { get; set; }
+        public bool? IsLocked { get; set; }
 
         // Lottey game
         public decimal? TotalDirectCPLUsedInLottery { get; set; }

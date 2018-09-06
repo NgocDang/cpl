@@ -379,7 +379,7 @@ namespace CPL.Controllers
                                 FirstName = x.FirstName,
                                 LastName = x.LastName,
                                 Email = x.Email,
-                                IsBlocked = x.IsBlocked,
+                                IsLocked = x.IsLocked,
                                 TotalIntroducer = x.DirectIntroducedUsers.Count(y => y.IsIntroducedById == x.Id),
 
                                 // lottery
@@ -436,7 +436,7 @@ namespace CPL.Controllers
                                 FirstName = x.FirstName,
                                 LastName = x.LastName,
                                 Email = x.Email,
-                                IsBlocked = x.IsBlocked,
+                                IsLocked = x.IsLocked,
                                 TotalIntroducer = x.DirectIntroducedUsers.Count(y => y.IsIntroducedById == x.Id),
 
                                 // lottery

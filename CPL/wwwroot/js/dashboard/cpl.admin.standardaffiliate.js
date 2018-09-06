@@ -14,7 +14,7 @@
             },
             "language": DTLang.getLang(),
             "createdRow": function (row, data, dataIndex) {
-                if (data.isBlocked == true) {
+                if (data.isLocked == true) {
                     $(row).addClass("disabled");
                 }
             },
@@ -58,13 +58,13 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        if (!full.isblocked || full.isblocked === false) {
+                        if (full.isLocked === false) {
                             return "<div>" +
-                                "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary '>" + "Block" +"</button> " +
+                                "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary '>" + "Lock" +"</button> " +
                                 "</div>";
                         }
                         return "<div>" +
-                            "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary '>" + "UnBlock" + "</button> " +
+                            "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary '>" + "UnLock" + "</button> " +
                             "</div>";
                     },
                     "orderable": false

@@ -1,7 +1,7 @@
 ﻿Use CPL;
 
 ALTER TABLE sysUser
-ADD IsBlocked bit NULL
+ADD IsLocked bit NOT NULL Default(0)
 
 INSERT INTO LangDetail VALUES (1, N'ListOfStandardAffiliate', N'List Of StandardAffiliate');
 INSERT INTO LangDetail VALUES (2, N'ListOfStandardAffiliate', N'標準アフィリエイトのリスト');
