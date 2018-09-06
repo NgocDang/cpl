@@ -13,6 +13,11 @@
                 type: 'POST'
             },
             "language": DTLang.getLang(),
+            "createdRow": function (row, data, dataIndex) {
+                if (data.isBlocked == true) {
+                    $(row).addClass("disabled");
+                }
+            },
             "columns": [
                 {
                     "data": "FirstName",
