@@ -61,26 +61,26 @@ namespace CPL.PredictionGameService
             IsCPLPredictionGameServiceRunning = true;
             Tasks.Clear();
 
-            //Tasks.Add(Task.Run(() => GetCurrentBTCPrice()));
+            Tasks.Add(Task.Run(() => GetCurrentBTCPrice()));
 
-            //Tasks.Add(Task.Run(async () =>
-            //{
-            //    IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
-            //    await scheduler.Start();
+            Tasks.Add(Task.Run(async () =>
+            {
+                IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
+                await scheduler.Start();
 
-            //    IJobDetail job = JobBuilder.Create<PricePredictionCreatingJob>()
-            //        .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
-            //        .WithDescription("Job to create new PricePredictions daily automatically")
-            //        .Build();
+                IJobDetail job = JobBuilder.Create<PricePredictionCreatingJob>()
+                    .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
+                    .WithDescription("Job to create new PricePredictions daily automatically")
+                    .Build();
 
-            //    ITrigger trigger = TriggerBuilder.Create()
-            //        .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
-            //        .WithDescription("Job to create new PricePredictions daily automatically")
-            //        .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(DailyStartTimeInHour, DailyStartTimeInMinute))
-            //        .Build();
+                ITrigger trigger = TriggerBuilder.Create()
+                    .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
+                    .WithDescription("Job to create new PricePredictions daily automatically")
+                    .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(DailyStartTimeInHour, DailyStartTimeInMinute))
+                    .Build();
 
-            //    await scheduler.ScheduleJob(job, trigger);
-            //}));
+                await scheduler.ScheduleJob(job, trigger);
+            }));
 
 
             Tasks.Add(Task.Run(async () =>
