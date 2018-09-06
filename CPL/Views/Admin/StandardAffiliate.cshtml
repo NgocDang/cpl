@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "_Layout";
-    ViewData["Title"] = "StandardAffiliate";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliate");
 }
 
 @section styles
@@ -13,7 +13,7 @@
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block">StandardAffiliate</h3>
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliate")</h3>
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
@@ -21,7 +21,7 @@
                                 <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             </li>
                             <li class="breadcrumb-item active">
-                                StandardAffiliate
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliate")
                             </li>
                         </ol>
                     </div>
@@ -31,7 +31,7 @@
         <div class="content-body">
             <div class="row">
                 <div class="col-12">
-                    <h6 class="my-2">List Of StandardAffiliate</h6>
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ListOfStandardAffiliate")</h6>
                     <div class="card">
                         <div class="card-content">
                             <table id="dt-standard-affiliate" class="table responsive table-hover table-xl mb-0">
@@ -40,13 +40,13 @@
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
-                                        <th class="border-top-0">Total sale in CPL</th>
-                                        <th class="border-top-0">Total introducer</th>
-                                        <th class="border-top-0">Affiliate Created Date</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSaleInCPL")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducer")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateCreatedDate")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
-                                        <th class="border-top-0">Tier1 %</th>
-                                        <th class="border-top-0">Tier2 %</th>
-                                        <th class="border-top-0">Tier3 %</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier1") %</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier2") %</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier3") %</th>
                                     </tr>
                                 </thead>
                             </table>
