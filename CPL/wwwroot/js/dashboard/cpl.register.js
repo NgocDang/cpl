@@ -33,6 +33,8 @@
                         Email: $("#Email").val(),
                         Password: $("#Password").val(),
                         PasswordConfirm: $("#PasswordConfirm").val(),
+                        IsIntroducedById: $("#IsIntroducedById").val(),
+                        AgencyToken: $("#AgencyToken").val()
                     },  
                     success: function (data) {
                         if (data.success) {
