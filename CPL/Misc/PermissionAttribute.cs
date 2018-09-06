@@ -36,8 +36,27 @@ namespace CPL.Misc
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (context.HttpContext.Session.GetInt32("LangId") == null)
-                context.HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
+            // If mobile 
+            if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["isMobile"].ToString()) 
+                && bool.Parse(context.HttpContext.Request.Query["isMobile"].ToString()))
+            {
+                if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["mobileUserId"].ToString()))
+                {
+                    var mobileUserId = int.Parse(context.HttpContext.Request.Query["mobileUserId"].ToString());
+                    var sysUserService = (ISysUserService)context.HttpContext.RequestServices.GetService(typeof(ISysUserService));
+                    context.HttpContext.Session.SetObjectAsJson("CurrentUser", sysUserService.Queryable().FirstOrDefault(x => x.Id == mobileUserId));
+                }
+
+                if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["mobileLangId"].ToString()))
+                {
+                    var langId = int.Parse(context.HttpContext.Request.Query["mobileLangId"].ToString());
+                    context.HttpContext.Session.SetInt32("LangId", langId);
+                }
+            } else
+            {
+                if (context.HttpContext.Session.GetInt32("LangId") == null)
+                    context.HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
+            }
 
             if ((context.RouteData.Values["action"].ToString() == "Maintenance") && (context.RouteData.Values["controller"].ToString() == "Home"))
             {

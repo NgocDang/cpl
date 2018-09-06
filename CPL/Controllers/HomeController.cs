@@ -15,6 +15,7 @@ using System.Net.Mail;
 using System.Net;
 using CPL.Common.Enums;
 using LinqKit;
+using CPL.Misc.Utils;
 
 namespace CPL.Controllers
 {
@@ -28,7 +29,6 @@ namespace CPL.Controllers
         private readonly ISettingService _settingService;
         private readonly ILotteryService _lotteryService;
         private readonly ITemplateService _templateService;
-        private readonly ISysUserService _sysUserService;
         private readonly INewsService _newsService;
 
         public HomeController(
@@ -38,7 +38,6 @@ namespace CPL.Controllers
             IViewRenderService viewRenderService,
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
-            ISysUserService sysUserService,
             ILotteryService lotteryService,
             ITemplateService templateService,
             INewsService newsService)
@@ -46,13 +45,12 @@ namespace CPL.Controllers
             this._langService = langService;
             this._langDetailService = langDetailService;
             this._mapper = mapper;
-            this._sysUserService = sysUserService;
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
             this._unitOfWork = unitOfWork;
             this._lotteryService = lotteryService;
             this._templateService = templateService;
-            this._newsService = newsService;
+            _newsService = newsService;
         }
 
         [Permission(EnumRole.Guest)]
@@ -100,9 +98,10 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Guest)]
-        public void UpdateLangDetail()
+        public IActionResult UpdateLangDetail()
         {
             LangDetailHelper.LangDetails = _langDetailService.Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
+            return new JsonResult( new{ success = true });
         }
     }
 }
