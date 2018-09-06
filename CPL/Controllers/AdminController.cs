@@ -36,6 +36,7 @@ namespace CPL.Controllers
         private readonly ISysUserService _sysUserService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
+        private readonly IPricePredictionService _pricePredictionService;
         private readonly INewsService _newsService;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILotteryService _lotteryService;
@@ -54,6 +55,7 @@ namespace CPL.Controllers
             ISysUserService sysUserService,
             ILotteryHistoryService lotteryHistoryService,
             IPricePredictionHistoryService pricePredictionHistoryService,
+            IPricePredictionService pricePredictionService,
             INewsService newsService,
             IHostingEnvironment hostingEnvironment,
             ILotteryService lotteryService,
@@ -73,6 +75,7 @@ namespace CPL.Controllers
             this._lotteryService = lotteryService;
             this._lotteryPrizeService = lotteryPrizeService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
+            this._pricePredictionService = pricePredictionService;
             this._newsService = newsService;
             this._affiliateService = affiliateService;
             this._hostingEnvironment = hostingEnvironment;
@@ -93,10 +96,41 @@ namespace CPL.Controllers
 
             // Game management
             var lotteryGames = _lotteryService.Queryable();
+            var pricePredictioNGames = _pricePredictionService.Queryable();
+            var lotteryHistories = _lotteryHistoryService.Queryable();
+            var pricePredictionHistories = _pricePredictionHistoryService.Queryable();
+
+            // lottery game
             viewModel.TotalLotteryGame = lotteryGames.Count();
-            viewModel.TotalLotteryGamePending = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.PENDING).Count();
-            viewModel.TotalLotteryGameActive = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.ACTIVE).Count();
-            viewModel.TotalLotteryGameCompleted = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.COMPLETED).Count();
+            var totalSaleInLotteryGame = _lotteryHistoryService.Query()
+                                        .Include(x => x.Lottery)
+                                        .Select(x => x.Lottery.UnitPrice).Sum();
+
+            var totalSaleInLotteryGameToday = _lotteryHistoryService.Query()
+                                        .Include(x => x.Lottery)
+                                        .Select()
+                                        .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.Date))
+                                        .Sum(x => x.Lottery.UnitPrice);
+            var totalSaleInLotteryGameYesterday = _lotteryHistoryService.Query()
+                                        .Include(x => x.Lottery)
+                                        .Select()
+                                        .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.AddDays(-1).Date))
+                                        .Sum(x => x.Lottery.UnitPrice);
+            // price prediction game
+            viewModel.TotalPricePredictionGame = pricePredictioNGames.Count();
+            var totalSaleIPricePredictionGame = _pricePredictionHistoryService.Queryable()
+                                            .Sum(x => x.Amount);
+            var totalSaleIPricePredictionGameToday = _pricePredictionHistoryService.Queryable()
+                                            .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.Date))
+                                            .Sum(x => x.Amount);
+            var totalSaleIPricePredictionGameYesterday = _pricePredictionHistoryService.Queryable()
+                                            .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.AddDays(-1).Date))
+                                            .Sum(x => x.Amount);
+            // all game
+            viewModel.TotalGame = viewModel.TotalLotteryGame + viewModel.TotalPricePredictionGame;
+            viewModel.TotalSaleInGame = totalSaleInLotteryGame + (int)totalSaleIPricePredictionGame;
+            viewModel.TotalSaleInGameToday = totalSaleInLotteryGameToday + (int)totalSaleIPricePredictionGameToday;
+            viewModel.TotalSaleInGameYesterday = totalSaleInLotteryGameYesterday + (int)totalSaleIPricePredictionGameYesterday;
 
             // Affiliate
             // TODO: Get data from database
@@ -558,12 +592,55 @@ namespace CPL.Controllers
                 totalResultsCount = _sysUserService.Queryable()
                         .Count();
 
-                return _sysUserService.Queryable()
-                            .Select(x => Mapper.Map<SysUserViewModel>(x))
-                            .OrderBy(sortBy, sortDir)
+                // total CPL used and total CPL awarded in lottery game 
+                var lotteryHistories = _lotteryHistoryService.Query()
+                                    .Include(x => x.Lottery)
+                                    .Include(x => x.LotteryPrize)
+                                    .Select()
+                                    .AsQueryable()
+                                    .GroupBy(x => x.SysUserId)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.Lottery.UnitPrice), TotalCPLAwarded = (int)y.Sum(x => (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0) });
+
+                // total CPL used and total CPL awarded in priceprediction game 
+                var pricePredictionHistories = _pricePredictionHistoryService.Queryable()
+                                    .GroupBy(x => x.SysUserId)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = (int)y.Sum(x => x.Amount), TotalCPLAwarded = (int)y.Sum(x => x.Award ?? 0) });
+
+                // total CPL used and total CPL awarded in all game 
+                var histories = lotteryHistories.Concat(pricePredictionHistories).ToList()
+                                    .GroupBy(x => x.Id)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.TotalCPLUsed), TotalCPLAwarded = y.Sum(x => x.TotalCPLAwarded) });
+
+                var sysUsers = _sysUserService.Queryable()
                             .Skip(skip)
                             .Take(take)
                             .ToList();
+
+                return sysUsers.LeftOuterJoin(histories, user => user.Id,
+                                                    history => history.Id,
+                                                    (user, history) => new SysUserViewModel()
+                                                    {
+                                                        Id = user.Id,
+                                                        Email = user.Email,
+                                                        FirstName = user.FirstName,
+                                                        LastName = user.LastName,
+                                                        StreetAddress = user.StreetAddress,
+                                                        Mobile = user.Mobile,
+                                                        CreatedDateInString = user.CreatedDate.ToString("yyyy/MM/dd"),
+                                                        Country = user.Country,
+                                                        City = user.City,
+                                                        IsDeleted = user.IsDeleted,
+                                                        BTCAmount = user.BTCAmount,
+                                                        ETHAmount = user.ETHAmount,
+                                                        TokenAmount = user.TokenAmount,
+                                                        TotalCPLUsed = (history != null) ? history.TotalCPLUsed : 0,
+                                                        TotalCPLAwarded = (history != null) ? history.TotalCPLAwarded : 0,
+                                                        TotalCPLUsedInString = (history != null) ? history.TotalCPLUsed.ToString(CPLConstant.Format.Amount) : "0",
+                                                        TotalCPLAwardedInString = (history != null) ? history.TotalCPLAwarded.ToString(CPLConstant.Format.Amount) : "0"
+                                                    })
+                                                    .AsQueryable()
+                                                    .OrderBy(sortBy, sortDir)
+                                                    .ToList();
             }
             else
             {
@@ -575,14 +652,57 @@ namespace CPL.Controllers
                 totalResultsCount = _sysUserService.Queryable()
                         .Count();
 
-                return _sysUserService.Queryable()
+                // total CPL used and total CPL awarded in lottery game 
+                var lotteryHistories = _lotteryHistoryService.Query()
+                                    .Include(x => x.Lottery)
+                                    .Include(x => x.LotteryPrize)
+                                    .Select()
+                                    .AsQueryable()
+                                    .GroupBy(x => x.SysUserId)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.Lottery.UnitPrice), TotalCPLAwarded = (int)y.Sum(x => (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0) });
+
+                // total CPL used and total CPL awarded in priceprediction game 
+                var pricePredictionHistories = _pricePredictionHistoryService.Queryable()
+                                    .GroupBy(x => x.SysUserId)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = (int)y.Sum(x => x.Amount), TotalCPLAwarded = (int)y.Sum(x => x.Award ?? 0) });
+
+                // total CPL used and total CPL awarded in all game 
+                var histories = lotteryHistories.Concat(pricePredictionHistories).ToList()
+                                    .GroupBy(x => x.Id)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.TotalCPLUsed), TotalCPLAwarded = y.Sum(x => x.TotalCPLAwarded) });
+
+                var sysUsers = _sysUserService.Queryable()
                         .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
-                        .Select(x => Mapper.Map<SysUserViewModel>(x))
-                        .OrderBy(sortBy, sortDir)
                         .Skip(skip)
-                        .Take(take)
-                        .ToList();
+                        .Take(take);
+
+                return sysUsers.LeftOuterJoin(histories, user => user.Id,
+                                                    history => history.Id,
+                                                    (user, history) => new SysUserViewModel()
+                                                    {
+                                                        Id = user.Id,
+                                                        Email = user.Email,
+                                                        FirstName = user.FirstName,
+                                                        LastName = user.LastName,
+                                                        StreetAddress = user.StreetAddress,
+                                                        Mobile = user.Mobile,
+                                                        CreatedDateInString = user.CreatedDate.ToString("yyyy/MM/dd"),
+                                                        Country = user.Country,
+                                                        City = user.City,
+                                                        IsDeleted = user.IsDeleted,
+                                                        BTCAmount = user.BTCAmount,
+                                                        ETHAmount = user.ETHAmount,
+                                                        TokenAmount = user.TokenAmount,
+                                                        TotalCPLUsed = (history != null) ? history.TotalCPLUsed : 0,
+                                                        TotalCPLAwarded = (history != null) ? history.TotalCPLAwarded : 0,
+                                                        TotalCPLUsedInString = (history != null) ? history.TotalCPLUsed.ToString(CPLConstant.Format.Amount) : "0",
+                                                        TotalCPLAwardedInString = (history != null) ? history.TotalCPLAwarded.ToString(CPLConstant.Format.Amount) : "0"
+                                                    })
+                                                    .AsQueryable()
+                                                    .OrderBy(sortBy, sortDir)
+                                                    .ToList();
+
             }
         }
         #endregion
@@ -891,6 +1011,14 @@ namespace CPL.Controllers
                         .Take(take)
                         .ToList();
             }
+        }
+        #endregion
+
+        #region Game
+        [Permission(EnumRole.Admin)]
+        public IActionResult Game()
+        {
+            return View();
         }
         #endregion
 
@@ -1378,6 +1506,63 @@ namespace CPL.Controllers
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
             }
         }
+        #endregion
+
+        #region PricePrediction
+        #endregion
+
+        #region Setting
+        [Permission(EnumRole.Admin)]
+        public IActionResult Setting()
+        {
+            var viewModel = new SettingViewModel();
+            var settings = _settingService.Queryable();
+            viewModel.IsKYCVerificationActivated = bool.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
+            viewModel.IsAccountActivationEnable = bool.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value);
+            viewModel.CookieExpirations = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.CookieExpirations).Value);
+
+            viewModel.StandardAffiliate = new StandardAffiliateRateViewModel
+            {
+                Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier1DirectRate).Value),
+                Tier2SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier2SaleToTier1Rate).Value),
+                Tier3SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier3SaleToTier1Rate).Value)
+            };
+
+            viewModel.AgencyAffiliate = new AgencyAffiliateRateViewModel
+            {
+                Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier1DirectRate).Value),
+                Tier2DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier2DirectRate).Value),
+                Tier3DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3DirectRate).Value),
+                Tier2SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier2SaleToTier1Rate).Value),
+                Tier3SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3SaleToTier1Rate).Value),
+                Tier3SaleToTier2Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3SaleToTier2Rate).Value)
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoUpdateSetting(string data)
+        {
+            try
+            {
+                var dataInList = JsonConvert.DeserializeObject<List<SettingDataModel>>(data);
+                foreach (var _data in dataInList)
+                {
+                    var setting = _settingService.Queryable().FirstOrDefault(x => x.Name == _data.Name);
+                    setting.Value = _data.Value;
+                    _settingService.Update(setting);
+                }
+
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
         #endregion
     }
 }

@@ -12,6 +12,11 @@
                 <div class="card-content">
                     <div class="card-body">
                         <p class="text-center h5 text-capitalize txt-welcome mb-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Welcome")</p>
+                        @if (!string.IsNullOrEmpty(Model.Message))
+                        {
+                            <p class="text-danger text-center">@Model.Message</p>
+                        }
+
                         <p id="register-message" class="text-muted"></p>
                         <form id="form-register" class="form-horizontal form-signin form needs-validation" novalidate>
                             <p class="text-center text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AccountInfoRequired")</p>
@@ -52,7 +57,8 @@
                             <p class="text-center">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AlreadyHaveAccount") <a asp-controller="Authentication" asp-action="LogIn">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHere")</a> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ToLogIn")
                             </p>
-
+                            @Html.HiddenFor(x => x.IsIntroducedById)
+                            @Html.HiddenFor(x => x.AgencyToken)
                         </form>
                     </div>
                 </div>

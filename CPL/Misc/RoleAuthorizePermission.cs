@@ -41,7 +41,7 @@ namespace CPL.Misc
 
         public override PermissionStatus IsACL(ActionExecutingContext context, EnumEntity? entity, EnumAction? action)
         {
-            if (entity.HasValue && (entity.Value == EnumEntity.CoinTransaction || entity.Value == EnumEntity.LotteryHistory || entity.Value == EnumEntity.SysUser))
+            if (entity.HasValue && (entity.Value == EnumEntity.CoinTransaction || entity.Value == EnumEntity.LotteryHistory || entity.Value == EnumEntity.SysUser || entity.Value == EnumEntity.PricePredictionHistory))
                 return new PermissionStatus { Code = PermissionStatus.UnLoggedInCode, Text = PermissionStatus.UnLoggedInText, Url = PermissionStatus.UnLoggedInUrl };
             else
                 return new PermissionStatus { Code = PermissionStatus.OkCode, Text = PermissionStatus.OkText };
@@ -99,7 +99,14 @@ namespace CPL.Misc
             else if (entity.HasValue && entity.Value == EnumEntity.LotteryHistory && action == EnumAction.Read)
             {
                 var sysUserService = (ISysUserService)context.HttpContext.RequestServices.GetService(typeof(ISysUserService));
-                var transactionHistoryService = (ICoinTransactionService)context.HttpContext.RequestServices.GetService(typeof(ICoinTransactionService));
+
+                var currentUser = context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+                if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["sysUserId"]) && !currentUser.IsAdmin && currentUser.Id != int.Parse(context.HttpContext.Request.Query["sysUserId"].ToString()))
+                    return new PermissionStatus { Code = PermissionStatus.UnAuthorizedCode, Text = PermissionStatus.UnAuthorizedText, Url = PermissionStatus.UnAuthorizedUrl };
+            }
+            else if (entity.HasValue && entity.Value == EnumEntity.PricePredictionHistory && action == EnumAction.Read)
+            {
+                var sysUserService = (ISysUserService)context.HttpContext.RequestServices.GetService(typeof(ISysUserService));
 
                 var currentUser = context.HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
                 if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["sysUserId"]) && !currentUser.IsAdmin && currentUser.Id != int.Parse(context.HttpContext.Request.Query["sysUserId"].ToString()))

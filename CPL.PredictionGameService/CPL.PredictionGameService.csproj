@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     <PackageReference Include="PeterKottas.DotNetCore.WindowsService" Version="2.0.8" />
+    <PackageReference Include="Quartz" Version="3.0.6" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.*" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.4.*" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.*" />
