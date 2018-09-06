@@ -96,6 +96,7 @@ namespace CPL.Controllers
             var pricePredictioNGames = _pricePredictionService.Queryable();
             var lotteryHistories = _lotteryHistoryService.Queryable();
             var pricePredictionHistories = _pricePredictionHistoryService.Queryable();
+
             // lottery game
             viewModel.TotalLotteryGame = lotteryGames.Count();
             var totalSaleInLotteryGame = _lotteryHistoryService.Query()
