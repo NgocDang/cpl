@@ -1,0 +1,99 @@
+﻿@model PricePredictionViewComponentViewModel
+
+<div class="card mb-1">
+    <div class="card-content">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-9 col-12">
+                    <div id="btc-price-chart">
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-12" id="form-bet">
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="font-large-2 font-weight-bold" value="@Model.CurrentBTCRate" id="btc-rate">@Model.CurrentBTCRateInString</span> <span class="font-medium-4">BTC/USDT</span>
+                        </div>
+                    </div>
+                    <form id="form-price-bet">
+                        <div class="row">
+                            <div class="col-12">
+                                <fieldset class="form-group">
+                                    @*TODO - Max value should be user's CPL*@
+                                    <label for="Amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
+                                    <input type="number" name="Amount" class="form-control" min="1" id="bet-amount" value="0" required autofocus="">
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <button type="button" id="btn-bet-1000" class="btn btn-gray btn-block font-weight-bold px-0">1,000</button>
+                            </div>
+                            <div class="col-lg-4">
+                                <button type="button" id="btn-bet-5000" class="btn btn-gray btn-block font-weight-bold px-0">5,000</button>
+                            </div>
+                            <div class="col-lg-4">
+                                <button type="button" id="btn-bet-10000" class="btn btn-gray btn-block font-weight-bold px-0">10,000</button>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="btn-group btn-group-toggle col-md-12 col-sm-12" data-toggle="buttons">
+                                <label class="btn btn-success col-md-6 col-sm-6" id="lbl-bet-up">
+                                    <input type="radio" name="options" id="btn-bet-up" autocomplete="off" class="btn btn-success btn-block font-weight-bold" /> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Up")
+                                </label>
+                                <label class="btn btn-danger col-md-6 col-sm-6" id="lbl-bet-down">
+                                    <input type="radio" name="options" id="btn-bet-down" autocomplete="off" class="btn btn-danger btn-block font-weight-bold" /> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Down")
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-12">
+                                <button type="button" id="btn-bet" class="btn btn-yellow btn-block font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bet")</button>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6 text-left text-success" id="up-bar-value">@Model.UpPercentage %</div>
+                                    <div class="col-6 text-right text-danger" id="down-bar-value">@Model.DownPercentage %</div>
+                                </div>
+                                <div class="progress progress-cus">
+                                    <div id="up-bar" class="progress-bar bg-success progress-bar-cus" role="progressbar" style="width: @Model.UpPercentage%;" aria-valuenow="@Model.UpPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div id="down-bar" class="progress-bar bg-danger progress-bar-cus" role="progressbar" style="width: @Model.DownPercentage%;" aria-valuenow="@Model.DownPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.PreviousBtcRate)
+                        @Html.HiddenFor(x => x.LowestBtcRate)
+                    </form>
+                </div>
+                <div class="col-md-3 col-sm-12" style="display:none" id="form-confirm">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12" style="text-align:center">
+                            <span class="font-large-2 font-weight-bold info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <span class="font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PredictedTrend"):</span><span class="font-medium-4 font-weight-bold" id="predicted-trend-confirm" style="display:inline; float:right"></span>
+                        </div>
+                        <div class="col-md-12 col-sm-12">
+                            <span class="font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BetAmount"):</span><span class="font-medium-4 font-weight-bold success" id="bet-amount-confirm" style="display:inline; float:right"></span>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-5">
+                            <button type="button" id="btn-confirm" class="btn btn-success btn-block font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</button>
+                        </div>
+                        <div class="col-md-2">
+                            &nbsp;
+                        </div>
+                        <div class="col-md-5">
+                            <button type="button" id="btn-back" class="btn btn-danger btn-block font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Back")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

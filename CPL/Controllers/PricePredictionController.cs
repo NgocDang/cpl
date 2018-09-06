@@ -74,18 +74,31 @@ namespace CPL.Controllers
             //var scheduler = _quartzSchedulerService.GetScheduler<IScheduler, IPricePredictionUpdateResultFactory>();
             //QuartzHelper.AddJob<PricePredictionUpdateResultJob>(scheduler, new DateTime(2018, 07, 30, 12, 56, 0));
 
-            var viewModel = new PricePredictionViewModel();
-            viewModel.PricePredictionId = _pricePredictionService.Queryable().LastOrDefault(x => !x.UpdatedDate.HasValue)?.Id;
-
-            if (viewModel.PricePredictionId.HasValue)
+            var viewModel = new PricePredictionIndexViewModel();
+            viewModel.PricePredictionTabs = new List<PricePredictionTab>();
+            var activePricePredictionList = _pricePredictionService.Queryable().Where(x => x.CloseBettingTime >= DateTime.Now).Select(x => x.Id).ToList();
+            for (int i = 0; i < activePricePredictionList.Count; i++)
             {
-                decimal upPercentage;
-                decimal downPercentage;
-                this.CalculatePercentagePrediction(viewModel.PricePredictionId.Value, out upPercentage, out downPercentage);
-                // Set to Model
-                viewModel.UpPercentage = upPercentage;
-                viewModel.DownPercentage = downPercentage;
+                var pricePredictionTab = _pricePredictionService.Queryable().Where(x => x.Id == activePricePredictionList[i]).Select(x => Mapper.Map<PricePredictionTab>(x)).FirstOrDefault();
+                viewModel.PricePredictionTabs.Add(pricePredictionTab);
             }
+            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
+
+            return View(viewModel);
+        }
+
+        public IActionResult PricePredictionViewComponent(int pricePredictionId)
+        {
+            var viewModel = new PricePredictionViewComponentViewModel();
+            viewModel = _pricePredictionService.Queryable().Where(x => x.Id == pricePredictionId).Select(x => Mapper.Map<PricePredictionViewComponentViewModel>(x)).FirstOrDefault();
+
+            decimal upPercentage;
+            decimal downPercentage;
+            this.CalculatePercentagePrediction(viewModel.Id, out upPercentage, out downPercentage);
+
+            // Set to Model
+            viewModel.UpPercentage = upPercentage;
+            viewModel.DownPercentage = downPercentage;
 
             var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
             btcCurrentPriceResult.Wait();
@@ -108,9 +121,9 @@ namespace CPL.Controllers
             var currentTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
             var listCurrentTime = new Dictionary<long, decimal>();
             var second = CPLConstant.HourBeforeInChart * 60 * 60 - 1; // currently 43200
-            for (int i = -second; i <= 0; i++)
+            for (int j = -second; j <= 0; j++)
             {
-                listCurrentTime.Add(currentTime + i, 0); // Default Price is 0;
+                listCurrentTime.Add(currentTime + j, 0); // Default Price is 0;
             }
 
             // Join 2 list
@@ -125,14 +138,14 @@ namespace CPL.Controllers
                                             .ToList();
 
             decimal value = 0;
-            for (int i = 0; i < pricePredictionViewModels.Count; i++)
+            for (int j = 0; j < pricePredictionViewModels.Count; j++)
             {
-                if (pricePredictionViewModels[i].Price != null)
+                if (pricePredictionViewModels[j].Price != null)
                 {
-                    value = pricePredictionViewModels[i].Price.GetValueOrDefault(0);
+                    value = pricePredictionViewModels[j].Price.GetValueOrDefault(0);
                 }
 
-                pricePredictionViewModels[i].Price = value;
+                pricePredictionViewModels[j].Price = value;
             }
 
             var previousTime = pricePredictionViewModels.FirstOrDefault().Time.ToString();
@@ -148,7 +161,7 @@ namespace CPL.Controllers
             // Get history game
             viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
 
-            return View(viewModel);
+            return ViewComponent("PricePrediction", viewModel);
         }
 
         private void CalculatePercentagePrediction(int pricePredictionId, out decimal upPercentage, out decimal downPercentage)
@@ -317,7 +330,7 @@ namespace CPL.Controllers
 
         // Not implemented yet
         [HttpPost]
-        public IActionResult AddNewGame(PricePredictionViewModel viewModel)
+        public IActionResult AddNewGame(PricePredictionIndexViewModel viewModel)
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             var currentUser = _sysUserService.Query().Select().FirstOrDefault(x => x.Id == user.Id && x.IsAdmin == true);
