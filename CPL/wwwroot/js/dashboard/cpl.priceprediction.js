@@ -70,7 +70,7 @@ var PricePrediction = {
             }
         });
 
-        var btcPriceChart = Highcharts.chart('btc-price-chart', {
+        $("#btc-price-chart").highcharts({
             chart: {
                 type: 'area',
                 zoomType: 'x',
@@ -79,8 +79,9 @@ var PricePrediction = {
                 events: {
                     load: function () {
                         // set up the updating of the chart each second
-                        var series = this.series[0], x, y;
-
+                        var series = this.series[0], x, y,
+                            chart = $('#btc-price-chart').highcharts(),
+                            yAxis = chart.yAxis[0];
                         //// auto set hover
                         //setInterval(function () {
                         //    var d = new Date();
@@ -118,6 +119,11 @@ var PricePrediction = {
                                 //x = (new Date()).getTime(); // current time
                                 y = parseFloat(btcCurrentRate.split(";")[1]);
                                 series.addPoint([x, y], true, true);
+
+                                yAxis.plotLinesAndBands[0].options.label.text = y.toString();
+                                yAxis.plotLinesAndBands[0].options.value = y;
+                                console.log(x, y);
+                                yAxis.update();
                             }
                         }, 1000);
                     }
@@ -132,7 +138,7 @@ var PricePrediction = {
                 series: {
                     shadow: false,
                     lineWidth: 0.01,
-                    turboThreshold: 50000
+                    turboThreshold: 500000
                 }
             },
             title: {
@@ -140,18 +146,38 @@ var PricePrediction = {
             },
             xAxis: {
                 type: 'datetime',
-                tickPixelInterval: 150
+                tickPixelInterval: 150,
+                plotLines: [{
+                    label: {
+                        text: 'Start time - 12:15',
+                    },
+                    color: '#000', // Color value
+                    value: 1536211043000, // Value of where the line will appear
+                    width: 1 // Width of the line    
+                },
+                {
+                    label: {
+                        text: 'Close time - 20:15',
+                    },
+                    color: '#000', // Color value
+                    value: 1536239403000, // Value of where the line will appear
+                    width: 1 // Width of the line    
+                }]
             },
             yAxis: {
                 title: {
                     text: 'Price'
                 },
-                min: $("#LowestBtcRate").val(),
                 plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#1EC481'
-                }]
+                    label: {
+                        text: '0000000000000000000',
+                        textAlign: 'center'
+                    },
+                    color: 'red', // Color value
+                    value: 6380, // Value of where the line will appear
+                    width: 1 // Width of the line    
+                }],
+                min: 6350//$("#LowestBtcRate").val()
             },
             tooltip: {
                 crosshairs: [true, true]
@@ -189,7 +215,7 @@ var PricePrediction = {
                         });
                     }
                     bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-                    for (i = 0; i <= 3600; i += 1) {
+                    for (i = 0; i <= (3600 * 8); i += 1) {
                         data.push({
                             x: (currentTime + i) * 1000,
                             y: null
