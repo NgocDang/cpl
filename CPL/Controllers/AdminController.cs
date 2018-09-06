@@ -392,12 +392,55 @@ namespace CPL.Controllers
                 totalResultsCount = _sysUserService.Queryable()
                         .Count();
 
-                return _sysUserService.Queryable()
-                            .Select(x => Mapper.Map<SysUserViewModel>(x))
-                            .OrderBy(sortBy, sortDir)
+                // total CPL used and total CPL awarded in lottery game 
+                var lotteryHistories = _lotteryHistoryService.Query()
+                                    .Include(x => x.Lottery)
+                                    .Include(x => x.LotteryPrize)
+                                    .Select()
+                                    .AsQueryable()
+                                    .GroupBy(x => x.SysUserId)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.Lottery.UnitPrice), TotalCPLAwarded = (int)y.Sum(x => (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0) });
+
+                // total CPL used and total CPL awarded in priceprediction game 
+                var pricePredictionHistories = _pricePredictionHistoryService.Queryable()
+                                    .GroupBy(x => x.SysUserId)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = (int)y.Sum(x => x.Amount), TotalCPLAwarded = (int)y.Sum(x => x.Award ?? 0) });
+
+                // total CPL used and total CPL awarded in all game 
+                var histories = lotteryHistories.Concat(pricePredictionHistories).ToList()
+                                    .GroupBy(x => x.Id)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.TotalCPLUsed), TotalCPLAwarded = y.Sum(x => x.TotalCPLAwarded) });
+
+                var sysUsers = _sysUserService.Queryable()
                             .Skip(skip)
                             .Take(take)
                             .ToList();
+
+                return sysUsers.LeftOuterJoin(histories, user => user.Id,
+                                                    history => history.Id,
+                                                    (user, history) => new SysUserViewModel()
+                                                    {
+                                                        Id = user.Id,
+                                                        Email = user.Email,
+                                                        FirstName = user.FirstName,
+                                                        LastName = user.LastName,
+                                                        StreetAddress = user.StreetAddress,
+                                                        Mobile = user.Mobile,
+                                                        CreatedDateInString = user.CreatedDate.ToString("yyyy/MM/dd"),
+                                                        Country = user.Country,
+                                                        City = user.City,
+                                                        IsDeleted = user.IsDeleted,
+                                                        BTCAmount = user.BTCAmount,
+                                                        ETHAmount = user.ETHAmount,
+                                                        TokenAmount = user.TokenAmount,
+                                                        TotalCPLUsed = (history != null) ? history.TotalCPLUsed : 0,
+                                                        TotalCPLAwarded = (history != null) ? history.TotalCPLAwarded : 0,
+                                                        TotalCPLUsedInString = (history != null) ? history.TotalCPLUsed.ToString(CPLConstant.Format.Amount) : "0",
+                                                        TotalCPLAwardedInString = (history != null) ?  history.TotalCPLAwarded.ToString(CPLConstant.Format.Amount) : "0"
+                                                    })
+                                                    .AsQueryable()
+                                                    .OrderBy(sortBy, sortDir)
+                                                    .ToList();
             }
             else
             {
@@ -409,14 +452,57 @@ namespace CPL.Controllers
                 totalResultsCount = _sysUserService.Queryable()
                         .Count();
 
-                return _sysUserService.Queryable()
+                // total CPL used and total CPL awarded in lottery game 
+                var lotteryHistories = _lotteryHistoryService.Query()
+                                    .Include(x => x.Lottery)
+                                    .Include(x => x.LotteryPrize)
+                                    .Select()
+                                    .AsQueryable()
+                                    .GroupBy(x => x.SysUserId)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.Lottery.UnitPrice), TotalCPLAwarded = (int)y.Sum(x => (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0) });
+
+                // total CPL used and total CPL awarded in priceprediction game 
+                var pricePredictionHistories = _pricePredictionHistoryService.Queryable()
+                                    .GroupBy(x => x.SysUserId)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = (int)y.Sum(x => x.Amount), TotalCPLAwarded = (int)y.Sum(x => x.Award ?? 0) });
+
+                // total CPL used and total CPL awarded in all game 
+                var histories = lotteryHistories.Concat(pricePredictionHistories).ToList()
+                                    .GroupBy(x => x.Id)
+                                    .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.TotalCPLUsed), TotalCPLAwarded = y.Sum(x => x.TotalCPLAwarded) });
+
+                var sysUsers = _sysUserService.Queryable()
                         .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
-                        .Select(x => Mapper.Map<SysUserViewModel>(x))
-                        .OrderBy(sortBy, sortDir)
                         .Skip(skip)
-                        .Take(take)
-                        .ToList();
+                        .Take(take);
+
+                return sysUsers.LeftOuterJoin(histories, user => user.Id,
+                                                    history => history.Id,
+                                                    (user, history) => new SysUserViewModel()
+                                                    {
+                                                        Id = user.Id,
+                                                        Email = user.Email,
+                                                        FirstName = user.FirstName,
+                                                        LastName = user.LastName,
+                                                        StreetAddress = user.StreetAddress,
+                                                        Mobile = user.Mobile,
+                                                        CreatedDateInString = user.CreatedDate.ToString("yyyy/MM/dd"),
+                                                        Country = user.Country,
+                                                        City = user.City,
+                                                        IsDeleted = user.IsDeleted,
+                                                        BTCAmount = user.BTCAmount,
+                                                        ETHAmount = user.ETHAmount,
+                                                        TokenAmount = user.TokenAmount,
+                                                        TotalCPLUsed = (history != null) ? history.TotalCPLUsed : 0,
+                                                        TotalCPLAwarded = (history != null) ? history.TotalCPLAwarded : 0,
+                                                        TotalCPLUsedInString = (history != null) ? history.TotalCPLUsed.ToString(CPLConstant.Format.Amount) : "0",
+                                                        TotalCPLAwardedInString = (history != null) ? history.TotalCPLAwarded.ToString(CPLConstant.Format.Amount) : "0"
+                                                    })
+                                                    .AsQueryable()
+                                                    .OrderBy(sortBy, sortDir)
+                                                    .ToList();
+
             }
         }
         #endregion
