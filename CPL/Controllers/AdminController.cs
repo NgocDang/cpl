@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace CPL.Controllers
 {
-    
+
     public class AdminController : Controller
     {
         private readonly ILangService _langService;
@@ -33,6 +33,7 @@ namespace CPL.Controllers
         private readonly ISysUserService _sysUserService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
+        private readonly IPricePredictionService _pricePredictionService;
         private readonly INewsService _newsService;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILotteryService _lotteryService;
@@ -51,6 +52,7 @@ namespace CPL.Controllers
             ISysUserService sysUserService,
             ILotteryHistoryService lotteryHistoryService,
             IPricePredictionHistoryService pricePredictionHistoryService,
+            IPricePredictionService pricePredictionService,
             INewsService newsService,
             IHostingEnvironment hostingEnvironment,
             ILotteryService lotteryService,
@@ -70,6 +72,7 @@ namespace CPL.Controllers
             this._lotteryService = lotteryService;
             this._lotteryPrizeService = lotteryPrizeService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
+            this._pricePredictionService = pricePredictionService;
             this._newsService = newsService;
             this._affiliateService = affiliateService;
             this._hostingEnvironment = hostingEnvironment;
@@ -90,10 +93,39 @@ namespace CPL.Controllers
 
             // Game management
             var lotteryGames = _lotteryService.Queryable();
+            var pricePredictioNGames = _pricePredictionService.Queryable();
+            var lotteryHistories = _lotteryHistoryService.Queryable();
+            var pricePredictionHistories = _pricePredictionHistoryService.Queryable();
+            // lottery game
             viewModel.TotalLotteryGame = lotteryGames.Count();
-            viewModel.TotalLotteryGamePending = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.PENDING).Count();
-            viewModel.TotalLotteryGameActive = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.ACTIVE).Count();
-            viewModel.TotalLotteryGameCompleted = lotteryGames.Where(x => x.Status == (int)EnumLotteryGameStatus.COMPLETED).Count();
+            var totalSaleInLotteryGame = _lotteryHistoryService.Query()
+                                        .Include(x => x.Lottery)
+                                        .Select(x => x.Lottery.UnitPrice).Sum();
+            var totalSaleInLotteryGameToday = _lotteryHistoryService.Query()
+                                        .Include(x => x.Lottery)
+                                        .Select().AsQueryable()
+                                        .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.Date))
+                                        .Select(x => x.Lottery.UnitPrice).Sum();
+            var totalSaleInLotteryGameYesterday = _lotteryHistoryService.Query()
+                                        .Include(x => x.Lottery)
+                                        .Select().AsQueryable()
+                                        .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.AddDays(-1).Date))
+                                        .Select(x => x.Lottery.UnitPrice).Sum();
+            // price prediction game
+            viewModel.TotalPricePredictionGame = pricePredictioNGames.Count();
+            var totalSaleIPricePredictionGame = _pricePredictionHistoryService.Queryable()
+                                            .Select(x => x.Amount).Sum();
+            var totalSaleIPricePredictionGameToday = _pricePredictionHistoryService.Queryable()
+                                            .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.Date))
+                                            .Select(x => x.Amount).Sum();
+            var totalSaleIPricePredictionGameYesterday = _pricePredictionHistoryService.Queryable()
+                                            .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.AddDays(-1).Date))
+                                            .Select(x => x.Amount).Sum();
+            // all game
+            viewModel.TotalGame = viewModel.TotalLotteryGame + viewModel.TotalPricePredictionGame;
+            viewModel.TotalSaleInGame = totalSaleInLotteryGame + (int)totalSaleIPricePredictionGame;
+            viewModel.TotalSaleInGameToday = totalSaleInLotteryGameToday + (int)totalSaleIPricePredictionGameToday;
+            viewModel.TotalSaleInGameYesterday = totalSaleInLotteryGameYesterday + (int)totalSaleIPricePredictionGameYesterday;
 
             // Affiliate
             // TODO: Get data from database
@@ -127,7 +159,7 @@ namespace CPL.Controllers
                 Tier3SaleToTier2Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3SaleToTier2Rate).Value)
             };
 
-            viewModel.TotalAffiliateApplicationApproved = _sysUserService.Queryable().Count(x=>x.AffiliateId.HasValue && x.AffiliateId.Value != (int)EnumAffiliateApplicationStatus.PENDING);
+            viewModel.TotalAffiliateApplicationApproved = _sysUserService.Queryable().Count(x => x.AffiliateId.HasValue && x.AffiliateId.Value != (int)EnumAffiliateApplicationStatus.PENDING);
             viewModel.TotalAffiliateApplicationPending = _sysUserService.Queryable().Count(x => x.AffiliateId.HasValue && x.AffiliateId == (int)EnumAffiliateApplicationStatus.PENDING);
 
             viewModel.NumberOfAgencyAffiliateExpiredDays = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.NumberOfAgencyAffiliateExpiredDays).Value);
@@ -436,7 +468,7 @@ namespace CPL.Controllers
                                                         TotalCPLUsed = (history != null) ? history.TotalCPLUsed : 0,
                                                         TotalCPLAwarded = (history != null) ? history.TotalCPLAwarded : 0,
                                                         TotalCPLUsedInString = (history != null) ? history.TotalCPLUsed.ToString(CPLConstant.Format.Amount) : "0",
-                                                        TotalCPLAwardedInString = (history != null) ?  history.TotalCPLAwarded.ToString(CPLConstant.Format.Amount) : "0"
+                                                        TotalCPLAwardedInString = (history != null) ? history.TotalCPLAwarded.ToString(CPLConstant.Format.Amount) : "0"
                                                     })
                                                     .AsQueryable()
                                                     .OrderBy(sortBy, sortDir)
@@ -811,6 +843,14 @@ namespace CPL.Controllers
                         .Take(take)
                         .ToList();
             }
+        }
+        #endregion
+
+        #region Game
+        [Permission(EnumRole.Admin)]
+        public IActionResult Game()
+        {
+            return View();
         }
         #endregion
 
@@ -1298,6 +1338,9 @@ namespace CPL.Controllers
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
             }
         }
+        #endregion
+
+        #region PricePrediction
         #endregion
     }
 }
