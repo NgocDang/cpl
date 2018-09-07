@@ -45,7 +45,6 @@ namespace CPL.PredictionGameService
         private static int HoldingIntervalInHour;
         private static int CompareIntervalInMinutes;
 
-
         public void Start()
         {
             // ConfigurationBuilder

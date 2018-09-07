@@ -40,15 +40,11 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 // currentTime
                 var resultTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
                 // the time to be compared
-                var toBeComparedTime = ((DateTimeOffset)DateTime.UtcNow.AddMinutes(-/*CompareIntervalInMinutes*/1)).ToUnixTimeSeconds(); // TO DO
+                var toBeComparedTime = ((DateTimeOffset)DateTime.UtcNow.AddMinutes(-/*CompareIntervalInMinutes*/1)).ToUnixTimeSeconds(); // TODO
                 // get price at current time from BTCPrice table
                 var resultPrize = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => resultTime >= x.Time).Price;
                 // get price at time to be compared from BTCPrice table
                 var toBeComparedPrize = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => toBeComparedTime >= x.Time).Price;
-
-                //var resultDBTime = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => resultTime >= x.Time).Time;
-                // get price at time to be compared from BTCPrice table
-                //var toBeComparedDBTime = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => toBeComparedTime >= x.Time).Time;
 
                 // update price prediction
                 var pricePrediction = resolver.PricePredictionService.Queryable().OrderBy(x => x.ResultTime).FirstOrDefault(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && DateTime.Now >= x.ResultTime); // TEST
@@ -91,14 +87,14 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                     .Where(x => x.PricePredictionId == pricePredictionId);
 
                 // result of game
-                var gameResult = (pricePrediction.ResultPrice > pricePrediction.ToBeComparedPrice) ? EnumPricePredictionStatus.UP.ToBoolean() : EnumPricePredictionStatus.DOWN.ToBoolean(); // equals?
+                var gameResult = (pricePrediction.ResultPrice > pricePrediction.ToBeComparedPrice) ? EnumPricePredictionStatus.UP.ToBoolean() : EnumPricePredictionStatus.DOWN.ToBoolean(); // TODO equals?
 
                 // calculate the prize
                 var totalAmountOfLoseUsers = pricePredictionHistories.Where(x => x.Prediction != gameResult).Sum(x => x.Amount);
                 var totalAmountToBeAwarded = totalAmountOfLoseUsers * 80 / 100; // Distribute 80% of the loser's BET quantity to the winners.
                 var totalAmountOfWinUsers = pricePredictionHistories.Where(x => x.Prediction == gameResult).Sum(x => x.Amount);
                 
-                // calculate amount of each win users and update status.
+                // calculate the award
                 foreach (var pricePredictionHistory in pricePredictionHistories)
                 {
                     if (pricePredictionHistory.Prediction != gameResult)
@@ -114,10 +110,13 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                         pricePredictionHistory.Result = EnumGameResult.WIN.ToString();
                         pricePredictionHistory.Award = amountToBeAwarded;
                         pricePredictionHistory.SysUser.TokenAmount += amountToBeAwarded;
+
+                        // update user's amount
                         resolver.SysUserService.Update(pricePredictionHistory.SysUser);
                     }
                     pricePredictionHistory.UpdatedDate = DateTime.Now;
                     
+                    // update price prediction history
                     resolver.PricePredictionHistoryService.Update(pricePredictionHistory);
                 }
 
@@ -125,7 +124,6 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 pricePrediction.NumberOfPredictors = pricePredictionHistories.Count();
                 pricePrediction.Volume = pricePredictionHistories.Sum(x => x.Amount);
                 pricePrediction.Description += $" Game end at {DateTime.Now.ToString(CPLConstant.Format.DateTime)}";
-
                 resolver.PricePredictionService.Update(pricePrediction);
 
                 // save to DB
