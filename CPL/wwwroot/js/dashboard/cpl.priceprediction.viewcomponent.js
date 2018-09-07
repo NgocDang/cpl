@@ -334,7 +334,7 @@ var PricePredictionViewComponent = {
                 url: '/PricePrediction/ConfirmPrediction',
                 type: "POST",
                 data: {
-                    pricePredictionId: tabPane.find("#Id").val(),
+                    pricePredictionId: $(_this).data().id,
                     betAmount: tabPane.find(".bet-amount").val(),
                     predictedTrend: tabPane.find(".btn-up-down-group > .btn.active").data().value
                 },
