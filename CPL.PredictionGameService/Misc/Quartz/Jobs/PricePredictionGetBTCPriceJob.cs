@@ -24,7 +24,8 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
         public Task Execute(IJobExecutionContext context)
         {
             int pricePredictionId = DoGetBTCPrizePricePrediction();
-            DoUpdateWinner(pricePredictionId);
+            if (pricePredictionId > 0)
+                DoUpdateWinner(pricePredictionId);
             return Task.FromResult(0);
         }
 
@@ -87,7 +88,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                     .Query()
                     .Include(x => x.SysUser)
                     .Select()
-                    .Where(x => x.Id == pricePredictionId);
+                    .Where(x => x.PricePredictionId == pricePredictionId);
 
                 // result of game
                 var gameResult = (pricePrediction.ResultPrice > pricePrediction.ToBeComparedPrice) ? EnumPricePredictionStatus.UP.ToBoolean() : EnumPricePredictionStatus.DOWN.ToBoolean(); // equals?
@@ -104,13 +105,16 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                     {
                         // check minus money
                         pricePredictionHistory.Result = EnumGameResult.LOSE.ToString();
+                        pricePredictionHistory.Award = 0m;
                     }
                     else
                     {
                         // the amount will be awarded
                         var amountToBeAwarded = (pricePredictionHistory.Amount / totalAmountOfWinUsers) * totalAmountToBeAwarded; // The prize money is distributed at an equal rate according to the amount of bet.​
                         pricePredictionHistory.Result = EnumGameResult.WIN.ToString();
+                        pricePredictionHistory.Award = amountToBeAwarded;
                         pricePredictionHistory.SysUser.TokenAmount += amountToBeAwarded;
+                        resolver.SysUserService.Update(pricePredictionHistory.SysUser);
                     }
                     pricePredictionHistory.UpdatedDate = DateTime.Now;
                     
@@ -120,7 +124,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 // update pricePrediction
                 pricePrediction.NumberOfPredictors = pricePredictionHistories.Count();
                 pricePrediction.Volume = pricePredictionHistories.Sum(x => x.Amount);
-                pricePrediction.Description += $" Game end at {DateTime.Now}";
+                pricePrediction.Description += $" Game end at {DateTime.Now.ToString(CPLConstant.Format.DateTime)}";
 
                 resolver.PricePredictionService.Update(pricePrediction);
 

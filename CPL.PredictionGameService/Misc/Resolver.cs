@@ -36,6 +36,8 @@ namespace CPL.PredictionGameService.Misc
 
             builder.RegisterType<SysUserService>().As<ISysUserService>().InstancePerDependency();
             builder.RegisterType<PricePredictionService>().As<IPricePredictionService>().InstancePerDependency();
+            builder.RegisterType<PricePredictionHistoryService>().As<IPricePredictionHistoryService>().InstancePerDependency();
+            builder.RegisterType<CoinTransactionService>().As<ICoinTransactionService>().InstancePerDependency();
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerDependency();
             builder.RegisterType<BTCPriceService>().As<IBTCPriceService>().InstancePerDependency();
 
