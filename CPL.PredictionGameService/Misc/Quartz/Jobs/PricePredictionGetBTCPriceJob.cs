@@ -23,12 +23,12 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
-            int pricePredictionId = DoGetBTCPrizePricePrediction(out string result);
-            DoUpdateWinner(pricePredictionId, result);
+            int pricePredictionId = DoGetBTCPrizePricePrediction();
+            DoUpdateWinner(pricePredictionId);
             return Task.FromResult(0);
         }
 
-        private int DoGetBTCPrizePricePrediction(out bool result)
+        private int DoGetBTCPrizePricePrediction()
         {
             try
             {
@@ -57,19 +57,6 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 
                 resolver.PricePredictionService.Update(pricePrediction);
 
-                if (resultPrize > toBeComparedPrize)
-                {
-                    result = EnumPricePredictionStatus.UP.ToBoolean();
-                }
-                else if (resultPrize < toBeComparedPrize)
-                {
-                    result = EnumPricePredictionStatus.DOWN.ToString();
-                }
-                else
-                {
-                    result = null; // TODO
-                }
-
                 // save to DB
                 resolver.UnitOfWork.SaveChanges();
 
@@ -82,35 +69,58 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 else
                     Utils.FileAppendThreadSafe(FileName, string.Format("DoGetBTCPrizePricePrediction -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
 
-                result = null;
                 return 0 ;
             }
         }
 
-        private void DoUpdateWinner(int pricePredictionId, string result)
+        private void DoUpdateWinner(int pricePredictionId)
         {
             try
             {
                 var resolver = new Resolver();
 
-                // update price prediction
+                var pricePrediction = resolver.PricePredictionService
+                    .Queryable()
+                    .FirstOrDefault(x => x.Id == pricePredictionId);
+
                 var pricePredictionHistories = resolver.PricePredictionHistoryService
                     .Query()
                     .Include(x => x.SysUser)
                     .Select()
                     .Where(x => x.Id == pricePredictionId);
+
+                // result of game
+                var gameResult = (pricePrediction.ResultPrice > pricePrediction.ToBeComparedPrice) ? EnumPricePredictionStatus.UP.ToBoolean() : EnumPricePredictionStatus.DOWN.ToBoolean(); // equals?
+
+                // calculate the prize
+                var totalAmountOfLoseUsers = pricePredictionHistories.Where(x => x.Prediction != gameResult).Sum(x => x.Amount);
+                var totalAmountToBeAwarded = totalAmountOfLoseUsers * 80 / 100; // Distribute 80% of the loser's BET quantity to the winners.
+                var totalAmountOfWinUsers = pricePredictionHistories.Where(x => x.Prediction == gameResult).Sum(x => x.Amount);
+                
+                // calculate amount of each win users and update status.
                 foreach (var pricePredictionHistory in pricePredictionHistories)
                 {
-                    if (result == pricePredictionHistory.Prediction)
+                    if (pricePredictionHistory.Prediction != gameResult)
                     {
-                        pricePredictionHistory.Result = EnumGameResult.WIN.ToString(); // TODO KYC ?
-                    }
-                    else // result == EnumPricePredictionStatus.LOSE.ToString()
-                    {
+                        // check minus money
                         pricePredictionHistory.Result = EnumGameResult.LOSE.ToString();
                     }
+                    else
+                    {
+                        // the amount will be awarded
+                        var amountToBeAwarded = (pricePredictionHistory.Amount / totalAmountOfWinUsers) * totalAmountToBeAwarded; // The prize money is distributed at an equal rate according to the amount of bet.​
+                        pricePredictionHistory.Result = EnumGameResult.WIN.ToString();
+                        pricePredictionHistory.SysUser.TokenAmount += amountToBeAwarded;
+                    }
+                    pricePredictionHistory.UpdatedDate = DateTime.Now;
+                    
+                    resolver.PricePredictionHistoryService.Update(pricePredictionHistory);
                 }
-                pricePrediction.UpdatedDate = DateTime.Now;
+
+                // update pricePrediction
+                pricePrediction.NumberOfPredictors = pricePredictionHistories.Count();
+                pricePrediction.Volume = pricePredictionHistories.Sum(x => x.Amount);
+                pricePrediction.Description += $" Game end at {DateTime.Now}";
 
                 resolver.PricePredictionService.Update(pricePrediction);
 
@@ -120,10 +130,18 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             catch (Exception ex)
             {
                 if (ex.InnerException?.Message != null)
-                    Utils.FileAppendThreadSafe(FileName, string.Format("DoGetBTCPrizePricePrediction -- Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(FileName, string.Format("DoUpdateWinnerPricePrediction -- Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                 else
-                    Utils.FileAppendThreadSafe(FileName, string.Format("DoGetBTCPrizePricePrediction -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(FileName, string.Format("DoUpdateWinnerPricePrediction -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
             }
+        }
+    }
+
+    public static class EnumBooleanExtension
+    {
+        public static bool ToBoolean(this EnumPricePredictionStatus value)
+        {
+            return value == EnumPricePredictionStatus.UP;
         }
     }
 }
