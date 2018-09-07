@@ -46,6 +46,7 @@
     <Folder Include="wwwroot\css\dashboard\plugins\high-charts\" />
     <Folder Include="wwwroot\css\dashboard\plugins\img\" />
     <Folder Include="wwwroot\images\news\" />
+    <Folder Include="wwwroot\flags\" />
   </ItemGroup>
 
   <ItemGroup>
