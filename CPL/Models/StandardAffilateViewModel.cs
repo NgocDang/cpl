@@ -12,6 +12,7 @@ namespace CPL.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public int? AffiliateId { get; set; }
 
         public decimal TotalIntroducer { get; set; }
 
@@ -56,5 +57,13 @@ namespace CPL.Models
 
         // variable in string
         public string AffiliateCreatedDateInString { get; set; }
+    }
+
+    public class StandardAffliateDataModel
+    {
+        public int Id { get; set; }
+        public int? Tier1DirectRate { get; set; }
+        public int? Tier2SaleToTier1Rate { get; set; }
+        public int? Tier3SaleToTier1Rate { get; set; }
     }
 }
