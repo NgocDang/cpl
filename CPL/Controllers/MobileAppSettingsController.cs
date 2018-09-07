@@ -18,7 +18,7 @@ namespace CPL.Controllers
             {
                 return new JsonResult(
                     new {
-                        code = 200,
+                        code = EnumResponseStatus.SUCCESS,
                         server_address = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}",
                         server_api_address = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}",
                         app_copyright = ConfigurationManager.AppSettings["MobileAppSettings:Copyright"],
@@ -36,7 +36,7 @@ namespace CPL.Controllers
                 return new JsonResult(
                     new
                     {
-                        code = 500,
+                        code = EnumResponseStatus.WARNING,
                         error_message_key = ex.Message
                     }
                 );

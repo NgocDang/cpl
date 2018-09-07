@@ -56,7 +56,7 @@ namespace CPL.Controllers
                 return new JsonResult(
                     new
                     {
-                        code = 200,
+                        code = EnumResponseStatus.SUCCESS,
                         data = Langs
                     }
                 );
@@ -66,13 +66,12 @@ namespace CPL.Controllers
                 return new JsonResult(
                     new
                     {
-                        code = 500,
+                        code = EnumResponseStatus.WARNING,
                         error_message_key = ex.Message
                     }
                 );
             }
         }
-
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
@@ -95,11 +94,10 @@ namespace CPL.Controllers
                         .Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
                 }
 
-
                 return new JsonResult(
                     new
                     {
-                        code = 200,
+                        code = EnumResponseStatus.SUCCESS,
                         data = Langs
                     }
                 );
@@ -109,7 +107,7 @@ namespace CPL.Controllers
                 return new JsonResult(
                     new
                     {
-                        code = 500,
+                        code = EnumResponseStatus.WARNING,
                         error_message_key = ex.Message
                     }
                 );
@@ -126,11 +124,10 @@ namespace CPL.Controllers
                         .Where(x => x.LangId == langId && x.Name == pageName)
                         .Select(x => Mapper.Map<LangMsgDetailViewModel>(x)).FirstOrDefault();
 
-
                 return new JsonResult(
                     new
                     {
-                        code = 200,
+                        code = EnumResponseStatus.SUCCESS,
                         data = pageDetail
                     }
                 );
@@ -140,21 +137,11 @@ namespace CPL.Controllers
                 return new JsonResult(
                     new
                     {
-                        code = 500,
+                        code = EnumResponseStatus.WARNING,
                         error_message_key = ex.Message
                     }
                 );
             }
         }
-
-
-
-
-
-
-
-
-
-
     }
 }
