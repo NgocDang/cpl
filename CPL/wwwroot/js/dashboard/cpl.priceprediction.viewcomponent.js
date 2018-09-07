@@ -16,10 +16,9 @@ var PricePredictionViewComponent = {
             .catch(() => {
                 console.log("Error while establishing connection");
             });
-
-        progressConnection.on("predictedUserProgress", (up, down) => {
-            if (up !== undefined && down !== undefined)
-                this.setUserProgress(up, down);
+        progressConnection.on("predictedUserProgress", (up, down, pricePredictionId) => {
+            if (up !== undefined && down !== undefined && pricePredictionId !== undefined)
+                this.setUserProgress(up, down, pricePredictionId);
         });
     },
     //bindLoadBTCCurrentRate: function () {
@@ -49,16 +48,16 @@ var PricePredictionViewComponent = {
     //        }
     //    });
     //},
-    setUserProgress: function (up, down) {
+    setUserProgress: function (up, down, pricePredictionId) {
         // Reset up-bar setting
-        $("#up-bar").css({ "width": up + "%" })
+        $("#price-prediction-nav-" + pricePredictionId + " #up-bar").css({ "width": up + "%" })
             .attr("aria-valuenow", up)
-        $("#up-bar-value").html(up + "%");
+        $("#price-prediction-nav-" + pricePredictionId + " #up-bar-value").html(up + "%");
 
         // Reset down-bar setting
-        $("#down-bar").css({ "width": down + "%" })
+        $("#price-prediction-nav-" + pricePredictionId + " #down-bar").css({ "width": down + "%" })
             .attr("aria-valuenow", down)
-        $("#down-bar-value").html(down + "%");
+        $("#price-prediction-nav-" + pricePredictionId + " #down-bar-value").html(down + "%");
     },
     //loadBTCPriceChart: function () {
     //    Highcharts.setOptions({
@@ -337,7 +336,7 @@ var PricePredictionViewComponent = {
                 data: {
                     pricePredictionId: $(_this).data().id,
                     betAmount: tabPane.find(".bet-amount").val(),
-                    predictedTrend: tabPane.find(".btn-up-down-group > .btn.active").data().value
+                    predictedTrend: tabPane.find(".btn-up-down-group > .btn.active").data().value,
                 },
                 success: function (data) {
                     if (data.success) {

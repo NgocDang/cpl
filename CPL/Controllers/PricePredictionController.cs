@@ -238,7 +238,7 @@ namespace CPL.Controllers
                     //////////////////////////
 
 
-                    _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage);
+                    _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage, pricePredictionId);
 
 
                     return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "BettingSuccessfully") });
