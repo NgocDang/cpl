@@ -8,6 +8,7 @@ namespace CPL.Models
     public class PricePredictionIndexViewModel
     {
         public int? SysUserId { get; set; }
+        public decimal? TokenAmount { get; set; }
         public List<PricePredictionTab> PricePredictionTabs { get; set; }
     }
 
