@@ -3,6 +3,7 @@ using CPL.Core.Services;
 using CPL.Domain;
 using CPL.Infrastructure.Repositories;
 using Quartz;
+using Quartz.Impl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,20 +21,24 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
-            var resolver = new Resolver();
+            JobDataMap dataMap = context.JobDetail.JobDataMap;
+            Resolver resolver = (Resolver)dataMap["resolve"];
 
             NumberOfDailyPricePrediction = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.NumberOfDailyPricePrediction).Value);
             PricePredictionBettingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionBettingIntervalInHour).Value);
             HoldingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.HoldingIntervalInHour).Value);
             CompareIntervalInMinutes = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinutes).Value);
 
-            DoCreateNewPricePrediction(resolver);
+            DoCreateNewPricePrediction(ref resolver);
             return Task.FromResult(0);
         }
 
-        public void DoCreateNewPricePrediction(Resolver resolver)
+        public void DoCreateNewPricePrediction(ref Resolver resolver)
         {
             var startTime = DateTime.Now;
+
+            IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
+            scheduler.Start();
 
             for (int i = 0; i < NumberOfDailyPricePrediction; i++)
             {
@@ -48,6 +53,39 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 };
 
                 resolver.PricePredictionService.Insert(newPricePredictionRecord);
+
+
+                var hour = 17;
+                var min = 24 + i;
+                var day = 7;
+                DateTimeOffset timeOffset = DateBuilder.DateOf(
+                    //newPricePredictionRecord.CloseBettingTime.Hour,
+                    hour,
+                    //newPricePredictionRecord.CloseBettingTime.Minute,
+                    min,
+                    newPricePredictionRecord.CloseBettingTime.Second,
+                    //newPricePredictionRecord.CloseBettingTime.Day,
+                    day,
+                    newPricePredictionRecord.CloseBettingTime.Month,
+                    newPricePredictionRecord.CloseBettingTime.Year);
+
+                var jobData = new JobDataMap
+                {
+                    ["resolve"] = resolver
+                };
+                IJobDetail job = JobBuilder.Create<PricePredictionGetBTCPriceJob>()
+                     .UsingJobData(jobData)
+                    .WithIdentity($"PricePredictionUpdateBTCPrice{i}", "QuartzGroup")
+                    .WithDescription("Job to update BTC price each interval hours automatically")
+                    .Build();
+
+                ITrigger trigger = TriggerBuilder.Create()
+                    .WithIdentity($"PricePredictionUpdateBTCPrice{i}", "QuartzGroup")
+                    .WithDescription("Job to update BTC price each interval hours automatically")
+                    .StartAt(timeOffset) // consider timeOffset.ToUniversalTime()
+                    .Build();
+
+                scheduler.ScheduleJob(job, trigger);
             }
 
             resolver.UnitOfWork.SaveChanges();

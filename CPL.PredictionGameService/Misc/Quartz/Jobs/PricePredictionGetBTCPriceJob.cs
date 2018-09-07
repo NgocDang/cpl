@@ -23,18 +23,19 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
-            int pricePredictionId = DoGetBTCPrizePricePrediction();
+            JobDataMap dataMap = context.JobDetail.JobDataMap;
+            Resolver resolver = (Resolver)dataMap["resolve"];
+
+            int pricePredictionId = DoGetBTCPrizePricePrediction(ref resolver);
             if (pricePredictionId > 0)
-                DoUpdateWinner(pricePredictionId);
+                DoUpdateWinner(ref resolver, pricePredictionId);
             return Task.FromResult(0);
         }
 
-        private int DoGetBTCPrizePricePrediction()
+        private int DoGetBTCPrizePricePrediction(ref Resolver resolver)
         {
             try
             {
-                var resolver = new Resolver();
-
                 // interval time
                 CompareIntervalInMinutes = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinutes).Value);
                 // currentTime
@@ -70,12 +71,10 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             }
         }
 
-        private void DoUpdateWinner(int pricePredictionId)
+        private void DoUpdateWinner(ref Resolver resolver, int pricePredictionId)
         {
             try
             {
-                var resolver = new Resolver();
-
                 var pricePrediction = resolver.PricePredictionService
                     .Queryable()
                     .FirstOrDefault(x => x.Id == pricePredictionId);
