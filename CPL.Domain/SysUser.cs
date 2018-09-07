@@ -41,7 +41,7 @@ namespace CPL.Domain
         public int? AffiliateId { get; set; }
         public DateTime? AffiliateCreatedDate { get; set; }
         public int? IsIntroducedById { get; set; }
-        public bool? IsLocked { get; set; }
+        public bool IsLocked { get; set; }
 
         public virtual ICollection<CoinTransaction> CoinTransactions { get; set; }
         public virtual ICollection<PricePredictionHistory> PricePredictionHistories { get; set; }
