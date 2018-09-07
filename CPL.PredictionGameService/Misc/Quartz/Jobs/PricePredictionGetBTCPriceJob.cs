@@ -40,14 +40,14 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 // currentTime
                 var resultTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
                 // the time to be compared
-                var toBeComparedTime = ((DateTimeOffset)DateTime.UtcNow.AddMinutes(-/*CompareIntervalInMinutes*/1)).ToUnixTimeSeconds(); // TODO
+                var toBeComparedTime = ((DateTimeOffset)DateTime.UtcNow.AddMinutes(-CompareIntervalInMinutes)).ToUnixTimeSeconds();
                 // get price at current time from BTCPrice table
                 var resultPrize = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => resultTime >= x.Time).Price;
                 // get price at time to be compared from BTCPrice table
                 var toBeComparedPrize = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => toBeComparedTime >= x.Time).Price;
 
                 // update price prediction
-                var pricePrediction = resolver.PricePredictionService.Queryable().OrderBy(x => x.ResultTime).FirstOrDefault(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && DateTime.Now >= x.ResultTime); // TEST
+                var pricePrediction = resolver.PricePredictionService.Queryable().OrderBy(x => x.ResultTime).FirstOrDefault(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && DateTime.Now >= x.ResultTime);
                 pricePrediction.ResultPrice = resultPrize;
                 pricePrediction.ToBeComparedPrice = toBeComparedPrize;
                 pricePrediction.UpdatedDate = DateTime.Now;
@@ -109,7 +109,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                         var amountToBeAwarded = (pricePredictionHistory.Amount / totalAmountOfWinUsers) * totalAmountToBeAwarded; // The prize money is distributed at an equal rate according to the amount of bet.​
                         pricePredictionHistory.Result = EnumGameResult.WIN.ToString();
                         pricePredictionHistory.Award = amountToBeAwarded;
-                        pricePredictionHistory.SysUser.TokenAmount += amountToBeAwarded;
+                        pricePredictionHistory.SysUser.TokenAmount += amountToBeAwarded + pricePredictionHistory.Amount; // add amount award and refund amount bet
 
                         // update user's amount
                         resolver.SysUserService.Update(pricePredictionHistory.SysUser);

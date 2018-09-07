@@ -97,9 +97,8 @@ namespace CPL.PredictionGameService
                 ITrigger trigger = TriggerBuilder.Create()
                     .WithIdentity("PricePredictionUpdateBTCPrice", "QuartzGroup")
                     .WithDescription("Job to update BTC price each interval hours automatically")
-                    //.WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PricePredictionBettingIntervalInHour)
-                    .WithDailyTimeIntervalSchedule(x => x.WithIntervalInMinutes(1) // Test
-                                                          .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(startHour, CompareIntervalInMinutes)))
+                    .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PricePredictionBettingIntervalInHour)
+                                                         .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(startHour, CompareIntervalInMinutes)))
                     .Build();
 
                 await scheduler.ScheduleJob(job, trigger);
