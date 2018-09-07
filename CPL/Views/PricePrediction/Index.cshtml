@@ -3,142 +3,46 @@
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction");
 }
 
-@model PricePredictionViewModel
+@model PricePredictionIndexViewModel
 
 @section styles
     {
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
-    <style>
-        .fa-circle-active {
-            bottom: 2px;
-            position: relative;
-            font-size: .5rem !important;
-        }
-
-        .fa-circle-inactive {
-            bottom: 2px;
-            position: relative;
-            font-size: .5rem !important;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/dashboard/cpl.priceprediction.css" asp-append-version="true" />
 }
 <div class="app-content container center-layout mt-2 px-0">
     <div class="content-wrapper">
         <div class="content-body">
-            <div class="row">
-                <div class="col-12">
-                    <img src="~/images/banner_13.jpg" class="img-fluid" />
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-content collapse show">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-9 col-12">
-                                        <div id="btc-price-chart">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-sm-12" id="form-bet">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <span class="font-large-2 font-weight-bold" value="@Model.CurrentBTCRate" id="btc-rate">@Model.CurrentBTCRateInString</span> <span class="font-medium-4">BTC/USDT</span>
-                                            </div>
-                                        </div>
-                                        @if (Model.PricePredictionId.HasValue)
-                                        {
-                                            <form id="form-price-bet">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <fieldset class="form-group">
-                                                            @*TODO - Max value should be user's CPL*@
-                                                            <label for="Amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
-                                                            <input type="number" name="Amount" class="form-control" min="1" id="bet-amount" value="0" required autofocus="">
-                                                        </fieldset>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <button type="button" id="btn-bet-1000" class="btn btn-gray btn-block font-weight-bold">1.000 CPL</button>
-                                                    </div>
-                                                    <div class="col-md-4 p-sm-0">
-                                                        <button type="button" id="btn-bet-5000" class="btn btn-gray btn-block font-weight-bold">5.000 CPL</button>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <button type="button" id="btn-bet-10000" class="btn btn-gray btn-block font-weight-bold">10.000 CPL</button>
-                                                    </div>
-                                                </div>
-                                                <div class="row" style="margin-top:10px;">
-                                                    <div class="btn-group btn-group-toggle col-md-12 col-sm-12" data-toggle="buttons">
-                                                        <label class="btn btn-success col-md-6 col-sm-6" id="lbl-bet-up">
-                                                            <input type="radio" name="options" id="btn-bet-up" autocomplete="off" class="btn btn-success btn-block font-weight-bold" /> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Up")
-                                                        </label>
-                                                        <label class="btn btn-danger col-md-6 col-sm-6" id="lbl-bet-down">
-                                                            <input type="radio" name="options" id="btn-bet-down" autocomplete="off" class="btn btn-danger btn-block font-weight-bold" /> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Down")
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="row" style="margin-top:10px;">
-                                                    <div class="col-12">
-                                                        <button type="button" id="btn-bet" class="btn btn-yellow btn-block font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bet")</button>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-12">
-                                                        <div class="row">
-                                                            <div class="col-6 text-left text-success" id="up-bar-value">@Model.UpPercentage %</div>
-                                                            <div class="col-6 text-right text-danger" id="down-bar-value">@Model.DownPercentage %</div>
-                                                        </div>
-                                                        <div class="progress progress-cus">
-                                                            <div id="up-bar" class="progress-bar bg-success progress-bar-cus" role="progressbar" style="width: @Model.UpPercentage%;" aria-valuenow="@Model.UpPercentage" aria-valuemin="0" aria-valuemax="100"></div>
-                                                            <div id="down-bar" class="progress-bar bg-danger progress-bar-cus" role="progressbar" style="width: @Model.DownPercentage%;" aria-valuenow="@Model.DownPercentage" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                @Html.HiddenFor(x => x.PricePredictionId)
-                                            </form>
-                                        }
-                                    </div>
-                                    <div class="col-md-3 col-sm-12" style="display:none" id="form-confirm">
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12" style="text-align:center">
-                                                <span class="font-large-2 font-weight-bold info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</span>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <span class="font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PredictedTrend"):</span><span class="font-medium-4 font-weight-bold" id="predicted-trend-confirm" style="display:inline; float:right"></span>
-                                            </div>
-                                            <div class="col-md-12 col-sm-12">
-                                                <span class="font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BetAmount"):</span><span class="font-medium-4 font-weight-bold success" id="bet-amount-confirm" style="display:inline; float:right"></span>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="margin-top:10px;">
-                                            <div class="col-md-5">
-                                                <button type="button" id="btn-confirm" class="btn btn-success btn-block font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</button>
-                                            </div>
-                                            <div class="col-md-2">
-                                                &nbsp;
-                                            </div>
-                                            <div class="col-md-5">
-                                                <button type="button" id="btn-back" class="btn btn-danger btn-block font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Back")</button>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
+            <div class="tab-component">
+                @if (Model.PricePredictionTabs.Count > 0)
+                {
+                    <ul class="nav nav-tabs border-0" id="price-prediction-nav-bar">
+                        @for (var i = 0; i < Model.PricePredictionTabs.Count; i++)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link font-medium-2 font-weight-bold px-2 border-0 @(i == 0 ? "active" : "")" id="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id" data-id="@Model.PricePredictionTabs[i].Id"
+                                   data-toggle="tab" href="#price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-controls="price-prediction-nav-@Model.PricePredictionTabs[i].Id">
+                                    @Model.PricePredictionTabs[i].ToBeComparedTime.ToString("HH:mm")~@Model.PricePredictionTabs[i].ResultTime.ToString("HH:mm")
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                    <div class="tab-content mb-1">
+                        @for (var i = 0; i < Model.PricePredictionTabs.Count; i++)
+                        {
+                        <div role="tabpanel" class="tab-pane @(i == 0 ? "active" : "")" id="price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-labelledby="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id">
+                            @if (i == 0)
+                            {
+                                @await Component.InvokeAsync("PricePrediction", new PricePredictionViewComponentViewModel { Id = Model.PricePredictionTabs[i].Id, TokenAmount = Model.TokenAmount })
+                            }
                         </div>
+                        }
                     </div>
-                </div>
+                }
             </div>
             @await Component.InvokeAsync("PricePredictionHistory", new PricePredictionHistoryViewComponentViewModel { SysUserId = Model.SysUserId })
-            @Html.HiddenFor(x => x.PreviousBtcRate)
-            @Html.HiddenFor(x => x.LowestBtcRate)
         </div>
     </div>
 </div>
@@ -147,7 +51,6 @@
     {
     <script src="~/js/dashboard/plugins/moment.min.js"></script>
     <script src="~/js/dashboard/plugins/signalr.js"></script>
-    <script src="~/js/dashboard/cpl.priceprediction.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/highcharts.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/boost.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/exporting.js"></script>
@@ -155,5 +58,7 @@
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/cpl.priceprediction.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.priceprediction.viewcomponent.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.pricepredictionhistory.viewcomponent.js" asp-append-version="true"></script>
 }

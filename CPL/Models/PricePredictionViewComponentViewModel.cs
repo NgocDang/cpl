@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class PricePredictionViewModel
+    public class PricePredictionViewComponentViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -21,15 +21,15 @@ namespace CPL.Models
         public string Coinbase { get; set; }
         public DateTime? UpdatedDate { get; set; }
 
-        public List<PricePredictionHistoryViewModel> PricePredictionHistories { get; set; }
-
-        public int? PricePredictionId { get; set; }
         public decimal UpPercentage { get; set; }
         public decimal DownPercentage { get; set; }
         public decimal CurrentBTCRate { get; set; }
         public string CurrentBTCRateInString { get; set; }
         public int? SysUserId { get; set; }
+        public decimal? TokenAmount { get; set; }
         public string PreviousBtcRate { get; set; }
         public decimal LowestBtcRate { get; set; }
+
+        public List<PricePredictionHistoryViewModel> PricePredictionHistories { get; set; }
     }
 }
