@@ -75,10 +75,8 @@ namespace CPL
             services.AddSession();
 
             services.AddSingleton<ILotteryDrawingFactory, LotteryDrawingFactory>();
-                    //.AddSingleton<IPricePredictionUpdateResultFactory, PricePredictionUpdateResultFactory>();
 
             services.UseQuartz<ILotteryDrawingFactory>(typeof(LotteryDrawingJob));
-            //services.UseQuartz<IPricePredictionUpdateResultFactory>(typeof(PricePredictionUpdateResultJob));
 
             services
                 .AddTransient<ILangService, LangService>()

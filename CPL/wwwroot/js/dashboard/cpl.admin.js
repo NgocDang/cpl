@@ -23,7 +23,7 @@
                 var searchstring = document.getElementById('search-standard-affiliate');
                 if (searchstring.value != null && searchstring.value.replace(/\s+/g, '') != "")
                     // TODO: Change xxxxx by Action for Standard Affiliate
-                    window.location.href = "/Admin/xxxxx?search=" + searchstring.value.replace(/\s+/g, '');
+                    window.location.href = "/Admin/StandardAffiliate?search=" + searchstring.value.replace(/\s+/g, '');
             }
         });
     },

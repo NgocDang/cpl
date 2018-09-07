@@ -8,9 +8,15 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "stateSave": (Utils.getJsonFromUrl().search == null) ? true : false,
             "ajax": {
                 url: "/Admin/SearchStandardAffiliate",
-                type: 'POST'
+                type: 'POST',
+                data: function (data) {
+                    if (data.search.value == "") {
+                        data.search.value = Utils.getJsonFromUrl().search;
+                    }
+                },
             },
             "language": DTLang.getLang(),
             "createdRow": function (row, data, dataIndex) {
@@ -19,6 +25,12 @@
                 }
             },
             "columns": [
+                {
+                    "data": "Email",
+                    "render": function (data, type, full, meta) {
+                        return "<span class='word-break'>" + full.email + "</span>";
+                    }
+                },
                 {
                     "data": "FirstName",
                     "render": function (data, type, full, meta) {
@@ -32,19 +44,13 @@
                     }
                 },
                 {
-                    "data": "Email",
-                    "render": function (data, type, full, meta) {
-                        return "<span class='word-break'>" + full.email + "</span>";
-                    }
-                },
-                {
                     "data": "TotalSale",
                     "render": function (data, type, full, meta) {
                         return full.totalSale;
                     }
                 },
                 {
-                    "data": "TotalTntroducer",
+                    "data": "TotalIntroducer",
                     "render": function (data, type, full, meta) {
                         return full.totalIntroducer;
                     }
@@ -59,12 +65,12 @@
                     "data": "Action",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false) {
-                            return "<div>" +
-                                "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary '>" + "Lock" +"</button> " +
+                            return "<div class='text-lg-center'>" +
+                                "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary '>" + $("#lock").val() +"</button> " +
                                 "</div>";
                         }
-                        return "<div>" +
-                            "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary '>" + "UnLock" + "</button> " +
+                        return "<div class='text-lg-center'>" +
+                            "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary '>" + $("#unlock").val() + "</button> " +
                             "</div>";
                     },
                     "orderable": false

@@ -33,15 +33,15 @@ namespace CPL.Misc.Quartz.Jobs
                                     .Include(x => x.PricePredictionHistories)
                                     .Select()
                                     .Where(x => x.UpdatedDate != null)
-                                    .Select(x => Mapper.Map<PricePredictionViewModel>(x));
+                                    .Select(x => Mapper.Map<PricePredictionIndexViewModel>(x));
 
             var listOfSysUser = sysUserService.Queryable()
                                 .Where(x => x.KYCVerified.HasValue);
 
             foreach (var pricePrediction in listOfPricePrediction)
             {
-                var listUserId = pricePrediction.PricePredictionHistories.Select(x => x.SysUserId).Distinct();
-                var lstSysUser = listOfSysUser.Where(x => listUserId.Contains(x.Id)).ToList();
+                //var listUserId = pricePrediction.PricePredictionHistories.Select(x => x.SysUserId).Distinct();
+                //var lstSysUser = listOfSysUser.Where(x => listUserId.Contains(x.Id)).ToList();
 
                 // Cmt out because of new PricePrediction logic
                 /*var resultPrice = btcPriceService.Queryable()
@@ -84,39 +84,39 @@ namespace CPL.Misc.Quartz.Jobs
             unitOfWork.SaveChanges();
         }
 
-        private PricePredictionViewModel UpdateResult(PricePredictionViewModel pricePrediction, List<SysUser> listOfSysUser, decimal resultPrice)
-        {
-            foreach (var history in pricePrediction.PricePredictionHistories)
-            {
-                // Cmt out because of new PricePrediction logic
-                /*var isWinner = IsWinner(pricePrediction.PredictionPrice, resultPrice, history.Prediction);
-                if (isWinner)
-                {
-                    if (IsKYCVerified(listOfSysUser, history.SysUserId))
-                        history.Result = EnumGameResult.WIN.ToString();
-                    else
-                        history.Result = EnumGameResult.KYC_PENDING.ToString();
-                }
-                else
-                {
-                    history.Result = EnumGameResult.LOSE.ToString();
-                    history.Award = 0.0m;
-                }*/
-            }
+        //private PricePredictionIndexViewModel UpdateResult(PricePredictionIndexViewModel pricePrediction, List<SysUser> listOfSysUser, decimal resultPrice)
+        //{
+        //    foreach (var history in pricePrediction.PricePredictionHistories)
+        //    {
+        //        // Cmt out because of new PricePrediction logic
+        //        /*var isWinner = IsWinner(pricePrediction.PredictionPrice, resultPrice, history.Prediction);
+        //        if (isWinner)
+        //        {
+        //            if (IsKYCVerified(listOfSysUser, history.SysUserId))
+        //                history.Result = EnumGameResult.WIN.ToString();
+        //            else
+        //                history.Result = EnumGameResult.KYC_PENDING.ToString();
+        //        }
+        //        else
+        //        {
+        //            history.Result = EnumGameResult.LOSE.ToString();
+        //            history.Award = 0.0m;
+        //        }*/
+        //    }
 
-            var numberOfLoser = pricePrediction.PricePredictionHistories.Count(x => x.Result.Equals(EnumGameResult.LOSE.ToString()));
+        //    var numberOfLoser = pricePrediction.PricePredictionHistories.Count(x => x.Result.Equals(EnumGameResult.LOSE.ToString()));
 
-            return pricePrediction;
-        }
+        //    return pricePrediction;
+        //}
 
-        private PricePredictionViewModel GameStatistic(PricePredictionViewModel pricePrediction, decimal resultPrice)
-        {
-            pricePrediction.ResultPrice = resultPrice;
-            pricePrediction.NumberOfPredictors = pricePrediction.PricePredictionHistories.Count;
-            pricePrediction.Volume = pricePrediction.PricePredictionHistories.Sum(x => x.Amount);
+        //private PricePredictionIndexViewModel GameStatistic(PricePredictionIndexViewModel pricePrediction, decimal resultPrice)
+        //{
+        //    pricePrediction.ResultPrice = resultPrice;
+        //    pricePrediction.NumberOfPredictors = pricePrediction.PricePredictionHistories.Count;
+        //    pricePrediction.Volume = pricePrediction.PricePredictionHistories.Sum(x => x.Amount);
 
-            return pricePrediction;
-        }
+        //    return pricePrediction;
+        //}
 
         private bool IsWinner(decimal predictionPrice, decimal resultPrice, bool prediction)
         {

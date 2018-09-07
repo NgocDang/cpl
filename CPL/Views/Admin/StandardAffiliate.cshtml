@@ -5,9 +5,9 @@
 
 @section styles
     {
-<link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
-<link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
 }
 <div class="app-content container center-layout mt-2 px-0">
     <div class="content-wrapper">
@@ -37,11 +37,11 @@
                             <table id="dt-standard-affiliate" class="table responsive table-hover table-xl mb-0">
                                 <thead>
                                     <tr>
+                                        <th class="border-top-0" data-priority="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSaleInCPL")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducer")</th>
+                                        <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSaleInCPL")</th>
+                                        <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducer")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateCreatedDate")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier1") %</th>
@@ -51,6 +51,8 @@
                                 </thead>
                             </table>
                         </div>
+                        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lock")" id="lock" />
+                        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UnLock")" id="unlock" />
                     </div>
                 </div>
             </div>
@@ -60,10 +62,11 @@
 
 @section scripts
     {
-<script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
-<script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
-<script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
-<script src="~/js/dashboard/cpl.dtlang.js"></script>
-<script src="~/js/dashboard/cpl.admin.standardaffiliate.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/cpl.admin.standardaffiliate.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.utils.js"></script>
 }
 
