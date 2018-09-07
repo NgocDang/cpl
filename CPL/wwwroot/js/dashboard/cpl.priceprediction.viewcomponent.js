@@ -1,31 +1,27 @@
 ﻿var btcCurrentRate, btcLastestTime, bctDelayTime;
 var PricePredictionViewComponent = {
     init: function () {
-        //PricePredictionViewComponent.bindLoadPredictionResult();
+        PricePredictionViewComponent.bindLoadPredictionResult();
         //PricePredictionViewComponent.loadBTCPriceChart();
         //PricePredictionViewComponent.bindLoadBTCCurrentRate();
-        //PricePredictionViewComponent.bindBet1000();
-        //PricePredictionViewComponent.bindBet5000();
-        //PricePredictionViewComponent.bindBet10000();
-        //PricePredictionViewComponent.bindBet();
-        //PricePredictionViewComponent.bindBack();
-        //PricePredictionViewComponent.bindDoBet();
-        PricePredictionViewComponent.bindNavbar();
-        PricePredictionViewComponent.binLoadFirstPricePrediction();
+        PricePredictionViewComponent.bindBet();
+        PricePredictionViewComponent.bindConfirmBet();
+        PricePredictionViewComponent.bindBack();
+        PricePredictionViewComponent.bindDoBet();
     },
-    //bindLoadPredictionResult: function () {
-    //    var progressConnection = new signalR.HubConnection("/predictedUserProgress");
-    //    progressConnection
-    //        .start()
-    //        .catch(() => {
-    //            console.log("Error while establishing connection");
-    //        });
+    bindLoadPredictionResult: function () {
+        var progressConnection = new signalR.HubConnection("/predictedUserProgress");
+        progressConnection
+            .start()
+            .catch(() => {
+                console.log("Error while establishing connection");
+            });
 
-    //    progressConnection.on("predictedUserProgress", (up, down) => {
-    //        if (up !== undefined && down !== undefined)
-    //            this.setUserProgress(up, down);
-    //    });
-    //},
+        progressConnection.on("predictedUserProgress", (up, down) => {
+            if (up !== undefined && down !== undefined)
+                this.setUserProgress(up, down);
+        });
+    },
     //bindLoadBTCCurrentRate: function () {
     //    $.ajax({
     //        url: '/PricePrediction/GetBTCCurrentRate',
@@ -53,17 +49,17 @@ var PricePredictionViewComponent = {
     //        }
     //    });
     //},
-    //setUserProgress: function (up, down) {
-    //    // Reset up-bar setting
-    //    $("#up-bar").css({ "width": up + "%" })
-    //        .attr("aria-valuenow", up)
-    //    $("#up-bar-value").html(up + "%");
+    setUserProgress: function (up, down) {
+        // Reset up-bar setting
+        $("#up-bar").css({ "width": up + "%" })
+            .attr("aria-valuenow", up)
+        $("#up-bar-value").html(up + "%");
 
-    //    // Reset down-bar setting
-    //    $("#down-bar").css({ "width": down + "%" })
-    //        .attr("aria-valuenow", down)
-    //    $("#down-bar-value").html(down + "%");
-    //},
+        // Reset down-bar setting
+        $("#down-bar").css({ "width": down + "%" })
+            .attr("aria-valuenow", down)
+        $("#down-bar-value").html(down + "%");
+    },
     //loadBTCPriceChart: function () {
     //    Highcharts.setOptions({
     //        global: {
@@ -211,218 +207,153 @@ var PricePredictionViewComponent = {
     //        }]
     //    });
     //},
-    //loadPricePredictionHistoryDatatable: function () {
-    //    if ($("#SysUserId").val() === undefined)
-    //        return false;
+    loadPricePredictionHistoryDatatable: function () {
+        if ($("#SysUserId").val() === undefined)
+            return false;
 
-    //    return $('#dt-prediction-history').DataTable({
-    //        "processing": true,
-    //        "serverSide": true,
-    //        "autoWidth": false,
-    //        "ajax": {
-    //            url: "/PricePrediction/SearchPricePredictionHistory",
-    //            type: 'POST'
-    //        },
-    //        "language": DTLang.getLang(),
-    //        "columns": [
-    //            {
-    //                "data": "PurcharseTime",
-    //                "render": function (data, type, full, meta) {
-    //                    return full.purcharseTimeInString;
-    //                }
-    //            },
-    //            {
-    //                "data": "Bet",
-    //                "className": "text-center",
-    //                "render": function (data, type, full, meta) {
-    //                    return full.bet;
-    //                }
-    //            },
-    //            {
-    //                "data": "StartRate",
-    //                "render": function (data, type, full, meta) {
-    //                    return full.startRateInString;
-    //                }
-    //            },
-    //            {
-    //                "data": "Amount",
-    //                "render": function (data, type, full, meta) {
-    //                    return full.amountInString;
-    //                }
-    //            },
-    //            {
-    //                "data": "Bonus",
-    //                "render": function (data, type, full, meta) {
-    //                    return full.bonusInString;
-    //                }
-    //            },
-    //            {
-    //                "data": "Status",
-    //                "render": function (data, type, full, meta) {
-    //                    if (full.status === "ACTIVE") {
-    //                        return "<i class='fas fa-circle text-success fa-circle-active'></i> " + full.status;
-    //                    }
-    //                    else {
-    //                        return "<i class='fas fa-circle text-danger fa-circle-inactive'></i> " + full.status;
-    //                    }
-    //                }
-    //            },
-    //            {
-    //                "data": "ResultRate",
-    //                "render": function (data, type, full, meta) {
-    //                    return full.resultRateInString;
-    //                }
-    //            },
-    //            {
-    //                "data": "ResultTime",
-    //                "render": function (data, type, full, meta) {
-    //                    return full.resultTimeInString;
-    //                }
-    //            }
-    //        ]
-    //    });
-    //},
-    //bindBet1000: function () {
-    //    $("#btn-bet-1000").on("click", function () {
-    //        $("#bet-amount").val(1000);
-    //        if ($("#btn-bet-5000").hasClass("btn-secondary")) {
-    //            $("#btn-bet-5000").removeClass("btn-secondary");
-    //            $("#btn-bet-5000").addClass("btn-gray");
-    //        }
-    //        if ($("#btn-bet-10000").hasClass("btn-secondary")) {
-    //            $("#btn-bet-10000").removeClass("btn-secondary");
-    //            $("#btn-bet-10000").addClass("btn-gray");
-    //        }
-    //        $("#btn-bet-1000").removeClass("btn-gray");
-    //        $("#btn-bet-1000").addClass("btn-secondary");
-    //    });
-    //},
-    //bindBet5000: function () {
-    //    $("#btn-bet-5000").on("click", function () {
-    //        $("#bet-amount").val(5000);
-    //        if ($("#btn-bet-1000").hasClass("btn-secondary")) {
-    //            $("#btn-bet-1000").removeClass("btn-secondary");
-    //            $("#btn-bet-1000").addClass("btn-gray");
-    //        }
-    //        if ($("#btn-bet-10000").hasClass("btn-secondary")) {
-    //            $("#btn-bet-10000").removeClass("btn-secondary");
-    //            $("#btn-bet-10000").addClass("btn-gray");
-    //        }
-    //        $("#btn-bet-5000").removeClass("btn-gray");
-    //        $("#btn-bet-5000").addClass("btn-secondary");
-    //    });
-    //},
-    //bindBet10000: function () {
-    //    $("#btn-bet-10000").on("click", function () {
-    //        $("#bet-amount").val(10000);
-    //        if ($("#btn-bet-1000").hasClass("btn-secondary")) {
-    //            $("#btn-bet-1000").removeClass("btn-secondary");
-    //            $("#btn-bet-1000").addClass("btn-gray");
-    //        }
-    //        if ($("#btn-bet-5000").hasClass("btn-secondary")) {
-    //            $("#btn-bet-5000").removeClass("btn-secondary");
-    //            $("#btn-bet-5000").addClass("btn-gray");
-    //        }
-    //        $("#btn-bet-10000").removeClass("btn-gray");
-    //        $("#btn-bet-10000").addClass("btn-secondary");
-    //    });
-    //},
-    //bindBet: function () {
-    //    $("#btn-bet").on("click", function () {
-    //        if ($("#bet-amount").val() <= 0) {
-    //            toastr.error("Incorrect amount!");
-    //        } else {
-    //            if ($("#lbl-bet-up").hasClass("active") || $("#lbl-bet-down").hasClass("active")) {
-    //                $("#predicted-trend-confirm").val($("#lbl-bet-up").hasClass("active") ? "UP" : "DOWN");
-    //                if ($("#lbl-bet-up").hasClass("active")) {
-    //                    $("#predicted-trend-confirm").removeClass("danger");
-    //                    $("#predicted-trend-confirm").addClass("success");
+        return $('#dt-prediction-history').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                url: "/PricePrediction/SearchPricePredictionHistory",
+                type: 'POST'
+            },
+            "language": DTLang.getLang(),
+            "columns": [
+                {
+                    "data": "PurcharseTime",
+                    "render": function (data, type, full, meta) {
+                        return full.purcharseTimeInString;
+                    }
+                },
+                {
+                    "data": "Bet",
+                    "className": "text-center",
+                    "render": function (data, type, full, meta) {
+                        return full.bet;
+                    }
+                },
+                {
+                    "data": "StartRate",
+                    "render": function (data, type, full, meta) {
+                        return full.startRateInString;
+                    }
+                },
+                {
+                    "data": "Amount",
+                    "render": function (data, type, full, meta) {
+                        return full.amountInString;
+                    }
+                },
+                {
+                    "data": "Bonus",
+                    "render": function (data, type, full, meta) {
+                        return full.bonusInString;
+                    }
+                },
+                {
+                    "data": "Status",
+                    "render": function (data, type, full, meta) {
+                        if (full.status === "ACTIVE") {
+                            return "<i class='fas fa-circle text-success fa-circle-active'></i> " + full.status;
+                        }
+                        else {
+                            return "<i class='fas fa-circle text-danger fa-circle-inactive'></i> " + full.status;
+                        }
+                    }
+                },
+                {
+                    "data": "ResultRate",
+                    "render": function (data, type, full, meta) {
+                        return full.resultRateInString;
+                    }
+                },
+                {
+                    "data": "ResultTime",
+                    "render": function (data, type, full, meta) {
+                        return full.resultTimeInString;
+                    }
+                }
+            ]
+        });
+    },
+    bindBet: function () {
+        $(".tab-pane").on("click", ".btn-bet", function () {
+            var _this = this;
+            $(_this).closest(".tab-pane").find(".bet-amount").val($(_this).data().value);
+        });
 
-    //                    $("#bet-amount-confirm").removeClass("danger");
-    //                    $("#bet-amount-confirm").addClass("success");
-    //                } else {
-    //                    $("#predicted-trend-confirm").removeClass("success");
-    //                    $("#predicted-trend-confirm").addClass("danger");
-
-    //                    $("#bet-amount-confirm").removeClass("success");
-    //                    $("#bet-amount-confirm").addClass("danger");
-    //                }
-    //                $("#predicted-trend-confirm").html($("#lbl-bet-up").hasClass("active") ? "UP" : "DOWN");
-    //                $("#bet-amount-confirm").val($("#bet-amount").val());
-    //                $("#bet-amount-confirm").html($("#bet-amount").val());
-    //                $("#form-bet").hide();
-    //                $("#form-confirm").show();
-    //            } else {
-    //                toastr.error("Please select UP or DOWN");
-    //            }
-    //        }
-    //    });
-    //},
-    //bindBack: function () {
-    //    $("#btn-back").on("click", function () {
-    //        $("#form-confirm").hide();
-    //        $("#form-bet").show();
-    //    });
-    //},
-    //bindDoBet: function () {
-    //    $("#btn-confirm").on("click", function () {
-    //        $.ajax({
-    //            url: '/PricePrediction/ConfirmPrediction',
-    //            type: "POST",
-    //            data: {
-    //                pricePredictionId: $("#PricePredictionId").val(),
-    //                betAmount: $("#bet-amount-confirm").val(),
-    //                predictedTrend: ($("#predicted-trend-confirm").val() == "UP" ? true : false)
-    //            },
-    //            success: function (data) {
-    //                if (data.success) {
-    //                    if (data.url == null) {
-    //                        $("#form-confirm").hide();
-    //                        $("#form-bet").show();
-    //                        toastr.success(data.message);
-    //                        PricePredictionHistoryViewComponent.pricePredictionHistoryDataTable = PricePredictionHistoryViewComponent.loadPricePredictionHistoryDataTable();
-    //                    } else
-    //                        window.location.replace(data.url);
-    //                } else {
-    //                    toastr.error(a);
-    //                }
-    //            }
-    //        });
-    //    });
-    //},
-    binLoadFirstPricePrediction: function () {
-        if ($("#price-prediction-nav-" + $("#FirstGame").val()).html().trim().length == 0) {
+        $(".tab-pane").on("click", ".btn-up-down-group > .btn", function () {
+            var _this = this;
+            var tabPane = $(_this).closest(".tab-pane");
+            tabPane.find(".btn-up-down-group > .btn").removeClass("active");
+            $(_this).addClass("active");
+            return false;
+        });
+    },
+    bindConfirmBet: function () {
+        $(".tab-pane").on("click", ".btn-confirm-bet", function () {
+            var _this = this;   
+            var tabPane = $(_this).closest(".tab-pane");
+            if (tabPane.find(".bet-amount").val() <= 0) {
+                toastr.error("Incorrect amount!");
+            } else {
+                if (tabPane.find(".btn-up").hasClass("active") || tabPane.find(".btn-down").hasClass("active")) {
+                    tabPane.find(".predicted-trend-confirm").html(tabPane.find(".btn-up").hasClass("active") ? "UP" : "DOWN");
+                    if (tabPane.find(".btn-up").hasClass("active")) {
+                        tabPane.find(".predicted-trend-confirm").removeClass("danger").addClass("success");
+                        tabPane.find(".bet-amount-confirm").removeClass("danger").addClass("success");
+                    } else {
+                        tabPane.find(".predicted-trend-confirm").removeClass("success").addClass("danger");
+                        tabPane.find(".bet-amount-confirm").removeClass("success").addClass("danger");
+                    }
+                    tabPane.find(".bet-amount-confirm").html(tabPane.find(".bet-amount").val());
+                    tabPane.find(".bet").hide();
+                    tabPane.find(".bet-confirm").show();
+                } else {
+                    toastr.error("Please select UP or DOWN");
+                }
+            }
+        });
+    },
+    bindBack: function () {
+        $(".tab-pane").on("click", ".btn-back", function () {
+            var _this = this;
+            var tabPane = $(_this).closest(".tab-pane");
+            tabPane.find(".bet-confirm").hide();
+            tabPane.find(".bet").show();
+        });
+    },
+    bindDoBet: function () {
+        $(".tab-pane").on("click", ".btn-confirm", function () {
+            var _this = this;
+            var tabPane = $(_this).closest(".tab-pane");
+            debugger;
             $.ajax({
-                url: '/PricePrediction/PricePredictionViewComponent',
+                url: '/PricePrediction/ConfirmPrediction',
                 type: "POST",
                 data: {
-                    pricePredictionId: $("#FirstGame").val(),
+                    pricePredictionId: tabPane.find("#Id").val(),
+                    betAmount: tabPane.find(".bet-amount").val(),
+                    predictedTrend: tabPane.find(".btn-up-down-group > .btn.active").data().value
                 },
                 success: function (data) {
-                    $("#price-prediction-nav-" + $("#FirstGame").val()).html(data);
+                    if (data.success) {
+                        if (data.url == null) {
+                            tabPane.find(".bet-confirm").hide();
+                            tabPane.find(".bet").show();
+                            toastr.success(data.message);
+                            PricePredictionHistoryViewComponent.pricePredictionHistoryDataTable.ajax.reload();
+                        } else
+                            window.location.replace(data.url);
+                    } else {
+                        toastr.error(a);
+                    }
                 }
             });
-        } else {
-        }
+        });
     },
-    bindNavbar: function () {
-        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
-            var _this = this;
-            if ($("#price-prediction-nav-" + $(_this).data().id).html().trim().length == 0) {
-                $.ajax({
-                    url: '/PricePrediction/PricePredictionViewComponent',
-                    type: "POST",
-                    data: {
-                        pricePredictionId: $(_this).data().id,
-                    },
-                    success: function (data) {
-                        $("#price-prediction-nav-" + $(_this).data().id).html(data);
-                    }
-                });
-            } else {
-            }
-        })
-    }
 };
 
 $(document).ready(function () {

@@ -1307,7 +1307,7 @@ select.bs-select-hidden {
         background-color: #f1f0f0 !important;
     }
 
-#form-price-bet .progress {
+.form-bet .progress {
     height: .2rem;
 }
 

@@ -67,6 +67,7 @@ namespace CPL.Controllers
             this._progressHubContext = progressHubContext;
         }
 
+        [Permission(EnumRole.Guest)]
         public IActionResult Index()
         {
             //Test quartz job price prediction update result
