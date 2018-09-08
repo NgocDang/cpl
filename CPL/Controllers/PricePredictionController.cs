@@ -74,18 +74,19 @@ namespace CPL.Controllers
             // Cmt out because of new PricePrediction logic
             //var scheduler = _quartzSchedulerService.GetScheduler<IScheduler, IPricePredictionUpdateResultFactory>();
             //QuartzHelper.AddJob<PricePredictionUpdateResultJob>(scheduler, new DateTime(2018, 07, 30, 12, 56, 0));
+
             var viewModel = new PricePredictionIndexViewModel();
             viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
             if (viewModel.SysUserId.HasValue)
                 viewModel.TokenAmount = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).TokenAmount;
 
-            viewModel.PricePredictionTabs = new List<PricePredictionTab>();
-            var activePricePredictionList = _pricePredictionService.Queryable().Where(x => x.CloseBettingTime >= DateTime.Now).Select(x => x.Id).ToList();
-            for (int i = 0; i < activePricePredictionList.Count; i++)
-            {
-                var pricePredictionTab = _pricePredictionService.Queryable().Where(x => x.Id == activePricePredictionList[i]).Select(x => Mapper.Map<PricePredictionTab>(x)).FirstOrDefault();
-                viewModel.PricePredictionTabs.Add(pricePredictionTab);
-            }
+            viewModel.PricePredictionTabs = _pricePredictionService.Queryable()
+                .Where(x => x.ResultTime.Date >= DateTime.Now.Date)
+                .Select(x => Mapper.Map<PricePredictionTab>(x))
+                .ToList();
+
+            if (viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now) != null)
+                viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).IsActive = true;
 
             return View(viewModel);
         }
@@ -238,7 +239,7 @@ namespace CPL.Controllers
                     //////////////////////////
 
 
-                    _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage);
+                    _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage, pricePredictionId);
 
 
                     return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "BettingSuccessfully") });
