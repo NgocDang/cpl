@@ -1,5 +1,8 @@
-﻿var btcCurrentRate, btcLastestTime, bctDelayTime;
-var PricePredictionViewComponent = {
+﻿var PricePredictionViewComponent = {
+    btcCurrentRate: null,
+    bctDelayTime: null,
+    realtimeInterval: null,
+    charts:[],
     init: function () {
         PricePredictionViewComponent.bindLoadPredictionResult();
         PricePredictionViewComponent.loadBTCPriceChart();
@@ -42,10 +45,10 @@ var PricePredictionViewComponent = {
                         $(element).html(data.valueInString.split(";")[0]); // Assign data to get current rate
                     });
                     // Get data to show in to the chart
-                    btcCurrentRate = data.valueInString;
+                    PricePredictionViewComponent.btcCurrentRate = data.valueInString;
                 }
                 else {
-                    btcCurrentRate = null;
+                    PricePredictionViewComponent.btcCurrentRate = null;
                 }
             }
         });
@@ -62,11 +65,10 @@ var PricePredictionViewComponent = {
         $("#price-prediction-nav-" + pricePredictionId + " #down-bar-value").html(down + "%");
     },
     loadBTCPriceChart: function () {
-        $(".btc-price-chart").each(function (index, element) {
+        $(".tab-pane.active .btc-price-chart").each(function (index, element) {
             var openTime = moment(parseInt($(element).closest(".tab-pane").find("#OpenBettingTime").val()));
             var closeTime = moment(parseInt($(element).closest(".tab-pane").find("#CloseBettingTime").val()));
             var resultTime = moment(parseInt($(element).closest(".tab-pane").find("#ResultTime").val()));
-            debugger;
             $(element).highcharts({
                 chart: {
                     type: 'area',
@@ -76,52 +78,48 @@ var PricePredictionViewComponent = {
                     events: {
                         load: function () {
                             // set up the updating of the chart each second
-                            var series = this.series[0], x, y,
-                                chart = $(element).highcharts(),
-                                yAxis = chart.yAxis[0];
-                            //// auto set hover
-                            //setInterval(function () {
-                            //    var d = new Date();
+                            PricePredictionViewComponent.charts.push($(element).highcharts());
+                            
+                            if (PricePredictionViewComponent.realtimeInterval != null) {
+                                clearInterval(PricePredictionViewComponent.realtimeInterval)
+                            }
 
-                            //    var tzOffset = d.getTimezoneOffset();
+                            PricePredictionViewComponent.realtimeInterval = setInterval(function () {
+                                PricePredictionViewComponent.bindLoadBTCCurrentRate();
 
-                            //    series.redraw;
-                            //    var lastPoint = series.getPoint(series.points[series.points.length - 1]);
+                                for (var i = 0; i < PricePredictionViewComponent.charts.length; i++) {
+                                    var series = PricePredictionViewComponent.charts[i].series[0], x, y,
+                                        chart = PricePredictionViewComponent.charts[i],
+                                        yAxis = chart.yAxis[0];
 
-                            //    lastPoint.setState('hover');
-                            //    //lastPoint.state = '';  // need this to fix hover bug
-                            //    series.chart.tooltip.refresh(lastPoint); // Show tooltip
-                            //}, 1000);
-
-                            // Load gap between real time
-                            var previousX = x;
-                            setInterval(function () {
-                                if (x !== undefined) {
-                                    var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-                                    previousX = x / 1000;
-                                    var count = currentTime - previousX;
-                                    if (count > 0) {
-                                        for (var i = 0; i < count; i++) {
-                                            series.addPoint([x + i * 1000, y], true, true);
+                                    // Load gap between real time and real time data
+                                    var previousX = x;
+                                    if (x !== undefined) {
+                                        var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                                        previousX = x / 1000;
+                                        var count = currentTime - previousX;
+                                        if (count > 0) {
+                                            for (var i = 0; i < count; i++) {
+                                                series.addPoint([x + i * 1000, y], true, true);
+                                            }
                                         }
                                     }
+                                   
+                                    if (PricePredictionViewComponent.btcCurrentRate !== undefined && PricePredictionViewComponent.btcCurrentRate !== null) {
+                                        x = parseFloat(PricePredictionViewComponent.btcCurrentRate.split(";")[2]) * 1000; // current time from wcf
+                                        y = parseFloat(PricePredictionViewComponent.btcCurrentRate.split(";")[1]);
+                                        series.addPoint([x, y], true, true);
+                                        yAxis.plotLinesAndBands[0].options.label.text = y.toString();
+                                        yAxis.plotLinesAndBands[0].options.value = y;
+                                        
+                                        yAxis.update();
+                                    }
                                 }
-                            }, 1000);
 
-                            // Load current BTC-USDT rate in real time
-                            setInterval(function () {
-                                PricePredictionViewComponent.bindLoadBTCCurrentRate();
-                                if (btcCurrentRate !== undefined && btcCurrentRate !== null) {
-                                    x = parseFloat(btcCurrentRate.split(";")[2]) * 1000; // current time from wcf
-                                    //x = (new Date()).getTime(); // current time
-                                    y = parseFloat(btcCurrentRate.split(";")[1]);
-                                    series.addPoint([x, y], true, true);
-                                    yAxis.plotLinesAndBands[0].options.label.text = y.toString();
-                                    yAxis.plotLinesAndBands[0].options.value = y;
-                                    console.log(x, y);
-                                    yAxis.update();
-                                }
+                                console.log(PricePredictionViewComponent.btcCurrentRate);
+                                
                             }, 1000);
+                            
                         }
                     }
                 },
@@ -219,7 +217,7 @@ var PricePredictionViewComponent = {
                                 y: parseFloat(rate[count + i])
                             });
                         }
-                        bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                        PricePredictionViewComponent.bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
                         for (i = 0; i <= (3600 * 17); i += 1) {
                             data.push({
                                 x: (currentTime + i) * 1000,
@@ -228,10 +226,10 @@ var PricePredictionViewComponent = {
                         }
 
                         // Fill Delay Time
-                        var count = currentTime - bctDelayTime;
+                        var count = currentTime - PricePredictionViewComponent.bctDelayTime;
                         for (var i = 0; i < count; i++) {
                             data.push({
-                                x: (bctDelayTime + i) * 1000,
+                                x: (PricePredictionViewComponent.bctDelayTime + i) * 1000,
                                 y: null
                             });
                         }

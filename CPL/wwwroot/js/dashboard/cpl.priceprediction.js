@@ -14,6 +14,7 @@
                     },
                     success: function (data) {
                         $("#price-prediction-nav-" + $(_this).data().id).html(data);
+                        PricePredictionViewComponent.loadBTCPriceChart();
                     }
                 });
             } 
