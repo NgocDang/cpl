@@ -69,6 +69,12 @@
             var openTime = moment(parseInt($(element).closest(".tab-pane").find("#OpenBettingTime").val()));
             var closeTime = moment(parseInt($(element).closest(".tab-pane").find("#CloseBettingTime").val()));
             var resultTime = moment(parseInt($(element).closest(".tab-pane").find("#ResultTime").val()));
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
+
             $(element).highcharts({
                 chart: {
                     type: 'area',
@@ -104,14 +110,14 @@
                                             }
                                         }
                                     }
-                                   
+
                                     if (PricePredictionViewComponent.btcCurrentRate !== undefined && PricePredictionViewComponent.btcCurrentRate !== null) {
                                         x = parseFloat(PricePredictionViewComponent.btcCurrentRate.split(";")[2]) * 1000; // current time from wcf
                                         y = parseFloat(PricePredictionViewComponent.btcCurrentRate.split(";")[1]);
                                         series.addPoint([x, y], true, true);
                                         yAxis.plotLinesAndBands[0].options.label.text = y.toString();
+                                        yAxis.plotLinesAndBands[0].options.label.textAlign = 'center';
                                         yAxis.plotLinesAndBands[0].options.value = y;
-                                        
                                         yAxis.update();
                                     }
                                 }
@@ -132,8 +138,8 @@
                     series: {
                         shadow: false,
                         lineWidth: 0.01,
-                        turboThreshold: 500000,
-                        color: '#ffc111'
+                        turboThreshold: 200000,
+                        color: '#ffc111',
                     }
                 },
                 title: {
@@ -144,7 +150,8 @@
                     tickPixelInterval: 150,
                     plotLines: [{
                         label: {
-                            text: 'Open - ' + openTime.utc().format("hh:mm"),
+                            text: 'Open(' + openTime.utc().format("hh:mm") + ')',
+                            rotation: 0,
                         },
                         color: '#000', // Color value
                         value: (openTime.unix() * 1000), // Value of where the line will appear
@@ -152,7 +159,9 @@
                     },
                     {
                         label: {
-                            text: 'Close - ' + closeTime.utc().format("hh:mm"),
+                            text: 'Close(' + closeTime.utc().format("hh:mm") + ')',
+                            rotation: 0,
+                            x: -90,
                         },
                         color: '#000', // Color value
                         value: (closeTime.unix() * 1000), // Value of where the line will appear
@@ -160,7 +169,8 @@
                     },
                     {
                         label: {
-                            text: 'Result - ' + resultTime.utc().format("hh:mm"),
+                            text: 'Result(' + resultTime.utc().format("hh:mm") + ')',
+                            rotation: 0,
                         },
                         color: '#000', // Color value
                         value: (resultTime.unix() * 1000), // Value of where the line will appear
@@ -180,7 +190,7 @@
                         value: 0, // Value of where the line will appear
                         width: 1 // Width of the line    
                     }],
-                    min: 6300//$("#LowestBtcRate").val()
+                    min: $("#LowestBtcRate").val(),
                 },
                 tooltip: {
                     crosshairs: [true, true]
