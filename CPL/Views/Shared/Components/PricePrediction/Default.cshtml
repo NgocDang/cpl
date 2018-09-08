@@ -5,13 +5,13 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-9 col-12">
-                    <div id="btc-price-chart">
+                    <div class="btc-price-chart">
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-12 bet">
                     <div class="row">
                         <div class="col-12">
-                            <span class="font-large-1 font-weight-bold" value="@Model.CurrentBTCRate" id="btc-rate">@Model.CurrentBTCRateInString</span> <span class="font-medium-4">BTC/USDT</span>
+                            <span class="font-large-1 font-weight-bold btc-rate" value="@Model.CurrentBTCRate">@Model.CurrentBTCRateInString</span> <span class="font-medium-4">BTC/USDT</span>
                         </div>
                     </div>
                     <form class="form-bet">
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="row" style="margin-top:10px;">
-                            <div class="btn-group col-12 btn-up-down-group"  role="group">
+                            <div class="btn-group col-12 btn-up-down-group" role="group">
                                 <button type="button" data-value="true" class="btn btn-outline-success col-6 btn-up">
                                     UP
                                 </button>
@@ -70,6 +70,9 @@
                         </div>
                         @Html.HiddenFor(x => x.PreviousBtcRate)
                         @Html.HiddenFor(x => x.LowestBtcRate)
+                        @Html.Hidden("OpenBettingTime", CPL.Common.Misc.Utils.ToJSTimeStamp(DateTime.SpecifyKind(Model.OpenBettingTime, DateTimeKind.Utc)));
+                        @Html.Hidden("CloseBettingTime", CPL.Common.Misc.Utils.ToJSTimeStamp(DateTime.SpecifyKind(Model.CloseBettingTime, DateTimeKind.Utc)));
+                        @Html.Hidden("ResultTime", CPL.Common.Misc.Utils.ToJSTimeStamp(DateTime.SpecifyKind(Model.ResultTime, DateTimeKind.Utc)));
                     </form>
                 </div>
                 <div class="col-md-3 col-sm-12 bet-confirm" style="display:none">

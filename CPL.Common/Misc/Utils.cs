@@ -51,5 +51,10 @@ namespace CPL.Common.Misc
             }
 
         }
+
+        public static double ToJSTimeStamp(DateTime dt)
+        {
+            return dt.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+        }
     }
 }
