@@ -116,8 +116,10 @@
                                         y = parseFloat(PricePredictionViewComponent.btcCurrentRate.split(";")[1]);
                                         series.addPoint([x, y], true, true);
                                         yAxis.plotLinesAndBands[0].options.label.text = y.toString();
-                                        yAxis.plotLinesAndBands[0].options.label.textAlign = 'center';
+                                        yAxis.plotLinesAndBands[0].options.label.align = 'right';
+                                        yAxis.plotLinesAndBands[0].options.label.x = -80;
                                         yAxis.plotLinesAndBands[0].options.value = y;
+                                        yAxis.plotLinesAndBands[0].options.zIndex = 4;
                                         yAxis.update();
                                     }
                                 }
@@ -150,30 +152,39 @@
                     tickPixelInterval: 150,
                     plotLines: [{
                         label: {
-                            text: 'Open(' + openTime.utc().format("hh:mm") + ')',
+                            text: 'Open(' + openTime.format("hh:mm") + ')',
                             rotation: 0,
+                            zIndex: 4
                         },
                         color: '#000', // Color value
-                        value: (openTime.unix() * 1000), // Value of where the line will appear
-                        width: 1 // Width of the line    
+                        value: (openTime.valueOf()), // Value of where the line will appear
+                        zIndex: 4,
+                        dashStyle: 'dash',
+                        width: 1 // Width of the line   
                     },
                     {
                         label: {
-                            text: 'Close(' + closeTime.utc().format("hh:mm") + ')',
+                            text: 'Close(' + closeTime.format("hh:mm") + ')',
                             rotation: 0,
                             x: -90,
+                            zIndex: 4
                         },
                         color: '#000', // Color value
-                        value: (closeTime.unix() * 1000), // Value of where the line will appear
+                        value: (closeTime.valueOf()), // Value of where the line will appear
+                        zIndex: 4,
+                        dashStyle: 'dash',
                         width: 1 // Width of the line    
                     },
                     {
                         label: {
-                            text: 'Result(' + resultTime.utc().format("hh:mm") + ')',
+                            text: 'Result(' + resultTime.format("hh:mm") + ')',
                             rotation: 0,
+                            zIndex: 4
                         },
                         color: '#000', // Color value
-                        value: (resultTime.unix() * 1000), // Value of where the line will appear
+                        value: (resultTime.valueOf()), // Value of where the line will appear
+                        zIndex: 4,
+                        dashStyle: 'dash',
                         width: 1 // Width of the line    
                     }]
                 },
@@ -184,7 +195,6 @@
                     plotLines: [{
                         label: {
                             text: "",
-                            textAlign: 'center'
                         },
                         color: 'red', // Color value
                         value: 0, // Value of where the line will appear
@@ -207,42 +217,36 @@
                     states: { hover: { enabled: false } },
                     dataGrouping: { enabled: false },
                     connectNulls: true,
+                    zIndex: 1,
                     data: (function () {
                         // generate an array of random data
-                        var data = [],
-                            currentTime,
-                            time,
-                            rate,
-                            count,
-                            i;
-
-                        currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-                        time = $("#PreviousBtcRate").val().split(";")[0];
-                        rate = $("#PreviousBtcRate").val().split(";")[1].split(",");
-                        count = rate.length;
-
-                        for (i = -count; i <= 0; i += 1) {
+                        var data = [];
+                        var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                        var btcPrices = JSON.parse($("#PreviousBtcRate").val());
+                        for (i = 0; i < btcPrices.length; i++) {
                             data.push({
-                                x: (parseFloat(time) + count + i) * 1000, // Convert to milisecond
-                                y: parseFloat(rate[count + i])
+                                x: moment(btcPrices[i].Time * 1000).valueOf(), // Convert to milisecond
+                                y: parseFloat(btcPrices[i].Price)
                             });
                         }
+
                         PricePredictionViewComponent.bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-                        for (i = 0; i <= (3600 * 17); i += 1) {
+                        var resultTimeInSeconds = moment(parseInt($(".tab-pane.active").closest(".tab-pane").find("#ResultTime").val())).valueOf() / 1000;
+                        for (i = currentTime; i <= resultTimeInSeconds + 7200; i++) { // After result time 2 hours
                             data.push({
-                                x: (currentTime + i) * 1000,
+                                x: moment(i*1000).valueOf(),
                                 y: null
                             });
                         }
 
                         // Fill Delay Time
-                        var count = currentTime - PricePredictionViewComponent.bctDelayTime;
-                        for (var i = 0; i < count; i++) {
-                            data.push({
-                                x: (PricePredictionViewComponent.bctDelayTime + i) * 1000,
-                                y: null
-                            });
-                        }
+                        //var count = currentTime - PricePredictionViewComponent.bctDelayTime;
+                        //for (var i = 0; i < count; i++) {
+                        //    data.push({
+                        //        x: moment.utc((PricePredictionViewComponent.bctDelayTime + i) * 1000).valueOf(),
+                        //        y: null
+                        //    });
+                        //}
 
                         return data;
                     }())

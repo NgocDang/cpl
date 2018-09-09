@@ -70,9 +70,9 @@
                         </div>
                         @Html.HiddenFor(x => x.PreviousBtcRate)
                         @Html.HiddenFor(x => x.LowestBtcRate)
-                        @Html.Hidden("OpenBettingTime", CPL.Common.Misc.Utils.ToJSTimeStamp(DateTime.SpecifyKind(Model.OpenBettingTime, DateTimeKind.Utc)))
-                        @Html.Hidden("CloseBettingTime", CPL.Common.Misc.Utils.ToJSTimeStamp(DateTime.SpecifyKind(Model.CloseBettingTime, DateTimeKind.Utc)))
-                        @Html.Hidden("ResultTime", CPL.Common.Misc.Utils.ToJSTimeStamp(DateTime.SpecifyKind(Model.ResultTime, DateTimeKind.Utc)))
+                        @Html.Hidden("OpenBettingTime", ((DateTimeOffset)Model.OpenBettingTime).ToUnixTimeMilliseconds())
+                        @Html.Hidden("CloseBettingTime", ((DateTimeOffset)Model.CloseBettingTime).ToUnixTimeMilliseconds())
+                        @Html.Hidden("ResultTime", ((DateTimeOffset)Model.ResultTime).ToUnixTimeMilliseconds())
                     </form>
                 </div>
                 <div class="card col-md-3 col-sm-12 bet-confirm mb-0" style="display:none">

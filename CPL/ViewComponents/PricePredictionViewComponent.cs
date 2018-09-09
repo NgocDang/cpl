@@ -6,6 +6,7 @@ using CPL.Misc;
 using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace CPL.ViewComponents
                 .Where(x => x.PricePredictionId == viewModel.Id && x.Prediction == EnumPricePredictionStatus.DOWN.ToBoolean())
                 .Count();
 
-            
+
             if (upPrediction + downPrediction == 0)
             {
                 viewModel.UpPercentage = viewModel.DownPercentage = 50;
@@ -73,15 +74,10 @@ namespace CPL.ViewComponents
             var btcPriceInUTC = _btcPriceService.Queryable()
                 .Where(x => x.Time >= ((DateTimeOffset)viewModel.OpenBettingTime.AddHours(-CPLConstant.HourBeforeInChart)).ToUnixTimeSeconds())
                 .ToList();
-
-            var previousTime = btcPriceInUTC.FirstOrDefault().Time.ToString();
-            var previousRate = string.Join(",", btcPriceInUTC.Select(x => x.Price));
             var lowestRate = btcPriceInUTC.Min(x => x.Price) - CPLConstant.LowestRateBTCInterval;
             if (lowestRate < 0)
                 lowestRate = 0;
-            var previousBtcRate = $"{previousTime};{previousRate}";
-
-            viewModel.PreviousBtcRate = previousBtcRate;
+            viewModel.PreviousBtcRate = JsonConvert.SerializeObject(btcPriceInUTC);
             viewModel.LowestBtcRate = lowestRate;
             return View(viewModel);
         }
