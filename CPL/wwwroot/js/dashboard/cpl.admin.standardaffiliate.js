@@ -104,9 +104,9 @@
                     "data": "Tier1DirectRate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a style="border: none" class="editable editable-unlocked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + ' href="#">' + full.tier1DirectRate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + ' href="#">' + full.tier1DirectRate + '</a>';
                         else
-                            return '<a style="border: none" class="editable editable-locked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + '>' + full.tier1DirectRate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + '>' + full.tier1DirectRate + '</a>';
                     },
                     "orderable": false
                 },
@@ -114,9 +114,9 @@
                     "data": "Tier2SaleToTier1Rate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a style="border: none" class="editable editable-unlocked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier2SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier2SaleToTier1Rate + '</a>';
                         else
-                            return '<a style="border: none" class="editable editable-locked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier2SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier2SaleToTier1Rate + '</a>';
                     },
                     "orderable": false
                 },
@@ -124,9 +124,9 @@
                     "data": "Tier3SaleToTier1Rate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a style="border: none" class="editable editable-unlocked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier3SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier3SaleToTier1Rate + '</a>';
                         else
-                            return '<a style="border: none" class="editable editable-locked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier3SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier3SaleToTier1Rate + '</a>';
                     },
                     "orderable": false
                 },
@@ -193,6 +193,7 @@
         });
     },
     loadEditable: function () {
+        $.fn.editable.defaults.clear = false;
         $.fn.editable.defaults.mode = 'popup';
         $.fn.editable.defaults.placement = 'top';
         $.fn.editable.defaults.type = 'number';
