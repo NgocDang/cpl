@@ -424,6 +424,9 @@
                             tabPane.find(".bet").show();
                             toastr.success(data.message);
                             PricePredictionHistoryViewComponent.pricePredictionHistoryDataTable.ajax.reload();
+                            $(".user-token-amount").map(function (index, element) {
+                                $(element).text(data.token + " CPL");
+                            });
                         } else
                             window.location.replace(data.url);
                     } else {
