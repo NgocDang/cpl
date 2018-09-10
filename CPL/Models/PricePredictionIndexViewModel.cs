@@ -17,5 +17,8 @@ namespace CPL.Models
         public int Id { get; set; }
         public DateTime ResultTime { get; set; }
         public DateTime ToBeComparedTime { get; set; }
+        public DateTime CloseBettingTime { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDisabled { get; set; }
     }
 }

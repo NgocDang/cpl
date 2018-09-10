@@ -1,9 +1,12 @@
-﻿var btcCurrentRate, btcLastestTime, bctDelayTime;
-var PricePredictionViewComponent = {
+﻿var PricePredictionViewComponent = {
+    btcCurrentRate: null,
+    bctDelayTime: null,
+    realtimeInterval: null,
+    charts:[],
     init: function () {
         PricePredictionViewComponent.bindLoadPredictionResult();
-        //PricePredictionViewComponent.loadBTCPriceChart();
-        //PricePredictionViewComponent.bindLoadBTCCurrentRate();
+        PricePredictionViewComponent.loadBTCPriceChart();
+        PricePredictionViewComponent.bindLoadBTCCurrentRate();
         PricePredictionViewComponent.bindBet();
         PricePredictionViewComponent.bindConfirmBet();
         PricePredictionViewComponent.bindBack();
@@ -21,33 +24,35 @@ var PricePredictionViewComponent = {
                 this.setUserProgress(up, down, pricePredictionId);
         });
     },
-    //bindLoadBTCCurrentRate: function () {
-    //    $.ajax({
-    //        url: '/PricePrediction/GetBTCCurrentRate',
-    //        type: "POST",
-    //        data: {},
-    //        success: function (data) {
-    //            if (data.success) {
-    //                if ($("#btc-rate").val() < data.value) { // Up
-    //                    $("#btc-rate").removeClass("text-danger");
-    //                    $("#btc-rate").addClass("text-success");
-    //                }
-    //                    else if ($("#btc-rate").val() > data.value){ //Down
-    //                    $("#btc-rate").removeClass("text-success");
-    //                    $("#btc-rate").addClass("text-danger");
-    //                }
-    //                $("#btc-rate").val(data.value);
-    //                $("#btc-rate").html(data.valueInString.split(";")[0]); // Assign data to get current rate
+    bindLoadBTCCurrentRate: function () {
+        $.ajax({
+            url: '/PricePrediction/GetBTCCurrentRate',
+            type: "POST",
+            data: {},
+            success: function (data) {
+                if (data.success) {
+                    $(".btc-rate").each(function (index, element) {
+                        if ($(element).val() < data.value) { // Up
+                            $(element).removeClass("text-danger");
+                            $(element).addClass("text-success");
+                        }
+                        else if ($(element).val() > data.value) { //Down
+                            $(element).removeClass("text-success");
+                            $(element).addClass("text-danger");
+                        }
 
-    //                // Get data to show in to the chart
-    //                btcCurrentRate = data.valueInString;
-    //            }
-    //            else {
-    //                btcCurrentRate = null;
-    //            }
-    //        }
-    //    });
-    //},
+                        $(element).val(data.value);
+                        $(element).html(data.valueInString.split(";")[0]); // Assign data to get current rate
+                    });
+                    // Get data to show in to the chart
+                    PricePredictionViewComponent.btcCurrentRate = data.valueInString;
+                }
+                else {
+                    PricePredictionViewComponent.btcCurrentRate = null;
+                }
+            }
+        });
+    },
     setUserProgress: function (up, down, pricePredictionId) {
         // Reset up-bar setting
         $("#price-prediction-nav-" + pricePredictionId + " #up-bar").css({ "width": up + "%" })
@@ -59,153 +64,196 @@ var PricePredictionViewComponent = {
             .attr("aria-valuenow", down)
         $("#price-prediction-nav-" + pricePredictionId + " #down-bar-value").html(down + "%");
     },
-    //loadBTCPriceChart: function () {
-    //    Highcharts.setOptions({
-    //        global: {
-    //            useUTC: false
-    //        }
-    //    });
+    loadBTCPriceChart: function () {
+        $(".tab-pane.active .btc-price-chart").each(function (index, element) {
+            var openTime = moment(parseInt($(element).closest(".tab-pane").find("#OpenBettingTime").val()));
+            var closeTime = moment(parseInt($(element).closest(".tab-pane").find("#CloseBettingTime").val()));
+            var resultTime = moment(parseInt($(element).closest(".tab-pane").find("#ResultTime").val()));
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
 
-    //    var btcPriceChart = Highcharts.chart('btc-price-chart', {
-    //        chart: {
-    //            type: 'area',
-    //            zoomType: 'x',
-    //            panning: true,
-    //            panKey: 'shift',
-    //            events: {
-    //                load: function () {
-    //                    // set up the updating of the chart each second
-    //                    var series = this.series[0], x, y;
+            $(element).highcharts({
+                chart: {
+                    type: 'area',
+                    zoomType: 'x',
+                    panning: true,
+                    panKey: 'shift',
+                    events: {
+                        load: function () {
+                            // set up the updating of the chart each second
+                            PricePredictionViewComponent.charts.push($(element).highcharts());
+                            
+                            if (PricePredictionViewComponent.realtimeInterval != null) {
+                                clearInterval(PricePredictionViewComponent.realtimeInterval)
+                            }
 
-    //                    //// auto set hover
-    //                    //setInterval(function () {
-    //                    //    var d = new Date();
+                            PricePredictionViewComponent.realtimeInterval = setInterval(function () {
+                                PricePredictionViewComponent.bindLoadBTCCurrentRate();
 
-    //                    //    var tzOffset = d.getTimezoneOffset();
+                                for (var i = 0; i < PricePredictionViewComponent.charts.length; i++) {
+                                    var series = PricePredictionViewComponent.charts[i].series[0], x, y,
+                                        chart = PricePredictionViewComponent.charts[i],
+                                        yAxis = chart.yAxis[0];
 
-    //                    //    series.redraw;
-    //                    //    var lastPoint = series.getPoint(series.points[series.points.length - 1]);
+                                    // Load gap between real time and real time data
+                                    var previousX = x;
+                                    if (x !== undefined) {
+                                        var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                                        previousX = x / 1000;
+                                        var count = currentTime - previousX;
+                                        if (count > 0) {
+                                            for (var i = 0; i < count; i++) {
+                                                series.addPoint([x + i * 1000, y], true, true);
+                                            }
+                                        }
+                                    }
 
-    //                    //    lastPoint.setState('hover');
-    //                    //    //lastPoint.state = '';  // need this to fix hover bug
-    //                    //    series.chart.tooltip.refresh(lastPoint); // Show tooltip
-    //                    //}, 1000);
+                                    if (PricePredictionViewComponent.btcCurrentRate !== undefined && PricePredictionViewComponent.btcCurrentRate !== null) {
+                                        x = parseFloat(PricePredictionViewComponent.btcCurrentRate.split(";")[2]) * 1000; // current time from wcf
+                                        y = parseFloat(PricePredictionViewComponent.btcCurrentRate.split(";")[1]);
+                                        series.addPoint([x, y], true, true);
+                                        yAxis.plotLinesAndBands[0].options.label.text = y.toString();
+                                        yAxis.plotLinesAndBands[0].options.label.align = 'right';
+                                        yAxis.plotLinesAndBands[0].options.label.x = -80;
+                                        yAxis.plotLinesAndBands[0].options.value = y;
+                                        yAxis.plotLinesAndBands[0].options.zIndex = 4;
+                                        yAxis.update();
+                                    }
+                                }
 
-    //                    // Load gap between real time
-    //                    var previousX = x;
-    //                    setInterval(function () {
-    //                        if (x !== undefined) {
-    //                            var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-    //                            previousX = x / 1000;
-    //                            var count = currentTime - previousX;
-    //                            if (count > 0) {
-    //                                for (var i = 0; i < count; i++) {
-    //                                    series.addPoint([x + i * 1000, y], true, true);
-    //                                }
-    //                            }
-    //                        }
-    //                    }, 1000);
+                                console.log(PricePredictionViewComponent.btcCurrentRate);
+                                
+                            }, 1000);
+                            
+                        }
+                    }
+                },
+                plotOptions: {
+                    area: {
+                        marker: {
+                            enabled: false
+                        }
+                    },
+                    series: {
+                        shadow: false,
+                        lineWidth: 0.01,
+                        turboThreshold: 200000,
+                        color: '#ffc111',
+                    }
+                },
+                title: {
+                    text: 'Live BTC/USDT rate'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    tickPixelInterval: 150,
+                    plotLines: [{
+                        label: {
+                            text: 'Open(' + openTime.format("hh:mm") + ')',
+                            rotation: 0,
+                            zIndex: 4
+                        },
+                        color: '#000', // Color value
+                        value: (openTime.valueOf()), // Value of where the line will appear
+                        zIndex: 4,
+                        dashStyle: 'dash',
+                        width: 1 // Width of the line   
+                    },
+                    {
+                        label: {
+                            text: 'Close(' + closeTime.format("hh:mm") + ')',
+                            rotation: 0,
+                            x: -90,
+                            zIndex: 4
+                        },
+                        color: '#000', // Color value
+                        value: (closeTime.valueOf()), // Value of where the line will appear
+                        zIndex: 4,
+                        dashStyle: 'dash',
+                        width: 1 // Width of the line    
+                    },
+                    {
+                        label: {
+                            text: 'Result(' + resultTime.format("hh:mm") + ')',
+                            rotation: 0,
+                            zIndex: 4
+                        },
+                        color: '#000', // Color value
+                        value: (resultTime.valueOf()), // Value of where the line will appear
+                        zIndex: 4,
+                        dashStyle: 'dash',
+                        width: 1 // Width of the line    
+                    }]
+                },
+                yAxis: {
+                    title: {
+                        text: 'Price'
+                    },
+                    plotLines: [{
+                        label: {
+                            text: "",
+                        },
+                        color: 'red', // Color value
+                        value: 0, // Value of where the line will appear
+                        width: 1 // Width of the line    
+                    }],
+                    min: $("#LowestBtcRate").val(),
+                },
+                tooltip: {
+                    crosshairs: [true, true]
+                },
+                legend: {
+                    enabled: false
+                },
+                exporting: {
+                    enabled: false
+                },
+                series: [{
+                    name: 'BTC/USDT rate',
+                    fillOpacity: 1,
+                    states: { hover: { enabled: false } },
+                    dataGrouping: { enabled: false },
+                    connectNulls: true,
+                    zIndex: 1,
+                    data: (function () {
+                        // generate an array of random data
+                        var data = [];
+                        var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                        var btcPrices = JSON.parse($("#PreviousBtcRate").val());
+                        for (i = 0; i < btcPrices.length; i++) {
+                            data.push({
+                                x: moment(btcPrices[i].Time * 1000).valueOf(), // Convert to milisecond
+                                y: parseFloat(btcPrices[i].Price)
+                            });
+                        }
 
-    //                    // Load current BTC-USDT rate in real time
-    //                    setInterval(function () {
-    //                        PricePredictionViewComponent.bindLoadBTCCurrentRate();
-    //                        if (btcCurrentRate !== undefined && btcCurrentRate !== null) {
-    //                            x = parseFloat(btcCurrentRate.split(";")[2]) * 1000; // current time from wcf
-    //                            //x = (new Date()).getTime(); // current time
-    //                            y = parseFloat(btcCurrentRate.split(";")[1]);
-    //                            series.addPoint([x, y], true, true);
-    //                        }
-    //                    }, 1000);
-    //                }
-    //            }
-    //        },
-    //        plotOptions: {
-    //            area: {
-    //                marker: {
-    //                    enabled: false
-    //                }
-    //            },
-    //            series: {
-    //                shadow: false,
-    //                lineWidth: 0.01,
-    //                turboThreshold: 50000
-    //            }
-    //        },
-    //        title: {
-    //            text: 'Live BTC/USDT rate'
-    //        },
-    //        xAxis: {
-    //            type: 'datetime',
-    //            tickPixelInterval: 150
-    //        },
-    //        yAxis: {
-    //            title: {
-    //                text: 'Price'
-    //            },
-    //            min: $("#LowestBtcRate").val(),
-    //            plotLines: [{
-    //                value: 0,
-    //                width: 1,
-    //                color: '#1EC481'
-    //            }]
-    //        },
-    //        tooltip: {
-    //            crosshairs: [true, true]
-    //        },
-    //        legend: {
-    //            enabled: false
-    //        },
-    //        exporting: {
-    //            enabled: false
-    //        },
-    //        series: [{
-    //            name: 'BTC/USDT rate',
-    //            fillOpacity: 1,
-    //            states: { hover: { enabled: false } },
-    //            dataGrouping: { enabled: false },
-    //            connectNulls: true, 
-    //            data: (function () {
-    //                // generate an array of random data
-    //                var data = [],
-    //                    currentTime,
-    //                    time,
-    //                    rate,
-    //                    count,
-    //                    i;
+                        PricePredictionViewComponent.bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                        var resultTimeInSeconds = moment(parseInt($(".tab-pane.active").closest(".tab-pane").find("#ResultTime").val())).valueOf() / 1000;
+                        for (i = currentTime; i <= resultTimeInSeconds + 7200; i++) { // After result time 2 hours
+                            data.push({
+                                x: moment(i*1000).valueOf(),
+                                y: null
+                            });
+                        }
 
-    //                currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-    //                time = $("#PreviousBtcRate").val().split(";")[0];
-    //                rate = $("#PreviousBtcRate").val().split(";")[1].split(",");
-    //                count = rate.length;
+                        // Fill Delay Time
+                        //var count = currentTime - PricePredictionViewComponent.bctDelayTime;
+                        //for (var i = 0; i < count; i++) {
+                        //    data.push({
+                        //        x: moment.utc((PricePredictionViewComponent.bctDelayTime + i) * 1000).valueOf(),
+                        //        y: null
+                        //    });
+                        //}
 
-    //                for (i = -count; i <= 0; i += 1) {
-    //                    data.push({
-    //                        x: (parseFloat(time) + count + i) * 1000, // Convert to milisecond
-    //                        y: parseFloat(rate[count + i])
-    //                    });
-    //                }
-    //                bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-    //                for (i = 0; i <= 3600; i += 1) {
-    //                    data.push({
-    //                        x: (currentTime + i) * 1000,
-    //                        y: null
-    //                    });
-    //                }
-
-    //                // Fill Delay Time
-    //                var count = currentTime - bctDelayTime;
-    //                for (var i = 0; i < count; i++) {
-    //                    data.push({
-    //                        x: (bctDelayTime + i) * 1000,
-    //                        y: null
-    //                    });
-    //                }
-
-    //                return data;
-    //            }())
-    //        }]
-    //    });
-    //},
+                        return data;
+                    }())
+                }]
+            });
+        });
+    },
     loadPricePredictionHistoryDatatable: function () {
         if ($("#SysUserId").val() === undefined)
             return false;

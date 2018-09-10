@@ -199,19 +199,65 @@ namespace CPL.Controllers
                 var isAccountActivationEnable = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value);
                 var latestAddressIndex = _sysUserService.Queryable().LastOrDefault()?.ETHHDWalletAddressIndex ?? 0;
                 // Try to create a user with the given identity
-                var user = new SysUser
+                SysUser user = null;
+                if(viewModel.IsIntroducedById.HasValue)
                 {
-                    Email = viewModel.Email,
-                    Password = viewModel.Password.ToBCrypt(),
-                    CreatedDate = DateTime.Now,
-                    IsAdmin = false,
-                    ActivateToken = isAccountActivationEnable ? Guid.NewGuid().ToString() : null,
-                    IsIntroducedById = viewModel.IsIntroducedById,
-                    AgencyId = agency == null ? null : (int?)agency.Id,
-                    BTCAmount = 0,
-                    ETHAmount = 0,
-                    TokenAmount = 0
-                };
+                    var fatherUser = _sysUserService.Queryable().FirstOrDefault(x => x.Id == viewModel.IsIntroducedById);
+                    var grandFatherUser = _sysUserService.Queryable().FirstOrDefault(x => fatherUser != null && x.Id == fatherUser.IsIntroducedById);
+                    var grandGrandFatherUser = _sysUserService.Queryable().FirstOrDefault(x => grandFatherUser != null && x.Id == grandFatherUser.IsIntroducedById);
+
+                    if(grandGrandFatherUser == null && fatherUser.AgencyId.HasValue)
+                    {
+                        user = new SysUser
+                        {
+                            Email = viewModel.Email,
+                            Password = viewModel.Password.ToBCrypt(),
+                            CreatedDate = DateTime.Now,
+                            IsAdmin = false,
+                            ActivateToken = isAccountActivationEnable ? Guid.NewGuid().ToString() : null,
+                            IsIntroducedById = viewModel.IsIntroducedById,
+                            AgencyId = fatherUser.AgencyId,
+                            BTCAmount = 0,
+                            ETHAmount = 0,
+                            TokenAmount = 0,
+                            IsLocked = false
+                        };
+                    }
+                    else
+                    {
+                        user = new SysUser
+                        {
+                            Email = viewModel.Email,
+                            Password = viewModel.Password.ToBCrypt(),
+                            CreatedDate = DateTime.Now,
+                            IsAdmin = false,
+                            ActivateToken = isAccountActivationEnable ? Guid.NewGuid().ToString() : null,
+                            IsIntroducedById = viewModel.IsIntroducedById,
+                            AgencyId = null,
+                            BTCAmount = 0,
+                            ETHAmount = 0,
+                            TokenAmount = 0,
+                            IsLocked = false
+                        };
+                    }
+                }
+                else
+                {
+                    user = new SysUser
+                    {
+                        Email = viewModel.Email,
+                        Password = viewModel.Password.ToBCrypt(),
+                        CreatedDate = DateTime.Now,
+                        IsAdmin = false,
+                        ActivateToken = isAccountActivationEnable ? Guid.NewGuid().ToString() : null,
+                        IsIntroducedById = viewModel.IsIntroducedById,
+                        AgencyId = agency == null ? null : (int?)agency.Id,
+                        BTCAmount = 0,
+                        ETHAmount = 0,
+                        TokenAmount = 0,
+                        IsLocked = false
+                    };
+                }
 
                 try
                 {

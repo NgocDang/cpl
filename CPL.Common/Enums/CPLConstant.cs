@@ -95,8 +95,8 @@ namespace CPL.Common.Enums
         public static int LotteryGamePerRow  = 4;
 
         // High Chart
-        public static int HourBeforeInChart = 12; // hour
-        public static int LowestRateBTCInterval = 500;
+        public static int HourBeforeInChart = 1; // hour
+        public static int LowestRateBTCInterval = 100;
 
         // GCaptcha Key
         public static string GCaptchaKey = "GCaptchaKey";

@@ -4,14 +4,14 @@
     <div class="card-content">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-9 col-12">
-                    <div id="btc-price-chart">
+                <div class="col-md-9 col-12 px-sm-1 px-0">
+                    <div class="btc-price-chart">
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-12 bet">
                     <div class="row">
                         <div class="col-12">
-                            <span class="font-large-1 font-weight-bold" value="@Model.CurrentBTCRate" id="btc-rate">@Model.CurrentBTCRateInString</span> <span class="font-medium-4">BTC/USDT</span>
+                            <span class="font-large-1 font-weight-bold btc-rate" value="@Model.CurrentBTCRate">@Model.CurrentBTCRateInString</span> <span class="font-medium-4">BTC/USDT</span>
                         </div>
                     </div>
                     <form class="form-bet">
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="row" style="margin-top:10px;">
-                            <div class="btn-group col-12 btn-up-down-group"  role="group">
+                            <div class="btn-group col-12 btn-up-down-group" role="group">
                                 <button type="button" data-value="true" class="btn btn-outline-success col-6 btn-up">
                                     UP
                                 </button>
@@ -70,31 +70,31 @@
                         </div>
                         @Html.HiddenFor(x => x.PreviousBtcRate)
                         @Html.HiddenFor(x => x.LowestBtcRate)
+                        @Html.Hidden("OpenBettingTime", ((DateTimeOffset)Model.OpenBettingTime).ToUnixTimeMilliseconds())
+                        @Html.Hidden("CloseBettingTime", ((DateTimeOffset)Model.CloseBettingTime).ToUnixTimeMilliseconds())
+                        @Html.Hidden("ResultTime", ((DateTimeOffset)Model.ResultTime).ToUnixTimeMilliseconds())
                     </form>
                 </div>
-                <div class="col-md-3 col-sm-12 bet-confirm" style="display:none">
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12" style="text-align:center">
-                            <span class="font-large-2 font-weight-bold info">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</span>
+                <div class="card col-md-3 col-sm-12 bet-confirm mb-0" style="display:none">
+                    <div class="card-header text-center font-medium-4 font-weight-bold text-danger text-uppercase">
+                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")
+                    </div>
+                    <div class="card-content pt-2 pb-3">
+                        <div class="col-md-12 col-sm-12 mb-05 px-0">
+                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PredictedTrend")</span><span class="font-weight-bold predicted-trend-confirm" style="display:inline; float:right"></span>
+                        </div>
+                        <div class="col-md-12 col-sm-12 px-0">
+                            <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BetAmount")</span><span class="font-weight-bold success bet-amount-confirm" style="display:inline; float:right"></span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12">
-                            <span class="font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PredictedTrend"):</span><span class="font-medium-4 font-weight-bold predicted-trend-confirm" style="display:inline; float:right"></span>
-                        </div>
-                        <div class="col-md-12 col-sm-12">
-                            <span class="font-medium-4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BetAmount"):</span><span class="font-medium-4 font-weight-bold success bet-amount-confirm" style="display:inline; float:right"></span>
-                        </div>
+                    <div class="card-footer pb-0">
                     </div>
-                    <div class="row" style="margin-top:10px;">
-                        <div class="col-md-5">
-                            <button type="button" data-id="@Model.Id" class="btn btn-confirm btn-success btn-block font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</button>
+                    <div class="row px-0">
+                        <div class="col-6">
+                            <button type="button" class="btn btn-back btn-secondary btn-block px-0"><i class="fa fa-arrow-left"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Back")</button>
                         </div>
-                        <div class="col-md-2">
-                            &nbsp;
-                        </div>
-                        <div class="col-md-5">
-                            <button type="button" class="btn btn-back btn-danger btn-block font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Back")</button>
+                        <div class="col-6">
+                            <button type="button" data-id="@Model.Id" class="btn btn-confirm btn-primary btn-block px-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm") <i class="fa fa-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
