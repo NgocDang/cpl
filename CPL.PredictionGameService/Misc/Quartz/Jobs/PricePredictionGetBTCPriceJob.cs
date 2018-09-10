@@ -63,9 +63,9 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             catch (Exception ex)
             {
                 if (ex.InnerException?.Message != null)
-                    Utils.FileAppendThreadSafe(FileName, string.Format("DoGetBTCPrizePricePrediction -- Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(FileName, string.Format("DoGetBTCPrice -- Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                 else
-                    Utils.FileAppendThreadSafe(FileName, string.Format("DoGetBTCPrizePricePrediction -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(FileName, string.Format("DoGetBTCPrice -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
 
                 return 0 ;
             }

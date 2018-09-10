@@ -27,14 +27,13 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             HoldingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.HoldingIntervalInHour).Value);
             CompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinute).Value);
 
-            DoCreateNewPricePrediction(ref resolver);
+            DoCreatePricePrediction(ref resolver);
             return Task.FromResult(0);
         }
 
-        public void DoCreateNewPricePrediction(ref Resolver resolver)
+        public void DoCreatePricePrediction(ref Resolver resolver)
         {
-            var startTime = DateTime.Now;
-
+            var startTime = DateTime.Now.Date;
             IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
             scheduler.Start();
 
