@@ -38,13 +38,13 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             {
                 // interval time
                 CompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinute).Value);
-                // currentTime
+
+                // result time and price
                 var resultTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
-                // the time to be compared
-                var toBeComparedTime = ((DateTimeOffset)DateTime.UtcNow.AddMinutes(-CompareIntervalInMinute)).ToUnixTimeSeconds();
-                // get price at current time from BTCPrice table
                 var resultPrize = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => resultTime >= x.Time).Price;
-                // get price at time to be compared from BTCPrice table
+
+                // the time to be compared time and price
+                var toBeComparedTime = ((DateTimeOffset)DateTime.UtcNow.AddMinutes(-CompareIntervalInMinute)).ToUnixTimeSeconds();
                 var toBeComparedPrice = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => toBeComparedTime >= x.Time).Price;
 
                 // update price prediction

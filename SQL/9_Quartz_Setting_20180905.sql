@@ -1,6 +1,5 @@
-INSERT [dbo].[Setting] ([Name], [Value], [Description]) VALUES (N'NumberOfDailyPricePrediction', N'3', NULL)
 INSERT [dbo].[Setting] ([Name], [Value], [Description]) VALUES (N'PricePredictionBettingIntervalInHour', N'8', NULL)
 INSERT [dbo].[Setting] ([Name], [Value], [Description]) VALUES (N'HoldingIntervalInHour', N'1', NULL)
-INSERT [dbo].[Setting] ([Name], [Value], [Description]) VALUES (N'CompareIntervalInMinutes', N'15', NULL)
+INSERT [dbo].[Setting] ([Name], [Value], [Description]) VALUES (N'CompareIntervalInMinute', N'15', NULL)
 INSERT [dbo].[Setting] ([Name], [Value], [Description]) VALUES (N'DailyStartTimeInHour', N'0', NULL)
 INSERT [dbo].[Setting] ([Name], [Value], [Description]) VALUES (N'DailyStartTimeInMinute', N'0', NULL)
