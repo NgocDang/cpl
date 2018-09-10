@@ -56,6 +56,7 @@ namespace CPL.Controllers
         [Permission(EnumRole.Guest)]
         public IActionResult Index()
         {
+
             var lotteries = _lotteryService.Query()
                 .Include(x => x.LotteryHistories)
                 .Select()
