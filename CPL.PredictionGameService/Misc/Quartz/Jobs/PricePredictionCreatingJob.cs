@@ -14,6 +14,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 {
     internal class PricePredictionCreatingJob : IJob
     {
+        private static int NumberOfDailyPricePrediction;
         private static int PricePredictionBettingIntervalInHour;
         private static int HoldingIntervalInHour;
         private static int CompareIntervalInMinute;
@@ -23,6 +24,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             JobDataMap dataMap = context.JobDetail.JobDataMap;
             Resolver resolver = (Resolver)dataMap["Resolver"];
 
+            NumberOfDailyPricePrediction = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.NumberOfDailyPricePrediction).Value);
             PricePredictionBettingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionBettingIntervalInHour).Value);
             HoldingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.HoldingIntervalInHour).Value);
             CompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinute).Value);
@@ -38,7 +40,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
             scheduler.Start();
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < NumberOfDailyPricePrediction; i++)
             {
                 var newPricePredictionRecord = new PricePrediction
                 {
