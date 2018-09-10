@@ -2,7 +2,7 @@
     btcCurrentRate: null,
     bctDelayTime: null,
     realtimeInterval: null,
-    charts:[],
+    charts: [],
     init: function () {
         PricePredictionViewComponent.bindLoadPredictionResult();
         PricePredictionViewComponent.loadBTCPriceChart();
@@ -74,6 +74,37 @@
                     useUTC: false
                 }
             });
+            if (parseInt($("#LangId").val()) == 1) {
+                Highcharts.setOptions({
+                    lang: {
+                        months: [
+                            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+                        ],
+                        weekdays: [
+                            'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+                        ],
+                        shortMonths: [
+                            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                        ]
+                    }
+                });
+            }
+            else if (parseInt($("#LangId").val()) == 2) {
+                Highcharts.setOptions({
+                    lang: {
+                        months: [
+                            '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
+                        ],
+                        weekdays: [
+                            '月曜日', '火曜日', '水曜日', '木曜日',
+                            '金曜日', '土曜日', '日曜日'
+                        ],
+                        shortMonths: [
+                            '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
+                        ]
+                    }
+                });
+            }
 
             $(element).highcharts({
                 chart: {
@@ -85,7 +116,7 @@
                         load: function () {
                             // set up the updating of the chart each second
                             PricePredictionViewComponent.charts.push($(element).highcharts());
-                            
+
                             if (PricePredictionViewComponent.realtimeInterval != null) {
                                 clearInterval(PricePredictionViewComponent.realtimeInterval)
                             }
@@ -125,9 +156,9 @@
                                 }
 
                                 console.log(PricePredictionViewComponent.btcCurrentRate);
-                                
+
                             }, 1000);
-                            
+
                         }
                     }
                 },
@@ -145,14 +176,14 @@
                     }
                 },
                 title: {
-                    text: 'Live BTC/USDT rate'
+                    text: $("#btcPricePredictionChartTitle").val()
                 },
                 xAxis: {
                     type: 'datetime',
                     tickPixelInterval: 150,
                     plotLines: [{
                         label: {
-                            text: 'Open(' + openTime.format("hh:mm") + ')',
+                            text: $("#open").val() + '(' + openTime.format("hh:mm") + ')',
                             rotation: 0,
                             zIndex: 4
                         },
@@ -164,7 +195,7 @@
                     },
                     {
                         label: {
-                            text: 'Close(' + closeTime.format("hh:mm") + ')',
+                            text: $("#close").val() + '(' + closeTime.format("hh:mm") + ')',
                             rotation: 0,
                             x: -90,
                             zIndex: 4
@@ -177,7 +208,7 @@
                     },
                     {
                         label: {
-                            text: 'Result(' + resultTime.format("hh:mm") + ')',
+                            text: $("#result").val() + '(' + resultTime.format("hh:mm") + ')',
                             rotation: 0,
                             zIndex: 4
                         },
@@ -190,7 +221,7 @@
                 },
                 yAxis: {
                     title: {
-                        text: 'Price'
+                        text: $("#price").val()
                     },
                     plotLines: [{
                         label: {
@@ -212,7 +243,7 @@
                     enabled: false
                 },
                 series: [{
-                    name: 'BTC/USDT rate',
+                    name: $("#btcPricePredictionSeriesName").val(),
                     fillOpacity: 1,
                     states: { hover: { enabled: false } },
                     dataGrouping: { enabled: false },
@@ -234,7 +265,7 @@
                         var resultTimeInSeconds = moment(parseInt($(".tab-pane.active").find("#ResultTime").val())).valueOf() / 1000;
                         for (i = currentTime; i <= resultTimeInSeconds + 7200; i++) { // After result time 2 hours
                             data.push({
-                                x: moment(i*1000).valueOf(),
+                                x: moment(i * 1000).valueOf(),
                                 y: null
                             });
                         }
@@ -343,7 +374,7 @@
     },
     bindConfirmBet: function () {
         $(".tab-pane").on("click", ".btn-confirm-bet", function () {
-            var _this = this;   
+            var _this = this;
             var tabPane = $(_this).closest(".tab-pane");
             if (tabPane.find(".bet-amount").val() <= 0) {
                 toastr.error("Incorrect amount!");
@@ -393,6 +424,9 @@
                             tabPane.find(".bet").show();
                             toastr.success(data.message);
                             PricePredictionHistoryViewComponent.pricePredictionHistoryDataTable.ajax.reload();
+                            $(".user-token-amount").map(function (index, element) {
+                                $(element).text(data.token + " CPL");
+                            });
                         } else
                             window.location.replace(data.url);
                     } else {

@@ -97,7 +97,7 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        if (!full.kycVerified) {
+                        if (!full.kycVerified && full.affiliateId == 0) {
                             return "<div>" +
                                 "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-do-approve-affiliate-application'>" + $("#approve").val()+"</button> " +
                                 "</div>";
