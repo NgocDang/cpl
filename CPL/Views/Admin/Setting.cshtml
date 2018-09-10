@@ -1,0 +1,206 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Setting");
+}
+@model SettingViewModel
+@section styles
+    {
+    <link href="~/css/dashboard/plugins/switchery/switchery.min.css" rel="stylesheet" />
+}
+<div class="app-content container center-layout mt-2 px-0">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Setting")</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="breadcrumb-wrapper col-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Setting")
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <div class="row" id="affiliate-program">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <h5 class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateProgram")</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-6 col-12">
+                                        <label for="IsKYCVerificationActivated" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsKYCVerificationActivated") &nbsp; </label>
+                                        <input id="IsKYCVerificationActivated" type="checkbox" checked="@Model.IsKYCVerificationActivated" class="form-check-input checkbox-switch" required name="IsKYCVerificationActivated">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="standard-affiliate-tier">
+                <div class="col-12">
+                    <div class="card">
+                        <form id="form-standard-affiliate-tier" method="POST" action="#" class="needs-validation" novalidate="">
+                            <div class="card-content">
+                                <div class="card-header">
+                                    <h5 class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliateTiers")</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="StandardAffiliate.Tier1DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1")</label>
+                                                <input type="number" min="0" name="StandardAffiliate.Tier1DirectRate" class="form-control" maxlength="30" id="StandardAffiliate.Tier1DirectRate" value="@Model.StandardAffiliate.Tier1DirectRate" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1Required")</div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="StandardAffiliate.Tier2SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier2")</label>
+                                                <input type="number" min="0" name="StandardAffiliate.Tier2SaleToTier1Rate" class="form-control" maxlength="30" id="StandardAffiliate.Tier2SaleToTier1Rate" value="@Model.StandardAffiliate.Tier2SaleToTier1Rate" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier2Required")</div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="StandardAffiliate.Tier3SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier3")</label>
+                                                <input type="number" min="0" name="StandardAffiliate.Tier3SaleToTier1Rate" class="form-control" maxlength="30" id="StandardAffiliate.Tier3SaleToTier1Rate" value="@Model.StandardAffiliate.Tier3SaleToTier1Rate" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier3Required")</div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer border-top-blue-grey border-top-lighten-5 text-right">
+                                <button class="btn btn-sm btn-primary btn-update">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="agency-affiliate-tier">
+                <div class="col-12">
+                    <div class="card">
+                        <form id="form-agency-affiliate-tier" method="POST" action="#" class="needs-validation" novalidate="">
+                            <div class="card-content">
+                                <div class="card-header">
+                                    <h5 class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyAffiliateTiers")</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="AgencyAffiliate.Tier1DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1")</label>
+                                                <input type="number" min="0" name="AgencyAffiliate.Tier1DirectRate" class="form-control" maxlength="30" id="AgencyAffiliate.Tier1DirectRate" value="@Model.AgencyAffiliate.Tier1DirectRate" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1Required")</div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="AgencyAffiliate.Tier2DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier2")</label>
+                                                <input type="number" min="0" name="AgencyAffiliate.Tier2DirectRate" class="form-control" maxlength="30" id="AgencyAffiliate.Tier2DirectRate" value="@Model.AgencyAffiliate.Tier2DirectRate" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier2Required")</div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="AgencyAffiliate.Tier3DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier3")</label>
+                                                <input type="number" min="0" name="AgencyAffiliate.Tier3DirectRate" class="form-control" maxlength="30" id="AgencyAffiliate.Tier3DirectRate" value="@Model.AgencyAffiliate.Tier3DirectRate" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier3Required")</div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="AgencyAffiliate.Tier2SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1")</label>
+                                                <input type="number" min="0" name="AgencyAffiliate.Tier2SaleToTier1Rate" class="form-control" maxlength="30" id="AgencyAffiliate.Tier2SaleToTier1Rate" value="@Model.AgencyAffiliate.Tier2SaleToTier1Rate" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1Required")</div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="AgencyAffiliate.Tier3SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1")</label>
+                                                <input type="number" min="0" name="AgencyAffiliate.Tier3SaleToTier1Rate" class="form-control" maxlength="30" id="AgencyAffiliate.Tier3SaleToTier1Rate" value="@Model.AgencyAffiliate.Tier3SaleToTier1Rate" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1Required")</div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="AgencyAffiliate.Tier3SaleToTier2Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier2")</label>
+                                                <input type="number" min="0" name="AgencyAffiliate.Tier3SaleToTier2Rate" class="form-control" maxlength="30" id="AgencyAffiliate.Tier3SaleToTier2Rate" value="@Model.AgencyAffiliate.Tier3SaleToTier2Rate" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier2Required")</div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer border-top-blue-grey border-top-lighten-5 text-right">
+                                <button class="btn btn-sm btn-primary btn-update">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="cookie-expired">
+                <div class="col-12">
+                    <div class="card">
+                        <form id="form-cookie-expired" method="POST" action="#" class="needs-validation" novalidate="">
+                            <div class="card-content">
+                                <div class="card-header">
+                                    <h5 class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CookieExpiredInDays")</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="CookieExpirations">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cookie")</label>
+                                                <input type="number" min="0" name="CookieExpirations" class="form-control" maxlength="30" id="CookieExpirations" value="@Model.CookieExpirations" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CookieExpirationsRequired")</div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer border-top-blue-grey border-top-lighten-5 text-right">
+                                <button class="btn btn-sm btn-primary btn-update">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="authentication">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-header">
+                                <h5 class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Authentication")</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-6 col-12">
+                                        <label for="IsAccountActivationEnable" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsAccountActivationEnable") &nbsp; </label>
+                                        <input id="IsAccountActivationEnable" checked="@Model.IsAccountActivationEnable" type="checkbox" class="form-check-input checkbox-switch" required name="IsAccountActivationEnable">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/js/dashboard/plugins/switchery/switchery.min.js"></script>
+    <script src="~/js/dashboard/cpl.admin.setting.js"></script>
+}

@@ -63,6 +63,10 @@ namespace CPL.Models
 
         public string Message { get; set; }
 
+        public string AgencyToken { get; set; }
+        public int? IsIntroducedById { get; set; }
+        public bool IsRedirected { get; set; }
+
         public string GCaptchaKey { get; set; }
     }
 

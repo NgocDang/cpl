@@ -22,7 +22,6 @@ namespace CPL.Infrastructure
         public DbSet<Template> Template { get; set; }
         public DbSet<Currency> Currency { get; set; }
         public DbSet<LangMsgDetail> LangMsgDetail { get; set; }
-        public DbSet<Team> Team { get; set; }
         public DbSet<Notification> Notification { get; set; }
         public DbSet<CoinTransaction> CoinTransaction { get; set; }
         public DbSet<PricePrediction> PricePrediction { get; set; }
@@ -35,6 +34,9 @@ namespace CPL.Infrastructure
         public DbSet<BTCTransaction> BTCTransaction { get; set; }
         public DbSet<ETHTransaction> ETHTransaction { get; set; }
         public DbSet<Contact> Contact { get; set; }
+        public DbSet<Agency> Agency { get; set; }
+        public DbSet<AgencyToken> AgencyToken { get; set; }
+        public DbSet<Affiliate> Affiliate { get; set; }
         public DbSet<LangContent> LangContent { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,7 +49,6 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new TemplateMap());
             modelBuilder.ApplyConfiguration(new CurrencyMap());
             modelBuilder.ApplyConfiguration(new LangMsgDetailMap());
-            modelBuilder.ApplyConfiguration(new TeamMap());
             modelBuilder.ApplyConfiguration(new NotificationMap());
 
             modelBuilder.ApplyConfiguration(new CoinTransactionMap());
@@ -62,6 +63,10 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new BTCPriceMap());
 
             modelBuilder.ApplyConfiguration(new NewsMap());
+
+            modelBuilder.ApplyConfiguration(new AgencyMap());
+            modelBuilder.ApplyConfiguration(new AgencyTokenMap());
+            modelBuilder.ApplyConfiguration(new AffiliateMap());
 
             modelBuilder.ApplyConfiguration(new BTCTransactionMap());
             modelBuilder.ApplyConfiguration(new ETHTransactionMap());

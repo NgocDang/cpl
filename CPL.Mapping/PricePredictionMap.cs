@@ -19,15 +19,16 @@ namespace CPL.Mapping
             builder.Property(t => t.Id).HasColumnName("Id");
             builder.Property(t => t.Name).HasColumnName("Name");
             builder.Property(t => t.Description).HasColumnName("Description");
-            builder.Property(t => t.OpenTime).HasColumnName("OpenTime");
-            builder.Property(t => t.EndTime).HasColumnName("EndTime");
-            builder.Property(t => t.PredictionResultTime).HasColumnName("PredictionResultTime");
-            builder.Property(t => t.PredictionPrice).HasColumnName("PredictionPrice");
+            builder.Property(t => t.OpenBettingTime).HasColumnName("OpenBettingTime");
+            builder.Property(t => t.CloseBettingTime).HasColumnName("CloseBettingTime");
+            builder.Property(t => t.ResultTime).HasColumnName("ResultTime");
+            builder.Property(t => t.ToBeComparedTime).HasColumnName("ToBeComparedTime");
             builder.Property(t => t.ResultPrice).HasColumnName("ResultPrice");
+            builder.Property(t => t.ToBeComparedPrice).HasColumnName("ToBeComparedPrice");
             builder.Property(t => t.NumberOfPredictors).HasColumnName("NumberOfPredictors");
             builder.Property(t => t.Volume).HasColumnName("Volume");
             builder.Property(t => t.Coinbase).HasColumnName("Coinbase");
             builder.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
-    }
+        }
     }
 }

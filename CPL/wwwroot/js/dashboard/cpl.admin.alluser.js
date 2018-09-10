@@ -115,27 +115,18 @@
             $(this).ekkoLightbox();
         });
     },
-    getJsonFromUrl: function () {
-        var query = location.search.substr(1);
-        var result = {};
-        query.split("&").forEach(function (part) {
-            var item = part.split("=");
-            result[item[0]] = decodeURIComponent(item[1]);
-        });
-        return result;
-    },
     loadAllUserDataTable: function () {
         return $('#dt-all-user').DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
-            "stateSave": (AdminAllUser.getJsonFromUrl().search == null) ? true : false,
+            "stateSave": (Utils.getJsonFromUrl().search == null) ? true : false,
             "ajax": {
                 url: "/Admin/SearchAllUser",
                 type: 'POST',
                 data: function (data) {
                     if (data.search.value == "") {
-                        data.search.value = AdminAllUser.getJsonFromUrl().search;
+                        data.search.value = Utils.getJsonFromUrl().search;
                     }
                 },
             },
@@ -180,9 +171,15 @@
                     }
                 },
                 {
-                    "data": "TokenAmount",
+                    "data": "TotalCPLUsed",
                     "render": function (data, type, full, meta) {
-                        return full.tokenAmount;
+                        return full.totalCPLUsedInString;
+                    }
+                },
+                {
+                    "data": "TotalCPLAwarded",
+                    "render": function (data, type, full, meta) {
+                        return full.totalCPLAwardedInString;
                     }
                 },
                 {

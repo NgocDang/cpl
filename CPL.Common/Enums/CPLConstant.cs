@@ -7,7 +7,7 @@ namespace CPL.Common.Enums
     public class CPLConstant
     {
         //Change this environment setting will affect CPL globally including Web & Services!!!
-        public static EnumEnvironment Environment = EnumEnvironment.TESTNET;
+        public static EnumEnvironment Environment = EnumEnvironment.MAINNET;
 
         //Authentication
         public static string ActivateExpiredInDays = "ActivateExpiredInDays";
@@ -16,6 +16,26 @@ namespace CPL.Common.Enums
 
         //Setting
         public static string BTCToTokenRate = "BTCToTokenRate";
+        public static string IsKYCVerificationActivated = "IsKYCVerificationActivated";
+        public static string CookieExpirations = "CookieExpirations";
+
+        //Affiliate
+        public struct StandardAffiliate
+        {
+            public static string Tier1DirectRate = "StandardAffiliate.Tier1DirectRate";
+            public static string Tier2SaleToTier1Rate = "StandardAffiliate.Tier2SaleToTier1Rate";
+            public static string Tier3SaleToTier1Rate = "StandardAffiliate.Tier3SaleToTier1Rate";
+        }
+
+        public struct AgencyAffiliate
+        {
+            public static string Tier1DirectRate = "AgencyAffiliate.Tier1DirectRate";
+            public static string Tier2DirectRate = "AgencyAffiliate.Tier2DirectRate";
+            public static string Tier3DirectRate = "AgencyAffiliate.Tier3DirectRate";
+            public static string Tier2SaleToTier1Rate = "AgencyAffiliate.Tier2SaleToTier1Rate";
+            public static string Tier3SaleToTier1Rate = "AgencyAffiliate.Tier3SaleToTier1Rate";
+            public static string Tier3SaleToTier2Rate = "AgencyAffiliate.Tier3SaleToTier2Rate";
+        }
 
         //Two-factor authentication
         public static string AppName = "CPL";
@@ -75,8 +95,8 @@ namespace CPL.Common.Enums
         public static int LotteryGamePerRow  = 4;
 
         // High Chart
-        public static int HourBeforeInChart = 12; // hour
-        public static int LowestRateBTCInterval = 500;
+        public static int HourBeforeInChart = 1; // hour
+        public static int LowestRateBTCInterval = 100;
 
         // GCaptcha Key
         public static string GCaptchaKey = "GCaptchaKey";
@@ -120,5 +140,7 @@ namespace CPL.Common.Enums
             public static string Amount = "#,##0.########";
             public static string DateTime = "yyyy/MM/dd hh:mm:ss";
         }
+
+        public static string NumberOfAgencyAffiliateExpiredDays = "NumberOfAgencyAffiliateExpiredDays";
     }
 }

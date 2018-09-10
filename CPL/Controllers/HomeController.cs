@@ -15,6 +15,7 @@ using System.Net.Mail;
 using System.Net;
 using CPL.Common.Enums;
 using LinqKit;
+using CPL.Misc.Utils;
 
 namespace CPL.Controllers
 {
@@ -55,6 +56,7 @@ namespace CPL.Controllers
         [Permission(EnumRole.Guest)]
         public IActionResult Index()
         {
+
             var lotteries = _lotteryService.Query()
                 .Include(x => x.LotteryHistories)
                 .Select()
@@ -97,9 +99,10 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Guest)]
-        public void UpdateLangDetail()
+        public IActionResult UpdateLangDetail()
         {
             LangDetailHelper.LangDetails = _langDetailService.Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
+            return new JsonResult( new{ success = true });
         }
     }
 }

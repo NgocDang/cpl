@@ -6,7 +6,6 @@
 
 @section styles
     {
-    <link href="~/css/dashboard/style.css" rel="stylesheet" />
     <link href="~/js/dashboard/plugins/lightbox/ekko-lightbox.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
@@ -33,7 +32,7 @@
         </div>
         <div class="content-body">
             <div class="row">
-                <div id="transaction-history-view-component" class="col-12">
+                <div class="col-12">
                     <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYCVerify")</h6>
                     <div class="card">
                         <div class="card-content">

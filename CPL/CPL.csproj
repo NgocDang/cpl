@@ -44,10 +44,18 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css\dashboard\plugins\high-charts\" />
+    <Folder Include="wwwroot\css\dashboard\plugins\img\" />
     <Folder Include="wwwroot\images\news\" />
+    <Folder Include="wwwroot\flags\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\.eslintignore" />
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\.eslintrc" />
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\js\dataTables.checkboxes.js" />
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\js\dataTables.checkboxes.min.js" />
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\LICENSE" />
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\README.md" />
     <None Include="wwwroot\js\dashboard\plugins\tinymce\langs\readme.md" />
     <None Include="wwwroot\js\dashboard\plugins\tinymce\plugins\advlist\plugin.min.js" />
     <None Include="wwwroot\js\dashboard\plugins\tinymce\plugins\anchor\plugin.min.js" />
@@ -101,10 +109,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Admin\AffiliateApprove.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Admin\Setting.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Admin\KYCVerify.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Admin\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Admin\Game.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Admin\_AffiliateApproveEmailTemplate.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Contact\Index.cshtml">
@@ -113,10 +133,13 @@
     <Content Update="Views\DepositAndWithdraw\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\PricePrediction\Backup_Index.cshtml">
+    <Content Update="Views\PricePrediction\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Lottery\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Profile\Affiliate.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Profile\Security.cshtml">

@@ -100,10 +100,11 @@ namespace CPL.TransactionService
 
         private async void DepositBTransactionAsync()
         {
-            try
+            do
             {
-                do
+                try
                 {
+
                     //Init dependency transaction & dbcontext
                     var resolver = InitializeRepositories();
                     var transactions = new List<BTCTransaction>();
@@ -144,14 +145,14 @@ namespace CPL.TransactionService
                             // user transfer
                             if (!transaction.ParentId.HasValue)
                             {
-                            var user = resolver.SysUserService.Queryable()
-                                    .FirstOrDefault(x => transactionDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
+                                var user = resolver.SysUserService.Queryable()
+                                        .FirstOrDefault(x => transactionDetail.Result.To.Select(y => y.Address).Contains(x.BTCHDWalletAddress));
                                 if (user != null)
                                 {
                                     // update btc transaction so that it is not checked next time
                                     transaction.UpdatedTime = DateTime.Now;
                                     transaction.Status = true;
-                                	resolver.BTCTransactionService.Update(transaction);
+                                    resolver.BTCTransactionService.Update(transaction);
 
                                     // do internal transfer
                                     var transactionToDepositAddress = _bAccount.TransferByMnemonicAsync(Authentication.Token, CPLConstant.BTCMnemonic, user.BTCHDWalletAddressIndex.ToString(), CPLConstant.BTCDepositAddress, CPLConstant.DurationInSecond);
@@ -195,7 +196,7 @@ namespace CPL.TransactionService
                                     resolver.SysUserService.Update(user);
 
                                     // add record to coin transaction of user transfer (not internal transfer)
-                                	resolver.CoinTransactionService.Insert(new CoinTransaction
+                                    resolver.CoinTransactionService.Insert(new CoinTransaction
                                     {
                                         CoinAmount = coinAmount,
                                         CreatedDate = DateTime.Now,
@@ -217,24 +218,25 @@ namespace CPL.TransactionService
                     }
                     resolver.UnitOfWork.SaveChanges();
                 }
-                while (IsTransactionServiceRunning);
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null && ex.InnerException.Message != null)
+                        Utils.FileAppendThreadSafe(BTCDepositFileName, string.Format("BTC Deposit Thread - Exception {0} at {1}.{2}StackTrace {3}{4}", ex.InnerException.Message, DateTime.Now, Environment.NewLine, ex.StackTrace, Environment.NewLine));
+                    else
+                        Utils.FileAppendThreadSafe(BTCDepositFileName, string.Format("BTC Deposit Thread - Exception {0} at {1}.{2}StackTrace {3}{4}", ex.Message, DateTime.Now, Environment.NewLine, ex.StackTrace, Environment.NewLine));
+                }
             }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null && ex.InnerException.Message != null)
-                    Utils.FileAppendThreadSafe(BTCDepositFileName, string.Format("BTC Deposit Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
-                else
-                    Utils.FileAppendThreadSafe(BTCDepositFileName, string.Format("BTC Deposit Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
-            }
+            while (IsTransactionServiceRunning);
             Utils.FileAppendThreadSafe(BTCDepositFileName, String.Format("BTC Deposit Thread stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
         }
 
         private async void DepositETransactionAsync()
         {
-            try
+            do
             {
-                do
+                try
                 {
+
                     //Init dependency transaction & dbcontext
                     var resolver = InitializeRepositories();
                     var transactions = new List<ETHTransaction>();
@@ -282,7 +284,7 @@ namespace CPL.TransactionService
                                     // update eth transaction so that it is not checked next time
                                     transaction.UpdatedTime = DateTime.Now;
                                     transaction.Status = true;
-                                	resolver.ETHTransactionService.Update(transaction);
+                                    resolver.ETHTransactionService.Update(transaction);
                                     // do internal transfer
                                     var transactionToDepositAddress = _eAccount.TransferByMnemonicAsync(Authentication.Token, CPLConstant.ETHMnemonic, user.ETHHDWalletAddressIndex.ToString(), CPLConstant.ETHWithdrawAddress, CPLConstant.DurationInSecond);
                                     transactionToDepositAddress.Wait();
@@ -321,7 +323,7 @@ namespace CPL.TransactionService
                                     resolver.SysUserService.Update(user);
 
                                     // add record to coin transaction of user transfer (not internal transfer)
-                                	resolver.CoinTransactionService.Insert(new CoinTransaction
+                                    resolver.CoinTransactionService.Insert(new CoinTransaction
                                     {
                                         CoinAmount = coinAmount,
                                         CreatedDate = DateTime.Now,
@@ -343,23 +345,25 @@ namespace CPL.TransactionService
                     }
                     resolver.UnitOfWork.SaveChanges();
                 }
-                while (IsTransactionServiceRunning);
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null && ex.InnerException.Message != null)
+                        Utils.FileAppendThreadSafe(ETHDepositFileName, string.Format("ETH Deposit Thread - Exception {0} at {1}.{2}StackTrace {3}{4}", ex.InnerException.Message, DateTime.Now, Environment.NewLine, ex.StackTrace, Environment.NewLine));
+                    else
+                        Utils.FileAppendThreadSafe(ETHDepositFileName, string.Format("ETH Deposit Thread - Exception {0} at {1}.{2}StackTrace {3}{4}", ex.Message, DateTime.Now, Environment.NewLine, ex.StackTrace, Environment.NewLine));
+
+                }
+
             }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null && ex.InnerException.Message != null)
-                    Utils.FileAppendThreadSafe(ETHDepositFileName, string.Format("ETH Deposit Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
-                else
-                    Utils.FileAppendThreadSafe(ETHDepositFileName, string.Format("ETH Deposit Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
-            }
+            while (IsTransactionServiceRunning);
             Utils.FileAppendThreadSafe(ETHDepositFileName, String.Format("ETH Deposit Thread stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
         }
 
         private async void WithdrawBTransactionAsync()
         {
-            try
+            do
             {
-                do
+                try
                 {
                     //Init dependency transaction & dbcontext
                     var resolver = InitializeRepositories();
@@ -406,24 +410,26 @@ namespace CPL.TransactionService
                     }
                     resolver.UnitOfWork.SaveChanges();
                 }
-                while (IsTransactionServiceRunning) ;
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null && ex.InnerException.Message != null)
+                        Utils.FileAppendThreadSafe(BTCWithdrawFileName, string.Format("BTC Withdraw Thread - Exception {0} at {1}.{2}StackTrace {3}{4}", ex.InnerException.Message, DateTime.Now, Environment.NewLine, ex.StackTrace, Environment.NewLine));
+                    else
+                        Utils.FileAppendThreadSafe(BTCWithdrawFileName, string.Format("BTC Withdraw Thread - Exception {0} at {1}.{2}StackTrace {3}{4}", ex.Message, DateTime.Now, Environment.NewLine, ex.StackTrace, Environment.NewLine));
+                }
             }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null && ex.InnerException.Message != null)
-                    Utils.FileAppendThreadSafe(BTCWithdrawFileName, string.Format("BTC Withdraw Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
-                else
-                    Utils.FileAppendThreadSafe(BTCWithdrawFileName, string.Format("BTC Withdraw Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
-            }
+            while (IsTransactionServiceRunning);
+
             Utils.FileAppendThreadSafe(BTCWithdrawFileName, String.Format("BTC Withdraw Thread stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
         }
 
         private async void WithdrawETransactionAsync()
         {
-            try
+            do
             {
-                do
+                try
                 {
+
                     //Init dependency transaction & dbcontext
                     var resolver = InitializeRepositories();
                     var transactions = new List<CoinTransaction>();
@@ -473,15 +479,16 @@ namespace CPL.TransactionService
 
                     resolver.UnitOfWork.SaveChanges();
                 }
-                while (IsTransactionServiceRunning);
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null && ex.InnerException.Message != null)
+                        Utils.FileAppendThreadSafe(ETHWithdrawFileName, string.Format("ETH Withdraw Thread - Exception {0} at {1}.{2}StackTrace {3}{4}", ex.InnerException.Message, DateTime.Now, Environment.NewLine, ex.StackTrace, Environment.NewLine));
+                    else
+                        Utils.FileAppendThreadSafe(ETHWithdrawFileName, string.Format("ETH Withdraw Thread - Exception {0} at {1}.{2}StackTrace {3}{4}", ex.Message, DateTime.Now, Environment.NewLine, ex.StackTrace, Environment.NewLine));
+                }
+
             }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null && ex.InnerException.Message != null)
-                    Utils.FileAppendThreadSafe(ETHWithdrawFileName, string.Format("ETH Withdraw Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
-                else
-                    Utils.FileAppendThreadSafe(ETHWithdrawFileName, string.Format("ETH Withdraw Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
-            }
+            while (IsTransactionServiceRunning);
             Utils.FileAppendThreadSafe(ETHWithdrawFileName, String.Format("ETH Withdraw Thread stopped at {1}{2}", TransactionServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
         }
 
@@ -519,7 +526,7 @@ namespace CPL.TransactionService
             builder.RegisterType<Repository<ETHTransaction>>().As<IRepositoryAsync<ETHTransaction>>().InstancePerLifetimeScope();
 
             var container = builder.Build();
-            return new Resolver (
+            return new Resolver(
                 container,
                 container.Resolve<IUnitOfWorkAsync>(),
                 container.Resolve<ISysUserService>(),

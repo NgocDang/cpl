@@ -1,0 +1,119 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliate");
+}
+
+@section styles
+    {
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
+    <link href="~/css/dashboard/plugins/editable/bootstrap-editable.css" rel="stylesheet" />
+    <link href="~/js/dashboard/plugins/datatables/Checkboxes-1.2.11/css/dataTables.checkboxes.css" rel="stylesheet" />
+    <link href="~/css/dashboard/cpl.admin.standardaffiliate.css" rel="stylesheet" />
+}
+<div class="app-content container center-layout mt-2 px-0">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliate")</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="breadcrumb-wrapper col-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliate")
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <div class="row">
+                <div class="col-12">
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ListOfStandardAffiliate")</h6>
+                    <div class="card">
+                        <div class="card-content">
+                            <table id="dt-standard-affiliate" class="table responsive table-hover table-xl mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0" id="checkbox-header" data-priority="1"></th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</th>
+                                        <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
+                                        <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSaleInCPL")</th>
+                                        <th class="border-top-0" data-priority="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducer")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateCreatedDate")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier1") %</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier2") %</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier3") %</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lock")" id="lock" />
+                        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UnLock")" id="unlock" />
+                    </div>
+                </div>
+                <div class="col-12" id="comission-rate-setting">
+                    <h6 class="my-2">Comission Rate Setting​</h6>
+                    <div class="card">
+                        <form id="form-comission-rate-setting" method="POST" action="#" class="needs-validation" novalidate="">
+                            <div class="card-content">
+                                <div class="card-header">
+                                    <h5 class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliateTiers")</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="Tier1DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1")</label>
+                                                <input type="number" min="0" max="100" name="Tier1DirectRate" class="form-control" maxlength="30" id="Tier1DirectRate" value="0" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1Required")</div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="Tier2SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier2")</label>
+                                                <input type="number" min="0" max="100" name="Tier2SaleToTier1Rate" class="form-control" maxlength="30" id="Tier2SaleToTier1Rate" value="0" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier2Required")</div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <fieldset class="form-group">
+                                                <label for="Tier3SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier3")</label>
+                                                <input type="number" min="0" max="100" name="Tier3SaleToTier1Rate" class="form-control" maxlength="30" id="Tier3SaleToTier1Rate" value="0" required>
+                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier3Required")</div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer border-top-blue-grey border-top-lighten-5 text-right">
+                                <button class="btn btn-sm btn-primary btn-update">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/Checkboxes-1.2.11/js/dataTables.checkboxes.min.js"></script>
+    <script src="~/js/dashboard/plugins/editable/bootstrap-editable.min.js"></script>
+    <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/cpl.admin.standardaffiliate.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.utils.js"></script>
+}
+

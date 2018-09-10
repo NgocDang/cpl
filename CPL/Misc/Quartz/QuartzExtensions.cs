@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Misc.Quartz
 {
-    public static class QuartzExtensions
+    internal static class QuartzExtensions
     {
         public static void UseQuartz<TIJobFactory>(this IServiceCollection services, params Type[] jobs)
             where TIJobFactory : IJobFactory

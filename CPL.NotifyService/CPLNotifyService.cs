@@ -88,10 +88,11 @@ namespace CPL.NotifyService
 
         private void ETHNofify()
         {
-            try
+            do
             {
-                do
+                try
                 {
+
                     var currentBlockNoSetting = Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == NotifyServiceConstant.ETHNotifyCurrentBlockNo);
                     var currentBlockNo = int.Parse(currentBlockNoSetting.Value);
                     Task<EBlockService.EBlockRetrieveBlockTransactionResult> block;
@@ -105,7 +106,7 @@ namespace CPL.NotifyService
                     }
                     while (IsNotifyServiceRunning && block.Result.Status.Code != 0);
 
-                    foreach(var tx in block.Result.Transactions)
+                    foreach (var tx in block.Result.Transactions)
                     {
                         if (Resolver.SysUserService.Queryable().Any(x => x.ETHHDWalletAddress == tx.ToAddress))
                             Resolver.ETHTransactionService.Insert(new ETHTransaction { CreatedDate = DateTime.Now, TxHashId = tx.TxHashId });
@@ -115,15 +116,15 @@ namespace CPL.NotifyService
                     Resolver.SettingService.Update(currentBlockNoSetting);
                     Resolver.UnitOfWork.SaveChanges();
                 }
-                while (IsNotifyServiceRunning);
+                catch (Exception ex)
+                {
+                    if (ex.InnerException.Message != null)
+                        Utils.FileAppendThreadSafe(ETHNotifyFileName, string.Format("ETH Notify Thread - Exception {0} at {1}.{2}StackTrace {3}{4}", ex.InnerException.Message, DateTime.Now, Environment.NewLine, ex.StackTrace, Environment.NewLine));
+                    else
+                        Utils.FileAppendThreadSafe(ETHNotifyFileName, string.Format("ETH Notify Thread - Exception {0} at {1}.{2}StackTrace {3}{4}", ex.Message, DateTime.Now, Environment.NewLine, ex.StackTrace, Environment.NewLine));
+                }
             }
-            catch (Exception ex)
-            {
-                if (ex.InnerException.Message != null)
-                    Utils.FileAppendThreadSafe(ETHNotifyFileName, string.Format("ETH Notify Thread - Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
-                else
-                    Utils.FileAppendThreadSafe(ETHNotifyFileName, string.Format("ETH Notify Thread - Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
-            }
+            while (IsNotifyServiceRunning);
             Utils.FileAppendThreadSafe(ETHNotifyFileName, String.Format("ETH Notify Thread stopped at {1}{2}", NotifyServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
         }
 

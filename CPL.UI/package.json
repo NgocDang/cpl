@@ -29,11 +29,5 @@
   },
   "dependencies": {
     "webpack-cli": "^3.1.0"
-  },
-  "-vs-binding": {
-    "BeforeBuild": [
-      "scss",
-      "ts"
-    ]
   }
 }

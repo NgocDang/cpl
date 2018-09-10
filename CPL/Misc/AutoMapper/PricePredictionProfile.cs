@@ -12,8 +12,11 @@ namespace CPL.Misc.AutoMapper
     {
         public PricePredictionProfile()
         {
-            CreateMap<PricePrediction, PricePredictionViewModel>();
-            CreateMap<PricePredictionViewModel, PricePrediction>();
+            CreateMap<PricePrediction, PricePredictionIndexViewModel>();
+            CreateMap<PricePrediction, PricePredictionViewComponentViewModel>();
+            CreateMap<PricePrediction, PricePredictionTab>()
+                .ForMember(dest => dest.IsDisabled, opt => opt.MapFrom(src => src.CloseBettingTime < DateTime.Now));
+            CreateMap<PricePredictionIndexViewModel, PricePrediction>();
         }
     }
 }

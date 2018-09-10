@@ -5,11 +5,12 @@ using System.Text;
 
 namespace CPL.Domain
 {
-    public class Team : Entity
+    public class MobileLangDetail : Entity
     {
         public int Id { get; set; }
+        public int LangId { get; set; }
         public string Name { get; set; }
-        public string Designation { get; set; }
-        public string Avatar { get; set; }
+        public string Value { get; set; }
+        public virtual Lang Lang { get; set; }
     }
 }

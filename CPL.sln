@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CPL.TransactionService", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CPL.UI", "CPL.UI\CPL.UI.csproj", "{3061EB00-5560-4654-81C9-75C15273AF1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPL.NotifyService", "CPL.NotifyService\CPL.NotifyService.csproj", "{A91612A9-AC34-44AF-9D76-BD9014D1D2BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CPL.NotifyService", "CPL.NotifyService\CPL.NotifyService.csproj", "{A91612A9-AC34-44AF-9D76-BD9014D1D2BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

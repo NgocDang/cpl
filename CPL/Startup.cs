@@ -42,6 +42,8 @@ namespace CPL
                 options.UseSqlServer(Configuration["ConnectionStrings:CPLConnection"]));
 
             services
+                .AddScoped<IRepositoryAsync<MobileLangDetail>, Repository<MobileLangDetail>>()
+                .AddScoped<IRepositoryAsync<MobileLangMsgDetail>, Repository<MobileLangMsgDetail>>()
                 .AddScoped<IRepositoryAsync<LangDetail>, Repository<LangDetail>>()
                 .AddScoped<IRepositoryAsync<Lang>, Repository<Lang>>()
                 .AddScoped<IRepositoryAsync<LangContent>, Repository<LangContent>>()
@@ -51,7 +53,6 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<Currency>, Repository<Currency>>()
                 .AddScoped<IRepositoryAsync<Notification>, Repository<Notification>>()
                 .AddScoped<IRepositoryAsync<LangMsgDetail>, Repository<LangMsgDetail>>()
-                .AddScoped<IRepositoryAsync<Team>, Repository<Team>>()
                 .AddScoped<IRepositoryAsync<CoinTransaction>, Repository<CoinTransaction>>()
                 .AddScoped<IRepositoryAsync<PricePrediction>, Repository<PricePrediction>>()
                 .AddScoped<IRepositoryAsync<PricePredictionHistory>, Repository<PricePredictionHistory>>()
@@ -63,6 +64,9 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<Contact>, Repository<Contact>>()
                 .AddScoped<IRepositoryAsync<BTCTransaction>, Repository<BTCTransaction>>()
                 .AddScoped<IRepositoryAsync<ETHTransaction>, Repository<ETHTransaction>>()
+                .AddScoped<IRepositoryAsync<Agency>, Repository<Agency>>()
+                .AddScoped<IRepositoryAsync<AgencyToken>, Repository<AgencyToken>>()
+                .AddScoped<IRepositoryAsync<Affiliate>, Repository<Affiliate>>()
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
 
@@ -72,21 +76,20 @@ namespace CPL
             services.AddSession();
 
             services.AddSingleton<ILotteryDrawingFactory, LotteryDrawingFactory>();
-                    //.AddSingleton<IPricePredictionUpdateResultFactory, PricePredictionUpdateResultFactory>();
 
             services.UseQuartz<ILotteryDrawingFactory>(typeof(LotteryDrawingJob));
-            //services.UseQuartz<IPricePredictionUpdateResultFactory>(typeof(PricePredictionUpdateResultJob));
 
             services
                 .AddTransient<ILangService, LangService>()
                 .AddTransient<ILangDetailService, LangDetailService>()
+                .AddTransient<IMobileLangDetailService, MobileLangDetailService>()
+                .AddTransient<IMobileLangMsgDetailService, MobileLangMsgDetailService>()
                 .AddTransient<ILangContentService, LangContentService>()
                 .AddTransient<ISysUserService, SysUserService>()
                 .AddTransient<ISettingService, SettingService>()
                 .AddTransient<ITemplateService, TemplateService>()
                 .AddTransient<ICurrencyService, CurrencyService>()
                 .AddTransient<ILangMsgDetailService, LangMsgDetailService>()
-                .AddTransient<ITeamService, TeamService>()
                 .AddTransient<INotificationService, NotificationService>()
                 .AddTransient<IViewRenderService, ViewRenderService>()
                 .AddTransient<ICoinTransactionService, CoinTransactionService>()
@@ -100,6 +103,9 @@ namespace CPL
                 .AddTransient<INewsService, NewsService>()
                 .AddTransient<IBTCTransactionService, BTCTransactionService>()
                 .AddTransient<IETHTransactionService, ETHTransactionService>()
+                .AddTransient<IAgencyService, AgencyService>()
+                .AddTransient<IAgencyTokenService, AgencyTokenService>()
+                .AddTransient<IAffiliateService, AffiliateService>()
                 .AddTransient<INewsService, NewsService>()
                 .AddTransient<IContactService, ContactService>();
 
@@ -222,8 +228,8 @@ namespace CPL
         {
             // Drawing lottery job
             var scheduler = serviceProvider.GetScheduler<IScheduler, ILotteryDrawingFactory>();
-            var rawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameDrawingInHourOfDay).Value);
-            QuartzHelper.StartJob<LotteryDrawingJob>(scheduler, rawingTime);
+            var drawingTime = DateTime.Parse(((SettingService)serviceProvider.GetService(typeof(ISettingService))).Queryable().FirstOrDefault(x => x.Name == CPLConstant.LotteryGameDrawingInHourOfDay).Value);
+            QuartzHelper.StartJob<LotteryDrawingJob>(scheduler, drawingTime);
         }
     }
 }

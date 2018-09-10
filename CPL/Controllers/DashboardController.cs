@@ -23,7 +23,6 @@ namespace CPL.Controllers
         private readonly ISettingService _settingService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
-        private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
 
@@ -33,7 +32,6 @@ namespace CPL.Controllers
             IViewRenderService viewRenderService,
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
-            ITeamService teamService,
             ITemplateService templateService,
             ISysUserService sysUserService,
             ILotteryHistoryService lotteryHistoryService,
@@ -44,7 +42,6 @@ namespace CPL.Controllers
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
             this._unitOfWork = unitOfWork;
-            this._teamService = teamService;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
             this._lotteryHistoryService = lotteryHistoryService;

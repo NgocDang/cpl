@@ -43,7 +43,6 @@ namespace CPL.Controllers
             ISettingService settingService,
             ISysUserService sysUserService,
             ICoinTransactionService coinTransactionService,
-            ITeamService teamService,
             ILotteryHistoryService lotteryHistoryService,
             ITemplateService templateService)
         {
@@ -80,6 +79,20 @@ namespace CPL.Controllers
             else // viewModel.KYCVerified == false
             {
                 viewModel.KYCStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending");
+            }
+
+            // Mapping Affiliate status
+            if (!user.AffiliateId.HasValue)
+            {
+                viewModel.AffiliateStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotJoinedYet");
+            }
+            else if (user.AffiliateId.Value != (int)EnumAffiliateApplicationStatus.PENDING)
+            {
+                viewModel.AffiliateStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Approved");
+            }
+            else // viewModel.AffiliateId.Value != (int)EnumAffiliateApplicationStatus.PENDING
+            {
+                viewModel.AffiliateStatus = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending");
             }
 
             // Mapping TwoFactorAuthenticationEnable status
@@ -235,6 +248,16 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
+        [Permission(EnumRole.User)]
+        public IActionResult Affiliate()
+        {
+            var user = _sysUserService.Queryable().Where(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).FirstOrDefault();
+            var viewModel = Mapper.Map<ProfileAffiliateViewModel>(user);
+            viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
+            viewModel.IsKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
+            return View(viewModel);
+        }
+
         [HttpPost]
         [Permission(EnumRole.User)]
         public IActionResult DoEditTwoFactorAuthentication(bool value, string pin)
@@ -304,6 +327,27 @@ namespace CPL.Controllers
                 {
                     success = true,
                     message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "KYCSubmitted")
+                });
+            }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.User)]
+        public IActionResult DoSubmitAffiliate(KYCViewModel viewModel)
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+            if (user != null)
+            {
+                user.AffiliateId = (int)EnumAffiliateApplicationStatus.PENDING;
+                HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new
+                {
+                    success = true,
+                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AffiliateApplicationSubmitted")
                 });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });

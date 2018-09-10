@@ -1,0 +1,36 @@
+﻿@model PricePredictionHistoryViewComponentViewModel
+
+<div class="row">
+    <div id="price-prediction-history-view-component" class="col-12 @(Model.SysUserId.HasValue ? "" : "d-none")">
+        <div class="card">
+            @if (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction" && ViewContext.RouteData.Values["Action"].ToString() == "Index")
+            {
+                <div class="card-header">
+                    <h4 class="card-title float-left text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionHistory")</h4>
+                    <ul class="list-inline mb-0 float-right">
+                        <li><a id="txt-collapse" data-action="collapse"><i class="ft-minus"></i></a></li>
+                    </ul>
+                </div>
+            }
+
+            <div class="card-content collapse show">
+                <table id="dt-price-prediction-history" class="table responsive table-hover table-xl mb-0">
+                    <thead>
+                        <tr>
+                            <th class="border-top-0" data-priority="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bet")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StartRate")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultRate")</th>
+                            <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</th>
+                            <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                            <th class="border-top-0" data-priority="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Award")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchaseTime")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTime")</th>
+                        </tr>
+                    </thead>
+                </table>
+                @Html.Hidden("SysUserId", Model.SysUserId)
+            </div>
+        </div>
+    </div>
+</div>

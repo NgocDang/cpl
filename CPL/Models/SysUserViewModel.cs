@@ -39,6 +39,14 @@ namespace CPL.Models
         public decimal BTCAmount { get; set; }
         public decimal ETHAmount { get; set; }
         public decimal TokenAmount { get; set; }
+        public int TotalCPLUsed { get; set; }
+        public int TotalCPLAwarded { get; set; }
+        public string TotalCPLUsedInString { get; set; }
+        public string TotalCPLAwardedInString { get; set; }
         public bool TwoFactorAuthenticationEnable { get; set; }
+        public int? AgencyId { get; set; }
+        public int? AffiliateId { get; set; }
+        public DateTime? AffiliateCreatedDate { get; set; }
+        public int? IsIntroducedById { get; set; }
     }
 }

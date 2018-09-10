@@ -7,11 +7,11 @@ using System.Text;
 
 namespace CPL.Core.Services
 {
-    public class TeamService : CoreBase<Team>, ITeamService
+    public class MobileLangMsgDetailService : CoreBase<MobileLangMsgDetail>, IMobileLangMsgDetailService
     {
-        private readonly IRepositoryAsync<Team> _repository;
+        private readonly IRepositoryAsync<MobileLangMsgDetail> _repository;
 
-        public TeamService(IRepositoryAsync<Team> repository)
+        public MobileLangMsgDetailService(IRepositoryAsync<MobileLangMsgDetail> repository)
             : base(repository)
         {
             this._repository = repository;

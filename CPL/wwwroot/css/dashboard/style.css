@@ -1307,7 +1307,7 @@ select.bs-select-hidden {
         background-color: #f1f0f0 !important;
     }
 
-#form-price-bet .progress {
+.form-bet .progress {
     height: .2rem;
 }
 
@@ -1809,4 +1809,13 @@ button#btn-dropdown-item:focus {
 .toastr-top-center {
     top: 30%;
     right:0;
+}
+
+.py-01 {
+    padding-bottom: 0.1rem !important;
+    padding-top: 0.1rem !important;
+}
+
+.btn-outline-success:not(:disabled):not(.disabled).active, .btn-outline-success:not(:disabled):not(.disabled):active, .show > .btn-outline-success.dropdown-toggle {
+    color:#FFF;
 }

@@ -25,15 +25,22 @@ namespace CPL.Controllers
         private readonly ISysUserService _sysUserService;
         private readonly ITemplateService _templateService;
         private readonly ISettingService _settingService;
+        private readonly IAgencyService _agencyService;
+        private readonly IAgencyTokenService _agencyTokenService;
+        private readonly IAffiliateService _affiliateService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly IViewRenderService _viewRenderService;
 
         public AuthenticationController(ILangService langService, IMapper mapper, ISettingService settingService,
-        ISysUserService sysUserService, IUnitOfWorkAsync unitOfWork, ITemplateService templateService, IViewRenderService viewRenderService)
+            IAgencyService agencyService, IAffiliateService affiliateService, IAgencyTokenService agencyTokenService,
+            ISysUserService sysUserService, IUnitOfWorkAsync unitOfWork, ITemplateService templateService, IViewRenderService viewRenderService)
         {
             _langService = langService;
             _mapper = mapper;
             _sysUserService = sysUserService;
+            _agencyService = agencyService;
+            _affiliateService = affiliateService;
+            _agencyTokenService = agencyTokenService;
             _settingService = settingService;
             _templateService = templateService;
             _unitOfWork = unitOfWork;
@@ -105,8 +112,57 @@ namespace CPL.Controllers
             var viewModel = new AccountRegistrationModel();
             var gcaptchaKey = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.GCaptchaKey)?.Value;
             viewModel.GCaptchaKey = gcaptchaKey;
-			
-            return View(viewModel);
+
+            var affiliateCookieExpirations = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CookieExpirations).Value);
+            var affiliateCookie = Request.Cookies["AffiliateCookie"];
+            var agencyTokenCookie = Request.Cookies["AgencyTokenCookie"];
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                var agencyToken = _agencyTokenService.Queryable().FirstOrDefault(x => x.Token == token && x.ExpiredDate >= DateTime.Now && !x.SysUserId.HasValue);
+                if (agencyToken != null)
+                {
+                    viewModel.AgencyToken = token;
+                    CookieHelper.SetCookies(Response, "AgencyTokenCookie", token, affiliateCookieExpirations * 60 * 24);
+                    viewModel.IsRedirected = true;
+                } else
+                {
+                    viewModel.Message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidOrExpiredAgencyToken");
+                }
+            }
+            else if (!string.IsNullOrEmpty(agencyTokenCookie))
+            {
+                viewModel.AgencyToken = agencyTokenCookie;
+            }
+
+            // Update id using cookie
+            if (id.HasValue)
+            {
+                CookieHelper.SetCookies(Response, "AffiliateCookie", id.Value.ToString(), affiliateCookieExpirations * 60 * 24);
+                viewModel.IsRedirected = true;
+            }
+            else if(!string.IsNullOrEmpty(affiliateCookie))
+            {
+                id = int.Parse(affiliateCookie);
+            }
+
+            // Verify id again
+            if (id.HasValue)
+            {
+                var introducedByUser = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id.Value);
+                var isKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
+                if (introducedByUser != null
+                    && !introducedByUser.IsAdmin
+                    && (!isKYCVerificationActivated || (introducedByUser.KYCVerified.HasValue && introducedByUser.KYCVerified.Value)))
+                {
+                    viewModel.IsIntroducedById = id.Value;
+                }
+            }
+
+            if (viewModel.IsRedirected)
+                return RedirectToAction("Index", "Home");
+            else 
+                return View(viewModel);
         }
 
         [HttpPost]
@@ -121,20 +177,87 @@ namespace CPL.Controllers
                     return new JsonResult(new { success = false, name = "email", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExistingEmail") });
                 }
 
+                var agencyToken = _agencyTokenService.Queryable().FirstOrDefault(x => x.Token == viewModel.AgencyToken && x.ExpiredDate >= DateTime.Now && !x.SysUserId.HasValue);
+                Agency agency = null;
+                if (agencyToken != null)
+                {
+                    agency = new Agency
+                    {
+                        Tier1DirectRate = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier1DirectRate).Value),
+                        Tier2DirectRate = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier2DirectRate).Value),
+                        Tier3DirectRate = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3DirectRate).Value),
+                        Tier2SaleToTier1Rate = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier2SaleToTier1Rate).Value),
+                        Tier3SaleToTier1Rate = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3SaleToTier1Rate).Value),
+                        Tier3SaleToTier2Rate = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3SaleToTier2Rate).Value)
+                    };
+
+                    _agencyService.Insert(agency);
+                    _unitOfWork.SaveChanges();
+                }
+
+
                 var isAccountActivationEnable = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value);
                 var latestAddressIndex = _sysUserService.Queryable().LastOrDefault()?.ETHHDWalletAddressIndex ?? 0;
                 // Try to create a user with the given identity
-                var user = new SysUser
+                SysUser user = null;
+                if(viewModel.IsIntroducedById.HasValue)
                 {
-                    Email = viewModel.Email,
-                    Password = viewModel.Password.ToBCrypt(),
-                    CreatedDate = DateTime.Now,
-                    IsAdmin = false,
-                    ActivateToken = isAccountActivationEnable ? Guid.NewGuid().ToString() : null,
-                    BTCAmount = 0,
-                    ETHAmount = 0,
-                    TokenAmount = 0
-                };
+                    var fatherUser = _sysUserService.Queryable().FirstOrDefault(x => x.Id == viewModel.IsIntroducedById);
+                    var grandFatherUser = _sysUserService.Queryable().FirstOrDefault(x => fatherUser != null && x.Id == fatherUser.IsIntroducedById);
+                    var grandGrandFatherUser = _sysUserService.Queryable().FirstOrDefault(x => grandFatherUser != null && x.Id == grandFatherUser.IsIntroducedById);
+
+                    if(grandGrandFatherUser == null && fatherUser.AgencyId.HasValue)
+                    {
+                        user = new SysUser
+                        {
+                            Email = viewModel.Email,
+                            Password = viewModel.Password.ToBCrypt(),
+                            CreatedDate = DateTime.Now,
+                            IsAdmin = false,
+                            ActivateToken = isAccountActivationEnable ? Guid.NewGuid().ToString() : null,
+                            IsIntroducedById = viewModel.IsIntroducedById,
+                            AgencyId = fatherUser.AgencyId,
+                            BTCAmount = 0,
+                            ETHAmount = 0,
+                            TokenAmount = 0,
+                            IsLocked = false
+                        };
+                    }
+                    else
+                    {
+                        user = new SysUser
+                        {
+                            Email = viewModel.Email,
+                            Password = viewModel.Password.ToBCrypt(),
+                            CreatedDate = DateTime.Now,
+                            IsAdmin = false,
+                            ActivateToken = isAccountActivationEnable ? Guid.NewGuid().ToString() : null,
+                            IsIntroducedById = viewModel.IsIntroducedById,
+                            AgencyId = null,
+                            BTCAmount = 0,
+                            ETHAmount = 0,
+                            TokenAmount = 0,
+                            IsLocked = false
+                        };
+                    }
+                }
+                else
+                {
+                    user = new SysUser
+                    {
+                        Email = viewModel.Email,
+                        Password = viewModel.Password.ToBCrypt(),
+                        CreatedDate = DateTime.Now,
+                        IsAdmin = false,
+                        ActivateToken = isAccountActivationEnable ? Guid.NewGuid().ToString() : null,
+                        IsIntroducedById = viewModel.IsIntroducedById,
+                        AgencyId = agency == null ? null : (int?)agency.Id,
+                        BTCAmount = 0,
+                        ETHAmount = 0,
+                        TokenAmount = 0,
+                        IsLocked = false
+                    };
+                }
 
                 try
                 {
@@ -156,7 +279,6 @@ namespace CPL.Controllers
                                 isETHHDWalletAddressGenerated = true;
                             }
                         }
-
 
                         // Populate BTC HD Wallet Address
                         if (!isBTCHDWalletAddressGenerated)
@@ -193,6 +315,14 @@ namespace CPL.Controllers
                 _sysUserService.Insert(user);
                 _unitOfWork.SaveChanges();
 
+
+                if (agencyToken != null && !user.IsIntroducedById.HasValue)
+                {
+                    agencyToken.SysUserId = user.Id;
+                    _agencyTokenService.Update(agencyToken);
+                    _unitOfWork.SaveChanges();
+                }
+
                 if (isAccountActivationEnable)
                 {
                     var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Activate.ToString());
@@ -214,6 +344,10 @@ namespace CPL.Controllers
 
                     template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_ActivateEmailTemplate.cshtml", activateEmailTemplateViewModel).Result;
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
+
+                    CookieHelper.RemoveCookies(Response, "AffiliateCookie");
+                    CookieHelper.RemoveCookies(Response, "AgencyTokenCookie");
+
                     return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ActivateEmailSent") });
                 }
                 else
@@ -235,6 +369,9 @@ namespace CPL.Controllers
 
                     template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_MemberEmailTemplate.cshtml", memberEmailTemplateViewModel).Result;
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
+
+                    CookieHelper.RemoveCookies(Response, "AffiliateCookie");
+                    CookieHelper.RemoveCookies(Response, "AgencyTokenCookie");
 
                     // Log in
                     HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));

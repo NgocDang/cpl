@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CPL.Core.Interfaces
 {
-    public interface ITeamService : ICoreBase<Team>
+    public interface IMobileLangDetailService : ICoreBase<MobileLangDetail>
     {
     }
 }

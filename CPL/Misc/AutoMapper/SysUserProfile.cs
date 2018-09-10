@@ -21,6 +21,8 @@ namespace CPL.Misc.MapperCreate
             CreateMap<SysUser, MemberEmailTemplateViewModel>();
             CreateMap<SysUser, KYCVerifyEmailTemplateViewModel>();
             CreateMap<SysUser, ForgotPasswordEmailTemplateViewModel>();
+            CreateMap<SysUser, AffiliateApproveEmailTemplateViewModel>();
+
             CreateMap<SysUserViewModel, SysUser>();
             CreateMap<SysUserViewModel, ProfileViewModel>();
             CreateMap<SysUserViewModel, SecurityViewModel>()
@@ -28,6 +30,8 @@ namespace CPL.Misc.MapperCreate
 
             CreateMap<SysUserViewModel, DashboardNavbarViewModel>();
             CreateMap<SysUserViewModel, KYCViewModel>();
+
+            CreateMap<SysUser, ProfileAffiliateViewModel>();
 
             CreateMap<SysUser, DashboardViewModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));

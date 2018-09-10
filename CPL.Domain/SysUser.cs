@@ -37,9 +37,18 @@ namespace CPL.Domain
         public decimal ETHAmount { get; set; }
         public decimal TokenAmount { get; set; }
         public bool TwoFactorAuthenticationEnable { get; set; }
+        public int? AgencyId { get; set; }
+        public int? AffiliateId { get; set; }
+        public DateTime? AffiliateCreatedDate { get; set; }
+        public int? IsIntroducedById { get; set; }
+        public bool IsLocked { get; set; }
 
         public virtual ICollection<CoinTransaction> CoinTransactions { get; set; }
         public virtual ICollection<PricePredictionHistory> PricePredictionHistories { get; set; }
         public virtual ICollection<LotteryHistory> LotteryHistories { get; set; }
+        public virtual Agency Agency { get; set; }
+        public virtual Affiliate Affiliate { get; set; }
+        public virtual SysUser IsIntroducedByUser { get; set; }
+        public virtual ICollection<SysUser> DirectIntroducedUsers { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Misc.Quartz
 {
-    public class QuartzHelper
+    internal class QuartzHelper
     {
         public static void StartJob<TJob>(IScheduler scheduler, DateTime dateTime)
             where TJob : IJob

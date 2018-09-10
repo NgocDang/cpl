@@ -1,0 +1,69 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateApprove");
+}
+@model AffiliateApproveViewModel
+
+@section styles
+    {
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
+}
+<div class="app-content container center-layout mt-2 px-0">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateApprove")</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="breadcrumb-wrapper col-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateApprove")
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <div class="row">
+                <div class="col-12">
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ListOfAffiliateApplication")</h6>
+                    <div class="card">
+                        <div class="card-content">
+                            <table id="dt-affiliate-application" class="table responsive table-hover table-xl mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Address")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DOB")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ApplicationDate")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Approve")" id="approve" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
+    <script src="~/js/dashboard/cpl.admin.affiliateapprove.js" asp-append-version="true"></script>
+}
