@@ -21,6 +21,9 @@ insert into LangDetail values (2, N'AffiliateApprovedDescription', N'おめで�
 insert into LangDetail values (1, N'AffiliateIsApproved', N'Affiliate application is approved successfully.');
 insert into LangDetail values (2, N'AffiliateIsApproved', N'アフィリエイトアプリケーションが正常に承認されました。');
 
+insert into LangDetail values (1, N'AffiliateHasBeenApproved', N'Affiliate application has been approved.');
+insert into LangDetail values (2, N'AffiliateHasBeenApproved', N'アフィリエイトアプリケーションが承認されました。');
+
 
 update Setting set Name = 'StandardAffiliate.Tier1DirectRate' where Id = 13;
 update Setting set Name = 'StandardAffiliate.Tier2SaleToTier1Rate' where Id = 14;
