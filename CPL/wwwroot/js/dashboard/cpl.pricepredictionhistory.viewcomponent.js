@@ -47,13 +47,13 @@
                     }
                 },
                 {
-                    "data": "StartRate",
+                    "data": "ToBeComparedPrice",
                     "render": function (data, type, full, meta) {
                         return full.toBeComparedPriceInString;
                     }
                 },
                 {
-                    "data": "ResultRate",
+                    "data": "ResultPrice",
                     "render": function (data, type, full, meta) {
                         return full.resultPriceInString;
                     }
