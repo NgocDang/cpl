@@ -231,7 +231,7 @@
                         }
 
                         PricePredictionViewComponent.bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-                        var resultTimeInSeconds = moment(parseInt($(".tab-pane.active").closest(".tab-pane").find("#ResultTime").val())).valueOf() / 1000;
+                        var resultTimeInSeconds = moment(parseInt($(".tab-pane.active").find("#ResultTime").val())).valueOf() / 1000;
                         for (i = currentTime; i <= resultTimeInSeconds + 7200; i++) { // After result time 2 hours
                             data.push({
                                 x: moment(i*1000).valueOf(),
