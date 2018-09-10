@@ -14,20 +14,18 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 {
     internal class PricePredictionCreatingJob : IJob
     {
-        private static int NumberOfDailyPricePrediction;
         private static int PricePredictionBettingIntervalInHour;
         private static int HoldingIntervalInHour;
-        private static int CompareIntervalInMinutes;
+        private static int CompareIntervalInMinute;
 
         public Task Execute(IJobExecutionContext context)
         {
             JobDataMap dataMap = context.JobDetail.JobDataMap;
-            Resolver resolver = (Resolver)dataMap["resolve"];
+            Resolver resolver = (Resolver)dataMap["Resolver"];
 
-            NumberOfDailyPricePrediction = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.NumberOfDailyPricePrediction).Value);
             PricePredictionBettingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionBettingIntervalInHour).Value);
             HoldingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.HoldingIntervalInHour).Value);
-            CompareIntervalInMinutes = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinutes).Value);
+            CompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinute).Value);
 
             DoCreateNewPricePrediction(ref resolver);
             return Task.FromResult(0);
@@ -49,7 +47,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                     OpenBettingTime = startTime,
                     CloseBettingTime = startTime.AddHours((i + 1) * PricePredictionBettingIntervalInHour),
                     ToBeComparedTime = startTime.AddHours((i + 1) * PricePredictionBettingIntervalInHour).AddHours(HoldingIntervalInHour),
-                    ResultTime = startTime.AddHours((i + 1) * PricePredictionBettingIntervalInHour).AddHours(HoldingIntervalInHour).AddMinutes(CompareIntervalInMinutes)
+                    ResultTime = startTime.AddHours((i + 1) * PricePredictionBettingIntervalInHour).AddHours(HoldingIntervalInHour).AddMinutes(CompareIntervalInMinute)
                 };
 
                 resolver.PricePredictionService.Insert(newPricePredictionRecord);
@@ -64,7 +62,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 
                 var jobData = new JobDataMap
                 {
-                    ["resolve"] = resolver
+                    ["Resolver"] = resolver
                 };
                 IJobDetail job = JobBuilder.Create<PricePredictionGetBTCPriceJob>()
                      .UsingJobData(jobData)

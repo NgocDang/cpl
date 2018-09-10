@@ -24,20 +24,20 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
         public Task Execute(IJobExecutionContext context)
         {
             JobDataMap dataMap = context.JobDetail.JobDataMap;
-            Resolver resolver = (Resolver)dataMap["resolve"];
+            Resolver resolver = (Resolver)dataMap["Resolver"];
 
-            int pricePredictionId = DoGetBTCPrizePricePrediction(ref resolver);
+            int pricePredictionId = DoGetBTCPrice(ref resolver);
             if (pricePredictionId > 0)
                 DoUpdateWinner(ref resolver, pricePredictionId);
             return Task.FromResult(0);
         }
 
-        private int DoGetBTCPrizePricePrediction(ref Resolver resolver)
+        private int DoGetBTCPrice(ref Resolver resolver)
         {
             try
             {
                 // interval time
-                CompareIntervalInMinutes = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinutes).Value);
+                CompareIntervalInMinutes = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinute).Value);
                 // currentTime
                 var resultTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
                 // the time to be compared
@@ -89,8 +89,8 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 var gameResult = (pricePrediction.ResultPrice > pricePrediction.ToBeComparedPrice) ? EnumPricePredictionStatus.UP.ToBoolean() : EnumPricePredictionStatus.DOWN.ToBoolean(); // TODO equals?
 
                 // calculate the prize
-                var totalAmountOfLoseUsers = pricePredictionHistories.Where(x => x.Prediction != gameResult).Sum(x => x.Amount);
-                var totalAmountToBeAwarded = totalAmountOfLoseUsers * 80 / 100; // Distribute 80% of the loser's BET quantity to the winners.
+                var totalAmountOfLosers = pricePredictionHistories.Where(x => x.Prediction != gameResult).Sum(x => x.Amount);
+                var totalAmountToBeAwarded = totalAmountOfLosers * 80 / 100; // Distribute 80% of the loser's BET quantity to the winners.
                 var totalAmountOfWinUsers = pricePredictionHistories.Where(x => x.Prediction == gameResult).Sum(x => x.Amount);
                 
                 // calculate the award

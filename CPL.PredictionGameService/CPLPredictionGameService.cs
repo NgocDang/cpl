@@ -66,7 +66,7 @@ namespace CPL.PredictionGameService
 
                 var jobData = new JobDataMap
                 {
-                    ["resolve"] = Resolver
+                    ["Resolver"] = Resolver
                 };
                 IJobDetail job = JobBuilder.Create<PricePredictionCreatingJob>()
                     .UsingJobData(jobData)
