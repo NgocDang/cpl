@@ -1,26 +1,17 @@
 ﻿var StandardAffiliate = {
     standardAffiliateDataTable: null,
-    isCheckAllRow: null,
-    standardAffiliateDataTablePagesUncheckbox: null,
-    standardAffiliateDataTablePagesCheckbox: null,
-    standardAffiliateDataTablePagesLoaded: null,
     init: function () {
         StandardAffiliate.isCheckAllRow = false;
         StandardAffiliate.standardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateDataTable();
         StandardAffiliate.initStandardAffiliateDataTable();
         StandardAffiliate.bindDoLock();
         StandardAffiliate.bindDoUpdateRateMultipleRow();
-        StandardAffiliate.bindCheckboxAllRow();
-        StandardAffiliate.bindUnCheckboxOneRow();
     },
     initStandardAffiliateDataTable: function () {
         StandardAffiliate.standardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
             StandardAffiliate.loadEditable();
         });
         StandardAffiliate.standardAffiliateDataTable.column(0).checkboxes.deselectAll();
-        StandardAffiliate.standardAffiliateDataTablePagesUncheckbox = new Array(StandardAffiliate.standardAffiliateDataTable.page.info().pages).fill(false);
-        StandardAffiliate.standardAffiliateDataTablePagesCheckbox = new Array(StandardAffiliate.standardAffiliateDataTable.page.info().pages).fill(false);
-        StandardAffiliate.standardAffiliateDataTablePagesLoaded = new Array(StandardAffiliate.standardAffiliateDataTable.page.info().pages).fill(false);
     },
     loadStandardAffiliateDataTable: function () {
         return $('#dt-standard-affiliate').DataTable({
@@ -45,33 +36,21 @@
                         }).indexes(),
                         0
                     ).checkboxes.disable();
-                    
-                    if (StandardAffiliate.isCheckAllRow && !StandardAffiliate.standardAffiliateDataTablePagesUncheckbox[StandardAffiliate.standardAffiliateDataTable.page.info().page]) {
-                        table.cells(
-                            table.rows(function (idx, data, node) {
-                                return data.isLocked === false;
-                            }).indexes(),
-                            0
-                        ).checkboxes.select(true);
-                    }
-
-                    if (!StandardAffiliate.isCheckAllRow && !StandardAffiliate.standardAffiliateDataTablePagesCheckbox[StandardAffiliate.standardAffiliateDataTable.page.info().page]) {
-                        table.cells(
-                            table.rows(function (idx, data, node) {
-                                return data.isLocked === false;
-                            }).indexes(),
-                            0
-                        ).checkboxes.select(false);
-                    }
-
-                    StandardAffiliate.standardAffiliateDataTablePagesLoaded[StandardAffiliate.standardAffiliateDataTable.page.info().page]
                 }
             },
             'columnDefs': [
                 {
                     'targets': 0,
+                    'render': function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                        }
+
+                        return data;
+                    },
                     'checkboxes': {
-                        'selectRow': true
+                        'selectRow': true,
+                        'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
                     }
                 }
             ],
@@ -256,16 +235,26 @@
     bindDoUpdateRateMultipleRow: function () {
         $("#form-comission-rate-setting").on("click", ".btn-update", function () {
             var rows_selected = StandardAffiliate.standardAffiliateDataTable.column(0).checkboxes.selected();
+            var _postData = {};
+            if (rows_selected.count() == 0)
+                return false;
+            else {
+                if (StandardAffiliate.isCheckAllRow == true) {
+                    _postData["IsCheckedAll"] = true;
+                }
+                _postData["Ids"] = new Array(rows_selected.count());
+                $.each(rows_selected, function (i, value) {
+                    _postData["Ids"][i] = parseInt(value);
+                });
+            }
             var isFormValid = $("#form-comission-rate-setting")[0].checkValidity();
             $("#form-comission-rate-setting").addClass('was-validated');
             var _this = this;
             if (isFormValid) {
                 var _formData = $("#form-comission-rate-setting").serializeArray();
-                var _postData = {};
                 _formData.forEach(function (element) {
                     _postData[element['name']] = parseInt(element['value']);
                 });
-                _postData["Ids"] = [1, 2, 3, 4, 5];
                 var _data = JSON.stringify(_postData);
                 $.ajax({
                     url: "/Admin/DoUpdateStandardAffiliateRates/",
@@ -280,6 +269,8 @@
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
                             StandardAffiliate.standardAffiliateDataTable.ajax.reload();
+                            StandardAffiliate.standardAffiliateDataTable.column(0).checkboxes.deselectAll();
+                            $("#form-comission-rate-setting")[0].reset();
                         } else {
                             toastr.error(data.message, 'Error!');
                         }
@@ -293,32 +284,9 @@
             }
 
             return false;
-            console.log(rows_selected);
-        });
-    },
-    bindCheckboxAllRow: function () {
-        $("#checkbox-header").on("change", "input[type=checkbox]", function () {
-            var _this = this;
-            if (_this.checked) {
-                StandardAffiliate.isCheckAllRow = true;
-            }
-            else {
-                StandardAffiliate.isCheckAllRow = false;
-            }
-            StandardAffiliate.standardAffiliateDataTablePagesUncheckbox.fill(false);
-            StandardAffiliate.standardAffiliateDataTablePagesCheckbox.fill(false);
-        });
-    },
-    bindUnCheckboxOneRow: function () {
-        $("#dt-standard-affiliate").on("change", "tr input[type=checkbox]", function () {
-            var _this = this;
-            if (StandardAffiliate.isCheckAllRow && !_this.checked)
-                StandardAffiliate.standardAffiliateDataTablePagesUncheckbox[StandardAffiliate.standardAffiliateDataTable.page.info().page] = true;
-            if (!StandardAffiliate.isCheckAllRow && _this.checked)
-                StandardAffiliate.standardAffiliateDataTablePagesCheckbox[StandardAffiliate.standardAffiliateDataTable.page.info().page] = true;
         });
     }
-}
+};
 
 $(document).ready(function () {
     StandardAffiliate.init();

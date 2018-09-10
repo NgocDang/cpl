@@ -62,9 +62,10 @@ namespace CPL.Models
     public class StandardAffliateDataModel
     {
         public int Id { get; set; }
-        public List<int> Ids { get; set; }
         public int? Tier1DirectRate { get; set; }
         public int? Tier2SaleToTier1Rate { get; set; }
         public int? Tier3SaleToTier1Rate { get; set; }
+
+        public List<int> Ids { get; set; }
     }
 }
