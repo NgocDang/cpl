@@ -40,7 +40,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
             scheduler.Start();
 
-            for (int i = 0; i < NumberOfDailyPricePrediction; i++)
+            for (int i = 0; i < 10; i++)
             {
                 var newPricePredictionRecord = new PricePrediction
                 {
@@ -54,18 +54,11 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 
                 resolver.PricePredictionService.Insert(newPricePredictionRecord);
 
-
-                var hour = 17;
-                var min = 24 + i;
-                var day = 7;
                 DateTimeOffset timeOffset = DateBuilder.DateOf(
-                    //newPricePredictionRecord.CloseBettingTime.Hour,
-                    hour,
-                    //newPricePredictionRecord.CloseBettingTime.Minute,
-                    min,
+                    newPricePredictionRecord.CloseBettingTime.Hour,
+                    newPricePredictionRecord.CloseBettingTime.Minute,
                     newPricePredictionRecord.CloseBettingTime.Second,
-                    //newPricePredictionRecord.CloseBettingTime.Day,
-                    day,
+                    newPricePredictionRecord.CloseBettingTime.Day,
                     newPricePredictionRecord.CloseBettingTime.Month,
                     newPricePredictionRecord.CloseBettingTime.Year);
 

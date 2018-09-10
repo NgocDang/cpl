@@ -40,11 +40,6 @@ namespace CPL.PredictionGameService
         public string FileName { get; set; }
         public int RunningIntervalInMilliseconds { get; set; }
 
-        private static int NumberOfDailyPricePrediction;
-        private static int PricePredictionBettingIntervalInHour;
-        private static int HoldingIntervalInHour;
-        private static int CompareIntervalInMinutes;
-
         Resolver Resolver { get; set; }
 
         public void Start()
@@ -82,35 +77,11 @@ namespace CPL.PredictionGameService
                 ITrigger trigger = TriggerBuilder.Create()
                     .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
                     .WithDescription("Job to create new PricePredictions daily automatically")
-                    //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(DailyStartTimeInHour, DailyStartTimeInMinute))
-                    .StartNow()
+                    .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(DailyStartTimeInHour, DailyStartTimeInMinute))
                     .Build();
 
                 await scheduler.ScheduleJob(job, trigger);
             }));
-
-
-            //Tasks.Add(Task.Run(async () =>
-            //{
-            //    var startHour = Math.Abs(24 - (PricePredictionBettingIntervalInHour * NumberOfDailyPricePrediction + HoldingIntervalInHour));
-
-            //    IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
-            //    await scheduler.Start();
-
-            //    IJobDetail job = JobBuilder.Create<PricePredictionGetBTCPriceJob>()
-            //        .WithIdentity("PricePredictionUpdateBTCPrice", "QuartzGroup")
-            //        .WithDescription("Job to update BTC price each interval hours automatically")
-            //        .Build();
-
-            //    ITrigger trigger = TriggerBuilder.Create()
-            //        .WithIdentity("PricePredictionUpdateBTCPrice", "QuartzGroup")
-            //        .WithDescription("Job to update BTC price each interval hours automatically")
-            //        .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PricePredictionBettingIntervalInHour)
-            //                                             .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(startHour, CompareIntervalInMinutes)))
-            //        .Build();
-
-            //    await scheduler.ScheduleJob(job, trigger);
-            //}));
         }
 
         public async void Stop()
@@ -128,6 +99,8 @@ namespace CPL.PredictionGameService
         // Get current BTC price
         private void GetCurrentBTCPrice()
         {
+            var resolver = new Resolver();
+
             Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC thread on CPL window service STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
             while (IsCPLPredictionGameServiceRunning)
             {
@@ -148,14 +121,14 @@ namespace CPL.PredictionGameService
                         Time = btcCurrentPriceResult.Result.DateTime
                     };
 
-                    Resolver.BTCPriceService.Insert(btcPrice);
-                    Resolver.UnitOfWork.SaveChanges();
+                    resolver.BTCPriceService.Insert(btcPrice);
+                    resolver.UnitOfWork.SaveChanges();
 
                     Task.Delay(RunningIntervalInMilliseconds).Wait();
                 }
                 catch (Exception ex)
                 {
-                    if (ex.InnerException.Message != null)
+                    if (ex.InnerException?.Message != null)
                         Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                     else
                         Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
@@ -185,12 +158,6 @@ namespace CPL.PredictionGameService
             DailyStartTimeInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.DailyStartTimeInHour).Value);
             DailyStartTimeInMinute = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.DailyStartTimeInMinute).Value);
             BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(cplServiceEndpoint + CPLConstant.BTCCurrentPriceServiceEndpoint));
-
-            // For trigger get BTC price
-            NumberOfDailyPricePrediction = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.NumberOfDailyPricePrediction).Value);
-            PricePredictionBettingIntervalInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionBettingIntervalInHour).Value);
-            HoldingIntervalInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.HoldingIntervalInHour).Value);
-            CompareIntervalInMinutes = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinutes).Value);
         }
     }
 }
