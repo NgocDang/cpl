@@ -25,14 +25,16 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
         {
             JobDataMap dataMap = context.JobDetail.JobDataMap;
             Resolver resolver = (Resolver)dataMap["Resolver"];
+            DateTime resultTimeLocal = (DateTime)dataMap["ResultTime"];
+            DateTime tobeCompareTimeLocal = (DateTime)dataMap["ToBeComparedTime"];
 
-            int pricePredictionId = DoGetBTCPrice(ref resolver);
+            int pricePredictionId = DoGetBTCPrice(ref resolver, resultTimeLocal, tobeCompareTimeLocal);
             if (pricePredictionId > 0)
                 DoUpdateWinner(ref resolver, pricePredictionId);
             return Task.FromResult(0);
         }
 
-        private int DoGetBTCPrice(ref Resolver resolver)
+        private int DoGetBTCPrice(ref Resolver resolver, DateTime resultTimeLocal, DateTime tobeCompareTimeLocal)
         {
             try
             {
@@ -40,11 +42,11 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 CompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinute).Value);
 
                 // result time and price
-                var resultTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+                var resultTime = ((DateTimeOffset)resultTimeLocal).ToUnixTimeSeconds();
                 var resultPrize = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => resultTime >= x.Time).Price;
 
                 // the time to be compared time and price
-                var toBeComparedTime = ((DateTimeOffset)DateTime.UtcNow.AddMinutes(-CompareIntervalInMinute)).ToUnixTimeSeconds();
+                var toBeComparedTime = ((DateTimeOffset)tobeCompareTimeLocal).ToUnixTimeSeconds();
                 var toBeComparedPrice = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => toBeComparedTime >= x.Time).Price;
 
                 // update price prediction
