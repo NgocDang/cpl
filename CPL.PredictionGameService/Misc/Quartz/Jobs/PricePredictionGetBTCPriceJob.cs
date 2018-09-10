@@ -13,7 +13,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 {
     class PricePredictionGetBTCPriceJob : IJob
     {
-        private static int CompareIntervalInMinutes;
+        private static int CompareIntervalInMinute;
         public string FileName { get; set; }
 
         public PricePredictionGetBTCPriceJob()
@@ -37,20 +37,20 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             try
             {
                 // interval time
-                CompareIntervalInMinutes = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinute).Value);
+                CompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinute).Value);
                 // currentTime
                 var resultTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
                 // the time to be compared
-                var toBeComparedTime = ((DateTimeOffset)DateTime.UtcNow.AddMinutes(-CompareIntervalInMinutes)).ToUnixTimeSeconds();
+                var toBeComparedTime = ((DateTimeOffset)DateTime.UtcNow.AddMinutes(-CompareIntervalInMinute)).ToUnixTimeSeconds();
                 // get price at current time from BTCPrice table
                 var resultPrize = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => resultTime >= x.Time).Price;
                 // get price at time to be compared from BTCPrice table
-                var toBeComparedPrize = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => toBeComparedTime >= x.Time).Price;
+                var toBeComparedPrice = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => toBeComparedTime >= x.Time).Price;
 
                 // update price prediction
                 var pricePrediction = resolver.PricePredictionService.Queryable().OrderBy(x => x.ResultTime).FirstOrDefault(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && DateTime.Now >= x.ResultTime);
                 pricePrediction.ResultPrice = resultPrize;
-                pricePrediction.ToBeComparedPrice = toBeComparedPrize;
+                pricePrediction.ToBeComparedPrice = toBeComparedPrice;
                 pricePrediction.UpdatedDate = DateTime.Now;
 
                 resolver.PricePredictionService.Update(pricePrediction);
