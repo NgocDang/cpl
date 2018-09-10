@@ -362,13 +362,7 @@ namespace CPL.Controllers
             if (string.IsNullOrEmpty(searchBy))
             {
                 filteredResultsCount = totalResultsCount = _sysUserService.Queryable()
-                        .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AffiliateId.HasValue);
-
-                var standardAffliateaa = _sysUserService
-                        .Query()
-                        .Include(x => x.Affiliate)
-                        .Select()
-                        .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue).ToList();
+                        .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
 
                 var standardAffliate =
                             ((CPLContext)HttpContext.RequestServices.GetService(typeof(IDataContextAsync))).SysUser
@@ -389,22 +383,23 @@ namespace CPL.Controllers
                                 Email = x.Email,
                                 IsLocked = x.IsLocked,
                                 TotalIntroducer = x.DirectIntroducedUsers.Count(y => y.IsIntroducedById == x.Id),
+                                AffiliateId = x.AffiliateId,
 
                                 // lottery
-                                TotalDirectCPLAwardedInLottery = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value)) * x.Affiliate.Tier1DirectRate / 100,
-                                TotalTier2DirectCPLAwardedInLottery = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value))) * x.Affiliate.Tier2SaleToTier1Rate / 100,
-                                TotalTier3DirectCPLAwardedInLottery = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value))) * x.Affiliate.Tier3SaleToTier1Rate / 100,
-                                TotalDirectCPLUsedInLottery = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.Lottery.UnitPrice)) * x.Affiliate.Tier1DirectRate / 100,
-                                TotalTier2DirectCPLUsedInLottery = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.Lottery.UnitPrice))) * x.Affiliate.Tier2SaleToTier1Rate / 100,
-                                TotalTier3DirectCPLUsedInLottery = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.Lottery.UnitPrice))) * x.Affiliate.Tier3SaleToTier1Rate / 100,
+                                TotalDirectCPLAwardedInLottery = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value)),// * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLAwardedInLottery = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value))),// * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLAwardedInLottery = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.LotteryPrize.Value))),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
+                                TotalDirectCPLUsedInLottery = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.Lottery.UnitPrice)),// * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLUsedInLottery = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.Lottery.UnitPrice))),// * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLUsedInLottery = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.Lottery.UnitPrice))),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
 
                                 // price predciotn
-                                TotalDirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Award)).GetValueOrDefault(0) * x.Affiliate.Tier1DirectRate / 100,
-                                TotalTier2DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0) * x.Affiliate.Tier2SaleToTier1Rate / 100,
-                                TotalTier3DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0) * x.Affiliate.Tier3SaleToTier1Rate / 100,
-                                TotalDirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Amount)) * x.Affiliate.Tier1DirectRate / 100,
-                                TotalTier2DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))) * x.Affiliate.Tier2SaleToTier1Rate / 100,
-                                TotalTier3DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))) * x.Affiliate.Tier3SaleToTier1Rate / 100,
+                                TotalDirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Award)).GetValueOrDefault(0),// * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0),// * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
+                                TotalDirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Amount)),// * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))),// * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
 
                                 AffiliateCreatedDate = x.AffiliateCreatedDate,
                                 AffiliateCreatedDateInString = x.AffiliateCreatedDate.GetValueOrDefault().ToString(Format.DateTime),
@@ -446,6 +441,7 @@ namespace CPL.Controllers
                                 Email = x.Email,
                                 IsLocked = x.IsLocked,
                                 TotalIntroducer = x.DirectIntroducedUsers.Count(y => y.IsIntroducedById == x.Id),
+                                AffiliateId = x.AffiliateId,
 
                                 // lottery
                                 TotalDirectCPLAwardedInLottery = x.DirectIntroducedUsers.Sum(y => y.LotteryHistories.Sum(z => z.LotteryPrize.Value)),// * x.Affiliate.Tier1DirectRate / 100,
@@ -480,6 +476,60 @@ namespace CPL.Controllers
             }
         }
 
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoLockStandardAffiliate(int id)
+        {
+            try
+            {
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
+
+                user.IsLocked = !user.IsLocked;
+
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+
+                if (user.IsLocked)
+                    return new JsonResult(new { success = true, isLocked = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "LockSuccessful") });
+                else
+                    return new JsonResult(new { success = true, isLocked = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UnLockSuccessful") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoUpdateStandardAffiliateRate(StandardAffliateDataModel model)
+        {
+            try
+            {
+                var standardAffiliate = _affiliateService.Queryable().FirstOrDefault(x => x.Id == model.Id);
+
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.AffiliateId == model.Id);
+                if (user != null && !user.IsLocked)
+                {
+                    if (model.Tier1DirectRate != null)
+                        standardAffiliate.Tier1DirectRate = model.Tier1DirectRate.Value;
+                    if (model.Tier2SaleToTier1Rate != null)
+                        standardAffiliate.Tier2SaleToTier1Rate = model.Tier2SaleToTier1Rate.Value;
+                    if (model.Tier3SaleToTier1Rate != null)
+                        standardAffiliate.Tier3SaleToTier1Rate = model.Tier3SaleToTier1Rate.Value;
+
+                    _affiliateService.Update(standardAffiliate);
+                    _unitOfWork.SaveChanges();
+                    return new JsonResult(new { success = true, isLocked = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+                }
+                else
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
         #endregion
 
         #region User

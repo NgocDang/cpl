@@ -33,4 +33,8 @@ INSERT INTO LangDetail VALUES (2, N'Lock', N'ロック');
 INSERT INTO LangDetail VALUES (1, N'UnLock', N'UnLock');
 INSERT INTO LangDetail VALUES (2, N'UnLock', N'アンロック');
 
+INSERT INTO LangDetail VALUES (1, N'LockSuccessful', N'Lock Successful');
+INSERT INTO LangDetail VALUES (2, N'LockSuccessful', N'ロック成功');
 
+INSERT INTO LangDetail VALUES (1, N'UnLockSuccessful', N'Unlock Successful');
+INSERT INTO LangDetail VALUES (2, N'UnLockSuccessful', N'成功したロック解除');
