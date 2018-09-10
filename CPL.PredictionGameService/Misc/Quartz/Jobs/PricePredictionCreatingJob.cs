@@ -75,7 +75,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 ITrigger trigger = TriggerBuilder.Create()
                     .WithIdentity($"PricePredictionUpdateBTCPrice{i}", "QuartzGroup")
                     .WithDescription("Job to update BTC price each interval hours automatically")
-                    .StartAt(timeOffset) // consider timeOffset.ToUniversalTime()
+                    .StartAt(timeOffset)
                     .Build();
 
                 scheduler.ScheduleJob(job, trigger);
