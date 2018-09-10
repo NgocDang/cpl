@@ -36,6 +36,7 @@
                     sysUserId: $("#price-prediction-history-view-component #SysUserId").val()
                 }
             },
+            "order": [[8, "asc"]],
             "language": DTLang.getLang(),
             "columns": [
                 {
@@ -67,10 +68,10 @@
                     "data": "Status",
                     "render": function (data, type, full, meta) {
                         if (full.status === "ACTIVE") {
-                            return "<div class='badge badge-success'>" + full.status + "</div>";
+                            return "<div class='badge badge-success'> Active </div>";
                         }
                         else {
-                            return "<div class='badge badge-secondary'>" + full.status + "</div>";
+                            return "<div class='badge badge-secondary'>Completed</div>";
                         }
                     }
                 },
