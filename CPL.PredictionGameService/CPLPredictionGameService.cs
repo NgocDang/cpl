@@ -63,24 +63,62 @@ namespace CPL.PredictionGameService
             {
                 IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
                 await scheduler.Start();
+                
+                // Work on pending job since service starts
+                var pricePredictions = Resolver.PricePredictionService.Queryable().OrderBy(x => x.ResultTime)
+                    .Where(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue);
 
-                var jobData = new JobDataMap
+                foreach (var pricePrediction in pricePredictions)
+                {
+                    var timeOffset = DateBuilder.DateOf(
+                                            pricePrediction.ResultTime.Hour,
+                                            pricePrediction.ResultTime.Minute,
+                                            pricePrediction.ResultTime.Second,
+                                            pricePrediction.ResultTime.Day,
+                                            pricePrediction.ResultTime.Month,
+                                            pricePrediction.ResultTime.Year);
+
+                    var jobData = new JobDataMap
+                    {
+                        ["Resolver"] = Resolver,
+                        ["ResultTime"] = pricePrediction.ResultTime,
+                        ["ToBeComparedTime"] = pricePrediction.ToBeComparedTime,
+                    };
+
+                    IJobDetail job = JobBuilder.Create<PricePredictionGetBTCPriceJob>()
+                         .UsingJobData(jobData)
+                        .WithIdentity($"PricePredictionUpdateBTCPrice{pricePrediction.Id}", "QuartzGroup")
+                        .WithDescription("Job to update BTC price each interval hours automatically")
+                        .Build();
+
+                    ITrigger trigger = TriggerBuilder.Create()
+                        .WithIdentity($"PricePredictionUpdateBTCPrice{pricePrediction.Id}", "QuartzGroup")
+                        .WithDescription("Job to update BTC price each interval hours automatically")
+                        .StartAt(timeOffset)
+                        .Build();
+
+                    await scheduler.ScheduleJob(job, trigger);
+                }
+
+                // Start the job as usual
+                var creatingJobData = new JobDataMap
                 {
                     ["Resolver"] = Resolver
                 };
-                IJobDetail job = JobBuilder.Create<PricePredictionCreatingJob>()
-                    .UsingJobData(jobData)
+
+                IJobDetail creatingJob = JobBuilder.Create<PricePredictionCreatingJob>()
+                    .UsingJobData(creatingJobData)
                     .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
                     .WithDescription("Job to create new PricePredictions daily automatically")
                     .Build();
 
-                ITrigger trigger = TriggerBuilder.Create()
+                ITrigger creatingTrigger = TriggerBuilder.Create()
                     .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
                     .WithDescription("Job to create new PricePredictions daily automatically")
                     .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(DailyStartTimeInHour, DailyStartTimeInMinute))
                     .Build();
 
-                await scheduler.ScheduleJob(job, trigger);
+                await scheduler.ScheduleJob(creatingJob, creatingTrigger);
             }));
         }
 
