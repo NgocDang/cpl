@@ -43,14 +43,14 @@
                     'targets': 0,
                     'render': function (data, type, row, meta) {
                         if (type === 'display') {
-                            data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
+                            data = '<div class="checkbox"><input type="checkbox"><label></label></div>';
                         }
 
                         return data;
                     },
                     'checkboxes': {
                         'selectRow': true,
-                        'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
+                        'selectAllRender': '<div class="checkbox"><input type="checkbox"><label></label></div>'
                     }
                 }
             ],

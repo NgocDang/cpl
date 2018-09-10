@@ -79,3 +79,7 @@ label:hover:before {
 #checkbox-header label {
     padding-bottom: 15px !important;
 }
+
+.dt-checkboxes-cell {
+    outline: none!important
+}
