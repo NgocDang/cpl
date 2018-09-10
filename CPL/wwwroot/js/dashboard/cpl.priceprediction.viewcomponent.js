@@ -183,8 +183,8 @@
                     tickPixelInterval: 150,
                     plotLines: [{
                         label: {
-                            text: $("#open").val() + '(' + openTime.format("hh:mm") + ')',
-                            rotation: 0,
+                            text: 'Open (' + openTime.format("HH:mm") + ')',
+                            //rotation: 0,
                             zIndex: 4
                         },
                         color: '#000', // Color value
@@ -195,9 +195,9 @@
                     },
                     {
                         label: {
-                            text: $("#close").val() + '(' + closeTime.format("hh:mm") + ')',
-                            rotation: 0,
-                            x: -90,
+                            text: 'Close (' + closeTime.format("HH:mm") + ')',
+                            //rotation: 0,
+                            //x: -90,
                             zIndex: 4
                         },
                         color: '#000', // Color value
@@ -208,8 +208,8 @@
                     },
                     {
                         label: {
-                            text: $("#result").val() + '(' + resultTime.format("hh:mm") + ')',
-                            rotation: 0,
+                            text: 'Result (' + resultTime.format("HH:mm") + ')',
+                            //rotation: 0,
                             zIndex: 4
                         },
                         color: '#000', // Color value
@@ -263,7 +263,7 @@
 
                         PricePredictionViewComponent.bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
                         var resultTimeInSeconds = moment(parseInt($(".tab-pane.active").find("#ResultTime").val())).valueOf() / 1000;
-                        for (i = currentTime; i <= resultTimeInSeconds + 7200; i++) { // After result time 2 hours
+                        for (i = currentTime; i <= resultTimeInSeconds + 3600; i++) { // After result time 2 hours
                             data.push({
                                 x: moment(i * 1000).valueOf(),
                                 y: null
@@ -359,8 +359,11 @@
     bindBet: function () {
         $(".tab-pane").on("click", ".btn-bet", function () {
             var _this = this;
+            var tabPane = $(_this).closest(".tab-pane");
             $(_this).closest(".tab-pane").find(".bet-amount").val($(_this).data().value);
-            $(_this).closest(".tab-pane").find(".btn-bet").removeClass("btn-secondary");
+            tabPane.find(".btn-bet").removeClass("btn-secondary");
+            tabPane.find(".btn-bet").addClass("btn-gray");
+            $(_this).removeClass("btn-gray");
             $(_this).addClass("btn-secondary");
         });
 

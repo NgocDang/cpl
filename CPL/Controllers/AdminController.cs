@@ -31,7 +31,6 @@ namespace CPL.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-        private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
@@ -50,7 +49,6 @@ namespace CPL.Controllers
             IViewRenderService viewRenderService,
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
-            ITeamService teamService,
             ITemplateService templateService,
             ISysUserService sysUserService,
             ILotteryHistoryService lotteryHistoryService,
@@ -68,7 +66,6 @@ namespace CPL.Controllers
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
             this._unitOfWork = unitOfWork;
-            this._teamService = teamService;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
             this._lotteryHistoryService = lotteryHistoryService;
@@ -527,6 +524,36 @@ namespace CPL.Controllers
                 }
                 else
                     return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoUpdateStandardAffiliateRates(string data)
+        {
+            try
+            {
+                var _data = JsonConvert.DeserializeObject<StandardAffliateDataModel>(data);
+                foreach (var id in _data.Ids)
+                {
+                    var standardAffiliate = _affiliateService.Queryable().FirstOrDefault(x => x.Id == id);
+
+                    if (_data.Tier1DirectRate != null)
+                        standardAffiliate.Tier1DirectRate = _data.Tier1DirectRate.Value;
+                    if (_data.Tier2SaleToTier1Rate != null)
+                        standardAffiliate.Tier2SaleToTier1Rate = _data.Tier2SaleToTier1Rate.Value;
+                    if (_data.Tier3SaleToTier1Rate != null)
+                        standardAffiliate.Tier3SaleToTier1Rate = _data.Tier3SaleToTier1Rate.Value;
+
+                    _affiliateService.Update(standardAffiliate);
+                }
+
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
             }
             catch (Exception ex)
             {

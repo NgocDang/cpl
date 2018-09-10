@@ -50,6 +50,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\.eslintignore" />
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\.eslintrc" />
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\js\dataTables.checkboxes.js" />
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\js\dataTables.checkboxes.min.js" />
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\LICENSE" />
+    <None Include="wwwroot\js\dashboard\plugins\datatables\Checkboxes-1.2.11\README.md" />
     <None Include="wwwroot\js\dashboard\plugins\tinymce\langs\readme.md" />
     <None Include="wwwroot\js\dashboard\plugins\tinymce\plugins\advlist\plugin.min.js" />
     <None Include="wwwroot\js\dashboard\plugins\tinymce\plugins\anchor\plugin.min.js" />

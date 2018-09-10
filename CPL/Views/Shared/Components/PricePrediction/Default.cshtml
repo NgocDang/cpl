@@ -4,11 +4,11 @@
     <div class="card-content">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-9 col-12 px-sm-1 px-0">
+                <div class="col-lg-9 col-12 px-sm-1 px-0">
                     <div class="btc-price-chart">
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-12 bet">
+                <div class="col-lg-3 col-12 bet">
                     <div class="row">
                         <div class="col-12">
                             <span class="font-large-1 font-weight-bold btc-rate" value="@Model.CurrentBTCRate">@Model.CurrentBTCRateInString</span> <span class="font-medium-4">BTC/USDT</span>
@@ -44,10 +44,10 @@
                         <div class="row" style="margin-top:10px;">
                             <div class="btn-group col-12 btn-up-down-group" role="group">
                                 <button type="button" data-value="true" class="btn btn-outline-success col-6 btn-up">
-                                    UP
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Up")
                                 </button>
                                 <button type="button" data-value="false" class="btn btn-outline-danger col-6 btn-down">
-                                    DOWN
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Down")
                                 </button>
                             </div>
                         </div>

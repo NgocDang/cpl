@@ -22,9 +22,9 @@
                         @for (var i = 0; i < Model.PricePredictionTabs.Count; i++)
                         {
                             <li class="nav-item">
-                                <a class="nav-link font-medium-2 font-weight-bold px-2 border-0 @(Model.PricePredictionTabs[i].IsDisabled ? "disabled" : "") @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id" data-id="@Model.PricePredictionTabs[i].Id"
+                                <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold px-2 border-0 @(Model.PricePredictionTabs[i].IsDisabled ? "disabled" : "") @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id" data-id="@Model.PricePredictionTabs[i].Id"
                                    data-toggle="tab" href="#price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-controls="price-prediction-nav-@Model.PricePredictionTabs[i].Id">
-                                    @Model.PricePredictionTabs[i].ToBeComparedTime.ToString("HH:mm")~@Model.PricePredictionTabs[i].ResultTime.ToString("HH:mm")
+                                    @Model.PricePredictionTabs[i].ToBeComparedTime.ToString("HH:mm") ~ @Model.PricePredictionTabs[i].ResultTime.ToString("HH:mm")
                                 </a>
                             </li>
                         }

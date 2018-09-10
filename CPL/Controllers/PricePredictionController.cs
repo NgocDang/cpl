@@ -28,7 +28,6 @@ namespace CPL.Controllers
         private readonly IViewRenderService _viewRenderService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
-        private readonly ITeamService _teamService;
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
         private readonly IPricePredictionService _pricePredictionService;
@@ -43,7 +42,6 @@ namespace CPL.Controllers
             IViewRenderService viewRenderService,
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
-            ITeamService teamService,
             ITemplateService templateService,
             ISysUserService sysUserService,
             IPricePredictionService pricePredictionService,
@@ -57,7 +55,6 @@ namespace CPL.Controllers
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
             this._unitOfWork = unitOfWork;
-            this._teamService = teamService;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
             this._pricePredictionService = pricePredictionService;

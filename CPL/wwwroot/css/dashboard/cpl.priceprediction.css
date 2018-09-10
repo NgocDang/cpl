@@ -13,3 +13,12 @@
     position: relative;
     font-size: .5rem !important;
 }
+
+@media (max-width: 460px) {
+    .mobile-tab-name {
+        word-break: break-word;
+        width: 100px;
+        line-height: 18px;
+        text-align: center;
+    }
+}

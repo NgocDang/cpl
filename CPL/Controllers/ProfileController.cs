@@ -43,7 +43,6 @@ namespace CPL.Controllers
             ISettingService settingService,
             ISysUserService sysUserService,
             ICoinTransactionService coinTransactionService,
-            ITeamService teamService,
             ILotteryHistoryService lotteryHistoryService,
             ITemplateService templateService)
         {
