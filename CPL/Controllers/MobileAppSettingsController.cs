@@ -1,7 +1,5 @@
 ﻿using CPL.Misc;
 using CPL.Misc.Enums;
-using CPL.Misc.Utils;
-using CPL.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Configuration;
@@ -36,7 +34,7 @@ namespace CPL.Controllers
                 return new JsonResult(
                     new
                     {
-                        code = EnumResponseStatus.WARNING,
+                        code = EnumResponseStatus.ERROR,
                         error_message_key = ex.Message
                     }
                 );

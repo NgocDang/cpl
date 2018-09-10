@@ -2,13 +2,11 @@
 using CPL.Core.Interfaces;
 using CPL.Misc;
 using CPL.Misc.Enums;
-using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 
 namespace CPL.Controllers
@@ -16,22 +14,22 @@ namespace CPL.Controllers
     public class MobileLocaleController : Controller
     {
         private readonly ILangService _langService;
-        private readonly ILangDetailService _langDetailService;
-        private readonly ILangMsgDetailService _langMsgDetailService;
+        private readonly IMobileLangDetailService _mobileLangDetailService;
+        private readonly IMobileLangMsgDetailService _mobileLangMsgDetailService;
         private readonly IMapper _mapper;
         private readonly IHostingEnvironment _appEnvironment;
 
         public MobileLocaleController(
             ILangService langService,
-            ILangDetailService langDetailService,
-            ILangMsgDetailService langMsgDetailService,
+            IMobileLangDetailService mobileLangDetailService,
+            IMobileLangMsgDetailService mobileLangMsgDetailService,
             IMapper mapper,
             IHostingEnvironment appEnvironment
         )
         {
             this._langService = langService;
-            this._langDetailService = langDetailService;
-            this._langMsgDetailService = langMsgDetailService;
+            this._mobileLangDetailService = mobileLangDetailService;
+            this._mobileLangMsgDetailService = mobileLangMsgDetailService;
             this._mapper = mapper;
             this._appEnvironment = appEnvironment;
         }
@@ -66,7 +64,7 @@ namespace CPL.Controllers
                 return new JsonResult(
                     new
                     {
-                        code = EnumResponseStatus.WARNING,
+                        code = EnumResponseStatus.ERROR,
                         error_message_key = ex.Message
                     }
                 );
@@ -89,7 +87,7 @@ namespace CPL.Controllers
                     //string base64ImageRepresentation = "data:image/png;base64," + Convert.ToBase64String(imageArray);
                     //lang.Image = base64ImageRepresentation;
 
-                    lang.LangDetails = _langDetailService.Queryable()
+                    lang.LangDetails = _mobileLangDetailService.Queryable()
                         .Where(x => x.LangId == lang.Id)
                         .Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
                 }
@@ -107,7 +105,7 @@ namespace CPL.Controllers
                 return new JsonResult(
                     new
                     {
-                        code = EnumResponseStatus.WARNING,
+                        code = EnumResponseStatus.ERROR,
                         error_message_key = ex.Message
                     }
                 );
@@ -120,9 +118,9 @@ namespace CPL.Controllers
         {
             try
             {
-                LangMsgDetailViewModel pageDetail = _langMsgDetailService.Queryable()
+                MobileLangMsgDetailViewModel pageDetail = _mobileLangMsgDetailService.Queryable()
                         .Where(x => x.LangId == langId && x.Name == pageName)
-                        .Select(x => Mapper.Map<LangMsgDetailViewModel>(x)).FirstOrDefault();
+                        .Select(x => Mapper.Map<MobileLangMsgDetailViewModel>(x)).FirstOrDefault();
 
                 return new JsonResult(
                     new
@@ -137,7 +135,7 @@ namespace CPL.Controllers
                 return new JsonResult(
                     new
                     {
-                        code = EnumResponseStatus.WARNING,
+                        code = EnumResponseStatus.ERROR,
                         error_message_key = ex.Message
                     }
                 );

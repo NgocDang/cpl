@@ -42,6 +42,8 @@ namespace CPL
                 options.UseSqlServer(Configuration["ConnectionStrings:CPLConnection"]));
 
             services
+                .AddScoped<IRepositoryAsync<MobileLangDetail>, Repository<MobileLangDetail>>()
+                .AddScoped<IRepositoryAsync<MobileLangMsgDetail>, Repository<MobileLangMsgDetail>>()
                 .AddScoped<IRepositoryAsync<LangDetail>, Repository<LangDetail>>()
                 .AddScoped<IRepositoryAsync<Lang>, Repository<Lang>>()
                 .AddScoped<IRepositoryAsync<LangContent>, Repository<LangContent>>()
@@ -81,6 +83,8 @@ namespace CPL
             services
                 .AddTransient<ILangService, LangService>()
                 .AddTransient<ILangDetailService, LangDetailService>()
+                .AddTransient<IMobileLangDetailService, MobileLangDetailService>()
+                .AddTransient<IMobileLangMsgDetailService, MobileLangMsgDetailService>()
                 .AddTransient<ILangContentService, LangContentService>()
                 .AddTransient<ISysUserService, SysUserService>()
                 .AddTransient<ISettingService, SettingService>()
