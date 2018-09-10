@@ -4,7 +4,7 @@
     top: 12px
 }
 
-@media (max-width: 400px){
+@media (max-width: 570px){
     .search-box{
         position: relative !important;
         right:auto !important;

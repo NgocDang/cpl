@@ -2,8 +2,8 @@
 {
     public enum EnumResponseStatus
     {
-        SUCCESS = 0,
-        WARNING = 1,
-        ERROR = 2
+        SUCCESS = 200,
+        WARNING = 400,
+        ERROR = 500
     }
 }

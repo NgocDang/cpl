@@ -32,12 +32,12 @@
                     <div class="tab-content mb-1">
                         @for (var i = 0; i < Model.PricePredictionTabs.Count; i++)
                         {
-                        <div role="tabpanel" class="tab-pane @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-labelledby="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id">
-                            @if (Model.PricePredictionTabs[i].IsActive)
-                            {
-                                @await Component.InvokeAsync("PricePrediction", new PricePredictionViewComponentViewModel { Id = Model.PricePredictionTabs[i].Id, TokenAmount = Model.TokenAmount })
-                            }
-                        </div>
+                            <div role="tabpanel" class="tab-pane @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-labelledby="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id">
+                                @if (Model.PricePredictionTabs[i].IsActive)
+                                {
+                                    @await Component.InvokeAsync("PricePrediction", new PricePredictionViewComponentViewModel { Id = Model.PricePredictionTabs[i].Id, TokenAmount = Model.TokenAmount })
+                                }
+                            </div>
                         }
                     </div>
                 }
@@ -45,6 +45,13 @@
             @await Component.InvokeAsync("PricePredictionHistory", new PricePredictionHistoryViewComponentViewModel { SysUserId = Model.SysUserId })
         </div>
     </div>
+    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")" id="result" />
+    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Price")" id="price" />
+    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Open")" id="open" />
+    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Close")" id="close" />
+    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCPricePredictionChartTitle")" id="btcPricePredictionChartTitle" />
+    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCPricePredictionSeriesName")" id="btcPricePredictionSeriesName" />
+
 </div>
 
 @section scripts
