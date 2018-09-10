@@ -530,6 +530,36 @@ namespace CPL.Controllers
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
             }
         }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoUpdateStandardAffiliateRates(string data)
+        {
+            try
+            {
+                var _data = JsonConvert.DeserializeObject<StandardAffliateDataModel>(data);
+                foreach (var id in _data.Ids)
+                {
+                    var standardAffiliate = _affiliateService.Queryable().FirstOrDefault(x => x.Id == id);
+
+                    if (_data.Tier1DirectRate != null)
+                        standardAffiliate.Tier1DirectRate = _data.Tier1DirectRate.Value;
+                    if (_data.Tier2SaleToTier1Rate != null)
+                        standardAffiliate.Tier2SaleToTier1Rate = _data.Tier2SaleToTier1Rate.Value;
+                    if (_data.Tier3SaleToTier1Rate != null)
+                        standardAffiliate.Tier3SaleToTier1Rate = _data.Tier3SaleToTier1Rate.Value;
+
+                    _affiliateService.Update(standardAffiliate);
+                }
+
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
         #endregion
 
         #region User
