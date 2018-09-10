@@ -40,6 +40,8 @@ namespace CPL.PredictionGameService
         public string FileName { get; set; }
         public int RunningIntervalInMilliseconds { get; set; }
 
+        Resolver Resolver { get; set; }
+
         public void Start()
         {
             // ConfigurationBuilder
@@ -61,19 +63,62 @@ namespace CPL.PredictionGameService
             {
                 IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
                 await scheduler.Start();
+                
+                // Work on pending job since service starts
+                var pricePredictions = Resolver.PricePredictionService.Queryable().OrderBy(x => x.ResultTime)
+                    .Where(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue);
 
-                IJobDetail job = JobBuilder.Create<PricePredictionCreatingJob>()
+                foreach (var pricePrediction in pricePredictions)
+                {
+                    var timeOffset = DateBuilder.DateOf(
+                                            pricePrediction.ResultTime.Hour,
+                                            pricePrediction.ResultTime.Minute,
+                                            pricePrediction.ResultTime.Second,
+                                            pricePrediction.ResultTime.Day,
+                                            pricePrediction.ResultTime.Month,
+                                            pricePrediction.ResultTime.Year);
+
+                    var jobData = new JobDataMap
+                    {
+                        ["Resolver"] = Resolver,
+                        ["ResultTime"] = pricePrediction.ResultTime,
+                        ["ToBeComparedTime"] = pricePrediction.ToBeComparedTime,
+                    };
+
+                    IJobDetail job = JobBuilder.Create<PricePredictionGetBTCPriceJob>()
+                         .UsingJobData(jobData)
+                        .WithIdentity($"PricePredictionUpdateBTCPrice{pricePrediction.Id}", "QuartzGroup")
+                        .WithDescription("Job to update BTC price each interval hours automatically")
+                        .Build();
+
+                    ITrigger trigger = TriggerBuilder.Create()
+                        .WithIdentity($"PricePredictionUpdateBTCPrice{pricePrediction.Id}", "QuartzGroup")
+                        .WithDescription("Job to update BTC price each interval hours automatically")
+                        .StartAt(timeOffset)
+                        .Build();
+
+                    await scheduler.ScheduleJob(job, trigger);
+                }
+
+                // Start the job as usual
+                var creatingJobData = new JobDataMap
+                {
+                    ["Resolver"] = Resolver
+                };
+
+                IJobDetail creatingJob = JobBuilder.Create<PricePredictionCreatingJob>()
+                    .UsingJobData(creatingJobData)
                     .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
                     .WithDescription("Job to create new PricePredictions daily automatically")
                     .Build();
 
-                ITrigger trigger = TriggerBuilder.Create()
+                ITrigger creatingTrigger = TriggerBuilder.Create()
                     .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
                     .WithDescription("Job to create new PricePredictions daily automatically")
                     .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(DailyStartTimeInHour, DailyStartTimeInMinute))
                     .Build();
 
-                await scheduler.ScheduleJob(job, trigger);
+                await scheduler.ScheduleJob(creatingJob, creatingTrigger);
             }));
         }
 
@@ -121,7 +166,7 @@ namespace CPL.PredictionGameService
                 }
                 catch (Exception ex)
                 {
-                    if (ex.InnerException.Message != null)
+                    if (ex.InnerException?.Message != null)
                         Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                     else
                         Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
@@ -143,12 +188,13 @@ namespace CPL.PredictionGameService
         // Initialize
         private void Initialize()
         {
+            Resolver = new Resolver();
+
             FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
-            var resolver = new Resolver();
-            var cplServiceEndpoint = resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
-            DailyStartTimeInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.DailyStartTimeInHour).Value);
-            DailyStartTimeInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.DailyStartTimeInMinute).Value);
+            var cplServiceEndpoint = Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
+            DailyStartTimeInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.DailyStartTimeInHour).Value);
+            DailyStartTimeInMinute = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.DailyStartTimeInMinute).Value);
             BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(cplServiceEndpoint + CPLConstant.BTCCurrentPriceServiceEndpoint));
         }
     }
