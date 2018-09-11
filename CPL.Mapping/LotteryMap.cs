@@ -29,6 +29,11 @@ namespace CPL.Mapping
             builder.Property(t => t.PrizeImage).HasColumnName("PrizeImage");
             builder.Property(t => t.Title).HasColumnName("Title");
             builder.Property(t => t.UnitPrice).HasColumnName("UnitPrice");
+
+            //Relationship
+            builder.HasOne(x => x.LotteryCategory)
+                .WithMany(x => x.Lotteries)
+                .HasForeignKey(x => x.LotteryCategoryId);
         }
     }
 }

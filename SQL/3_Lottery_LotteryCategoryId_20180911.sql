@@ -1,0 +1,4 @@
+USE CPL;
+
+ALTER TABLE Lottery
+ADD LotteryCategoryId int NOT NULL DEFAULT 0;

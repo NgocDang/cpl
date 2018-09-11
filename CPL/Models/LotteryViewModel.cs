@@ -20,6 +20,7 @@ namespace CPL.Models
         public string PrizeImage { get; set; }
         public string Title { get; set; }
         public int UnitPrice { get; set; }
+        public int LotteryCategoryId { get; set; }
 
         public string CreatedDateInString { get; set; }
 

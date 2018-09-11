@@ -20,8 +20,10 @@ namespace CPL.Domain
         public string MobileSlideImage { get; set; }
         public string PrizeImage { get; set; }
         public int UnitPrice { get; set; }
+        public int LotteryCategoryId { get; set; }
 
         public virtual ICollection<LotteryPrize> LotteryPrizes { get; set; }
         public virtual ICollection<LotteryHistory> LotteryHistories { get; set; }
+        public virtual LotteryCategory LotteryCategory { get; set; }
     }
 }
