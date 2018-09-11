@@ -126,7 +126,7 @@ namespace CPL.Controllers
                 return new JsonResult(new
                 {
                     code = EnumResponseStatus.ERROR,
-                    error_message_key = "LoginScreen_Invalid_Email_Password"
+                    error_message_key = "Common_ErrorOccurs"
                 });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
