@@ -113,7 +113,7 @@ namespace CPL.Controllers
         {
             var viewModel = new LotteryTicketPurchaseViewModel();
 
-            viewModel.TicketPrice = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault().UnitPrice;
+            viewModel.TicketPrice = _lotteryService.Queryable().Where(x => !x.IsDeleted).Where(x => x.Id == lotteryId).FirstOrDefault().UnitPrice;
             viewModel.TotalTickets = amount;
             viewModel.TotalPriceOfTickets = viewModel.TotalTickets * viewModel.TicketPrice;
 
@@ -146,11 +146,11 @@ namespace CPL.Controllers
                     if (lotteryRecordList.Count > 0)
                         lastTicketIndex = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).Max(x => x.TicketIndex);
 
-                    var unitPrice = _lotteryService.Queryable().Where(x => x.Id == lotteryId.Value).FirstOrDefault().UnitPrice;
+                    var unitPrice = _lotteryService.Queryable().Where(x => !x.IsDeleted).Where(x => x.Id == lotteryId.Value).FirstOrDefault().UnitPrice;
 
                     var totalPriceOfTickets = viewModel.TotalTickets * unitPrice;
 
-                    var currentLottery = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault();
+                    var currentLottery = _lotteryService.Queryable().Where(x => !x.IsDeleted).Where(x => x.Id == lotteryId).FirstOrDefault();
 
                     if (viewModel.TotalTickets <= currentLottery.Volume - lotteryRecordList.Count())
                     {
@@ -159,7 +159,7 @@ namespace CPL.Controllers
                             /// Example paramsInJson: {"1":{"uint32":"4"},"2":{"address":"0xB43eA1802458754A122d02418Fe71326030C6412"}, "3": {"uint32[]":"[1, 2, 3]"}}
                             var userAddress = user.ETHHDWalletAddress;
                             var ticketIndexList = new List<int>[viewModel.TotalTickets / 10 + 1];
-                            var lotteryPhase = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault().Phase;
+                            var lotteryPhase = _lotteryService.Queryable().Where(x => !x.IsDeleted).Where(x => x.Id == lotteryId).FirstOrDefault().Phase;
 
                             var listIndex = 0;
                             ticketIndexList[listIndex] = new List<int>();

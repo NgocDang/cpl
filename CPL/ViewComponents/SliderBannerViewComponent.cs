@@ -28,6 +28,7 @@ namespace CPL.ViewComponents
             var lotteries = _lotteryService.Query()
                 .Include(x => x.LotteryHistories)
                 .Select()
+                .Where(x => !x.IsDeleted)
                 .Where(x => x.LotteryHistories.Count() < x.Volume && x.Status == (int)EnumLotteryGameStatus.ACTIVE)
                 .OrderByDescending(x => x.CreatedDate);
 

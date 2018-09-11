@@ -63,7 +63,7 @@
                                                 <span id="total-amount">@Model.UnitPrice.ToString("N0")</span> CPL
                                             </div>
                                         </div>
-                                        <div class="row mb-2">
+                                        <div class="row mb-2 @((Model.Status == (int)EnumLotteryGameStatus.DEACTIVATED) ? "d-none" : "")")>
                                             <div class="form-group col-12">
                                                 <input type="number" data-unit-price="@Model.UnitPrice" name="number-of-ticket" class="form-control" id="number-of-ticket" value="1" min="1" max="@(Model.Volume - @Model.LotteryHistories.Count())" required aria-describedby="basic-addon4">
                                                 <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
