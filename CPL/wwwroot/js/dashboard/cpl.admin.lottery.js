@@ -13,7 +13,7 @@
         AdminLottery.bindDoEditLottery();
         AdminLottery.bindDoEditAndPublishLottery();
         AdminLottery.bindDoActivateLottery();
-        AdminLottery.bindDoDeActivateLottery();
+        AdminLottery.bindDoDeactivateLottery();
         AdminLottery.bindDoDeleteLottery();
         AdminLottery.bindViewLottery();
         AdminLottery.bindViewLotteryPrize();
@@ -733,11 +733,11 @@
         });
     },
 
-    bindDoDeActivateLottery: function () {
+    bindDoDeactivateLottery: function () {
         $('#dt-all-lottery-game').on('click', '.btn-deactivate', function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/DoDeActivateLottery/",
+                url: "/Admin/DoDeactivateLottery/",
                 type: "POST",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);

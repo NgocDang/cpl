@@ -1170,15 +1170,15 @@ namespace CPL.Controllers
             }
             else
             {
-                filteredResultsCount = _lotteryService.Queryable().Where(x => !x.IsDeleted)
-                        .Where(x => x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.Title.Contains(searchBy))
+                filteredResultsCount = _lotteryService.Queryable()
+                        .Where(x => !x.IsDeleted && (x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.Title.Contains(searchBy)))
                         .Count();
 
-                totalResultsCount = _lotteryService.Queryable().Where(x => !x.IsDeleted)
-                        .Count();
+                totalResultsCount = _lotteryService.Queryable()
+                        .Count(x => !x.IsDeleted);
 
-                return _lotteryService.Queryable().Where(x => !x.IsDeleted)
-                        .Where(x => x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.Title.Contains(searchBy))
+                return _lotteryService.Queryable()
+                        .Where(x => !x.IsDeleted && (x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.Title.Contains(searchBy)))
                         .Select(x => Mapper.Map<LotteryViewModel>(x))
                         .OrderBy(sortBy, sortDir)
                         .Skip(skip)
@@ -1195,8 +1195,7 @@ namespace CPL.Controllers
             lottery = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
                                                         .Select()
-                                                        .Where(x => !x.IsDeleted)
-                                                        .FirstOrDefault(x => x.Id == id));
+                                                        .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
 
             return PartialView("_ViewLottery", lottery);
         }
@@ -1274,8 +1273,8 @@ namespace CPL.Controllers
                     .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
                     .Count();
 
-                totalResultsCount = _lotteryService.Queryable().Where(x => !x.IsDeleted)
-                        .Count();
+                totalResultsCount = _lotteryService.Queryable()
+                        .Count(x => !x.IsDeleted);
 
                 return _lotteryHistoryService.Query()
                         .Include(x => x.SysUser)
@@ -1297,8 +1296,7 @@ namespace CPL.Controllers
             lottery = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
                                                         .Select()
-                                                        .Where(x => !x.IsDeleted)
-                                                        .FirstOrDefault(x => x.Id == id));
+                                                        .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
 
             return PartialView("_EditLottery", lottery);
         }
@@ -1316,7 +1314,7 @@ namespace CPL.Controllers
         {
             try
             {
-                var lottery = _lotteryService.Queryable().Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == viewModel.Id);
+                var lottery = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == viewModel.Id);
 
                 // lottery game
                 lottery.Title = viewModel.Title;
@@ -1451,7 +1449,7 @@ namespace CPL.Controllers
             try
             {
                 // Lottery game
-                var latestLottery = _lotteryService.Queryable().Where(x => !x.IsDeleted).LastOrDefault();
+                var latestLottery = _lotteryService.Queryable().LastOrDefault(x => !x.IsDeleted);
                 var currentPhase = latestLottery == null ? 0 : latestLottery.Phase;
                 var currentId = latestLottery == null ? 0 : latestLottery.Id;
 
@@ -1562,7 +1560,7 @@ namespace CPL.Controllers
             try
             {
                 // udpate status for lottery game
-                var lottery = _lotteryService.Queryable().Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == id);
+                var lottery = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == id);
                 lottery.IsDeleted = true;
 
                 // refund money for user
@@ -1591,7 +1589,7 @@ namespace CPL.Controllers
         {
             try
             {
-                var lottery = _lotteryService.Queryable().Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == id);
+                var lottery = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == id);
                 lottery.Status = (int)EnumLotteryGameStatus.ACTIVE;
                 _lotteryService.Update(lottery);
                 _unitOfWork.SaveChanges();
@@ -1605,11 +1603,11 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult DoDeActivateLottery(int id)
+        public JsonResult DoDeactivateLottery(int id)
         {
             try
             {
-                var lottery = _lotteryService.Queryable().Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == id);
+                var lottery = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == id);
                 lottery.Status = (int)EnumLotteryGameStatus.DEACTIVATED;
                 _lotteryService.Update(lottery);
                 _unitOfWork.SaveChanges();
