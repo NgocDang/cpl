@@ -1,4 +1,4 @@
-﻿using CPL.Common.CurrenciesPairRateHelper;
+﻿using CPL.Common.CurrencyPairRateHelper;
 using CPL.Common.Enums;
 using CPL.WCF.Misc;
 using System;
@@ -45,7 +45,7 @@ namespace CPL.WCF.ExchangeCurrentPrice
         {
             try
             {
-                var currentPrice = CurrenciesPairRateHelper.GetCurrenciesPairRate(EnumCurrenciesPair.BTCUSDT.ToString());
+                var currentPrice = CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.BTCUSDT.ToString());
                 CPL.WCF.Misc.BTCCurrentPrice.Price = currentPrice.Value;
                 CPL.WCF.Misc.BTCCurrentPrice.Time = currentPrice.Time;
                 return new SetBTCCurrentPriceResult
