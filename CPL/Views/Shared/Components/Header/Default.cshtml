@@ -179,6 +179,9 @@
                         <a class="dropdown-item" asp-controller="History" asp-action="Lottery"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
                     </li>
                     <li>
+                        <a class="dropdown-item" asp-controller="History" asp-action="PricePrediction"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
+                    </li>
+                    <li>
                         <a class="dropdown-item" asp-controller="History" asp-action="Transaction"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transaction")</a>
                     </li>
                 </ul>
