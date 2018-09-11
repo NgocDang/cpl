@@ -183,7 +183,7 @@
                     tickPixelInterval: 150,
                     plotLines: [{
                         label: {
-                            text: 'Open (' + openTime.format("HH:mm") + ')',
+                            text: $("#open").val() + ' (' + openTime.format("HH:mm") + ')',
                             //rotation: 0,
                             zIndex: 4
                         },
@@ -195,7 +195,7 @@
                     },
                     {
                         label: {
-                            text: 'Close (' + closeTime.format("HH:mm") + ')',
+                            text: $("#close").val() + ' (' + closeTime.format("HH:mm") + ')',
                             //rotation: 0,
                             //x: -90,
                             zIndex: 4
@@ -208,7 +208,7 @@
                     },
                     {
                         label: {
-                            text: 'Result (' + resultTime.format("HH:mm") + ')',
+                            text: $("#result").val() + ' (' + resultTime.format("HH:mm") + ')',
                             //rotation: 0,
                             zIndex: 4
                         },
