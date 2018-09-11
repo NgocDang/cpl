@@ -81,9 +81,9 @@
                     }
                 },
                 {
-                    "data": "DesktopSlideImage",
+                    "data": "DesktopTopImage",
                     "render": function (data, type, full, meta) {
-                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "' href='/images/lottery/" + full.desktopSlideImage + "' ><img src='/images/lottery/" + full.desktopSlideImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopSlideImage + "'> </a>";
+                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "' href='/images/lottery/" + full.desktopTopImage + "' ><img src='/images/lottery/" + full.desktopTopImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopTopImage + "'> </a>";
                     },
                     "orderable": false
                 },
@@ -398,14 +398,14 @@
             if (isFormValid) {
                 var formData = new FormData();
 
-                var desktopSlideImage = $("#desktop-slide-image").get(0);
-                if (desktopSlideImage !== undefined && desktopSlideImage.files.length > 0) {
-                    formData.append('DesktopSlideImageFile', desktopSlideImage.files[0]);
+                var desktopTopImage = $("#desktop-slide-image").get(0);
+                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
                 }
 
-                var mobileSlideImage = $("#mobile-slide-image").get(0);
-                if (mobileSlideImage !== undefined && mobileSlideImage.files.length > 0) {
-                    formData.append('MobileSlideImageFile', mobileSlideImage.files[0]);
+                var mobileTopImage = $("#mobile-slide-image").get(0);
+                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
                 }
 
                 var desktopListingImage = $("#desktop-listing-image").get(0);
@@ -478,14 +478,14 @@
             if (isFormValid) {
                 var formData = new FormData();
 
-                var desktopSlideImage = $("#desktop-slide-image").get(0);
-                if (desktopSlideImage !== undefined && desktopSlideImage.files.length > 0) {
-                    formData.append('DesktopSlideImageFile', desktopSlideImage.files[0]);
+                var desktopTopImage = $("#desktop-slide-image").get(0);
+                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
                 }
 
-                var mobileSlideImage = $("#mobile-slide-image").get(0);
-                if (mobileSlideImage !== undefined && mobileSlideImage.files.length > 0) {
-                    formData.append('MobileSlideImageFile', mobileSlideImage.files[0]);
+                var mobileTopImage = $("#mobile-slide-image").get(0);
+                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
                 }
 
                 var desktopListingImage = $("#desktop-listing-image").get(0);
@@ -558,14 +558,14 @@
             if (isFormValid) {
                 var formData = new FormData();
 
-                var desktopSlideImage = $("#desktop-slide-image").get(0);
-                if (desktopSlideImage !== undefined && desktopSlideImage.files.length > 0) {
-                    formData.append('DesktopSlideImageFile', desktopSlideImage.files[0]);
+                var desktopTopImage = $("#desktop-slide-image").get(0);
+                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
                 }
 
-                var mobileSlideImage = $("#mobile-slide-image").get(0);
-                if (mobileSlideImage !== undefined && mobileSlideImage.files.length > 0) {
-                    formData.append('MobileSlideImageFile', mobileSlideImage.files[0]);
+                var mobileTopImage = $("#mobile-slide-image").get(0);
+                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
                 }
 
                 var desktopListingImage = $("#desktop-listing-image").get(0);
@@ -639,14 +639,14 @@
             if (isFormValid) {
                 var formData = new FormData();
 
-                var desktopSlideImage = $("#desktop-slide-image").get(0);
-                if (desktopSlideImage !== undefined && desktopSlideImage.files.length > 0) {
-                    formData.append('DesktopSlideImageFile', desktopSlideImage.files[0]);
+                var desktopTopImage = $("#desktop-slide-image").get(0);
+                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
                 }
 
-                var mobileSlideImage = $("#mobile-slide-image").get(0);
-                if (mobileSlideImage !== undefined && mobileSlideImage.files.length > 0) {
-                    formData.append('MobileSlideImageFile', mobileSlideImage.files[0]);
+                var mobileTopImage = $("#mobile-slide-image").get(0);
+                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
                 }
 
                 var desktopListingImage = $("#desktop-listing-image").get(0);

@@ -1330,21 +1330,21 @@ namespace CPL.Controllers
                 string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
 
                 // Desktop slide image
-                if (viewModel.DesktopSlideImageFile != null)
+                if (viewModel.DesktopTopImageFile != null)
                 {
-                    var desktopSlideImage = $"{lottery.Phase.ToString()}_ds_{timestamp}_{viewModel.DesktopSlideImageFile.FileName}";
-                    var desktopSlideImagePath = Path.Combine(pathLottery, desktopSlideImage);
-                    viewModel.DesktopSlideImageFile.CopyTo(new FileStream(desktopSlideImagePath, FileMode.Create));
-                    lottery.DesktopSlideImage = desktopSlideImage;
+                    var desktopTopImage = $"{lottery.Phase.ToString()}_ds_{timestamp}_{viewModel.DesktopTopImageFile.FileName}";
+                    var desktopTopImagePath = Path.Combine(pathLottery, desktopTopImage);
+                    viewModel.DesktopTopImageFile.CopyTo(new FileStream(desktopTopImagePath, FileMode.Create));
+                    lottery.DesktopTopImage = desktopTopImage;
                 }
 
                 // Mobile slide image
-                if (viewModel.MobileSlideImageFile != null)
+                if (viewModel.MobileTopImageFile != null)
                 {
-                    var mobileSlideImage = $"{lottery.Phase.ToString()}_ms_{timestamp}_{viewModel.MobileSlideImageFile.FileName}";
-                    var mobileSlideImagePath = Path.Combine(pathLottery, mobileSlideImage);
-                    viewModel.MobileSlideImageFile.CopyTo(new FileStream(mobileSlideImagePath, FileMode.Create));
-                    lottery.MobileSlideImage = mobileSlideImage;
+                    var mobileTopImage = $"{lottery.Phase.ToString()}_ms_{timestamp}_{viewModel.MobileTopImageFile.FileName}";
+                    var mobileTopImagePath = Path.Combine(pathLottery, mobileTopImage);
+                    viewModel.MobileTopImageFile.CopyTo(new FileStream(mobileTopImagePath, FileMode.Create));
+                    lottery.MobileTopImage = mobileTopImage;
                 }
 
                 // desktop listing image
@@ -1470,21 +1470,21 @@ namespace CPL.Controllers
                 string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
 
                 // Desktop slide image
-                if (viewModel.DesktopSlideImageFile != null)
+                if (viewModel.DesktopTopImageFile != null)
                 {
-                    var desktopSlideImage = $"{lottery.Phase.ToString()}_ds_{timestamp}_{viewModel.DesktopSlideImageFile.FileName}";
-                    var desktopSlideImagePath = Path.Combine(pathLottery, desktopSlideImage);
-                    viewModel.DesktopSlideImageFile.CopyTo(new FileStream(desktopSlideImagePath, FileMode.Create));
-                    lottery.DesktopSlideImage = desktopSlideImage;
+                    var desktopTopImage = $"{lottery.Phase.ToString()}_ds_{timestamp}_{viewModel.DesktopTopImageFile.FileName}";
+                    var desktopTopImagePath = Path.Combine(pathLottery, desktopTopImage);
+                    viewModel.DesktopTopImageFile.CopyTo(new FileStream(desktopTopImagePath, FileMode.Create));
+                    lottery.DesktopTopImage = desktopTopImage;
                 }
 
                 // Mobile slide image
-                if (viewModel.MobileSlideImageFile != null)
+                if (viewModel.MobileTopImageFile != null)
                 {
-                    var mobileSlideImage = $"{lottery.Phase.ToString()}_ms_{timestamp}_{viewModel.MobileSlideImageFile.FileName}";
-                    var mobileSlideImagePath = Path.Combine(pathLottery, mobileSlideImage);
-                    viewModel.MobileSlideImageFile.CopyTo(new FileStream(mobileSlideImagePath, FileMode.Create));
-                    lottery.MobileSlideImage = mobileSlideImage;
+                    var mobileTopImage = $"{lottery.Phase.ToString()}_ms_{timestamp}_{viewModel.MobileTopImageFile.FileName}";
+                    var mobileTopImagePath = Path.Combine(pathLottery, mobileTopImage);
+                    viewModel.MobileTopImageFile.CopyTo(new FileStream(mobileTopImagePath, FileMode.Create));
+                    lottery.MobileTopImage = mobileTopImage;
                 }
 
                 // desktop listing image
