@@ -37,6 +37,27 @@
     <script src="~/js/dashboard/jquery.validate.min.js"></script>
     <script src="~/js/dashboard/cpl.layout.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.viewcomponent.js" asp-append-version="true"></script>
+
+    <!--  TEST -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125563668-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-125563668-2');
+    </script>
+
+    <!-- PROD -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    @*<script async src="https://www.googletagmanager.com/gtag/js?id=UA-125563668-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-125563668-1');
+    </script>*@
+
     @Html.Hidden("LangId", Context.Session.GetInt32("LangId").Value)
     @RenderSection("scripts", required: false)
 </body>
