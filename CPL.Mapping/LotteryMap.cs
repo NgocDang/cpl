@@ -29,6 +29,7 @@ namespace CPL.Mapping
             builder.Property(t => t.PrizeImage).HasColumnName("PrizeImage");
             builder.Property(t => t.Title).HasColumnName("Title");
             builder.Property(t => t.UnitPrice).HasColumnName("UnitPrice");
+            builder.Property(t => t.IsDeleted).HasColumnName("IsDeleted");
         }
     }
 }
