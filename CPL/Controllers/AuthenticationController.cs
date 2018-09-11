@@ -60,7 +60,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public IActionResult Login(AccountLoginModel viewModel)
+        public IActionResult Login(AccountLoginModel viewModel,, MobileModel mobileModel)
         {
             if (ModelState.IsValid)
             {
@@ -69,24 +69,69 @@ namespace CPL.Controllers
                 if (user != null && BCrypt.Net.BCrypt.Verify(viewModel.Password, user.Password))
                 {
                     if (!string.IsNullOrEmpty(user.ActivateToken))
+                    {
+                        if (mobileModel.IsMobile)
+                        {
+                            return new JsonResult(new
+                            {
+                                code = EnumResponseStatus.WARNING,
+                                error_message_key = "LoginScreen_Inactivating_Account"
+                            });
+                        }
                         return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "EmailInactivatingAccount") });
+                    }
                     else
                     {
                         if (user.TwoFactorAuthenticationEnable)
                         {
+                            if (mobileModel.IsMobile)
+                            {
+                                return new JsonResult(new
+                                {
+                                    code = EnumResponseStatus.WARNING,
+                                    error_message_key = "LoginScreen_Waiting_PIN"
+                                });
+                            }
                             return new JsonResult(new { success = true, twofactor = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WaitingPIN") });
                         }
                         else
                         {
+                            if (mobileModel.IsMobile)
+                            {
+                                return new JsonResult(new
+                                {
+                                    code = EnumResponseStatus.SUCCESS,
+                                    data = Mapper.Map<SysUserViewModel>(user)
+                                });
+                            }
                             HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
                             return viewModel.ReturnUrl == null ? RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Home")}") : RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{viewModel.ReturnUrl}");
                         }
                     }
                 }
+
+                if (mobileModel.IsMobile)
+                {
+                    return new JsonResult(new
+                    {
+                        code = EnumResponseStatus.WARNING,
+                        error_message_key = "LoginScreen_Invalid_Email_Password"
+                    });
+                }
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidEmailPassword") });
+            }
+
+            if (mobileModel.IsMobile)
+            {
+                return new JsonResult(new
+                {
+                    code = EnumResponseStatus.ERROR,
+                    error_message_key = "LoginScreen_Invalid_Email_Password"
+                });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
+
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
