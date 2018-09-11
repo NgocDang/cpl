@@ -13,3 +13,8 @@ INSERT INTO LangDetail VALUES (2, N'Deactivated', N'無効化された')
 INSERT INTO LangDetail VALUES (1, N'Deactivate', N'Deactivate')
 INSERT INTO LangDetail VALUES (2, N'Deactivate', N'無効化する')
 -------------------------------------------------------------------------------------------
+
+-- 20180911-PricePrediction history---
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'CurrencyPair', N'Currency Pair')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'CurrencyPair', N'通貨ペア')
+-------------------------------------------------------------------------------------------
