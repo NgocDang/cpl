@@ -42,6 +42,7 @@ namespace CPL.Controllers
         private readonly ILotteryPrizeService _lotteryPrizeService;
         private readonly IAgencyTokenService _agencyTokenService;
         private readonly IAffiliateService _affiliateService;
+        private readonly IAnalyticService _analyticService;
 
         public AdminController(
             ILangService langService,
@@ -56,6 +57,7 @@ namespace CPL.Controllers
             IPricePredictionService pricePredictionService,
             INewsService newsService,
             IHostingEnvironment hostingEnvironment,
+            IAnalyticService analyticService,
             ILotteryService lotteryService,
             IAffiliateService affiliateService,
             ILotteryPrizeService lotteryPrizeService,
@@ -74,6 +76,7 @@ namespace CPL.Controllers
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._pricePredictionService = pricePredictionService;
             this._newsService = newsService;
+            this._analyticService = analyticService;
             this._affiliateService = affiliateService;
             this._hostingEnvironment = hostingEnvironment;
             this._agencyTokenService = agencyTokenService;
