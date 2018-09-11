@@ -23,7 +23,6 @@ using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Controllers
 {
-
     public class AdminController : Controller
     {
         private readonly ILangService _langService;

@@ -1,4 +1,9 @@
-﻿using CPL.Models;
+﻿using CPL.Common.Enums;
+using CPL.Models;
+using Google.Apis.AnalyticsReporting.v4;
+using Google.Apis.AnalyticsReporting.v4.Data;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,36 +23,64 @@ namespace CPL.Misc
 {
     public interface IAnalyticService
     {
-        Task<int> GetPageView(DateTime from, DateTime to);
-        Task<double> GetBounceRate(DateTime from, DateTime to);
-        Task<List<DeviceViewModel>> GetDevices(DateTime from, DateTime to);
+        Task<int> GetPageView(DateTime start, DateTime end);
+        Task<double> GetBounceRate(DateTime start, DateTime end);
+        Task<List<DeviceViewModel>> GetDevices(DateTime start, DateTime end);
     }
 
     public class AnalyticService : IAnalyticService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IHostingEnvironment _env;
+        private readonly AnalyticsReportingService _reportingService;
 
         public AnalyticService(IHostingEnvironment env,
             IServiceProvider serviceProvider)
         {
             _env = env;
             _serviceProvider = serviceProvider;
+
+
+            // Initialize google analytics
+            string[] scopes = { AnalyticsReportingService.Scope.AnalyticsReadonly };
+            _reportingService = new AnalyticsReportingService(
+                new BaseClientService.Initializer
+                {
+                    HttpClientInitializer = GoogleCredential.FromJson(CPLConstant.Analytic.Credential).CreateScoped(scopes)
+                });
         }
 
-        public Task<double> GetBounceRate(DateTime from, DateTime to)
+        public Task<double> GetBounceRate(DateTime start, DateTime end)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<DeviceViewModel>> GetDevices(DateTime from, DateTime to)
+        public Task<List<DeviceViewModel>> GetDevices(DateTime start, DateTime end)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> GetPageView(DateTime from, DateTime to)
+        public Task<int> GetPageView(DateTime start, DateTime end)
         {
-            throw new NotImplementedException();
+            var dateRange = new DateRange
+            {
+                StartDate = start.ToString("yyyy-MM-dd"),
+                EndDate = end.ToString("yyyy-MM-dd")
+            };
+            var sessions = new Metric
+            {
+                Expression = "ga:pageviews",
+                Alias = "Sessions"
+            };
+            var date = new Dimension { Name = "ga:date" };
+
+            var reportRequest = new ReportRequest
+            {
+                DateRanges = new List<DateRange> { dateRange },
+                Dimensions = new List<Dimension> { date },
+                Metrics = new List<Metric> { sessions },
+                ViewId = "" // your view id
+            };
         }
     }
 }
