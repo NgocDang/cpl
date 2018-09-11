@@ -31,5 +31,8 @@ namespace CPL.Models
         public string BonusInString { get; set; }
         public string ResultPriceInString { get; set; }
         public string ResultTimeInString { get; set; }
+
+        public string CurrencyPair { get; set; }
+        public string CurrencyPairInString { get; set; }
     }
 }

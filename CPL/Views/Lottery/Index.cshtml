@@ -63,15 +63,18 @@
                                                 <span id="total-amount">@Model.UnitPrice.ToString("N0")</span> CPL
                                             </div>
                                         </div>
-                                        <div class="row mb-2">
-                                            <div class="form-group col-12">
-                                                <input type="number" data-unit-price="@Model.UnitPrice" name="number-of-ticket" class="form-control" id="number-of-ticket" value="1" min="1" max="@(Model.Volume - @Model.LotteryHistories.Count())" required aria-describedby="basic-addon4">
-                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
+                                        @if (Model.Status != (int)EnumLotteryGameStatus.DEACTIVATED)
+                                        {
+                                            <div class="row mb-2" )>
+                                                <div class="form-group col-12">
+                                                    <input type="number" data-unit-price="@Model.UnitPrice" name="number-of-ticket" class="form-control" id="number-of-ticket" value="1" min="1" max="@(Model.Volume - @Model.LotteryHistories.Count())" required aria-describedby="basic-addon4">
+                                                    <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-block font-weight-bold" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                                                </div>
                                             </div>
-                                            <div class="col-12">
-                                                <button type="button" class="btn btn-primary btn-block font-weight-bold" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
-                                            </div>
-                                        </div>
+                                        }
                                         <div class="row mb-1">
                                             <div class="col-12">
                                                 <hr />

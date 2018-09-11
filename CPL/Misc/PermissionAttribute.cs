@@ -37,19 +37,19 @@ namespace CPL.Misc
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             // If mobile 
-            if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["isMobile"].ToString()) 
-                && bool.Parse(context.HttpContext.Request.Query["isMobile"].ToString()))
+            if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["IsMobile"].ToString()) 
+                && bool.Parse(context.HttpContext.Request.Query["IsMobile"].ToString()))
             {
-                if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["mobileUserId"].ToString()))
+                if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["MobileUserId"].ToString()))
                 {
-                    var mobileUserId = int.Parse(context.HttpContext.Request.Query["mobileUserId"].ToString());
+                    var mobileUserId = int.Parse(context.HttpContext.Request.Query["MobileUserId"].ToString());
                     var sysUserService = (ISysUserService)context.HttpContext.RequestServices.GetService(typeof(ISysUserService));
                     context.HttpContext.Session.SetObjectAsJson("CurrentUser", sysUserService.Queryable().FirstOrDefault(x => x.Id == mobileUserId));
                 }
 
-                if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["mobileLangId"].ToString()))
+                if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["MobileLangId"].ToString()))
                 {
-                    var langId = int.Parse(context.HttpContext.Request.Query["mobileLangId"].ToString());
+                    var langId = int.Parse(context.HttpContext.Request.Query["MobileLangId"].ToString());
                     context.HttpContext.Session.SetInt32("LangId", langId);
                 }
             } else
