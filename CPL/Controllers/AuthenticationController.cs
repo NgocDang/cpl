@@ -88,8 +88,9 @@ namespace CPL.Controllers
                             {
                                 return new JsonResult(new
                                 {
-                                    code = EnumResponseStatus.WARNING,
-                                    error_message_key = "LoginScreen_Waiting_PIN"
+                                    code = EnumResponseStatus.SUCCESS,
+                                    two_factor = 1,
+                                    data = Mapper.Map<SysUserViewModel>(user)
                                 });
                             }
                             return new JsonResult(new { success = true, twofactor = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WaitingPIN") });
@@ -101,6 +102,7 @@ namespace CPL.Controllers
                                 return new JsonResult(new
                                 {
                                     code = EnumResponseStatus.SUCCESS,
+                                    two_factor = 0,
                                     data = Mapper.Map<SysUserViewModel>(user)
                                 });
                             }
