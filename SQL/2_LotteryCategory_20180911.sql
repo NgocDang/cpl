@@ -15,7 +15,7 @@ GO
 CREATE TABLE dbo.LotteryCategory
 	(
 	Id int NOT NULL IDENTITY (1, 1),
-	Value nvarchar(100) NOT NULL,
+	Name nvarchar(100) NOT NULL,
 	Description ntext NULL
 	)  ON [PRIMARY]
 	 TEXTIMAGE_ON [PRIMARY]

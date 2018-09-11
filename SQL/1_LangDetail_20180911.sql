@@ -18,3 +18,14 @@ INSERT INTO LangDetail VALUES (2, N'Deactivate', N'無効化する')
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'CurrencyPair', N'Currency Pair')
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'CurrencyPair', N'通貨ペア')
 -------------------------------------------------------------------------------------------
+
+-- 20180911-Lottery---
+INSERT INTO LangDetail VALUES (1, N'LotteryCategory', N'Lottery Category');
+INSERT INTO LangDetail VALUES (2, N'LotteryCategory', N'宝くじカテゴリ');
+
+INSERT INTO LangDetail VALUES (1, N'LotteryCategoryRequired', N'Please select lottery category');
+INSERT INTO LangDetail VALUES (2, N'LotteryCategoryRequired', N'抽選カテゴリを選択してください');
+
+INSERT INTO LangDetail VALUES (1, N'LotteryCategoryNameRequired', N'Please fill in lottery category name');
+INSERT INTO LangDetail VALUES (2, N'LotteryCategoryNameRequired', N'宝くじカテゴリ名を記入してください');
+

@@ -42,6 +42,7 @@ namespace CPL.Controllers
         private readonly ILotteryPrizeService _lotteryPrizeService;
         private readonly IAgencyTokenService _agencyTokenService;
         private readonly IAffiliateService _affiliateService;
+        private readonly ILotteryCategoryService _lotteryCategoryService;
 
         public AdminController(
             ILangService langService,
@@ -59,6 +60,7 @@ namespace CPL.Controllers
             ILotteryService lotteryService,
             IAffiliateService affiliateService,
             ILotteryPrizeService lotteryPrizeService,
+            ILotteryCategoryService lotteryCategoryService,
             IAgencyTokenService agencyTokenService)
         {
             this._langService = langService;
@@ -77,6 +79,7 @@ namespace CPL.Controllers
             this._affiliateService = affiliateService;
             this._hostingEnvironment = hostingEnvironment;
             this._agencyTokenService = agencyTokenService;
+            this._lotteryCategoryService = lotteryCategoryService;
         }
 
         [Permission(EnumRole.Admin)]
@@ -1196,6 +1199,7 @@ namespace CPL.Controllers
                                                         .Include(x => x.LotteryPrizes)
                                                         .Select()
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
+            lottery.LotteryCategory = _lotteryCategoryService.Queryable().Where(x => x.Id == lottery.LotteryCategoryId).FirstOrDefault().Name;
 
             return PartialView("_ViewLottery", lottery);
         }
@@ -1297,6 +1301,7 @@ namespace CPL.Controllers
                                                         .Include(x => x.LotteryPrizes)
                                                         .Select()
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
+            lottery.LotteryCategories = _lotteryCategoryService.Query().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
 
             return PartialView("_EditLottery", lottery);
         }
@@ -1305,7 +1310,15 @@ namespace CPL.Controllers
         public IActionResult AddLottery()
         {
             var lottery = new LotteryViewModel();
+            lottery.LotteryCategories = _lotteryCategoryService.Query().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
             return PartialView("_EditLottery", lottery);
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult AddLotteryCategory()
+        {
+            var lotteryCategory = new LotteryCategoryViewModel();
+            return PartialView("_EditLotteryCategory", lotteryCategory);
         }
 
         [HttpPost]
@@ -1320,6 +1333,7 @@ namespace CPL.Controllers
                 lottery.Title = viewModel.Title;
                 lottery.Volume = viewModel.Volume;
                 lottery.UnitPrice = viewModel.UnitPrice;
+                lottery.LotteryCategoryId = viewModel.LotteryCategoryId;
 
                 if (!viewModel.IsPublished)
                     lottery.Status = (int)EnumLotteryGameStatus.PENDING;
@@ -1329,19 +1343,19 @@ namespace CPL.Controllers
                 var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
                 string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
 
-                // Desktop slide image
+                // Desktop top image
                 if (viewModel.DesktopTopImageFile != null)
                 {
-                    var desktopTopImage = $"{lottery.Phase.ToString()}_ds_{timestamp}_{viewModel.DesktopTopImageFile.FileName}";
+                    var desktopTopImage = $"{lottery.Phase.ToString()}_dt_{timestamp}_{viewModel.DesktopTopImageFile.FileName}";
                     var desktopTopImagePath = Path.Combine(pathLottery, desktopTopImage);
                     viewModel.DesktopTopImageFile.CopyTo(new FileStream(desktopTopImagePath, FileMode.Create));
                     lottery.DesktopTopImage = desktopTopImage;
                 }
 
-                // Mobile slide image
+                // Mobile top image
                 if (viewModel.MobileTopImageFile != null)
                 {
-                    var mobileTopImage = $"{lottery.Phase.ToString()}_ms_{timestamp}_{viewModel.MobileTopImageFile.FileName}";
+                    var mobileTopImage = $"{lottery.Phase.ToString()}_mt_{timestamp}_{viewModel.MobileTopImageFile.FileName}";
                     var mobileTopImagePath = Path.Combine(pathLottery, mobileTopImage);
                     viewModel.MobileTopImageFile.CopyTo(new FileStream(mobileTopImagePath, FileMode.Create));
                     lottery.MobileTopImage = mobileTopImage;
@@ -1460,6 +1474,7 @@ namespace CPL.Controllers
                 lottery.UnitPrice = viewModel.UnitPrice;
                 lottery.Phase = currentPhase + 1;
                 lottery.CreatedDate = DateTime.Now;
+                lottery.LotteryCategoryId = viewModel.LotteryCategoryId;
 
                 if (!viewModel.IsPublished)
                     lottery.Status = (int)EnumLotteryGameStatus.PENDING;
@@ -1472,7 +1487,7 @@ namespace CPL.Controllers
                 // Desktop slide image
                 if (viewModel.DesktopTopImageFile != null)
                 {
-                    var desktopTopImage = $"{lottery.Phase.ToString()}_ds_{timestamp}_{viewModel.DesktopTopImageFile.FileName}";
+                    var desktopTopImage = $"{lottery.Phase.ToString()}_dt_{timestamp}_{viewModel.DesktopTopImageFile.FileName}";
                     var desktopTopImagePath = Path.Combine(pathLottery, desktopTopImage);
                     viewModel.DesktopTopImageFile.CopyTo(new FileStream(desktopTopImagePath, FileMode.Create));
                     lottery.DesktopTopImage = desktopTopImage;
@@ -1481,7 +1496,7 @@ namespace CPL.Controllers
                 // Mobile slide image
                 if (viewModel.MobileTopImageFile != null)
                 {
-                    var mobileTopImage = $"{lottery.Phase.ToString()}_ms_{timestamp}_{viewModel.MobileTopImageFile.FileName}";
+                    var mobileTopImage = $"{lottery.Phase.ToString()}_mt_{timestamp}_{viewModel.MobileTopImageFile.FileName}";
                     var mobileTopImagePath = Path.Combine(pathLottery, mobileTopImage);
                     viewModel.MobileTopImageFile.CopyTo(new FileStream(mobileTopImagePath, FileMode.Create));
                     lottery.MobileTopImage = mobileTopImage;

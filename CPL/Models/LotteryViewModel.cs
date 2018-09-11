@@ -21,6 +21,7 @@ namespace CPL.Models
         public string Title { get; set; }
         public int UnitPrice { get; set; }
         public int LotteryCategoryId { get; set; }
+        public string LotteryCategory { get; set; }
 
         public string CreatedDateInString { get; set; }
 
@@ -34,6 +35,7 @@ namespace CPL.Models
         public List<LotteryHistoryViewModel> LotteryHistories { get; set; }
         public List<LotteryPrizeViewModel> LotteryPrizes { get; set; }
         public List<LotteryDetailViewModel> LotteryDetails { get; set; }
+        public List<LotteryCategoryViewModel> LotteryCategories { get; set; }
     }
 
     public class Prizes

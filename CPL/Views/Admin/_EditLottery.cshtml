@@ -12,6 +12,23 @@
                     <div class="row">
                         <div class="col-12">
                             <fieldset class="form-group">
+                                <label for="lottery-category" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryCategory")</label>
+                                <select data-value="@Model.LotteryCategoryId" name="lottery-category" id="lottery-category" class="selectpicker" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                    @foreach (var category in Model.LotteryCategories)
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                    <option value="0">Create New</option>
+                                </select>
+                                <div class="invalid-feedback" id="category-msg">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryCategoryRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <fieldset class="form-group">
                                 <label for="title" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</label>
                                 <input name="title" id="title" type="text" value="@Model.Title" class="form-control" required autofocus />
                                 <div class="invalid-feedback">
