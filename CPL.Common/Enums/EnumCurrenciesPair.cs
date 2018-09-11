@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Common.Enums
 {
-    public enum EnumCurrenciesPair
+    public enum EnumCurrencyPair
     {
         [Display(Name = "ETH/BTC")]
         ETHBTC,

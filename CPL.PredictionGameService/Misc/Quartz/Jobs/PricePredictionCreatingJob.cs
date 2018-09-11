@@ -44,7 +44,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 var newPricePredictionRecord = new PricePrediction
                 {
                     Name = String.Format("Price Prediction #{0} {1}", (i + 1), startTime.ToString()),
-                    Coinbase = EnumCurrenciesPair.BTCUSDT.ToString(),
+                    Coinbase = EnumCurrencyPair.BTCUSDT.ToString(),
                     OpenBettingTime = startTime,
                     CloseBettingTime = startTime.AddHours((i + 1) * PricePredictionBettingIntervalInHour),
                     ToBeComparedTime = startTime.AddHours((i + 1) * PricePredictionBettingIntervalInHour).AddHours(HoldingIntervalInHour),

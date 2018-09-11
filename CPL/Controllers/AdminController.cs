@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CPL.Common.CurrenciesPairRateHelper;
+using CPL.Common.CurrencyPairRateHelper;
 using CPL.Common.Enums;
 using CPL.Common.Misc;
 using CPL.Core.Interfaces;
@@ -575,7 +575,7 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
             var viewModel = Mapper.Map<UserDashboardAdminViewModel>(user);
-            decimal coinRate = CurrenciesPairRateHelper.GetCurrenciesPairRate(EnumCurrenciesPair.ETHBTC.ToString()).Value;
+            decimal coinRate = CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value;
             var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value;
             viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
             return View(viewModel);

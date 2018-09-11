@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using CPL.Common.CurrenciesPairRateHelper;
+using CPL.Common.CurrencyPairRateHelper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Misc;
@@ -38,14 +38,6 @@ namespace CPL.Controllers
             this._coinTransactionService = coinTransactionService;
         }
 
-        [Permission(EnumRole.User)]
-        public IActionResult Game()
-        {
-            var viewModel = new GameHistoryIndexViewModel();
-            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
-            return View(viewModel);
-        }
-
         #region Lottery History
 
         [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
@@ -57,14 +49,6 @@ namespace CPL.Controllers
                 LotteryId = lotteryId,
                 SysUserId = sysUserId
             };
-            return View(viewModel);
-        }
-
-        [Permission(EnumRole.User, EnumEntity.PricePredictionHistory, EnumAction.Read)]
-        public IActionResult PricePrediction()
-        {
-            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            var viewModel = new PricePredictionHistoryIndexViewModel { SysUserId = user.Id};
             return View(viewModel);
         }
 
@@ -215,6 +199,15 @@ namespace CPL.Controllers
         #endregion
 
         #region Game History
+
+        [Permission(EnumRole.User)]
+        public IActionResult Game()
+        {
+            var viewModel = new GameHistoryIndexViewModel();
+            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
+            return View(viewModel);
+        }
+
         [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
         public JsonResult SearchGameHistory(DataTableAjaxPostModel viewModel, int sysUserId)
         {
@@ -546,6 +539,14 @@ namespace CPL.Controllers
 
         #region Price Prediction History
 
+        [Permission(EnumRole.User)]
+        public IActionResult PricePrediction()
+        {
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            var viewModel = new PricePredictionHistoryIndexViewModel { SysUserId = user.Id };
+            return View(viewModel);
+        }
+
         [Permission(EnumRole.User, EnumEntity.PricePredictionHistory, EnumAction.Read)]
         public JsonResult SearchPricePredictionHistory(DataTableAjaxPostModel viewModel, int? sysUserId)
         {
@@ -599,7 +600,7 @@ namespace CPL.Controllers
                                               ToBeComparedPrice = x.PricePrediction.ToBeComparedPrice,
                                               ToBeComparedPriceInString = $"{x.PricePrediction.ToBeComparedPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
                                               CurrencyPair = x.PricePrediction.Coinbase,
-                                              CurrencyPairInString = EnumHelper<EnumCurrenciesPair>.GetDisplayValue((EnumCurrenciesPair)Enum.Parse(typeof(EnumCurrenciesPair),x.PricePrediction.Coinbase)),
+                                              CurrencyPairInString = EnumHelper<EnumCurrencyPair>.GetDisplayValue((EnumCurrencyPair)Enum.Parse(typeof(EnumCurrencyPair),x.PricePrediction.Coinbase)),
                                               ResultPrice = x.PricePrediction.ResultPrice,
                                               ResultPriceInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
                                               ResultTime = x.PricePrediction.ResultTime,
@@ -647,7 +648,7 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
             var viewModel = Mapper.Map<GameHistoryViewModel>(user);
-            decimal coinRate = CurrenciesPairRateHelper.GetCurrenciesPairRate(EnumCurrenciesPair.ETHBTC.ToString()).Value;
+            decimal coinRate = CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value;
             var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value;
             viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
 
