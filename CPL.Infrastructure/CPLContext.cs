@@ -38,6 +38,7 @@ namespace CPL.Infrastructure
         public DbSet<AgencyToken> AgencyToken { get; set; }
         public DbSet<Affiliate> Affiliate { get; set; }
         public DbSet<LangContent> LangContent { get; set; }
+        public DbSet<LotteryCategory> LotteryCategory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,6 +60,7 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new LotteryMap());
             modelBuilder.ApplyConfiguration(new LotteryPrizeMap());
             modelBuilder.ApplyConfiguration(new LotteryHistoryMap());
+            modelBuilder.ApplyConfiguration(new LotteryCategoryMap());
 
             modelBuilder.ApplyConfiguration(new BTCPriceMap());
 
