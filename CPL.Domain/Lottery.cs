@@ -25,5 +25,6 @@ namespace CPL.Domain
         public virtual ICollection<LotteryPrize> LotteryPrizes { get; set; }
         public virtual ICollection<LotteryHistory> LotteryHistories { get; set; }
         public virtual LotteryCategory LotteryCategory { get; set; }
+        public virtual ICollection<LotteryDetail> LotteryDetails { get; set; }
     }
 }

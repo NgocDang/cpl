@@ -33,6 +33,7 @@ namespace CPL.Models
 
         public List<LotteryHistoryViewModel> LotteryHistories { get; set; }
         public List<LotteryPrizeViewModel> LotteryPrizes { get; set; }
+        public List<LotteryDetailViewModel> LotteryDetails { get; set; }
     }
 
     public class Prizes
