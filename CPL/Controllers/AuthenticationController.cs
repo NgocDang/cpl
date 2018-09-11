@@ -60,7 +60,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public IActionResult Login(AccountLoginModel viewModel,, MobileModel mobileModel)
+        public IActionResult Login(AccountLoginModel viewModel, MobileModel mobileModel)
         {
             if (ModelState.IsValid)
             {
