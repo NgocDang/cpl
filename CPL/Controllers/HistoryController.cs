@@ -60,6 +60,14 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
+        [Permission(EnumRole.User, EnumEntity.PricePredictionHistory, EnumAction.Read)]
+        public IActionResult PricePrediction()
+        {
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            var viewModel = new PricePredictionHistoryIndexViewModel { SysUserId = user.Id};
+            return View(viewModel);
+        }
+
         [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
         public JsonResult SearchLotteryHistory(DataTableAjaxPostModel viewModel, DateTime? createdDate, int? lotteryId, int sysUserId)
         {
@@ -590,10 +598,12 @@ namespace CPL.Controllers
                                           {
                                               ToBeComparedPrice = x.PricePrediction.ToBeComparedPrice,
                                               ToBeComparedPriceInString = $"{x.PricePrediction.ToBeComparedPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
+                                              CurrencyPair = x.PricePrediction.Coinbase,
+                                              CurrencyPairInString = EnumHelper<EnumCurrenciesPair>.GetDisplayValue((EnumCurrenciesPair)Enum.Parse(typeof(EnumCurrenciesPair),x.PricePrediction.Coinbase)),
                                               ResultPrice = x.PricePrediction.ResultPrice,
                                               ResultPriceInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
                                               ResultTime = x.PricePrediction.ResultTime,
-                                              ResultTimeInString = x.PricePrediction.ResultTime.ToString(),
+                                              ResultTimeInString = x.PricePrediction.ResultTime.ToString("yyyy/MM/dd hh:mm:ss"),
                                               Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
                                               Status = x.UpdatedDate.HasValue == true ? EnumPricePredictionGameStatus.COMPLETED.ToString() : EnumPricePredictionGameStatus.ACTIVE.ToString(),
                                               PurcharseTime = x.CreatedDate,
@@ -620,6 +630,7 @@ namespace CPL.Controllers
                                                     || x.AmountInString.ToLower().Contains(searchBy)
                                                     || x.BonusInString.ToLower().Contains(searchBy)
                                                     || x.ResultPriceInString.ToLower().Contains(searchBy)
+                                                    || x.CurrencyPairInString.ToLower().Contains(searchBy)
                                                     || x.ResultTimeInString.ToLower().Contains(searchBy));
 
                 filteredResultsCount = pricePredictionHistory.Count();
