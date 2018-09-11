@@ -21,6 +21,7 @@ namespace CPL.Domain
         public string PrizeImage { get; set; }
         public int UnitPrice { get; set; }
         public int LotteryCategoryId { get; set; }
+        public bool IsDeleted { get; set; }
 
         public virtual ICollection<LotteryPrize> LotteryPrizes { get; set; }
         public virtual ICollection<LotteryHistory> LotteryHistories { get; set; }

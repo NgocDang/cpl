@@ -28,7 +28,8 @@ namespace CPL.Common.Enums
     {
         PENDING = 1,
         ACTIVE = 2,
-        COMPLETED = 3
+        COMPLETED = 3,
+        DEACTIVATED = 4,
     }
 
     public enum EnumPricePredictionGameStatus
