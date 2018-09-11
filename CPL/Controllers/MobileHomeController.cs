@@ -14,7 +14,6 @@ namespace CPL.Controllers
     public class MobileHomeController : Controller
     {
         private readonly IMobileLangDetailService _mobileLangDetailService;
-        private readonly IMobileLangMsgDetailService _mobileLangMsgDetailService;
         private readonly IMapper _mapper;
         private readonly IHostingEnvironment _appEnvironment;
         private readonly INewsService _newsService;
