@@ -67,6 +67,7 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<Agency>, Repository<Agency>>()
                 .AddScoped<IRepositoryAsync<AgencyToken>, Repository<AgencyToken>>()
                 .AddScoped<IRepositoryAsync<Affiliate>, Repository<Affiliate>>()
+                .AddScoped<IRepositoryAsync<LotteryCategory>, Repository<LotteryCategory>>()
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
 
@@ -108,7 +109,8 @@ namespace CPL
                 .AddTransient<IAgencyTokenService, AgencyTokenService>()
                 .AddTransient<IAffiliateService, AffiliateService>()
                 .AddTransient<INewsService, NewsService>()
-                .AddTransient<IContactService, ContactService>();
+                .AddTransient<IContactService, ContactService>()
+                .AddTransient<ILotteryCategoryService, LotteryCategoryService>();
 
             services.AddSignalR();
         }

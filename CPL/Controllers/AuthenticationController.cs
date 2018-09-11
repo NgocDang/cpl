@@ -167,7 +167,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public IActionResult DoRegister(AccountRegistrationModel viewModel)
+        public IActionResult DoRegister(AccountRegistrationModel viewModel, MobileModel mobileModel)
         {
             // Ensure we have a valid viewModel to work with
             if (ModelState.IsValid)

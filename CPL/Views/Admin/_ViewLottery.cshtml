@@ -36,18 +36,18 @@
                         <div class="row">
                             <div class="col-sm-6 col- col-12">
                                 <p class="text-muted mb-3px font-size-13px">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopSlideImage")
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopTopImage")
                                 </p>
                                 <p>
-                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model.DesktopSlideImage"><img src="/images/lottery/@Model.DesktopSlideImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model.DesktopSlideImage"></a>
+                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model.DesktopTopImage"><img src="/images/lottery/@Model.DesktopTopImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model.DesktopTopImage"></a>
                                 </p>
                             </div>
                             <div class="col-sm-6 col-12">
                                 <p class="text-muted mb-3px font-size-13px">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileSlideImage")
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileTopImage")
                                 </p>
                                 <p>
-                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model.MobileSlideImage"><img src="/images/lottery/@Model.MobileSlideImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model?.MobileSlideImage"></a>
+                                    <a data-toggle="lightbox" data-gallery="document-@Model.Id" href="/images/lottery/@Model.MobileTopImage"><img src="/images/lottery/@Model.MobileTopImage" class="img-thumbnail img-fluid border-0 w-30" alt="document-@Model?.MobileTopImage"></a>
                                 </p>
                             </div>
                         </div>

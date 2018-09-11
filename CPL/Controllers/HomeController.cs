@@ -60,7 +60,7 @@ namespace CPL.Controllers
             var lotteries = _lotteryService.Query()
                 .Include(x => x.LotteryHistories)
                 .Select()
-                .Where(x => x.LotteryHistories.Count() < x.Volume && x.Status == (int)EnumLotteryGameStatus.ACTIVE)
+                .Where(x => !x.IsDeleted && (x.LotteryHistories.Count() < x.Volume && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
                 .OrderByDescending(x => x.CreatedDate);
 
             var viewModel = new HomeViewModel();

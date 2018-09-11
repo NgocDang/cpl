@@ -9,10 +9,11 @@ namespace CPL.Models
     {
         public int Id { get; set; }
         public int Volume { get; set; }
-        public string DesktopSlideImage { get; set; }
-        public string MobileSlideImage { get; set; }
+        public string DesktopTopImage { get; set; }
+        public string MobileTopImage { get; set; }
         public string PrizeImage { get; set; }
         public string Title { get; set; }
+        public int Status { get; set; }
         public List<LotteryHistoryViewModel> LotteryHistories { get; set; }
 
         public int? SysUserId { get; set; }
