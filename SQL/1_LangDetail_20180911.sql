@@ -18,3 +18,8 @@ INSERT INTO LangDetail VALUES (2, N'Deactivate', N'無効化する')
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'CurrencyPair', N'Currency Pair')
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'CurrencyPair', N'通貨ペア')
 -------------------------------------------------------------------------------------------
+
+-- 20180911-GameManagement---
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'Summary', N'Summary')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'Summary', N'概要')
+-------------------------------------------------------------------------------------------
