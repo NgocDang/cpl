@@ -1,1 +1,0 @@
-update LangDetail set value = N'Up' where name = N'Up' and langid = 1
