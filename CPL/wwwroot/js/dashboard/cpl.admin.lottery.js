@@ -18,6 +18,7 @@
         AdminLottery.bindViewLottery();
         AdminLottery.bindViewLotteryPrize();
         AdminLottery.bindAddLotteryCategory();
+        AdminLottery.bindDoAddLotteryCategory();
     },
     loadLotteryDataTable: function () {
         return $('#dt-all-lottery-game').DataTable({
@@ -50,7 +51,7 @@
                             return "<p class='text-sm-center'><span class='badge badge-info'>" + $("#pending").val() + "</span></p>";
                         }
                         else if (full.status == 2) {
-                            return "<p class='text-sm-center'><span class='badge badge-success'>" + $("#active").val() + "</span></p>"; 
+                            return "<p class='text-sm-center'><span class='badge badge-success'>" + $("#active").val() + "</span></p>";
                         }
                         else if (full.status == 3) {
                             return "<p class='text-sm-center'><span class='badge badge-secondary'>" + $("#completed").val() + "</span></p>";
@@ -149,7 +150,7 @@
                     "orderable": false
                 },
                 {
-                     "data": "Email",
+                    "data": "Email",
                     "render": function (data, type, full, meta) {
                         return full.email;
                     },
@@ -831,9 +832,9 @@
     },
 
     bindAddLotteryCategory: function () {
-        $("#modal").on("click", "#lottery-category", function () {
+        $("#modal").on("change", "#lottery-category", function () {
             var _this = this;
-            if ($(_this).val() == "0") {
+            if ($(_this).val() === "0") {
                 $.ajax({
                     url: "/Admin/AddLotteryCategory",
                     type: "GET",
@@ -841,7 +842,9 @@
                         $(_this).attr("disabled", true);
                     },
                     success: function (data) {
-                        $("#modal").html(data);
+                        $("#edit-lottery").modal("hide");
+                        $("#modal #modal-lottery-category").html(data);
+                        $("#edit-lottery-category").modal("show");
                     },
                     complete: function (data) {
                         $(_this).attr("disabled", false);
@@ -851,7 +854,44 @@
             return false;
         });
     },
-}
+
+    bindDoAddLotteryCategory: function () {
+        $("#modal").on("click", "#edit-lottery-category .btn-do-add", function () {
+            var isFormValid = $("#form-edit-lottery-category")[0].checkValidity();
+            $("#form-edit-lottery-category").addClass('was-validated');
+            var _this = this;
+
+            if (isFormValid) {
+                $.ajax({
+                    url: "/Admin/DoAddLotteryCategory",
+                    type: "POST",
+                    data: $("#form-edit-lottery-category").serialize(),
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message, 'Success!');
+                            $("#edit-lottery-category").modal("hide");
+                            $("#modal #modal-lottery-category").html();
+                            $("#edit-lottery").modal("show");
+                            $("#prize-required").removeClass("d-block");
+                            $("#modal #lottery-category").append($("<option selected='selected'></option>").val(data.id).html(data.name));
+                            $("#modal #lottery-category").selectpicker('refresh');
+                        }
+                        else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                    }
+                });
+            };
+            return false;
+        });
+    },
+};
 
 $(document).ready(function () {
     AdminLottery.init();

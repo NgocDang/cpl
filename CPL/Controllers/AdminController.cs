@@ -1323,6 +1323,37 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
+        public JsonResult DoAddLotteryCategory(LotteryCategoryViewModel viewModel)
+        {
+            try
+            {
+                var lotteryCategory = _lotteryCategoryService.Queryable().Where(x => x.Name == viewModel.Name);
+                if (lotteryCategory.Count() != 0)
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExistingCategory") });
+                else
+                {
+                    _lotteryCategoryService.Insert(new LotteryCategory()
+                    {
+                        Name = viewModel.Name,
+                        Description = viewModel.Description
+                    });
+
+                    _unitOfWork.SaveChanges();
+                    var newCategory = _lotteryCategoryService.Queryable().Where(x => x.Name == viewModel.Name).FirstOrDefault();
+                    return new JsonResult(new { success = true, id = newCategory.Id, name = newCategory.Name, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+                }
+                
+
+                
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult DoEditLottery(LotteryViewModel viewModel)
         {
             try
