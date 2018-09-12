@@ -1,0 +1,23 @@
+﻿<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-content">
+                <table id="dt-purchased-lottery-history" class="table responsive table-hover table-xl mb-0">
+                    <thead>
+                        <tr>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfTicket")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPurchasePrice")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchaseDateTime")</th>
+                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Details")</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    @Html.Hidden("view", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View"))
+</div>
+

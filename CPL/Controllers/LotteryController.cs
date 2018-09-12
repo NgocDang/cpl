@@ -178,13 +178,13 @@ namespace CPL.Controllers
 
                             var totalOfTicketSuccessful = 0;
 
+                            var buyTime = DateTime.Now;
                             foreach (var ticket in ticketIndexList)
                             {
                                 if (ticket == null) continue;
 
                                 var paramJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", ticket.ToArray()));
 
-                                var buyTime = DateTime.Now;
                                 var ticketGenResult = ServiceClient.ETokenClient.CallTransactionAsync(Authentication.Token, CPLConstant.OwnerAddress, CPLConstant.OwnerPassword, "random", CPLConstant.GasPriceMultiplicator, CPLConstant.DurationInSecond, paramJson);
                                 ticketGenResult.Wait();
 

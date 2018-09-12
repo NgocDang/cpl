@@ -47,9 +47,11 @@
                     </li>
                 </ul>
                 <div class="tab-content mb-1">
-                    
+
                 </div>
             </div>
+
+            @await Component.InvokeAsync("AdminLotteryHistory")
         </div>
     </div>
 </div>
@@ -64,4 +66,5 @@
     <script src="~/js/dashboard/plugins/intl-tel-input/js/intlTelInput.js"></script>
     <script src="~/js/dashboard/plugins/intl-tel-input/js/utils.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/cpl.admin.lotteryhistory.viewcomponent.js" asp-append-version="true"></script>
 }
