@@ -6,7 +6,7 @@ using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Models
 {
-    public class PurchasedLotteryHistoryViewComponentViewModel
+    public class AdminLotteryHistoryViewComponentViewModel
     {
         public int SysUserId { get; set; }
         public string UserName { get; set; }
@@ -25,7 +25,7 @@ namespace CPL.Models
         public string NumberOfTicketInString {
             get
             {
-                return NumberOfTicket.ToString();
+                return NumberOfTicket.ToString(Format.Number);
             }
         }
     }

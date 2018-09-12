@@ -1139,7 +1139,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<PurchasedLotteryHistoryViewComponentViewModel> SearchPurchasedLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? lotteryCategoryId)
+        public IList<AdminLotteryHistoryViewComponentViewModel> SearchPurchasedLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? lotteryCategoryId)
         {
             var searchBy = (model.search != null) ? model.search?.value : null;
             var take = model.length;
@@ -1162,7 +1162,7 @@ namespace CPL.Controllers
                     .Select()
                     .Where(x => !lotteryCategoryId.HasValue || x.Lottery.LotteryCategoryId == lotteryCategoryId)
                     .GroupBy(x => new { x.CreatedDate, x.LotteryId, x.SysUserId })
-                    .Select(y => new PurchasedLotteryHistoryViewComponentViewModel
+                    .Select(y => new AdminLotteryHistoryViewComponentViewModel
                     {
                         SysUserId = y.Key.SysUserId,
                         UserName = y.FirstOrDefault().SysUser.Email,
@@ -1179,7 +1179,7 @@ namespace CPL.Controllers
             if (!string.IsNullOrEmpty(searchBy))
             {
                 searchBy = searchBy.ToLower();
-                bool condition(PurchasedLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.Status.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
+                bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.Status.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
                                     || x.NumberOfTicketInString.ToLower().Contains(searchBy) || x.Title.ToLower().Contains(searchBy);
                 purchasedLotteryHistory = purchasedLotteryHistory
                         .Where(condition);

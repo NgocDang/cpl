@@ -10,7 +10,7 @@ using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.ViewComponents
 {
-    public class PurchasedLotteryHistoryViewComponent : ViewComponent
+    public class AdminLotteryHistoryViewComponent : ViewComponent
     {
         public IViewComponentResult Invoke(int? lotteryCategoryId)
         {
