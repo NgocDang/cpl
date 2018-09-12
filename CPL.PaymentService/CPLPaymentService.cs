@@ -26,9 +26,13 @@ namespace CPL.PaymentService
         public string PaymentProcessFileName { get; set; }
         public Resolver Resolver { get; set; }
 
-        private static int PaymentMonthlyStartTimeInDay;
-        private static int PaymentMonthlyStartTimeInHour;
-        private static int PaymentMonthlyStartTimeInMinute;
+        private static int PaymentCreateMonthlyStartTimeInDay;
+        private static int PaymentCreateMonthlyStartTimeInHour;
+        private static int PaymentCreateMonthlyStartTimeInMinute;
+
+        private static int PaymentProcessMonthlyStartTimeInDay;
+        private static int PaymentProcessMonthlyStartTimeInHour;
+        private static int PaymentProcessMonthlyStartTimeInMinute;
 
         public void Start()
         {
@@ -63,7 +67,7 @@ namespace CPL.PaymentService
                 ITrigger creatingTrigger = TriggerBuilder.Create()
                     .WithIdentity("PaymentCreateJob", "QuartzGroup")
                     .WithDescription("Job to automatically create payment at the beginning of every month")
-                    .WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(PaymentMonthlyStartTimeInDay, PaymentMonthlyStartTimeInHour, PaymentMonthlyStartTimeInMinute))
+                    .WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(PaymentCreateMonthlyStartTimeInDay, PaymentCreateMonthlyStartTimeInHour, PaymentCreateMonthlyStartTimeInMinute))
                     .Build();
 
                 await scheduler.ScheduleJob(creatingJob, creatingTrigger);
@@ -78,7 +82,7 @@ namespace CPL.PaymentService
                 ITrigger processingTrigger = TriggerBuilder.Create()
                     .WithIdentity("PaymentProcessJob", "QuartzGroup")
                     .WithDescription("Job to automatically process payment at 10th monthly")
-                    .WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(PaymentMonthlyStartTimeInDay, PaymentMonthlyStartTimeInHour, PaymentMonthlyStartTimeInMinute))
+                    .WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(PaymentProcessMonthlyStartTimeInDay, PaymentProcessMonthlyStartTimeInHour, PaymentProcessMonthlyStartTimeInMinute))
                     .Build();
 
                 await scheduler.ScheduleJob(processingJob, processingTrigger);
@@ -111,6 +115,15 @@ namespace CPL.PaymentService
         private void Initialize()
         {
             Resolver = new Resolver();
+
+            PaymentCreateMonthlyStartTimeInDay = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PaymentServiceConstant.PaymentCreateMonthlyStartTimeInDay).Value);
+            PaymentCreateMonthlyStartTimeInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PaymentServiceConstant.PaymentCreateMonthlyStartTimeInHour).Value);
+            PaymentCreateMonthlyStartTimeInMinute = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PaymentServiceConstant.PaymentCreateMonthlyStartTimeInMinute).Value);
+
+            PaymentProcessMonthlyStartTimeInDay = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PaymentServiceConstant.PaymentProcessMonthlyStartTimeInDay).Value);
+            PaymentProcessMonthlyStartTimeInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PaymentServiceConstant.PaymentProcessMonthlyStartTimeInHour).Value);
+            PaymentProcessMonthlyStartTimeInMinute = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PaymentServiceConstant.PaymentProcessMonthlyStartTimeInMinute).Value);
+
             PaymentFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
         }
     }
