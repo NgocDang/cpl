@@ -94,6 +94,7 @@ namespace CPL
                 .AddTransient<ILangMsgDetailService, LangMsgDetailService>()
                 .AddTransient<INotificationService, NotificationService>()
                 .AddTransient<IViewRenderService, ViewRenderService>()
+                .AddTransient<IAnalyticService, AnalyticService>()
                 .AddTransient<ICoinTransactionService, CoinTransactionService>()
                 .AddTransient<IPricePredictionService, PricePredictionService>()
                 .AddTransient<IPricePredictionHistoryService, PricePredictionHistoryService>()

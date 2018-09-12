@@ -23,7 +23,6 @@ using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Controllers
 {
-
     public class AdminController : Controller
     {
         private readonly ILangService _langService;
@@ -44,6 +43,7 @@ namespace CPL.Controllers
         private readonly IAffiliateService _affiliateService;
         private readonly ILotteryCategoryService _lotteryCategoryService;
         private readonly ILotteryDetailService _lotteryDetailService;
+        private readonly IAnalyticService _analyticService;
 
         public AdminController(
             ILangService langService,
@@ -58,6 +58,7 @@ namespace CPL.Controllers
             IPricePredictionService pricePredictionService,
             INewsService newsService,
             IHostingEnvironment hostingEnvironment,
+            IAnalyticService analyticService,
             ILotteryService lotteryService,
             IAffiliateService affiliateService,
             ILotteryPrizeService lotteryPrizeService,
@@ -78,6 +79,7 @@ namespace CPL.Controllers
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._pricePredictionService = pricePredictionService;
             this._newsService = newsService;
+            this._analyticService = analyticService;
             this._affiliateService = affiliateService;
             this._hostingEnvironment = hostingEnvironment;
             this._agencyTokenService = agencyTokenService;
@@ -88,6 +90,11 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IActionResult Index()
         {
+            //Example of using Analytic Service
+            //var deviceCategories = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
+            //var bounceRates = _analyticService.GetBounceRate(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
+            //var pageViews = _analyticService.GetPageViews(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
+
             var viewModel = new AdminViewModel();
 
             // User management
