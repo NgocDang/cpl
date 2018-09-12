@@ -42,6 +42,8 @@ namespace CPL.Controllers
         private readonly IAgencyTokenService _agencyTokenService;
         private readonly IAffiliateService _affiliateService;
         private readonly IAnalyticService _analyticService;
+		private readonly ILotteryCategoryService _lotteryCategoryService;
+
 
         public AdminController(
             ILangService langService,
@@ -60,7 +62,8 @@ namespace CPL.Controllers
             ILotteryService lotteryService,
             IAffiliateService affiliateService,
             ILotteryPrizeService lotteryPrizeService,
-            IAgencyTokenService agencyTokenService)
+            IAgencyTokenService agencyTokenService,
+			ILotteryCategoryService lotteryCategoryService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -79,6 +82,7 @@ namespace CPL.Controllers
             this._affiliateService = affiliateService;
             this._hostingEnvironment = hostingEnvironment;
             this._agencyTokenService = agencyTokenService;
+            this._lotteryCategoryService = lotteryCategoryService;
         }
 
         [Permission(EnumRole.Admin)]
@@ -1115,6 +1119,83 @@ namespace CPL.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult SearchPurchasedLotteryHistory(DataTableAjaxPostModel viewModel, int? lotteryCategoryId)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchPurchasedLotteryHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, lotteryCategoryId);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IList<AdminLotteryHistoryViewComponentViewModel> SearchPurchasedLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? lotteryCategoryId)
+        {
+            var searchBy = (model.search != null) ? model.search?.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            var purchasedLotteryHistory = _lotteryHistoryService
+                    .Query()
+                    .Include(x => x.Lottery)
+                    .Include(x => x.SysUser)
+                    .Select()
+                    .Where(x => !lotteryCategoryId.HasValue || x.Lottery.LotteryCategoryId == lotteryCategoryId)
+                    .GroupBy(x => new { x.CreatedDate, x.LotteryId, x.SysUserId })
+                    .Select(y => new AdminLotteryHistoryViewComponentViewModel
+                    {
+                        SysUserId = y.Key.SysUserId,
+                        UserName = y.FirstOrDefault().SysUser.Email,
+                        Status = ((EnumLotteryGameStatus)(y.FirstOrDefault().Lottery.Status)).ToString(),
+                        NumberOfTicket = y.Count(),
+                        TotalPurchasePrice = y.Sum(x => x.Lottery.UnitPrice),
+                        Title = y.FirstOrDefault().Lottery.Title,
+                        PurchaseDateTime = y.Key.CreatedDate,
+                    });
+
+            filteredResultsCount = totalResultsCount = purchasedLotteryHistory.Count();
+
+            // search the dbase taking into consideration table sorting and paging
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                searchBy = searchBy.ToLower();
+                bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.Status.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
+                                    || x.NumberOfTicketInString.ToLower().Contains(searchBy) || x.Title.ToLower().Contains(searchBy);
+                purchasedLotteryHistory = purchasedLotteryHistory
+                        .Where(condition);
+
+                filteredResultsCount = purchasedLotteryHistory
+                        .Count();
+            }
+
+            return purchasedLotteryHistory
+                  .AsQueryable()
+                  .OrderBy(sortBy, sortDir)
+                  .Skip(skip)
+                  .Take(take)
+                  .ToList();
+        }
+
         #endregion
 
         #region Lottery
