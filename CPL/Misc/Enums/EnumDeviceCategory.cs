@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Misc.Enums
 {
-    public enum EnumDevice
+    public enum EnumDeviceCategory
     {
         DESKTOP = 1,
         MOBILE = 2,

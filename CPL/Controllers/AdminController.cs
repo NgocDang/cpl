@@ -84,6 +84,11 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IActionResult Index()
         {
+            //Example of using Analytic Service
+            //var deviceCategories = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
+            //var bounceRates = _analyticService.GetBounceRate(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
+            //var pageViews = _analyticService.GetPageViews(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
+
             var viewModel = new AdminViewModel();
 
             // User management
