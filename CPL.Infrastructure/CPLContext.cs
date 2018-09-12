@@ -39,6 +39,7 @@ namespace CPL.Infrastructure
         public DbSet<Affiliate> Affiliate { get; set; }
         public DbSet<LangContent> LangContent { get; set; }
         public DbSet<LotteryCategory> LotteryCategory { get; set; }
+        public DbSet<Payment> Payment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -69,6 +70,8 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new AgencyMap());
             modelBuilder.ApplyConfiguration(new AgencyTokenMap());
             modelBuilder.ApplyConfiguration(new AffiliateMap());
+
+            modelBuilder.ApplyConfiguration(new PaymentMap());
 
             modelBuilder.ApplyConfiguration(new BTCTransactionMap());
             modelBuilder.ApplyConfiguration(new ETHTransactionMap());
