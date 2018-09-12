@@ -23,7 +23,6 @@ using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Controllers
 {
-
     public class AdminController : Controller
     {
         private readonly ILangService _langService;
@@ -42,7 +41,9 @@ namespace CPL.Controllers
         private readonly ILotteryPrizeService _lotteryPrizeService;
         private readonly IAgencyTokenService _agencyTokenService;
         private readonly IAffiliateService _affiliateService;
-        private readonly ILotteryCategoryService _lotteryCategoryService;
+        private readonly IAnalyticService _analyticService;
+		private readonly ILotteryCategoryService _lotteryCategoryService;
+
 
         public AdminController(
             ILangService langService,
@@ -57,11 +58,12 @@ namespace CPL.Controllers
             IPricePredictionService pricePredictionService,
             INewsService newsService,
             IHostingEnvironment hostingEnvironment,
+            IAnalyticService analyticService,
             ILotteryService lotteryService,
             IAffiliateService affiliateService,
             ILotteryPrizeService lotteryPrizeService,
             IAgencyTokenService agencyTokenService,
-            ILotteryCategoryService lotteryCategoryService)
+			ILotteryCategoryService lotteryCategoryService)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -76,6 +78,7 @@ namespace CPL.Controllers
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._pricePredictionService = pricePredictionService;
             this._newsService = newsService;
+            this._analyticService = analyticService;
             this._affiliateService = affiliateService;
             this._hostingEnvironment = hostingEnvironment;
             this._agencyTokenService = agencyTokenService;
@@ -85,6 +88,11 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IActionResult Index()
         {
+            //Example of using Analytic Service
+            //var deviceCategories = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
+            //var bounceRates = _analyticService.GetBounceRate(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
+            //var pageViews = _analyticService.GetPageViews(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
+
             var viewModel = new AdminViewModel();
 
             // User management
@@ -1156,6 +1164,7 @@ namespace CPL.Controllers
                     .GroupBy(x => new { x.CreatedDate, x.LotteryId, x.SysUserId })
                     .Select(y => new PurchasedLotteryHistoryViewComponentViewModel
                     {
+                        SysUserId = y.Key.SysUserId,
                         UserName = y.FirstOrDefault().SysUser.Email,
                         Status = ((EnumLotteryGameStatus)(y.FirstOrDefault().Lottery.Status)).ToString(),
                         NumberOfTicket = y.Count(),

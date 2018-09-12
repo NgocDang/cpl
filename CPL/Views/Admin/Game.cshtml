@@ -31,7 +31,27 @@
             </div>
         </div>
         <div class="content-body">
-              @await Component.InvokeAsync("PurchasedLotteryHistory")
+            <div class="tab-component">
+                <ul class="nav nav-tabs border-0">
+                    <li class="nav-item">
+                        <a class="nav-link font-medium-2 font-weight-bold active px-2 border-0" id="summary-nav-tab" data-toggle="tab" href="#summary-nav" aria-controls="summary-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="lottery-nav-tab" data-toggle="tab" href="#lottery-nav" aria-controls="lottery-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="price-prediction-nav-tab" data-toggle="tab" href="#price-prediction-nav" aria-controls="price-prediction-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="slot-nav-tab" data-toggle="tab" href="#slot-nav" aria-controls="slot-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slot")</a>
+                    </li>
+                </ul>
+                <div class="tab-content mb-1">
+
+                </div>
+            </div>
+
+            @await Component.InvokeAsync("PurchasedLotteryHistory")
         </div>
     </div>
 </div>

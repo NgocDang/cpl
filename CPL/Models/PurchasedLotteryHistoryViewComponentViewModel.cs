@@ -8,6 +8,7 @@ namespace CPL.Models
 {
     public class PurchasedLotteryHistoryViewComponentViewModel
     {
+        public int SysUserId { get; set; }
         public string UserName { get; set; }
         public string Status { get; set; }
         public int NumberOfTicket { get; set; }
