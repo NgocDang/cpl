@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Misc;
 using CPL.Misc.Enums;
@@ -17,11 +18,13 @@ namespace CPL.Controllers
         private readonly IMapper _mapper;
         private readonly IHostingEnvironment _appEnvironment;
         private readonly INewsService _newsService;
+        private readonly ILotteryService _lotteryService;
 
         public MobileHomeController(
             IMobileLangDetailService mobileLangDetailService,
             IMapper mapper,
             INewsService newsService,
+            ILotteryService lotteryService,
             IHostingEnvironment appEnvironment
         )
         {
@@ -29,11 +32,12 @@ namespace CPL.Controllers
             this._mobileLangDetailService = mobileLangDetailService;
             this._mapper = mapper;
             this._appEnvironment = appEnvironment;
+            this._lotteryService = lotteryService;
         }
 
-        [HttpPost]
-        [Permission(EnumRole.Guest)]
-        public IActionResult GetBannersList(int? mobileLangId)
+        [HttpGet]
+        [Permission(EnumRole.User)]
+        public IActionResult GetBannersList(MobileModel mobileModel)
         {
             try
             {
@@ -74,13 +78,11 @@ namespace CPL.Controllers
         }
 
         [HttpPost]
-        [Permission(EnumRole.Guest)]
-        public IActionResult GetLatestNewsList(int? mobileLangId)
+        [Permission(EnumRole.User)]
+        public IActionResult GetLatestNewsList(MobileModel mobileModel)
         {
             try
             {
-                LangDetailHelper.LangDetails = _mobileLangDetailService.Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
-
                 var lastestNews = _newsService.Queryable().LastOrDefault();
 
                 return new JsonResult(
@@ -88,6 +90,45 @@ namespace CPL.Controllers
                     {
                         code = EnumResponseStatus.SUCCESS,
                         data = Mapper.Map<NewsViewModel>(lastestNews)
+            }
+                );
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(
+                    new
+                    {
+                        code = EnumResponseStatus.ERROR,
+                        error_message_key = ex.Message
+                    }
+                );
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.User)]
+        public IActionResult GetLotteriesList(MobileModel mobileModel)
+        {
+            try
+            {
+                var lotteries = _lotteryService.Query()
+                                .Include(x => x.LotteryHistories)
+                                .Select()
+                                .Where(x => !x.IsDeleted 
+                                        && (x.LotteryHistories.Count() < x.Volume 
+                                        && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
+                                .OrderByDescending(x => x.CreatedDate);
+
+                var viewModel = new HomeViewModel();
+                viewModel.Lotteries = lotteries
+                    .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
+                    .ToList();
+
+                return new JsonResult(
+                    new
+                    {
+                        code = EnumResponseStatus.SUCCESS,
+                        data = lotteries.Select(x => Mapper.Map<HomeLotteryViewModel>(x)).ToList()
             }
                 );
             }
