@@ -23,9 +23,9 @@ namespace CPL.Misc
 {
     public interface IAnalyticService
     {
-        Task<int> GetPageView(DateTime start, DateTime end);
-        Task<double> GetBounceRate(DateTime start, DateTime end);
-        Task<List<DeviceViewModel>> GetDevices(DateTime start, DateTime end);
+        GetReportsResponse GetPageView(string viewId, DateTime start, DateTime end);
+        GetReportsResponse GetBounceRate(string viewId, DateTime start, DateTime end);
+        GetReportsResponse GetDevices(string viewId, DateTime start, DateTime end);
     }
 
     public class AnalyticService : IAnalyticService
@@ -50,17 +50,42 @@ namespace CPL.Misc
                 });
         }
 
-        public Task<double> GetBounceRate(DateTime start, DateTime end)
+        public GetReportsResponse GetBounceRate(string viewId, DateTime start, DateTime end)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<DeviceViewModel>> GetDevices(DateTime start, DateTime end)
+        public GetReportsResponse GetDevices(string viewId, DateTime start, DateTime end)
         {
-            throw new NotImplementedException();
+            var dateRange = new DateRange
+            {
+                StartDate = start.ToString("yyyy-MM-dd"),
+                EndDate = end.ToString("yyyy-MM-dd")
+            };
+            var sessions = new Metric
+            {
+                Expression = "ga:deviceCategory",
+                Alias = "Sessions"
+            };
+            var date = new Dimension { Name = "ga:date" };
+
+            var reportRequest = new ReportRequest
+            {
+                DateRanges = new List<DateRange> { dateRange },
+                Dimensions = new List<Dimension> { date },
+                Metrics = new List<Metric> { sessions },
+                ViewId = viewId
+            };
+
+            var getReportsRequest = new GetReportsRequest
+            {
+                ReportRequests = new List<ReportRequest> { reportRequest }
+            };
+            var batchRequest = _reportingService.Reports.BatchGet(getReportsRequest);
+            return batchRequest.Execute();
         }
 
-        public Task<int> GetPageView(DateTime start, DateTime end)
+        public GetReportsResponse GetPageView(string viewId, DateTime start, DateTime end)
         {
             var dateRange = new DateRange
             {
@@ -79,8 +104,15 @@ namespace CPL.Misc
                 DateRanges = new List<DateRange> { dateRange },
                 Dimensions = new List<Dimension> { date },
                 Metrics = new List<Metric> { sessions },
-                ViewId = "" // your view id
+                ViewId = viewId
             };
+
+            var getReportsRequest = new GetReportsRequest
+            {
+                ReportRequests = new List<ReportRequest> { reportRequest }
+            };
+            var batchRequest = _reportingService.Reports.BatchGet(getReportsRequest);
+            return batchRequest.Execute();
         }
     }
 }
