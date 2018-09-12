@@ -34,8 +34,8 @@ namespace CPL.PredictionGameService
         public static BTCCurrentPriceClient BTCCurrentPriceClient = new BTCCurrentPriceClient();
         public static bool IsCPLPredictionGameServiceRunning = false;
         public static List<Task> Tasks = new List<Task>();
-        private static int DailyStartTimeInHour;
-        private static int DailyStartTimeInMinute;
+        private static int PricePredictionDailyStartTimeInHour;
+        private static int PricePredictionDailyStartTimeInMinute;
 
         public string FileName { get; set; }
         public int RunningIntervalInMilliseconds { get; set; }
@@ -115,7 +115,7 @@ namespace CPL.PredictionGameService
                 ITrigger creatingTrigger = TriggerBuilder.Create()
                     .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
                     .WithDescription("Job to create new PricePredictions daily automatically")
-                    .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(DailyStartTimeInHour, DailyStartTimeInMinute))
+                    .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(PricePredictionDailyStartTimeInHour, PricePredictionDailyStartTimeInMinute))
                     .Build();
 
                 await scheduler.ScheduleJob(creatingJob, creatingTrigger);
@@ -193,8 +193,8 @@ namespace CPL.PredictionGameService
             FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
             var cplServiceEndpoint = Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
-            DailyStartTimeInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.DailyStartTimeInHour).Value);
-            DailyStartTimeInMinute = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.DailyStartTimeInMinute).Value);
+            PricePredictionDailyStartTimeInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionDailyStartTimeInHour).Value);
+            PricePredictionDailyStartTimeInMinute = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionDailyStartTimeInMinute).Value);
             BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(cplServiceEndpoint + CPLConstant.BTCCurrentPriceServiceEndpoint));
         }
     }
