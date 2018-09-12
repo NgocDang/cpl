@@ -85,14 +85,14 @@
                 {
                     "data": "DesktopTopImage",
                     "render": function (data, type, full, meta) {
-                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "' href='/images/lottery/" + full.desktopTopImage + "' ><img src='/images/lottery/" + full.desktopTopImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopTopImage + "'> </a>";
+                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "' href='/images/lottery/" + full.lotteryDetails[1].desktopTopImage + "' ><img src='/images/lottery/" + full.lotteryDetails[1].desktopTopImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopTopImage + "'> </a>";
                     },
                     "orderable": false
                 },
                 {
                     "data": "DesktopListingImage",
                     "render": function (data, type, full, meta) {
-                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "'  href='/images/lottery/" + full.desktopListingImage + "' ><img src='/images/lottery/" + full.desktopListingImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopListingImage + "'> </a>";
+                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "'  href='/images/lottery/" + full.lotteryDetails[1].desktopListingImage + "' ><img src='/images/lottery/" + full.lotteryDetails[1].desktopListingImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopListingImage + "'> </a>";
                     },
                     "orderable": false
                 },
@@ -414,31 +414,35 @@
 
             if (isFormValid && isCategoryValid) {
                 var formData = new FormData();
+                $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                    var desktopTopImage = $(e).find("#desktop-top-image").get(0);
+                    if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopTopImageFile', desktopTopImage.files[0]);
+                    }
 
-                var desktopTopImage = $("#desktop-slide-image").get(0);
-                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
-                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
-                }
+                    var mobileTopImage = $(e).find("#mobile-top-image").get(0);
+                    if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileTopImageFile', mobileTopImage.files[0]);
+                    }
 
-                var mobileTopImage = $("#mobile-slide-image").get(0);
-                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
-                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
-                }
+                    var desktopListingImage = $(e).find("#desktop-listing-image").get(0);
+                    if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopListingImageFile', desktopListingImage.files[0]);
+                    }
 
-                var desktopListingImage = $("#desktop-listing-image").get(0);
-                if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
-                    formData.append('DesktopListingImageFile', desktopListingImage.files[0]);
-                }
+                    var mobileListingImage = $(e).find("#mobile-listing-image").get(0);
+                    if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileListingImageFile', mobileListingImage.files[0]);
+                    }
 
-                var mobileListingImage = $("#mobile-listing-image").get(0);
-                if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
-                    formData.append('MobileListingImageFile', mobileListingImage.files[0]);
-                }
-
-                var prizeImage = $("#prize-image").get(0);
-                if (prizeImage !== undefined && prizeImage.files.length > 0) {
-                    formData.append('PrizeImageFile', prizeImage.files[0]);
-                }
+                    var prizeImage = $(e).find("#prize-image").get(0);
+                    if (prizeImage !== undefined && prizeImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
+                    }
+                    formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
+                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
+                });
 
                 formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
                 formData.append('UnitPrice', $(_this).parents("#form-edit-lottery").find("#ticket-price").val());
@@ -450,6 +454,7 @@
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
                     formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
                 });
+                
 
                 $.ajax({
                     url: "/Admin/DoAddLottery/",
@@ -502,30 +507,35 @@
             if (isFormValid) {
                 var formData = new FormData();
 
-                var desktopTopImage = $("#desktop-slide-image").get(0);
-                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
-                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
-                }
+                $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                    var desktopTopImage = $(e).find("#desktop-top-image").get(0);
+                    if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopTopImageFile', desktopTopImage.files[0]);
+                    }
 
-                var mobileTopImage = $("#mobile-slide-image").get(0);
-                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
-                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
-                }
+                    var mobileTopImage = $(e).find("#mobile-top-image").get(0);
+                    if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileTopImageFile', mobileTopImage.files[0]);
+                    }
 
-                var desktopListingImage = $("#desktop-listing-image").get(0);
-                if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
-                    formData.append('DesktopListingImageFile', desktopListingImage.files[0]);
-                }
+                    var desktopListingImage = $(e).find("#desktop-listing-image").get(0);
+                    if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopListingImageFile', desktopListingImage.files[0]);
+                    }
 
-                var mobileListingImage = $("#mobile-listing-image").get(0);
-                if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
-                    formData.append('MobileListingImageFile', mobileListingImage.files[0]);
-                }
+                    var mobileListingImage = $(e).find("#mobile-listing-image").get(0);
+                    if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileListingImageFile', mobileListingImage.files[0]);
+                    }
 
-                var prizeImage = $("#prize-image").get(0);
-                if (prizeImage !== undefined && prizeImage.files.length > 0) {
-                    formData.append('PrizeImageFile', prizeImage.files[0]);
-                }
+                    var prizeImage = $(e).find("#prize-image").get(0);
+                    if (prizeImage !== undefined && prizeImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
+                    }
+                    formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
+                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
+                });
 
                 formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
                 formData.append('UnitPrice', $(_this).parents("#form-edit-lottery").find("#ticket-price").val());
@@ -589,30 +599,36 @@
             if (isFormValid) {
                 var formData = new FormData();
 
-                var desktopTopImage = $("#desktop-slide-image").get(0);
-                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
-                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
-                }
+                $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                    var desktopTopImage = $(e).find("#desktop-top-image").get(0);
+                    if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopTopImageFile', desktopTopImage.files[0]);
+                    }
 
-                var mobileTopImage = $("#mobile-slide-image").get(0);
-                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
-                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
-                }
+                    var mobileTopImage = $(e).find("#mobile-top-image").get(0);
+                    if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileTopImageFile', mobileTopImage.files[0]);
+                    }
 
-                var desktopListingImage = $("#desktop-listing-image").get(0);
-                if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
-                    formData.append('DesktopListingImageFile', desktopListingImage.files[0]);
-                }
+                    var desktopListingImage = $(e).find("#desktop-listing-image").get(0);
+                    if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopListingImageFile', desktopListingImage.files[0]);
+                    }
 
-                var mobileListingImage = $("#mobile-listing-image").get(0);
-                if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
-                    formData.append('MobileListingImageFile', mobileListingImage.files[0]);
-                }
+                    var mobileListingImage = $(e).find("#mobile-listing-image").get(0);
+                    if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileListingImageFile', mobileListingImage.files[0]);
+                    }
 
-                var prizeImage = $("#prize-image").get(0);
-                if (prizeImage !== undefined && prizeImage.files.length > 0) {
-                    formData.append('PrizeImageFile', prizeImage.files[0]);
-                }
+                    var prizeImage = $(e).find("#prize-image").get(0);
+                    if (prizeImage !== undefined && prizeImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
+                    }
+                    formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
+                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
+                    formData.append('LotteryDetails[' + i + '].Id', parseInt($(e).find("#detail-id").val()));
+                });
 
                 formData.append('Id', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                 formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
@@ -677,30 +693,36 @@
             if (isFormValid) {
                 var formData = new FormData();
 
-                var desktopTopImage = $("#desktop-slide-image").get(0);
-                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
-                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
-                }
+                $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                    var desktopTopImage = $(e).find("#desktop-top-image").get(0);
+                    if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopTopImageFile', desktopTopImage.files[0]);
+                    }
 
-                var mobileTopImage = $("#mobile-slide-image").get(0);
-                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
-                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
-                }
+                    var mobileTopImage = $(e).find("#mobile-top-image").get(0);
+                    if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileTopImageFile', mobileTopImage.files[0]);
+                    }
 
-                var desktopListingImage = $("#desktop-listing-image").get(0);
-                if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
-                    formData.append('DesktopListingImageFile', desktopListingImage.files[0]);
-                }
+                    var desktopListingImage = $(e).find("#desktop-listing-image").get(0);
+                    if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopListingImageFile', desktopListingImage.files[0]);
+                    }
 
-                var mobileListingImage = $("#mobile-listing-image").get(0);
-                if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
-                    formData.append('MobileListingImageFile', mobileListingImage.files[0]);
-                }
+                    var mobileListingImage = $(e).find("#mobile-listing-image").get(0);
+                    if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileListingImageFile', mobileListingImage.files[0]);
+                    }
 
-                var prizeImage = $("#prize-image").get(0);
-                if (prizeImage !== undefined && prizeImage.files.length > 0) {
-                    formData.append('PrizeImageFile', prizeImage.files[0]);
-                }
+                    var prizeImage = $(e).find("#prize-image").get(0);
+                    if (prizeImage !== undefined && prizeImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
+                    }
+                    formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
+                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
+                    formData.append('LotteryDetails[' + i + '].Id', parseInt($(e).find("#detail-id").val()));
+                });
 
                 formData.append('Id', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                 formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
