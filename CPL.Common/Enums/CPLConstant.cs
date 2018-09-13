@@ -147,6 +147,7 @@ namespace CPL.Common.Enums
         public struct Format
         {
             public static string Amount = "#,##0.########";
+            public static string Number = "N0";
             public static string DateTime = "yyyy/MM/dd hh:mm:ss";
         }
 

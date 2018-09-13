@@ -15,6 +15,7 @@ namespace CPL.Models
         public string Title { get; set; }
         public int Status { get; set; }
         public List<LotteryHistoryViewModel> LotteryHistories { get; set; }
+        public List<LotteryDetailViewModel> LotteryDetails { get; set; }
 
         public int? SysUserId { get; set; }
         public string PrecentOfPerchasedTickets { get; set; }

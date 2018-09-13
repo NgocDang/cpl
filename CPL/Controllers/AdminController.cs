@@ -41,7 +41,10 @@ namespace CPL.Controllers
         private readonly ILotteryPrizeService _lotteryPrizeService;
         private readonly IAgencyTokenService _agencyTokenService;
         private readonly IAffiliateService _affiliateService;
+        private readonly ILotteryCategoryService _lotteryCategoryService;
+        private readonly ILotteryDetailService _lotteryDetailService;
         private readonly IAnalyticService _analyticService;
+
 
         public AdminController(
             ILangService langService,
@@ -60,6 +63,8 @@ namespace CPL.Controllers
             ILotteryService lotteryService,
             IAffiliateService affiliateService,
             ILotteryPrizeService lotteryPrizeService,
+            ILotteryCategoryService lotteryCategoryService,
+            ILotteryDetailService lotteryDetailService,
             IAgencyTokenService agencyTokenService)
         {
             this._langService = langService;
@@ -79,6 +84,8 @@ namespace CPL.Controllers
             this._affiliateService = affiliateService;
             this._hostingEnvironment = hostingEnvironment;
             this._agencyTokenService = agencyTokenService;
+            this._lotteryDetailService = lotteryDetailService;
+            this._lotteryCategoryService = lotteryCategoryService;
         }
 
         [Permission(EnumRole.Admin)]
@@ -1118,6 +1125,83 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
+        public JsonResult SearchPurchasedLotteryHistory(DataTableAjaxPostModel viewModel, int? lotteryCategoryId)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchPurchasedLotteryHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, lotteryCategoryId);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IList<AdminLotteryHistoryViewComponentViewModel> SearchPurchasedLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? lotteryCategoryId)
+        {
+            var searchBy = (model.search != null) ? model.search?.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            var purchasedLotteryHistory = _lotteryHistoryService
+                    .Query()
+                    .Include(x => x.Lottery)
+                    .Include(x => x.SysUser)
+                    .Select()
+                    .Where(x => !lotteryCategoryId.HasValue || x.Lottery.LotteryCategoryId == lotteryCategoryId)
+                    .GroupBy(x => new { x.CreatedDate, x.LotteryId, x.SysUserId })
+                    .Select(y => new AdminLotteryHistoryViewComponentViewModel
+                    {
+                        SysUserId = y.Key.SysUserId,
+                        UserName = y.FirstOrDefault().SysUser.Email,
+                        Status = ((EnumLotteryGameStatus)(y.FirstOrDefault().Lottery.Status)).ToString(),
+                        NumberOfTicket = y.Count(),
+                        TotalPurchasePrice = y.Sum(x => x.Lottery.UnitPrice),
+                        Title = y.FirstOrDefault().Lottery.Title,
+                        PurchaseDateTime = y.Key.CreatedDate,
+                    });
+
+            filteredResultsCount = totalResultsCount = purchasedLotteryHistory.Count();
+
+            // search the dbase taking into consideration table sorting and paging
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                searchBy = searchBy.ToLower();
+                bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.Status.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
+                                    || x.NumberOfTicketInString.ToLower().Contains(searchBy) || x.Title.ToLower().Contains(searchBy);
+                purchasedLotteryHistory = purchasedLotteryHistory
+                        .Where(condition);
+
+                filteredResultsCount = purchasedLotteryHistory
+                        .Count();
+            }
+
+            return purchasedLotteryHistory
+                  .AsQueryable()
+                  .OrderBy(sortBy, sortDir)
+                  .Skip(skip)
+                  .Take(take)
+                  .ToList();
+        }
+
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
         public IActionResult GetDataGameSummaryStatisticChart(int periodInDay)
         {
             var viewModel = new GameManagementIndexViewModel();
@@ -1218,7 +1302,11 @@ namespace CPL.Controllers
                 totalResultsCount = _lotteryService.Queryable().Where(x => !x.IsDeleted)
                         .Count();
 
-                return _lotteryService.Queryable().Where(x => !x.IsDeleted)
+                return _lotteryService.Query()
+                            .Include(x => x.LotteryDetails)
+                            .Select()
+                            .AsQueryable()
+                            .Where(x => !x.IsDeleted)
                             .Select(x => Mapper.Map<LotteryViewModel>(x))
                             .OrderBy(sortBy, sortDir)
                             .Skip(skip)
@@ -1234,7 +1322,10 @@ namespace CPL.Controllers
                 totalResultsCount = _lotteryService.Queryable()
                         .Count(x => !x.IsDeleted);
 
-                return _lotteryService.Queryable()
+                return _lotteryService.Query()
+                        .Include(x => x.LotteryDetails)
+                        .Select()
+                        .AsQueryable()
                         .Where(x => !x.IsDeleted && (x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.Title.Contains(searchBy)))
                         .Select(x => Mapper.Map<LotteryViewModel>(x))
                         .OrderBy(sortBy, sortDir)
@@ -1253,6 +1344,7 @@ namespace CPL.Controllers
                                                         .Include(x => x.LotteryPrizes)
                                                         .Select()
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
+            lottery.LotteryCategory = _lotteryCategoryService.Queryable().Where(x => x.Id == lottery.LotteryCategoryId).FirstOrDefault().Name;
 
             return PartialView("_ViewLottery", lottery);
         }
@@ -1348,21 +1440,80 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IActionResult EditLottery(int id)
         {
-            var lottery = new LotteryViewModel();
-
-            lottery = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
+            var lotteries = new LotteryViewModel();
+            lotteries = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
+                                                        .Include(x => x.LotteryDetails)
                                                         .Select()
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
 
-            return PartialView("_EditLottery", lottery);
+            foreach (var detail in lotteries.LotteryDetails)
+            {
+                var lang = Mapper.Map<LangViewModel>(_langService.Queryable().Where(x => x.Id == detail.LangId).FirstOrDefault());
+                detail.Lang = lang;
+            }
+
+            lotteries.LotteryCategories = _lotteryCategoryService.Query().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
+
+            return PartialView("_EditLottery", lotteries);
         }
 
         [Permission(EnumRole.Admin)]
         public IActionResult AddLottery()
         {
             var lottery = new LotteryViewModel();
+
+            var langs = _langService.Queryable()
+                .Select(x => Mapper.Map<LangViewModel>(x))
+                .ToList();
+
+            foreach (var lang in langs)
+            {
+                lottery.LotteryDetails.Add(new LotteryDetailViewModel()
+                {
+                    Lang = lang
+                });
+            }
+
+            lottery.LotteryCategories = _lotteryCategoryService.Query().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
             return PartialView("_EditLottery", lottery);
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult AddLotteryCategory()
+        {
+            var lotteryCategory = new LotteryCategoryViewModel();
+            return PartialView("_EditLotteryCategory", lotteryCategory);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoAddLotteryCategory(LotteryCategoryViewModel viewModel)
+        {
+            try
+            {
+                if (_lotteryCategoryService.Queryable().Any(x => x.Name == viewModel.Name))
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExistingCategory") });
+                else
+                {
+                    _lotteryCategoryService.Insert(new LotteryCategory()
+                    {
+                        Name = viewModel.Name,
+                        Description = viewModel.Description
+                    });
+
+                    _unitOfWork.SaveChanges();
+                    var newCategory = _lotteryCategoryService.Queryable().FirstOrDefault(x => x.Name == viewModel.Name);
+                    return new JsonResult(new { success = true, id = newCategory.Id, name = newCategory.Name, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
         }
 
         [HttpPost]
@@ -1377,6 +1528,7 @@ namespace CPL.Controllers
                 lottery.Title = viewModel.Title;
                 lottery.Volume = viewModel.Volume;
                 lottery.UnitPrice = viewModel.UnitPrice;
+                lottery.LotteryCategoryId = viewModel.LotteryCategoryId;
 
                 if (!viewModel.IsPublished)
                     lottery.Status = (int)EnumLotteryGameStatus.PENDING;
@@ -1386,49 +1538,57 @@ namespace CPL.Controllers
                 var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
                 string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
 
-                // Desktop slide image
-                if (viewModel.DesktopTopImageFile != null)
+                foreach (var detail in viewModel.LotteryDetails)
                 {
-                    var desktopTopImage = $"{lottery.Phase.ToString()}_ds_{timestamp}_{viewModel.DesktopTopImageFile.FileName}";
-                    var desktopTopImagePath = Path.Combine(pathLottery, desktopTopImage);
-                    viewModel.DesktopTopImageFile.CopyTo(new FileStream(desktopTopImagePath, FileMode.Create));
-                    lottery.DesktopTopImage = desktopTopImage;
-                }
+                    var lotteryDetail = _lotteryDetailService.Queryable().FirstOrDefault(x => x.Id == detail.Id);
+                    // Desktop slide image
+                    if (detail.DesktopTopImageFile != null)
+                    {
+                        var desktopTopImage = $"{lottery.Phase.ToString()}_lang_{detail.LangId}_dt_{timestamp}_{detail.DesktopTopImageFile.FileName}";
+                        var desktopTopImagePath = Path.Combine(pathLottery, desktopTopImage);
+                        detail.DesktopTopImageFile.CopyTo(new FileStream(desktopTopImagePath, FileMode.Create));
+                        lotteryDetail.DesktopTopImage = desktopTopImage;
+                    }
 
-                // Mobile slide image
-                if (viewModel.MobileTopImageFile != null)
-                {
-                    var mobileTopImage = $"{lottery.Phase.ToString()}_ms_{timestamp}_{viewModel.MobileTopImageFile.FileName}";
-                    var mobileTopImagePath = Path.Combine(pathLottery, mobileTopImage);
-                    viewModel.MobileTopImageFile.CopyTo(new FileStream(mobileTopImagePath, FileMode.Create));
-                    lottery.MobileTopImage = mobileTopImage;
-                }
+                    // Mobile slide image
+                    if (detail.MobileTopImageFile != null)
+                    {
+                        var mobileTopImage = $"{lottery.Phase.ToString()}_lang_{detail.LangId}_mt_{timestamp}_{detail.MobileTopImageFile.FileName}";
+                        var mobileTopImagePath = Path.Combine(pathLottery, mobileTopImage);
+                        detail.MobileTopImageFile.CopyTo(new FileStream(mobileTopImagePath, FileMode.Create));
+                        lotteryDetail.MobileTopImage = mobileTopImage;
+                    }
 
-                // desktop listing image
-                if (viewModel.DesktopListingImageFile != null)
-                {
-                    var desktopListingImage = $"{lottery.Phase.ToString()}_dl_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
-                    var desktopListingImagePath = Path.Combine(pathLottery, desktopListingImage);
-                    viewModel.DesktopListingImageFile.CopyTo(new FileStream(desktopListingImagePath, FileMode.Create));
-                    lottery.DesktopListingImage = desktopListingImage;
-                }
+                    // desktop listing image
+                    if (detail.DesktopListingImageFile != null)
+                    {
+                        var desktopListingImage = $"{lottery.Phase.ToString()}_lang_{detail.LangId}_dl_{timestamp}_{detail.DesktopListingImageFile.FileName}";
+                        var desktopListingImagePath = Path.Combine(pathLottery, desktopListingImage);
+                        detail.DesktopListingImageFile.CopyTo(new FileStream(desktopListingImagePath, FileMode.Create));
+                        lotteryDetail.DesktopListingImage = desktopListingImage;
+                    }
 
-                // mobile listing image
-                if (viewModel.MobileListingImageFile != null)
-                {
-                    var mobileListingImage = $"{lottery.Phase.ToString()}_ml_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
-                    var mobileListingImagePath = Path.Combine(pathLottery, mobileListingImage);
-                    viewModel.MobileListingImageFile.CopyTo(new FileStream(mobileListingImagePath, FileMode.Create));
-                    lottery.MobileListingImage = mobileListingImage;
-                }
+                    // mobile listing image
+                    if (detail.MobileListingImageFile != null)
+                    {
+                        var mobileListingImage = $"{lottery.Phase.ToString()}_lang_{detail.LangId}_ml_{timestamp}_{detail.MobileListingImageFile.FileName}";
+                        var mobileListingImagePath = Path.Combine(pathLottery, mobileListingImage);
+                        detail.MobileListingImageFile.CopyTo(new FileStream(mobileListingImagePath, FileMode.Create));
+                        lotteryDetail.MobileListingImage = mobileListingImage;
+                    }
 
-                // prize image
-                if (viewModel.PrizeImageFile != null)
-                {
-                    var prizeImage = $"{lottery.Phase.ToString()}_p_{timestamp}_{viewModel.PrizeImageFile.FileName}";
-                    var prizeImagePath = Path.Combine(pathLottery, prizeImage);
-                    viewModel.PrizeImageFile.CopyTo(new FileStream(prizeImagePath, FileMode.Create));
-                    lottery.PrizeImage = prizeImage;
+                    // prize image
+                    if (detail.PrizeImageFile != null)
+                    {
+                        var prizeImage = $"{lottery.Phase.ToString()}_lang_{detail.LangId}_p_{timestamp}_{detail.PrizeImageFile.FileName}";
+                        var prizeImagePath = Path.Combine(pathLottery, prizeImage);
+                        detail.PrizeImageFile.CopyTo(new FileStream(prizeImagePath, FileMode.Create));
+                        lotteryDetail.PrizeImage = prizeImage;
+                    }
+
+                    lotteryDetail.Description = detail.Description;
+
+                    _lotteryDetailService.Update(lotteryDetail);
                 }
 
                 _lotteryService.Update(lottery);
@@ -1517,6 +1677,7 @@ namespace CPL.Controllers
                 lottery.UnitPrice = viewModel.UnitPrice;
                 lottery.Phase = currentPhase + 1;
                 lottery.CreatedDate = DateTime.Now;
+                lottery.LotteryCategoryId = viewModel.LotteryCategoryId;
 
                 if (!viewModel.IsPublished)
                     lottery.Status = (int)EnumLotteryGameStatus.PENDING;
@@ -1526,52 +1687,64 @@ namespace CPL.Controllers
                 var pathLottery = Path.Combine(_hostingEnvironment.WebRootPath, @"images\lottery");
                 string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
 
-                // Desktop slide image
-                if (viewModel.DesktopTopImageFile != null)
-                {
-                    var desktopTopImage = $"{lottery.Phase.ToString()}_ds_{timestamp}_{viewModel.DesktopTopImageFile.FileName}";
-                    var desktopTopImagePath = Path.Combine(pathLottery, desktopTopImage);
-                    viewModel.DesktopTopImageFile.CopyTo(new FileStream(desktopTopImagePath, FileMode.Create));
-                    lottery.DesktopTopImage = desktopTopImage;
-                }
-
-                // Mobile slide image
-                if (viewModel.MobileTopImageFile != null)
-                {
-                    var mobileTopImage = $"{lottery.Phase.ToString()}_ms_{timestamp}_{viewModel.MobileTopImageFile.FileName}";
-                    var mobileTopImagePath = Path.Combine(pathLottery, mobileTopImage);
-                    viewModel.MobileTopImageFile.CopyTo(new FileStream(mobileTopImagePath, FileMode.Create));
-                    lottery.MobileTopImage = mobileTopImage;
-                }
-
-                // desktop listing image
-                if (viewModel.DesktopListingImageFile != null)
-                {
-                    var desktopListingImage = $"{lottery.Phase.ToString()}_dl_{timestamp}_{viewModel.DesktopListingImageFile.FileName}";
-                    var desktopListingImagePath = Path.Combine(pathLottery, desktopListingImage);
-                    viewModel.DesktopListingImageFile.CopyTo(new FileStream(desktopListingImagePath, FileMode.Create));
-                    lottery.DesktopListingImage = desktopListingImage;
-                }
-
-                // mobile listing image
-                if (viewModel.MobileListingImageFile != null)
-                {
-                    var mobileListingImage = $"{lottery.Phase.ToString()}_ml_{timestamp}_{viewModel.MobileListingImageFile.FileName}";
-                    var mobileListingImagePath = Path.Combine(pathLottery, mobileListingImage);
-                    viewModel.MobileListingImageFile.CopyTo(new FileStream(mobileListingImagePath, FileMode.Create));
-                    lottery.MobileListingImage = mobileListingImage;
-                }
-
-                // prize image
-                if (viewModel.PrizeImageFile != null)
-                {
-                    var prizeImage = $"{lottery.Phase.ToString()}_p_{timestamp}_{viewModel.PrizeImageFile.FileName}";
-                    var prizeImagePath = Path.Combine(pathLottery, prizeImage);
-                    viewModel.PrizeImageFile.CopyTo(new FileStream(prizeImagePath, FileMode.Create));
-                    lottery.PrizeImage = prizeImage;
-                }
-
                 _lotteryService.Insert(lottery);
+                _unitOfWork.SaveChanges();
+
+                foreach (var detail in viewModel.LotteryDetails)
+                {
+                    var lotteryDetail = new LotteryDetail();
+                    // Desktop slide image
+                    if (detail.DesktopTopImageFile != null)
+                    {
+                        var desktopTopImage = $"{lottery.Phase.ToString()}_lang_{detail.LangId}_dt_{timestamp}_{detail.DesktopTopImageFile.FileName}";
+                        var desktopTopImagePath = Path.Combine(pathLottery, desktopTopImage);
+                        detail.DesktopTopImageFile.CopyTo(new FileStream(desktopTopImagePath, FileMode.Create));
+                        lotteryDetail.DesktopTopImage = desktopTopImage;
+                    }
+
+                    // Mobile slide image
+                    if (detail.MobileTopImageFile != null)
+                    {
+                        var mobileTopImage = $"{lottery.Phase.ToString()}_lang_{detail.LangId}_mt_{timestamp}_{detail.MobileTopImageFile.FileName}";
+                        var mobileTopImagePath = Path.Combine(pathLottery, mobileTopImage);
+                        detail.MobileTopImageFile.CopyTo(new FileStream(mobileTopImagePath, FileMode.Create));
+                        lotteryDetail.MobileTopImage = mobileTopImage;
+                    }
+
+                    // desktop listing image
+                    if (detail.DesktopListingImageFile != null)
+                    {
+                        var desktopListingImage = $"{lottery.Phase.ToString()}_lang_{detail.LangId}_dl_{timestamp}_{detail.DesktopListingImageFile.FileName}";
+                        var desktopListingImagePath = Path.Combine(pathLottery, desktopListingImage);
+                        detail.DesktopListingImageFile.CopyTo(new FileStream(desktopListingImagePath, FileMode.Create));
+                        lotteryDetail.DesktopListingImage = desktopListingImage;
+                    }
+
+                    // mobile listing image
+                    if (detail.MobileListingImageFile != null)
+                    {
+                        var mobileListingImage = $"{lottery.Phase.ToString()}_lang_{detail.LangId}_ml_{timestamp}_{detail.MobileListingImageFile.FileName}";
+                        var mobileListingImagePath = Path.Combine(pathLottery, mobileListingImage);
+                        detail.MobileListingImageFile.CopyTo(new FileStream(mobileListingImagePath, FileMode.Create));
+                        lotteryDetail.MobileListingImage = mobileListingImage;
+                    }
+
+                    // prize image
+                    if (detail.PrizeImageFile != null)
+                    {
+                        var prizeImage = $"{lottery.Phase.ToString()}_lang_{detail.LangId}_p_{timestamp}_{detail.PrizeImageFile.FileName}";
+                        var prizeImagePath = Path.Combine(pathLottery, prizeImage);
+                        detail.PrizeImageFile.CopyTo(new FileStream(prizeImagePath, FileMode.Create));
+                        lotteryDetail.PrizeImage = prizeImage;
+                    }
+
+                    lotteryDetail.LotteryId = lottery.Id;
+                    lotteryDetail.LangId = detail.LangId;
+                    lotteryDetail.Description = detail.Description;
+
+                    _lotteryDetailService.Insert(lotteryDetail);
+                }
+
                 _unitOfWork.SaveChanges();
 
                 // Order to set index of the prize

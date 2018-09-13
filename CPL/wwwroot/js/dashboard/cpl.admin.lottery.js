@@ -17,6 +17,8 @@
         AdminLottery.bindDoDeleteLottery();
         AdminLottery.bindViewLottery();
         AdminLottery.bindViewLotteryPrize();
+        AdminLottery.bindAddLotteryCategory();
+        AdminLottery.bindDoAddLotteryCategory();
     },
     loadLotteryDataTable: function () {
         return $('#dt-all-lottery-game').DataTable({
@@ -49,7 +51,7 @@
                             return "<p class='text-sm-center'><span class='badge badge-info'>" + $("#pending").val() + "</span></p>";
                         }
                         else if (full.status == 2) {
-                            return "<p class='text-sm-center'><span class='badge badge-success'>" + $("#active").val() + "</span></p>"; 
+                            return "<p class='text-sm-center'><span class='badge badge-success'>" + $("#active").val() + "</span></p>";
                         }
                         else if (full.status == 3) {
                             return "<p class='text-sm-center'><span class='badge badge-secondary'>" + $("#completed").val() + "</span></p>";
@@ -83,14 +85,14 @@
                 {
                     "data": "DesktopTopImage",
                     "render": function (data, type, full, meta) {
-                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "' href='/images/lottery/" + full.desktopTopImage + "' ><img src='/images/lottery/" + full.desktopTopImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopTopImage + "'> </a>";
+                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "' href='/images/lottery/" + full.lotteryDetails[1].desktopTopImage + "' ><img src='/images/lottery/" + full.lotteryDetails[1].desktopTopImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopTopImage + "'> </a>";
                     },
                     "orderable": false
                 },
                 {
                     "data": "DesktopListingImage",
                     "render": function (data, type, full, meta) {
-                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "'  href='/images/lottery/" + full.desktopListingImage + "' ><img src='/images/lottery/" + full.desktopListingImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopListingImage + "'> </a>";
+                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "'  href='/images/lottery/" + full.lotteryDetails[1].desktopListingImage + "' ><img src='/images/lottery/" + full.lotteryDetails[1].desktopListingImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.desktopListingImage + "'> </a>";
                     },
                     "orderable": false
                 },
@@ -148,7 +150,7 @@
                     "orderable": false
                 },
                 {
-                     "data": "Email",
+                    "data": "Email",
                     "render": function (data, type, full, meta) {
                         return full.email;
                     },
@@ -192,6 +194,7 @@
                 },
                 success: function (data) {
                     $("#modal").html(data);
+                    $("#modal #lottery-category").selectpicker('refresh');
                     $("#edit-lottery").modal("show");
                     $("#edit-lottery .btn-do-edit").hide();
                     $("#edit-lottery .btn-do-edit-publish").hide();
@@ -297,6 +300,11 @@
                 },
                 success: function (data) {
                     $("#modal").html(data);
+                    // Initiate lottery-category
+                    if ($("#modal #lottery-category").data("value") != "") {
+                        $("#modal #lottery-category option[value=" + $("#modal #lottery-category").data("value") + "]").attr("selected", "selected");
+                    }
+                    $("#modal #lottery-category").selectpicker('refresh');
                     $("#edit-lottery").modal("show");
                     $("#edit-lottery .btn-do-add").hide();
                     $("#edit-lottery .btn-do-add-publish").hide();
@@ -385,6 +393,14 @@
     bindDoAddLottery: function () {
         $('#modal').on('click', '.btn-do-add', function () {
             var _this = this;
+
+            //Validate for category
+            var isCategoryValid = $("#lottery-category").val() != "";
+            if (isCategoryValid)
+                $("#category-msg").hide();
+            else
+                $("#category-msg").show();
+
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
             var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
@@ -395,43 +411,50 @@
             else {
                 $("#prize-required").removeClass("d-block");
             }
-            if (isFormValid) {
+
+            if (isFormValid && isCategoryValid) {
                 var formData = new FormData();
+                $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                    var desktopTopImage = $(e).find("#desktop-top-image").get(0);
+                    if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopTopImageFile', desktopTopImage.files[0]);
+                    }
 
-                var desktopTopImage = $("#desktop-slide-image").get(0);
-                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
-                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
-                }
+                    var mobileTopImage = $(e).find("#mobile-top-image").get(0);
+                    if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileTopImageFile', mobileTopImage.files[0]);
+                    }
 
-                var mobileTopImage = $("#mobile-slide-image").get(0);
-                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
-                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
-                }
+                    var desktopListingImage = $(e).find("#desktop-listing-image").get(0);
+                    if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopListingImageFile', desktopListingImage.files[0]);
+                    }
 
-                var desktopListingImage = $("#desktop-listing-image").get(0);
-                if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
-                    formData.append('DesktopListingImageFile', desktopListingImage.files[0]);
-                }
+                    var mobileListingImage = $(e).find("#mobile-listing-image").get(0);
+                    if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileListingImageFile', mobileListingImage.files[0]);
+                    }
 
-                var mobileListingImage = $("#mobile-listing-image").get(0);
-                if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
-                    formData.append('MobileListingImageFile', mobileListingImage.files[0]);
-                }
-
-                var prizeImage = $("#prize-image").get(0);
-                if (prizeImage !== undefined && prizeImage.files.length > 0) {
-                    formData.append('PrizeImageFile', prizeImage.files[0]);
-                }
+                    var prizeImage = $(e).find("#prize-image").get(0);
+                    if (prizeImage !== undefined && prizeImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
+                    }
+                    formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
+                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
+                });
 
                 formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
                 formData.append('UnitPrice', $(_this).parents("#form-edit-lottery").find("#ticket-price").val());
                 formData.append('Volume', $(_this).parents("#form-edit-lottery").find("#volume").val());
+                formData.append('LotteryCategoryId', $(_this).parents("#form-edit-lottery").find("#lottery-category").val());
                 formData.append('IsPublished', false);
 
                 $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").map(function (i, e) {
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
                     formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
                 });
+                
 
                 $.ajax({
                     url: "/Admin/DoAddLottery/",
@@ -465,6 +488,12 @@
     bindDoAddAndPublishLottery: function () {
         $('#modal').on('click', '.btn-do-add-publish', function () {
             var _this = this;
+            //Validate for category
+            var isCategoryValid = $("#lottery-category").val() != "";
+            if (isCategoryValid)
+                $("#category-msg").hide();
+            else
+                $("#category-msg").show();
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
             var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
@@ -478,34 +507,40 @@
             if (isFormValid) {
                 var formData = new FormData();
 
-                var desktopTopImage = $("#desktop-slide-image").get(0);
-                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
-                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
-                }
+                $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                    var desktopTopImage = $(e).find("#desktop-top-image").get(0);
+                    if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopTopImageFile', desktopTopImage.files[0]);
+                    }
 
-                var mobileTopImage = $("#mobile-slide-image").get(0);
-                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
-                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
-                }
+                    var mobileTopImage = $(e).find("#mobile-top-image").get(0);
+                    if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileTopImageFile', mobileTopImage.files[0]);
+                    }
 
-                var desktopListingImage = $("#desktop-listing-image").get(0);
-                if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
-                    formData.append('DesktopListingImageFile', desktopListingImage.files[0]);
-                }
+                    var desktopListingImage = $(e).find("#desktop-listing-image").get(0);
+                    if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopListingImageFile', desktopListingImage.files[0]);
+                    }
 
-                var mobileListingImage = $("#mobile-listing-image").get(0);
-                if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
-                    formData.append('MobileListingImageFile', mobileListingImage.files[0]);
-                }
+                    var mobileListingImage = $(e).find("#mobile-listing-image").get(0);
+                    if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileListingImageFile', mobileListingImage.files[0]);
+                    }
 
-                var prizeImage = $("#prize-image").get(0);
-                if (prizeImage !== undefined && prizeImage.files.length > 0) {
-                    formData.append('PrizeImageFile', prizeImage.files[0]);
-                }
+                    var prizeImage = $(e).find("#prize-image").get(0);
+                    if (prizeImage !== undefined && prizeImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
+                    }
+                    formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
+                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
+                });
 
                 formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
                 formData.append('UnitPrice', $(_this).parents("#form-edit-lottery").find("#ticket-price").val());
                 formData.append('Volume', $(_this).parents("#form-edit-lottery").find("#volume").val());
+                formData.append('LotteryCategoryId', $(_this).parents("#form-edit-lottery").find("#lottery-category").val());
                 formData.append('IsPublished', true);
 
                 $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").map(function (i, e) {
@@ -545,6 +580,12 @@
     bindDoEditLottery: function () {
         $('#modal').on('click', '.btn-do-edit', function () {
             var _this = this;
+            //Validate for category
+            var isCategoryValid = $("#lottery-category").val() != "";
+            if (isCategoryValid)
+                $("#category-msg").hide();
+            else
+                $("#category-msg").show();
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
             var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
@@ -558,35 +599,42 @@
             if (isFormValid) {
                 var formData = new FormData();
 
-                var desktopTopImage = $("#desktop-slide-image").get(0);
-                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
-                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
-                }
+                $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                    var desktopTopImage = $(e).find("#desktop-top-image").get(0);
+                    if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopTopImageFile', desktopTopImage.files[0]);
+                    }
 
-                var mobileTopImage = $("#mobile-slide-image").get(0);
-                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
-                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
-                }
+                    var mobileTopImage = $(e).find("#mobile-top-image").get(0);
+                    if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileTopImageFile', mobileTopImage.files[0]);
+                    }
 
-                var desktopListingImage = $("#desktop-listing-image").get(0);
-                if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
-                    formData.append('DesktopListingImageFile', desktopListingImage.files[0]);
-                }
+                    var desktopListingImage = $(e).find("#desktop-listing-image").get(0);
+                    if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopListingImageFile', desktopListingImage.files[0]);
+                    }
 
-                var mobileListingImage = $("#mobile-listing-image").get(0);
-                if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
-                    formData.append('MobileListingImageFile', mobileListingImage.files[0]);
-                }
+                    var mobileListingImage = $(e).find("#mobile-listing-image").get(0);
+                    if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileListingImageFile', mobileListingImage.files[0]);
+                    }
 
-                var prizeImage = $("#prize-image").get(0);
-                if (prizeImage !== undefined && prizeImage.files.length > 0) {
-                    formData.append('PrizeImageFile', prizeImage.files[0]);
-                }
+                    var prizeImage = $(e).find("#prize-image").get(0);
+                    if (prizeImage !== undefined && prizeImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
+                    }
+                    formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
+                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
+                    formData.append('LotteryDetails[' + i + '].Id', parseInt($(e).find("#detail-id").val()));
+                });
 
                 formData.append('Id', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                 formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
                 formData.append('UnitPrice', $(_this).parents("#form-edit-lottery").find("#ticket-price").val());
                 formData.append('Volume', $(_this).parents("#form-edit-lottery").find("#volume").val());
+                formData.append('LotteryCategoryId', $(_this).parents("#form-edit-lottery").find("#lottery-category").val());
                 formData.append('IsPublished', false);
 
                 $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").map(function (i, e) {
@@ -626,6 +674,12 @@
     bindDoEditAndPublishLottery: function () {
         $('#modal').on('click', '.btn-do-edit-publish', function () {
             var _this = this;
+            //Validate for category
+            var isCategoryValid = $("#lottery-category").val() != "";
+            if (isCategoryValid)
+                $("#category-msg").hide();
+            else
+                $("#category-msg").show();
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
             var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
@@ -639,35 +693,42 @@
             if (isFormValid) {
                 var formData = new FormData();
 
-                var desktopTopImage = $("#desktop-slide-image").get(0);
-                if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
-                    formData.append('DesktopTopImageFile', desktopTopImage.files[0]);
-                }
+                $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                    var desktopTopImage = $(e).find("#desktop-top-image").get(0);
+                    if (desktopTopImage !== undefined && desktopTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopTopImageFile', desktopTopImage.files[0]);
+                    }
 
-                var mobileTopImage = $("#mobile-slide-image").get(0);
-                if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
-                    formData.append('MobileTopImageFile', mobileTopImage.files[0]);
-                }
+                    var mobileTopImage = $(e).find("#mobile-top-image").get(0);
+                    if (mobileTopImage !== undefined && mobileTopImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileTopImageFile', mobileTopImage.files[0]);
+                    }
 
-                var desktopListingImage = $("#desktop-listing-image").get(0);
-                if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
-                    formData.append('DesktopListingImageFile', desktopListingImage.files[0]);
-                }
+                    var desktopListingImage = $(e).find("#desktop-listing-image").get(0);
+                    if (desktopListingImage !== undefined && desktopListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].DesktopListingImageFile', desktopListingImage.files[0]);
+                    }
 
-                var mobileListingImage = $("#mobile-listing-image").get(0);
-                if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
-                    formData.append('MobileListingImageFile', mobileListingImage.files[0]);
-                }
+                    var mobileListingImage = $(e).find("#mobile-listing-image").get(0);
+                    if (mobileListingImage !== undefined && mobileListingImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].MobileListingImageFile', mobileListingImage.files[0]);
+                    }
 
-                var prizeImage = $("#prize-image").get(0);
-                if (prizeImage !== undefined && prizeImage.files.length > 0) {
-                    formData.append('PrizeImageFile', prizeImage.files[0]);
-                }
+                    var prizeImage = $(e).find("#prize-image").get(0);
+                    if (prizeImage !== undefined && prizeImage.files.length > 0) {
+                        formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
+                    }
+                    formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
+                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
+                    formData.append('LotteryDetails[' + i + '].Id', parseInt($(e).find("#detail-id").val()));
+                });
 
                 formData.append('Id', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                 formData.append('Title', $(_this).parents("#form-edit-lottery").find("#title").val());
                 formData.append('UnitPrice', $(_this).parents("#form-edit-lottery").find("#ticket-price").val());
                 formData.append('Volume', $(_this).parents("#form-edit-lottery").find("#volume").val());
+                formData.append('LotteryCategoryId', $(_this).parents("#form-edit-lottery").find("#lottery-category").val());
                 formData.append('IsPublished', true);
 
                 $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").map(function (i, e) {
@@ -762,7 +823,6 @@
         });
     },
 
-
     bindDoDeleteLottery: function () {
         $('#modal').on('click', '.btn-do-delete', function () {
             var _this = this;
@@ -793,7 +853,67 @@
         });
     },
 
-}
+    bindAddLotteryCategory: function () {
+        $("#modal").on("change", "#lottery-category", function () {
+            var _this = this;
+            if ($(_this).val() === "0") {
+                $.ajax({
+                    url: "/Admin/AddLotteryCategory",
+                    type: "GET",
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                    },
+                    success: function (data) {
+                        $("#edit-lottery").modal("hide");
+                        $("#modal #modal-lottery-category").html(data);
+                        $("#edit-lottery-category").modal("show");
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                    }
+                });
+            };
+            return false;
+        });
+    },
+
+    bindDoAddLotteryCategory: function () {
+        $("#modal").on("click", "#edit-lottery-category .btn-do-add", function () {
+            var isFormValid = $("#form-edit-lottery-category")[0].checkValidity();
+            $("#form-edit-lottery-category").addClass('was-validated');
+            var _this = this;
+
+            if (isFormValid) {
+                $.ajax({
+                    url: "/Admin/DoAddLotteryCategory",
+                    type: "POST",
+                    data: $("#form-edit-lottery-category").serialize(),
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message, 'Success!');
+                            $("#edit-lottery-category").modal("hide");
+                            $("#modal #modal-lottery-category").empty();
+                            $("#edit-lottery").modal("show");
+                            $("#prize-required").removeClass("d-block");
+                            $("#modal #lottery-category").append($("<option selected='selected'></option>").val(data.id).html(data.name));
+                            $("#modal #lottery-category").selectpicker('refresh');
+                        }
+                        else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                    }
+                });
+            };
+            return false;
+        });
+    },
+};
 
 $(document).ready(function () {
     AdminLottery.init();

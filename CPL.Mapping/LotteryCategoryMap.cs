@@ -17,7 +17,7 @@ namespace CPL.Mapping
             // Table & Column Mappings
             builder.ToTable("LotteryCategory");
             builder.Property(t => t.Id).HasColumnName("Id");
-            builder.Property(t => t.Value).HasColumnName("Value");
+            builder.Property(t => t.Name).HasColumnName("Name");
             builder.Property(t => t.Description).HasColumnName("Description");
         }
     }
