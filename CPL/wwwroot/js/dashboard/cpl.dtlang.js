@@ -128,5 +128,50 @@
                 }
             }
         }
-    }
+    },
+    getHighChartLang: function () {
+        if ($("#LangId").val() == 1) // English 
+        {
+            return {
+                months: [
+                    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+                ],
+                weekdays: [
+                    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+                ],
+                shortMonths: [
+                    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                ]
+            }
+        }
+        else if ($("#LangId").val() == 2) { // Japanese
+            return {
+                months: [
+                    '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
+                ],
+                weekdays: [
+                    '月曜日', '火曜日', '水曜日', '木曜日',
+                    '金曜日', '土曜日', '日曜日'
+                ],
+                shortMonths: [
+                    '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
+                ]
+            }
+        }
+        else if ($("#LangId").val() == 3) { // Korean
+            return {
+
+            }
+        }
+        else if ($("#LangId").val() == 4) { // Chinese 
+            return {
+
+            }
+        }
+        else if ($("#LangId").val() == 5) { // Chinese 
+            return {
+
+            }
+        }
+    },
 };

@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
-    <link href="~/css/dashboard/cpl.admin.game.css" rel="stylesheet" />
+    <link href="~/css/dashboard/cpl.admin.game.css" asp-append-version = "true" rel="stylesheet" />
 }
 <div class="app-content container center-layout mt-2 px-0">
     <div class="content-wrapper">
@@ -68,6 +68,10 @@
                                             </fieldset>
                                             <div id="GameSummaryStatistic">
                                                 @await Component.InvokeAsync("GameSummaryStatistic")
+                                                @Html.Hidden("TotalRevenue", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue"))
+                                                @Html.Hidden("TotalSale", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale"))
+                                                @Html.Hidden("PageView", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView"))
+                                                @Html.Hidden("TotalPlayers", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPlayers"))
                                             </div>
                                         </div>
                                     </div>

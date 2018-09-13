@@ -1,6 +1,6 @@
 ﻿var AdminGameManagement = {
     init: function () {
-        AdminGameManagement.loadBetStatistic();
+        AdminGameManagement.loadStatisticChart();
         AdminGameManagement.bindSelectTimeRange();
     },
     bindSelectTimeRange: function () {
@@ -10,7 +10,7 @@
                 $("#GameSummaryStatistic").load("/ViewComponent/GetGameSummaryStatisticViewComponent?periodInDay=" + this.value);
             });
     },
-    loadBetStatistic: function (period) {
+    loadStatisticChart: function (period) {
         $.ajax({
             url: '/Admin/GetDataGameSummaryStatisticChart',
             type: "POST",
@@ -27,37 +27,9 @@
                             useUTC: false
                         }
                     });
-                    if (parseInt($("#LangId").val()) == 1) {
-                        Highcharts.setOptions({
-                            lang: {
-                                months: [
-                                    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-                                ],
-                                weekdays: [
-                                    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-                                ],
-                                shortMonths: [
-                                    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-                                ]
-                            }
-                        });
-                    }
-                    else if (parseInt($("#LangId").val()) == 2) {
-                        Highcharts.setOptions({
-                            lang: {
-                                months: [
-                                    '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
-                                ],
-                                weekdays: [
-                                    '月曜日', '火曜日', '水曜日', '木曜日',
-                                    '金曜日', '土曜日', '日曜日'
-                                ],
-                                shortMonths: [
-                                    '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
-                                ]
-                            }
-                        });
-                    }
+                    Highcharts.setOptions({
+                        lang: DTLang.getHighChartLang()
+                    });
                     options = {
                         chart: {
                             type: 'spline'
@@ -100,10 +72,10 @@
 
                     };
 
-                    var revenue = { data: [], name: parseInt($("#LangId").val()) == 1 ? 'Total revenue' : '総収入', color: '#4267b2' };
-                    var sale = { data: [], name: parseInt($("#LangId").val()) == 1 ? 'Total sale' : 'トータルセール', color: '#f7931a' };
-                    var pageView = { data: [], name: parseInt($("#LangId").val()) == 1 ? 'Page view' : 'ページビュー', color: '#828384' };
-                    var totalPlayers = { data: [], name: parseInt($("#LangId").val()) == 1 ? 'Total players' : '総プレーヤー', color: '#F69BF9' };
+                    var revenue = { data: [], name: $("#TotalRevenue").val(), color: '#4267b2' };
+                    var sale = { data: [], name: $("#TotalSale").val(), color: '#f7931a' };
+                    var pageView = { data: [], name: $("#PageView").val(), color: '#828384' };
+                    var totalPlayers = { data: [], name: $("#TotalPlayers").val(), color: '#F69BF9' };
 
                     if (JSON.parse(a).TotalSaleChanges.length != 0) {
                         $.each(JSON.parse(a).TotalSaleChanges, function (index, value) {

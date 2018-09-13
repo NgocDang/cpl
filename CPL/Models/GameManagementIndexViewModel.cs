@@ -20,4 +20,10 @@ namespace CPL.Models
         public DateTime Date { get; set; }
         public int Value { get; set; }
     }
+
+    public class PlayersChange
+    {
+        public DateTime Date { get; set; }
+        public IEnumerable<int> SysUserIdList { get; set; }
+    }
 }
