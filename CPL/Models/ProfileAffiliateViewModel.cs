@@ -15,5 +15,13 @@ namespace CPL.Models
         public string AffiliateUrl { get; set; }
 
         public bool IsKYCVerificationActivated { get; set; }
+
+        public int TotalSale { get; set; }
+        public int TotalSaleInToday { get; set; }
+        public int TotalSaleInYesterday { get; set; }
+
+        public int TotalUserRegister { get; set; }
+        public int TotalUserRegisterInToday { get; set; }
+        public int TotalUserRegisterInYesterday { get; set; }
     }
 }

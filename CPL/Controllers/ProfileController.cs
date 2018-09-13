@@ -253,8 +253,28 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().Where(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).FirstOrDefault();
             var viewModel = Mapper.Map<ProfileAffiliateViewModel>(user);
-            viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
+
             viewModel.IsKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
+
+            // Affiliate url
+            viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
+
+            // Total sale
+            // TODO: bind data to total sale by Store Procedure (implement after implement getSales procedure)
+            viewModel.TotalSale = 1000;
+            viewModel.TotalSaleInToday = 10;
+            viewModel.TotalSaleInYesterday = 10;
+
+            // Total user register
+            viewModel.TotalUserRegister = _sysUserService.Queryable()
+                                           .Where(x => x.IsIntroducedById != null && x.IsIntroducedById == user.Id).Count();
+            viewModel.TotalUserRegisterInToday = _sysUserService.Queryable()
+                                            .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Day == DateTime.Now.Day).Count();
+            viewModel.TotalUserRegisterInYesterday = _sysUserService.Queryable()
+                                            .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Day == DateTime.Now.AddDays(-1).Day).Count();
+
             return View(viewModel);
         }
 
