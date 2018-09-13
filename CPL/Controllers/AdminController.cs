@@ -1125,6 +1125,56 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
+        public IActionResult GetDataGameSummaryStatisticChart(int periodInDay)
+        {
+            var viewModel = new GameManagementIndexViewModel();
+
+            var lotterySale = _lotteryHistoryService.Queryable()
+                        .Where(x => periodInDay > 0 ?  x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => x.Lottery.UnitPrice) })
+                        .ToList().AsQueryable();
+
+            var pricePredictionSale = _pricePredictionHistoryService.Queryable()
+                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => (int)x.Amount) })
+                        .ToList().AsQueryable();
+
+            viewModel.TotalSaleChanges = lotterySale.Concat(pricePredictionSale).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
+
+            var lotteryRevenue = _lotteryHistoryService.Queryable()
+                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice * LotteryTotalRevenuePercentage)) })
+                        .ToList().AsQueryable();
+
+            var pricePredictionRevenue = _pricePredictionHistoryService.Queryable()
+                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Amount * PricePredictionTotalRevenuePercentage)) })
+                        .ToList().AsQueryable();
+
+            viewModel.TotalRevenueChanges = lotteryRevenue.Concat(pricePredictionRevenue).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
+
+            viewModel.PageViewChanges = _analyticService.GetPageViews(CPLConstant.Analytic.HomeViewId, periodInDay > 0 ? DateTime.Now.Date.AddDays(-periodInDay) : CPLConstant.FirstDeploymentDate, DateTime.Now).OrderBy(x => x.Date).ToList();
+
+            var lotteryPlayers = _lotteryHistoryService.Queryable()
+                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .GroupBy(x => x.CreatedDate.Date).Select(y => new { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIdList = y.Select(x => x.SysUserId) }).ToList();
+
+            var pricePredictionPlayers = _pricePredictionHistoryService.Queryable()
+                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .GroupBy(x => x.CreatedDate.Date).Select(y => new { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIdList = y.Select(x => x.SysUserId) }).ToList();
+
+            viewModel.TotalPlayersChanges = lotteryPlayers.Concat(pricePredictionPlayers).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.SelectMany(x => x.SysUserIdList).Distinct().Count() }).OrderBy(x => x.Date).ToList();
+
+            var mess = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
+            return new JsonResult(new { success = true, message = mess });
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
         public JsonResult SearchPurchasedLotteryHistory(DataTableAjaxPostModel viewModel, int? lotteryCategoryId)
         {
             // action inside a standard controller
@@ -1197,57 +1247,6 @@ namespace CPL.Controllers
                   .Skip(skip)
                   .Take(take)
                   .ToList();
-        }
-
-
-        [HttpPost]
-        [Permission(EnumRole.Admin)]
-        public IActionResult GetDataGameSummaryStatisticChart(int periodInDay)
-        {
-            var viewModel = new GameManagementIndexViewModel();
-
-            var lotterySale = _lotteryHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ?  x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => x.Lottery.UnitPrice) })
-                        .ToList().AsQueryable();
-
-            var pricePredictionSale = _pricePredictionHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => (int)x.Amount) })
-                        .ToList().AsQueryable();
-
-            viewModel.TotalSaleChanges = lotterySale.Concat(pricePredictionSale).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
-
-            var lotteryRevenue = _lotteryHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice * LotteryTotalRevenuePercentage)) })
-                        .ToList().AsQueryable();
-
-            var pricePredictionRevenue = _pricePredictionHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Amount * PricePredictionTotalRevenuePercentage)) })
-                        .ToList().AsQueryable();
-
-            viewModel.TotalRevenueChanges = lotteryRevenue.Concat(pricePredictionRevenue).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
-
-            viewModel.PageViewChanges = _analyticService.GetPageViews(CPLConstant.Analytic.HomeViewId, periodInDay > 0 ? DateTime.Now.Date.AddDays(-periodInDay) : CPLConstant.FirstDeploymentDate, DateTime.Now).OrderBy(x => x.Date).ToList();
-
-            var lotteryPlayers = _lotteryHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date).Select(y => new { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIdList = y.Select(x => x.SysUserId) }).ToList();
-
-            var pricePredictionPlayers = _pricePredictionHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date).Select(y => new { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIdList = y.Select(x => x.SysUserId) }).ToList();
-
-            viewModel.TotalPlayersChanges = lotteryPlayers.Concat(pricePredictionPlayers).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.SelectMany(x => x.SysUserIdList).Distinct().Count() }).OrderBy(x => x.Date).ToList();
-
-            var mess = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
-            return new JsonResult(new { success = true, message = mess });
         }
         #endregion
 
