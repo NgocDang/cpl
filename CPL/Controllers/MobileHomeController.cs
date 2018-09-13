@@ -47,12 +47,15 @@ namespace CPL.Controllers
                 item.Id = 1;
                 item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}"+"/images/lottery/1_slide_probability_mobile.jpg";
                 banners.Add(item);
+                item = new MobileBannerViewModel();
                 item.Id = 2;
                 item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + "/images/lottery/2_slide_crypto_lot_mobile.jpg";
                 banners.Add(item);
+                item = new MobileBannerViewModel();
                 item.Id = 3;
                 item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + "/images/lottery/3_slide_lottery_mobile.jpg";
                 banners.Add(item);
+                item = new MobileBannerViewModel();
                 item.Id = 4;
                 item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + "/images/lottery/4_slide_smartcontract_mobile.jpg";
                 banners.Add(item);
@@ -77,7 +80,7 @@ namespace CPL.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Permission(EnumRole.User)]
         public IActionResult GetLatestNewsList(MobileModel mobileModel)
         {
@@ -105,7 +108,7 @@ namespace CPL.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Permission(EnumRole.User)]
         public IActionResult GetLotteriesList(MobileModel mobileModel)
         {
