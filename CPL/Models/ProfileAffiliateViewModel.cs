@@ -17,11 +17,11 @@ namespace CPL.Models
         public bool IsKYCVerificationActivated { get; set; }
 
         public int TotalSale { get; set; }
-        public int TotalSaleInToday { get; set; }
-        public int TotalSaleInYesterday { get; set; }
+        public int TotalSaleToday { get; set; }
+        public int TotalSaleYesterday { get; set; }
 
         public int TotalUserRegister { get; set; }
-        public int TotalUserRegisterInToday { get; set; }
-        public int TotalUserRegisterInYesterday { get; set; }
+        public int TotalUserRegisterToday { get; set; }
+        public int TotalUserRegisterYesterday { get; set; }
     }
 }

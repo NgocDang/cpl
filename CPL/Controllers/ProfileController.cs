@@ -262,18 +262,18 @@ namespace CPL.Controllers
             // Total sale
             // TODO: bind data to total sale by Store Procedure (implement after implement getSales procedure)
             viewModel.TotalSale = 1000;
-            viewModel.TotalSaleInToday = 10;
-            viewModel.TotalSaleInYesterday = 10;
+            viewModel.TotalSaleToday = 10;
+            viewModel.TotalSaleYesterday = 10;
 
             // Total user register
             viewModel.TotalUserRegister = _sysUserService.Queryable()
                                            .Where(x => x.IsIntroducedById != null && x.IsIntroducedById == user.Id).Count();
-            viewModel.TotalUserRegisterInToday = _sysUserService.Queryable()
+            viewModel.TotalUserRegisterToday = _sysUserService.Queryable()
                                             .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
-                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Day == DateTime.Now.Day).Count();
-            viewModel.TotalUserRegisterInYesterday = _sysUserService.Queryable()
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date).Count();
+            viewModel.TotalUserRegisterYesterday = _sysUserService.Queryable()
                                             .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
-                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Day == DateTime.Now.AddDays(-1).Day).Count();
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date).Count();
 
             return View(viewModel);
         }
