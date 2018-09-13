@@ -2,6 +2,9 @@
     Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameManagement");
 }
+
+@model GameManagementIndexViewModel
+
 @section styles
     {
     <link href="~/js/dashboard/plugins/lightbox/ekko-lightbox.css" rel="stylesheet" />
@@ -10,6 +13,7 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
+    <link href="~/css/dashboard/cpl.admin.game.css" asp-append-version = "true" rel="stylesheet" />
 }
 <div class="app-content container center-layout mt-2 px-0">
     <div class="content-wrapper">
@@ -34,30 +38,60 @@
             <div class="tab-component">
                 <ul class="nav nav-tabs border-0">
                     <li class="nav-item">
-                        <a class="nav-link font-medium-2 font-weight-bold active px-2 border-0" id="summary-nav-tab" data-toggle="tab" href="#summary-nav" aria-controls="summary-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
+                        <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold active px-2 border-0" id="summary-nav-tab" data-toggle="tab" href="#summary-nav" aria-controls="summary-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="lottery-nav-tab" data-toggle="tab" href="#lottery-nav" aria-controls="lottery-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
+                        <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold px-2 border-0" id="lottery-nav-tab" data-toggle="tab" href="#lottery-nav" aria-controls="lottery-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="price-prediction-nav-tab" data-toggle="tab" href="#price-prediction-nav" aria-controls="price-prediction-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
+                        <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold px-2 border-0" id="price-prediction-nav-tab" data-toggle="tab" href="#price-prediction-nav" aria-controls="price-prediction-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="slot-nav-tab" data-toggle="tab" href="#slot-nav" aria-controls="slot-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slot")</a>
+                        <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold px-2 border-0" id="slot-nav-tab" data-toggle="tab" href="#slot-nav" aria-controls="slot-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slot")</a>
                     </li>
                 </ul>
                 <div class="tab-content mb-1">
-
+                    <div role="tabpanel" class="tab-pane active" id="summary-nav" aria-labelledby="summary-nav-tab" aria-expanded="true">
+                        <div class="card mb-1">
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="card col-12 mt-1">
+                                        <div class="card-content">
+                                            <label class="d-inline-block" for="Category">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TimeRange")</label>
+                                            <fieldset class="form-group col-lg-2 col-6 pl-0">
+                                                <select name="Category" id="Category" class="selectpicker" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                                    @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
+                                                    {
+                                                        <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                    }
+                                                </select>
+                                            </fieldset>
+                                            <div id="GameSummaryStatistic">
+                                                @await Component.InvokeAsync("GameSummaryStatistic")
+                                                @Html.Hidden("TotalRevenue", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue"))
+                                                @Html.Hidden("TotalSale", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale"))
+                                                @Html.Hidden("PageView", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView"))
+                                                @Html.Hidden("TotalPlayers", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPlayers"))
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card col-12 mt-1">
+                                        <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StatisticChart")</h6>
+                                        <div id="statistic-chart" class="height-400"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            @await Component.InvokeAsync("AdminLotteryHistory")
         </div>
     </div>
 </div>
 
 @section scripts
     {
+    <script src="~/js/dashboard/plugins/moment.min.js"></script>
     <script src="~/js/dashboard/plugins/lightbox/ekko-lightbox.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
@@ -66,5 +100,11 @@
     <script src="~/js/dashboard/plugins/intl-tel-input/js/intlTelInput.js"></script>
     <script src="~/js/dashboard/plugins/intl-tel-input/js/utils.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/highcharts.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/series-label.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/exporting.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
+    <script src="~/js/dashboard/plugins/bootstrap-selectpicker.js"></script>
+    <script src="~/js/dashboard/cpl.admin.game.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.admin.lotteryhistory.viewcomponent.js" asp-append-version="true"></script>
 }
