@@ -148,9 +148,7 @@
                                     allowPointSelect: true,
                                     cursor: 'pointer',
                                     dataLabels: {
-                                        enabled: true,
-                                        format: '<b>{point.percentage:.1f} %',
-                                        distance: -50,
+                                        enabled: false,
                                     },
                                     showInLegend: true
                                 }
