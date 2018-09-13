@@ -1,0 +1,23 @@
+﻿@{
+    Layout = null;
+}
+<div class="modal" tabindex="-1" role="dialog" id="deactivate-lottery" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <form id="form-deactivate-lottery" method="POST" action="#" class="needs-validation" novalidate="">
+                <div class="modal-header">
+                    <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Confirm")</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DeactivateLotteryGameConfirmation")
+                </div>
+                <div class="modal-footer text-right">
+                    <button type="button" class="btn btn-primary btn-sm btn-do-deactivate btn-mobile-version">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yes") </button>
+                    <button type="button" class="btn btn-secondary btn-sm btn-cancel btn-mobile-version" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
+                </div>
+                <input type="number" value='@ViewData["gameId"]' hidden id="game-id" />
+            </form>
+        </div>
+    </div>
+</div>

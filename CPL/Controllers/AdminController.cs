@@ -1831,6 +1831,13 @@ namespace CPL.Controllers
             }
         }
 
+        [Permission(EnumRole.Admin)]
+        public IActionResult ConfirmDeactivateLottery(int id)
+        {
+            ViewData["gameId"] = id;
+            return PartialView("_ConfirmDeactivateLottery");
+        }
+
         [HttpPost]
         [Permission(EnumRole.Admin)]
         public JsonResult DoDeactivateLottery(int id)
