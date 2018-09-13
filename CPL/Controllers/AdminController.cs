@@ -1337,8 +1337,16 @@ namespace CPL.Controllers
 
             lottery = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
+                                                        .Include(x => x.LotteryDetails)
                                                         .Select()
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
+
+            foreach (var detail in lottery.LotteryDetails)
+            {
+                var lang = Mapper.Map<LangViewModel>(_langService.Queryable().Where(x => x.Id == detail.LangId).FirstOrDefault());
+                detail.Lang = lang;
+            }
+
             lottery.LotteryCategory = _lotteryCategoryService.Queryable().Where(x => x.Id == lottery.LotteryCategoryId).FirstOrDefault().Name;
 
             return PartialView("_ViewLottery", lottery);
