@@ -23,3 +23,26 @@ INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'CurrencyPair'
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'Summary', N'Summary')
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'Summary', N'概要')
 -------------------------------------------------------------------------------------------
+
+-- 20180913-GameManagement---
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'StatisticChart', N'Statistic Chart')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'StatisticChart', N'統計チャート')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'TotalRevenue', N'Total Revenue')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TotalRevenue', N'総収入')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'TotalSale', N'Total Sale')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TotalSale', N'トータルセール')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'PageView', N'Page View')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'PageView', N'ページビュー')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'TotalPlayers', N'Total Players')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TotalPlayers', N'総プレーヤー')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'TodayPlayers', N'Today Players')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TodayPlayers', N'今日のプレーヤー')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'TimeRange', N'Time Range')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TimeRange', N'時間範囲')
+-------------------------------------------------------------------------------------------
