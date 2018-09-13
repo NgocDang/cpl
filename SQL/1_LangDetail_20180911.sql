@@ -55,4 +55,10 @@ INSERT INTO LangDetail VALUES (2, N'PurchaseDateTime', N'購入日時');
 INSERT INTO LangDetail VALUES (1, N'Details', N'Details');
 INSERT INTO LangDetail VALUES (2, N'Details', N'詳細');
 
+-- 20180912 - Admin game --
+INSERT INTO LangDetail VALUES (1, N'Revenue', N'Revenue');
+INSERT INTO LangDetail VALUES (2, N'Revenue', N'収入');
+
+INSERT INTO LangDetail VALUES (1, N'Terminal', N'Terminal');
+INSERT INTO LangDetail VALUES (2, N'Terminal', N'ターミナル');
 
