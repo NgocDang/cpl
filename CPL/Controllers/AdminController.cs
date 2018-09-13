@@ -1199,6 +1199,56 @@ namespace CPL.Controllers
                   .ToList();
         }
 
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetDataRevenuePercentagePieChart()
+        {
+            try
+            {
+                // lottery game
+                var totalSaleInLotteryGame = _lotteryHistoryService.Query()
+                                .Include(x => x.Lottery)
+                                .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
+                var totalAwardInLotteryGame = _lotteryHistoryService.Query()
+                    .Include(x => x.LotteryPrize)
+                    .Select(x => x.LotteryPrize).Sum(y => y?.Value);
+                var revenueInLotteryGame = totalSaleInLotteryGame - totalAwardInLotteryGame;
+
+                // price prediction game
+                var totalSaleIPricePredictionGame = _pricePredictionHistoryService.Queryable()
+                                                    .Sum(x => x.Amount);
+                var totalAwardIPricePredictionGame = _pricePredictionHistoryService.Queryable()
+                                                    .Sum(x => x.Award);
+                var revenueInPricePredictionGame = totalSaleIPricePredictionGame - totalAwardIPricePredictionGame;
+
+                return new JsonResult(new { success = true, revenueLotteryGame = revenueInLotteryGame , revenuePricePredictionGame = revenueInPricePredictionGame });
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new { success = false });
+            }
+        }
+
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetDataTeminalPercentagePieChart()
+        {
+            try
+            {
+                var deviceCategories = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+
+                return new JsonResult(new { success = true, pc = deviceCategories.Count(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP),
+                                                            mobile = deviceCategories.Count(x => x.DeviceCategory == EnumDeviceCategory.MOBILE),
+                                                            tablet = deviceCategories.Count(x => x.DeviceCategory == EnumDeviceCategory.TABLET)
+                                       });
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new { success = false });
+            }
+        }
+
         #endregion
 
         #region Lottery

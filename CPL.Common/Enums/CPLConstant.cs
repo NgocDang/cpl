@@ -152,5 +152,7 @@ namespace CPL.Common.Enums
         }
 
         public static string NumberOfAgencyAffiliateExpiredDays = "NumberOfAgencyAffiliateExpiredDays";
+
+        public static DateTime FirstDeploymentDate = new DateTime(2018, 8, 28);
     }
 }
