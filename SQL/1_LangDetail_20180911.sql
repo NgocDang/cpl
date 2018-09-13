@@ -54,5 +54,13 @@ INSERT INTO LangDetail VALUES (2, N'PurchaseDateTime', N'購入日時');
 
 INSERT INTO LangDetail VALUES (1, N'Details', N'Details');
 INSERT INTO LangDetail VALUES (2, N'Details', N'詳細');
+---------------------------------------------------------------------------------------------
 
+-- 20180913- Affiliate View --
+UPDATE LangDetail SET Value = N'Affiliate Generated URL' WHERE Name = N'AffliateUrl' and LangId = 1;
 
+INSERT INTO LangDetail VALUES (1, N'AffliateUrlComment', N'Lost CPL Amount of users who registered using this link will become affiliate sales');
+INSERT INTO LangDetail VALUES (2, N'AffliateUrlComment', N'このURLからユーザーが登録したユーザーの負け金が売上となります。');
+
+INSERT INTO LangDetail VALUES (1, N'Sales', N'Sales');
+INSERT INTO LangDetail VALUES (2, N'Sales', N'売上');
