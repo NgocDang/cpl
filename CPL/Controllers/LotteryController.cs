@@ -60,6 +60,7 @@ namespace CPL.Controllers
                 var lottery = _lotteryService
                                 .Query()
                                 .Include(x => x.LotteryHistories)
+                                .Include(x => x.LotteryDetails)
                                 //.Include(x => x.LotteryPrizes)
                                 .Select()
                                 .FirstOrDefault(x => x.Id == id);

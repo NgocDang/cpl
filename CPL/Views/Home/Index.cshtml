@@ -33,9 +33,17 @@
                     <div class="owl-item col-3">
                         <div class="card card-game">
                             <div class="card-header card-header-game font-weight-bold font-sm-size-15px">
-                                @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"),@lottery.NumberOfTicketLeft.ToString("N0"))
+                                @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0"))
                             </div>
-                            <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id"><img class="card-img-top card-img-game img-fluid" src="~/images/lottery/@lottery.DesktopListingImage" /></a>
+                            <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id">
+                                @foreach (var detail in lottery.LotteryDetails)
+                                {
+                                    @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                                    {
+                                        <img class="card-img-top card-img-game img-fluid" src="~/images/lottery/@detail.DesktopListingImage" />
+                                    }
+                                }
+                            </a>
                             <div class="card-body">
                                 <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id" class="btn btn-primary btn-block font-sm-size-15px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</a>
                             </div>
@@ -68,7 +76,15 @@
             @foreach (var lottery in Model.Lotteries)
             {
                 <div class="card card-game mt-05 mb-0">
-                    <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id"><img class="card-img-top card-img-game img-fluid visible-mobile" src="~/images/lottery/@lottery.MobileListingImage" /></a>
+                    <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id">
+                        @foreach (var detail in lottery.LotteryDetails)
+                        {
+                            @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                            {
+                                <img class="card-img-top card-img-game img-fluid visible-mobile" src="~/images/lottery/@detail.MobileListingImage" />
+                            }
+                        }
+                    </a>
                     <div class="card-header card-header-game-mobile font-weight-bold">
                         @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0"))
                     </div>

@@ -8,7 +8,7 @@ namespace CPL.Domain
     public class LotteryCategory : Entity
     {
         public int Id { get; set; }
-        public string Value { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
 
         public virtual ICollection<Lottery> Lotteries { get; set; }

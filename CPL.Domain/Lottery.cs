@@ -14,11 +14,6 @@ namespace CPL.Domain
         public int Volume { get; set; }
         public int Status { get; set; }
         public string Title { get; set; }
-        public string DesktopListingImage { get; set; }
-        public string MobileListingImage { get; set; }
-        public string DesktopTopImage { get; set; }
-        public string MobileTopImage { get; set; }
-        public string PrizeImage { get; set; }
         public int UnitPrice { get; set; }
         public int LotteryCategoryId { get; set; }
         public bool IsDeleted { get; set; }
@@ -26,5 +21,6 @@ namespace CPL.Domain
         public virtual ICollection<LotteryPrize> LotteryPrizes { get; set; }
         public virtual ICollection<LotteryHistory> LotteryHistories { get; set; }
         public virtual LotteryCategory LotteryCategory { get; set; }
+        public virtual ICollection<LotteryDetail> LotteryDetails { get; set; }
     }
 }

@@ -23,3 +23,20 @@ INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'CurrencyPair'
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'Summary', N'Summary')
 INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'Summary', N'概要')
 -------------------------------------------------------------------------------------------
+
+-- 20180911-Lottery---
+INSERT INTO LangDetail VALUES (1, N'CreateNewCategory', N'Create new category');
+INSERT INTO LangDetail VALUES (2, N'CreateNewCategory', N'新しいカテゴリを作成する');
+
+INSERT INTO LangDetail VALUES (1, N'ExistingCategory', N'Existing category, please use another.');
+INSERT INTO LangDetail VALUES (2, N'ExistingCategory', N'既存のカテゴリは、別のカテゴリを使用してください。');
+
+INSERT INTO LangDetail VALUES (1, N'LotteryCategory', N'Lottery Category');
+INSERT INTO LangDetail VALUES (2, N'LotteryCategory', N'宝くじカテゴリ');
+
+INSERT INTO LangDetail VALUES (1, N'LotteryCategoryRequired', N'Please select lottery category');
+INSERT INTO LangDetail VALUES (2, N'LotteryCategoryRequired', N'抽選カテゴリを選択してください');
+
+INSERT INTO LangDetail VALUES (1, N'LotteryCategoryNameRequired', N'Please fill in lottery category name');
+INSERT INTO LangDetail VALUES (2, N'LotteryCategoryNameRequired', N'宝くじカテゴリ名を記入してください');
+
