@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.Core.Interfaces;
 using CPL.Domain;
 using CPL.Infrastructure.Interfaces;
@@ -187,6 +188,11 @@ namespace CPL.Controllers
                 var agencyToken = _agencyTokenService.Queryable().FirstOrDefault(x => x.Token == token && x.ExpiredDate >= DateTime.Now && !x.SysUserId.HasValue);
                 if (agencyToken != null)
                 {
+                    if (Utils.IsMobile())
+                    {
+                        return Redirect("cryptoodds://SetAgencyToken/" + token + "/" + (affiliateCookieExpirations * 60 * 24));
+                    }
+
                     viewModel.AgencyToken = token;
                     CookieHelper.SetCookies(Response, "AgencyTokenCookie", token, affiliateCookieExpirations * 60 * 24);
                     viewModel.IsRedirected = true;
@@ -203,6 +209,11 @@ namespace CPL.Controllers
             // Update id using cookie
             if (id.HasValue)
             {
+                if (Utils.IsMobile())
+                {
+                    return Redirect("cryptoodds://SetIntroductionId/" + id.Value.ToString() + "/" + (affiliateCookieExpirations * 60 * 24));
+                }
+
                 CookieHelper.SetCookies(Response, "AffiliateCookie", id.Value.ToString(), affiliateCookieExpirations * 60 * 24);
                 viewModel.IsRedirected = true;
             }
@@ -441,6 +452,7 @@ namespace CPL.Controllers
                         return new JsonResult(new
                         {
                             code = EnumResponseStatus.SUCCESS,
+                            activation = 1
                         });
                     }
 
@@ -474,6 +486,7 @@ namespace CPL.Controllers
                         return new JsonResult(new
                         {
                             code = EnumResponseStatus.SUCCESS,
+                            activation = 0
                         });
                     }
 
@@ -491,7 +504,7 @@ namespace CPL.Controllers
                 return new JsonResult(new
                 {
                     code = EnumResponseStatus.ERROR,
-                    error_message_key = "Common_ErrorOccurs",
+                    error_message_key = "Common_ErrorOccurs"
                 });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
@@ -537,6 +550,11 @@ namespace CPL.Controllers
 
                     template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_MemberEmailTemplate.cshtml", memberEmailTemplateViewModel).Result;
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
+
+                    if(Utils.IsMobile())
+                    {
+                        return Redirect("cryptoodds://Activated");
+                    }
 
                     // Log in
                     user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
