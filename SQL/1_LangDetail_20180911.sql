@@ -54,11 +54,37 @@ INSERT INTO LangDetail VALUES (2, N'PurchaseDateTime', N'購入日時');
 
 INSERT INTO LangDetail VALUES (1, N'Details', N'Details');
 INSERT INTO LangDetail VALUES (2, N'Details', N'詳細');
+---------------------------------------------------------------------------------------------
 
--- 20180912 - Admin game --
-INSERT INTO LangDetail VALUES (1, N'Revenue', N'Revenue');
-INSERT INTO LangDetail VALUES (2, N'Revenue', N'収入');
+-- 20180913- Affiliate View --
+UPDATE LangDetail SET Value = N'Affiliate Generated URL' WHERE Name = N'AffliateUrl' and LangId = 1;
 
-INSERT INTO LangDetail VALUES (1, N'Terminal', N'Terminal');
-INSERT INTO LangDetail VALUES (2, N'Terminal', N'ターミナル');
+INSERT INTO LangDetail VALUES (1, N'AffliateUrlComment', N'Lost CPL Amount of users who registered using this link will become affiliate sales');
+INSERT INTO LangDetail VALUES (2, N'AffliateUrlComment', N'このURLからユーザーが登録したユーザーの負け金が売上となります。');
 
+-------------------------------------------------------------------------------------------
+
+-- 20180913-GameManagement---
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'StatisticChart', N'Statistic Chart')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'StatisticChart', N'統計チャート')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'TotalRevenue', N'Total Revenue')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TotalRevenue', N'総収入')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'TotalSale', N'Total Sale')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TotalSale', N'トータルセール')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'PageView', N'Page View')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'PageView', N'ページビュー')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'TotalPlayers', N'Total Players')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TotalPlayers', N'総プレーヤー')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'TodayPlayers', N'Today Players')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TodayPlayers', N'今日のプレーヤー')
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'TimeRange', N'Time Range')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TimeRange', N'時間範囲')
+-------------------------------------------------------------------------------------------
+INSERT INTO LangDetail VALUES (1, N'Sales', N'Sales');
+INSERT INTO LangDetail VALUES (2, N'Sales', N'売上');

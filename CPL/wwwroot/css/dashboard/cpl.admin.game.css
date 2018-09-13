@@ -1,0 +1,38 @@
+﻿.nav-tabs .nav-item {
+    z-index: 9;
+}
+
+.border-right {
+    border-right: 1px solid #ECEFF1 !important;
+}
+
+@media (max-width: 990px) {
+    .border-right {
+        border: none !important;
+    }
+}
+
+#price-prediction-nav-bar .nav-item {
+    z-index: 9;
+}
+
+.fa-circle-active {
+    bottom: 2px;
+    position: relative;
+    font-size: .5rem !important;
+}
+
+.fa-circle-inactive {
+    bottom: 2px;
+    position: relative;
+    font-size: .5rem !important;
+}
+
+@media (max-width: 465px) {
+    .mobile-tab-name {
+        word-break: break-word;
+        width: 90px;
+        line-height: 18px;
+        text-align: center;
+    }
+}
