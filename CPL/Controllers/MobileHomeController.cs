@@ -19,12 +19,14 @@ namespace CPL.Controllers
         private readonly IHostingEnvironment _appEnvironment;
         private readonly INewsService _newsService;
         private readonly ILotteryService _lotteryService;
+        private readonly ISysUserService _sysUserService;
 
         public MobileHomeController(
             IMobileLangDetailService mobileLangDetailService,
             IMapper mapper,
             INewsService newsService,
             ILotteryService lotteryService,
+            ISysUserService sysUserService,
             IHostingEnvironment appEnvironment
         )
         {
@@ -33,6 +35,7 @@ namespace CPL.Controllers
             this._mapper = mapper;
             this._appEnvironment = appEnvironment;
             this._lotteryService = lotteryService;
+            this._sysUserService = sysUserService;
         }
 
         [HttpGet]
@@ -133,6 +136,35 @@ namespace CPL.Controllers
                         code = EnumResponseStatus.SUCCESS,
                         data = lotteries.Select(x => Mapper.Map<HomeLotteryViewModel>(x)).ToList()
             }
+                );
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(
+                    new
+                    {
+                        code = EnumResponseStatus.ERROR,
+                        error_message_key = ex.Message
+                    }
+                );
+            }
+        }
+
+
+        [HttpGet]
+        [Permission(EnumRole.User)]
+        public IActionResult GetUserInfomation(MobileModel mobileModel)
+        {
+            try
+            {
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id== mobileModel.MobileUserId && x.IsDeleted == false);
+
+                return new JsonResult(
+                    new
+                    {
+                        code = EnumResponseStatus.SUCCESS,
+                        data = user
+                    }
                 );
             }
             catch (Exception ex)
