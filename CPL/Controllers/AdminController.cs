@@ -44,7 +44,6 @@ namespace CPL.Controllers
         private readonly ILotteryCategoryService _lotteryCategoryService;
         private readonly ILotteryDetailService _lotteryDetailService;
         private readonly IAnalyticService _analyticService;
-		private readonly ILotteryCategoryService _lotteryCategoryService;
 
 
         public AdminController(
@@ -1443,8 +1442,7 @@ namespace CPL.Controllers
         {
             try
             {
-                var lotteryCategory = _lotteryCategoryService.Queryable().Where(x => x.Name == viewModel.Name);
-                if (lotteryCategory.Count() != 0)
+                if (_lotteryCategoryService.Queryable().Any(x => x.Name == viewModel.Name))
                     return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExistingCategory") });
                 else
                 {
@@ -1455,7 +1453,7 @@ namespace CPL.Controllers
                     });
 
                     _unitOfWork.SaveChanges();
-                    var newCategory = _lotteryCategoryService.Queryable().Where(x => x.Name == viewModel.Name).FirstOrDefault();
+                    var newCategory = _lotteryCategoryService.Queryable().FirstOrDefault(x => x.Name == viewModel.Name);
                     return new JsonResult(new { success = true, id = newCategory.Id, name = newCategory.Name, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
                 }
 
@@ -1492,7 +1490,7 @@ namespace CPL.Controllers
 
                 foreach (var detail in viewModel.LotteryDetails)
                 {
-                    var lotteryDetail = _lotteryDetailService.Queryable().Where(x => x.Id == detail.Id).FirstOrDefault();
+                    var lotteryDetail = _lotteryDetailService.Queryable().FirstOrDefault(x => x.Id == detail.Id);
                     // Desktop slide image
                     if (detail.DesktopTopImageFile != null)
                     {
@@ -1642,8 +1640,6 @@ namespace CPL.Controllers
                 _lotteryService.Insert(lottery);
                 _unitOfWork.SaveChanges();
 
-                var lotteryId = _lotteryService.Queryable().LastOrDefault().Id;
-
                 foreach (var detail in viewModel.LotteryDetails)
                 {
                     var lotteryDetail = new LotteryDetail();
@@ -1692,7 +1688,7 @@ namespace CPL.Controllers
                         lotteryDetail.PrizeImage = prizeImage;
                     }
 
-                    lotteryDetail.LotteryId = lotteryId;
+                    lotteryDetail.LotteryId = lottery.Id;
                     lotteryDetail.LangId = detail.LangId;
                     lotteryDetail.Description = detail.Description;
 
@@ -1717,7 +1713,7 @@ namespace CPL.Controllers
                         Index = prize.Index,
                         Value = prize.Value,
                         Volume = prize.Volume,
-                        LotteryId = lotteryId
+                        LotteryId = lottery.Id
                     });
                 }
 

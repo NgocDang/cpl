@@ -895,7 +895,7 @@
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
                             $("#edit-lottery-category").modal("hide");
-                            $("#modal #modal-lottery-category").html();
+                            $("#modal #modal-lottery-category").empty();
                             $("#edit-lottery").modal("show");
                             $("#prize-required").removeClass("d-block");
                             $("#modal #lottery-category").append($("<option selected='selected'></option>").val(data.id).html(data.name));
