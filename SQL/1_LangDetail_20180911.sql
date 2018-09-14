@@ -97,5 +97,15 @@ INSERT INTO LangDetail VALUES (2, N'Sales', N'売上');
 INSERT INTO LangDetail VALUES (1, N'Revenue', N'Revenue');
 INSERT INTO LangDetail VALUES (2, N'Revenue', N'収入');
 
-INSERT INTO LangDetail VALUES (1, N'Terminal', N'Terminal');
-INSERT INTO LangDetail VALUES (2, N'Terminal', N'ターミナル');
+INSERT INTO LangDetail VALUES (1, N'Device', N'Device');
+INSERT INTO LangDetail VALUES (2, N'Device', N'デバイス');
+
+
+INSERT INTO LangDetail VALUES (1, N'Desktop', N'Desktop');
+INSERT INTO LangDetail VALUES (2, N'Desktop', N'デスクトップ');
+
+INSERT INTO LangDetail VALUES (1, N'Tablet', N'Tablet');
+INSERT INTO LangDetail VALUES (2, N'Tablet', N'タブレット');
+
+INSERT INTO LangDetail VALUES (1, N'NoData', N'No Data Available');
+INSERT INTO LangDetail VALUES (2, N'NoData', N'データなし')
