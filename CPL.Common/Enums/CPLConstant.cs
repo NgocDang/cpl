@@ -156,5 +156,18 @@ namespace CPL.Common.Enums
         public static decimal PricePredictionTotalRevenuePercentage = 0.2m;
         public static decimal PricePredictionTotalAwardPercentage = 0.8m;
         public static DateTime FirstDeploymentDate = new DateTime(2018, 8, 28);
+
+        public struct MobileAppConstant
+        {
+            public static string LoginScreenInactivatingAccount = "LoginScreen_Inactivating_Account";
+            public static string LoginScreenInvalidEmailPassword = "LoginScreen_Invalid_Email_Password";
+            public static string LoginScreenInvalidPIN = "LoginScreen_Invalid_PIN";
+
+            public static string RegisterScreenInputEmailExist = "RegisterScreen_Input_Email_Exist";
+
+            public static string CommonErrorOccurs = "Common_ErrorOccurs";
+        }
+
+        
     }
 }
