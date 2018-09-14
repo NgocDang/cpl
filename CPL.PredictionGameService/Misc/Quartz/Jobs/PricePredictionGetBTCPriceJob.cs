@@ -39,7 +39,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             try
             {
                 // interval time
-                CompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinute).Value);
+                CompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionCompareIntervalInMinute).Value);
 
                 // result time and price
                 var resultTime = ((DateTimeOffset)resultTimeLocal).ToUnixTimeSeconds();
