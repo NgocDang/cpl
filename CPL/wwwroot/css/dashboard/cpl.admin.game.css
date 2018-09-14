@@ -33,6 +33,7 @@
         word-break: break-word;
         width: 90px;
         line-height: 18px;
+        height: 100%;
         text-align: center;
     }
 }
