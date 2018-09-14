@@ -60,5 +60,11 @@ namespace CPL.Controllers
             }
             return ViewComponent("PricePrediction", viewModel);
         }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetGameSummaryStatisticViewComponent(double periodInDay)
+        {
+            return ViewComponent("GameSummaryStatistic", periodInDay);
+        }
     }
 }
