@@ -97,21 +97,27 @@
                         </div>
                         <div class="card-body">
                             <div id="holding-revenue-percentage-chart" class="height-300 "></div>
-                            <div id="holding-revenue-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoAssets")</div>
+                            <div id="holding-revenue-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoData")</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-4 col-12">
                     <div class="card">
                         <div class="card-header">
-                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Terminal")
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Device")
                         </div>
                         <div class="card-body">
                             <div id="holding-terminal-percentage-chart" class="height-300 "></div>
-                            <div id="holding-terminal-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoAssets")</div>
+                            <div id="holding-terminal-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoData")</div>
                         </div>
-
                     </div>
+                    @Html.Hidden("revenue", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Revenue"))
+                    @Html.Hidden("device", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Device"))
+                    @Html.Hidden("lottery", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery"))
+                    @Html.Hidden("priceprediction", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction"))
+                    @Html.Hidden("desktop", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Desktop"))
+                    @Html.Hidden("mobile", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Mobile"))
+                    @Html.Hidden("tablet", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tablet"))
                 </div>
             </div>
         </div>

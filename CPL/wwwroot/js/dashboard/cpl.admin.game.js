@@ -209,7 +209,6 @@
             type: "POST",
             data: {},
             success: function (data) {
-                debugger;
                 if (data.success && (data.pc > 0 || data.mobile > 0 || data.table > 0)) {
                     Highcharts.chart('holding-terminal-percentage-chart', {
                         chart: {
@@ -240,21 +239,21 @@
                             }
                         },
                         series: [{
-                            name: $("#terminal").val(),
+                            name: $("#device").val(),
                             colorByPoint: true,
                             data: [{
-                                name: "PC",
+                                name: $("#desktop").val(),
                                 y: data.pc,
                                 sliced: false,
                                 selected: false,
                                 color: '#4267b2'
                             }, {
-                                name: "Mobile",
+                                name: $("#mobile").val(),
                                 y: data.mobile,
                                 color: '#f7931a'
                             }, {
-                                name: "Tablel",
-                                y: data.table,
+                                name: $("#tablet").val(),
+                                y: data.tablet,
                                 color: '#828384'
                             }]
                         }]
