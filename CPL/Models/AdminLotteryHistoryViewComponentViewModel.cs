@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CPL.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace CPL.Models
     {
         public int SysUserId { get; set; }
         public string UserName { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
         public int NumberOfTicket { get; set; }
         public decimal TotalPurchasePrice { get; set; }
         public string Title { get; set; }
@@ -26,6 +27,13 @@ namespace CPL.Models
             get
             {
                 return NumberOfTicket.ToString(Format.Number);
+            }
+        }
+
+        public string StatusInString {
+            get
+            {
+                return ((EnumLotteryGameStatus)(Status)).ToString();
             }
         }
     }
