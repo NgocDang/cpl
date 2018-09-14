@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
-    <link href="~/css/dashboard/cpl.admin.game.css" asp-append-version="true" rel="stylesheet" />
+    <link href="~/css/dashboard/cpl.admin.game.css" asp-append-version = "true" rel="stylesheet" />
 }
 <div class="app-content container center-layout mt-2 px-0">
     <div class="content-wrapper">
@@ -71,15 +71,15 @@
                                             @await Component.InvokeAsync("GameSummaryStatistic")
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card col-12 mt-1">
-                                    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StatisticChart")</h6>
-                                    <div id="statistic-chart" class="height-400">
-                                        @await Component.InvokeAsync("GameSummaryStatistic")
-                                        @Html.Hidden("TotalRevenue", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue"))
-                                        @Html.Hidden("TotalSale", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale"))
-                                        @Html.Hidden("PageView", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView"))
-                                        @Html.Hidden("TotalPlayers", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPlayers"))
+                                    <div class="card col-12 mt-1">
+                                        <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StatisticChart")</h6>
+                                        <div id="statistic-chart" class="height-400">
+                                            @await Component.InvokeAsync("GameSummaryStatistic")
+                                            @Html.Hidden("TotalRevenue", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue"))
+                                            @Html.Hidden("TotalSale", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale"))
+                                            @Html.Hidden("PageView", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView"))
+                                            @Html.Hidden("TotalPlayers", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPlayers"))
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -87,42 +87,12 @@
                     </div>
                 </div>
             </div>
-
-            @await Component.InvokeAsync("AdminLotteryHistory")
-
-            <div class="row match-height">
-                <div class="col-xl-4 col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Revenue")
-                        </div>
-                        <div class="card-body">
-                            <div id="holding-revenue-percentage-chart" class="height-300 "></div>
-                            <div id="holding-revenue-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoAssets")</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Terminal")
-                        </div>
-                        <div class="card-body">
-                            <div id="holding-terminal-percentage-chart" class="height-300 "></div>
-                            <div id="holding-terminal-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoAssets")</div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>
 
 @section scripts
     {
-    <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/plugins/moment.min.js"></script>
     <script src="~/js/dashboard/plugins/lightbox/ekko-lightbox.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
@@ -131,12 +101,12 @@
     <script src="~/js/dashboard/plugins/switchery/switchery.min.js"></script>
     <script src="~/js/dashboard/plugins/intl-tel-input/js/intlTelInput.js"></script>
     <script src="~/js/dashboard/plugins/intl-tel-input/js/utils.js"></script>
+    <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/highcharts.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/series-label.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/exporting.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
     <script src="~/js/dashboard/plugins/bootstrap-selectpicker.js"></script>
-    <script src="~/js/dashboard/cpl.admin.lotteryhistory.viewcomponent.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.admin.game.js" asp-append-version="true"></script>
-
+    <script src="~/js/dashboard/cpl.admin.lotteryhistory.viewcomponent.js" asp-append-version="true"></script>
 }
