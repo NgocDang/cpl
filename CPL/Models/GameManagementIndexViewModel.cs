@@ -9,6 +9,11 @@ namespace CPL.Models
     public class GameManagementIndexViewModel
     {
         // Summary
+        
+    }
+
+    public class SummaryChangesViewModel
+    {
         public List<SummaryChange> TotalRevenueChanges { get; set; }
         public List<SummaryChange> TotalSaleChanges { get; set; }
         public List<PageViewsViewModel> PageViewChanges { get; set; }

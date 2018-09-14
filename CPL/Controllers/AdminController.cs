@@ -1127,7 +1127,7 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IActionResult GetDataGameSummaryStatisticChart(int periodInDay)
         {
-            var viewModel = new GameManagementIndexViewModel();
+            var viewModel = new SummaryChangesViewModel();
 
             var lotterySale = _lotteryHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ?  x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
