@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ConfirmLotteryViewModel
+
+@{
     Layout = null;
 }
 <div class="modal" tabindex="-1" role="dialog" id="deactivate-lottery" style="display: none;" aria-hidden="true">
@@ -16,7 +18,7 @@
                     <button type="button" class="btn btn-primary btn-sm btn-do-deactivate btn-mobile-version">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yes") </button>
                     <button type="button" class="btn btn-secondary btn-sm btn-cancel btn-mobile-version" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
                 </div>
-                <input type="number" value='@ViewData["gameId"]' hidden id="game-id" />
+                <input type="number" value='@Model.Id' hidden id="game-id" />
             </form>
         </div>
     </div>

@@ -1835,10 +1835,9 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IActionResult ConfirmDeactivateLottery(int id)
+        public IActionResult ConfirmDeactivateLottery(ConfirmLotteryViewModel viewModel)
         {
-            ViewData["gameId"] = id;
-            return PartialView("_ConfirmDeactivateLottery");
+            return PartialView("_ConfirmDeactivateLottery", viewModel);
         }
 
         [HttpPost]
