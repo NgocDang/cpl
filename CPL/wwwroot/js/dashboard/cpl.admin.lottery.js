@@ -13,6 +13,7 @@
         AdminLottery.bindDoEditLottery();
         AdminLottery.bindDoEditAndPublishLottery();
         AdminLottery.bindDoActivateLottery();
+        AdminLottery.bindDeactivateLottery();
         AdminLottery.bindDoDeactivateLottery();
         AdminLottery.bindDoDeleteLottery();
         AdminLottery.bindViewLottery();
@@ -99,27 +100,25 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
+                        var html = "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</button>  <br />";
                         if (full.status == 1) { // pendding
-                            return "<button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val()
-                                + "</button> <button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val()
-                                + "</button><button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-delete'>" + $("#delete").val() + "</button>";
+                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</button>"
+                                + "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val();
                         }
-                        else {
-                            var html = "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</button>";
-                            if (full.status == 2) { // active
-                                html += "<button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-deactivate'>" + $("#deactivate").val() + "</button>";
-                            }
-                            else if (full.status == 4) { // deactivate
-                                html += "<button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val() + "</button>";
-                            }
-                            if (full.status != 3) { // completed
-                                html += "<button style='line-height:12px;margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-delete'>" + $("#delete").val() + "</button>";
-                            }
-                            return html;
+                        else if (full.status == 2) { // active
+                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-deactivate'>" + $("#deactivate").val() + "</button>";
                         }
+                        else if (full.status == 4) { // deactivate
+                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val()
+                                + "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val() + "</button>";
+                        }
+                        if (full.status != 3) { // !completed
+                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-delete'>" + $("#delete").val() + "</button>";
+                        }
+                        return html;
                     },
                     "orderable": false
-                }
+                },
             ],
         });
     },
@@ -454,7 +453,7 @@
                     formData.append('LotteryPrizes[' + i + '].Value', $(this).find("#prize-award").val());
                     formData.append('LotteryPrizes[' + i + '].Volume', $(this).find("#prize-number-of-ticket").val());
                 });
-                
+
 
                 $.ajax({
                     url: "/Admin/DoAddLottery/",
@@ -794,8 +793,32 @@
         });
     },
 
+    bindDeactivateLottery: function () {
+        $("#dt-all-lottery-game").on("click", ".btn-deactivate", function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/ConfirmDeactivateLottery",
+                type: "GET",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: {
+                    id: $(_this).data().id
+                },
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#deactivate-lottery").modal("show");
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                }
+            });
+            return false;
+        });
+    },
+
     bindDoDeactivateLottery: function () {
-        $('#dt-all-lottery-game').on('click', '.btn-deactivate', function () {
+        $('#modal').on('click', '.btn-do-deactivate', function () {
             var _this = this;
             $.ajax({
                 url: "/Admin/DoDeactivateLottery/",
@@ -804,10 +827,11 @@
                     $(_this).attr("disabled", true);
                 },
                 data: {
-                    id: $(_this).data().id
+                    id: $(_this).parents("#deactivate-lottery").find("#game-id").val()
                 },
                 success: function (data) {
                     if (data.success) {
+                        $("#deactivate-lottery").modal("hide");
                         toastr.success(data.message, 'Success!');
                         AdminLottery.lotteryDataTable.ajax.reload();
                     } else {

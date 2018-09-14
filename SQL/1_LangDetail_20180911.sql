@@ -54,6 +54,10 @@ INSERT INTO LangDetail VALUES (2, N'PurchaseDateTime', N'購入日時');
 
 INSERT INTO LangDetail VALUES (1, N'Details', N'Details');
 INSERT INTO LangDetail VALUES (2, N'Details', N'詳細');
+
+INSERT INTO LangDetail VALUES (1, N'DeactivateLotteryGameConfirmation', N'Deactivate lottery game confirmation');
+INSERT INTO LangDetail VALUES (2, N'DeactivateLotteryGameConfirmation', N'宝くじゲームの確認を無効にする');
+
 ---------------------------------------------------------------------------------------------
 
 -- 20180913- Affiliate View --

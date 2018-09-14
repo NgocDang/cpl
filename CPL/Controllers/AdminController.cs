@@ -1834,6 +1834,12 @@ namespace CPL.Controllers
             }
         }
 
+        [Permission(EnumRole.Admin)]
+        public IActionResult ConfirmDeactivateLottery(ConfirmLotteryViewModel viewModel)
+        {
+            return PartialView("_ConfirmDeactivateLottery", viewModel);
+        }
+
         [HttpPost]
         [Permission(EnumRole.Admin)]
         public JsonResult DoDeactivateLottery(int id)

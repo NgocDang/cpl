@@ -68,16 +68,16 @@
                                                 @Model.UnitPrice.ToString("N0") CPL
                                             </div>
                                         </div>
-                                        <div class="row mb-3 text-md-left text-center">
-                                            <div class="col-md-6 col-12 font-medium-5 font-weight-bold">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAmount")
-                                            </div>
-                                            <div class="col-md-6 col-12 text-md-right font-medium-5 font-weight-bold">
-                                                <span id="total-amount">@Model.UnitPrice.ToString("N0")</span> CPL
-                                            </div>
-                                        </div>
                                         @if (Model.Status != (int)EnumLotteryGameStatus.DEACTIVATED)
                                         {
+                                            <div class="row mb-3 text-md-left text-center">
+                                                <div class="col-md-6 col-12 font-medium-5 font-weight-bold">
+                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAmount")
+                                                </div>
+                                                <div class="col-md-6 col-12 text-md-right font-medium-5 font-weight-bold">
+                                                    <span id="total-amount">@Model.UnitPrice.ToString("N0")</span> CPL
+                                                </div>
+                                            </div>
                                             <div class="row mb-2">
                                                 <div class="form-group col-12">
                                                     <input type="number" data-unit-price="@Model.UnitPrice" name="number-of-ticket" class="form-control" id="number-of-ticket" value="1" min="1" max="@(Model.Volume - @Model.LotteryHistories.Count())" required aria-describedby="basic-addon4">
