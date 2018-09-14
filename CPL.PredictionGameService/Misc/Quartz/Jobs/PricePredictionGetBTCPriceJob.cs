@@ -39,7 +39,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             try
             {
                 // interval time
-                CompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.CompareIntervalInMinute).Value);
+                CompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionCompareIntervalInMinute).Value);
 
                 // result time and price
                 var resultTime = ((DateTimeOffset)resultTimeLocal).ToUnixTimeSeconds();
@@ -92,7 +92,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 
                 // calculate the prize
                 var totalAmountOfLosers = pricePredictionHistories.Where(x => x.Prediction != gameResult).Sum(x => x.Amount);
-                var totalAmountToBeAwarded = totalAmountOfLosers * 80 / 100; // Distribute 80% of the loser's BET quantity to the winners.
+                var totalAmountToBeAwarded = totalAmountOfLosers * CPLConstant.PricePredictionTotalAwardPercentage; // Distribute 80% of the loser's BET quantity to the winners.
                 var totalAmountOfWinUsers = pricePredictionHistories.Where(x => x.Prediction == gameResult).Sum(x => x.Amount);
                 
                 // calculate the award

@@ -24,7 +24,7 @@ namespace CPL.Infrastructure.Repositories
         {
             this._context = context;
             this._unitOfWork = unitOfWork;
-
+            
             var dbContext = context as DbContext;
             if (dbContext != null)
             {

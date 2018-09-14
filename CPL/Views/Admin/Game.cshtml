@@ -75,7 +75,6 @@
                                 <div class="card col-12 mt-1">
                                     <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StatisticChart")</h6>
                                     <div id="statistic-chart" class="height-400">
-                                        @await Component.InvokeAsync("GameSummaryStatistic")
                                         @Html.Hidden("TotalRevenue", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue"))
                                         @Html.Hidden("TotalSale", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale"))
                                         @Html.Hidden("PageView", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView"))
