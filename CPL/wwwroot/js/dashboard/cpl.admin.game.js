@@ -209,7 +209,7 @@
             type: "POST",
             data: {},
             success: function (data) {
-                if (data.success && (data.pc > 0 || data.mobile > 0 || data.table > 0)) {
+                if (data.success && (data.desktop > 0 || data.mobile > 0 || data.table > 0)) {
                     Highcharts.chart('holding-terminal-percentage-chart', {
                         chart: {
                             plotBackgroundColor: null,
