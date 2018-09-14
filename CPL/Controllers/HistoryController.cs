@@ -703,21 +703,21 @@ namespace CPL.Controllers
             var gameHistoryList = lotteryHistory.Concat(pricePredictionHistory).ToList();
 
             viewModel.MonthlyInvest = gameHistoryList.AsQueryable()
-                        .GroupBy(x => x.CreatedDate.Day)
+                        .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Amount) })
                         .ToList();
             viewModel.MonthlyInvest.Reverse();
 
             viewModel.AssetChange = gameHistoryList.AsQueryable()
                         .Where(x => x.Result != string.Empty)
-                        .GroupBy(x => x.CreatedDate.Day)
+                        .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => (x.Award.Value - x.Amount)) })
                         .ToList();
             viewModel.AssetChange.Reverse();
 
             viewModel.BonusChange = gameHistoryList.AsQueryable()
                         .Where(x => x.Result != string.Empty)
-                        .GroupBy(x => x.CreatedDate.Day)
+                        .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Award.Value) })
                         .ToList();
             viewModel.BonusChange.Reverse();

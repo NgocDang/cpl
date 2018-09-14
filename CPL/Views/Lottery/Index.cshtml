@@ -17,8 +17,15 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card mb-md-2 mb-05">
-                        <img src="~/images/lottery/@Model.DesktopTopImage" class="img-fluid d-md-block d-none" alt="@Model.Title">
-                        <img src="~/images/lottery/@Model.MobileTopImage" class="img-fluid d-md-none d-block" alt="@Model.Title">
+                        @foreach (var detail in Model.LotteryDetails)
+                        {
+                            @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                            {
+                                <img src="~/images/lottery/@detail.DesktopTopImage" class="img-fluid d-md-block d-none" alt="@Model.Title">
+                                <img src="~/images/lottery/@detail.MobileTopImage" class="img-fluid d-md-none d-block" alt="@Model.Title">
+                            }
+                        }
+
                     </div>
                 </div>
             </div>
@@ -37,7 +44,13 @@
             <div class="row mb-05">
                 <div class="col-lg-6 col-12 d-sm-block d-none">
                     <div class="card">
-                        <img class="img-fluid" src="~/images/lottery/@Model.PrizeImage" />
+                        @foreach (var detail in Model.LotteryDetails)
+                        {
+                            @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                            {
+                                <img class="img-fluid" src="~/images/lottery/@detail.PrizeImage" />
+                            }
+                        }
                     </div>
                 </div>
                 <div class="col-lg-6 col-12">
@@ -167,14 +180,26 @@
                         </div>
                     </div>
                     <div class="mb-05 d-sm-none d-block">
-                        <img class="img-fluid" src="~/images/lottery/@Model.PrizeImage" />
+                        @foreach (var detail in Model.LotteryDetails)
+                        {
+                            @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                            {
+                                <img class="img-fluid" src="~/images/lottery/@detail.PrizeImage" />
+                            }
+                        }
                     </div>
                     <div class="card mb-md-1 mb-05">
                         <div class="card-content">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12 mb-0">
-                                        @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryDescription"))
+                                        @foreach (var detail in Model.LotteryDetails)
+                                        {
+                                            @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                                            {
+                                                @Html.Raw(detail.Description)
+                                            }
+                                        }
                                     </div>
                                 </div>
                             </div>

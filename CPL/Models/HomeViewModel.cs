@@ -27,5 +27,6 @@ namespace CPL.Models
         public int NumberOfTicketLeft { get; set; }
         public string DesktopListingImage { get; set; }
         public string MobileListingImage { get; set; }
+        public List<LotteryDetailViewModel> LotteryDetails {get;set;}
     }
 }

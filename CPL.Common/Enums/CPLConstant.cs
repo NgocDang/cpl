@@ -147,9 +147,13 @@ namespace CPL.Common.Enums
         public struct Format
         {
             public static string Amount = "#,##0.########";
+            public static string Number = "N0";
             public static string DateTime = "yyyy/MM/dd hh:mm:ss";
         }
 
         public static string NumberOfAgencyAffiliateExpiredDays = "NumberOfAgencyAffiliateExpiredDays";
+        public static decimal LotteryTotalRevenuePercentage = 0.2m;
+        public static decimal PricePredictionTotalRevenuePercentage = 0.2m;
+        public static DateTime FirstDeploymentDate = new DateTime(2018, 8, 28);
     }
 }
