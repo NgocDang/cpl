@@ -1215,7 +1215,7 @@ namespace CPL.Controllers
                     {
                         SysUserId = y.Key.SysUserId,
                         UserName = y.FirstOrDefault().SysUser.Email,
-                        Status = ((EnumLotteryGameStatus)(y.FirstOrDefault().Lottery.Status)).ToString(),
+                        Status = y.FirstOrDefault().Lottery.Status,
                         NumberOfTicket = y.Count(),
                         TotalPurchasePrice = y.Sum(x => x.Lottery.UnitPrice),
                         Title = y.FirstOrDefault().Lottery.Title,
@@ -1228,7 +1228,7 @@ namespace CPL.Controllers
             if (!string.IsNullOrEmpty(searchBy))
             {
                 searchBy = searchBy.ToLower();
-                bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.Status.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
+                bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.StatusInString.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
                                     || x.NumberOfTicketInString.ToLower().Contains(searchBy) || x.Title.ToLower().Contains(searchBy);
                 purchasedLotteryHistory = purchasedLotteryHistory
                         .Where(condition);
@@ -1244,6 +1244,58 @@ namespace CPL.Controllers
                   .Take(take)
                   .ToList();
         }
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetSummaryRevenuePercentagePieChart()
+        {
+            try
+            {
+                // lottery game
+                var totalSaleLotteryGame = _lotteryHistoryService.Query()
+                                .Include(x => x.Lottery)
+                                .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
+                var totalAwardLotteryGame = _lotteryHistoryService.Query()
+                    .Include(x => x.LotteryPrize)
+                    .Select(x => x.LotteryPrize).Sum(y => y?.Value);
+                var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
+
+                // price prediction game
+                var totalSalePricePrediction = _pricePredictionHistoryService.Queryable()
+                                                    .Sum(x => x.Amount);
+                var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable()
+                                                    .Sum(x => x.Award);
+                var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
+
+                return new JsonResult(new { success = true, revenueLotteryGame = revenueInLotteryGame , revenuePricePredictionGame = revenueInPricePredictionGame });
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new { success = false });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetSummaryDeviceCategoryPercentagePieChart()
+        {
+            try
+            {
+                var deviceCategories = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+                var totalDesktop = deviceCategories.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+                var totalMobile = deviceCategories.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+                var totalTablet = deviceCategories.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
+
+                return new JsonResult(new { success = true, desktop = totalDesktop,
+                                                            mobile = totalMobile,
+                                                            tablet = totalTablet
+                });
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new { success = false });
+            }
+        }
+
         #endregion
 
         #region Lottery

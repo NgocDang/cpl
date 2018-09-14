@@ -19,5 +19,9 @@
         </div>
     </div>
     @Html.Hidden("view", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View"))
+    @Html.Hidden("pending", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending"))
+    @Html.Hidden("active", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Active"))
+    @Html.Hidden("completed", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Completed"))
+    @Html.Hidden("deactivated", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deactivated"))
 </div>
 
