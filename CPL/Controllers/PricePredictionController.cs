@@ -78,7 +78,7 @@ namespace CPL.Controllers
                 viewModel.TokenAmount = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).TokenAmount;
 
             viewModel.PricePredictionTabs = _pricePredictionService.Queryable()
-                .Where(x => x.ResultTime.Date >= DateTime.Now.Date)
+                .Where(x => x.OpenBettingTime.Date == DateTime.Now.Date)
                 .Select(x => Mapper.Map<PricePredictionTab>(x))
                 .ToList();
 
