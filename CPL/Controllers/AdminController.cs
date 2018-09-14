@@ -1257,14 +1257,14 @@ namespace CPL.Controllers
                 var totalAwardInLotteryGame = _lotteryHistoryService.Query()
                     .Include(x => x.LotteryPrize)
                     .Select(x => x.LotteryPrize).Sum(y => y?.Value);
-                var revenueInLotteryGame = (totalSaleInLotteryGame - totalAwardInLotteryGame) * CPLConstant.LotteryTotalRevenuePercentage;
+                var revenueInLotteryGame = totalSaleInLotteryGame - totalAwardInLotteryGame;
 
                 // price prediction game
                 var totalSaleIPricePredictionGame = _pricePredictionHistoryService.Queryable()
                                                     .Sum(x => x.Amount);
                 var totalAwardIPricePredictionGame = _pricePredictionHistoryService.Queryable()
                                                     .Sum(x => x.Award);
-                var revenueInPricePredictionGame = (totalSaleIPricePredictionGame - totalAwardIPricePredictionGame) * CPLConstant.PricePredictionTotalRevenuePercentage;
+                var revenueInPricePredictionGame = totalSaleIPricePredictionGame - totalAwardIPricePredictionGame;
 
                 return new JsonResult(new { success = true, revenueLotteryGame = revenueInLotteryGame , revenuePricePredictionGame = revenueInPricePredictionGame });
             }
@@ -1282,9 +1282,9 @@ namespace CPL.Controllers
             try
             {
                 var deviceCategories = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
-                var totalDesktop = deviceCategories.GroupBy(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(y => y.Sum(x => x.Count));
-                var totalMobile = deviceCategories.GroupBy(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(y => y.Sum(x => x.Count));
-                var totalTablet = deviceCategories.GroupBy(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(y => y.Sum(x => x.Count));
+                var totalDesktop = deviceCategories.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+                var totalMobile = deviceCategories.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+                var totalTablet = deviceCategories.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
 
                 return new JsonResult(new { success = true, desktop = totalDesktop,
                                                             mobile = totalMobile,
