@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.Core.Interfaces;
 using CPL.Domain;
 using CPL.Infrastructure.Interfaces;
@@ -60,7 +61,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public IActionResult Login(AccountLoginModel viewModel)
+        public IActionResult Login(AccountLoginModel viewModel, MobileModel mobileModel)
         {
             if (ModelState.IsValid)
             {
@@ -69,28 +70,72 @@ namespace CPL.Controllers
                 if (user != null && BCrypt.Net.BCrypt.Verify(viewModel.Password, user.Password))
                 {
                     if (!string.IsNullOrEmpty(user.ActivateToken))
+                    {
+                        if (mobileModel.IsMobile)
+                        {
+                            return new JsonResult(new
+                            {
+                                code = EnumResponseStatus.WARNING,
+                                error_message_key = CPLConstant.MobileAppConstant.LoginScreenInactivatingAccount
+                            });
+                        }
                         return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "EmailInactivatingAccount") });
+                    }
                     else
                     {
                         if (user.TwoFactorAuthenticationEnable)
                         {
+                            if (mobileModel.IsMobile)
+                            {
+                                return new JsonResult(new
+                                {
+                                    code = EnumResponseStatus.SUCCESS,
+                                    two_factor = 1,
+                                    data = Mapper.Map<SysUserViewModel>(user)
+                                });
+                            }
                             return new JsonResult(new { success = true, twofactor = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WaitingPIN") });
                         }
                         else
                         {
+                            if (mobileModel.IsMobile)
+                            {
+                                return new JsonResult(new
+                                {
+                                    code = EnumResponseStatus.SUCCESS,
+                                    two_factor = 0,
+                                    data = Mapper.Map<SysUserViewModel>(user)
+                                });
+                            }
                             HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
                             return viewModel.ReturnUrl == null ? RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Home")}") : RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{viewModel.ReturnUrl}");
                         }
                     }
                 }
+                if (mobileModel.IsMobile)
+                {
+                    return new JsonResult(new
+                    {
+                        code = EnumResponseStatus.WARNING,
+                        error_message_key = CPLConstant.MobileAppConstant.LoginScreenInvalidEmailPassword
+                    });
+                }
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidEmailPassword") });
+            }
+            if (mobileModel.IsMobile)
+            {
+                return new JsonResult(new
+                {
+                    code = EnumResponseStatus.ERROR,
+                    error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs
+                });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public IActionResult VerifyPIN(AccountLoginModel viewModel)
+        public IActionResult VerifyPIN(AccountLoginModel viewModel, MobileModel mobileModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email);
             var tfa = new TwoFactorAuthenticator();
@@ -98,8 +143,24 @@ namespace CPL.Controllers
 
             if (isCorrectPIN)
             {
+                if (mobileModel.IsMobile)
+                {
+                    return new JsonResult(new
+                    {
+                        code = EnumResponseStatus.SUCCESS,
+                    });
+                }
                 HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
                 return RedirectToLocal($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Home")}");
+            }
+
+            if (mobileModel.IsMobile)
+            {
+                return new JsonResult(new
+                {
+                    code = EnumResponseStatus.WARNING,
+                    error_message_key = CPLConstant.MobileAppConstant.LoginScreenInvalidPIN
+                });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidPIN") });
         }
@@ -122,8 +183,12 @@ namespace CPL.Controllers
                 var agencyToken = _agencyTokenService.Queryable().FirstOrDefault(x => x.Token == token && x.ExpiredDate >= DateTime.Now && !x.SysUserId.HasValue);
                 if (agencyToken != null)
                 {
+                    if (Utils.IsMobile())
+                    {
+                        return Redirect("cryptoodds://SetAgencyToken/" + token + "/" + (affiliateCookieExpirations * 60 * 24));
+                    }
                     viewModel.AgencyToken = token;
-                    CookieHelper.SetCookies(Response, "AgencyTokenCookie", token, affiliateCookieExpirations- * 60 * 24);
+                    CookieHelper.SetCookies(Response, "AgencyTokenCookie", token, affiliateCookieExpirations * 60 * 24);
                     viewModel.IsRedirected = true;
                 } else
                 {
@@ -138,6 +203,10 @@ namespace CPL.Controllers
             // Update id using cookie
             if (id.HasValue)
             {
+                if (Utils.IsMobile())
+                {
+                    return Redirect("cryptoodds://SetIntroductionId/" + id.Value.ToString() + "/" + (affiliateCookieExpirations * 60 * 24));
+                }
                 CookieHelper.SetCookies(Response, "AffiliateCookie", id.Value.ToString(), affiliateCookieExpirations * 60 * 24);
                 viewModel.IsRedirected = true;
             }
@@ -174,6 +243,14 @@ namespace CPL.Controllers
             {
                 if (_sysUserService.Queryable().Any(x => x.Email == viewModel.Email && x.IsDeleted == false))
                 {
+                    if (mobileModel.IsMobile)
+                    {
+                        return new JsonResult(new
+                        {
+                            code = EnumResponseStatus.WARNING,
+                            error_message_key = CPLConstant.MobileAppConstant.RegisterScreenInputEmailExist
+                        });
+                    }
                     return new JsonResult(new { success = false, name = "email", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExistingEmail") });
                 }
 
@@ -294,7 +371,6 @@ namespace CPL.Controllers
                             }
                         }
 
-
                         if (isETHHDWalletAddressGenerated && isBTCHDWalletAddressGenerated)
                             break;
                         else
@@ -305,10 +381,29 @@ namespace CPL.Controllers
                     }
 
                     if (requestCount == CPLConstant.RequestCountLimit)
+                    {
+                        if (mobileModel.IsMobile)
+                        {
+                            return new JsonResult(new
+                            {
+                                code = EnumResponseStatus.WARNING,
+                                error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs
+                            });
+                        }
                         return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+                    }
                 }
                 catch (Exception ex)
                 {
+                    if (mobileModel.IsMobile)
+                    {
+                        return new JsonResult(new
+                        {
+                            code = EnumResponseStatus.ERROR,
+                            error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs,
+                            error_message = ex.Message
+                        });
+                    }
                     return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
                 }
 
@@ -345,6 +440,15 @@ namespace CPL.Controllers
                     template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_ActivateEmailTemplate.cshtml", activateEmailTemplateViewModel).Result;
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
 
+                    if (mobileModel.IsMobile)
+                    {
+                        return new JsonResult(new
+                        {
+                            code = EnumResponseStatus.SUCCESS,
+                            activation = 1
+                        });
+                    }
+
                     CookieHelper.RemoveCookies(Response, "AffiliateCookie");
                     CookieHelper.RemoveCookies(Response, "AgencyTokenCookie");
 
@@ -370,6 +474,15 @@ namespace CPL.Controllers
                     template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_MemberEmailTemplate.cshtml", memberEmailTemplateViewModel).Result;
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
 
+                    if (mobileModel.IsMobile)
+                    {
+                        return new JsonResult(new
+                        {
+                            code = EnumResponseStatus.SUCCESS,
+                            activation = 0
+                        });
+                    }
+
                     CookieHelper.RemoveCookies(Response, "AffiliateCookie");
                     CookieHelper.RemoveCookies(Response, "AgencyTokenCookie");
 
@@ -377,6 +490,14 @@ namespace CPL.Controllers
                     HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
                     return new JsonResult(new { success = true, activated = true, url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("Index", "Home")}" });
                 }
+            }
+            if (mobileModel.IsMobile)
+            {
+                return new JsonResult(new
+                {
+                    code = EnumResponseStatus.ERROR,
+                    error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs
+                });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
@@ -420,6 +541,11 @@ namespace CPL.Controllers
 
                     template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_MemberEmailTemplate.cshtml", memberEmailTemplateViewModel).Result;
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
+
+                    if (Utils.IsMobile())
+                    {
+                        return Redirect("cryptoodds://Activated");
+                    }
 
                     // Log in
                     user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
