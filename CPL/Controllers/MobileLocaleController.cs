@@ -34,7 +34,7 @@ namespace CPL.Controllers
             this._appEnvironment = appEnvironment;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Permission(EnumRole.Guest)]
         public IActionResult GetLanguagesList()
         {
@@ -71,7 +71,7 @@ namespace CPL.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Permission(EnumRole.Guest)]
         public IActionResult GetLanguagesDetailList()
         {
@@ -83,10 +83,6 @@ namespace CPL.Controllers
 
                 foreach (var lang in Langs)
                 {
-                    //byte[] imageArray = System.IO.File.ReadAllBytes(@"" + _appEnvironment.WebRootPath + "/flags/" + lang.Image + ".png");
-                    //string base64ImageRepresentation = "data:image/png;base64," + Convert.ToBase64String(imageArray);
-                    //lang.Image = base64ImageRepresentation;
-
                     lang.LangDetails = _mobileLangDetailService.Queryable()
                         .Where(x => x.LangId == lang.Id)
                         .Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();
@@ -112,14 +108,14 @@ namespace CPL.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Permission(EnumRole.Guest)]
-        public IActionResult GetPageDetail(string pageName, int langId)
+        public IActionResult GetPageDetail(MobileModel mobileModel, string pageName)
         {
             try
             {
                 MobileLangMsgDetailViewModel pageDetail = _mobileLangMsgDetailService.Queryable()
-                        .Where(x => x.LangId == langId && x.Name == pageName)
+                        .Where(x => x.LangId == mobileModel.MobileLangId && x.Name == pageName)
                         .Select(x => Mapper.Map<MobileLangMsgDetailViewModel>(x)).FirstOrDefault();
 
                 return new JsonResult(

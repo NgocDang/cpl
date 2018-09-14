@@ -8,7 +8,7 @@ namespace CPL.Controllers
 {
     public class MobileAppSettingsController : Controller
     {
-        [HttpPost]
+        [HttpGet]
         [Permission(EnumRole.Guest)]
         public IActionResult GetAppSettings()
         {
