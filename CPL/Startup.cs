@@ -49,6 +49,7 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<LangContent>, Repository<LangContent>>()
                 .AddScoped<IRepositoryAsync<Setting>, Repository<Setting>>()
                 .AddScoped<IRepositoryAsync<SysUser>, Repository<SysUser>>()
+                .AddScoped<IRepositoryAsync<Payment>, Repository<Payment>>()
                 .AddScoped<IRepositoryAsync<Template>, Repository<Template>>()
                 .AddScoped<IRepositoryAsync<Currency>, Repository<Currency>>()
                 .AddScoped<IRepositoryAsync<Notification>, Repository<Notification>>()
@@ -68,6 +69,7 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<AgencyToken>, Repository<AgencyToken>>()
                 .AddScoped<IRepositoryAsync<Affiliate>, Repository<Affiliate>>()
                 .AddScoped<IRepositoryAsync<LotteryCategory>, Repository<LotteryCategory>>()
+                .AddScoped<IRepositoryAsync<LotteryDetail>, Repository<LotteryDetail>>()
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
 
@@ -88,11 +90,13 @@ namespace CPL
                 .AddTransient<ILangContentService, LangContentService>()
                 .AddTransient<ISysUserService, SysUserService>()
                 .AddTransient<ISettingService, SettingService>()
+                .AddTransient<IPaymentService, PaymentService>()
                 .AddTransient<ITemplateService, TemplateService>()
                 .AddTransient<ICurrencyService, CurrencyService>()
                 .AddTransient<ILangMsgDetailService, LangMsgDetailService>()
                 .AddTransient<INotificationService, NotificationService>()
                 .AddTransient<IViewRenderService, ViewRenderService>()
+                .AddTransient<IAnalyticService, AnalyticService>()
                 .AddTransient<ICoinTransactionService, CoinTransactionService>()
                 .AddTransient<IPricePredictionService, PricePredictionService>()
                 .AddTransient<IPricePredictionHistoryService, PricePredictionHistoryService>()
@@ -109,7 +113,8 @@ namespace CPL
                 .AddTransient<IAffiliateService, AffiliateService>()
                 .AddTransient<INewsService, NewsService>()
                 .AddTransient<IContactService, ContactService>()
-                .AddTransient<ILotteryCategoryService, LotteryCategoryService>();
+                .AddTransient<ILotteryCategoryService, LotteryCategoryService>()
+                .AddTransient<ILotteryDetailService, LotteryDetailService>();
 
             services.AddSignalR();
         }
