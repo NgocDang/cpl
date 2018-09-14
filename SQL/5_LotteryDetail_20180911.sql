@@ -10,23 +10,29 @@ SET ANSI_WARNINGS ON
 COMMIT
 BEGIN TRANSACTION
 GO
-USE CPL
+USE CPL;
 GO
-CREATE TABLE dbo.LotteryCategory
+CREATE TABLE dbo.LotteryDetail
 	(
 	Id int NOT NULL IDENTITY (1, 1),
-	Name nvarchar(100) NOT NULL,
-	Description ntext NULL
+	LotteryId int NOT NULL,
+	LangId int NOT NULL,
+	DesktopTopImage nvarchar(200) NOT NULL,
+	DesktopListingImage nvarchar(200) NOT NULL,
+	MobileListingImage nvarchar(200) NOT NULL,
+	MobileTopImage nvarchar(200) NOT NULL,
+	PrizeImage nvarchar(200) NOT NULL,
+	Description ntext NOT NULL
 	)  ON [PRIMARY]
 	 TEXTIMAGE_ON [PRIMARY]
 GO
-ALTER TABLE dbo.LotteryCategory ADD CONSTRAINT
-	PK_LotteryCategory PRIMARY KEY CLUSTERED 
+ALTER TABLE dbo.LotteryDetail ADD CONSTRAINT
+	PK_LotteryDetail PRIMARY KEY CLUSTERED 
 	(
 	Id
 	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 
 GO
-ALTER TABLE dbo.LotteryCategory SET (LOCK_ESCALATION = TABLE)
+ALTER TABLE dbo.LotteryDetail SET (LOCK_ESCALATION = TABLE)
 GO
 COMMIT

@@ -169,7 +169,7 @@ namespace CPL.Controllers
         [Permission(EnumRole.Guest)]
         public IActionResult DoRegister(AccountRegistrationModel viewModel, MobileModel mobileModel)
         {
-            //// Ensure we have a valid viewModel to work with
+            // Ensure we have a valid viewModel to work with
             if (ModelState.IsValid)
             {
                 if (_sysUserService.Queryable().Any(x => x.Email == viewModel.Email && x.IsDeleted == false))
