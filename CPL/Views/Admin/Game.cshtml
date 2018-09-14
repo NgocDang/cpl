@@ -95,8 +95,8 @@
                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Revenue")
                         </div>
                         <div class="card-body">
-                            <div id="holding-revenue-percentage-chart" class="height-300 "></div>
-                            <div id="holding-revenue-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoData")</div>
+                            <div id="sumary-revenue-chart" class="height-300 "></div>
+                            <div id="sumary-revenue-no-data" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoData")</div>
                         </div>
                     </div>
                 </div>
@@ -106,8 +106,8 @@
                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Device")
                         </div>
                         <div class="card-body">
-                            <div id="holding-terminal-percentage-chart" class="height-300 "></div>
-                            <div id="holding-terminal-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoData")</div>
+                            <div id="device-category-chart" class="height-300 "></div>
+                            <div id="device-category-no-data" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoData")</div>
                         </div>
                     </div>
                     @Html.Hidden("revenue", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Revenue"))

@@ -1215,7 +1215,7 @@ namespace CPL.Controllers
                     {
                         SysUserId = y.Key.SysUserId,
                         UserName = y.FirstOrDefault().SysUser.Email,
-                        Status = ((EnumLotteryGameStatus)(y.FirstOrDefault().Lottery.Status)).ToString(),
+                        Status = y.FirstOrDefault().Lottery.Status,
                         NumberOfTicket = y.Count(),
                         TotalPurchasePrice = y.Sum(x => x.Lottery.UnitPrice),
                         Title = y.FirstOrDefault().Lottery.Title,
@@ -1228,7 +1228,7 @@ namespace CPL.Controllers
             if (!string.IsNullOrEmpty(searchBy))
             {
                 searchBy = searchBy.ToLower();
-                bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.Status.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
+                bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.StatusInString.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
                                     || x.NumberOfTicketInString.ToLower().Contains(searchBy) || x.Title.ToLower().Contains(searchBy);
                 purchasedLotteryHistory = purchasedLotteryHistory
                         .Where(condition);
@@ -1246,25 +1246,25 @@ namespace CPL.Controllers
         }
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult GetDataRevenuePercentagePieChart()
+        public IActionResult GetSummaryRevenuePercentagePieChart()
         {
             try
             {
                 // lottery game
-                var totalSaleInLotteryGame = _lotteryHistoryService.Query()
+                var totalSaleLotteryGame = _lotteryHistoryService.Query()
                                 .Include(x => x.Lottery)
                                 .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
-                var totalAwardInLotteryGame = _lotteryHistoryService.Query()
+                var totalAwardLotteryGame = _lotteryHistoryService.Query()
                     .Include(x => x.LotteryPrize)
                     .Select(x => x.LotteryPrize).Sum(y => y?.Value);
-                var revenueInLotteryGame = totalSaleInLotteryGame - totalAwardInLotteryGame;
+                var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
 
                 // price prediction game
-                var totalSaleIPricePredictionGame = _pricePredictionHistoryService.Queryable()
+                var totalSalePricePrediction = _pricePredictionHistoryService.Queryable()
                                                     .Sum(x => x.Amount);
-                var totalAwardIPricePredictionGame = _pricePredictionHistoryService.Queryable()
+                var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable()
                                                     .Sum(x => x.Award);
-                var revenueInPricePredictionGame = totalSaleIPricePredictionGame - totalAwardIPricePredictionGame;
+                var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
 
                 return new JsonResult(new { success = true, revenueLotteryGame = revenueInLotteryGame , revenuePricePredictionGame = revenueInPricePredictionGame });
             }
@@ -1274,10 +1274,9 @@ namespace CPL.Controllers
             }
         }
 
-
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult GetDataTeminalPercentagePieChart()
+        public IActionResult GetSummaryDeviceCategoryPercentagePieChart()
         {
             try
             {

@@ -2,8 +2,8 @@
     init: function () {
         AdminGameManagement.loadStatisticChart();
         AdminGameManagement.bindSelectTimeRange();
-        AdminGameManagement.loadHoldingRevenuePercentage();
-        AdminGameManagement.loadHoldingTerminalPercentage();
+        AdminGameManagement.loadSummaryRevenuePercentage();
+        AdminGameManagement.loadSummaryDeviceCategoryPercentage();
     },
     bindSelectTimeRange: function () {
         $("#Category").on("changed.bs.select",
@@ -144,14 +144,14 @@
             }
         });
     },
-    loadHoldingRevenuePercentage: function () {
+    loadSummaryRevenuePercentage: function () {
         $.ajax({
-            url: '/Admin/GetDataRevenuePercentagePieChart',
+            url: '/Admin/GetSummaryRevenuePercentagePieChart',
             type: "POST",
             data: {},
             success: function (data) {
                 if (data.success && (data.revenueLotteryGame > 0 || data.revenuePricePredictionGame > 0)) {
-                    Highcharts.chart('holding-revenue-percentage-chart', {
+                    Highcharts.chart('sumary-revenue-chart', {
                         chart: {
                             plotBackgroundColor: null,
                             plotBorderWidth: null,
@@ -197,20 +197,20 @@
                     });
                 }
                 else {
-                    $("#holding-revenue-percentage-chart").addClass("d-none");
-                    $("#holding-revenue-percentage-no-assets").removeClass("d-none");
+                    $("#sumary-revenue-chart").addClass("d-none");
+                    $("#sumary-revenue-no-data").removeClass("d-none");
                 }
             }
         });
     },
-    loadHoldingTerminalPercentage: function () {
+    loadSummaryDeviceCategoryPercentage: function () {
         $.ajax({
-            url: '/Admin/GetDataTeminalPercentagePieChart',
+            url: '/Admin/GetSummaryDeviceCategoryPercentagePieChart',
             type: "POST",
             data: {},
             success: function (data) {
                 if (data.success && (data.desktop > 0 || data.mobile > 0 || data.table > 0)) {
-                    Highcharts.chart('holding-terminal-percentage-chart', {
+                    Highcharts.chart('device-category-chart', {
                         chart: {
                             plotBackgroundColor: null,
                             plotBorderWidth: null,
@@ -260,8 +260,8 @@
                     });
                 }
                 else {
-                    $("#holding-terminal-percentage-chart").addClass("d-none");
-                    $("#holding-terminal-percentage-no-assets").removeClass("d-none");
+                    $("#device-category-chart").addClass("d-none");
+                    $("#device-category-no-data").removeClass("d-none");
                 }
             }
         });
