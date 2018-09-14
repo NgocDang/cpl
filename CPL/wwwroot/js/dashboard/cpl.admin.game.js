@@ -189,7 +189,7 @@
                                 selected: false,
                                 color: '#ff0000'
                             }, {
-                                name: $("#pricePrediction").val(),
+                                name: $("#priceprediction").val(),
                                 y: data.revenuePricePredictionGame,
                                 color: '#0092cd'
                             }]
@@ -243,7 +243,7 @@
                             colorByPoint: true,
                             data: [{
                                 name: $("#desktop").val(),
-                                y: data.pc,
+                                y: data.desktop,
                                 sliced: false,
                                 selected: false,
                                 color: '#4267b2'
