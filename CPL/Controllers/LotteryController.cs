@@ -63,7 +63,10 @@ namespace CPL.Controllers
                                 .Include(x => x.LotteryDetails)
                                 //.Include(x => x.LotteryPrizes)
                                 .Select()
-                                .FirstOrDefault(x => x.Id == id);
+                                .FirstOrDefault(x => x.Id == id && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED));
+                if (lottery == null)
+                    return RedirectToAction("Index", "Home");
+
                 var viewModel = Mapper.Map<LotteryIndexViewModel>(lottery);
                 var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
                 if (user != null)
