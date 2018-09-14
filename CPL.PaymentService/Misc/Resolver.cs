@@ -20,6 +20,7 @@ namespace CPL.PaymentService.Misc
         public IPricePredictionHistoryService PricePredictionHistoryService { get; }
         public IPaymentService PaymentService { get; }
         public ISettingService SettingService { get; }
+        public IDataContextAsync CPLContext { get; }
 
         public Resolver()
         {
@@ -60,6 +61,7 @@ namespace CPL.PaymentService.Misc
             this.PricePredictionHistoryService = this.Container.Resolve<IPricePredictionHistoryService>();
             this.PaymentService = this.Container.Resolve<IPaymentService>();
             this.SettingService = this.Container.Resolve<ISettingService>();
+            this.CPLContext = this.Container.Resolve<IDataContextAsync>();
         }
     }
 }

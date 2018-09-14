@@ -15,6 +15,6 @@ insert into Setting values (N'PaymentCreateMonthlyStartTimeInDay', 1, null);
 insert into Setting values (N'PaymentCreateMonthlyStartTimeInHour', 0, null);
 insert into Setting values (N'PaymentCreateMonthlyStartTimeInMinute', 0, null);
 
-insert into Setting values (N'PaymentCreateMonthlyStartTimeInDay', 10, null);
-insert into Setting values (N'PaymentCreateMonthlyStartTimeInHour', 0, null);
-insert into Setting values (N'PaymentCreateMonthlyStartTimeInMinute', 0, null);
+insert into Setting values (N'PaymentProcessMonthlyStartTimeInDay', 10, null);
+insert into Setting values (N'PaymentProcessMonthlyStartTimeInHour', 0, null);
+insert into Setting values (N'PaymentProcessMonthlyStartTimeInMinute', 0, null);

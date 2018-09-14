@@ -73,19 +73,19 @@ namespace CPL.PaymentService
                 await scheduler.ScheduleJob(creatingJob, creatingTrigger);
 
                 //Payment processing job
-                IJobDetail processingJob = JobBuilder.Create<PaymentProcessJob>()
-                    .UsingJobData(jobData)
-                    .WithIdentity("PaymentProcessJob", "QuartzGroup")
-                    .WithDescription("Job to automatically process payment at 10th monthly")
-                    .Build();
+                //IJobDetail processingJob = JobBuilder.Create<PaymentProcessJob>()
+                //    .UsingJobData(jobData)
+                //    .WithIdentity("PaymentProcessJob", "QuartzGroup")
+                //    .WithDescription("Job to automatically process payment at 10th monthly")
+                //    .Build();
 
-                ITrigger processingTrigger = TriggerBuilder.Create()
-                    .WithIdentity("PaymentProcessJob", "QuartzGroup")
-                    .WithDescription("Job to automatically process payment at 10th monthly")
-                    .WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(PaymentProcessMonthlyStartTimeInDay, PaymentProcessMonthlyStartTimeInHour, PaymentProcessMonthlyStartTimeInMinute))
-                    .Build();
+                //ITrigger processingTrigger = TriggerBuilder.Create()
+                //    .WithIdentity("PaymentProcessJob", "QuartzGroup")
+                //    .WithDescription("Job to automatically process payment at 10th monthly")
+                //    .WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(PaymentProcessMonthlyStartTimeInDay, PaymentProcessMonthlyStartTimeInHour, PaymentProcessMonthlyStartTimeInMinute))
+                //    .Build();
 
-                await scheduler.ScheduleJob(processingJob, processingTrigger);
+                //await scheduler.ScheduleJob(processingJob, processingTrigger);
             }));
         }
 

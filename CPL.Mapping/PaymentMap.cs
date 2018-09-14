@@ -18,7 +18,6 @@ namespace CPL.Mapping
             builder.ToTable("Payment");
             builder.Property(t => t.Id).HasColumnName("Id");
             builder.Property(t => t.SysUserId).HasColumnName("SysUserId");
-            builder.Property(t => t.Amount).HasColumnName("Amount");
             builder.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
             builder.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
             builder.Property(t => t.Tier1DirectSale).HasColumnName("Tier1DirectSale");
