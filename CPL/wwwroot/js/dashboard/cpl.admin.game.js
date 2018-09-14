@@ -173,7 +173,7 @@
                                 cursor: 'pointer',
                                 dataLabels: {
                                     enabled: true,
-                                    format: '<b>{point.percentage:.1f} %',
+                                    format: '<b>{point.percentage:.1f} </b> %',
                                     distance: -50,
                                 },
                                 showInLegend: true
