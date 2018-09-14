@@ -795,7 +795,6 @@
 
     bindDeactivateLottery: function () {
         $("#dt-all-lottery-game").on("click", ".btn-deactivate", function () {
-            debugger;
             var _this = this;
             $.ajax({
                 url: "/Admin/ConfirmDeactivateLottery",
