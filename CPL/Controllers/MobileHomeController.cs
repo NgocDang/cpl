@@ -44,30 +44,11 @@ namespace CPL.Controllers
         {
             try
             {
-                List<MobileBannerViewModel> banners = new List<MobileBannerViewModel>();
-
-                MobileBannerViewModel item = new MobileBannerViewModel();
-                item.Id = 1;
-                item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}"+"/images/lottery/1_slide_probability_mobile.jpg";
-                banners.Add(item);
-                item = new MobileBannerViewModel();
-                item.Id = 2;
-                item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + "/images/lottery/2_slide_crypto_lot_mobile.jpg";
-                banners.Add(item);
-                item = new MobileBannerViewModel();
-                item.Id = 3;
-                item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + "/images/lottery/3_slide_lottery_mobile.jpg";
-                banners.Add(item);
-                item = new MobileBannerViewModel();
-                item.Id = 4;
-                item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + "/images/lottery/4_slide_smartcontract_mobile.jpg";
-                banners.Add(item);
-
                 return new JsonResult(
                     new
                     {
                         code = EnumResponseStatus.SUCCESS,
-                        data = banners
+                        data = _getBannersList()
                     }
                 );
             }
@@ -89,14 +70,12 @@ namespace CPL.Controllers
         {
             try
             {
-                var lastestNews = _newsService.Queryable().LastOrDefault();
-
                 return new JsonResult(
                     new
                     {
                         code = EnumResponseStatus.SUCCESS,
-                        data = Mapper.Map<NewsViewModel>(lastestNews)
-            }
+                        data = _getLatestNewsList()
+                    }
                 );
             }
             catch (Exception ex)
@@ -110,6 +89,8 @@ namespace CPL.Controllers
                 );
             }
         }
+
+        
 
         [HttpGet]
         [Permission(EnumRole.User)]
@@ -117,25 +98,12 @@ namespace CPL.Controllers
         {
             try
             {
-                var lotteries = _lotteryService.Query()
-                                .Include(x => x.LotteryHistories)
-                                .Select()
-                                .Where(x => !x.IsDeleted 
-                                        && (x.LotteryHistories.Count() < x.Volume 
-                                        && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
-                                .OrderByDescending(x => x.CreatedDate);
-
-                var viewModel = new HomeViewModel();
-                viewModel.Lotteries = lotteries
-                    .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
-                    .ToList();
-
                 return new JsonResult(
                     new
                     {
                         code = EnumResponseStatus.SUCCESS,
-                        data = lotteries.Select(x => Mapper.Map<HomeLotteryViewModel>(x)).ToList()
-            }
+                        data = _getLotteriesList()
+                    }
                 );
             }
             catch (Exception ex)
@@ -149,7 +117,6 @@ namespace CPL.Controllers
                 );
             }
         }
-
 
         [HttpGet]
         [Permission(EnumRole.User)]
@@ -177,6 +144,88 @@ namespace CPL.Controllers
                     }
                 );
             }
+        }
+
+
+        [HttpGet]
+        [Permission(EnumRole.User)]
+        public IActionResult GetHomeScreenData(MobileModel mobileModel)
+        {
+            try
+            {
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == mobileModel.MobileUserId && x.IsDeleted == false);
+
+                return new JsonResult(
+                    new
+                    {
+                        code = EnumResponseStatus.SUCCESS,
+                        data = new {
+                            banners = _getBannersList(),
+                            news = _getLatestNewsList(),
+                            lotteries = _getLotteriesList()
+                        }
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(
+                    new
+                    {
+                        code = EnumResponseStatus.ERROR,
+                        error_message_key = ex.Message
+                    }
+                );
+            }
+        }
+
+        private NewsViewModel _getLatestNewsList()
+        {
+            var lastestNews = _newsService.Queryable().LastOrDefault();
+
+            return Mapper.Map<NewsViewModel>(lastestNews);
+        }
+
+        private List<HomeLotteryViewModel> _getLotteriesList()
+        {
+            var lotteries = _lotteryService.Query()
+                                .Include(x => x.LotteryHistories)
+                                .Select()
+                                .Where(x => !x.IsDeleted
+                                        && (x.LotteryHistories.Count() < x.Volume
+                                        && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
+                                .OrderByDescending(x => x.CreatedDate);
+
+            var viewModel = new HomeViewModel();
+            viewModel.Lotteries = lotteries
+                .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
+                .ToList();
+
+            return lotteries.Select(x => Mapper.Map<HomeLotteryViewModel>(x)).ToList();
+        }
+
+        private List<MobileBannerViewModel> _getBannersList()
+        {
+            List<MobileBannerViewModel> banners = new List<MobileBannerViewModel>();
+
+            MobileBannerViewModel item = new MobileBannerViewModel();
+            item.Id = 1;
+            item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + "/images/lottery/1_slide_probability_mobile.jpg";
+            banners.Add(item);
+            item = new MobileBannerViewModel();
+            item.Id = 2;
+            item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + "/images/lottery/2_slide_crypto_lot_mobile.jpg";
+            banners.Add(item);
+            item = new MobileBannerViewModel();
+            item.Id = 3;
+            item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + "/images/lottery/3_slide_lottery_mobile.jpg";
+            banners.Add(item);
+            item = new MobileBannerViewModel();
+            item.Id = 4;
+            item.Src = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + "/images/lottery/4_slide_smartcontract_mobile.jpg";
+            banners.Add(item);
+
+            return banners;
         }
     }
 }
