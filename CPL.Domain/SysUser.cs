@@ -46,9 +46,12 @@ namespace CPL.Domain
         public virtual ICollection<CoinTransaction> CoinTransactions { get; set; }
         public virtual ICollection<PricePredictionHistory> PricePredictionHistories { get; set; }
         public virtual ICollection<LotteryHistory> LotteryHistories { get; set; }
+        public virtual ICollection<SysUser> DirectIntroducedUsers { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
+
         public virtual Agency Agency { get; set; }
         public virtual Affiliate Affiliate { get; set; }
         public virtual SysUser IsIntroducedByUser { get; set; }
-        public virtual ICollection<SysUser> DirectIntroducedUsers { get; set; }
+        
     }
 }
