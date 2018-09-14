@@ -8,8 +8,8 @@
     bindSelectTimeRange: function () {
         $("#Category").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
-                AdminGameManagement.loadStatisticChart(this.value);
                 $("#GameSummaryStatistic").load("/ViewComponent/GetGameSummaryStatisticViewComponent?periodInDay=" + this.value);
+                AdminGameManagement.loadStatisticChart(this.value);
             });
     },
     loadStatisticChart: function (period) {

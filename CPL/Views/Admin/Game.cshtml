@@ -66,58 +66,58 @@
                                                     }
                                                 </select>
                                             </fieldset>
-                                            <div id="GameSummaryStatistic">
-                                                @await Component.InvokeAsync("GameSummaryStatistic")
-                                            </div>
+                                        </div>
+                                        <div id="GameSummaryStatistic">
+                                            @await Component.InvokeAsync("GameSummaryStatistic")
                                         </div>
                                     </div>
-                                    <div class="card col-12 mt-1">
-                                        <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StatisticChart")</h6>
-                                        <div id="statistic-chart" class="height-400">
-                                            @Html.Hidden("TotalRevenue", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue"))
-                                            @Html.Hidden("TotalSale", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale"))
-                                            @Html.Hidden("PageView", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView"))
-                                            @Html.Hidden("TotalPlayers", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPlayers"))
-                                        </div>
+                                </div>
+                                <div class="card col-12 mt-1">
+                                    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StatisticChart")</h6>
+                                    <div id="statistic-chart" class="height-400">
+                                        @await Component.InvokeAsync("GameSummaryStatistic")
+                                        @Html.Hidden("TotalRevenue", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue"))
+                                        @Html.Hidden("TotalSale", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale"))
+                                        @Html.Hidden("PageView", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView"))
+                                        @Html.Hidden("TotalPlayers", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPlayers"))
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminLotteryHistory")
+            </div>
 
-                <div class="row match-height">
-                    <div class="col-xl-4 col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Revenue")
-                            </div>
-                            <div class="card-body">
-                                <div id="holding-revenue-percentage-chart" class="height-300 "></div>
-                                <div id="holding-revenue-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoAssets")</div>
-                            </div>
+            @await Component.InvokeAsync("AdminLotteryHistory")
+
+            <div class="row match-height">
+                <div class="col-xl-4 col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Revenue")
                         </div>
-                    </div>
-                    <div class="col-xl-4 col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Terminal")
-                            </div>
-                            <div class="card-body">
-                                <div id="holding-terminal-percentage-chart" class="height-300 "></div>
-                                <div id="holding-terminal-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoAssets")</div>
-                            </div>
+                        <div class="card-body">
+                            <div id="holding-revenue-percentage-chart" class="height-300 "></div>
+                            <div id="holding-revenue-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoAssets")</div>
                         </div>
                     </div>
                 </div>
+                <div class="col-xl-4 col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Terminal")
+                        </div>
+                        <div class="card-body">
+                            <div id="holding-terminal-percentage-chart" class="height-300 "></div>
+                            <div id="holding-terminal-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoAssets")</div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
-    @Html.Hidden("lottery", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery"))
-    @Html.Hidden("pricePrediction", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction"))
-    @Html.Hidden("revenue", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Revenue"))
-    @Html.Hidden("terminal", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Terminal"))
 </div>
 
 @section scripts
