@@ -54,7 +54,8 @@ namespace CPL.PaymentService
                 // Start the job as usual
                 var jobData = new JobDataMap
                 {
-                    ["Resolver"] = Resolver
+                    ["Resolver"] = Resolver,
+                    ["PaymentFileName"] = PaymentFileName
                 };
 
                 //Payment creating job

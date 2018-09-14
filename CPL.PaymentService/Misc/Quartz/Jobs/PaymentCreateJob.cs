@@ -1,4 +1,5 @@
 ﻿using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.Core.Services;
 using CPL.Domain;
 using CPL.Infrastructure;
@@ -19,15 +20,17 @@ namespace CPL.PaymentService.Misc.Quartz.Jobs
     {
         public Task Execute(IJobExecutionContext context)
         {
-            JobDataMap dataMap = context.JobDetail.JobDataMap;
-            Resolver resolver = (Resolver)dataMap["Resolver"];
-            DoCreatePayment(ref resolver);
+            var dataMap = context.JobDetail.JobDataMap;
+            var resolver = (Resolver)dataMap["Resolver"];
+            var paymentFileName = (string)dataMap["PaymentFileName"];
+            DoCreatePayment(paymentFileName, ref resolver);
             return Task.FromResult(0);
         }
 
-        public void DoCreatePayment(ref Resolver resolver)
+        public void DoCreatePayment(string paymentFileName, ref Resolver resolver)
         {
-            var payment = resolver.PaymentService.SelectQuery("usp_CreatePayment");
+            resolver.CPLContext.ExecuteSqlCommand("exec usp_CreatePayment");
+            Utils.FileAppendThreadSafe(paymentFileName, string.Format("All payment are generated at: {0}{1}{2}", DateTime.Now, Environment.NewLine, Environment.NewLine));
         }
     }
 }
