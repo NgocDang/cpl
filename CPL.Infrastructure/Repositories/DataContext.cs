@@ -131,5 +131,10 @@ namespace CPL.Infrastructure.Repositories
                 ((IObjectState)dbEntityEntry.Entity).ObjectState = StateHelper.ConvertState(dbEntityEntry.State);
             }
         }
+
+        public void ExecuteSqlCommand(RawSqlString sql, params object[] parameters)
+        {
+            this.Database.ExecuteSqlCommand(sql, parameters);
+        }
     }
 }
