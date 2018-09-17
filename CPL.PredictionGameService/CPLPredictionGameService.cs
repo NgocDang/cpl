@@ -34,8 +34,9 @@ namespace CPL.PredictionGameService
         public static BTCCurrentPriceClient BTCCurrentPriceClient = new BTCCurrentPriceClient();
         public static bool IsCPLPredictionGameServiceRunning = false;
         public static List<Task> Tasks = new List<Task>();
-        private static int PricePredictionDailyStartTimeInHour;
-        private static int PricePredictionDailyStartTimeInMinute;
+        private static int PricePredictionBettingIntervalInHour;        // 8h
+        private static int PricePredictionHoldingIntervalInHour;        // 1h
+        private static int PricePredictionCompareIntervalInMinute;      // 15m
 
         public string FileName { get; set; }
         public int RunningIntervalInMilliseconds { get; set; }
@@ -61,64 +62,32 @@ namespace CPL.PredictionGameService
 
             Tasks.Add(Task.Run(async () =>
             {
+                var startHour = PricePredictionBettingIntervalInHour + PricePredictionHoldingIntervalInHour; // 9h
+                var startMinute = PricePredictionCompareIntervalInMinute; // 15m
+
                 IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
                 await scheduler.Start();
-                
-                // Work on pending job since service starts
-                var pricePredictions = Resolver.PricePredictionService.Queryable().OrderBy(x => x.ResultTime)
-                    .Where(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue);
 
-                foreach (var pricePrediction in pricePredictions)
+                var jobData = new JobDataMap
                 {
-                    var timeOffset = DateBuilder.DateOf(
-                                            pricePrediction.ResultTime.Hour,
-                                            pricePrediction.ResultTime.Minute,
-                                            pricePrediction.ResultTime.Second,
-                                            pricePrediction.ResultTime.Day,
-                                            pricePrediction.ResultTime.Month,
-                                            pricePrediction.ResultTime.Year);
-
-                    var jobData = new JobDataMap
-                    {
-                        ["Resolver"] = Resolver,
-                        ["ResultTime"] = pricePrediction.ResultTime,
-                        ["ToBeComparedTime"] = pricePrediction.ToBeComparedTime,
-                    };
-
-                    IJobDetail job = JobBuilder.Create<PricePredictionGetBTCPriceJob>()
-                         .UsingJobData(jobData)
-                        .WithIdentity($"PricePredictionUpdateBTCPrice{pricePrediction.Id}", "QuartzGroup")
-                        .WithDescription("Job to update BTC price each interval hours automatically")
-                        .Build();
-
-                    ITrigger trigger = TriggerBuilder.Create()
-                        .WithIdentity($"PricePredictionUpdateBTCPrice{pricePrediction.Id}", "QuartzGroup")
-                        .WithDescription("Job to update BTC price each interval hours automatically")
-                        .StartAt(timeOffset)
-                        .Build();
-
-                    await scheduler.ScheduleJob(job, trigger);
-                }
-
-                // Start the job as usual
-                var creatingJobData = new JobDataMap
-                {
-                    ["Resolver"] = Resolver
+                    ["Resolver"] = Resolver,
                 };
 
-                IJobDetail creatingJob = JobBuilder.Create<PricePredictionCreatingJob>()
-                    .UsingJobData(creatingJobData)
+                IJobDetail job = JobBuilder.Create<PricePredictionCreatingJob>()
+                    .UsingJobData(jobData)
                     .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
                     .WithDescription("Job to create new PricePredictions daily automatically")
                     .Build();
 
-                ITrigger creatingTrigger = TriggerBuilder.Create()
+                ITrigger trigger = TriggerBuilder.Create()
                     .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
                     .WithDescription("Job to create new PricePredictions daily automatically")
-                    .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(PricePredictionDailyStartTimeInHour, PricePredictionDailyStartTimeInMinute))
+                                        .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PricePredictionBettingIntervalInHour)
+                                                                             .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(startHour, startMinute)))
+
                     .Build();
 
-                await scheduler.ScheduleJob(creatingJob, creatingTrigger);
+                await scheduler.ScheduleJob(job, trigger);
             }));
         }
 
@@ -193,8 +162,9 @@ namespace CPL.PredictionGameService
             FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
             var cplServiceEndpoint = Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
-            PricePredictionDailyStartTimeInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionDailyStartTimeInHour).Value);
-            PricePredictionDailyStartTimeInMinute = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionDailyStartTimeInMinute).Value);
+            PricePredictionBettingIntervalInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionBettingIntervalInHour).Value);
+            PricePredictionHoldingIntervalInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionHoldingIntervalInHour).Value);
+            PricePredictionCompareIntervalInMinute = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionCompareIntervalInMinute).Value);
             BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(cplServiceEndpoint + CPLConstant.BTCCurrentPriceServiceEndpoint));
         }
     }

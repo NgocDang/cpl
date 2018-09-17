@@ -23,14 +23,12 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
-            JobDataMap dataMap = context.JobDetail.JobDataMap;
-            Resolver resolver = (Resolver)dataMap["Resolver"];
-            DateTime resultTimeLocal = (DateTime)dataMap["ResultTime"];
-            DateTime tobeCompareTimeLocal = (DateTime)dataMap["ToBeComparedTime"];
+            //JobDataMap dataMap = context.JobDetail.JobDataMap;
+            //Resolver resolver = (Resolver)dataMap["Resolver"];
 
-            int pricePredictionId = DoGetBTCPrice(ref resolver, resultTimeLocal, tobeCompareTimeLocal);
-            if (pricePredictionId > 0)
-                DoUpdateWinner(ref resolver, pricePredictionId);
+            //int pricePredictionId = DoGetBTCPrice(ref resolver, resultTimeLocal, tobeCompareTimeLocal);
+            //if (pricePredictionId > 0)
+            //    DoUpdateWinner(ref resolver, pricePredictionId);
             return Task.FromResult(0);
         }
 
@@ -137,14 +135,6 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 else
                     Utils.FileAppendThreadSafe(FileName, string.Format("DoUpdateWinnerPricePrediction -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
             }
-        }
-    }
-
-    public static class EnumBooleanExtension
-    {
-        public static bool ToBoolean(this EnumPricePredictionStatus value)
-        {
-            return value == EnumPricePredictionStatus.UP;
         }
     }
 }

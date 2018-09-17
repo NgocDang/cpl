@@ -148,7 +148,7 @@ namespace CPL.Common.Enums
         {
             public static string Amount = "#,##0.########";
             public static string Number = "N0";
-            public static string DateTime = "yyyy/MM/dd hh:mm:ss";
+            public static string DateTime = "yyyy/MM/dd HH:mm:ss";
         }
 
         public static string NumberOfAgencyAffiliateExpiredDays = "NumberOfAgencyAffiliateExpiredDays";

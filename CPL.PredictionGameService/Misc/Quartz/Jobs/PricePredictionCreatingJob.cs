@@ -1,11 +1,14 @@
 ﻿using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.Core.Services;
 using CPL.Domain;
 using CPL.Infrastructure.Repositories;
+using Microsoft.Extensions.PlatformAbstractions;
 using Quartz;
 using Quartz.Impl;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,85 +17,173 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 {
     internal class PricePredictionCreatingJob : IJob
     {
-        private static int PricePredictionBettingIntervalInHour;
-        private static int HoldingIntervalInHour;
-        private static int CompareIntervalInMinute;
+        public string FileName { get; set; }
+        private static int PricePredictionBettingIntervalInHour;        // 8h
+        private static int PricePredictionHoldingIntervalInHour;        // 1h
+        private static int PricePredictionCompareIntervalInMinute;      // 15m
+        private static int PricePredictionGameIntervalInHour;           // 24h
+
+        public PricePredictionCreatingJob()
+        {
+            FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
+        }
 
         public Task Execute(IJobExecutionContext context)
         {
+            Utils.FileAppendThreadSafe(FileName, string.Format("{0}Execute PricePredictionCreatingJob {1}: {2}", Environment.NewLine, DateTime.Now, Environment.NewLine));
+
             JobDataMap dataMap = context.JobDetail.JobDataMap;
             Resolver resolver = (Resolver)dataMap["Resolver"];
 
             PricePredictionBettingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionBettingIntervalInHour).Value);
-            HoldingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionHoldingIntervalInHour).Value);
-            CompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionCompareIntervalInMinute).Value);
+            PricePredictionHoldingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionHoldingIntervalInHour).Value);
+            PricePredictionCompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionCompareIntervalInMinute).Value);
+            PricePredictionGameIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionGameIntervalInHour).Value);
 
-            DoCreatePricePrediction(ref resolver);
+            DateTime localDateTime = context.FireTimeUtc.LocalDateTime;
+
+            // Create new price prediction game
+            DoCreatePricePrediction(ref resolver, localDateTime);
+
+            // Update result game
+            int pricePredictionId = DoGetBTCPrice(ref resolver, localDateTime);
+            if (pricePredictionId > 0)
+                DoUpdateWinner(ref resolver, pricePredictionId);
+
             return Task.FromResult(0);
         }
 
-        public void DoCreatePricePrediction(ref Resolver resolver)
+        public void DoCreatePricePrediction(ref Resolver resolver, DateTime localDateTime)
         {
-            var startTime = DateTime.Now.Date;
-            IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
-            scheduler.Start();
-            var lstResultTime = new List<DateTime>();
-            var lstToBeComparedTime = new List<DateTime>();
-            var lstId = new List<int> ();
-            for (int i = 0; i < 24/ PricePredictionBettingIntervalInHour; i++)
+            Utils.FileAppendThreadSafe(FileName, string.Format("1. DoCreatePricePrediction--OpenBettingTime is {0}: {1}{2}", localDateTime, DateTime.Now, Environment.NewLine));
+
+            var newPricePredictionRecord = new PricePrediction
             {
-                var newPricePredictionRecord = new PricePrediction
-                {
-                    Name = String.Format("Price Prediction #{0} {1}", (i + 1), startTime.ToString()),
-                    Coinbase = EnumCurrencyPair.BTCUSDT.ToString(),
-                    OpenBettingTime = startTime,
-                    CloseBettingTime = startTime.AddHours((i + 1) * PricePredictionBettingIntervalInHour),
-                    ToBeComparedTime = startTime.AddHours((i + 1) * PricePredictionBettingIntervalInHour).AddHours(HoldingIntervalInHour),
-                    ResultTime = startTime.AddHours((i + 1) * PricePredictionBettingIntervalInHour).AddHours(HoldingIntervalInHour).AddMinutes(CompareIntervalInMinute)
-                };
+                Name = String.Format("Price Prediction #{0}", localDateTime.ToString()),
+                Coinbase = EnumCurrencyPair.BTCUSDT.ToString(),
+                OpenBettingTime = localDateTime,
+                CloseBettingTime = localDateTime.AddHours(PricePredictionGameIntervalInHour - PricePredictionHoldingIntervalInHour).AddMinutes(-PricePredictionCompareIntervalInMinute),
+                ToBeComparedTime = localDateTime.AddHours(PricePredictionGameIntervalInHour).AddMinutes(-PricePredictionCompareIntervalInMinute),
+                ResultTime = localDateTime.AddHours(PricePredictionGameIntervalInHour),
+            };
 
-                resolver.PricePredictionService.Insert(newPricePredictionRecord);
+            resolver.PricePredictionService.Insert(newPricePredictionRecord);
 
-                // udpate DB
+            // udpate DB
+            resolver.UnitOfWork.SaveChanges();
+        }
+
+        private int DoGetBTCPrice(ref Resolver resolver, DateTime resultTimeLocal)
+        {
+            Utils.FileAppendThreadSafe(FileName, string.Format("2. DoGetBTCPrice--OpenBettingTime is {0} at: {1}{2}", resultTimeLocal, DateTime.Now, Environment.NewLine));
+            try
+            {
+                // result time and price
+                var resultTime = ((DateTimeOffset)resultTimeLocal).ToUnixTimeSeconds();
+                var resultPrize = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => resultTime >= x.Time).Price;
+
+                // the time to be compared time and price
+                var toBeComparedTime = ((DateTimeOffset)resultTimeLocal.AddHours(PricePredictionHoldingIntervalInHour)).ToUnixTimeSeconds();
+                var toBeComparedPrice = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => toBeComparedTime >= x.Time).Price;
+
+                // update price prediction
+                var pricePrediction = resolver.PricePredictionService.Queryable().FirstOrDefault(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && resultTimeLocal.ToString("dd-MM-yyyy HH:mm") == x.ResultTime.ToString("dd-MM-yyyy HH:mm"));
+                pricePrediction.ResultPrice = resultPrize;
+                pricePrediction.ToBeComparedPrice = toBeComparedPrice;
+                pricePrediction.UpdatedDate = DateTime.Now;
+
+                resolver.PricePredictionService.Update(pricePrediction);
+
+                // save to DB
                 resolver.UnitOfWork.SaveChanges();
 
-                // add time to start the job
-                lstResultTime.Add(newPricePredictionRecord.ResultTime);
-                lstToBeComparedTime.Add(newPricePredictionRecord.ToBeComparedTime);
-                lstId.Add(newPricePredictionRecord.Id);
+                return pricePrediction.Id;
             }
-
-            for (int i = 0; i < lstId.Count; i++)
+            catch (Exception ex)
             {
-                DateTimeOffset timeOffset = DateBuilder.DateOf(
-                                        lstResultTime[i].Hour,
-                                        lstResultTime[i].Minute,
-                                        lstResultTime[i].Second,
-                                        lstResultTime[i].Day,
-                                        lstResultTime[i].Month,
-                                        lstResultTime[i].Year);
+                if (ex.InnerException?.Message != null)
+                    Utils.FileAppendThreadSafe(FileName, string.Format("  + DoGetBTCPrice -- Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                else
+                    Utils.FileAppendThreadSafe(FileName, string.Format("  + DoGetBTCPrice -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
 
-                var jobData = new JobDataMap
-                {
-                    ["Resolver"] = resolver,
-                    ["ResultTime"] = lstResultTime[i],
-                    ["ToBeComparedTime"] = lstToBeComparedTime[i],
-                };
-                IJobDetail job = JobBuilder.Create<PricePredictionGetBTCPriceJob>()
-                     .UsingJobData(jobData)
-                    .WithIdentity($"PricePredictionUpdateBTCPrice{lstId[i]}", "QuartzGroup")
-                    .WithDescription("Job to update BTC price each interval hours automatically")
-                    .Build();
-
-                ITrigger trigger = TriggerBuilder.Create()
-                    .WithIdentity($"PricePredictionUpdateBTCPrice{lstId[i]}", "QuartzGroup")
-                    .WithDescription("Job to update BTC price each interval hours automatically")
-                    .StartAt(timeOffset)
-                    .Build();
-
-                scheduler.ScheduleJob(job, trigger);
+                return 0;
             }
         }
 
+        private void DoUpdateWinner(ref Resolver resolver, int pricePredictionId)
+        {
+            Utils.FileAppendThreadSafe(FileName, string.Format("3. DoUpdateWinner--PricePredictionId = {0} at: {1}{2}", pricePredictionId, DateTime.Now, Environment.NewLine));
+            try
+            {
+                var pricePrediction = resolver.PricePredictionService
+                    .Queryable()
+                    .FirstOrDefault(x => x.Id == pricePredictionId);
+
+                var pricePredictionHistories = resolver.PricePredictionHistoryService
+                    .Query()
+                    .Include(x => x.SysUser)
+                    .Select()
+                    .Where(x => x.PricePredictionId == pricePredictionId);
+
+                // result of game
+                var gameResult = (pricePrediction.ResultPrice > pricePrediction.ToBeComparedPrice) ? EnumPricePredictionStatus.UP.ToBoolean() : EnumPricePredictionStatus.DOWN.ToBoolean(); // TODO equals?
+
+                // calculate the prize
+                var totalAmountOfLosers = pricePredictionHistories.Where(x => x.Prediction != gameResult).Sum(x => x.Amount);
+                var totalAmountToBeAwarded = totalAmountOfLosers * CPLConstant.PricePredictionTotalAwardPercentage; // Distribute 80% of the loser's BET quantity to the winners.
+                var totalAmountOfWinUsers = pricePredictionHistories.Where(x => x.Prediction == gameResult).Sum(x => x.Amount);
+
+                // calculate the award
+                foreach (var pricePredictionHistory in pricePredictionHistories)
+                {
+                    if (pricePredictionHistory.Prediction != gameResult)
+                    {
+                        // check minus money
+                        pricePredictionHistory.Result = EnumGameResult.LOSE.ToString();
+                        pricePredictionHistory.Award = 0m;
+                    }
+                    else
+                    {
+                        // the amount will be awarded
+                        var amountToBeAwarded = (pricePredictionHistory.Amount / totalAmountOfWinUsers) * totalAmountToBeAwarded; // The prize money is distributed at an equal rate according to the amount of bet.​
+                        pricePredictionHistory.Result = EnumGameResult.WIN.ToString();
+                        pricePredictionHistory.Award = amountToBeAwarded;
+                        pricePredictionHistory.SysUser.TokenAmount += amountToBeAwarded + pricePredictionHistory.Amount; // add amount award and refund amount bet
+
+                        // update user's amount
+                        resolver.SysUserService.Update(pricePredictionHistory.SysUser);
+                    }
+                    pricePredictionHistory.UpdatedDate = DateTime.Now;
+
+                    // update price prediction history
+                    resolver.PricePredictionHistoryService.Update(pricePredictionHistory);
+                }
+
+                // update pricePrediction
+                pricePrediction.NumberOfPredictors = pricePredictionHistories.Count();
+                pricePrediction.Volume = pricePredictionHistories.Sum(x => x.Amount);
+                pricePrediction.Description += $" Game end at {DateTime.Now.ToString(CPLConstant.Format.DateTime)}";
+                resolver.PricePredictionService.Update(pricePrediction);
+
+                // save to DB
+                resolver.UnitOfWork.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException?.Message != null)
+                    Utils.FileAppendThreadSafe(FileName, string.Format("  + DoUpdateWinnerPricePrediction -- Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                else
+                    Utils.FileAppendThreadSafe(FileName, string.Format("  + DoUpdateWinnerPricePrediction -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+            }
+        }
     }
+
+    public static class EnumBooleanExtension
+    {
+        public static bool ToBoolean(this EnumPricePredictionStatus value)
+        {
+            return value == EnumPricePredictionStatus.UP;
+        }
+    }
+
 }

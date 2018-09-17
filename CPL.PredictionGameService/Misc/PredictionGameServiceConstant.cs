@@ -13,7 +13,6 @@ namespace CPL.PredictionGameService.Misc
         public const string PricePredictionBettingIntervalInHour = "PricePredictionBettingIntervalInHour";
         public const string PricePredictionHoldingIntervalInHour = "PricePredictionHoldingIntervalInHour";
         public const string PricePredictionCompareIntervalInMinute = "PricePredictionCompareIntervalInMinute";
-        public const string PricePredictionDailyStartTimeInHour = "PricePredictionDailyStartTimeInHour";
-        public const string PricePredictionDailyStartTimeInMinute = "PricePredictionDailyStartTimeInMinute";
+        public const string PricePredictionGameIntervalInHour = "PricePredictionGameIntervalInHour";
     }
 }
