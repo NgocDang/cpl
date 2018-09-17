@@ -1253,17 +1253,20 @@ namespace CPL.Controllers
                 // lottery game
                 var totalSaleLotteryGame = _lotteryHistoryService.Query()
                                 .Include(x => x.Lottery)
+                                .Select()
+                                .Where(x => x.Result != EnumGameResult.REFUND.ToString())
                                 .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
                 var totalAwardLotteryGame = _lotteryHistoryService.Query()
                     .Include(x => x.LotteryPrize)
-                    .Select(x => x.LotteryPrize).Sum(y => y?.Value);
+                    .Select(x => x.LotteryPrize).Sum(y => y?.Value); // there is no lotteryPrizeId when status is REFUND. So, no need check Result in here !
                 var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
 
                 // price prediction game
                 var totalSalePricePrediction = _pricePredictionHistoryService.Queryable()
+                                                    .Where(x => x.Result != EnumGameResult.REFUND.ToString())
                                                     .Sum(x => x.Amount);
                 var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable()
-                                                    .Sum(x => x.Award);
+                                                    .Sum(x => x.Award);  // Award is 0 when status is REFUND. So, no need check Result in here !
                 var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
 
                 return new JsonResult(new { success = true, revenueLotteryGame = revenueInLotteryGame , revenuePricePredictionGame = revenueInPricePredictionGame });
