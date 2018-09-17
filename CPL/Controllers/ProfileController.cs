@@ -266,7 +266,6 @@ namespace CPL.Controllers
             viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
 
             // Total sale
-            // TODO: bind data to total sale by Store Procedure (implement after implement getSales procedure)
             SqlParameter TotalSaleParam = new SqlParameter()
             {
                 ParameterName = "@TotalSale",
