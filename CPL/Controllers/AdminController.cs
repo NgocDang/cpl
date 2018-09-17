@@ -1233,7 +1233,7 @@ namespace CPL.Controllers
                     {
                         SysUserId = y.Key.SysUserId,
                         UserName = y.FirstOrDefault().SysUser.Email,
-                        Status = ((EnumLotteryGameStatus)(y.FirstOrDefault().Lottery.Status)).ToString(),
+                        Status = y.FirstOrDefault().Lottery.Status,
                         NumberOfTicket = y.Count(),
                         TotalPurchasePrice = y.Sum(x => x.Lottery.UnitPrice),
                         Title = y.FirstOrDefault().Lottery.Title,
@@ -1246,7 +1246,7 @@ namespace CPL.Controllers
             if (!string.IsNullOrEmpty(searchBy))
             {
                 searchBy = searchBy.ToLower();
-                bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.Status.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
+                bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.StatusInString.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
                                     || x.NumberOfTicketInString.ToLower().Contains(searchBy) || x.Title.ToLower().Contains(searchBy);
                 purchasedLotteryHistory = purchasedLotteryHistory
                         .Where(condition);
@@ -1262,6 +1262,63 @@ namespace CPL.Controllers
                   .Take(take)
                   .ToList();
         }
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetSummaryRevenuePercentagePieChart()
+        {
+            try
+            {
+                // lottery game
+                var totalSaleLotteryGame = _lotteryHistoryService.Query()
+                                .Include(x => x.Lottery)
+                                .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
+                var totalAwardLotteryGame = _lotteryHistoryService.Query()
+                    .Include(x => x.LotteryPrize)
+                    .Select(x => x.LotteryPrize).Sum(y => y?.Value);
+                var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
+
+                // price prediction game
+                var totalSalePricePrediction = _pricePredictionHistoryService.Queryable()
+                                                    .Sum(x => x.Amount);
+                var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable()
+                                                    .Sum(x => x.Award);
+                var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
+
+                return new JsonResult(new { success = true, revenueLotteryGame = revenueInLotteryGame , revenuePricePredictionGame = revenueInPricePredictionGame });
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new { success = false });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetSummaryDeviceCategoryPercentagePieChart()
+        {
+            try
+            {
+                var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+                var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+                var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+                var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
+
+                var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+                var totalDesktopPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+                var totalMobilePricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+                var totalTabletPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
+
+                return new JsonResult(new { success = true, desktop = totalDesktopLottery + totalDesktopPricePrediction,
+                                                            mobile = totalMobileLottery + totalMobilePricePrediction,
+                                                            tablet = totalTabletLottery + totalTabletPricePrediction
+                });
+            }
+            catch (Exception)
+            {
+                return new JsonResult(new { success = false });
+            }
+        }
+
         #endregion
 
         #region Lottery

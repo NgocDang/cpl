@@ -65,6 +65,7 @@ namespace CPL.Common.Enums
                     else return "{\"type\":\"service_account\",\"project_id\":\"cpo-test-216107\",\"private_key_id\":\"4895f13cee002d644cd004cdacdaa48f4818ac7a\",\"private_key\":\"-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCfuwkEUcvSWXaz\npgL2ivkziSaISd3+QP6KkEuMJRc6s3nC8yfl5Q3jUM7t0uxYHQ9tMKDzr4s5yPzU\npx5RLRG3zJU1LK7ZjsbeIHxUsvwwgrUSoBreGaGmFs2SVDH7oDUAloGIvDwg0IhK\nHgPc+ho48QdaN1aCeQn2+9AGsggI8QJNgAzlaO0pf4P4sYmOauacVQeM+i4ErAfo\nDbwtZSxAOkMkBh30EfObR9kGOLxLWmQajFMyLuYnKxG+j7q9/UFF5noNrj0/n2yD\nGGmep1079nVTinO2s1ytbxAhaWu4gW7ngbfUv5BGzDCm5M31s5q2iTTLVwgttJn6\n6aLhwccrAgMBAAECggEAA7aR3ZdXMSMiRsfXrsqJQ4DvM+Dft77kC+2RzAa6tQMi\nE/2aElaSTZP903qBQwUd7DBitXeBuYyqD/l4k3OEQ20OlOdegzE1/0jrCv8ELM6F\nDhNJvJsE7nr+OWYaqVpOkR5ukXKqxSqD2JE9DsCDpoo33QmHSc4thJ/S9Kzj0e1a\n7npp2BEQT4IhCKhFj2N46IRPXgfqzdz1GaMLT2chUocBxroY6GX9318RYDV1vAMc\nGJNi22eZNd56E0Cay4XKtIx3F0WjV2UCeF/JEtvenuplnQJFfQE73vnEk6bqcYd6\naXWtd3uKJJ9Yhp6wslPg5XuLWg5rAkl8vObUfHnEkQKBgQDZrNY3fpt6AENqepIV\naiWYblD0tiLAqsBYvWDL58F7ZTEjMCjBFt81LIvdxb2/590QdJT3Wj5rH3Bhah/2\n2jS3fSwpiwP/UuhfE3meLbbO3jAoULNqcOzrguwG6LkkmhzKhI9y/QlN1FCvmPNm\neut5OfbsJOruLAuvuBsKS1VMmwKBgQC72n5CNP703w7Oq1tSQYDS2DKjdZYBbR3Z\nPk+wQopyqBDjK0DQ+fLt7NqbLIMPohvDx6j7bVRGBVhl76t+TWDSp1gouwCCJBt5\nwOfl92Bi4a2t0Ih7Ebs0YvKvlrR2bfhwI2oW8UCH0WxwrUl8JRJdPv8ynuZAXinL\nBniqWQxwsQKBgGdJLKhOagW8xEBtAo4ovMgUaFOFbP4Qx44T5i86u8MKZAN3YY8l\nhCoeBgvoPT4nDe019E1eQ8netBt1GM+wAF2khmT78pyfQWWDvyyAMoL8SMuIZ2m1\nRaYGjGpG2Tr16X1q4wpD6LtGaDa6E5xn7P2rtG+eoN78hVsOt73tuv7LAoGBAKKR\nt+p8CpjH4Pyh9un8ngvZ5hjnzeV2FPrInhYfv8jyAYtXB0TSypV1AMqBfvqsg/Ku\ne2L7fo8KWTH+dB9dv4kOIZE+JHZ74PtBIm814kgwnilp6nL3KVdwui2S8qH7EaGa\nRFmOdxYS+xGYJZw2SOpBdoDMWt8hnnGBLDPf1JBBAoGBAMAtD1lny/cEtnu9pavN\nw7dPnXXe/jJWQBgbNK4/R04r5xyhkdVESiK/K91j/p++nao40Em0OHqJmb+ffi1U\nX4iMQdBMYlgx8JzQfoefFpBaPn8JZIxUC/YgsFhXWFoOOiKOyIT+CFZTyKUIOm/3\nRHCUajgZ3TQ9ECt6Noa+5SiJ\n-----END PRIVATE KEY-----\n\",\"client_email\":\"infocpl@cpo-test-216107.iam.gserviceaccount.com\",\"client_id\":\"103739034404838109792\",\"auth_uri\":\"https://accounts.google.com/o/oauth2/auth\",\"token_uri\":\"https://oauth2.googleapis.com/token\",\"auth_provider_x509_cert_url\":\"https://www.googleapis.com/oauth2/v1/certs\",\"client_x509_cert_url\":\"https://www.googleapis.com/robot/v1/metadata/x509/infocpl%40cpo-test-216107.iam.gserviceaccount.com\"}"; } }  // TEST
 
             public static string HomeViewId { get { if (Environment == EnumEnvironment.MAINNET) return "181557634"; else return "181531681"; }}  
+            public static string PricePredictionViewId { get { if (Environment == EnumEnvironment.MAINNET) return "181838124"; else return "181780573"; } }
         }
 
         //BWallet
@@ -156,5 +157,18 @@ namespace CPL.Common.Enums
         public static decimal PricePredictionTotalRevenuePercentage = 0.2m;
         public static decimal PricePredictionTotalAwardPercentage = 0.8m;
         public static DateTime FirstDeploymentDate = new DateTime(2018, 8, 28);
+
+        public struct MobileAppConstant
+        {
+            public static string LoginScreenInactivatingAccount = "LoginScreen_Inactivating_Account";
+            public static string LoginScreenInvalidEmailPassword = "LoginScreen_Invalid_Email_Password";
+            public static string LoginScreenInvalidPIN = "LoginScreen_Invalid_PIN";
+
+            public static string RegisterScreenInputEmailExist = "RegisterScreen_Input_Email_Exist";
+
+            public static string CommonErrorOccurs = "Common_ErrorOccurs";
+        }
+
+        
     }
 }
