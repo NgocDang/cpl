@@ -16,6 +16,7 @@ namespace CPL.Domain
         public string Result { get; set; }
         public decimal? Award { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public decimal? TotalAward { get; set; }
 
         public virtual PricePrediction PricePrediction { get; set; }
         public virtual SysUser SysUser { get; set; }
