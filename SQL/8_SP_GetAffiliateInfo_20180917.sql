@@ -6,8 +6,8 @@ GO
 -- =============================================
 CREATE PROCEDURE [dbo].[usp_GetAffiliateInfo]
 	-- Add the parameters for the stored procedure here
-	--@SysUserId int,
-	--@PeriodInDay int
+	@SysUserId int,
+	@PeriodInDay int
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -20,9 +20,9 @@ BEGIN
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////--
 
 	SELECT 
-		-------------------------------
-		-- TotalSale.Tier1DirectSale --
-		-------------------------------
+		--------------------------------------------------
+		-- Affiliate Sale | Tier 1 Direct Afiliate Sale --
+		--------------------------------------------------
 		--(SELECT MAX(Value) FROM (VALUES (0), (
 			ISNULL((SELECT SUM(UnitPrice) as TotalDirectCPLUsedInLottery
 					FROM LotteryHistory join Lottery on LotteryHistory.LotteryId = Lottery.Id
@@ -50,9 +50,9 @@ BEGIN
 						and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(iu.DirectIntroducedUsers, ','))),0)
 						--)) Tier1Direct(Value))
 			+
-		------------------------------------
-		-- TotalSale.Tier2SaleToTier1Sale --
-		------------------------------------
+		--------------------------------------------------------------------
+		-- Affiliate Sale | Tier 2 Affiliate Sale to Tier 1 Afiliate Sale --
+		--------------------------------------------------------------------
 		--(SELECT MAX(Value) FROM (VALUES (0), (
 			ISNULL((SELECT SUM(UnitPrice) as TotalDirectCPLUsedInLottery
 				FROM LotteryHistory join Lottery on LotteryHistory.LotteryId = Lottery.Id
@@ -80,9 +80,9 @@ BEGIN
 						and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(iu.Tier2IntroducedUsers, ','))),0)
 					--)) Tier2ToTier1(Value))
 			+
-		------------------------------------
-		-- TotalSale.Tier3SaleToTier1Sale --
-		------------------------------------
+		--------------------------------------------------------------------
+		-- Affiliate Sale | Tier 3 Affiliate Sale to Tier 1 Afiliate Sale --
+		--------------------------------------------------------------------
 		--(SELECT MAX(Value) FROM (VALUES (0), (
 			ISNULL((SELECT SUM(UnitPrice) as TotalDirectCPLUsedInLottery
 				FROM LotteryHistory join Lottery on LotteryHistory.LotteryId = Lottery.Id
@@ -111,9 +111,9 @@ BEGIN
 					--)) Tier3ToTier1(Value))
 		AS TotalSale,
 
-		----------------
-		-- DirectSale --
-		----------------
+		---------------------------
+		-- Direct Affiliate Sale --
+		---------------------------
 		--(SELECT MAX(Value) FROM (VALUES (0), (
 			ISNULL((SELECT SUM(UnitPrice) as TotalDirectCPLUsedInLottery
 					FROM LotteryHistory join Lottery on LotteryHistory.LotteryId = Lottery.Id
@@ -143,7 +143,7 @@ BEGIN
 		AS DirectSale,
 
 		--------------------------
-		-- TotalIntroducedUsers --
+		-- Total Introduced Users --
 		--------------------------
 			ISNULL((LEN(DirectIntroducedUsers) - LEN(REPLACE(DirectIntroducedUsers,',','')) + 1),0)
 			+ 
@@ -153,7 +153,7 @@ BEGIN
 		AS TotalIntroducedUsers,
 
 		---------------------------
-		-- DirectIntroducedUsers --
+		-- Direct Introduced Users --
 		---------------------------
 			ISNULL((LEN(DirectIntroducedUsers) - LEN(REPLACE(DirectIntroducedUsers,',','')) + 1),0)
 		AS DirectIntroducedUsers
@@ -169,11 +169,13 @@ BEGIN
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////--
 --///////////////////////////////////// INTRODUCED TIER 2 & TIER 3 USERS IN DETAILS /////////////////////////////////////--
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////--
-	DECLARE @SysUserId int;
-	SET @SysUserId = 1;
 
-	DECLARE @PeriodInDay int;
-	SET @PeriodInDay = 300;
+-------------------- TEST PURPOSE --------------------
+	--DECLARE @SysUserId int;
+	--SET @SysUserId = 1;
+
+	--DECLARE @PeriodInDay int;
+	--SET @PeriodInDay = 300;
 
 	DECLARE @DirectIntroducedUsers nvarchar(MAX);
 	DECLARE @Tier2IntroducedUsers nvarchar(MAX);
@@ -181,7 +183,7 @@ BEGIN
 			@Tier2IntroducedUsers = Tier2IntroducedUsers 
 	FROM	IntroducedUsers
 	WHERE	Id = @SysUserId;
-
+-------------------- TEST PURPOSE --------------------
 	SELECT 
 		--------
 		-- Id --
@@ -315,9 +317,20 @@ BEGIN
 				FROM PricePredictionHistory join PricePrediction on PricePredictionHistory.PricePredictionId = PricePrediction.Id
 				WHERE PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE
 						and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT((SELECT Tier3IntroducedUsers FROM IntroducedUsers WHERE IntroducedUsers.Id = su.Id), ','))),0)
-		--				)) Total(Value))
+		--				)) AffiliateSale(Value))
 		As AffiliateSale,
 
+	----------------------------
+	-- Total introduced users --
+	----------------------------
+		ISNULL((LEN((SELECT DirectIntroducedUsers FROM IntroducedUsers WHERE IntroducedUsers.Id = su.Id)) - LEN(REPLACE((SELECT DirectIntroducedUsers FROM IntroducedUsers WHERE IntroducedUsers.Id = su.Id),',','')) + 1),0)
+		AS TotalIntroducedUsers,
+
+    ----------------------------
+	-- Affiliate created date --
+	----------------------------
+		su.AffiliateCreatedDate
+		AS AffiliateCreatedDate
 
 	FROM   SysUser su join IntroducedUsers iu on su.Id = iu.Id
 	WHERE (su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))
