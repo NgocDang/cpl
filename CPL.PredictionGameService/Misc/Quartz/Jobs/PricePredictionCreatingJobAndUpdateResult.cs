@@ -157,6 +157,8 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                     {
                         pricePredictionHistory.SysUser.TokenAmount += pricePredictionHistory.Amount;
                         pricePredictionHistory.Result = EnumGameResult.REFUND.ToString();
+                        pricePredictionHistory.Award = 0.0m;
+                        pricePredictionHistory.TotalAward = 0.0m;
 
                         // update user's amount
                         resolver.SysUserService.Update(pricePredictionHistory.SysUser);
@@ -165,9 +167,10 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                     {
                         if (pricePredictionHistory.Prediction != gameResult)
                         {
-                            // check minus money
+                            // update result of PrdictionHistory
                             pricePredictionHistory.Result = EnumGameResult.LOSE.ToString();
                             pricePredictionHistory.Award = 0.0m;
+                            pricePredictionHistory.TotalAward = 0.0m;
                         }
                         else
                         {
@@ -175,6 +178,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                             var amountToBeAwarded = (pricePredictionHistory.Amount / totalAmountOfWinUsers) * totalAmountToBeAwarded; // The prize money is distributed at an equal rate according to the amount of bet.​
                             pricePredictionHistory.Result = EnumGameResult.WIN.ToString();
                             pricePredictionHistory.Award = amountToBeAwarded;
+                            pricePredictionHistory.TotalAward = amountToBeAwarded + pricePredictionHistory.Amount;
                             pricePredictionHistory.SysUser.TokenAmount += amountToBeAwarded + pricePredictionHistory.Amount; // add amount award and refund amount bet
 
                             // update user's amount

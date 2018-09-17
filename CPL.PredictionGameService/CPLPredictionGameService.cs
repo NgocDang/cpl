@@ -1,16 +1,9 @@
-﻿using Autofac;
-using BTCCurrentPriceService;
+﻿using BTCCurrentPriceService;
 using CPL.Common.Enums;
 using CPL.Common.Misc;
-using CPL.Core.Interfaces;
-using CPL.Core.Services;
 using CPL.Domain;
-using CPL.Infrastructure;
-using CPL.Infrastructure.Interfaces;
-using CPL.Infrastructure.Repositories;
 using CPL.PredictionGameService.Misc;
 using CPL.PredictionGameService.Misc.Quartz.Jobs;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.PlatformAbstractions;
 using PeterKottas.DotNetCore.WindowsService.Base;
@@ -22,8 +15,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace CPL.PredictionGameService
@@ -62,8 +53,8 @@ namespace CPL.PredictionGameService
 
             Tasks.Add(Task.Run(async () =>
             {
-                var startHour = PricePredictionBettingIntervalInHour + PricePredictionHoldingIntervalInHour; // 9h
-                var startMinute = PricePredictionCompareIntervalInMinute; // 15m
+                var startHour = PricePredictionHoldingIntervalInHour;       // 1h
+                var startMinute = PricePredictionCompareIntervalInMinute;   // 15m
 
                 IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
                 await scheduler.Start();
@@ -84,7 +75,6 @@ namespace CPL.PredictionGameService
                     .WithDescription("Job to create new PricePredictions daily automatically")
                                         .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PricePredictionBettingIntervalInHour)
                                                                              .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(startHour, startMinute)))
-
                     .Build();
 
                 await scheduler.ScheduleJob(job, trigger);
