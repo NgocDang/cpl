@@ -1120,7 +1120,9 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IActionResult Game()
         {
-            return View();
+            var viewModel = new GameManagementIndexViewModel();
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -1167,6 +1169,22 @@ namespace CPL.Controllers
 
             var mess = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
             return new JsonResult(new { success = true, message = mess });
+        }
+
+        [HttpPost]
+        public IActionResult GetSummaryRevenuePercentagePieChart()
+        {
+            var viewModel = new PieChartViewComponentViewModel();
+            // handle data for viewModel
+            return ViewComponent("PieChart", viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult GetSummaryDeviceCategoryPercentagePieChart()
+        {
+            var viewModel = new PieChartViewComponentViewModel();
+            // handle data for viewModel
+            return ViewComponent("PieChart", viewModel);
         }
 
         [HttpPost]
@@ -1916,5 +1934,6 @@ namespace CPL.Controllers
         }
 
         #endregion
+
     }
 }

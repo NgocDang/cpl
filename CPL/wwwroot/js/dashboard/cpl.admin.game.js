@@ -142,6 +142,16 @@
             }
         });
     },
+    bindNavbar: function () {
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            var _this = this;
+            if ($("#price-prediction-nav-" + $(_this).data().id).html().trim().length == 0) {
+                if ($(_this).attr("id") == "lottery-nav-tab") {
+                    PieChartViewComponent.loadPercentage();
+                }
+            }
+        })
+    }
 }
 
 $(document).ready(function () {
