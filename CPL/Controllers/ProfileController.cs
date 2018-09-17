@@ -18,6 +18,9 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Google.Authenticator;
 using CPL.Common.Enums;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Data;
 
 namespace CPL.Controllers
 {
@@ -33,6 +36,7 @@ namespace CPL.Controllers
         private readonly ICoinTransactionService _coinTransactionService;
         private readonly ITemplateService _templateService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
+        private readonly IDataContextAsync _dataContextAsync;
 
         public ProfileController(
             IHostingEnvironment hostingEnvironment,
@@ -44,6 +48,7 @@ namespace CPL.Controllers
             ISysUserService sysUserService,
             ICoinTransactionService coinTransactionService,
             ILotteryHistoryService lotteryHistoryService,
+            IDataContextAsync dataContextAsync,
             ITemplateService templateService)
         {
             this._hostingEnvironment = hostingEnvironment;
@@ -55,6 +60,7 @@ namespace CPL.Controllers
             this._sysUserService = sysUserService;
             this._unitOfWork = unitOfWork;
             this._templateService = templateService;
+            this._dataContextAsync = dataContextAsync;
             this._lotteryHistoryService = lotteryHistoryService;
         }
 
@@ -260,10 +266,42 @@ namespace CPL.Controllers
             viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
 
             // Total sale
-            // TODO: bind data to total sale by Store Procedure (implement after implement getSales procedure)
-            viewModel.TotalSale = 1000;
-            viewModel.TotalSaleToday = 10;
-            viewModel.TotalSaleYesterday = 10;
+            SqlParameter TotalSaleParam = new SqlParameter()
+            {
+                ParameterName = "@TotalSale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter TodaySaleParam = new SqlParameter()
+            {
+                ParameterName = "@TodaySale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter YesterdaySaleParam = new SqlParameter()
+            {
+                ParameterName = "@YesterdaySale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter[] parameters = {
+                new SqlParameter() {
+                    ParameterName = "@UserId",
+                    SqlDbType = SqlDbType.Int,
+                    Value = user.Id,
+                    Direction = ParameterDirection.Input
+                },
+                TotalSaleParam, TodaySaleParam, YesterdaySaleParam
+            };
+
+            _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @UserId, @TotalSale OUTPUT, @TodaySale OUTPUT, @YesterdaySale OUTPUT", parameters);
+
+            viewModel.TotalSale = Convert.ToInt32(TotalSaleParam.Value);
+            viewModel.TotalSaleToday = Convert.ToInt32(TodaySaleParam.Value);
+            viewModel.TotalSaleYesterday = Convert.ToInt32(YesterdaySaleParam.Value);
 
             // Total user register
             viewModel.TotalUserRegister = _sysUserService.Queryable()
