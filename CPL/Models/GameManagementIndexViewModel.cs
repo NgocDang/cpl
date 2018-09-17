@@ -9,8 +9,8 @@ namespace CPL.Models
     public class GameManagementIndexViewModel
     {
         // Summary
-        public PieChartViewComponentViewModel SummaryPieChartViewComponentViewModel { get; set; }
-        public PieChartViewComponentViewModel SummaryDeviceCategoryViewComponentViewModel { get; set; }
+        public PieChartViewComponentViewModel SummaryRevenue { get; set; }
+        public PieChartViewComponentViewModel SummaryDeviceCategory { get; set; }
     }
 
     public class SummaryChangesViewModel

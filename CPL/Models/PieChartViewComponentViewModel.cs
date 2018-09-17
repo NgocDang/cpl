@@ -7,7 +7,8 @@ namespace CPL.Models
 {
     public class PieChartViewComponentViewModel
     {
-        public List<PieChartData> ChartData { get; set; }
+        public string SeriesName { get; set; }
+        public string ChartDataInJson { get; set; }
     }
 
     public class PieChartData

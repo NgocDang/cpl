@@ -1,5 +1,4 @@
 ﻿@model PieChartViewComponentViewModel
 
-<div id="pie-chart">
-    @Html.Hidden("ChartData", Model.ChartData)
-</div>
+@Html.Hidden("ChartData", Model.ChartDataInJson)
+@Html.Hidden("SeriesName", Model.SeriesName)
