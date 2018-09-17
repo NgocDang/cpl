@@ -34,12 +34,12 @@ namespace CPL.PaymentService.Misc.Quartz.Jobs
 
             foreach(var payment in payments)
             {
-                var sale = payment.Tier1DirectRate * payment.Tier1DirectSale
+                var commission = payment.Tier1DirectRate * payment.Tier1DirectSale
                     + payment.Tier2SaleToTier1Rate * payment.Tier2SaleToTier1Sale
                     + payment.Tier3SaleToTier1Rate * payment.Tier3SaleToTier1Sale;
 
-                if (sale >0)
-                    payment.SysUser.TokenAmount += sale;
+                if (commission >0)
+                    payment.SysUser.TokenAmount += commission;
                 resolver.SysUserService.Update(payment.SysUser);
 
                 payment.UpdatedDate = DateTime.Now;
