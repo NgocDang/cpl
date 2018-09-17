@@ -59,7 +59,7 @@ namespace CPL.PaymentService
                 };
 
                 //Payment creating job
-                IJobDetail creatingJob = JobBuilder.Create<PaymentCreateJob>()
+                IJobDetail creatingJob = JobBuilder.Create<PricePredictionCreatingJobAndUpdateResult>()
                     .UsingJobData(jobData)
                     .WithIdentity("PaymentCreateJob", "QuartzGroup")
                     .WithDescription("Job to automatically create payment at the beginning of every month")

@@ -73,7 +73,7 @@ namespace CPL.PredictionGameService
                     ["Resolver"] = Resolver,
                 };
 
-                IJobDetail job = JobBuilder.Create<PricePredictionCreatingJob>()
+                IJobDetail job = JobBuilder.Create<PricePredictionCreatingJobAndUpdateResult>()
                     .UsingJobData(jobData)
                     .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
                     .WithDescription("Job to create new PricePredictions daily automatically")
