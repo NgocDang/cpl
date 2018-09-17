@@ -1,4 +1,5 @@
 ﻿using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.Core.Services;
 using CPL.Domain;
 using CPL.Infrastructure.Repositories;
@@ -18,13 +19,35 @@ namespace CPL.PaymentService.Misc.Quartz.Jobs
         {
             JobDataMap dataMap = context.JobDetail.JobDataMap;
             Resolver resolver = (Resolver)dataMap["Resolver"];
-            DoProcessPayment(ref resolver);
+            var paymentFileName = (string)dataMap["PaymentFileName"];
+            DoProcessPayment(paymentFileName, ref resolver);
             return Task.FromResult(0);
         }
 
-        public void DoProcessPayment(ref Resolver resolver)
+        public void DoProcessPayment(string paymentFileName, ref Resolver resolver)
         {
+            var payments = resolver.PaymentService.Query()
+                .Include(x=>x.SysUser)
+                .Select()
+                .Where(x => !x.UpdatedDate.HasValue)
+                .ToList();
 
+            foreach(var payment in payments)
+            {
+                var sale = payment.Tier1DirectRate * payment.Tier1DirectSale
+                    + payment.Tier2SaleToTier1Rate * payment.Tier2SaleToTier1Sale
+                    + payment.Tier3SaleToTier1Rate * payment.Tier3SaleToTier1Sale;
+
+                if (sale >0)
+                    payment.SysUser.TokenAmount += sale;
+                resolver.SysUserService.Update(payment.SysUser);
+
+                payment.UpdatedDate = DateTime.Now;
+                resolver.PaymentService.Update(payment);
+            }
+
+            resolver.UnitOfWork.SaveChanges();
+            Utils.FileAppendThreadSafe(paymentFileName, string.Format("All payments are paid at: {0}{1}{2}", DateTime.Now, Environment.NewLine, Environment.NewLine));
         }
     }
 }

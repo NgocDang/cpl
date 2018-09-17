@@ -85,7 +85,7 @@ BEGIN
 		-----------------------------------------------------
 		-- Tier1DirectSale to be inserted to PAYMENT table --
 		-----------------------------------------------------
-		(SELECT MAX(Value) FROM (VALUES (0), (
+		--(SELECT MAX(Value) FROM (VALUES (0), (
 			ISNULL((SELECT SUM(UnitPrice) as TotalDirectCPLUsedInLottery
 					FROM LotteryHistory join Lottery on LotteryHistory.LotteryId = Lottery.Id
 					WHERE Lottery.Status = 3 -- COMPLETED
@@ -112,13 +112,13 @@ BEGIN
 				WHERE   DATEPART(yyyy, PricePrediction.ResultTime) = DATEPART(yyyy, DATEADD(m, -1, getdate()))
 						and DATEPART(m, PricePrediction.ResultTime) = DATEPART(m, DATEADD(m, -1, getdate())) 
 						and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(iu.DirectIntroducedUsers, ','))),0)
-						)) Tier1Direct(Value))
+						--)) Tier1Direct(Value))
 		AS Tier1DirectSale,
 
 		----------------------------------------------------------
 		-- Tier2SaleToTier1Sale to be inserted to PAYMENT table --
 		----------------------------------------------------------
-		(SELECT MAX(Value) FROM (VALUES (0), (
+		--(SELECT MAX(Value) FROM (VALUES (0), (
 			ISNULL((SELECT SUM(UnitPrice) as TotalDirectCPLUsedInLottery
 				FROM LotteryHistory join Lottery on LotteryHistory.LotteryId = Lottery.Id
 				WHERE Lottery.Status = 3 -- COMPLETED
@@ -145,13 +145,13 @@ BEGIN
 				WHERE DATEPART(yyyy, PricePrediction.ResultTime) = DATEPART(yyyy, DATEADD(m, -1, getdate())) 
 						and DATEPART(m, PricePrediction.ResultTime) = DATEPART(m, DATEADD(m, -1, getdate())) 
 						and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(iu.Tier2IntroducedUsers, ','))),0)
-					)) Tier2ToTier1(Value))
+					--)) Tier2ToTier1(Value))
 		AS Tier2SaleToTier1Sale,
 
 		----------------------------------------------------------
 		-- Tier3SaleToTier1Sale to be inserted to PAYMENT table --
 		----------------------------------------------------------
-		(SELECT MAX(Value) FROM (VALUES (0), (
+		--(SELECT MAX(Value) FROM (VALUES (0), (
 			ISNULL((SELECT SUM(UnitPrice) as TotalDirectCPLUsedInLottery
 				FROM LotteryHistory join Lottery on LotteryHistory.LotteryId = Lottery.Id
 				WHERE Lottery.Status = 3 -- COMPLETED
@@ -178,7 +178,7 @@ BEGIN
 				WHERE	DATEPART(yyyy, PricePrediction.ResultTime) = DATEPART(yyyy, DATEADD(m, -1, getdate())) 
 						and DATEPART(m, PricePrediction.ResultTime) = DATEPART(m, DATEADD(m, -1, getdate())) 
 						and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(iu.Tier3IntroducedUsers, ','))),0)
-					)) Tier3ToTier1(Value))
+					--)) Tier3ToTier1(Value))
 		AS Tier3SaleToTier1Sale,
 
 		-----------------------------------------------------
