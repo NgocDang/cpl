@@ -59,7 +59,7 @@ BEGIN
 						and DATEPART(m, PricePrediction.ResultTime) = DATEPART(m, DATEADD(m, -1, getdate())) 
 						and  PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(iu.DirectIntroducedUsers, ','))),0)
 			-
-			ISNULL((SELECT SUM(Award) as TotalDirectCPLAwardedInPricePrediction
+			ISNULL((SELECT SUM(TotalAward) as TotalDirectCPLAwardedInPricePrediction
 				FROM PricePredictionHistory join PricePrediction on PricePredictionHistory.PricePredictionId = PricePrediction.Id
 				WHERE   PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 						and DATEPART(yyyy, PricePrediction.ResultTime) = DATEPART(yyyy, DATEADD(m, -1, getdate()))
@@ -94,7 +94,7 @@ BEGIN
 						and DATEPART(m, PricePrediction.ResultTime) = DATEPART(m, DATEADD(m, -1, getdate())) 
 						and  PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(iu.Tier2IntroducedUsers, ','))),0)
 			-
-			ISNULL((SELECT SUM(Award) as TotalDirectCPLAwardedInPricePrediction
+			ISNULL((SELECT SUM(TotalAward) as TotalDirectCPLAwardedInPricePrediction
 				FROM PricePredictionHistory join PricePrediction on PricePredictionHistory.PricePredictionId = PricePrediction.Id
 				WHERE PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 						and DATEPART(yyyy, PricePrediction.ResultTime) = DATEPART(yyyy, DATEADD(m, -1, getdate())) 
@@ -129,7 +129,7 @@ BEGIN
 						and DATEPART(m, PricePrediction.ResultTime) = DATEPART(m, DATEADD(m, -1, getdate())) 
 						and  PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(iu.Tier3IntroducedUsers, ','))),0)
 			-
-			ISNULL((SELECT SUM(Award) as TotalDirectCPLAwardedInPricePrediction
+			ISNULL((SELECT SUM(TotalAward) as TotalDirectCPLAwardedInPricePrediction
 				FROM PricePredictionHistory join PricePrediction on PricePredictionHistory.PricePredictionId = PricePrediction.Id
 				WHERE	PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 						and DATEPART(yyyy, PricePrediction.ResultTime) = DATEPART(yyyy, DATEADD(m, -1, getdate())) 
