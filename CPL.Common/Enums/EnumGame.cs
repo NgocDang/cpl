@@ -9,7 +9,7 @@ namespace CPL.Common.Enums
         WIN = 1,
         LOSE = 2,
         KYC_PENDING = 3,
-        REFUNDED = 4
+        REFUND = 4
     }
 
     public enum EnumPricePredictionStatus
