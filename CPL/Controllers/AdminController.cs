@@ -1126,33 +1126,33 @@ namespace CPL.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Permission(EnumRole.Admin)]
-        public IActionResult GetDataGameSummaryStatisticChart(int periodInDay)
+        public IActionResult GetSummaryStatistics(int periodInDay)
         {
             var viewModel = new SummaryChangesViewModel();
 
-            var lotterySale = _lotteryHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+            var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+                        .Where(x => (periodInDay > 0 ?  x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now) && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => x.Lottery.UnitPrice) });
 
             var pricePredictionSale = _pricePredictionHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => (int)x.Amount) });
 
             viewModel.TotalSaleChanges = (lotterySale ?? Enumerable.Empty<SummaryChange>()).Concat(pricePredictionSale ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
 
-            var lotteryRevenue = _lotteryHistoryService.Queryable()
+            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice * LotteryTotalRevenuePercentage)) });
+                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0))) });
 
             var pricePredictionRevenue = _pricePredictionHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Amount * PricePredictionTotalRevenuePercentage)) });
+                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Amount - x.Award)) });
 
             viewModel.TotalRevenueChanges = (lotteryRevenue ?? Enumerable.Empty<SummaryChange>()).Concat(pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
 
@@ -1160,16 +1160,14 @@ namespace CPL.Controllers
 
             var lotteryPlayers = _lotteryHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date).Select(y => new PlayersChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIdList = y.Select(x => x.SysUserId) }).ToList();
+                        .GroupBy(x => x.CreatedDate.Date).Select(y => new PlayersChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIds = y.Select(x => x.SysUserId) }).ToList();
 
             var pricePredictionPlayers = _pricePredictionHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date).Select(y => new PlayersChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIdList = y.Select(x => x.SysUserId) }).ToList();
+                        .GroupBy(x => x.CreatedDate.Date).Select(y => new PlayersChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIds = y.Select(x => x.SysUserId) }).ToList();
 
-            viewModel.TotalPlayersChanges = (lotteryPlayers ?? Enumerable.Empty<PlayersChange>()).Concat(pricePredictionPlayers ?? Enumerable.Empty<PlayersChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.SelectMany(x => x.SysUserIdList).Distinct().Count() }).OrderBy(x => x.Date).ToList();
-
-            var mess = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
-            return new JsonResult(new { success = true, message = mess });
+            viewModel.TotalPlayersChanges = (lotteryPlayers ?? Enumerable.Empty<PlayersChange>()).Concat(pricePredictionPlayers ?? Enumerable.Empty<PlayersChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.SelectMany(x => x.SysUserIds).Distinct().Count() }).OrderBy(x => x.Date).ToList();
+            return PartialView("_SummaryStatistics", viewModel);
         }
 
         [HttpPost]
@@ -1247,26 +1245,27 @@ namespace CPL.Controllers
                   .Take(take)
                   .ToList();
         }
+
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult GetSummaryRevenuePercentagePieChart()
+        public IActionResult GetSummaryStatisticRevenuePieChart()
         {
             try
             {
                 // lottery game
                 var totalSaleLotteryGame = _lotteryHistoryService.Query()
-                                .Include(x => x.Lottery)
+                                .Include(x => x.Lottery).Select().Where(x => x.Result != EnumGameResult.REFUND.ToString())
                                 .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
                 var totalAwardLotteryGame = _lotteryHistoryService.Query()
-                    .Include(x => x.LotteryPrize)
+                    .Include(x => x.LotteryPrize).Select().Where(x => x.Result != EnumGameResult.REFUND.ToString())
                     .Select(x => x.LotteryPrize).Sum(y => y?.Value);
                 var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
 
                 // price prediction game
-                var totalSalePricePrediction = _pricePredictionHistoryService.Queryable()
+                var totalSalePricePrediction = _pricePredictionHistoryService.Queryable().Where(x => x.Result != EnumGameResult.REFUND.ToString())
                                                     .Sum(x => x.Amount);
-                var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable()
-                                                    .Sum(x => x.TotalAward);
+                var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable().Where(x => x.Result != EnumGameResult.REFUND.ToString())
+                                                    .Sum(x => x.Award);
                 var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
 
                 return new JsonResult(new { success = true, revenueLotteryGame = revenueInLotteryGame , revenuePricePredictionGame = revenueInPricePredictionGame });
@@ -1276,34 +1275,6 @@ namespace CPL.Controllers
                 return new JsonResult(new { success = false });
             }
         }
-
-        [HttpPost]
-        [Permission(EnumRole.Admin)]
-        public IActionResult GetSummaryDeviceCategoryPercentagePieChart()
-        {
-            try
-            {
-                var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
-                var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
-                var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
-                var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
-
-                var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
-                var totalDesktopPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
-                var totalMobilePricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
-                var totalTabletPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
-
-                return new JsonResult(new { success = true, desktop = totalDesktopLottery + totalDesktopPricePrediction,
-                                                            mobile = totalMobileLottery + totalMobilePricePrediction,
-                                                            tablet = totalTabletLottery + totalTabletPricePrediction
-                });
-            }
-            catch (Exception)
-            {
-                return new JsonResult(new { success = false });
-            }
-        }
-
         #endregion
 
         #region Lottery
@@ -1861,6 +1832,7 @@ namespace CPL.Controllers
                 var lotteryHistories = _lotteryHistoryService.Query().Include(x => x.SysUser).Select().Where(x => x.LotteryId == id).ToList();
                 foreach (var lotteryHistory in lotteryHistories)
                 {
+                    lotteryHistory.Result = EnumGameResult.REFUND.ToString();
                     lotteryHistory.SysUser.TokenAmount += amountToken;
                     _sysUserService.Update(lotteryHistory.SysUser);
                 }

@@ -11,24 +11,4 @@ namespace CPL.Models
         public string Tab { get; set; }
         public List<LotteryCategoryViewModel> LotteryCategories { get; set; }
     }
-
-    public class SummaryChangesViewModel
-    {
-        public List<SummaryChange> TotalRevenueChanges { get; set; }
-        public List<SummaryChange> TotalSaleChanges { get; set; }
-        public List<PageViewsViewModel> PageViewChanges { get; set; }
-        public List<SummaryChange> TotalPlayersChanges { get; set; }
-    }
-
-    public class SummaryChange
-    {
-        public DateTime Date { get; set; }
-        public int Value { get; set; }
-    }
-
-    public class PlayersChange
-    {
-        public DateTime Date { get; set; }
-        public IEnumerable<int> SysUserIdList { get; set; }
-    }
 }

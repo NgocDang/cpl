@@ -63,7 +63,7 @@ namespace CPL.Controllers
                                 .Include(x => x.LotteryDetails)
                                 //.Include(x => x.LotteryPrizes)
                                 .Select()
-                                .FirstOrDefault(x => x.Id == id && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED));
+                                .FirstOrDefault(x => x.Id == id && !x.IsDeleted && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED));
                 if (lottery == null)
                     return RedirectToAction("Index", "Home");
 

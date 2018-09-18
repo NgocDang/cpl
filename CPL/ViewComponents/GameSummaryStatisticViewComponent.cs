@@ -29,14 +29,15 @@ namespace CPL.ViewComponents
         public IViewComponentResult Invoke(double? periodInDay)
         {
             var viewModel = new GameSummaryStatisticViewComponentViewModel();
-            var pageViews = _analyticService.GetPageViews(CPLConstant.Analytic.HomeViewId, periodInDay.GetValueOrDefault(0) > 0 ? DateTime.Now.AddDays(-periodInDay.GetValueOrDefault(0)) : CPLConstant.FirstDeploymentDate, DateTime.Now);
-            viewModel.PageView = pageViews.AsQueryable().Sum(x => x.Count);
+            var lotteryViews = _analyticService.GetPageViews(CPLConstant.Analytic.HomeViewId, periodInDay.GetValueOrDefault(0) > 0 ? DateTime.Now.AddDays(-periodInDay.GetValueOrDefault(0)) : CPLConstant.FirstDeploymentDate, DateTime.Now);
+            var pricePredictionViews = _analyticService.GetPageViews(CPLConstant.Analytic.PricePredictionViewId, periodInDay.GetValueOrDefault(0) > 0 ? DateTime.Now.AddDays(-periodInDay.GetValueOrDefault(0)) : CPLConstant.FirstDeploymentDate, DateTime.Now);
+            viewModel.PageView = lotteryViews.AsQueryable().Sum(x => x.Count) + pricePredictionViews.AsQueryable().Sum(x => x.Count);
 
-            var lotteryTotalSale = _lotteryHistoryService.Queryable()
-                .Where(x => periodInDay.GetValueOrDefault(0) > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay.GetValueOrDefault(0)) : x.CreatedDate <= DateTime.Now)
+            var lotteryTotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+                .Where(x => (periodInDay.GetValueOrDefault(0) > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay.GetValueOrDefault(0)) : x.CreatedDate <= DateTime.Now) && x.Result != EnumGameResult.REFUND.ToString())
                 .Sum(x => x.Lottery.UnitPrice);
             var pricePredictionTotalSale = _pricePredictionHistoryService.Queryable()
-                .Where(x => periodInDay.GetValueOrDefault(0) > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay.GetValueOrDefault(0)) : x.CreatedDate <= DateTime.Now)
+                .Where(x => (periodInDay.GetValueOrDefault(0) > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay.GetValueOrDefault(0)) : x.CreatedDate <= DateTime.Now) && x.Result != EnumGameResult.REFUND.ToString())
                 .Sum(x => x.Amount);
             viewModel.TotalSale = lotteryTotalSale + (int)pricePredictionTotalSale;
             viewModel.TodayPlayers = _lotteryHistoryService.Queryable().Where(x => x.CreatedDate.Date == DateTime.Now.Date).GroupBy(x => x.SysUserId).Count() + _pricePredictionHistoryService.Queryable().Where(x => x.CreatedDate.Date == DateTime.Now.Date).GroupBy(x => x.SysUserId).Count();
@@ -50,7 +51,14 @@ namespace CPL.ViewComponents
 
             viewModel.TotalPlayers = lotteryTotalPlayers.Concat(pricePredictionTotalPlayers).Distinct().Count();
 
-            viewModel.TotalRevenue = Convert.ToInt32(lotteryTotalSale * CPLConstant.LotteryTotalRevenuePercentage + pricePredictionTotalSale * CPLConstant.PricePredictionTotalRevenuePercentage);
+            var lotteryTotalRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
+                .Where(x => (periodInDay.GetValueOrDefault(0) > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay.GetValueOrDefault(0)) : x.CreatedDate <= DateTime.Now) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0));
+            var pricePredictionTotalRevenue = _pricePredictionHistoryService.Queryable()
+                .Where(x => (periodInDay.GetValueOrDefault(0) > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay.GetValueOrDefault(0)) : x.CreatedDate <= DateTime.Now) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Amount - x.Award.GetValueOrDefault(0));
+
+            viewModel.TotalRevenue = Convert.ToInt32(lotteryTotalRevenue + pricePredictionTotalRevenue);
             return View(viewModel);
         }
     }
