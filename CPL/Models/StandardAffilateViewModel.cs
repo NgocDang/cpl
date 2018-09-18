@@ -14,7 +14,7 @@ namespace CPL.Models
         public string Email { get; set; }
         public int? AffiliateId { get; set; }
 
-        public decimal TotalIntroducer { get; set; }
+        public int TotalIntroducer { get; set; }
 
         public DateTime? AffiliateCreatedDate { get; set; }
         public string Action { get; set; }
@@ -39,21 +39,8 @@ namespace CPL.Models
         public decimal? TotalTier2DirectCPLAwardedInPricePrediction { get; set; }
         public decimal? TotalTier3DirectCPLAwardedInPricePrediction { get; set; }
 
-        public decimal? TotalSale
-        {
-            get
-            {
-                var total = 
-                    // Total sale in lottery
-                    TotalDirectCPLUsedInLottery + TotalTier2DirectCPLUsedInLottery + TotalTier3DirectCPLUsedInLottery
-                       - TotalDirectCPLAwardedInLottery - TotalTier2DirectCPLAwardedInLottery - TotalTier3DirectCPLAwardedInLottery
-                    // Total sale in price prediction
-                       + TotalDirectCPLUsedInPricePrediction + TotalTier2DirectCPLUsedInPricePrediction + TotalTier3DirectCPLUsedInPricePrediction
-                       - TotalDirectCPLAwardedInPricePrediction - TotalTier2DirectCPLAwardedInPricePrediction - TotalTier3DirectCPLAwardedInPricePrediction;
-
-                return (total > 0) ? total : 0; 
-            }
-        }
+        public decimal TotalSale { get; set; }
+        public string TotalSaleInString { get; set; }
 
         // variable in string
         public string AffiliateCreatedDateInString { get; set; }

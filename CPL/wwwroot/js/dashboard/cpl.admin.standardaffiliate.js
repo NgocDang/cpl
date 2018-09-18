@@ -85,7 +85,7 @@
                 {
                     "data": "TotalSale",
                     "render": function (data, type, full, meta) {
-                        return full.totalSale;
+                        return full.totalSaleInString;
                     }
                 },
                 {
