@@ -1,14 +1,18 @@
-﻿var PieChartViewComponent = {
+﻿var PieChart = {
     init: function () {
     },
-    loadPercentageAjax: function (container, emptyContainer, url, seriesName) {
+    loadPercentageAjax: function (container, emptyContainer, url) {
+        debugger;
         $.ajax({
-            url: url, //GetDeviceCategoryData
-            type: "POST",
+            url: url, 
+            type: "GET",
+            beforeSend: function () {
+                container.html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+            },
             data: {},
-            success: function (data) {
-                if (data.success) {
-                    PieChartViewComponent.loadPercentage(data, container, emptyContainer, seriesName);
+            success: function (response) {
+                if (response.success) {
+                    PieChart.loadPercentage(response.data, container, emptyContainer, response.seriesName);
                 }
             }
         });
@@ -28,7 +32,7 @@
             container.addClass("d-none");
             emptyContainer.removeClass("d-none");
         } else {
-            var seriesArray = Array();
+            var seriesArray = [];
             for (var i = 0; i < jsonObj.length; i++) {
                 var point = { name: jsonObj[i].Label, y: jsonObj[i].Value, color: jsonObj[i].Color };
                 seriesArray.push(point);
@@ -72,5 +76,5 @@
     }
 }
 $(document).ready(function () {
-    PieChartViewComponent.init();
+    PieChart.init();
 });

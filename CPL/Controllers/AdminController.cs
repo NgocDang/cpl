@@ -1188,8 +1188,8 @@ namespace CPL.Controllers
                 .GroupBy(x => x.SysUserId)
                 .Count();
 
-
-            // 1.STATISTICAL CHART - TOTAL SALE CHANGES
+            // 2.STATISTICAL CHART
+            // 2.STATISTICAL CHART - TOTAL SALE CHANGES
             var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
@@ -1206,15 +1206,18 @@ namespace CPL.Controllers
                             Value = y.Sum(x => (int)x.Amount)
                         });
 
-            viewModel.TotalSaleChanges = (lotterySale ?? Enumerable.Empty<SummaryChange>())
+            viewModel.TotalSaleChangesInJson = JsonConvert.SerializeObject((lotterySale ?? Enumerable.Empty<SummaryChange>())
                 .Concat(pricePredictionSale ?? Enumerable.Empty<SummaryChange>())
                 .GroupBy(x => x.Date)
-                .Select(y => new SummaryChange {
+                .Select(y => new SummaryChange
+                {
                     Date = y.Select(x => x.Date).FirstOrDefault(),
                     Value = y.Sum(x => x.Value)
                 })
-                .OrderBy(x => x.Date).ToList();
+                .OrderBy(x => x.Date)
+                .ToList());
 
+            // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
             var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
                         .GroupBy(x => x.CreatedDate.Date)
@@ -1231,18 +1234,23 @@ namespace CPL.Controllers
                             Value = (int)y.Sum(x => x.Amount - x.Award.GetValueOrDefault(0))
                         });
 
-            viewModel.TotalRevenueChanges = (lotteryRevenue ?? Enumerable.Empty<SummaryChange>())
+            viewModel.TotalRevenueChangesInJson = JsonConvert.SerializeObject((lotteryRevenue ?? Enumerable.Empty<SummaryChange>())
                 .Concat(pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date)
-                .Select(y => new SummaryChange {
+                .Select(y => new SummaryChange
+                {
                     Date = y.Select(x => x.Date).FirstOrDefault(),
                     Value = y.Sum(x => x.Value)
                 }).OrderBy(x => x.Date)
-                .ToList();
+                .ToList());
 
-            viewModel.PageViewChanges = _analyticService.GetPageViews(Analytic.HomeViewId, DateTime.Now.Date.AddDays(-periodInDay), DateTime.Now)
+            // 2.STATISTICAL CHART - PAGE VIEW CHANGES
+            viewModel.PageViewChangesInJson = JsonConvert.SerializeObject(homePageViews
                 .OrderBy(x => x.Date)
-                .ToList();
+                .Concat(lotteryPageViews.OrderBy(x => x.Date))
+                .Concat(pricePredictionPageViews.OrderBy(x => x.Date))
+                .ToList());
 
+            // 2.STATISTICAL CHART - TOTAL PLAYERS
             var lotteryPlayers = _lotteryHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
                         .GroupBy(x => x.CreatedDate.Date)
@@ -1260,20 +1268,50 @@ namespace CPL.Controllers
                         })
                         .ToList();
 
-            viewModel.TotalPlayersChanges = (lotteryPlayers ?? Enumerable.Empty<PlayersChange>())
+            viewModel.TotalPlayersChangesInJson = JsonConvert.SerializeObject((lotteryPlayers ?? Enumerable.Empty<PlayersChange>())
                 .Concat(pricePredictionPlayers ?? Enumerable.Empty<PlayersChange>()).GroupBy(x => x.Date)
-                .Select(y => new SummaryChange {
+                .Select(y => new SummaryChange
+                {
                     Date = y.Select(x => x.Date).FirstOrDefault(),
                     Value = y.SelectMany(x => x.SysUserIds).Distinct().Count()
                 })
                 .OrderBy(x => x.Date)
-                .ToList();
-
-
-            
-
+                .ToList());
 
             return PartialView("_SummaryStatistics", viewModel);
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetSummaryRevenuePieChart()
+        {
+            var data = new List<PieChartData>();
+            var totalSaleLotteryGame = _lotteryHistoryService.Query()
+                                .Include(x => x.Lottery)
+                                .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
+            var totalAwardLotteryGame = _lotteryHistoryService.Query()
+                .Include(x => x.LotteryPrize)
+                .Select(x => x.LotteryPrize).Sum(y => y?.Value);
+            var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
+
+            // price prediction game
+            var totalSalePricePrediction = _pricePredictionHistoryService.Queryable()
+                                                .Sum(x => x.Amount);
+            var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable()
+                                                .Sum(x => x.Award);
+            var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
+
+            var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame.GetValueOrDefault(0) };
+            var pricePredictionChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PricePrediction"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = revenueInPricePredictionGame.GetValueOrDefault(0) };
+
+            data.Add(lotteryChartData);
+            data.Add(pricePredictionChartData);
+
+            return new JsonResult(new {
+                success = true,
+                seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Revenue"),
+                data = JsonConvert.SerializeObject(data)
+            });
         }
 
         [HttpPost]
@@ -1350,36 +1388,6 @@ namespace CPL.Controllers
                   .Skip(skip)
                   .Take(take)
                   .ToList();
-        }
-
-        [HttpPost]
-        [Permission(EnumRole.Admin)]
-        public IActionResult GetSummaryStatisticRevenuePieChart()
-        {
-            try
-            {
-                // lottery game
-                var totalSaleLotteryGame = _lotteryHistoryService.Query()
-                                .Include(x => x.Lottery).Select().Where(x => x.Result != EnumGameResult.REFUND.ToString())
-                                .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
-                var totalAwardLotteryGame = _lotteryHistoryService.Query()
-                    .Include(x => x.LotteryPrize).Select().Where(x => x.Result != EnumGameResult.REFUND.ToString())
-                    .Select(x => x.LotteryPrize).Sum(y => y?.Value);
-                var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
-
-                // price prediction game
-                var totalSalePricePrediction = _pricePredictionHistoryService.Queryable().Where(x => x.Result != EnumGameResult.REFUND.ToString())
-                                                    .Sum(x => x.Amount);
-                var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable().Where(x => x.Result != EnumGameResult.REFUND.ToString())
-                                                    .Sum(x => x.Award);
-                var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
-
-                return new JsonResult(new { success = true, revenueLotteryGame = revenueInLotteryGame , revenuePricePredictionGame = revenueInPricePredictionGame });
-            }
-            catch (Exception)
-            {
-                return new JsonResult(new { success = false });
-            }
         }
         #endregion
 

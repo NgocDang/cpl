@@ -31,10 +31,10 @@
         <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StatisticChart")</h6>
         <div class="height-400 statistic-chart">
         </div>
-        @Html.HiddenFor(x => x.TotalRevenueChanges, new { @class="total-revenue-change" })
-        @Html.HiddenFor(x => x.TotalSaleChanges, new { @class = "total-sale-change" })
-        @Html.HiddenFor(x => x.PageViewChanges, new { @class = "total-revenue-change" })
-        @Html.HiddenFor(x => x.TotalPlayersChanges, new { @class = "total-players-change" })
+        @Html.HiddenFor(x => x.TotalRevenueChangesInJson, new { @class="total-revenue-changes" })
+        @Html.HiddenFor(x => x.TotalSaleChangesInJson, new { @class = "total-sale-changes" })
+        @Html.HiddenFor(x => x.TotalPlayersChangesInJson, new { @class = "page-view-changes" })
+        @Html.HiddenFor(x => x.TotalPlayersChangesInJson, new { @class = "total-players-changes" })
         <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue")" class="total-revenue" />
         <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")" class="total-sale" />
         <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView")" class="page-view" />

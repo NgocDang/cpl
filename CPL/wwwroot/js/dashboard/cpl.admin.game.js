@@ -1,19 +1,13 @@
 ﻿var AdminGameManagement = {
     init: function () {
-        AdminGameManagement.bindNavbar();
+        AdminGameManagement.bindSummaryTab();
 
         // Show tab base on URL tab parameter
         var tab = $("#tab").val();
         if (tab == "") 
             tab = "summary";
         $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
-
-
-        
-        //AdminGameManagement.loadStatisticChart();
         //AdminGameManagement.bindSelectTimeRange();
-        //PieChartViewComponent.loadPercentage($("#sumary-revenue-chart").find("#ChartData").val(), $("#sumary-revenue-chart"), $("#sumary-revenue-no-data"), $("#sumary-revenue-chart").find("#SeriesName").val());
-        //PieChartViewComponent.loadPercentage($("#device-category-chart").find("#ChartData").val(), $("#device-category-chart"), $("#device-category-no-data"), $("#device-category-chart").find("#SeriesName").val());
     },
     bindSelectTimeRange: function () {
         $("#Category").on("changed.bs.select",
@@ -74,13 +68,14 @@
 
         };
 
-        var revenue = { data: [], name: $("#TotalRevenue").val(), color: '#4267b2' };
-        var sale = { data: [], name: $("#TotalSale").val(), color: '#f7931a' };
-        var pageView = { data: [], name: $("#PageView").val(), color: '#828384' };
-        var totalPlayers = { data: [], name: $("#TotalPlayers").val(), color: '#F69BF9' };
+        var revenue = { data: [], name: container.find(".total-revenue").val(), color: '#4267b2' };
+        var sale = { data: [], name: container.find(".total-sale").val(), color: '#f7931a' };
+        var pageView = { data: [], name: container.find(".page-view").val(), color: '#828384' };
+        var totalPlayers = { data: [], name: container.find(".total-players").val(), color: '#F69BF9' };
 
-        if (JSON.parse(a).TotalSaleChanges.length != 0) {
-            $.each(JSON.parse(a).TotalSaleChanges, function (index, value) {
+        var totalSaleChanges = JSON.parse(container.find(".total-sale-changes").val());
+        if (totalSaleChanges.length != 0) {
+            $.each(totalSaleChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
                 val = value.Value;
                 sale.data.push([now, val]);
@@ -93,8 +88,9 @@
         }
         sale.data.sort();
 
-        if (JSON.parse(a).TotalRevenueChanges.length != 0) {
-            $.each(JSON.parse(a).TotalRevenueChanges, function (index, value) {
+        var totalRevenueChanges = JSON.parse(container.find(".total-revenue-changes").val());
+        if (totalRevenueChanges.length != 0) {
+            $.each(totalRevenueChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
                 val = value.Value;
                 revenue.data.push([now, val]);
@@ -107,8 +103,9 @@
         }
         revenue.data.sort();
 
-        if (JSON.parse(a).PageViewChanges.length != 0) {
-            $.each(JSON.parse(a).PageViewChanges, function (index, value) {
+        var pageViewChanges = JSON.parse(container.find(".page-view-changes").val());
+        if (pageViewChanges.length != 0) {
+            $.each(pageViewChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
                 val = value.Count;
                 pageView.data.push([now, val]);
@@ -121,8 +118,9 @@
         }
         pageView.data.sort();
 
-        if (JSON.parse(a).TotalPlayersChanges.length != 0) {
-            $.each(JSON.parse(a).TotalPlayersChanges, function (index, value) {
+        var totalPlayersChanges = JSON.parse(container.find(".total-players-changes").val());
+        if (totalPlayersChanges.length != 0) {
+            $.each(totalPlayersChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
                 val = value.Value;
                 totalPlayers.data.push([now, val]);
@@ -141,9 +139,9 @@
         // Create the plot
         container.find(".statistic-chart").highcharts(options);
     },
-    bindNavbar: function () {
+    bindSummaryTab: function () {
         $('a#summary-nav-tab').on('show.bs.tab', function (e) {
-            if ($("#summary-nav .tab-detail").html().length == 0) {
+            if ($("#summary-nav .tab-detail").html().trim().length == 0) {
                 $.ajax({
                     url: "/Admin/GetSummaryStatistics/",
                     type: "GET",
@@ -155,19 +153,19 @@
                     },
                     success: function (data) {
                         $("#summary-nav .tab-detail").html(data);
-                        AdminGameManagement.loadSummaryStatistics($("#summary-nav .tab-detail"))
+                        AdminGameManagement.loadSummaryStatistics($("#summary-nav"))
                     },
                     complete: function (data) {
                     }
                 });
             }
 
-            if ($("#summary-nav .revenue-chart .loading").length > 0) {
-                alert(2);
+            if ($("#summary-nav .revenue-chart").html().trim().length == 0) {
+                PieChart.loadPercentageAjax($("#summary-nav .revenue-chart"), $("#summary-nav .revenue-no-data"), "/Admin/GetSummaryRevenuePieChart/")
             }
 
             if ($("#summary-nav .device-category-chart .loading").length > 0) {
-                alert(3);
+
             }
         })
     }

@@ -13,10 +13,10 @@ namespace CPL.Models
         public int TotalPlayers { get; set; }
         public int TodayPlayers { get; set; }
 
-        public List<SummaryChange> TotalRevenueChanges { get; set; }
-        public List<SummaryChange> TotalSaleChanges { get; set; }
-        public List<PageViewsViewModel> PageViewChanges { get; set; }
-        public List<SummaryChange> TotalPlayersChanges { get; set; }
+        public string TotalRevenueChangesInJson { get; set; }
+        public string TotalSaleChangesInJson { get; set; }
+        public string PageViewChangesInJson { get; set; }
+        public string TotalPlayersChangesInJson { get; set; }
     }
 
     public class SummaryChange
