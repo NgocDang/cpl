@@ -408,9 +408,9 @@ namespace CPL.Controllers
                                 TotalTier3DirectCPLUsedInLottery = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.Lottery.UnitPrice))),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
 
                                 // price prediction
-                                TotalDirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Award)).GetValueOrDefault(0),// * x.Affiliate.Tier1DirectRate / 100,
-                                TotalTier2DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0),// * x.Affiliate.Tier2SaleToTier1Rate / 100,
-                                TotalTier3DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
+                                TotalDirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.TotalAward)).GetValueOrDefault(0),// * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.TotalAward))).GetValueOrDefault(0),// * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.TotalAward))).GetValueOrDefault(0),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
                                 TotalDirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Amount)),// * x.Affiliate.Tier1DirectRate / 100,
                                 TotalTier2DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))),// * x.Affiliate.Tier2SaleToTier1Rate / 100,
                                 TotalTier3DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
@@ -466,9 +466,9 @@ namespace CPL.Controllers
                                 TotalTier3DirectCPLUsedInLottery = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.LotteryHistories.Sum(k => k.Lottery.UnitPrice))),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
 
                                 // price predciotn
-                                TotalDirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Award)).GetValueOrDefault(0),// * x.Affiliate.Tier1DirectRate / 100,
-                                TotalTier2DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0),// * x.Affiliate.Tier2SaleToTier1Rate / 100,
-                                TotalTier3DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Award))).GetValueOrDefault(0),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
+                                TotalDirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.TotalAward)).GetValueOrDefault(0),// * x.Affiliate.Tier1DirectRate / 100,
+                                TotalTier2DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.TotalAward))).GetValueOrDefault(0),// * x.Affiliate.Tier2SaleToTier1Rate / 100,
+                                TotalTier3DirectCPLAwardedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.TotalAward))).GetValueOrDefault(0),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
                                 TotalDirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.PricePredictionHistories.Sum(z => z.Amount)),// * x.Affiliate.Tier1DirectRate / 100,
                                 TotalTier2DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))),// * x.Affiliate.Tier2SaleToTier1Rate / 100,
                                 TotalTier3DirectCPLUsedInPricePrediction = x.DirectIntroducedUsers.SelectMany(y => y.DirectIntroducedUsers).Sum(y => y.DirectIntroducedUsers.Sum(z => z.PricePredictionHistories.Sum(k => k.Amount))),// * x.Affiliate.Tier3SaleToTier1Rate / 100,
@@ -1129,27 +1129,27 @@ namespace CPL.Controllers
         {
             var viewModel = new GameManagementIndexViewModel();
 
-            var lotterySale = _lotteryHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ?  x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+            var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+                        .Where(x => (periodInDay > 0 ?  x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now) && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => x.Lottery.UnitPrice) });
 
             var pricePredictionSale = _pricePredictionHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => (int)x.Amount) });
 
             viewModel.TotalSaleChanges = (lotterySale ?? Enumerable.Empty<SummaryChange>()).Concat(pricePredictionSale ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
 
-            var lotteryRevenue = _lotteryHistoryService.Queryable()
+            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice * LotteryTotalRevenuePercentage)) });
+                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0))) });
 
             var pricePredictionRevenue = _pricePredictionHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Amount * PricePredictionTotalRevenuePercentage)) });
+                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Amount - x.Award)) });
 
             viewModel.TotalRevenueChanges = (lotteryRevenue ?? Enumerable.Empty<SummaryChange>()).Concat(pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
 
@@ -1257,16 +1257,15 @@ namespace CPL.Controllers
                                 .Where(x => x.Result != EnumGameResult.REFUND.ToString())
                                 .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
                 var totalAwardLotteryGame = _lotteryHistoryService.Query()
-                    .Include(x => x.LotteryPrize)
-                    .Select(x => x.LotteryPrize).Sum(y => y?.Value); // there is no lotteryPrizeId when status is REFUND. So, no need check Result in here !
+                    .Include(x => x.LotteryPrize).Select().Where(x => x.Result != EnumGameResult.REFUND.ToString())
+                    .Select(x => x.LotteryPrize).Sum(y => y?.Value);
                 var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
 
                 // price prediction game
-                var totalSalePricePrediction = _pricePredictionHistoryService.Queryable()
-                                                    .Where(x => x.Result != EnumGameResult.REFUND.ToString())
+                var totalSalePricePrediction = _pricePredictionHistoryService.Queryable().Where(x => x.Result != EnumGameResult.REFUND.ToString())
                                                     .Sum(x => x.Amount);
-                var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable()
-                                                    .Sum(x => x.Award);  // Award is 0 when status is REFUND. So, no need check Result in here !
+                var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable().Where(x => x.Result != EnumGameResult.REFUND.ToString())
+                                                    .Sum(x => x.Award);
                 var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
 
                 return new JsonResult(new { success = true, revenueLotteryGame = revenueInLotteryGame , revenuePricePredictionGame = revenueInPricePredictionGame });
@@ -1861,6 +1860,7 @@ namespace CPL.Controllers
                 var lotteryHistories = _lotteryHistoryService.Query().Include(x => x.SysUser).Select().Where(x => x.LotteryId == id).ToList();
                 foreach (var lotteryHistory in lotteryHistories)
                 {
+                    lotteryHistory.Result = EnumGameResult.REFUND.ToString();
                     lotteryHistory.SysUser.TokenAmount += amountToken;
                     _sysUserService.Update(lotteryHistory.SysUser);
                 }
