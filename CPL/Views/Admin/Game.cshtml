@@ -56,7 +56,7 @@
                                                 <select name="TimeRange" class="selectpicker time-range" data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                                     @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
                                                     {
-                                                        if (period == EnumPeriodInDay._12M) //Default selected value
+                                                        if (period == EnumPeriodInDay._7D) //Default selected value
                                                         {
                                                             <option selected="selected" value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
                                                         }

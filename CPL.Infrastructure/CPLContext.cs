@@ -41,6 +41,7 @@ namespace CPL.Infrastructure
         public DbSet<LotteryCategory> LotteryCategory { get; set; }
         public DbSet<Payment> Payment { get; set; }
         public DbSet<LotteryDetail> LotteryDetail { get; set; }
+        public DbSet<IntroducedUsers> IntroducedUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -77,6 +78,8 @@ namespace CPL.Infrastructure
 
             modelBuilder.ApplyConfiguration(new BTCTransactionMap());
             modelBuilder.ApplyConfiguration(new ETHTransactionMap());
+
+            modelBuilder.ApplyConfiguration(new IntroducedUsersMap());
 
             base.OnModelCreating(modelBuilder);
         }
