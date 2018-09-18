@@ -1130,43 +1130,149 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IActionResult GetSummaryStatistics(int periodInDay)
         {
-            var viewModel = new SummaryChangesViewModel();
+            var viewModel = new SummaryStatisticsViewModel();
 
+            // 1.STATISTICAL INFORMATION 
+            // 1.STATISTICAL INFORMATION - TOTAL REVENUE
+            var lotteryTotalRevenue = _lotteryHistoryService.Query()
+                .Include(x => x.Lottery)
+                .Include(x => x.LotteryPrize)
+                .Select()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0));
+
+            var pricePredictionTotalRevenue = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Amount - x.Award.GetValueOrDefault(0));
+
+            viewModel.TotalRevenue = Convert.ToInt32(lotteryTotalRevenue + pricePredictionTotalRevenue);
+
+            // 1.STATISTICAL INFORMATION - TOTAL SALE
+            var lotteryTotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Lottery.UnitPrice);
+            var pricePredictionTotalSale = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Amount);
+            viewModel.TotalSale = lotteryTotalSale + (int)pricePredictionTotalSale;
+
+            // 1.STATISTICAL INFORMATION - PAGE VIEWS
+            var homePageViews = _analyticService.GetPageViews(Analytic.HomeViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            var lotteryPageViews = _analyticService.GetPageViews(Analytic.LotteryViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            var pricePredictionPageViews = _analyticService.GetPageViews(Analytic.PricePredictionViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            viewModel.PageView = homePageViews.AsQueryable().Sum(x => x.Count) 
+                + lotteryPageViews.AsQueryable().Sum(x => x.Count) 
+                + pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
+
+            // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
+            var lotteryTotalPlayers = _lotteryHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .Select(x => x.SysUserId);
+
+            var pricePredictionTotalPlayers = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .Select(x => x.SysUserId);
+
+            viewModel.TotalPlayers = lotteryTotalPlayers.Concat(pricePredictionTotalPlayers)
+                .Distinct()
+                .Count();
+
+            // 1.STATISTICAL INFORMATION - TODAY PLAYERS
+            viewModel.TodayPlayers = _lotteryHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date)
+                .GroupBy(x => x.SysUserId)
+                .Count()
+                +
+                _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date)
+                .GroupBy(x => x.SysUserId)
+                .Count();
+
+
+            // 1.STATISTICAL CHART - TOTAL SALE CHANGES
             var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
-                        .Where(x => (periodInDay > 0 ?  x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now) && x.Result != EnumGameResult.REFUND.ToString())
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => x.Lottery.UnitPrice) });
+                        .Select(y => new SummaryChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = y.Sum(x => x.Lottery.UnitPrice)
+                        });
 
             var pricePredictionSale = _pricePredictionHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now && x.Result != EnumGameResult.REFUND.ToString())
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => (int)x.Amount) });
+                        .Select(y => new SummaryChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = y.Sum(x => (int)x.Amount)
+                        });
 
-            viewModel.TotalSaleChanges = (lotterySale ?? Enumerable.Empty<SummaryChange>()).Concat(pricePredictionSale ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
+            viewModel.TotalSaleChanges = (lotterySale ?? Enumerable.Empty<SummaryChange>())
+                .Concat(pricePredictionSale ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.Sum(x => x.Value)
+                })
+                .OrderBy(x => x.Date).ToList();
 
             var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0))) });
+                        .Select(y => new SummaryChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)))
+                        });
 
             var pricePredictionRevenue = _pricePredictionHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Amount - x.Award)) });
+                        .Select(y => new SummaryChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = (int)y.Sum(x => x.Amount - x.Award.GetValueOrDefault(0))
+                        });
 
-            viewModel.TotalRevenueChanges = (lotteryRevenue ?? Enumerable.Empty<SummaryChange>()).Concat(pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
+            viewModel.TotalRevenueChanges = (lotteryRevenue ?? Enumerable.Empty<SummaryChange>())
+                .Concat(pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date)
+                .Select(y => new SummaryChange {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.Sum(x => x.Value)
+                }).OrderBy(x => x.Date)
+                .ToList();
 
-            viewModel.PageViewChanges = _analyticService.GetPageViews(CPLConstant.Analytic.HomeViewId, periodInDay > 0 ? DateTime.Now.Date.AddDays(-periodInDay) : CPLConstant.FirstDeploymentDate, DateTime.Now).OrderBy(x => x.Date).ToList();
+            viewModel.PageViewChanges = _analyticService.GetPageViews(Analytic.HomeViewId, DateTime.Now.Date.AddDays(-periodInDay), DateTime.Now)
+                .OrderBy(x => x.Date)
+                .ToList();
 
             var lotteryPlayers = _lotteryHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date).Select(y => new PlayersChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIds = y.Select(x => x.SysUserId) }).ToList();
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new PlayersChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            SysUserIds = y.Select(x => x.SysUserId)
+                        }).ToList();
 
             var pricePredictionPlayers = _pricePredictionHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date).Select(y => new PlayersChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIds = y.Select(x => x.SysUserId) }).ToList();
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new PlayersChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            SysUserIds = y.Select(x => x.SysUserId)
+                        })
+                        .ToList();
 
-            viewModel.TotalPlayersChanges = (lotteryPlayers ?? Enumerable.Empty<PlayersChange>()).Concat(pricePredictionPlayers ?? Enumerable.Empty<PlayersChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.SelectMany(x => x.SysUserIds).Distinct().Count() }).OrderBy(x => x.Date).ToList();
+            viewModel.TotalPlayersChanges = (lotteryPlayers ?? Enumerable.Empty<PlayersChange>())
+                .Concat(pricePredictionPlayers ?? Enumerable.Empty<PlayersChange>()).GroupBy(x => x.Date)
+                .Select(y => new SummaryChange {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.SelectMany(x => x.SysUserIds).Distinct().Count()
+                })
+                .OrderBy(x => x.Date)
+                .ToList();
+
+
+            
+
+
             return PartialView("_SummaryStatistics", viewModel);
         }
 
