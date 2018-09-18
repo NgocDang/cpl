@@ -24,22 +24,7 @@
     bindSummaryTab: function () {
         $('a#summary-nav-tab').on('show.bs.tab', function (e) {
             if ($("#summary-nav .tab-detail").html().trim().length == 0) {
-                $.ajax({
-                    url: "/Admin/GetSummaryStatistics/",
-                    type: "GET",
-                    beforeSend: function () {
-                        $("#summary-nav .tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
-                    },
-                    data: {
-                        periodInDay: $("#summary-nav").find("select.time-range").val()
-                    },
-                    success: function (data) {
-                        $("#summary-nav .tab-detail").html(data);
-                        AdminGameManagement.loadSummaryStatistics($("#summary-nav"))
-                    },
-                    complete: function (data) {
-                    }
-                });
+                AdminGameManagement.loadSummaryStatistics();
             }
 
             if ($("#summary-nav .revenue-chart").html().trim().length == 0) {
@@ -51,14 +36,29 @@
             }
         })
     },
+    loadSummaryStatistics: function () {
+        $.ajax({
+            url: "/Admin/GetSummaryStatistics/",
+            type: "GET",
+            beforeSend: function () {
+                $("#summary-nav .tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+            },
+            data: {
+                periodInDay: $("#summary-nav select.time-range").val()
+            },
+            success: function (data) {
+                $("#summary-nav .tab-detail").html(data);
+                AdminGameManagement.loadSummaryStatisticsChart($("#summary-nav"))
+            },
+        });
+    },
     bindSummaryTimeRangeChange: function () {
-        $("").on("changed.bs.select",
+        $("#summary-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
-                $("#GameSummaryStatistic").load("/ViewComponent/GetGameSummaryStatisticViewComponent?periodInDay=" + this.value);
-                AdminGameManagement.loadStatisticChart(this.value);
+                AdminGameManagement.loadSummaryStatistics();
             });
     },
-    loadSummaryStatistics: function (container) {
+    loadSummaryStatisticsChart: function (container) {
         Highcharts.setOptions({
             global: {
                 useUTC: false
@@ -199,14 +199,27 @@
             }
         })
     },
+    bindLotterySummaryTimeRangeChange: function () {
+        $("#lottery-summary-nav select.time-range").on("changed.bs.select",
+            function (e, clickedIndex, newValue, oldValue) {
+                alert('Time range change - LOTTERY Summary statistics should be reloaded!');
+            });
+    },
     bindLotteryCategoryTabs: function () {
         $('a.lottery-category-nav-tab').on('show.bs.tab', function (e) {
             var _this = this;
-            if ($("#lottery-category-nav-" + $(_this).data().id + " .tab-detail").html().trim().length == 0) {
-                alert('LOTTERY Category ' + $(_this).data().id + ' statistic should be loaded!');
+            if ($("#lottery-category-nav-" + $(_this).data().lotteryCategoryId + " .tab-detail").html().trim().length == 0) {
+                alert('LOTTERY Category ' + $(_this).data().lotteryCategoryId + ' statistics should be loaded!');
             }
         })
-    }
+    },
+    bindLotteryCategoryTimeRangeChange: function () {
+        $("#lottery-nav select.time-range[data-lottery-category-id]").on("changed.bs.select",
+            function (e, clickedIndex, newValue, oldValue) {
+                var _this = this;
+                alert('Time range change - LOTTERY Category ' + $(_this).data().lotteryCategoryId + ' statistics should be reloaded!');
+            });
+    },
 }
 
 $(document).ready(function () {

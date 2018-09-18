@@ -105,7 +105,7 @@
                                         @for (int i = 0; i < Model.LotteryCategories.Count; i++)
                                         {
                                             <li class="nav-item">
-                                                <a class="nav-link font-medium-2 font-weight-bold px-2 border-0 lottery-category-nav-tab" data-id="@Model.LotteryCategories[i].Id" id="lottery-category-nav-tab-@Model.LotteryCategories[i].Id" data-toggle="tab" href="#lottery-category-nav-@Model.LotteryCategories[i].Id" aria-controls="lottery-category-nav" aria-expanded="true">@Model.LotteryCategories[i].Name</a>
+                                                <a class="nav-link font-medium-2 font-weight-bold px-2 border-0 lottery-category-nav-tab" data-lottery-category-id="@Model.LotteryCategories[i].Id" id="lottery-category-nav-tab-@Model.LotteryCategories[i].Id" data-toggle="tab" href="#lottery-category-nav-@Model.LotteryCategories[i].Id" aria-controls="lottery-category-nav" aria-expanded="true">@Model.LotteryCategories[i].Name</a>
                                             </li>
                                         }
                                     </ul>
@@ -149,7 +149,7 @@
                                                                 <div class="col-12">
                                                                     <label class="d-inline-block" for="TimeRange">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TimeRange")</label>
                                                                     <fieldset class="form-group col-lg-2 col-6 pl-0">
-                                                                        <select name="TimeRange" class="selectpicker time-range" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                                                        <select name="TimeRange" data-lottery-category-id="@Model.LotteryCategories[i].Id" class="selectpicker time-range" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                                                             @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
                                                                             {
                                                                                 if (period == EnumPeriodInDay._7D) //Default selected value
