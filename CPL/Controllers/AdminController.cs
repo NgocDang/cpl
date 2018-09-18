@@ -1118,62 +1118,11 @@ namespace CPL.Controllers
 
         #region Game
         [Permission(EnumRole.Admin)]
-        public IActionResult Game()
+        public IActionResult Game(string tab)
         {
             var viewModel = new GameManagementIndexViewModel();
-
-            // Device category
-            viewModel.SummaryDeviceCategory = new PieChartViewComponentViewModel();
-            var SummaryDeviceCategoryChartData = new List<PieChartData>();
-            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
-            var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
-            var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
-            var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
-
-            var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
-            var totalDesktopPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
-            var totalMobilePricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
-            var totalTabletPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
-
-            var desktopChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Desktop"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = totalDesktopLottery + totalDesktopPricePrediction };
-            var mobileChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Mobile"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = totalMobileLottery + totalMobilePricePrediction };
-            var tabletChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Tablet"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)3), Value = totalTabletLottery + totalTabletPricePrediction };
-
-            SummaryDeviceCategoryChartData.Add(desktopChartData);
-            SummaryDeviceCategoryChartData.Add(mobileChartData);
-            SummaryDeviceCategoryChartData.Add(tabletChartData);
-
-            viewModel.SummaryDeviceCategory.ChartDataInJson = JsonConvert.SerializeObject(SummaryDeviceCategoryChartData, Formatting.Indented);
-            viewModel.SummaryDeviceCategory.SeriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Device");
-
-            // Revenue
-            viewModel.SummaryRevenue = new PieChartViewComponentViewModel();
-            var SummaryRevenueChartData = new List<PieChartData>();
-
-            var totalSaleLotteryGame = _lotteryHistoryService.Query()
-                                .Include(x => x.Lottery)
-                                .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
-            var totalAwardLotteryGame = _lotteryHistoryService.Query()
-                .Include(x => x.LotteryPrize)
-                .Select(x => x.LotteryPrize).Sum(y => y?.Value);
-            var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
-
-            // price prediction game
-            var totalSalePricePrediction = _pricePredictionHistoryService.Queryable()
-                                                .Sum(x => x.Amount);
-            var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable()
-                                                .Sum(x => x.Award);
-            var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
-
-            var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame.GetValueOrDefault(0) };
-            var pricePredictionChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PricePrediction"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = revenueInPricePredictionGame.GetValueOrDefault(0) };
-
-            SummaryRevenueChartData.Add(lotteryChartData);
-            SummaryRevenueChartData.Add(pricePredictionChartData);
-
-            viewModel.SummaryRevenue.ChartDataInJson = JsonConvert.SerializeObject(SummaryRevenueChartData, Formatting.Indented);
-            viewModel.SummaryRevenue.SeriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Revenue");
-
+            viewModel.ActiveTab = tab;
+            viewModel.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
             return View(viewModel);
         }
 

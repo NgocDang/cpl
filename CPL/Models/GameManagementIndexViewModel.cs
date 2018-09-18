@@ -8,9 +8,8 @@ namespace CPL.Models
 {
     public class GameManagementIndexViewModel
     {
-        // Summary
-        public PieChartViewComponentViewModel SummaryRevenue { get; set; }
-        public PieChartViewComponentViewModel SummaryDeviceCategory { get; set; }
+        public string ActiveTab { get; set; }
+        public List<LotteryCategoryViewModel> LotteryCategories { get; set; }
     }
 
     public class SummaryChangesViewModel

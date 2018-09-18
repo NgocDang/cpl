@@ -38,70 +38,36 @@
             <div class="tab-component">
                 <ul class="nav nav-tabs border-0">
                     <li class="nav-item">
-                        <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold active px-2 border-0" id="summary-nav-tab" data-toggle="tab" href="#summary-nav" aria-controls="summary-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
+                        <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="summary-nav-tab" data-toggle="tab" href="#summary-nav" aria-controls="summary-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold px-2 border-0" id="lottery-nav-tab" data-toggle="tab" href="#lottery-nav" aria-controls="lottery-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
+                        <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="lottery-nav-tab" data-toggle="tab" href="#lottery-nav" aria-controls="lottery-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold px-2 border-0" id="price-prediction-nav-tab" data-toggle="tab" href="#price-prediction-nav" aria-controls="price-prediction-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold px-2 border-0" id="slot-nav-tab" data-toggle="tab" href="#slot-nav" aria-controls="slot-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slot")</a>
+                        <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="price-prediction-nav-tab" data-toggle="tab" href="#price-prediction-nav" aria-controls="price-prediction-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
                     </li>
                 </ul>
                 <div class="tab-content mb-1">
-                    <div role="tabpanel" class="tab-pane active" id="summary-nav" aria-labelledby="summary-nav-tab" aria-expanded="true">
+                    <div role="tabpanel" class="tab-pane" id="summary-nav" aria-labelledby="summary-nav-tab" aria-expanded="true">
                         <div class="card mb-1">
                             <div class="card-content">
                                 <div class="card-body">
-                                    <div class="card col-12 mt-1">
-                                        <div class="card-content">
-                                            <label class="d-inline-block" for="Category">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TimeRange")</label>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label class="d-inline-block" for="TimeRange">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TimeRange")</label>
                                             <fieldset class="form-group col-lg-2 col-6 pl-0">
-                                                <select name="Category" id="Category" class="selectpicker" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                                <select name="TimeRange" class="selectpicker time-range" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                                     @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
                                                     {
                                                         <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
                                                     }
                                                 </select>
                                             </fieldset>
-                                            <div id="GameSummaryStatistic">
-                                                @await Component.InvokeAsync("GameSummaryStatistic")
-                                            </div>
                                         </div>
                                     </div>
-                                    <div class="card col-12 mt-1">
-                                        <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StatisticChart")</h6>
-                                        <div id="statistic-chart" class="height-400">
-                                        </div>
-                                        @Html.Hidden("TotalRevenue", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue"))
-                                        @Html.Hidden("TotalSale", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale"))
-                                        @Html.Hidden("PageView", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView"))
-                                        @Html.Hidden("TotalPlayers", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPlayers"))
-                                    </div>
-                                    <div class="row">
-                                        <div class="card col-lg-4 col-12">
-                                            <div class="card-header">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Revenue")
-                                            </div>
-                                            <div class="card-body">
-                                                <div id="sumary-revenue-chart" class="height-300 ">
-                                                    @await Component.InvokeAsync("PieChart", new PieChartViewComponentViewModel { ChartDataInJson = Model.SummaryRevenue.ChartDataInJson, SeriesName = Model.SummaryRevenue.SeriesName })
-                                                </div>
-                                                <div id="sumary-revenue-no-data" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoData")</div>
-                                            </div>
-                                        </div>
-                                        <div class="card col-lg-4 col-12">
-                                            <div class="card-header">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Device")
-                                            </div>
-                                            <div class="card-body">
-                                                <div id="device-category-chart" class="height-300 ">
-                                                    @await Component.InvokeAsync("PieChart", new PieChartViewComponentViewModel { ChartDataInJson = Model.SummaryDeviceCategory.ChartDataInJson, SeriesName = Model.SummaryDeviceCategory.SeriesName })
-                                                </div>
-                                                <div id="device-category-no-data" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoData")</div>
-                                            </div>
+                                    <div class="tab-detail">
+                                        <div class="text-center py-5">
+                                            <img src="~/css/dashboard/plugins/img/loading.gif" class="img-fluid" />
                                         </div>
                                     </div>
                                 </div>
@@ -111,9 +77,45 @@
                     <div role="tabpanel" class="tab-pane" id="lottery-nav" aria-labelledby="lottery-nav-tab" aria-expanded="true">
                         <div class="card mb-1">
                             <div class="card-content">
-                                <div class="card-body">
-                                    @await Component.InvokeAsync("AdminLotteryHistory")
-                                    <div class="revenue-percentage-chart">
+                                <div class="card-body px-0">
+                                    <ul class="nav nav-tabs border-0">
+                                        @for (int i = 0; i < Model.LotteryCategories.Count; i++)
+                                        {
+                                            <li class="nav-item">
+                                                <a class="nav-link font-medium-2 font-weight-bold @(i==0 ? "active" : "") px-2 border-0" id="lottery-category-nav-tab-@Model.LotteryCategories[i].Id" data-toggle="tab" href="#lottery-category-nav-@Model.LotteryCategories[i].Id" aria-controls="lottery-category-nav" aria-expanded="true">@Model.LotteryCategories[i].Name</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                    <div class="tab-content mb-1">
+                                        @for (int i = 0; i < Model.LotteryCategories.Count; i++)
+                                        {
+                                            <div role="tabpanel" class="tab-pane @(i==0 ? "active" : "")" id="lottery-category-nav-@Model.LotteryCategories[i].Id" aria-labelledby="lottery-category-nav-tab-@Model.LotteryCategories[i].Id" aria-expanded="true">
+                                                <div class="card mb-1">
+                                                    <div class="card-content">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <label class="d-inline-block" for="TimeRange">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TimeRange")</label>
+                                                                    <fieldset class="form-group col-lg-2 col-6 pl-0">
+                                                                        <select name="TimeRange" class="selectpicker time-range" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                                                            @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
+                                                                            {
+                                                                                <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                            }
+                                                                        </select>
+                                                                    </fieldset>
+                                                                </div>
+                                                            </div>
+                                                            <div class="tab-detail">
+                                                                <div class="text-center py-5">
+                                                                    <img src="~/css/dashboard/plugins/img/loading.gif" class="img-fluid" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -123,6 +125,24 @@
                         <div class="card mb-1">
                             <div class="card-content">
                                 <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label class="d-inline-block" for="TimeRange">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TimeRange")</label>
+                                            <fieldset class="form-group col-lg-2 col-6 pl-0">
+                                                <select name="TimeRange" class="selectpicker time-range" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                                    @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
+                                                    {
+                                                        <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                    }
+                                                </select>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="tab-detail">
+                                        <div class="text-center py-5">
+                                            <img src="~/css/dashboard/plugins/img/loading.gif" class="img-fluid" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
