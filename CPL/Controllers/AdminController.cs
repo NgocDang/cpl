@@ -1252,9 +1252,7 @@ namespace CPL.Controllers
             {
                 // lottery game
                 var totalSaleLotteryGame = _lotteryHistoryService.Query()
-                                .Include(x => x.Lottery)
-                                .Select()
-                                .Where(x => x.Result != EnumGameResult.REFUND.ToString())
+                                .Include(x => x.Lottery).Select().Where(x => x.Result != EnumGameResult.REFUND.ToString())
                                 .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
                 var totalAwardLotteryGame = _lotteryHistoryService.Query()
                     .Include(x => x.LotteryPrize).Select().Where(x => x.Result != EnumGameResult.REFUND.ToString())
