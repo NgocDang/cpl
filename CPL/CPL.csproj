@@ -131,6 +131,9 @@
     <Content Update="Views\Admin\_EditLotteryCategory.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Admin\_LotteryCategoryStatistics.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Contact\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

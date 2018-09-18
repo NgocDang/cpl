@@ -1098,55 +1098,231 @@ namespace CPL.Controllers
 
         #region Game
         [Permission(EnumRole.Admin)]
-        public IActionResult Game()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [Permission(EnumRole.Admin)]
-        public IActionResult GetDataGameSummaryStatisticChart(int periodInDay)
+        public IActionResult Game(string tab)
         {
             var viewModel = new GameManagementIndexViewModel();
+            viewModel.Tab = tab;
+            viewModel.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
+            return View(viewModel);
+        }
 
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetSummaryStatistics(int periodInDay)
+        {
+            var viewModel = new SummaryStatisticsViewModel();
+
+            // 1.STATISTICAL INFORMATION 
+            // 1.STATISTICAL INFORMATION - TOTAL REVENUE
+            var lotteryTotalRevenue = _lotteryHistoryService.Query()
+                .Include(x => x.Lottery)
+                .Include(x => x.LotteryPrize)
+                .Select()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0));
+
+            var pricePredictionTotalRevenue = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Amount - x.Award.GetValueOrDefault(0));
+
+            viewModel.TotalRevenue = Convert.ToInt32(lotteryTotalRevenue + pricePredictionTotalRevenue);
+
+            // 1.STATISTICAL INFORMATION - TOTAL SALE
+            var lotteryTotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Lottery.UnitPrice);
+            var pricePredictionTotalSale = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Amount);
+            viewModel.TotalSale = lotteryTotalSale + (int)pricePredictionTotalSale;
+
+            // 1.STATISTICAL INFORMATION - PAGE VIEWS
+            var homePageViews = _analyticService.GetPageViews(Analytic.HomeViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            var lotteryPageViews = _analyticService.GetPageViews(Analytic.LotteryViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            var pricePredictionPageViews = _analyticService.GetPageViews(Analytic.PricePredictionViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            viewModel.PageView = homePageViews.AsQueryable().Sum(x => x.Count) 
+                + lotteryPageViews.AsQueryable().Sum(x => x.Count) 
+                + pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
+
+            // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
+            var lotteryTotalPlayers = _lotteryHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .Select(x => x.SysUserId);
+
+            var pricePredictionTotalPlayers = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .Select(x => x.SysUserId);
+
+            viewModel.TotalPlayers = lotteryTotalPlayers.Concat(pricePredictionTotalPlayers)
+                .Distinct()
+                .Count();
+
+            // 1.STATISTICAL INFORMATION - TODAY PLAYERS
+            viewModel.TodayPlayers = _lotteryHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date)
+                .GroupBy(x => x.SysUserId)
+                .Count()
+                +
+                _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date)
+                .GroupBy(x => x.SysUserId)
+                .Count();
+
+            // 2.STATISTICAL CHART
+            // 2.STATISTICAL CHART - TOTAL SALE CHANGES
             var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
-                        .Where(x => (periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now) && x.Result != EnumGameResult.REFUND.ToString())
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => x.Lottery.UnitPrice) });
+                        .Select(y => new SummaryChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = y.Sum(x => x.Lottery.UnitPrice)
+                        });
 
             var pricePredictionSale = _pricePredictionHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now && x.Result != EnumGameResult.REFUND.ToString())
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => (int)x.Amount) });
+                        .Select(y => new SummaryChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = y.Sum(x => (int)x.Amount)
+                        });
 
-            viewModel.TotalSaleChanges = (lotterySale ?? Enumerable.Empty<SummaryChange>()).Concat(pricePredictionSale ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
+            viewModel.TotalSaleChangesInJson = JsonConvert.SerializeObject((lotterySale ?? Enumerable.Empty<SummaryChange>())
+                .Concat(pricePredictionSale ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.Sum(x => x.Value)
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
 
+            // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
             var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0))) });
+                        .Select(y => new SummaryChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)))
+                        });
 
             var pricePredictionRevenue = _pricePredictionHistoryService.Queryable()
-                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), Value = y.Sum(x => Convert.ToInt32(x.Amount - x.Award)) });
+                        .Select(y => new SummaryChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = (int)y.Sum(x => x.Amount - x.Award.GetValueOrDefault(0))
+                        });
 
-            viewModel.TotalRevenueChanges = (lotteryRevenue ?? Enumerable.Empty<SummaryChange>()).Concat(pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.Sum(x => x.Value) }).OrderBy(x => x.Date).ToList();
+            viewModel.TotalRevenueChangesInJson = JsonConvert.SerializeObject((lotteryRevenue ?? Enumerable.Empty<SummaryChange>())
+                .Concat(pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.Sum(x => x.Value)
+                }).OrderBy(x => x.Date)
+                .ToList());
 
-            viewModel.PageViewChanges = _analyticService.GetPageViews(CPLConstant.Analytic.HomeViewId, periodInDay > 0 ? DateTime.Now.Date.AddDays(-periodInDay) : CPLConstant.FirstDeploymentDate, DateTime.Now).OrderBy(x => x.Date).ToList();
+            // 2.STATISTICAL CHART - PAGE VIEW CHANGES
+            viewModel.PageViewChangesInJson = JsonConvert.SerializeObject(homePageViews
+                .OrderBy(x => x.Date)
+                .Concat(lotteryPageViews.OrderBy(x => x.Date))
+                .Concat(pricePredictionPageViews.OrderBy(x => x.Date))
+                .ToList());
 
+            // 2.STATISTICAL CHART - TOTAL PLAYERS
             var lotteryPlayers = _lotteryHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date).Select(y => new PlayersChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIdList = y.Select(x => x.SysUserId) }).ToList();
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new PlayersChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            SysUserIds = y.Select(x => x.SysUserId)
+                        }).ToList();
 
             var pricePredictionPlayers = _pricePredictionHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
-                        .GroupBy(x => x.CreatedDate.Date).Select(y => new PlayersChange { Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(), SysUserIdList = y.Select(x => x.SysUserId) }).ToList();
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new PlayersChange {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            SysUserIds = y.Select(x => x.SysUserId)
+                        })
+                        .ToList();
 
-            viewModel.TotalPlayersChanges = (lotteryPlayers ?? Enumerable.Empty<PlayersChange>()).Concat(pricePredictionPlayers ?? Enumerable.Empty<PlayersChange>()).GroupBy(x => x.Date).Select(y => new SummaryChange { Date = y.Select(x => x.Date).FirstOrDefault(), Value = y.SelectMany(x => x.SysUserIdList).Distinct().Count() }).OrderBy(x => x.Date).ToList();
+            viewModel.TotalPlayersChangesInJson = JsonConvert.SerializeObject((lotteryPlayers ?? Enumerable.Empty<PlayersChange>())
+                .Concat(pricePredictionPlayers ?? Enumerable.Empty<PlayersChange>()).GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.SelectMany(x => x.SysUserIds).Distinct().Count()
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
 
-            var mess = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
-            return new JsonResult(new { success = true, message = mess });
+            return PartialView("_SummaryStatistics", viewModel);
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetSummaryRevenuePieChart()
+        {
+            var data = new List<PieChartData>();
+            var totalSaleLotteryGame = _lotteryHistoryService.Query()
+                                .Include(x => x.Lottery)
+                                .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
+            var totalAwardLotteryGame = _lotteryHistoryService.Query()
+                .Include(x => x.LotteryPrize)
+                .Select(x => x.LotteryPrize).Sum(y => y?.Value);
+            var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
+
+            // price prediction game
+            var totalSalePricePrediction = _pricePredictionHistoryService.Queryable()
+                                                .Sum(x => x.Amount);
+            var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable()
+                                                .Sum(x => x.Award);
+            var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
+
+            var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame.GetValueOrDefault(0) };
+            var pricePredictionChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PricePrediction"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = revenueInPricePredictionGame.GetValueOrDefault(0) };
+
+            data.Add(lotteryChartData);
+            data.Add(pricePredictionChartData);
+
+            return new JsonResult(new {
+                success = true,
+                seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Revenue"),
+                data = JsonConvert.SerializeObject(data)
+            });
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetSummaryDeviceCategoryPieChart()
+        {
+            var data = new List<PieChartData>();
+            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+            var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+            var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+            var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
+
+            var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+            var totalDesktopPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+            var totalMobilePricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+            var totalTabletPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
+
+            var desktopChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Desktop"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = totalDesktopLottery + totalDesktopPricePrediction };
+            var mobileChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Mobile"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = totalMobileLottery + totalMobilePricePrediction };
+            var tabletChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Tablet"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)3), Value = totalTabletLottery + totalTabletPricePrediction };
+
+            data.Add(desktopChartData);
+            data.Add(mobileChartData);
+            data.Add(tabletChartData);
+
+            return new JsonResult(new
+            {
+                success = true,
+                seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Device"),
+                data = JsonConvert.SerializeObject(data)
+            });
         }
 
         [HttpPost]
@@ -1224,66 +1400,6 @@ namespace CPL.Controllers
                   .Take(take)
                   .ToList();
         }
-        [HttpPost]
-        [Permission(EnumRole.Admin)]
-        public IActionResult GetSummaryRevenuePercentagePieChart()
-        {
-            try
-            {
-                // lottery game
-                var totalSaleLotteryGame = _lotteryHistoryService.Query()
-                                .Include(x => x.Lottery).Select().Where(x => x.Result != EnumGameResult.REFUND.ToString())
-                                .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
-                var totalAwardLotteryGame = _lotteryHistoryService.Query()
-                    .Include(x => x.LotteryPrize).Select().Where(x => x.Result != EnumGameResult.REFUND.ToString())
-                    .Select(x => x.LotteryPrize).Sum(y => y?.Value);
-                var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
-
-                // price prediction game
-                var totalSalePricePrediction = _pricePredictionHistoryService.Queryable().Where(x => x.Result != EnumGameResult.REFUND.ToString())
-                                                    .Sum(x => x.Amount);
-                var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable().Where(x => x.Result != EnumGameResult.REFUND.ToString())
-                                                    .Sum(x => x.Award);
-                var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
-
-                return new JsonResult(new { success = true, revenueLotteryGame = revenueInLotteryGame, revenuePricePredictionGame = revenueInPricePredictionGame });
-            }
-            catch (Exception)
-            {
-                return new JsonResult(new { success = false });
-            }
-        }
-
-        [HttpPost]
-        [Permission(EnumRole.Admin)]
-        public IActionResult GetSummaryDeviceCategoryPercentagePieChart()
-        {
-            try
-            {
-                var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
-                var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
-                var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
-                var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
-
-                var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
-                var totalDesktopPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
-                var totalMobilePricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
-                var totalTabletPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
-
-                return new JsonResult(new
-                {
-                    success = true,
-                    desktop = totalDesktopLottery + totalDesktopPricePrediction,
-                    mobile = totalMobileLottery + totalMobilePricePrediction,
-                    tablet = totalTabletLottery + totalTabletPricePrediction
-                });
-            }
-            catch (Exception)
-            {
-                return new JsonResult(new { success = false });
-            }
-        }
-
         #endregion
 
         #region Lottery
@@ -1957,5 +2073,6 @@ namespace CPL.Controllers
         }
 
         #endregion
+
     }
 }

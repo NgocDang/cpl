@@ -159,8 +159,6 @@
                                 data: [{
                                     name: 'CPL',
                                     y: JSON.parse(a).CPLPercentage,
-                                    sliced: true,
-                                    selected: true,
                                     color: '#4267b2'
                                 }, {
                                     name: 'BTC',
