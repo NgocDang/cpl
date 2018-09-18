@@ -59,7 +59,14 @@
                                                 <select name="TimeRange" class="selectpicker time-range" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                                     @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
                                                     {
-                                                        <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                        if (period == EnumPeriodInDay._7D) //Default selected value
+                                                        {
+                                                            <option selected="selected" value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                        }
                                                     }
                                                 </select>
                                             </fieldset>
@@ -100,7 +107,14 @@
                                                                         <select name="TimeRange" class="selectpicker time-range" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                                                             @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
                                                                             {
-                                                                                <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                                if (period == EnumPeriodInDay._7D) //Default selected value
+                                                                                {
+                                                                                    <option selected="selected" value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                                }
                                                                             }
                                                                         </select>
                                                                     </fieldset>
@@ -132,7 +146,14 @@
                                                 <select name="TimeRange" class="selectpicker time-range" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                                     @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
                                                     {
-                                                        <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                        if (period == EnumPeriodInDay._7D) //Default selected value
+                                                        {
+                                                            <option selected="selected" value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                        }
                                                     }
                                                 </select>
                                             </fieldset>
@@ -148,6 +169,7 @@
                         </div>
                     </div>
                 </div>
+                @Html.HiddenFor(x=>x.Tab, new { @id="tab"})
             </div>
         </div>
     </div>

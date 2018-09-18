@@ -1121,7 +1121,7 @@ namespace CPL.Controllers
         public IActionResult Game(string tab)
         {
             var viewModel = new GameManagementIndexViewModel();
-            viewModel.ActiveTab = tab;
+            viewModel.Tab = tab;
             viewModel.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
             return View(viewModel);
         }
