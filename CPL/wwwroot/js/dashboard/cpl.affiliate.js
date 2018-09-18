@@ -1,7 +1,13 @@
 ﻿var Affiliate = {
     init: function () {
+        Affiliate.bindSwitchery();
         Affiliate.bindDoSubmit();
         Affiliate.bindCopy();
+    },
+    bindSwitchery: function () {
+        $.each($(".checkbox-switch"), function (index, element) {
+            var switches = new Switchery(element, { size: 'small' });
+        });
     },
     bindCopy: function () {
         if ($(".btn-copy").length > 0) {

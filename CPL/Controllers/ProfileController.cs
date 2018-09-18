@@ -299,9 +299,9 @@ namespace CPL.Controllers
 
             _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @UserId, @TotalSale OUTPUT, @TodaySale OUTPUT, @YesterdaySale OUTPUT", parameters);
 
-            viewModel.TotalSale = Convert.ToInt32(TotalSaleParam.Value);
-            viewModel.TotalSaleToday = Convert.ToInt32(TodaySaleParam.Value);
-            viewModel.TotalSaleYesterday = Convert.ToInt32(YesterdaySaleParam.Value);
+            viewModel.TotalSale = Convert.ToInt32((TotalSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TotalSaleToday = Convert.ToInt32((TodaySaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TotalSaleYesterday = Convert.ToInt32((YesterdaySaleParam.Value as int?).GetValueOrDefault(0));
 
             // Total user register
             viewModel.TotalUserRegister = _sysUserService.Queryable()

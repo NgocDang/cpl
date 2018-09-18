@@ -5,6 +5,7 @@
 }
 @section styles
     {
+    <link href="~/css/dashboard/plugins/switchery/switchery.min.css" rel="stylesheet" />
 }
 <div class="app-content container center-layout mt-2 px-0">
     <div class="content-wrapper">
@@ -169,6 +170,95 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-12">
+                            <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliateTiers")</h6>
+                            <div class="card">
+                                <form id="form-comission-rate-setting" method="POST" action="#" class="needs-validation" novalidate="">
+                                    <div class="card-content">
+                                        <div class="card-header">
+                                            <h5 class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliateTiers")</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row form-group">
+                                                <div class="col-md-2 col-sm-12 text-md-right mt-lg-1">
+                                                    <label>Tier 1 Direct Rate</label>
+                                                </div>
+                                                <div class="col-md-3 col-12 mb-2">
+                                                    <input type="number" min="0" max="100" name="Tier1DirectRate" class="form-control" maxlength="30" id="Tier1DirectRate" value="0" required>
+                                                    <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1Required")</div>
+                                                </div>
+                                                <div class="col-md-3 col-sm-12 text-md-right mt-lg-1">
+                                                    <label>Tier 2 Sale To Tier 1 Rate</label>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <input type="number" min="0" max="100" name="Tier1DirectRate" class="form-control" maxlength="30" id="Tier1DirectRate" value="0" required>
+                                                    <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1Required")</div>
+                                                </div>
+                                            </div>
+                                            <div class="row form-group">
+                                                <div class="col-md-2 col-sm-12 text-md-right mt-lg-1">
+                                                    <label>Tier 2 Direct Rate</label>
+                                                </div>
+                                                <div class="col-md-3 col-12 mb-2">
+                                                    <input type="number" min="0" max="100" name="Tier1DirectRate" class="form-control" maxlength="30" id="Tier1DirectRate" value="0" required>
+                                                    <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1Required")</div>
+                                                </div>
+                                                <div class="col-md-3 col-sm-12 text-md-right mt-lg-1">
+                                                    <label>Tier 3 Sale To Tier 1 Rate</label>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <input type="number" min="0" max="100" name="Tier1DirectRate" class="form-control" maxlength="30" id="Tier1DirectRate" value="0" required>
+                                                    <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1Required")</div>
+                                                </div>
+                                            </div>
+                                            <div class="row form-group">
+                                                <div class="col-md-2 col-sm-12 text-md-right mt-lg-1">
+                                                    <label>Tier 3 Direct Rate</label>
+                                                </div>
+                                                <div class="col-md-3 col-12 mb-2">
+                                                    <input type="number" min="0" max="100" name="Tier1DirectRate" class="form-control" maxlength="30" id="Tier1DirectRate" value="0" required>
+                                                    <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1Required")</div>
+                                                </div>
+                                                <div class="col-md-3 col-sm-12 text-md-right mt-lg-1">
+                                                    <label>Tier 3 Sale To Tier 2 Rate</label>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <input type="number" min="0" max="100" name="Tier1DirectRate" class="form-control" maxlength="30" id="Tier1DirectRate" value="0" required>
+                                                    <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1Required")</div>
+                                                </div>
+                                            </div>
+                                            <div class="row form-group">
+                                                <div class="col-12 text-right">
+                                                    <button class="btn btn-sm btn-primary btn-update mr-md-2 mr-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
+                                                    <button class="btn btn-sm btn-primary btn-update">Payment</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="card-footer border-top-blue-grey border-top-lighten-5">
+                                        <div class="row">
+                                            <div class="col-sm-4 col-12 mb-1 text-lg-right">
+                                                <label for="IsAccountActivationEnable" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsAccountActivationEnable") &nbsp; </label>
+                                                <input id="IsAccountActivationEnable" checked="true" type="checkbox" class="form-check-input checkbox-switch" required name="IsAccountActivationEnable">
+                                            </div>
+
+                                            <div class="col-sm-4 col-12 mb-1 sm-1">
+                                                <label for="IsAccountActivationEnable" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsAccountActivationEnable") &nbsp; </label>
+                                                <input id="IsAccountActivationEnable" checked="true" type="checkbox" class="form-check-input checkbox-switch" required name="IsAccountActivationEnable">
+                                            </div>
+
+                                            <div class="col-sm-4 col-12 mb-1 text-lg-right">
+                                                <label for="IsAccountActivationEnable" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsAccountActivationEnable") &nbsp; </label>
+                                                <input id="IsAccountActivationEnable" checked="true" type="checkbox" class="form-check-input checkbox-switch" required name="IsAccountActivationEnable">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 }
             }
         </div>
@@ -177,6 +267,7 @@
 </div>
 @section scripts
     {
+    <script src="~/js/dashboard/plugins/switchery/switchery.min.js"></script>
     <script src="~/js/dashboard/cpl.affiliate.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
 }
