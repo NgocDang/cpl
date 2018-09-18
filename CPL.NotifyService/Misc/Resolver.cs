@@ -13,7 +13,7 @@ namespace CPL.NotifyService.Misc
         public static IUnitOfWorkAsync UnitOfWork { get; set; }
         public static ISysUserService SysUserService { get; set; }
         public static IBTCTransactionService BTCTransactionService { get; set; }
-        public static IETHTransactionService ETHTransactionService { get; set; }
+        //public static IETHTransactionService ETHTransactionService { get; set; }
         public static ISettingService SettingService { get; set; }
     }
 }
