@@ -83,7 +83,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 var resultPrize = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => resultTime >= x.Time).Price;
 
                 // the time to be compared time and price
-                var toBeComparedTime = ((DateTimeOffset)resultTimeLocal.AddHours(PricePredictionHoldingIntervalInHour)).ToUnixTimeSeconds();
+                var toBeComparedTime = ((DateTimeOffset)resultTimeLocal.AddMinutes(-PricePredictionCompareIntervalInMinute)).ToUnixTimeSeconds();
                 var toBeComparedPrice = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => toBeComparedTime >= x.Time).Price;
 
                 // update price prediction
@@ -139,14 +139,14 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 // calculate the prize
                 decimal totalAmountOfLosers = 0.0m;
                 decimal totalAmountToBeAwarded = 0.0m;
-                decimal totalAmountOfWinUsers = 0.0m;
+                decimal totalAmountOfWinners = 0.0m;
 
                 if (gameResult.HasValue)
                 {
                     // calculate the prize
                     totalAmountOfLosers = pricePredictionHistories.Where(x => x.Prediction != gameResult).Sum(x => x.Amount);
                     totalAmountToBeAwarded = totalAmountOfLosers * CPLConstant.PricePredictionTotalAwardPercentage; // Distribute 80% of the loser's BET quantity to the winners.
-                    totalAmountOfWinUsers = pricePredictionHistories.Where(x => x.Prediction == gameResult).Sum(x => x.Amount);
+                    totalAmountOfWinners = pricePredictionHistories.Where(x => x.Prediction == gameResult).Sum(x => x.Amount);
                 }
 
                 // calculate the award
@@ -175,7 +175,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                         else
                         {
                             // the amount will be awarded
-                            var amountToBeAwarded = (pricePredictionHistory.Amount / totalAmountOfWinUsers) * totalAmountToBeAwarded; // The prize money is distributed at an equal rate according to the amount of bet.​
+                            var amountToBeAwarded = (pricePredictionHistory.Amount / totalAmountOfWinners) * totalAmountToBeAwarded; // The prize money is distributed at an equal rate according to the amount of bet.​
                             pricePredictionHistory.Result = EnumGameResult.WIN.ToString();
                             pricePredictionHistory.Award = amountToBeAwarded;
                             pricePredictionHistory.TotalAward = amountToBeAwarded + pricePredictionHistory.Amount;
