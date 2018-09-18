@@ -2,7 +2,6 @@
     init: function () {
     },
     loadPercentageAjax: function (container, emptyContainer, url) {
-        debugger;
         $.ajax({
             url: url, 
             type: "GET",
@@ -37,41 +36,40 @@
                 var point = { name: jsonObj[i].Label, y: jsonObj[i].Value, color: jsonObj[i].Color };
                 seriesArray.push(point);
             }
-            Highcharts.chart(container.attr('id'),
-                {
-                    chart: {
-                        plotBackgroundColor: null,
-                        plotBorderWidth: null,
-                        plotShadow: false,
-                        type: 'pie'
-                    },
-                    title: {
-                        text: null
-                    },
-                    tooltip: {
-                        pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
-                    },
-                    exporting: {
-                        enabled: false
-                    },
-                    plotOptions: {
-                        pie: {
-                            allowPointSelect: false,
-                            cursor: 'pointer',
-                            dataLabels: {
-                                enabled: true,
-                                format: '<b>{point.percentage:.1f} %',
-                                distance: -50,
-                            },
-                            showInLegend: true,
-                            colorByPoint: true,
-                        }
-                    },
-                    series: [{
-                        name: seriesName,
-                        data: seriesArray
-                    }]
-                });
+            container.highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: null
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
+                },
+                exporting: {
+                    enabled: false
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: false,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.percentage:.1f} %',
+                            distance: -50,
+                        },
+                        showInLegend: true,
+                        colorByPoint: true,
+                    }
+                },
+                series: [{
+                    name: seriesName,
+                    data: seriesArray
+                }]
+            });
         }
     }
 }

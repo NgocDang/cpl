@@ -5,12 +5,6 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class PieChartViewComponentViewModel
-    {
-        public string SeriesName { get; set; }
-        public List<PieChartData> Data { get; set; }
-    }
-
     public class PieChartData
     {
         public string Label { get; set; }

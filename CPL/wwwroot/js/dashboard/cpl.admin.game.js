@@ -1,16 +1,58 @@
 ﻿var AdminGameManagement = {
     init: function () {
+        // Summary Tab
         AdminGameManagement.bindSummaryTab();
+        AdminGameManagement.bindSummaryTimeRangeChange();
+
+        // Lottery Tab
+        AdminGameManagement.bindLotteryTab();
+
+        // Lottery Tab - Lottery Summary Tab
+        AdminGameManagement.bindLotterySummaryTab();
+        AdminGameManagement.bindLotterySummaryTimeRangeChange();
+
+        // Lottery Tab - Lottery Category Tab
+        AdminGameManagement.bindLotteryCategoryTabs();
+        AdminGameManagement.bindLotteryCategoryTimeRangeChange();
 
         // Show tab base on URL tab parameter
         var tab = $("#tab").val();
         if (tab == "") 
             tab = "summary";
         $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
-        //AdminGameManagement.bindSelectTimeRange();
     },
-    bindSelectTimeRange: function () {
-        $("#Category").on("changed.bs.select",
+    bindSummaryTab: function () {
+        $('a#summary-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#summary-nav .tab-detail").html().trim().length == 0) {
+                $.ajax({
+                    url: "/Admin/GetSummaryStatistics/",
+                    type: "GET",
+                    beforeSend: function () {
+                        $("#summary-nav .tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+                    },
+                    data: {
+                        periodInDay: $("#summary-nav").find("select.time-range").val()
+                    },
+                    success: function (data) {
+                        $("#summary-nav .tab-detail").html(data);
+                        AdminGameManagement.loadSummaryStatistics($("#summary-nav"))
+                    },
+                    complete: function (data) {
+                    }
+                });
+            }
+
+            if ($("#summary-nav .revenue-chart").html().trim().length == 0) {
+                PieChart.loadPercentageAjax($("#summary-nav .revenue-chart"), $("#summary-nav .revenue-no-data"), "/Admin/GetSummaryRevenuePieChart/")
+            }
+
+            if ($("#summary-nav .device-category-chart").length > 0) {
+                PieChart.loadPercentageAjax($("#summary-nav .device-category-chart"), $("#summary-nav .device-category-no-data"), "/Admin/GetSummaryDeviceCategoryPieChart/")
+            }
+        })
+    },
+    bindSummaryTimeRangeChange: function () {
+        $("").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 $("#GameSummaryStatistic").load("/ViewComponent/GetGameSummaryStatisticViewComponent?periodInDay=" + this.value);
                 AdminGameManagement.loadStatisticChart(this.value);
@@ -139,33 +181,29 @@
         // Create the plot
         container.find(".statistic-chart").highcharts(options);
     },
-    bindSummaryTab: function () {
-        $('a#summary-nav-tab').on('show.bs.tab', function (e) {
-            if ($("#summary-nav .tab-detail").html().trim().length == 0) {
-                $.ajax({
-                    url: "/Admin/GetSummaryStatistics/",
-                    type: "GET",
-                    beforeSend: function () {
-                        $("#summary-nav .tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
-                    },
-                    data: {
-                        periodInDay: $("#summary-nav").find("select.time-range").val()
-                    },
-                    success: function (data) {
-                        $("#summary-nav .tab-detail").html(data);
-                        AdminGameManagement.loadSummaryStatistics($("#summary-nav"))
-                    },
-                    complete: function (data) {
-                    }
-                });
+    bindLotteryTab: function () {
+        $('a#lottery-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#lottery-nav .revenue-chart").html().trim().length == 0) {
+                alert('LOTTERY Revenue chart should be loaded!');
             }
 
-            if ($("#summary-nav .revenue-chart").html().trim().length == 0) {
-                PieChart.loadPercentageAjax($("#summary-nav .revenue-chart"), $("#summary-nav .revenue-no-data"), "/Admin/GetSummaryRevenuePieChart/")
+            if ($("#lottery-nav .device-category-chart").html().trim().length == 0) {
+                alert('LOTTERY Device category chart should be loaded!');
             }
-
-            if ($("#summary-nav .device-category-chart .loading").length > 0) {
-
+        })
+    },
+    bindLotterySummaryTab: function () {
+        $('a#lottery-summary-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#lottery-summary-nav .tab-detail").html().trim().length == 0) {
+                alert('LOTTERY Summary statistics should be loaded!');
+            }
+        })
+    },
+    bindLotteryCategoryTabs: function () {
+        $('a.lottery-category-nav-tab').on('show.bs.tab', function (e) {
+            var _this = this;
+            if ($("#lottery-category-nav-" + $(_this).data().id + " .tab-detail").html().trim().length == 0) {
+                alert('LOTTERY Category ' + $(_this).data().id + ' statistic should be loaded!');
             }
         })
     }

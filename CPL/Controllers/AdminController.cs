@@ -1314,6 +1314,37 @@ namespace CPL.Controllers
             });
         }
 
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetSummaryDeviceCategoryPieChart()
+        {
+            var data = new List<PieChartData>();
+            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+            var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+            var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+            var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
+
+            var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+            var totalDesktopPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+            var totalMobilePricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+            var totalTabletPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
+
+            var desktopChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Desktop"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = totalDesktopLottery + totalDesktopPricePrediction };
+            var mobileChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Mobile"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = totalMobileLottery + totalMobilePricePrediction };
+            var tabletChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Tablet"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)3), Value = totalTabletLottery + totalTabletPricePrediction };
+
+            data.Add(desktopChartData);
+            data.Add(mobileChartData);
+            data.Add(tabletChartData);
+
+            return new JsonResult(new
+            {
+                success = true,
+                seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Device"),
+                data = JsonConvert.SerializeObject(data)
+            });
+        }
+
         [HttpPost]
         [Permission(EnumRole.Admin)]
         public JsonResult SearchPurchasedLotteryHistory(DataTableAjaxPostModel viewModel, int? lotteryCategoryId)
