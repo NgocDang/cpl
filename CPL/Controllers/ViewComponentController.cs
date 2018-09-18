@@ -30,11 +30,11 @@ namespace CPL.Controllers
             this._unitOfWork = unitOfWork;
         }
 
-        [Permission(EnumRole.User)]
-        public IActionResult GetExchangeViewComponent()
-        {
-            return ViewComponent("Exchange");
-        }
+        //[Permission(EnumRole.User)]
+        //public IActionResult GetExchangeViewComponent()
+        //{
+        //    return ViewComponent("Exchange");
+        //}
 
         [Permission(EnumRole.User)]
         public IActionResult GetRateViewComponent()

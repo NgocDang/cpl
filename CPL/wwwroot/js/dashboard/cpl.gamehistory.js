@@ -166,11 +166,12 @@
                                     name: 'BTC',
                                     y: JSON.parse(a).BTCPercentage,
                                     color: '#f7931a'
-                                }, {
-                                    name: 'ETH',
-                                    y: JSON.parse(a).ETHPercentage,
-                                    color: '#828384'
                                 }]
+                                //}, {
+                                //    name: 'ETH',
+                                //    y: JSON.parse(a).ETHPercentage,
+                                //    color: '#828384'
+                                //}]
                             }]
                         });
                         $("#holding-percentage-chart").removeClass("d-none");
