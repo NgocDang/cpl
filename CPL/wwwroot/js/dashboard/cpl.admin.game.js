@@ -3,7 +3,7 @@
         AdminGameManagement.loadStatisticChart();
         AdminGameManagement.bindSelectTimeRange();
         PieChartViewComponent.loadPercentage($("#sumary-revenue-chart").find("#ChartData").val(), $("#sumary-revenue-chart"), $("#sumary-revenue-no-data"), $("#sumary-revenue-chart").find("#SeriesName").val());
-        PieChartViewComponent.loadPercentage($("#device-category-chart").find("#ChartData").val(), $("#device-category-chart"), $("#device-category-no-data"), $("#sumary-revenue-chart").find("#SeriesName").val());
+        PieChartViewComponent.loadPercentage($("#device-category-chart").find("#ChartData").val(), $("#device-category-chart"), $("#device-category-no-data"), $("#device-category-chart").find("#SeriesName").val());
     },
     bindSelectTimeRange: function () {
         $("#Category").on("changed.bs.select",
