@@ -29,14 +29,14 @@
             </div>
         </div>
         <div class="content-body">
-            <div class="row">
+            @*<div class="row">
                 <div class="col-sm-6 col-12">
                     @await Component.InvokeAsync("Rate")
                 </div>
                 <div class="col-sm-6 col-12">
                     @await Component.InvokeAsync("Balance")
                 </div>
-            </div>
+            </div>*@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-12">
                     <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UserProfile")</h6>
@@ -105,5 +105,5 @@
     <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/cpl.dashboard.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.balance.viewcomponent.js" asp-append-version="true"></script>
+    @*<script src="~/js/dashboard/cpl.balance.viewcomponent.js" asp-append-version="true"></script>*@
 }

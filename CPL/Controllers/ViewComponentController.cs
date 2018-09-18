@@ -36,11 +36,11 @@ namespace CPL.Controllers
         //    return ViewComponent("Exchange");
         //}
 
-        [Permission(EnumRole.User)]
-        public IActionResult GetRateViewComponent()
-        {
-            return ViewComponent("Rate");
-        }
+        //[Permission(EnumRole.User)]
+        //public IActionResult GetRateViewComponent()
+        //{
+        //    return ViewComponent("Rate");
+        //}
 
         [Permission(EnumRole.User)]
         public IActionResult GetDepositWithdrawViewComponent()
