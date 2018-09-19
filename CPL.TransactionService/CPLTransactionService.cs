@@ -107,6 +107,7 @@ namespace CPL.TransactionService
 
                     //Init dependency transaction & dbcontext
                     var resolver = InitializeRepositories();
+
                     var transactions = new List<BTCTransaction>();
                     do
                     {
@@ -117,6 +118,8 @@ namespace CPL.TransactionService
                     while (IsTransactionServiceRunning && transactions.Count == 0);
 
                     Utils.FileAppendThreadSafe(BTCDepositFileName, String.Format("BTC Deposit Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
+
+                    var btcToTokenRate = decimal.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
 
                     foreach (var transaction in transactions)
                     {
@@ -192,7 +195,7 @@ namespace CPL.TransactionService
 
                                     // update BTC amount
                                     var coinAmount = transactionParentDetail.Result.To.FirstOrDefault(x => x.Address == user.BTCHDWalletAddress).Value;
-                                    user.BTCAmount += coinAmount;
+                                    user.TokenAmount += coinAmount * btcToTokenRate;
                                     resolver.SysUserService.Update(user);
 
                                     // add record to coin transaction of user transfer (not internal transfer)
@@ -367,7 +370,6 @@ namespace CPL.TransactionService
                 {
                     //Init dependency transaction & dbcontext
                     var resolver = InitializeRepositories();
-                    var btcToTokenRate = decimal.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
 
                     var transactions = new List<CoinTransaction>();
                     do
@@ -381,6 +383,8 @@ namespace CPL.TransactionService
                     while (IsTransactionServiceRunning && transactions.Count == 0);
 
                     Utils.FileAppendThreadSafe(BTCWithdrawFileName, String.Format("BTC Withdraw Thread - Number of transactions {0} need to be checked.{1}", transactions.Count, Environment.NewLine));
+
+                    var btcToTokenRate = decimal.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
 
                     foreach (var transaction in transactions)
                     {
