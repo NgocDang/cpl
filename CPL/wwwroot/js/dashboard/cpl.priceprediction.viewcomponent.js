@@ -11,6 +11,7 @@
         PricePredictionViewComponent.bindConfirmBet();
         PricePredictionViewComponent.bindBack();
         PricePredictionViewComponent.bindDoBet();
+        PricePredictionViewComponent.bindCountDownTick();
     },
     bindLoadPredictionResult: function () {
         var progressConnection = new signalR.HubConnection("/predictedUserProgress");
@@ -72,39 +73,9 @@
             Highcharts.setOptions({
                 global: {
                     useUTC: false
-                }
+                },
+                lang: DTLang.getHighChartLang()
             });
-            if (parseInt($("#LangId").val()) == 1) {
-                Highcharts.setOptions({
-                    lang: {
-                        months: [
-                            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-                        ],
-                        weekdays: [
-                            'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-                        ],
-                        shortMonths: [
-                            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-                        ]
-                    }
-                });
-            }
-            else if (parseInt($("#LangId").val()) == 2) {
-                Highcharts.setOptions({
-                    lang: {
-                        months: [
-                            '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
-                        ],
-                        weekdays: [
-                            '月曜日', '火曜日', '水曜日', '木曜日',
-                            '金曜日', '土曜日', '日曜日'
-                        ],
-                        shortMonths: [
-                            '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
-                        ]
-                    }
-                });
-            }
 
             $(element).highcharts({
                 chart: {
@@ -176,10 +147,14 @@
                     }
                 },
                 title: {
-                    text: $("#btcPricePredictionChartTitle").val()
+                    text: $("#btcPricePredictionChartTitle").val(),
+                    align: 'left'
                 },
                 xAxis: {
                     type: 'datetime',
+                    dateTimeLabelFormats: {
+                        day: '%b/%e'
+                    },
                     tickPixelInterval: 150,
                     plotLines: [{
                         label: {
@@ -220,9 +195,7 @@
                     }]
                 },
                 yAxis: {
-                    title: {
-                        text: $("#price").val()
-                    },
+                    title: null,
                     plotLines: [{
                         label: {
                             text: "",
@@ -439,6 +412,30 @@
             });
         });
     },
+    bindCountDownTick: function () {
+        $(".tab-pane.active .countdown-clock").each(function (index, element) {
+            var closeTime = moment(parseInt($(element).closest(".tab-pane").find("#CloseBettingTime").val()));
+            var dateString = closeTime.format("HH:mm") == "00:00" ? "24:00" : closeTime.format("HH:mm");
+            // Update the count down every 1 second
+            var x = setInterval(function () {
+
+                // Get todays date and time
+                var now = new Date().getTime();
+
+                // Find the distance between now and the count down date
+                var distance = closeTime - now;
+
+                // Time calculations for days, hours, minutes and seconds
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Display the result in the element with id="demo"
+                $(element).closest(".tab-pane").find(".countdown-clock").html($("#close").val() + ": " + dateString + '  <i class="la la-clock-o clock-icon"></i>' + hours + ":" + minutes + ":" + seconds);
+            });
+        });
+    },
+
 };
 
 $(document).ready(function () {

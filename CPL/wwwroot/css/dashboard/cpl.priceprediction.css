@@ -22,3 +22,19 @@
         text-align: center;
     }
 }
+
+.topright {
+    border-radius: 4px;
+    position: absolute;
+    right: 15px;
+    z-index: 1;
+    background-color: red;
+    padding: 0.5rem !important;
+    width: 180px;
+    text-align: center;
+}
+
+.clock-icon {
+    top: 2px;
+    position: relative;
+}

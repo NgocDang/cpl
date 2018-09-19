@@ -109,3 +109,9 @@ INSERT INTO LangDetail VALUES (2, N'Tablet', N'タブレット');
 
 INSERT INTO LangDetail VALUES (1, N'NoData', N'No Data Available');
 INSERT INTO LangDetail VALUES (2, N'NoData', N'データなし')
+
+-- 20180919-PricePredictionUpdate --
+update LangDetail set Value = N'BTC/USDT' where name = N'BTCPricePredictionChartTitle'
+update LangDetail set Value = N'High' where name = N'Up'
+update LangDetail set Value = N'Low' where name = N'Down'
+------------------------------------------------------------------------------------------

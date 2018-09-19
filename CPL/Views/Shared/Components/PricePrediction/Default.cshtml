@@ -5,28 +5,37 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-9 col-12 px-sm-1 px-0">
+                    <div class="panel panel-primary text-white bg-primary topright p-1 countdown-clock"></div>
                     <div class="btc-price-chart">
                     </div>
                 </div>
                 <div class="col-lg-3 col-12 bet">
                     <div class="row">
                         <div class="col-12">
-                            <span class="font-large-1 font-weight-bold btc-rate" value="@Model.CurrentBTCRate">@Model.CurrentBTCRateInString</span> <span class="font-medium-4">BTC/USDT</span>
+                            <span class="font-medium-4">BTC/USDT</span> <span class="font-large-1 font-weight-bold btc-rate" value="@Model.CurrentBTCRate">@Model.CurrentBTCRateInString</span>
                         </div>
                     </div>
                     <form class="form-bet">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 mt-1">
                                 <fieldset class="form-group mb-1">
-                                    <label for="Amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
-                                    @if (Model.TokenAmount.HasValue)
-                                    {
-                                        <input type="number" name="Amount" class="form-control bet-amount" min="1" max="@Model.TokenAmount.Value" value="0" required autofocus="">
-                                    }
-                                    else
-                                    {
-                                        <input type="number" name="Amount" class="form-control bet-amount" min="1" value="0" required autofocus="">
-                                    }
+                                    @*<label for="Amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>*@
+                                    <div class="input-group">
+                                        @if (Model.TokenAmount.HasValue)
+                                        {
+                                            <input type="number" name="Amount" class="form-control bet-amount" min="1" max="@Model.TokenAmount.Value" value="0" required autofocus="">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">CPL</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <input type="number" name="Amount" class="form-control bet-amount" min="1" value="0" required autofocus="">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">CPL</span>
+                                            </div>
+                                        }
+                                    </div>
                                 </fieldset>
                             </div>
                         </div>

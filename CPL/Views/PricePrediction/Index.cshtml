@@ -12,47 +12,47 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
     <link rel="stylesheet" href="~/css/dashboard/cpl.priceprediction.css" asp-append-version="true" />
 }
-<div class="app-content container center-layout mt-2 px-0">
-    <div class="content-wrapper">
-        <div class="content-body">
-            <div class="tab-component">
-                @if (Model.PricePredictionTabs.Count > 0)
-                {
-                    <ul class="nav nav-tabs border-0" id="price-prediction-nav-bar">
-                        @for (var i = 0; i < Model.PricePredictionTabs.Count; i++)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold px-2 border-0 @(Model.PricePredictionTabs[i].IsDisabled ? "disabled" : "") @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id" data-id="@Model.PricePredictionTabs[i].Id"
-                                   data-toggle="tab" href="#price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-controls="price-prediction-nav-@Model.PricePredictionTabs[i].Id">
-                                    @Model.PricePredictionTabs[i].ToBeComparedTime.ToString("HH:mm") ~ @Model.PricePredictionTabs[i].ResultTime.ToString("HH:mm")
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                    <div class="tab-content mb-1">
-                        @for (var i = 0; i < Model.PricePredictionTabs.Count; i++)
-                        {
-                            <div role="tabpanel" class="tab-pane @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-labelledby="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id">
-                                @if (Model.PricePredictionTabs[i].IsActive)
-                                {
-                                    @await Component.InvokeAsync("PricePrediction", new PricePredictionViewComponentViewModel { Id = Model.PricePredictionTabs[i].Id, TokenAmount = Model.TokenAmount })
-                                }
-                            </div>
-                        }
-                    </div>
-                }
-            </div>
-            @await Component.InvokeAsync("PricePredictionHistory", new PricePredictionHistoryViewComponentViewModel { SysUserId = Model.SysUserId })
-        </div>
-    </div>
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")" id="result" />
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Price")" id="price" />
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Open")" id="open" />
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Close")" id="close" />
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCPricePredictionChartTitle")" id="btcPricePredictionChartTitle" />
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCPricePredictionSeriesName")" id="btcPricePredictionSeriesName" />
+    <div class="app-content container center-layout mt-2 px-0">
+        <div class="content-wrapper">
+            <div class="content-body">
+                <div class="tab-component">
+                    @if (Model.PricePredictionTabs.Count > 0)
+                    {
+                        <ul class="nav nav-tabs border-0" id="price-prediction-nav-bar">
+                            @for (var i = 0; i < Model.PricePredictionTabs.Count; i++)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold px-2 border-0 @(Model.PricePredictionTabs[i].IsDisabled ? "disabled" : "") @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id" data-id="@Model.PricePredictionTabs[i].Id"
+                                       data-toggle="tab" href="#price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-controls="price-prediction-nav-@Model.PricePredictionTabs[i].Id">
+                                        @(Model.PricePredictionTabs[i].CloseBettingTime.ToString("HH:mm") == "00:00" ? "24:00" : Model.PricePredictionTabs[i].CloseBettingTime.ToString("HH:mm"))
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <div class="tab-content mb-1">
+                            @for (var i = 0; i < Model.PricePredictionTabs.Count; i++)
+                            {
+                                <div role="tabpanel" class="tab-pane @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-labelledby="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id">
+                                    @if (Model.PricePredictionTabs[i].IsActive)
+                                    {
+                                        @await Component.InvokeAsync("PricePrediction", new PricePredictionViewComponentViewModel { Id = Model.PricePredictionTabs[i].Id, TokenAmount = Model.TokenAmount })
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+                @await Component.InvokeAsync("PricePredictionHistory", new PricePredictionHistoryViewComponentViewModel { SysUserId = Model.SysUserId })
 
-</div>
+            </div>
+        </div>
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")" id="result" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Price")" id="price" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Open")" id="open" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Close")" id="close" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCPricePredictionChartTitle")" id="btcPricePredictionChartTitle" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCPricePredictionSeriesName")" id="btcPricePredictionSeriesName" />
+    </div>
 
 @section scripts
     {
