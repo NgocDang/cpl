@@ -57,4 +57,12 @@ namespace CPL.Models
         public int Tier3SaleToTier1Rate { get; set; }
         public int Tier3SaleToTier2Rate { get; set; }
     }
+
+    public class TopAgencySettingViewModel
+    {
+        public bool? IsAutoPaymentEnable { get; set; }
+        public bool? IsTier2TabVisible { get; set; }
+        public bool? IsTier3TabVisible { get; set; }
+    }
+
 }
