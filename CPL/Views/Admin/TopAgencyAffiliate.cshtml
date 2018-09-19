@@ -266,7 +266,8 @@
                 }
             </div>
         </div>
-        @Html.Hidden("AgencyId", 3) @*TODO*@
+        @Html.Hidden("AgencyId", Model.AgencyId) @*TODO*@
+        @Html.Hidden("SysUserId", Model.Id) @*TODO*@
         @Html.Hidden("CopiedSuccessfully", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CopiedSuccessfully"))
     </div>
 @section scripts

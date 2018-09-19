@@ -691,12 +691,15 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IActionResult ViewPayment(ViewPaymentPartialViewViewModel viewModel)
+        public IActionResult ViewPayment(int sysUserId)
         {
-            var payments = _paymentService.Queryable().Where(x => x.SysUserId == viewModel.SysUserId && !x.UpdatedDate.HasValue);
-            viewModel.Period = payments.Count() > 1 ? $"{payments.FirstOrDefault().UpdatedDate.Value.AddMonths(-1).Month.ToString()} ~ {payments.LastOrDefault().UpdatedDate.Value.Month.ToString()}"
-                                                    : $"{payments.FirstOrDefault().UpdatedDate.Value.AddMonths(-1).Month.ToString() ?? "0"}";
-            viewModel.CommissionAmount = payments.Sum(x => x.Tier2SaleToTier1Sale * x.Tier1DirectRate + x.Tier2SaleToTier1Sale * x.Tier2SaleToTier1Rate + x.Tier3SaleToTier1Sale * x.Tier3SaleToTier1Rate);
+            var payments = _paymentService.Queryable().Where(x => x.SysUserId == sysUserId && !x.UpdatedDate.HasValue);
+            var viewModel = new ViewPaymentPartialViewViewModel();
+            viewModel.Period = payments.Count() > 1 ? $"{payments.FirstOrDefault().CreatedDate.AddMonths(-1).Month.ToString()} ~ {payments.LastOrDefault().CreatedDate.AddMonths(-1).Month.ToString()}"
+                                                    : $"{payments.FirstOrDefault()?.CreatedDate.AddMonths(-1).Month.ToString(Format.Amount)}";
+            if (string.IsNullOrWhiteSpace(viewModel.Period))
+                viewModel.Period = "0";
+            viewModel.CommissionAmount = payments.Sum(x => x.Tier2SaleToTier1Sale * x.Tier1DirectRate / 100 + x.Tier2SaleToTier1Sale * x.Tier2SaleToTier1Rate / 100 + x.Tier3SaleToTier1Sale * x.Tier3SaleToTier1Rate / 100);
             return PartialView("_Payment", viewModel);
         }
 

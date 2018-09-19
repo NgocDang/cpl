@@ -94,7 +94,7 @@
                     $(_this).attr("disabled", true);
                 },
                 data: {
-                    id: $(_this).data().id
+                    sysUserId: $("#SysUserId").val()
                 },
                 success: function (data) {
                     $("#modal").html(data);
@@ -117,7 +117,9 @@
                     $(_this).attr("disabled", true);
                 },
                 data: {
-                    id: $(_this).data().id
+                    //id: $("#SysUserId").val();
+                    //id: $("#SysUserId").val();
+                    //id: $("#SysUserId").val();
                 },
                 success: function (data) {
                     $("#modal").html(data);
