@@ -1,0 +1,43 @@
+﻿@model SummaryStatisticsViewModel
+
+<div class="row">
+    <div class="col-12 statistic">
+        <div class="row">
+            <div class="col-lg-2 col-6 border-right mt-1">
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue")</h6>
+                <p class="lighten-2 mb-0 font-weight-bold">@Model.TotalRevenue.ToString(CPLConstant.Format.Amount)</p>
+            </div>
+            <div class="col-lg-2 col-6 border-right mt-1">
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")</h6>
+                <p class="lighten-2 mb-0 font-weight-bold">@Model.TotalSale.ToString(CPLConstant.Format.Amount)</p>
+            </div>
+            <div class="col-lg-2 col-6 border-right mt-1">
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView")</h6>
+                <p class="lighten-2 mb-0 font-weight-bold">@Model.PageView.ToString(CPLConstant.Format.Amount)</p>
+            </div>
+            <div class="col-lg-2 col-6 border-right mt-1">
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPlayers")</h6>
+                <p class="lighten-2 mb-0 font-weight-bold">@Model.TotalPlayers.ToString(CPLConstant.Format.Amount)</p>
+            </div>
+            <div class="col-lg-2 col-6 mt-1">
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TodayPlayers")</h6>
+                <p class="lighten-2 mb-0 font-weight-bold">@Model.TodayPlayers.ToString(CPLConstant.Format.Amount)</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 mt-1">
+        <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StatisticChart")</h6>
+        <div class="height-400 statistic-chart">
+        </div>
+        @Html.HiddenFor(x => x.TotalRevenueChangesInJson, new { @class="total-revenue-changes" })
+        @Html.HiddenFor(x => x.TotalSaleChangesInJson, new { @class = "total-sale-changes" })
+        @Html.HiddenFor(x => x.TotalPlayersChangesInJson, new { @class = "page-view-changes" })
+        @Html.HiddenFor(x => x.TotalPlayersChangesInJson, new { @class = "total-players-changes" })
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue")" class="total-revenue" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")" class="total-sale" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView")" class="page-view" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPlayers")" class="total-players" />
+    </div>
+</div>
