@@ -30,16 +30,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-sm-6 col-12 d-none d-md-block d-lg-block d-xl-block">
-                @await Component.InvokeAsync("Rate")
-            </div>
-            <div class="col-sm-6 col-12 mb-1">
-                @await Component.InvokeAsync("LotteryResult")
-            </div>
-        </div>
-
         <div class="content-detached">
             <div class="content-body" id="depositwithdraw-content">
                 @await Component.InvokeAsync("DepositWithdraw")
