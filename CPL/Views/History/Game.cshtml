@@ -34,20 +34,11 @@
         </div>
         <div class="content-body">
             <div class="row match-height">
-                <div class="col-xl-8 col-12">
+                <div class="col-12">
                     <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BetStatisticChart")</h6>
                     <div class="card">
                         <div class="card-body">
                             <div id="bet-statistic-chart" class="height-300"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-12">
-                    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HoldingPercentage")</h6>
-                    <div class="card">
-                        <div class="card-body">
-                            <div id="holding-percentage-chart" class="height-300 d-none"></div>
-                            <div id="holding-percentage-no-assets" class="height-300 row justify-content-center align-items-center d-none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoAssets")</div>
                         </div>
                     </div>
                 </div>

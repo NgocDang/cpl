@@ -29,18 +29,6 @@
                     </div>
                 </div>
             </div>
-            @if (Model.SysUserId.HasValue)
-            {
-                <div class="row">
-                    <div class="col-sm-6 col-12 d-none d-md-block d-lg-block d-xl-block" id="rate-component">
-                        @await Component.InvokeAsync("Rate")
-                    </div>
-                    <div class="col-sm-6 col-12 mb-05">
-                        @await Component.InvokeAsync("LotteryResult")
-                    </div>
-                </div>
-            }
-
             <div class="row mb-05">
                 <div class="col-lg-6 col-12 d-sm-block d-none">
                     <div class="card">
