@@ -21,7 +21,6 @@ namespace CPL.Models
 
         public string BTCHDWalletAddress { get; set; }
         public string ETHHDWalletAddress { get; set; }
-        public decimal TotalBalance { get; set; }
         public decimal ETHAmount { get; set; }
         public decimal BTCAmount { get; set; }
         public decimal TokenAmount { get; set; }

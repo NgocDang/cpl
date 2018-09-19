@@ -102,7 +102,10 @@ namespace CPL.Controllers
                 try
                 {
                     // Validate max BTC Amount
-                    if (viewModel.Amount > user.BTCAmount)
+                    var btcToTokenRate = decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
+                    var availableBTCAmount = user.TokenAmount / btcToTokenRate;
+
+                    if (viewModel.Amount > availableBTCAmount)
                         return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
 
                     //Validate BTC wallet address
@@ -130,9 +133,10 @@ namespace CPL.Controllers
                             Type = (int)EnumCoinTransactionType.WITHDRAW_BTC
                         });
 
-                        user.BTCAmount -= viewModel.Amount;
+                        user.TokenAmount -= viewModel.Amount * btcToTokenRate;
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
+
                     }
                     else
                     {
@@ -192,7 +196,7 @@ namespace CPL.Controllers
             //    }
             //}
 
-            return new JsonResult(new { success = true, profileKyc = true, txhashid = txHashId, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
+            return new JsonResult(new { success = true, token = user.TokenAmount.ToString("N0"), profileKyc = true, txhashid = txHashId, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
         }
 
         [HttpPost]

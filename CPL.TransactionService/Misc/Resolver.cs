@@ -12,12 +12,14 @@ namespace CPL.TransactionService.Misc
         public IContainer Container { get; }
         public IUnitOfWorkAsync UnitOfWork { get; }
         public ISysUserService SysUserService { get; }
+        public ISettingService SettingService { get; }
         public IBTCTransactionService BTCTransactionService { get; }
         //public IETHTransactionService ETHTransactionService { get; }
         public ICoinTransactionService CoinTransactionService { get; }
 
         public Resolver(IContainer container, IUnitOfWorkAsync unitOfWork, ISysUserService sysUserService, 
             IBTCTransactionService btcTransactionService, IETHTransactionService ethTransactionService,
+            ISettingService settingService,
             ICoinTransactionService coinTransactionService)
         {
             Container = container;
@@ -26,6 +28,7 @@ namespace CPL.TransactionService.Misc
             BTCTransactionService = btcTransactionService;
             //ETHTransactionService = ethTransactionService;
             CoinTransactionService = coinTransactionService;
+            SettingService = settingService;
         }
     }
 }

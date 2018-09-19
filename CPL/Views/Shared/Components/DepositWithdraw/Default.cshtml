@@ -33,7 +33,17 @@
                                         <h6 class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Available")</h6>
                                     </div>
                                     <div class="col-lg-9 col-md-8 col-12">
-                                        <h6 class="font-weight-bold font-medium-2 text-sm-bigger">@Model.BTCAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
+                                        <div class="row">
+                                            <div class="col-lg-5 col-12 text-center-sm">
+                                                <h6 class="font-weight-bold font-medium-2 text-sm-bigger">@Model.TokenAmount.ToString(CPLConstant.Format.Number) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h6>
+                                            </div>
+                                            <div class="col-lg-1 col-12 text-center-sm">
+                                                <h6 class="font-weight-bold font-medium-2 text-sm-bigger">~</h6>
+                                            </div>
+                                            <div class="col-lg-5 col-12 text-center-sm">
+                                                <h6 class="font-weight-bold font-medium-2 text-sm-bigger">@Model.BTCAvailable.ToString(CPLConstant.Format.Amount) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +95,10 @@
                             <div class="row">
                                 <div class="col-lg-3 col-12 text-center pt-1">
                                     <h4 class="text-uppercase font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCName")</h4>
-                                    <p class="mb-0"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Available"):</span><span class="text-bold-700 text-uppercase mb-0"> @Model.BTCAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span></p>
+                                    <p class="mb-0">
+                                        <span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Available"):</span>
+                                        <span class="text-bold-700 text-uppercase mb-0"> @Model.BTCAvailable.ToString(CPLConstant.Format.Amount) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span>
+                                    </p>
                                     <i class="cc BTC warning font-large-5"></i>
                                 </div>
                                 <div class="col-lg-9 col-12">
@@ -94,7 +107,7 @@
                                         <div class="col-md-3 col-12">
                                             <fieldset class="form-group mb-0">
                                                 <label for="btc-amount">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</label>
-                                                <input type="number" name="btc-amount" class="form-control amount-value" value="0" required="" autofocus="" min="0.00000001" max="@Model.BTCAmount" step="any">
+                                                <input type="number" name="btc-amount" class="form-control amount-value" value="0" required="" autofocus="" min="0.00000001" max="@Model.BTCAvailable" step="any">
                                                 <div class="invalid-feedback amount-error">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidAmountOrInsufficientBalance")
                                                 </div>
