@@ -17,17 +17,17 @@
 
         // Show tab base on URL tab parameter
         var tab = $("#tab").val();
-        if (tab == "") 
+        if (tab === "") 
             tab = "summary";
         $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
     },
     bindSummaryTab: function () {
         $('a#summary-nav-tab').on('show.bs.tab', function (e) {
-            if ($("#summary-nav .tab-detail").html().trim().length == 0) {
+            if ($("#summary-nav .tab-detail").html().trim().length === 0) {
                 AdminGameManagement.loadSummaryStatistics();
             }
 
-            if ($("#summary-nav .revenue-chart").html().trim().length == 0) {
+            if ($("#summary-nav .revenue-chart").html().trim().length === 0) {
                 PieChart.loadPercentageAjax($("#summary-nav .revenue-chart"), $("#summary-nav .revenue-no-data"), "/Admin/GetSummaryRevenuePieChart/")
             }
 
@@ -116,7 +116,7 @@
         var totalPlayers = { data: [], name: container.find(".total-players").val(), color: '#F69BF9' };
 
         var totalSaleChanges = JSON.parse(container.find(".total-sale-changes").val());
-        if (totalSaleChanges.length != 0) {
+        if (totalSaleChanges.length !== 0) {
             $.each(totalSaleChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
                 val = value.Value;
@@ -131,7 +131,7 @@
         sale.data.sort();
 
         var totalRevenueChanges = JSON.parse(container.find(".total-revenue-changes").val());
-        if (totalRevenueChanges.length != 0) {
+        if (totalRevenueChanges.length !== 0) {
             $.each(totalRevenueChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
                 val = value.Value;
@@ -146,7 +146,7 @@
         revenue.data.sort();
 
         var pageViewChanges = JSON.parse(container.find(".page-view-changes").val());
-        if (pageViewChanges.length != 0) {
+        if (pageViewChanges.length !== 0) {
             $.each(pageViewChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
                 val = value.Count;
@@ -183,21 +183,21 @@
     },
     bindLotteryTab: function () {
         $('a#lottery-nav-tab').on('show.bs.tab', function (e) {
-            if ($("#lottery-nav .revenue-chart").html().trim().length == 0) {
+            if ($("#lottery-nav .revenue-chart").html().trim().length === 0) {
                 alert('LOTTERY Revenue chart should be loaded!');
             }
 
-            if ($("#lottery-nav .device-category-chart").html().trim().length == 0) {
+            if ($("#lottery-nav .device-category-chart").html().trim().length === 0) {
                 alert('LOTTERY Device category chart should be loaded!');
             }
-        })
+        });
     },
     bindLotterySummaryTab: function () {
         $('a#lottery-summary-nav-tab').on('show.bs.tab', function (e) {
-            if ($("#lottery-summary-nav .tab-detail").html().trim().length == 0) {
+            if ($("#lottery-summary-nav .tab-detail").html().trim().length === 0) {
                 alert('LOTTERY Summary statistics should be loaded!');
             }
-        })
+        });
     },
     bindLotterySummaryTimeRangeChange: function () {
         $("#lottery-summary-nav select.time-range").on("changed.bs.select",
@@ -208,10 +208,10 @@
     bindLotteryCategoryTabs: function () {
         $('a.lottery-category-nav-tab').on('show.bs.tab', function (e) {
             var _this = this;
-            if ($("#lottery-category-nav-" + $(_this).data().lotteryCategoryId + " .tab-detail").html().trim().length == 0) {
+            if ($("#lottery-category-nav-" + $(_this).data().lotteryCategoryId + " .tab-detail").html().trim().length === 0) {
                 alert('LOTTERY Category ' + $(_this).data().lotteryCategoryId + ' statistics should be loaded!');
             }
-        })
+        });
     },
     bindLotteryCategoryTimeRangeChange: function () {
         $("#lottery-nav select.time-range[data-lottery-category-id]").on("changed.bs.select",
@@ -219,7 +219,7 @@
                 var _this = this;
                 alert('Time range change - LOTTERY Category ' + $(_this).data().lotteryCategoryId + ' statistics should be reloaded!');
             });
-    },
+    }
 }
 
 $(document).ready(function () {

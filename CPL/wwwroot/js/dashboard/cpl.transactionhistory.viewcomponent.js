@@ -42,9 +42,6 @@ var TransactionHistoryViewComponent = {
                 {
                     "data": "CurrencyInString",
                     "render": function (data, type, full, meta) {
-                        //if (full.currencyInString == "ETH") {
-                        //    return "<div class='badge badge-secondary'><i class='cc ETH-alt'></i> ETH</div>";
-                        //} else
                             if (full.currencyInString == "BTC") {
                             return "<div class='badge badge-secondary'><i class='cc BTC-alt'></i> BTC</div>";
                         }

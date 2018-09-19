@@ -43,18 +43,6 @@
                 </div>
             </div>
         </div>
-        @*@if (Model.SysUser != null)
-        {
-            <div class="row">
-                <div class="col-sm-6 col-12 d-none d-md-block d-lg-block d-xl-block">
-                    @await Component.InvokeAsync("Rate")
-                </div>
-                <div class="col-sm-6 col-12">
-                    @await Component.InvokeAsync("LotteryResult")
-                </div>
-            </div>
-        }*@
-
         <div class="content-body">
             <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AskUsAnything")</h6>
             <div class="card">
