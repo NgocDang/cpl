@@ -58,6 +58,7 @@ namespace CPL.Controllers
         {
 
             var lotteries = _lotteryService.Query()
+                .Include(x => x.LotteryCategory)
                 .Include(x => x.LotteryDetails)
                 .Include(x => x.LotteryHistories)
                 .Select()

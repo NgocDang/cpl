@@ -1,10 +1,8 @@
 ﻿var PurchasedLotteryHistoryViewComponent = {
-    lotteryHistoryDataTable: null,
     init: function () {
-        PurchasedLotteryHistoryViewComponent.loadLotteryHistoryDataTable();
     },
-    loadLotteryHistoryDataTable: function () {
-        return $("#dt-purchased-lottery-history").DataTable({
+    loadLotteryHistoryDataTable: function (parentElement, lotteryCategoryId) {
+        return $(parentElement + " .dt-purchased-lottery-history").DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
@@ -12,7 +10,7 @@
                 url: "/Admin/SearchPurchasedLotteryHistory",
                 type: 'POST',
                 data: {
-                    lotteryCategoryId: $("#lottery-category-Id").val(), // To be assigned later
+                    lotteryCategoryId: lotteryCategoryId
                 }
             },
             "language": DTLang.getLang(),

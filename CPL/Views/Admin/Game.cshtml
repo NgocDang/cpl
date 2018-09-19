@@ -100,7 +100,7 @@
                                 <div class="card-body px-0">
                                     <ul class="nav nav-tabs border-0">
                                         <li class="nav-item">
-                                            <a class="nav-link font-medium-2 font-weight-bold active px-2 border-0" id="lottery-summary-nav-tab" data-toggle="tab" href="#lottery-summary-nav" aria-controls="lottery-category-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
+                                            <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="lottery-summary-nav-tab" data-toggle="tab" href="#lottery-summary-nav" aria-controls="lottery-category-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
                                         </li>
                                         @for (int i = 0; i < Model.LotteryCategories.Count; i++)
                                         {
@@ -110,7 +110,7 @@
                                         }
                                     </ul>
                                     <div class="tab-content mb-1">
-                                        <div role="tabpanel" class="tab-pane active" id="lottery-summary-nav" aria-labelledby="lottery-summary-nav-tab" aria-expanded="true">
+                                        <div role="tabpanel" class="tab-pane" id="lottery-summary-nav" aria-labelledby="lottery-summary-nav-tab" aria-expanded="true">
                                             <div class="card mb-1">
                                                 <div class="card-content">
                                                     <div class="card-body">
@@ -135,6 +135,10 @@
                                                             </div>
                                                         </div>
                                                         <div class="tab-detail"></div>
+                                                        <hr />
+                                                        <div class="purchased-lottery-summary-history">
+                                                            @await Component.InvokeAsync("AdminLotteryHistory")
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -166,12 +170,17 @@
                                                                 </div>
                                                             </div>
                                                             <div class="tab-detail"></div>
+                                                            <hr />
+                                                            <div class="purchased-lottery-category-history">
+                                                                @await Component.InvokeAsync("AdminLotteryHistory")
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         }
                                     </div>
+                                    <hr />
                                     <div class="row">
                                         <div class="card col-lg-4 col-12">
                                             <div class="card-body">
