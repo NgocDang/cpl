@@ -31,7 +31,7 @@
                 PieChart.loadPercentageAjax($("#summary-nav .revenue-chart"), $("#summary-nav .revenue-no-data"), "/Admin/GetSummaryRevenuePieChart/")
             }
 
-            if ($("#summary-nav .device-category-chart").length > 0) {
+            if ($("#summary-nav .device-category-chart").html().trim().length === 0) {
                 PieChart.loadPercentageAjax($("#summary-nav .device-category-chart"), $("#summary-nav .device-category-no-data"), "/Admin/GetSummaryDeviceCategoryPieChart/")
             }
         })

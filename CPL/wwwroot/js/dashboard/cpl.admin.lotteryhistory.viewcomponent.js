@@ -1,7 +1,7 @@
 ﻿var PurchasedLotteryHistoryViewComponent = {
     lotteryHistoryDataTable: null,
     init: function () {
-        PurchasedLotteryHistoryViewComponent.loadLotteryHistoryDataTable()
+        PurchasedLotteryHistoryViewComponent.loadLotteryHistoryDataTable();
     },
     loadLotteryHistoryDataTable: function () {
         return $("#dt-purchased-lottery-history").DataTable({
