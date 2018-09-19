@@ -10,5 +10,6 @@ namespace CPL.NotifyService.Misc
         public const string ServiceDescription = "Notify service to explore block and input TxHashId to BTCTransaction table for BTC deposit operation";
 
         //public const string ETHNotifyCurrentBlockNo = "ETHNotifyCurrentBlockNo";
+        public const string BTCNotifyCurrentBlockNo = "BTCNotifyCurrentBlockNo";
     }
 }
