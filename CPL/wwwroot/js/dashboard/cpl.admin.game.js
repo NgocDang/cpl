@@ -144,12 +144,12 @@
             revenue.data.push([now, val]);
         }
         revenue.data.sort();
-
+        
         var pageViewChanges = JSON.parse(container.find(".page-view-changes").val());
         if (pageViewChanges.length !== 0) {
             $.each(pageViewChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
-                val = value.Count;
+                val = value.Value;
                 pageView.data.push([now, val]);
             });
         }

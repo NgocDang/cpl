@@ -34,14 +34,14 @@
                                     </div>
                                     <div class="col-lg-9 col-md-8 col-12">
                                         <div class="row">
-                                            <div class="col-lg-5 col-12 text-center">
+                                            <div class="col-lg-5 col-12 text-center-sm">
                                                 <h6 class="font-weight-bold font-medium-2 text-sm-bigger">@Model.TokenAmount.ToString(CPLConstant.Format.Number) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h6>
                                             </div>
-                                            <div class="col-lg-1 col-12 text-center">
+                                            <div class="col-lg-1 col-12 text-center-sm">
                                                 <h6 class="font-weight-bold font-medium-2 text-sm-bigger">~</h6>
                                             </div>
-                                            <div class="col-lg-5 col-12 text-center">
-                                                <h6 class="font-weight-bold font-medium-2 text-sm-bigger">@Model.BTCAvailable @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
+                                            <div class="col-lg-5 col-12 text-center-sm">
+                                                <h6 class="font-weight-bold font-medium-2 text-sm-bigger">@Model.BTCAvailable.ToString(CPLConstant.Format.Amount) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -95,7 +95,10 @@
                             <div class="row">
                                 <div class="col-lg-3 col-12 text-center pt-1">
                                     <h4 class="text-uppercase font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCName")</h4>
-                                    <p class="mb-0"><span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Available"):</span><span class="text-bold-700 text-uppercase mb-0"> @Model.BTCAvailable.ToString(CPLConstant.Format.Amount) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span></p>
+                                    <p class="mb-0">
+                                        <span class="text-muted">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Available"):</span>
+                                        <span class="text-bold-700 text-uppercase mb-0"> @Model.BTCAvailable.ToString(CPLConstant.Format.Amount) @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCSymbol")</span>
+                                    </p>
                                     <i class="cc BTC warning font-large-5"></i>
                                 </div>
                                 <div class="col-lg-9 col-12">
