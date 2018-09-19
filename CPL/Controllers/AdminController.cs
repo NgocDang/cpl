@@ -381,17 +381,10 @@ namespace CPL.Controllers
                 filteredResultsCount = totalResultsCount = _sysUserService.Queryable()
                         .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
 
-                var introducedUsers = _introducedUsersService.Queryable()
-                                        .Select(x => new {
-                                            x.Id,
-                                            x.TotalDirectIntroducedUsers,
-                                            TotalSale = x.DirectAffiliateSale + x.Tier2AffiliateSale + x.Tier3AffiliateSale
-                                        })
-                                        .ToList();
-
                 var standardAffliate =
                             _sysUserService.Query()
                             .Include(x => x.Affiliate)
+                            .Include(x => x.IntroducedUsers)
                             .Select()
                             .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
                             .Select(x => new StandardAffliateViewModel
@@ -401,10 +394,10 @@ namespace CPL.Controllers
                                 LastName = x.LastName,
                                 Email = x.Email,
                                 IsLocked = x.IsLocked,
-                                TotalIntroducer = introducedUsers.FirstOrDefault(y => y.Id == x.Id).TotalDirectIntroducedUsers,
+                                TotalIntroducer = x.IntroducedUsers.TotalDirectIntroducedUsers,
                                 AffiliateId = x.AffiliateId,
-                                TotalSale = (introducedUsers.FirstOrDefault(y => y.Id == x.Id).TotalSale < 0m) ? 0m : introducedUsers.FirstOrDefault(y => y.Id == x.Id).TotalSale,
-                                TotalSaleInString = (introducedUsers.FirstOrDefault(y => y.Id == x.Id).TotalSale < 0m) ? 0m.ToString(Format.Amount) : introducedUsers.FirstOrDefault(y => y.Id == x.Id).TotalSale.ToString(Format.Amount),
+                                TotalSale = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0),
+                                TotalSaleInString = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0).ToString(Format.Amount),
                                 AffiliateCreatedDate = x.AffiliateCreatedDate,
                                 AffiliateCreatedDateInString = x.AffiliateCreatedDate.GetValueOrDefault().ToString(Format.DateTime),
                                 Tier1DirectRate = x.Affiliate.Tier1DirectRate,
@@ -429,17 +422,10 @@ namespace CPL.Controllers
                 totalResultsCount = _sysUserService.Queryable()
                         .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
 
-                var introducedUsers = _introducedUsersService.Queryable()
-                                       .Select(x => new {
-                                           x.Id,
-                                           x.TotalDirectIntroducedUsers,
-                                           TotalSale = x.DirectAffiliateSale + x.Tier2AffiliateSale + x.Tier3AffiliateSale
-                                       })
-                                       .ToList();
-
                 var standardAffliate =
                             _sysUserService.Query()
                             .Include(x => x.Affiliate)
+                            .Include(x => x.IntroducedUsers)
                             .Select()
                             .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
                             .Select(x => new StandardAffliateViewModel
@@ -449,10 +435,10 @@ namespace CPL.Controllers
                                 LastName = x.LastName,
                                 Email = x.Email,
                                 IsLocked = x.IsLocked,
-                                TotalIntroducer = introducedUsers.FirstOrDefault(y => y.Id == x.Id).TotalDirectIntroducedUsers,
+                                TotalIntroducer = x.IntroducedUsers.TotalDirectIntroducedUsers,
                                 AffiliateId = x.AffiliateId,
-                                TotalSale = (introducedUsers.FirstOrDefault(y => y.Id == x.Id).TotalSale < 0m) ? 0m : introducedUsers.FirstOrDefault(y => y.Id == x.Id).TotalSale,
-                                TotalSaleInString = (introducedUsers.FirstOrDefault(y => y.Id == x.Id).TotalSale < 0m) ? 0m.ToString(Format.Amount) : introducedUsers.FirstOrDefault(y => y.Id == x.Id).TotalSale.ToString(Format.Amount),
+                                TotalSale = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0),
+                                TotalSaleInString = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0).ToString(Format.Amount),
                                 AffiliateCreatedDate = x.AffiliateCreatedDate,
                                 AffiliateCreatedDateInString = x.AffiliateCreatedDate.GetValueOrDefault().ToString(Format.DateTime),
                                 Tier1DirectRate = x.Affiliate.Tier1DirectRate,

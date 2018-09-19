@@ -52,6 +52,6 @@ namespace CPL.Domain
         public virtual Agency Agency { get; set; }
         public virtual Affiliate Affiliate { get; set; }
         public virtual SysUser IsIntroducedByUser { get; set; }
-        
+        public virtual IntroducedUsers IntroducedUsers { get; set; }
     }
 }

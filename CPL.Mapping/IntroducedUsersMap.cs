@@ -26,6 +26,11 @@ namespace CPL.Mapping
             builder.Property(t => t.DirectAffiliateSale).HasColumnName("DirectAffiliateSale");
             builder.Property(t => t.Tier2AffiliateSale).HasColumnName("Tier2AffiliateSale");
             builder.Property(t => t.Tier3AffiliateSale).HasColumnName("Tier3AffiliateSale");
+
+            builder.HasOne(x => x.SysUser)
+                .WithOne(x => x.IntroducedUsers)
+                .IsRequired(true)
+                .HasForeignKey<SysUser>(x => x.Id);
         }
     }
 }
