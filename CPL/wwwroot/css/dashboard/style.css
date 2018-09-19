@@ -1824,3 +1824,7 @@ button#btn-dropdown-item:focus {
     padding-left: 0.1rem !important;
     padding-right: 0.1rem !important;
 }
+
+.highcharts-credits {
+    display:none;
+}

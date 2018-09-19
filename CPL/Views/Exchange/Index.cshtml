@@ -31,24 +31,8 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-6 col-12" id="rate-component">
-                @await Component.InvokeAsync("Rate")
-            </div>
-            <div class="col-sm-6 col-12">
-                @await Component.InvokeAsync("LotteryResult")
-            </div>
-        </div>
-
         <input type="hidden" value="@Model.BTCToTokenrate" class="btc-token-rate" />
         <input type="hidden" value="@Model.ETHToBTCRate" class="eth-btc-rate" />
-
-        <div class="content-detached">
-            <div class="content-body">
-                @await Component.InvokeAsync("TokenCalculator")
-                @await Component.InvokeAsync("Exchange")
-            </div>
-        </div>
     </div>
 </div>
 
@@ -58,6 +42,4 @@
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
-    <script src="~/js/dashboard/cpl.exchange.viewcomponent.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.tokencalculator.viewcomponent.js" asp-append-version="true"></script>
 }

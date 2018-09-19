@@ -1,271 +1,225 @@
 ﻿var AdminGameManagement = {
     init: function () {
-        AdminGameManagement.loadStatisticChart();
-        AdminGameManagement.bindSelectTimeRange();
-        AdminGameManagement.loadSummaryRevenuePercentage();
-        AdminGameManagement.loadSummaryDeviceCategoryPercentage();
+        // Summary Tab
+        AdminGameManagement.bindSummaryTab();
+        AdminGameManagement.bindSummaryTimeRangeChange();
+
+        // Lottery Tab
+        AdminGameManagement.bindLotteryTab();
+
+        // Lottery Tab - Lottery Summary Tab
+        AdminGameManagement.bindLotterySummaryTab();
+        AdminGameManagement.bindLotterySummaryTimeRangeChange();
+
+        // Lottery Tab - Lottery Category Tab
+        AdminGameManagement.bindLotteryCategoryTabs();
+        AdminGameManagement.bindLotteryCategoryTimeRangeChange();
+
+        // Show tab base on URL tab parameter
+        var tab = $("#tab").val();
+        if (tab === "") 
+            tab = "summary";
+        $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
     },
-    bindSelectTimeRange: function () {
-        $("#Category").on("changed.bs.select",
+    bindSummaryTab: function () {
+        $('a#summary-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#summary-nav .tab-detail").html().trim().length === 0) {
+                AdminGameManagement.loadSummaryStatistics();
+            }
+
+            if ($("#summary-nav .revenue-chart").html().trim().length === 0) {
+                PieChart.loadPercentageAjax($("#summary-nav .revenue-chart"), $("#summary-nav .revenue-no-data"), "/Admin/GetSummaryRevenuePieChart/")
+            }
+
+            if ($("#summary-nav .device-category-chart").length > 0) {
+                PieChart.loadPercentageAjax($("#summary-nav .device-category-chart"), $("#summary-nav .device-category-no-data"), "/Admin/GetSummaryDeviceCategoryPieChart/")
+            }
+        })
+    },
+    loadSummaryStatistics: function () {
+        $.ajax({
+            url: "/Admin/GetSummaryStatistics/",
+            type: "GET",
+            beforeSend: function () {
+                $("#summary-nav .tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+            },
+            data: {
+                periodInDay: $("#summary-nav select.time-range").val()
+            },
+            success: function (data) {
+                $("#summary-nav .tab-detail").html(data);
+                AdminGameManagement.loadSummaryStatisticsChart($("#summary-nav"))
+            },
+        });
+    },
+    bindSummaryTimeRangeChange: function () {
+        $("#summary-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
-                $("#GameSummaryStatistic").load("/ViewComponent/GetGameSummaryStatisticViewComponent?periodInDay=" + this.value);
-                AdminGameManagement.loadStatisticChart(this.value);
+                AdminGameManagement.loadSummaryStatistics();
             });
     },
-    loadStatisticChart: function (period) {
-        $.ajax({
-            url: '/Admin/GetDataGameSummaryStatisticChart',
-            type: "POST",
-            data: {
-                periodInDay: period
+    loadSummaryStatisticsChart: function (container) {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        Highcharts.setOptions({
+            lang: DTLang.getHighChartLang()
+        });
+        options = {
+            chart: {
+                type: 'spline'
             },
-            chartData: {},
-            success: function (chartData) {
-                if (chartData.success) {
-                    var a = chartData.message;
+            title: {
+                text: null
+            },
+            subtitle: {
+                text: null
+            },
+            exporting: {
+                enabled: false
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    month: '%e. %b',
+                    year: '%b'
+                },
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+            },
+            tooltip: {
+                headerFormat: '<b>{series.name}</b><br>',
+                pointFormat: '{point.x:%e. %b}: {point.y}'
+            },
 
-                    Highcharts.setOptions({
-                        global: {
-                            useUTC: false
-                        }
-                    });
-                    Highcharts.setOptions({
-                        lang: DTLang.getHighChartLang()
-                    });
-                    options = {
-                        chart: {
-                            type: 'spline'
-                        },
-                        title: {
-                            text: null
-                        },
-                        subtitle: {
-                            text: null
-                        },
-                        exporting: {
-                            enabled: false
-                        },
-                        xAxis: {
-                            type: 'datetime',
-                            dateTimeLabelFormats: { // don't display the dummy year
-                                month: '%e. %b',
-                                year: '%b'
-                            },
-                        },
-                        yAxis: {
-                            title: {
-                                text: ''
-                            },
-                        },
-                        tooltip: {
-                            headerFormat: '<b>{series.name}</b><br>',
-                            pointFormat: '{point.x:%e. %b}: {point.y}'
-                        },
-
-                        plotOptions: {
-                            spline: {
-                                marker: {
-                                    enabled: true
-                                }
-                            }
-                        },
-
-                        series: []
-
-                    };
-
-                    var revenue = { data: [], name: $("#TotalRevenue").val(), color: '#4267b2' };
-                    var sale = { data: [], name: $("#TotalSale").val(), color: '#f7931a' };
-                    var pageView = { data: [], name: $("#PageView").val(), color: '#828384' };
-                    var totalPlayers = { data: [], name: $("#TotalPlayers").val(), color: '#F69BF9' };
-
-                    if (JSON.parse(a).TotalSaleChanges.length != 0) {
-                        $.each(JSON.parse(a).TotalSaleChanges, function (index, value) {
-                            now = moment(value.Date).valueOf();
-                            val = value.Value;
-                            sale.data.push([now, val]);
-                        });
+            plotOptions: {
+                spline: {
+                    marker: {
+                        enabled: true
                     }
-                    else {
-                        now = moment().valueOf();
-                        val = 0;
-                        sale.data.push([now, val]);
-                    }
-                    sale.data.sort();
-
-                    if (JSON.parse(a).TotalRevenueChanges.length != 0) {
-                        $.each(JSON.parse(a).TotalRevenueChanges, function (index, value) {
-                            now = moment(value.Date).valueOf();
-                            val = value.Value;
-                            revenue.data.push([now, val]);
-                        });
-                    }
-                    else {
-                        now = moment().valueOf();
-                        val = 0;
-                        revenue.data.push([now, val]);
-                    }
-                    revenue.data.sort();
-
-                    if (JSON.parse(a).PageViewChanges.length != 0) {
-                        $.each(JSON.parse(a).PageViewChanges, function (index, value) {
-                            now = moment(value.Date).valueOf();
-                            val = value.Count;
-                            pageView.data.push([now, val]);
-                        });
-                    }
-                    else {
-                        now = moment().valueOf();
-                        val = 0;
-                        pageView.data.push([now, val]);
-                    }
-                    pageView.data.sort();
-
-                    if (JSON.parse(a).TotalPlayersChanges.length != 0) {
-                        $.each(JSON.parse(a).TotalPlayersChanges, function (index, value) {
-                            now = moment(value.Date).valueOf();
-                            val = value.Value;
-                            totalPlayers.data.push([now, val]);
-                        });
-                    }
-                    else {
-                        now = moment().valueOf();
-                        val = 0;
-                        totalPlayers.data.push([now, val]);
-                    }
-                    totalPlayers.data.sort();
-
-                    // Push the completed series
-                    options.series.push(revenue, sale, pageView, totalPlayers);
-
-                    // Create the plot
-                    new Highcharts.Chart("statistic-chart", options);
                 }
+            },
+
+            series: []
+
+        };
+
+        var revenue = { data: [], name: container.find(".total-revenue").val(), color: '#4267b2' };
+        var sale = { data: [], name: container.find(".total-sale").val(), color: '#f7931a' };
+        var pageView = { data: [], name: container.find(".page-view").val(), color: '#828384' };
+        var totalPlayers = { data: [], name: container.find(".total-players").val(), color: '#F69BF9' };
+
+        var totalSaleChanges = JSON.parse(container.find(".total-sale-changes").val());
+        if (totalSaleChanges.length !== 0) {
+            $.each(totalSaleChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                sale.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            sale.data.push([now, val]);
+        }
+        sale.data.sort();
+
+        var totalRevenueChanges = JSON.parse(container.find(".total-revenue-changes").val());
+        if (totalRevenueChanges.length !== 0) {
+            $.each(totalRevenueChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                revenue.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            revenue.data.push([now, val]);
+        }
+        revenue.data.sort();
+
+        var pageViewChanges = JSON.parse(container.find(".page-view-changes").val());
+        if (pageViewChanges.length !== 0) {
+            $.each(pageViewChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Count;
+                pageView.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            pageView.data.push([now, val]);
+        }
+        pageView.data.sort();
+
+        var totalPlayersChanges = JSON.parse(container.find(".total-players-changes").val());
+        if (totalPlayersChanges.length != 0) {
+            $.each(totalPlayersChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                totalPlayers.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            totalPlayers.data.push([now, val]);
+        }
+        totalPlayers.data.sort();
+
+        // Push the completed series
+        options.series.push(revenue, sale, pageView, totalPlayers);
+
+        // Create the plot
+        container.find(".statistic-chart").highcharts(options);
+    },
+    bindLotteryTab: function () {
+        $('a#lottery-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#lottery-nav .revenue-chart").html().trim().length === 0) {
+                alert('LOTTERY Revenue chart should be loaded!');
+            }
+
+            if ($("#lottery-nav .device-category-chart").html().trim().length === 0) {
+                alert('LOTTERY Device category chart should be loaded!');
             }
         });
     },
-    loadSummaryRevenuePercentage: function () {
-        $.ajax({
-            url: '/Admin/GetSummaryRevenuePercentagePieChart',
-            type: "POST",
-            data: {},
-            success: function (data) {
-                if (data.success && (data.revenueLotteryGame > 0 || data.revenuePricePredictionGame > 0)) {
-                    Highcharts.chart('sumary-revenue-chart', {
-                        chart: {
-                            plotBackgroundColor: null,
-                            plotBorderWidth: null,
-                            plotShadow: false,
-                            type: 'pie'
-                        },
-                        title: {
-                            text: null
-                        },
-                        tooltip: {
-                            pointFormat: '{series.name}: <b>{point.y:.1f} CPL</b>'
-                        },
-                        exporting: {
-                            enabled: false
-                        },
-                        plotOptions: {
-                            pie: {
-                                allowPointSelect: false,
-                                cursor: 'pointer',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '<b>{point.percentage:.1f} </b> %',
-                                    distance: -50,
-                                },
-                                showInLegend: true
-                            }
-                        },
-                        series: [{
-                            name: $("#revenue").val(),
-                            colorByPoint: true,
-                            data: [{
-                                name: $("#lottery").val(),
-                                y: data.revenueLotteryGame,
-                                sliced: false,
-                                selected: false,
-                                color: '#ff0000'
-                            }, {
-                                name: $("#priceprediction").val(),
-                                y: data.revenuePricePredictionGame,
-                                color: '#0092cd'
-                            }]
-                        }]
-                    });
-                }
-                else {
-                    $("#sumary-revenue-chart").addClass("d-none");
-                    $("#sumary-revenue-no-data").removeClass("d-none");
-                }
+    bindLotterySummaryTab: function () {
+        $('a#lottery-summary-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#lottery-summary-nav .tab-detail").html().trim().length === 0) {
+                alert('LOTTERY Summary statistics should be loaded!');
             }
         });
     },
-    loadSummaryDeviceCategoryPercentage: function () {
-        $.ajax({
-            url: '/Admin/GetSummaryDeviceCategoryPercentagePieChart',
-            type: "POST",
-            data: {},
-            success: function (data) {
-                if (data.success && (data.desktop > 0 || data.mobile > 0 || data.table > 0)) {
-                    Highcharts.chart('device-category-chart', {
-                        chart: {
-                            plotBackgroundColor: null,
-                            plotBorderWidth: null,
-                            plotShadow: false,
-                            type: 'pie'
-                        },
-                        title: {
-                            text: null
-                        },
-                        tooltip: {
-                            pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
-                        },
-                        exporting: {
-                            enabled: false
-                        },
-                        plotOptions: {
-                            pie: {
-                                allowPointSelect: false,
-                                cursor: 'pointer',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '<b>{point.percentage:.1f} %',
-                                    distance: -50,
-                                },
-                                showInLegend: true
-                            }
-                        },
-                        series: [{
-                            name: $("#device").val(),
-                            colorByPoint: true,
-                            data: [{
-                                name: $("#desktop").val(),
-                                y: data.desktop,
-                                sliced: false,
-                                selected: false,
-                                color: '#4267b2'
-                            }, {
-                                name: $("#mobile").val(),
-                                y: data.mobile,
-                                color: '#f7931a'
-                            }, {
-                                name: $("#tablet").val(),
-                                y: data.tablet,
-                                color: '#828384'
-                            }]
-                        }]
-                    });
-                }
-                else {
-                    $("#device-category-chart").addClass("d-none");
-                    $("#device-category-no-data").removeClass("d-none");
-                }
+    bindLotterySummaryTimeRangeChange: function () {
+        $("#lottery-summary-nav select.time-range").on("changed.bs.select",
+            function (e, clickedIndex, newValue, oldValue) {
+                alert('Time range change - LOTTERY Summary statistics should be reloaded!');
+            });
+    },
+    bindLotteryCategoryTabs: function () {
+        $('a.lottery-category-nav-tab').on('show.bs.tab', function (e) {
+            var _this = this;
+            if ($("#lottery-category-nav-" + $(_this).data().lotteryCategoryId + " .tab-detail").html().trim().length === 0) {
+                alert('LOTTERY Category ' + $(_this).data().lotteryCategoryId + ' statistics should be loaded!');
             }
         });
     },
+    bindLotteryCategoryTimeRangeChange: function () {
+        $("#lottery-nav select.time-range[data-lottery-category-id]").on("changed.bs.select",
+            function (e, clickedIndex, newValue, oldValue) {
+                var _this = this;
+                alert('Time range change - LOTTERY Category ' + $(_this).data().lotteryCategoryId + ' statistics should be reloaded!');
+            });
+    }
 }
 
 $(document).ready(function () {

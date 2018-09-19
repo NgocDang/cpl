@@ -46,139 +46,139 @@ namespace CPL.Controllers
             this._coinTransactionService = coinTransactionService;
         }
 
-        [Permission(EnumRole.User)]
-        public IActionResult Index()
-        {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
-            var viewModel = Mapper.Map<ExchangeViewModel>(user);
-            viewModel.ETHToBTCRate = CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value;
-            viewModel.BTCToTokenrate = decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
-            return View(viewModel);
-        }
+        //[Permission(EnumRole.User)]
+        //public IActionResult Index()
+        //{
+        //    var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+        //    var viewModel = Mapper.Map<ExchangeViewModel>(user);
+        //    viewModel.ETHToBTCRate = CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value;
+        //    viewModel.BTCToTokenrate = decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
+        //    return View(viewModel);
+        //}
 
-        [Permission(EnumRole.User)]
-        public IActionResult GetConfirm(ConfirmExchangeViewModel viewModel)
-        {
-            return PartialView("_Confirm", viewModel);
-        }
+        //[Permission(EnumRole.User)]
+        //public IActionResult GetConfirm(ConfirmExchangeViewModel viewModel)
+        //{
+        //    return PartialView("_Confirm", viewModel);
+        //}
 
-        [HttpPost]
-        [Permission(EnumRole.User)]
-        public IActionResult Confirm(ConfirmExchangeViewModel viewModel)
-        {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
-            var btcToTokenRate = float.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
-            var rate = CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value;
-            if (user != null)
-            {
-                if (viewModel.FromCurrency == EnumCurrency.BTC.ToString() && viewModel.FromAmount <= user.BTCAmount)
-                {
-                    user.BTCAmount -= viewModel.FromAmount;
-                    var tokenAmount = viewModel.FromAmount * (decimal)btcToTokenRate;
-                    user.TokenAmount += tokenAmount;
+        //[HttpPost]
+        //[Permission(EnumRole.User)]
+        //public IActionResult Confirm(ConfirmExchangeViewModel viewModel)
+        //{
+        //    var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
+        //    var btcToTokenRate = float.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
+        //    var rate = CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value;
+        //    if (user != null)
+        //    {
+        //        if (viewModel.FromCurrency == EnumCurrency.BTC.ToString() && viewModel.FromAmount <= user.BTCAmount)
+        //        {
+        //            user.BTCAmount -= viewModel.FromAmount;
+        //            var tokenAmount = viewModel.FromAmount * (decimal)btcToTokenRate;
+        //            user.TokenAmount += tokenAmount;
 
-                    _coinTransactionService.Insert(new CoinTransaction()
-                    {
-                        SysUserId = user.Id,
-                        CoinAmount = viewModel.FromAmount,
-                        CreatedDate = DateTime.Now,
-                        CurrencyId = (int)EnumCurrency.BTC,
-                        TokenAmount = tokenAmount,
-                        Rate = btcToTokenRate,
-                        Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
-                        Type = (int)EnumCoinTransactionType.EXCHANGE_BTC_TO_CPL
-                    });
+        //            _coinTransactionService.Insert(new CoinTransaction()
+        //            {
+        //                SysUserId = user.Id,
+        //                CoinAmount = viewModel.FromAmount,
+        //                CreatedDate = DateTime.Now,
+        //                CurrencyId = (int)EnumCurrency.BTC,
+        //                TokenAmount = tokenAmount,
+        //                Rate = btcToTokenRate,
+        //                Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
+        //                Type = (int)EnumCoinTransactionType.EXCHANGE_BTC_TO_CPL
+        //            });
 
-                    _sysUserService.Update(user);
-                    _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true,
-                        message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
-                        token = user.TokenAmount.ToString("N0")
-                    });
-                }
-                else if (viewModel.FromCurrency == EnumCurrency.ETH.ToString() && viewModel.FromAmount <= user.ETHAmount)
-                {
-                    user.ETHAmount -= viewModel.FromAmount;
-                    var tokenAmount = viewModel.FromAmount * CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value * (decimal)btcToTokenRate;
-                    user.TokenAmount += tokenAmount;
+        //            _sysUserService.Update(user);
+        //            _unitOfWork.SaveChanges();
+        //            return new JsonResult(new { success = true,
+        //                message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
+        //                token = user.TokenAmount.ToString("N0")
+        //            });
+        //        }
+        //        else if (viewModel.FromCurrency == EnumCurrency.ETH.ToString() && viewModel.FromAmount <= user.ETHAmount)
+        //        {
+        //            user.ETHAmount -= viewModel.FromAmount;
+        //            var tokenAmount = viewModel.FromAmount * CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value * (decimal)btcToTokenRate;
+        //            user.TokenAmount += tokenAmount;
 
-                    _coinTransactionService.Insert(new CoinTransaction()
-                    {
-                        SysUserId = user.Id,
-                        CoinAmount = viewModel.FromAmount,
-                        CreatedDate = DateTime.Now,
-                        CurrencyId = (int)EnumCurrency.ETH,
-                        TokenAmount = tokenAmount,
-                        Rate = btcToTokenRate * (float)rate,
-                        Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
-                        Type = (int)EnumCoinTransactionType.EXCHANGE_ETH_TO_CPL
-                    });
+        //            _coinTransactionService.Insert(new CoinTransaction()
+        //            {
+        //                SysUserId = user.Id,
+        //                CoinAmount = viewModel.FromAmount,
+        //                CreatedDate = DateTime.Now,
+        //                CurrencyId = (int)EnumCurrency.ETH,
+        //                TokenAmount = tokenAmount,
+        //                Rate = btcToTokenRate * (float)rate,
+        //                Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
+        //                Type = (int)EnumCoinTransactionType.EXCHANGE_ETH_TO_CPL
+        //            });
 
-                    _sysUserService.Update(user);
-                    _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true,
-                        message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
-                        token = user.TokenAmount.ToString("N0")
-                    });
-                }
-                else if (viewModel.FromCurrency == EnumCurrency.CPL.ToString() && viewModel.FromAmount <= user.TokenAmount)
-                {
-                    if (viewModel.ToCurrency == EnumCurrency.BTC.ToString())
-                    {
-                        user.TokenAmount -= viewModel.FromAmount;
-                        var currencyAmount = viewModel.FromAmount / (decimal)btcToTokenRate;
-                        user.BTCAmount += currencyAmount;
+        //            _sysUserService.Update(user);
+        //            _unitOfWork.SaveChanges();
+        //            return new JsonResult(new { success = true,
+        //                message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
+        //                token = user.TokenAmount.ToString("N0")
+        //            });
+        //        }
+        //        else if (viewModel.FromCurrency == EnumCurrency.CPL.ToString() && viewModel.FromAmount <= user.TokenAmount)
+        //        {
+        //            if (viewModel.ToCurrency == EnumCurrency.BTC.ToString())
+        //            {
+        //                user.TokenAmount -= viewModel.FromAmount;
+        //                var currencyAmount = viewModel.FromAmount / (decimal)btcToTokenRate;
+        //                user.BTCAmount += currencyAmount;
 
-                        _coinTransactionService.Insert(new CoinTransaction()
-                        {
-                            SysUserId = user.Id,
-                            CoinAmount = currencyAmount,
-                            CreatedDate = DateTime.Now,
-                            CurrencyId = (int)EnumCurrency.BTC,
-                            TokenAmount = viewModel.FromAmount,
-                            Rate = btcToTokenRate,
-                            Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
-                            Type = (int)EnumCoinTransactionType.EXCHANGE_CPL_TO_BTC
-                        });
+        //                _coinTransactionService.Insert(new CoinTransaction()
+        //                {
+        //                    SysUserId = user.Id,
+        //                    CoinAmount = currencyAmount,
+        //                    CreatedDate = DateTime.Now,
+        //                    CurrencyId = (int)EnumCurrency.BTC,
+        //                    TokenAmount = viewModel.FromAmount,
+        //                    Rate = btcToTokenRate,
+        //                    Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
+        //                    Type = (int)EnumCoinTransactionType.EXCHANGE_CPL_TO_BTC
+        //                });
 
-                        _sysUserService.Update(user);
-                        _unitOfWork.SaveChanges();
-                        return new JsonResult(new { success = true,
-                            message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
-                            token = user.TokenAmount.ToString("N0")
-                        });
-                    }
-                    else
-                    {
-                        user.TokenAmount -= viewModel.FromAmount;
-                        var currencyAmount = viewModel.FromAmount / ((decimal)btcToTokenRate * rate);
-                        user.ETHAmount += currencyAmount;
+        //                _sysUserService.Update(user);
+        //                _unitOfWork.SaveChanges();
+        //                return new JsonResult(new { success = true,
+        //                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
+        //                    token = user.TokenAmount.ToString("N0")
+        //                });
+        //            }
+        //            else
+        //            {
+        //                user.TokenAmount -= viewModel.FromAmount;
+        //                var currencyAmount = viewModel.FromAmount / ((decimal)btcToTokenRate * rate);
+        //                user.ETHAmount += currencyAmount;
 
-                        _coinTransactionService.Insert(new CoinTransaction()
-                        {
-                            SysUserId = user.Id,
-                            CoinAmount = currencyAmount,
-                            CreatedDate = DateTime.Now,
-                            CurrencyId = (int)EnumCurrency.ETH,
-                            TokenAmount = viewModel.FromAmount,
-                            Rate = btcToTokenRate * (float)rate,
-                            Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
-                            Type = (int)EnumCoinTransactionType.EXCHANGE_CPL_TO_ETH
-                        });
+        //                _coinTransactionService.Insert(new CoinTransaction()
+        //                {
+        //                    SysUserId = user.Id,
+        //                    CoinAmount = currencyAmount,
+        //                    CreatedDate = DateTime.Now,
+        //                    CurrencyId = (int)EnumCurrency.ETH,
+        //                    TokenAmount = viewModel.FromAmount,
+        //                    Rate = btcToTokenRate * (float)rate,
+        //                    Status = EnumCoinTransactionStatus.SUCCESS.ToBoolean(),
+        //                    Type = (int)EnumCoinTransactionType.EXCHANGE_CPL_TO_ETH
+        //                });
 
-                        _sysUserService.Update(user);
-                        _unitOfWork.SaveChanges();
-                        return new JsonResult(new { success = true,
-                            message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
-                            token = user.TokenAmount.ToString("N0")
-                        });
-                    }
-                }
-                else
-                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
-            }
-            else
-                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
-        }
+        //                _sysUserService.Update(user);
+        //                _unitOfWork.SaveChanges();
+        //                return new JsonResult(new { success = true,
+        //                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExchangedSuccessfully"),
+        //                    token = user.TokenAmount.ToString("N0")
+        //                });
+        //            }
+        //        }
+        //        else
+        //            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
+        //    }
+        //    else
+        //        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        //}
     }
 }
