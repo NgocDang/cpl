@@ -109,3 +109,32 @@ INSERT INTO LangDetail VALUES (2, N'Tablet', N'タブレット');
 
 INSERT INTO LangDetail VALUES (1, N'NoData', N'No Data Available');
 INSERT INTO LangDetail VALUES (2, N'NoData', N'データなし')
+
+-- 20180919-AdminTopAgency---
+
+INSERT INTO LangDetail VALUES (1, N'Pay', N'Pay');
+INSERT INTO LangDetail VALUES (2, N'Pay', N'支払う');
+
+INSERT INTO LangDetail VALUES (1, N'IsTier2TabVisible', N'Is tier2 tab visible');
+INSERT INTO LangDetail VALUES (2, N'IsTier2TabVisible', N'Tier2タブが可視かどうか');
+
+INSERT INTO LangDetail VALUES (1, N'IsTier3TabVisible', N'Is tier3 tab visible');
+INSERT INTO LangDetail VALUES (2, N'IsTier3TabVisible', N'Tier3タブが可視かどうか');
+
+INSERT INTO LangDetail VALUES (1, N'IsAutoPaymentEnable', N'Is auto payment enable');
+INSERT INTO LangDetail VALUES (2, N'IsAutoPaymentEnable', N'自動支払いが有効かどうか');
+
+INSERT INTO LangDetail VALUES (1, N'Payment', N'Payment');
+INSERT INTO LangDetail VALUES (2, N'Payment', N'支払い');
+
+INSERT INTO LangDetail VALUES (1, N'ConfirmPayment', N'Do you want to pay commision ?');
+INSERT INTO LangDetail VALUES (2, N'ConfirmPayment', N'手数料を払いたいですか？');
+
+INSERT INTO LangDetail VALUES (1, N'CommissionAmount', N'Commission amount');
+INSERT INTO LangDetail VALUES (2, N'CommissionAmount', N'手数料額');
+
+INSERT INTO LangDetail VALUES (1, N'PeriodInMonth', N'Period in month');
+INSERT INTO LangDetail VALUES (2, N'PeriodInMonth', N'月の期間');
+
+INSERT INTO LangDetail VALUES (1, N'PaymentSuccessfully', N'Payment successfully !');
+INSERT INTO LangDetail VALUES (2, N'PaymentSuccessfully', N'支払いは正常に完了しました');

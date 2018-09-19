@@ -5,6 +5,7 @@
         TopAgencyAffiliate.bindDoUpdateAgencyAffiliateRate();
         TopAgencyAffiliate.bindDoUpdateTopAgencySetting();
         TopAgencyAffiliate.bindViewPayment();
+        TopAgencyAffiliate.bindDoPayment();
     },
     bindSwitchery: function () {
         $.each($(".checkbox-switch"), function (index, element) {
@@ -98,7 +99,7 @@
                 },
                 success: function (data) {
                     $("#modal").html(data);
-                    $("#view-lottery").modal("show");
+                    $("#view-payment").modal("show");
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
@@ -108,22 +109,25 @@
         });
     },
     bindDoPayment: function () {
-        $("#modal").on("click", "#btn-confirm", function () {
+        $("#modal").on("click", "#btn-confirm-payment", function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/ViewPayment",
-                type: "GET",
+                url: "/Admin/DoPayment",
+                type: "POST",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);
                 },
                 data: {
-                    //id: $("#SysUserId").val();
-                    //id: $("#SysUserId").val();
-                    //id: $("#SysUserId").val();
+                    sysUserId : $("#SysUserId").val()
                 },
                 success: function (data) {
-                    $("#modal").html(data);
-                    $("#view-lottery").modal("show");
+                    if (data.success) {
+                        $("#view-payment").modal("hide");
+                        toastr.success(data.message, "Success!");
+                        $("#btn-payment").attr("disabled", true);
+                    } else {
+                        toastr.error(data.message, "Error!");
+                    }
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);

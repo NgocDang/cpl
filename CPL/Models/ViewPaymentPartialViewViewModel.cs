@@ -8,7 +8,7 @@ namespace CPL.Models
     public class ViewPaymentPartialViewViewModel
     {
         public int SysUserId { get; set; }
-        public decimal CommissionAmount { get; set; }
+        public string CommissionAmount { get; set; }
         public string Period { get; set; }
     }
 }

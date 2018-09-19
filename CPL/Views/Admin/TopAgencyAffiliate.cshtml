@@ -227,7 +227,7 @@
                                         </div>
                                         <div class="card-footer border-top-blue-grey border-top-lighten-5 text-right">
                                             <button class="btn btn-sm btn-primary mr-md-2 mr-1" id="btn-update">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
-                                            <button class="btn btn-sm btn-secondary" id="btn-payment" @(!Model.CanDoPayment ? "disabled" : "")>Pay</button>
+                                            <button class="btn btn-sm btn-secondary" id="btn-payment" @(!Model.CanDoPayment ? "disabled" : "")>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pay")</button>
                                         </div>
                                     </form>
                                 </div>
@@ -242,14 +242,14 @@
                                             <div class="card-body mt-1">
                                                 <div class="row">
                                                     <div class="col-sm-8 col-12 mb-1">
-                                                        <label for="IsTier2TabVisible" class="form-check-label">IsTier2TabVisible &nbsp; </label>
+                                                        <label for="IsTier2TabVisible" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsTier2TabVisible") &nbsp; </label>
                                                         <input id="is-tier2-tab-visible" checked="@Model.TopAgencySetting.IsTier2TabVisible" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier2TabVisible">
                                                         
-                                                        <label for="IsTier3TabVisible" class="form-check-label ml-md-5 mt-md-0 mt-1">IsTier3TabVisible &nbsp; </label>
+                                                        <label for="IsTier3TabVisible" class="form-check-label ml-md-5 mt-md-0 mt-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsTier3TabVisible") &nbsp; </label>
                                                         <input id="is-tier3-tab-visible" checked="@Model.TopAgencySetting.IsTier3TabVisible" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier3TabVisible">
                                                     </div>
                                                     <div class="col-sm-4 col-12 mb-1 text-lg-right">
-                                                        <label for="IsAutoPaymentEnable" class="form-check-label">IsAutoPaymentEnable &nbsp; </label>
+                                                        <label for="IsAutoPaymentEnable" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsAutoPaymentEnable") &nbsp; </label>
                                                         <input id="is-auto-payment-enable" checked="@Model.TopAgencySetting.IsAutoPaymentEnable" type="checkbox" class="form-check-input checkbox-switch" required name="IsAutoPaymentEnable">
                                                     </div>
                                                 </div>

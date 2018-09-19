@@ -710,7 +710,7 @@ namespace CPL.Controllers
             viewModel.Period = payments.Count() > 1 ? $"{payments.FirstOrDefault().CreatedDate.AddMonths(-1).Month.ToString()} ~ {payments.LastOrDefault().CreatedDate.AddMonths(-1).Month.ToString()}"
                                                     : $"{payments.FirstOrDefault()?.CreatedDate.AddMonths(-1).Month.ToString(Format.Amount)}";
 
-            viewModel.CommissionAmount = payments.Sum(x => x.Tier2SaleToTier1Sale * x.Tier1DirectRate / 100 + x.Tier2SaleToTier1Sale * x.Tier2SaleToTier1Rate / 100 + x.Tier3SaleToTier1Sale * x.Tier3SaleToTier1Rate / 100);
+            viewModel.CommissionAmount = payments.Sum(x => x.Tier2SaleToTier1Sale * x.Tier1DirectRate / 100 + x.Tier2SaleToTier1Sale * x.Tier2SaleToTier1Rate / 100 + x.Tier3SaleToTier1Sale * x.Tier3SaleToTier1Rate / 100).ToString(Format.Amount);
 
             return PartialView("_Payment", viewModel);
         }
@@ -729,11 +729,19 @@ namespace CPL.Controllers
                 if (tokenToBePaid > 0)
                 {
                     user.TokenAmount += tokenToBePaid;
+
+                    var payments = _paymentService.Queryable().Where(x => x.SysUserId == sysUserId && !x.UpdatedDate.HasValue);
+                    foreach (var payment in payments)
+                    {
+                        payment.UpdatedDate = DateTime.Now;
+                        _paymentService.Update(payment);
+                    }
                 }
+
                 _sysUserService.Update(user);
                 _unitOfWork.SaveChanges();
 
-                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PaymentSuccessfully") });
             }
             catch (Exception ex)
             {
