@@ -367,6 +367,8 @@ namespace CPL.TransactionService
                 {
                     //Init dependency transaction & dbcontext
                     var resolver = InitializeRepositories();
+                    var btcToTokenRate = decimal.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
+
                     var transactions = new List<CoinTransaction>();
                     do
                     {
@@ -397,7 +399,7 @@ namespace CPL.TransactionService
                                 // update record to sysuser
                                 var user = resolver.SysUserService.Queryable()
                                     .FirstOrDefault(x => x.Id == transaction.SysUserId);
-                                user.BTCAmount += transaction.CoinAmount;
+                                user.TokenAmount += transaction.CoinAmount * btcToTokenRate;
                                 resolver.SysUserService.Update(user);
                             }
                         }
@@ -516,6 +518,7 @@ namespace CPL.TransactionService
             builder.RegisterType<CoinTransactionService>().As<ICoinTransactionService>().InstancePerDependency();
             builder.RegisterType<BTCTransactionService>().As<IBTCTransactionService>().InstancePerDependency();
             builder.RegisterType<ETHTransactionService>().As<IETHTransactionService>().InstancePerDependency();
+            builder.RegisterType<SettingService>().As<ISettingService>().InstancePerDependency();
 
             builder.RegisterType<UnitOfWork>().As<IUnitOfWorkAsync>().InstancePerLifetimeScope();
             builder.RegisterType<CPLContext>().As<IDataContextAsync>().InstancePerLifetimeScope();
@@ -524,6 +527,7 @@ namespace CPL.TransactionService
             builder.RegisterType<Repository<SysUser>>().As<IRepositoryAsync<SysUser>>().InstancePerLifetimeScope();
             builder.RegisterType<Repository<BTCTransaction>>().As<IRepositoryAsync<BTCTransaction>>().InstancePerLifetimeScope();
             builder.RegisterType<Repository<ETHTransaction>>().As<IRepositoryAsync<ETHTransaction>>().InstancePerLifetimeScope();
+            builder.RegisterType<Repository<Setting>>().As<IRepositoryAsync<Setting>>().InstancePerLifetimeScope();
 
             var container = builder.Build();
             return new Resolver(
@@ -532,6 +536,7 @@ namespace CPL.TransactionService
                 container.Resolve<ISysUserService>(),
                 container.Resolve<IBTCTransactionService>(),
                 container.Resolve<IETHTransactionService>(),
+                container.Resolve<ISettingService>(),
                 container.Resolve<ICoinTransactionService>()
                 );
         }
