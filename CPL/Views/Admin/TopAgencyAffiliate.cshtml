@@ -183,42 +183,42 @@
                                                     <div class="col-md-4 col-sm-12">
                                                         <fieldset class="form-group">
                                                             <label for="Tier1DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1")</label>
-                                                            <input type="number" min="0" name="Tier1DirectRate" class="form-control" max="100" id="Tier1DirectRate" value="@Model.AgencyAffiliate.Tier1DirectRate" required>
+                                                            <input type="number" min="0" name="Tier1DirectRate" class="form-control" max="100" id="Tier1DirectRate" value="@Model.AgencyAffiliateRate.Tier1DirectRate" required>
                                                             <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1Required")</div>
                                                         </fieldset>
                                                     </div>
                                                     <div class="col-md-4 col-sm-12">
                                                         <fieldset class="form-group">
                                                             <label for="Tier2DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier2")</label>
-                                                            <input type="number" min="0" name="Tier2DirectRate" class="form-control" max="100" id="Tier2DirectRate" value="@Model.AgencyAffiliate.Tier2DirectRate" required>
+                                                            <input type="number" min="0" name="Tier2DirectRate" class="form-control" max="100" id="Tier2DirectRate" value="@Model.AgencyAffiliateRate.Tier2DirectRate" required>
                                                             <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier2Required")</div>
                                                         </fieldset>
                                                     </div>
                                                     <div class="col-md-4 col-sm-12">
                                                         <fieldset class="form-group">
                                                             <label for="Tier3DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier3")</label>
-                                                            <input type="number" min="0" name="Tier3DirectRate" class="form-control" max="100" id="Tier3DirectRate" value="@Model.AgencyAffiliate.Tier3DirectRate" required>
+                                                            <input type="number" min="0" name="Tier3DirectRate" class="form-control" max="100" id="Tier3DirectRate" value="@Model.AgencyAffiliateRate.Tier3DirectRate" required>
                                                             <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier3Required")</div>
                                                         </fieldset>
                                                     </div>
                                                     <div class="col-md-4 col-sm-12">
                                                         <fieldset class="form-group">
                                                             <label for="Tier2SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1")</label>
-                                                            <input type="number" min="0" name="Tier2SaleToTier1Rate" class="form-control" max="100" id="Tier2SaleToTier1Rate" value="@Model.AgencyAffiliate.Tier2SaleToTier1Rate" required>
+                                                            <input type="number" min="0" name="Tier2SaleToTier1Rate" class="form-control" max="100" id="Tier2SaleToTier1Rate" value="@Model.AgencyAffiliateRate.Tier2SaleToTier1Rate" required>
                                                             <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1Required")</div>
                                                         </fieldset>
                                                     </div>
                                                     <div class="col-md-4 col-sm-12">
                                                         <fieldset class="form-group">
                                                             <label for="Tier3SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1")</label>
-                                                            <input type="number" min="0" name="Tier3SaleToTier1Rate" class="form-control" max="100" id="Tier3SaleToTier1Rate" value="@Model.AgencyAffiliate.Tier3SaleToTier1Rate" required>
+                                                            <input type="number" min="0" name="Tier3SaleToTier1Rate" class="form-control" max="100" id="Tier3SaleToTier1Rate" value="@Model.AgencyAffiliateRate.Tier3SaleToTier1Rate" required>
                                                             <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1Required")</div>
                                                         </fieldset>
                                                     </div>
                                                     <div class="col-md-4 col-sm-12">
                                                         <fieldset class="form-group">
                                                             <label for="Tier3SaleToTier2Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier2")</label>
-                                                            <input type="number" min="0" name="Tier3SaleToTier2Rate" class="form-control" max="100" id="Tier3SaleToTier2Rate" value="@Model.AgencyAffiliate.Tier3SaleToTier2Rate" required>
+                                                            <input type="number" min="0" name="Tier3SaleToTier2Rate" class="form-control" max="100" id="Tier3SaleToTier2Rate" value="@Model.AgencyAffiliateRate.Tier3SaleToTier2Rate" required>
                                                             <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier2Required")</div>
                                                         </fieldset>
                                                     </div>
@@ -227,7 +227,7 @@
                                         </div>
                                         <div class="card-footer border-top-blue-grey border-top-lighten-5 text-right">
                                             <button class="btn btn-sm btn-primary mr-md-2 mr-1" id="btn-update">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
-                                            <button class="btn btn-sm btn-primary" id="btn-payment">Pay</button>
+                                            <button class="btn btn-sm btn-secondary" id="btn-payment" @(!Model.CanDoPayment ? "disabled" : "")>Pay</button>
                                         </div>
                                     </form>
                                 </div>
@@ -241,19 +241,16 @@
                                         <div class="card-content">
                                             <div class="card-body mt-1">
                                                 <div class="row">
-                                                    <div class="col-sm-4 col-12 mb-1 text-lg-right">
+                                                    <div class="col-sm-8 col-12 mb-1">
                                                         <label for="IsTier2TabVisible" class="form-check-label">IsTier2TabVisible &nbsp; </label>
-                                                        <input id="is-tier2-tab-visible" checked="true" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier2TabVisible">
+                                                        <input id="is-tier2-tab-visible" checked="@Model.TopAgencySetting.IsTier2TabVisible" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier2TabVisible">
+                                                        
+                                                        <label for="IsTier3TabVisible" class="form-check-label ml-md-5 mt-md-0 mt-1">IsTier3TabVisible &nbsp; </label>
+                                                        <input id="is-tier3-tab-visible" checked="@Model.TopAgencySetting.IsTier3TabVisible" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier3TabVisible">
                                                     </div>
-
-                                                    <div class="col-sm-4 col-12 mb-1 sm-1">
-                                                        <label for="IsTier3TabVisible" class="form-check-label">IsTier3TabVisible &nbsp; </label>
-                                                        <input id="is-tier3-tab-visible" checked="true" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier3TabVisible">
-                                                    </div>
-
                                                     <div class="col-sm-4 col-12 mb-1 text-lg-right">
                                                         <label for="IsAutoPaymentEnable" class="form-check-label">IsAutoPaymentEnable &nbsp; </label>
-                                                        <input id="is-auto-payment-enable" checked="true" type="checkbox" class="form-check-input checkbox-switch" required name="IsAutoPaymentEnable">
+                                                        <input id="is-auto-payment-enable" checked="@Model.TopAgencySetting.IsAutoPaymentEnable" type="checkbox" class="form-check-input checkbox-switch" required name="IsAutoPaymentEnable">
                                                     </div>
                                                 </div>
                                             </div>
@@ -266,8 +263,8 @@
                 }
             </div>
         </div>
-        @Html.Hidden("AgencyId", Model.AgencyId) @*TODO*@
-        @Html.Hidden("SysUserId", Model.Id) @*TODO*@
+        @Html.Hidden("AgencyId", Model.AgencyId)
+        @Html.Hidden("SysUserId", Model.Id)
         @Html.Hidden("CopiedSuccessfully", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CopiedSuccessfully"))
     </div>
 @section scripts

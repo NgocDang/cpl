@@ -615,7 +615,7 @@ namespace CPL.Controllers
                                             .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
                                             && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date).Count();
 
-            viewModel.AgencyAffiliate = new AgencyAffiliateRateViewModel
+            viewModel.AgencyAffiliateRate = new AgencyAffiliateRateViewModel
             {
                 Tier1DirectRate = user.Agency.Tier1DirectRate,
                 Tier2DirectRate = user.Agency.Tier2DirectRate,
@@ -624,6 +624,15 @@ namespace CPL.Controllers
                 Tier3SaleToTier1Rate = user.Agency.Tier3SaleToTier1Rate,
                 Tier3SaleToTier2Rate = user.Agency.Tier3SaleToTier2Rate
             };
+
+            viewModel.TopAgencySetting = new TopAgencySettingViewModel
+            {
+                IsTier2TabVisible = user.Agency.IsTier2TabVisible,
+                IsTier3TabVisible = user.Agency.IsTier3TabVisible,
+                IsAutoPaymentEnable = user.Agency.IsAutoPaymentEnable,
+            };
+
+            viewModel.CanDoPayment = this.TokenToBePaid(id) > 0 ? true : false;
 
             return View(viewModel);
         }
@@ -694,13 +703,50 @@ namespace CPL.Controllers
         public IActionResult ViewPayment(int sysUserId)
         {
             var payments = _paymentService.Queryable().Where(x => x.SysUserId == sysUserId && !x.UpdatedDate.HasValue);
+            if (payments.Count() == 0)
+                return null;
+
             var viewModel = new ViewPaymentPartialViewViewModel();
             viewModel.Period = payments.Count() > 1 ? $"{payments.FirstOrDefault().CreatedDate.AddMonths(-1).Month.ToString()} ~ {payments.LastOrDefault().CreatedDate.AddMonths(-1).Month.ToString()}"
                                                     : $"{payments.FirstOrDefault()?.CreatedDate.AddMonths(-1).Month.ToString(Format.Amount)}";
-            if (string.IsNullOrWhiteSpace(viewModel.Period))
-                viewModel.Period = "0";
+
             viewModel.CommissionAmount = payments.Sum(x => x.Tier2SaleToTier1Sale * x.Tier1DirectRate / 100 + x.Tier2SaleToTier1Sale * x.Tier2SaleToTier1Rate / 100 + x.Tier3SaleToTier1Sale * x.Tier3SaleToTier1Rate / 100);
+
             return PartialView("_Payment", viewModel);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoPayment(int sysUserId)
+        {
+            try
+            {
+                var user = _sysUserService
+                    .Queryable()
+                    .Where(x => x.Id == sysUserId).FirstOrDefault();
+
+                var tokenToBePaid = this.TokenToBePaid(sysUserId);
+                if (tokenToBePaid > 0)
+                {
+                    user.TokenAmount += tokenToBePaid;
+                }
+                _sysUserService.Update(user);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        private decimal TokenToBePaid(int sysUserId)
+        {
+            var payments = _paymentService.Queryable().Where(x => x.SysUserId == sysUserId && !x.UpdatedDate.HasValue);
+            var tokenToBePaid = payments.Sum(x => x.Tier2SaleToTier1Sale * x.Tier1DirectRate / 100 + x.Tier2SaleToTier1Sale * x.Tier2SaleToTier1Rate / 100 + x.Tier3SaleToTier1Sale * x.Tier3SaleToTier1Rate / 100);
+
+            return tokenToBePaid;
         }
 
         #endregion

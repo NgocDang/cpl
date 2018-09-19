@@ -7,6 +7,9 @@ namespace CPL.Models
 {
     public class TopAgencyViewModel : ProfileAffiliateViewModel
     {
-        public AgencyAffiliateRateViewModel AgencyAffiliate { get; set; }
+        public bool CanDoPayment { get; set; }
+
+        public AgencyAffiliateRateViewModel AgencyAffiliateRate { get; set; }
+        public TopAgencySettingViewModel TopAgencySetting { get; set; }
     }
 }
