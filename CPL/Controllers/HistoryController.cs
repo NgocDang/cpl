@@ -116,7 +116,7 @@ namespace CPL.Controllers
                                                   LotteryStartDateInString = x.Lottery.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss"),
                                                   LotteryPhase = x.Lottery.Phase,
                                                   LotteryPhaseInString = x.Lottery.Phase.ToString("D3"),
-                                                  Result = x.Result == EnumGameResult.WIN.ToString() ? "Win" : (x.Result == EnumGameResult.LOSE.ToString() ? "Lose" : (x.Result == EnumGameResult.KYC_PENDING.ToString() ? "KYC Pending" : string.Empty)),
+                                                  Result = x.Result,
                                                   Award = x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0,
                                                   AwardInString = x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value.ToString("#,##0.##") : 0.ToString("#,##0.##"),
                                                   TicketNumber = !string.IsNullOrEmpty(x.TicketNumber) ? $"{x.Lottery.Phase.ToString("D3")}{CPLConstant.ProjectName}{x.TicketNumber}" : string.Empty,
@@ -168,7 +168,7 @@ namespace CPL.Controllers
                                                   LotteryStartDateInString = x.Lottery.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss"),
                                                   LotteryPhase = x.Lottery.Phase,
                                                   LotteryPhaseInString = x.Lottery.Phase.ToString("D3"),
-                                                  Result = x.Result == EnumGameResult.WIN.ToString() ? "Win" : (x.Result == EnumGameResult.LOSE.ToString() ? "Lose" : (x.Result == EnumGameResult.KYC_PENDING.ToString() ? "KYC Pending" : string.Empty)),
+                                                  Result = x.Result,
                                                   Award = x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0,
                                                   AwardInString = x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value.ToString("#,##0.##") : 0.ToString("#,##0.##"),
                                                   TicketNumber = !string.IsNullOrEmpty(x.TicketNumber) ? $"{x.Lottery.Phase.ToString("D3")}{CPLConstant.ProjectName}{x.TicketNumber}" : string.Empty,
@@ -613,7 +613,7 @@ namespace CPL.Controllers
                                               BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
                                               Amount = x.Amount,
                                               AmountInString = $"{x.Amount.ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
-                                              Result = x.Result == EnumGameResult.WIN.ToString() ? "Win" : (x.Result == EnumGameResult.LOSE.ToString() ? "Lose" : (x.Result == EnumGameResult.KYC_PENDING.ToString() ? "KYC Pending" : string.Empty)),
+                                              Result = x.Result,
                                           });
 
             if (string.IsNullOrEmpty(searchBy))
@@ -642,35 +642,35 @@ namespace CPL.Controllers
 
         #endregion
 
-        [HttpPost]
-        [Permission(EnumRole.User)]
-        public IActionResult GetDataPieChart()
-        {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
-            var viewModel = Mapper.Map<GameHistoryViewModel>(user);
-            decimal coinRate = CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value;
-            var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value;
-            viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
+        //[HttpPost]
+        //[Permission(EnumRole.User)]
+        //public IActionResult GetDataPieChart()
+        //{
+        //    var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
+        //    var viewModel = Mapper.Map<GameHistoryViewModel>(user);
+        //    decimal coinRate = CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value;
+        //    var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value;
+        //    viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
 
-            // Holding Percentage
-            viewModel.HoldingPercentage = new HoldingPercentageViewModel();
+        //    // Holding Percentage
+        //    viewModel.HoldingPercentage = new HoldingPercentageViewModel();
 
-            if (user.TokenAmount > 0)
-            {
-                viewModel.HoldingPercentage.CPLPercentage = user.TokenAmount / decimal.Parse(tokenRate) / viewModel.TotalBalance * 100;
-            }
-            if (user.TokenAmount > 0)
-            {
-                viewModel.HoldingPercentage.ETHPercentage = user.ETHAmount * coinRate / viewModel.TotalBalance * 100;
-            }
-            if (user.BTCAmount > 0)
-            {
-                viewModel.HoldingPercentage.BTCPercentage = user.BTCAmount / viewModel.TotalBalance * 100;
-            }
+        //    if (user.TokenAmount > 0)
+        //    {
+        //        viewModel.HoldingPercentage.CPLPercentage = user.TokenAmount / decimal.Parse(tokenRate) / viewModel.TotalBalance * 100;
+        //    }
+        //    if (user.TokenAmount > 0)
+        //    {
+        //        viewModel.HoldingPercentage.ETHPercentage = user.ETHAmount * coinRate / viewModel.TotalBalance * 100;
+        //    }
+        //    if (user.BTCAmount > 0)
+        //    {
+        //        viewModel.HoldingPercentage.BTCPercentage = user.BTCAmount / viewModel.TotalBalance * 100;
+        //    }
 
-            var mess = JsonConvert.SerializeObject(viewModel.HoldingPercentage, Formatting.Indented);
-            return new JsonResult(new { success = true, message = mess });
-        }
+        //    var mess = JsonConvert.SerializeObject(viewModel.HoldingPercentage, Formatting.Indented);
+        //    return new JsonResult(new { success = true, message = mess });
+        //}
 
         [HttpPost]
         [Permission(EnumRole.User)]
