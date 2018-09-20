@@ -526,21 +526,20 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult DoUpdateStandardAffiliateRates(string data)
+        public IActionResult DoUpdateStandardAffiliateRates(StandardAffliateDataModel viewModel)
         {
             try
             {
-                var _data = JsonConvert.DeserializeObject<StandardAffliateDataModel>(data);
-                foreach (var id in _data.Ids)
+                foreach (var id in viewModel.Ids)
                 {
                     var standardAffiliate = _affiliateService.Queryable().FirstOrDefault(x => x.Id == id);
 
-                    if (_data.Tier1DirectRate != null)
-                        standardAffiliate.Tier1DirectRate = _data.Tier1DirectRate.Value;
-                    if (_data.Tier2SaleToTier1Rate != null)
-                        standardAffiliate.Tier2SaleToTier1Rate = _data.Tier2SaleToTier1Rate.Value;
-                    if (_data.Tier3SaleToTier1Rate != null)
-                        standardAffiliate.Tier3SaleToTier1Rate = _data.Tier3SaleToTier1Rate.Value;
+                    if (viewModel.Tier1DirectRate != null)
+                        standardAffiliate.Tier1DirectRate = viewModel.Tier1DirectRate.Value;
+                    if (viewModel.Tier2SaleToTier1Rate != null)
+                        standardAffiliate.Tier2SaleToTier1Rate = viewModel.Tier2SaleToTier1Rate.Value;
+                    if (viewModel.Tier3SaleToTier1Rate != null)
+                        standardAffiliate.Tier3SaleToTier1Rate = viewModel.Tier3SaleToTier1Rate.Value;
 
                     _affiliateService.Update(standardAffiliate);
                 }

@@ -256,7 +256,6 @@
                 _formData.forEach(function (element) {
                     _postData[element['name']] = parseInt(element['value']);
                 });
-                var _data = JSON.stringify(_postData);
                 $.ajax({
                     url: "/Admin/DoUpdateStandardAffiliateRates/",
                     type: "POST",
@@ -265,7 +264,7 @@
                         $(_this).attr("disabled", true);
                         $(_this).html("<i class='fa fa-spinner fa-spin'> </i> " + $(_this).text());
                     },
-                    data: { 'data': _data },
+                    data: { 'viewModel': _postData },
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
