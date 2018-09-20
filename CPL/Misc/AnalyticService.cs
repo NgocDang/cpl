@@ -138,19 +138,28 @@ namespace CPL.Misc
             var response = batchRequest.Execute();
 
             var deviceCategories = new List<DeviceCategoryViewModel>();
-            foreach (var x in response.Reports.First().Data.Rows)
+            if (response.Reports.First().Data.Rows != null)
             {
-                if (x.Dimensions.Count > 0 && x.Metrics.Count > 0)
+                foreach (var x in response.Reports.First().Data.Rows)
                 {
-                    //if (string.Compare(x.Dimensions.First(), EnumDeviceCategory.DESKTOP.ToString(), true) == 0)
-                    deviceCategories.Add(new DeviceCategoryViewModel
+                    if (x.Dimensions.Count > 0 && x.Metrics.Count > 0)
                     {
-                        DeviceCategory = (EnumDeviceCategory)Enum.Parse(typeof(EnumDeviceCategory), x.Dimensions[0], true),
-                        Date = DateTime.ParseExact(x.Dimensions[1], "yyyyMMdd", null),
-                        Count = int.Parse(x.Metrics.First().Values.First())
-                    });
+                        //if (string.Compare(x.Dimensions.First(), EnumDeviceCategory.DESKTOP.ToString(), true) == 0)
+                        deviceCategories.Add(new DeviceCategoryViewModel
+                        {
+                            DeviceCategory = (EnumDeviceCategory)Enum.Parse(typeof(EnumDeviceCategory), x.Dimensions[0], true),
+                            Date = DateTime.ParseExact(x.Dimensions[1], "yyyyMMdd", null),
+                            Count = int.Parse(x.Metrics.First().Values.First())
+                        });
+                    }
                 }
             }
+            else deviceCategories.Add(new DeviceCategoryViewModel
+            {
+                DeviceCategory = EnumDeviceCategory.DESKTOP,
+                Date = DateTime.Now.Date,
+                Count = 0
+            });
 
             return deviceCategories;
         }
