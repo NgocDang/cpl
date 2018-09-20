@@ -1,26 +1,27 @@
-﻿var StandardAffiliate = {
-    standardAffiliateDataTable: null,
+﻿var AllTopAgencyAffiliate = {
+    AllTopAgencyAffiliateDataTable: null,
     init: function () {
-        StandardAffiliate.isCheckAllRow = false;
-        StandardAffiliate.standardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateDataTable();
-        StandardAffiliate.initStandardAffiliateDataTable();
-        StandardAffiliate.bindDoLock();
-        StandardAffiliate.bindDoUpdateRateMultipleRow();
+        AllTopAgencyAffiliate.isCheckAllRow = false;
+        AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable = AllTopAgencyAffiliate.loadAllTopAgencyAffiliateDataTable();
+        AllTopAgencyAffiliate.initAllTopAgencyAffiliateDataTable();
+        AllTopAgencyAffiliate.bindDoLock();
+        AllTopAgencyAffiliate.bindDoUpdateRateMultipleRow();
     },
-    initStandardAffiliateDataTable: function () {
-        StandardAffiliate.standardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
-            StandardAffiliate.loadEditable();
+    initAllTopAgencyAffiliateDataTable: function () {
+        AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+            AllTopAgencyAffiliate.loadEditable();
         });
-        StandardAffiliate.standardAffiliateDataTable.column(0).checkboxes.deselectAll();
+        AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.column(0).checkboxes.deselectAll();
     },
-    loadStandardAffiliateDataTable: function () {
-        return $('#dt-standard-affiliate').DataTable({
+    loadAllTopAgencyAffiliateDataTable: function () {
+        debugger;
+        return $('#dt-all-top-agency-affiliate').DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
             "stateSave": (Utils.getJsonFromUrl().search == null) ? true : false,
             "ajax": {
-                url: "/Admin/SearchStandardAffiliate",
+                url: "/Admin/SearchTopAgencyAffiliate",
                 type: 'POST',
                 data: function (data) {
                     if (data.search.value == "") {
@@ -28,8 +29,8 @@
                     }
                 },
                 complete: function (data) {
-                    StandardAffiliate.loadEditable();
-                    var table = StandardAffiliate.standardAffiliateDataTable;
+                    AllTopAgencyAffiliate.loadEditable();
+                    var table = AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable;
                     table.cells(
                         table.rows(function (idx, data, node) {
                             return data.isLocked === true;
@@ -62,7 +63,7 @@
             "language": DTLang.getLang(),
             "columns": [
                 {
-                    "data": "affiliateId"
+                    "data": "agencyId"
                 },
                 {
                     "data": "FirstName",
@@ -104,9 +105,29 @@
                     "data": "Tier1DirectRate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + ' href="#">' + full.tier1DirectRate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.agencyId + ' href="#">' + full.tier1DirectRate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + '>' + full.tier1DirectRate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.agencyId + '>' + full.tier1DirectRate + '</a>';
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "Tier2DirectRate",
+                    "render": function (data, type, full, meta) {
+                        if (full.isLocked === false)
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier2DirectRate" data-pk=' + full.agencyId + ' href="#">' + full.tier2DirectRate + '</a>';
+                        else
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier2DirectRate" data-pk=' + full.agencyId + '>' + full.tier2DirectRate + '</a>';
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "Tier3DirectRate",
+                    "render": function (data, type, full, meta) {
+                        if (full.isLocked === false)
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier3DirectRate" data-pk=' + full.agencyId + ' href="#">' + full.tier3DirectRate + '</a>';
+                        else
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier3DirectRate" data-pk=' + full.agencyId + '>' + full.tier3DirectRate + '</a>';
                     },
                     "orderable": false
                 },
@@ -114,9 +135,9 @@
                     "data": "Tier2SaleToTier1Rate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier2SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.agencyId + ' href="#">' + full.tier2SaleToTier1Rate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier2SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.agencyId + '>' + full.tier2SaleToTier1Rate + '</a>';
                     },
                     "orderable": false
                 },
@@ -124,9 +145,19 @@
                     "data": "Tier3SaleToTier1Rate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier3SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.agencyId + ' href="#">' + full.tier3SaleToTier1Rate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier3SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.agencyId + '>' + full.tier3SaleToTier1Rate + '</a>';
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "Tier3SaleToTier2Rate",
+                    "render": function (data, type, full, meta) {
+                        if (full.isLocked === false)
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier3SaleToTier2Rate" data-pk=' + full.agencyId + ' href="#">' + full.tier3SaleToTier2Rate + '</a>';
+                        else
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier3SaleToTier2Rate" data-pk=' + full.agencyId + '>' + full.tier3SaleToTier2Rate + '</a>';
                     },
                     "orderable": false
                 },
@@ -135,11 +166,11 @@
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
                             return "<div class='text-lg-center'>" +
-                                "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#lock").val() + "</button> " +
+                                "<button data-id='" + full.id + "'class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#lock").val() + "</button> " +
                                 "</div>";
                         else
                             return "<div class='text-lg-center'>" +
-                                "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#unlock").val() + "</button> " +
+                                "<button data-id='" + full.id + "'class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#unlock").val() + "</button> " +
                                 "</div>";
                     },
                     "orderable": false
@@ -148,9 +179,9 @@
         });
     },
     bindDoLock: function () {
-        $("#dt-standard-affiliate").on("click", ".btn-lock", function () {
+        $("#dt-all-top-agency-affiliate").on("click", ".btn-lock", function () {
             var _this = this;
-            var table = StandardAffiliate.standardAffiliateDataTable;
+            var table = AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable;
             $.ajax({
                 url: "/Admin/DoLockAffiliate/",
                 type: "POST",
@@ -169,7 +200,7 @@
                             $(_this).closest("tr").find("a.editable").addClass("editable-unlocked");
                             $(_this).closest("tr").find("a.editable").attr("href", "#");
                             table.cell(table.row($(_this).closest("tr")).index(), 0).checkboxes.enable();
-                            if (StandardAffiliate.isCheckAllRow)
+                            if (AllTopAgencyAffiliate.isCheckAllRow)
                                 table.cell(table.row($(_this).closest("tr")).index(), 0).checkboxes.select(true);
                         }
                         else {
@@ -200,20 +231,27 @@
         $.fn.editable.defaults.step = '1.00';
         $.fn.editable.defaults.min = '0.00';
         $.fn.editable.defaults.max = '100.00';
-        $("#dt-standard-affiliate tr").each(function (index, element) {
-            StandardAffiliate.loadEditableOnRow(element);
+        $("#dt-all-top-agency-affiliate tr").each(function (index, element) {
+            AllTopAgencyAffiliate.loadEditableOnRow(element);
         });
     },
     loadEditableOnRow: function (element) {
         $(element).find('a.editable').editable({
             url: function (params) {
+                debugger;
                 var requestData = '';
                 if (params.name == 'Tier1DirectRate')
                     requestData = { Id: params.pk, Tier1DirectRate: params.value }
+                else if (params.name == 'Tier2DirectRate')
+                    requestData = { Id: params.pk, Tier2DirectRate: params.value }
+                else if (params.name == 'Tier3DirectRate')
+                    requestData = { Id: params.pk, Tier3DirectRate: params.value }
                 else if (params.name == 'Tier2SaleToTier1Rate')
                     requestData = { Id: params.pk, Tier2SaleToTier1Rate: params.value }
                 else if (params.name == 'Tier3SaleToTier1Rate')
                     requestData = { Id: params.pk, Tier3SaleToTier1Rate: params.value }
+                else if (params.name == 'Tier3SaleToTier2Rate')
+                    requestData = { Id: params.pk, Tier3SaleToTier2Rate: params.value }
                 else
                     return;
                 return $.ajax({
@@ -221,7 +259,7 @@
                     async: true,
                     type: 'POST',
                     data: requestData,
-                    url: 'DoUpdateStandardAffiliateRate',
+                    url: 'DoUpdateAllTopAgencyAffiliateRate',
                     success: function (data) {
                         toastr.success(data.message, 'Success!');
                     },
@@ -234,13 +272,14 @@
         $(element).find('a.editable-locked').editable('toggleDisabled');
     },
     bindDoUpdateRateMultipleRow: function () {
-        $("#form-comission-rate-setting").on("click", ".btn-update", function () {
-            var rows_selected = StandardAffiliate.standardAffiliateDataTable.column(0).checkboxes.selected();
+        $("#form-comission-rate-setting").on("click", "#btn-update", function () {
+            debugger;
+            var rows_selected = AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.column(0).checkboxes.selected();
             var _postData = {};
             if (rows_selected.count() == 0)
                 return false;
             else {
-                if (StandardAffiliate.isCheckAllRow == true) {
+                if (AllTopAgencyAffiliate.isCheckAllRow == true) {
                     _postData["IsCheckedAll"] = true;
                 }
                 _postData["Ids"] = new Array(rows_selected.count());
@@ -256,21 +295,21 @@
                 _formData.forEach(function (element) {
                     _postData[element['name']] = parseInt(element['value']);
                 });
-                var _data = JSON.stringify(_postData);
+                var _data = _postData;
                 $.ajax({
-                    url: "/Admin/DoUpdateStandardAffiliateRates/",
+                    url: "/Admin/DoUpdateAllTopAgencyAffiliateRates/",
                     type: "POST",
                     dataType: 'json',
                     beforeSend: function () {
                         $(_this).attr("disabled", true);
                         $(_this).html("<i class='fa fa-spinner fa-spin'> </i> " + $(_this).text());
                     },
-                    data: { 'data': _data },
+                    data: { 'viewModel': _data },
                     success: function (data) {
                         if (data.success) {
                             toastr.success(data.message, 'Success!');
-                            StandardAffiliate.standardAffiliateDataTable.ajax.reload();
-                            StandardAffiliate.standardAffiliateDataTable.column(0).checkboxes.deselectAll();
+                            AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.ajax.reload();
+                            AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.column(0).checkboxes.deselectAll();
                             $("#form-comission-rate-setting")[0].reset();
                         } else {
                             toastr.error(data.message, 'Error!');
@@ -290,5 +329,5 @@
 };
 
 $(document).ready(function () {
-    StandardAffiliate.init();
+    AllTopAgencyAffiliate.init();
 });

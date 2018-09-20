@@ -21,6 +21,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Controllers
@@ -385,18 +386,21 @@ namespace CPL.Controllers
                 sortDir = model.order[0].dir.ToLower() == "asc";
             }
 
+            Func<SysUser, bool> StandardAffiliateCondition = x => x.AffiliateId.HasValue && x.AffiliateId > 0 &&
+                                                                 (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue));
+
             // search the dbase taking into consideration table sorting and paging
             if (string.IsNullOrEmpty(searchBy))
             {
                 filteredResultsCount = totalResultsCount = _sysUserService.Queryable()
-                        .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
+                        .Count(StandardAffiliateCondition);
 
                 var standardAffliate =
                             _sysUserService.Query()
                             .Include(x => x.Affiliate)
                             .Include(x => x.IntroducedUsers)
                             .Select()
-                            .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
+                            .Where(StandardAffiliateCondition)
                             .Select(x => new StandardAffliateViewModel
                             {
                                 Id = x.Id,
@@ -425,19 +429,18 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
-                        .Count(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
-                        || x.Email.Contains(searchBy));
+                        .Where(StandardAffiliateCondition)
+                        .Count(x => (x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy) || x.Email.Contains(searchBy));
 
                 totalResultsCount = _sysUserService.Queryable()
-                        .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
+                        .Count(StandardAffiliateCondition);
 
                 var standardAffliate =
                             _sysUserService.Query()
                             .Include(x => x.Affiliate)
                             .Include(x => x.IntroducedUsers)
                             .Select()
-                            .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
+                            .Where(StandardAffiliateCondition)
                             .Select(x => new StandardAffliateViewModel
                             {
                                 Id = x.Id,
@@ -468,7 +471,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult DoLockStandardAffiliate(int id)
+        public IActionResult DoLockAffiliate(int id)
         {
             try
             {
@@ -752,6 +755,176 @@ namespace CPL.Controllers
             return tokenToBePaid;
         }
 
+        [Permission(EnumRole.Admin)]
+        public IActionResult AllTopAgencyAffiliate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult SearchTopAgencyAffiliate(DataTableAjaxPostModel viewModel)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchTopAgencyAffiliateFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IList<AllTopAgencyAffiliateViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            Func<SysUser, bool> topAgencyAffiliateCondition = x => x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue;
+
+            var topAgencyAffliates = _sysUserService.Query()
+                                    .Include(x => x.Agency)
+                                    .Include(x => x.IntroducedUsers)
+                                    .Select()
+                                    .Where(topAgencyAffiliateCondition)
+                                    .Select(x => new AllTopAgencyAffiliateViewModel
+                                    {
+                                        Id = x.Id,
+                                        FirstName = x.FirstName,
+                                        LastName = x.LastName,
+                                        Email = x.Email,
+                                        IsLocked = x.IsLocked,
+                                        TotalIntroducer = x.IntroducedUsers.TotalDirectIntroducedUsers,
+                                        AgencyId = x.AgencyId,
+                                        TotalSale = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0),
+                                        TotalSaleInString = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0).ToString(Format.Amount),
+                                        AffiliateCreatedDate = x.AffiliateCreatedDate,
+                                        AffiliateCreatedDateInString = x.AffiliateCreatedDate.GetValueOrDefault().ToString(Format.DateTime),
+                                        Tier1DirectRate = x.Agency.Tier1DirectRate,
+                                        Tier2DirectRate = x.Agency.Tier2DirectRate,
+                                        Tier3DirectRate = x.Agency.Tier3DirectRate,
+                                        Tier2SaleToTier1Rate = x.Agency.Tier2SaleToTier1Rate,
+                                        Tier3SaleToTier1Rate = x.Agency.Tier3SaleToTier1Rate,
+                                        Tier3SaleToTier2Rate = x.Agency.Tier3SaleToTier2Rate,
+                                    })
+                                    .AsQueryable();
+
+            filteredResultsCount = totalResultsCount = _sysUserService.Queryable().Count(topAgencyAffiliateCondition);
+
+            // search the dbase taking into consideration table sorting and paging
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                Expression<Func<AllTopAgencyAffiliateViewModel, bool>> searchAllTopAgencyAffiliateCondition = x => (x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy);
+                Func<SysUser, bool> searchSysUserCondition = x => (x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy);
+
+                filteredResultsCount = _sysUserService.Queryable()
+                        .Where(topAgencyAffiliateCondition)
+                        .Count(searchSysUserCondition);
+
+                topAgencyAffliates = topAgencyAffliates.Where(searchAllTopAgencyAffiliateCondition);
+            }
+
+            return topAgencyAffliates.OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoUpdateAllTopAgencyAffiliateRate(AllTopAgencyAffiliateDataModel dataModel)
+        {
+            try
+            {
+                var user = _sysUserService.Queryable().FirstOrDefault(x => x.AgencyId == dataModel.Id);
+                if (user != null && !user.IsLocked)
+                {
+                    var agencyAffiliate = _agencyService.Queryable().FirstOrDefault(x => x.Id == dataModel.Id);
+
+                    if (dataModel.Tier1DirectRate.HasValue)
+                        agencyAffiliate.Tier1DirectRate = dataModel.Tier1DirectRate.Value;
+
+                    if (dataModel.Tier2DirectRate.HasValue)
+                        agencyAffiliate.Tier2DirectRate = dataModel.Tier2DirectRate.Value;
+
+                    if (dataModel.Tier3DirectRate.HasValue)
+                        agencyAffiliate.Tier3DirectRate = dataModel.Tier3DirectRate.Value;
+
+                    if (dataModel.Tier2SaleToTier1Rate.HasValue)
+                        agencyAffiliate.Tier2SaleToTier1Rate = dataModel.Tier2SaleToTier1Rate.Value;
+
+                    if (dataModel.Tier3SaleToTier1Rate.HasValue)
+                        agencyAffiliate.Tier3SaleToTier1Rate = dataModel.Tier3SaleToTier1Rate.Value;
+
+                    if (dataModel.Tier3SaleToTier2Rate.HasValue)
+                        agencyAffiliate.Tier3SaleToTier2Rate = dataModel.Tier3SaleToTier2Rate.Value;
+
+                    _agencyService.Update(agencyAffiliate);
+                    _unitOfWork.SaveChanges();
+
+                    return new JsonResult(new { success = true, isLocked = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+                }
+                else
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoUpdateAllTopAgencyAffiliateRates(AllTopAgencyAffiliateDataModel viewModel)
+        {
+            try
+            {
+                foreach (var id in viewModel.Ids)
+                {
+                    var agencyAffiliate = _agencyService.Queryable().FirstOrDefault(x => x.Id == id);
+
+                    if (viewModel.Tier1DirectRate.HasValue)
+                        agencyAffiliate.Tier1DirectRate = viewModel.Tier1DirectRate.Value;
+
+                    if (viewModel.Tier2DirectRate.HasValue)
+                        agencyAffiliate.Tier2DirectRate = viewModel.Tier2DirectRate.Value;
+
+                    if (viewModel.Tier3DirectRate.HasValue)
+                        agencyAffiliate.Tier3DirectRate = viewModel.Tier3DirectRate.Value;
+
+                    if (viewModel.Tier2SaleToTier1Rate.HasValue)
+                        agencyAffiliate.Tier2SaleToTier1Rate = viewModel.Tier2SaleToTier1Rate.Value;
+
+                    if (viewModel.Tier3SaleToTier1Rate.HasValue)
+                        agencyAffiliate.Tier3SaleToTier1Rate = viewModel.Tier3SaleToTier1Rate.Value;
+
+                    if (viewModel.Tier3SaleToTier2Rate.HasValue)
+                        agencyAffiliate.Tier3SaleToTier2Rate = viewModel.Tier3SaleToTier2Rate.Value;
+
+                    _agencyService.Update(agencyAffiliate);
+                }
+
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
         #endregion
 
         #region User
@@ -975,7 +1148,6 @@ namespace CPL.Controllers
                                                     .AsQueryable()
                                                     .OrderBy(sortBy, sortDir)
                                                     .ToList();
-
             }
         }
         #endregion
@@ -2335,6 +2507,5 @@ namespace CPL.Controllers
         }
 
         #endregion
-
     }
 }
