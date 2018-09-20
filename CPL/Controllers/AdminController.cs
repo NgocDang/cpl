@@ -17,6 +17,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using static CPL.Common.Enums.CPLConstant;
@@ -45,7 +47,9 @@ namespace CPL.Controllers
         private readonly ILotteryDetailService _lotteryDetailService;
         private readonly IAnalyticService _analyticService;
         private readonly IIntroducedUsersService _introducedUsersService;
-
+        private readonly IAgencyService _agencyService;
+        private readonly IPaymentService _paymentService;
+        private readonly IDataContextAsync _dataContextAsync;
 
         public AdminController(
             ILangService langService,
@@ -67,7 +71,10 @@ namespace CPL.Controllers
             ILotteryCategoryService lotteryCategoryService,
             ILotteryDetailService lotteryDetailService,
             IIntroducedUsersService introducedUsersService,
-            IAgencyTokenService agencyTokenService)
+            IAgencyTokenService agencyTokenService,
+            IAgencyService agencyService,
+            IPaymentService paymentService,
+            IDataContextAsync dataContextAsync)
         {
             this._langService = langService;
             this._mapper = mapper;
@@ -89,6 +96,9 @@ namespace CPL.Controllers
             this._lotteryDetailService = lotteryDetailService;
             this._lotteryCategoryService = lotteryCategoryService;
             this._introducedUsersService = introducedUsersService;
+            this._agencyService = agencyService;
+            this._paymentService = paymentService;
+            this._dataContextAsync = dataContextAsync;
         }
 
         [Permission(EnumRole.Admin)]
@@ -170,14 +180,14 @@ namespace CPL.Controllers
             viewModel.AccountActivationEnable = bool.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value) ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "On") : LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Off");
             viewModel.CookieExpirations = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.CookieExpirations).Value);
 
-            viewModel.StandardAffiliate = new StandardAffiliateRateViewModel
+            viewModel.StandardAffiliateRate = new StandardAffiliateRateViewModel
             {
                 Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier1DirectRate).Value),
                 Tier2SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier2SaleToTier1Rate).Value),
                 Tier3SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier3SaleToTier1Rate).Value)
             };
 
-            viewModel.AgencyAffiliate = new AgencyAffiliateRateViewModel
+            viewModel.AgencyAffiliateRate = new AgencyAffiliateRateViewModel
             {
                 Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier1DirectRate).Value),
                 Tier2DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier2DirectRate).Value),
@@ -542,6 +552,208 @@ namespace CPL.Controllers
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
             }
         }
+
+        
+        [Permission(EnumRole.Admin)]
+        public IActionResult TopAgencyAffiliate(int id)
+        {
+            var user = _sysUserService
+                .Query()
+                .Include(x => x.Agency)
+                .Select()
+                .FirstOrDefault(x => x.Id == id && x.AffiliateId.GetValueOrDefault(0) > 0 && x.AgencyId.HasValue);
+            var viewModel = Mapper.Map<TopAgencyAffiliateViewModel>(user);
+
+            viewModel.IsKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
+
+            // Affiliate url
+            viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
+
+            // Total sale
+            SqlParameter TotalSaleParam = new SqlParameter()
+            {
+                ParameterName = "@TotalSale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter TodaySaleParam = new SqlParameter()
+            {
+                ParameterName = "@TodaySale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter YesterdaySaleParam = new SqlParameter()
+            {
+                ParameterName = "@YesterdaySale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter[] parameters = {
+                new SqlParameter() {
+                    ParameterName = "@SysUserId",
+                    SqlDbType = SqlDbType.Int,
+                    Value = user.Id,
+                    Direction = ParameterDirection.Input
+                },
+                TotalSaleParam, TodaySaleParam, YesterdaySaleParam
+            };
+
+            _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @SysUserId, @TotalSale OUTPUT, @TodaySale OUTPUT, @YesterdaySale OUTPUT", parameters);
+
+            viewModel.TotalSale = Convert.ToInt32((TotalSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TotalSaleToday = Convert.ToInt32((TodaySaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TotalSaleYesterday = Convert.ToInt32((YesterdaySaleParam.Value as int?).GetValueOrDefault(0));
+
+            // Total user register
+            viewModel.TotalIntroducedUser = _sysUserService.Queryable()
+                                           .Count(x => x.IsIntroducedById != null && x.IsIntroducedById == user.Id);
+            viewModel.TotalIntroducedUserToday = _sysUserService.Queryable()
+                                            .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date).Count();
+            viewModel.TotalIntroducedUserYesterday = _sysUserService.Queryable()
+                                            .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date).Count();
+
+            viewModel.AgencyAffiliateRate = new AgencyAffiliateRateViewModel
+            {
+                Tier1DirectRate = user.Agency.Tier1DirectRate,
+                Tier2DirectRate = user.Agency.Tier2DirectRate,
+                Tier3DirectRate = user.Agency.Tier3DirectRate,
+                Tier2SaleToTier1Rate = user.Agency.Tier2SaleToTier1Rate,
+                Tier3SaleToTier1Rate = user.Agency.Tier3SaleToTier1Rate,
+                Tier3SaleToTier2Rate = user.Agency.Tier3SaleToTier2Rate
+            };
+
+            viewModel.AgencyAffiliateSetting = new AgencyAffiliateSettingViewModel
+            {
+                IsTier2TabVisible = user.Agency.IsTier2TabVisible,
+                IsTier3TabVisible = user.Agency.IsTier3TabVisible,
+                IsAutoPaymentEnable = user.Agency.IsAutoPaymentEnable,
+            };
+
+            viewModel.CanDoPayment = this.TokenToBePaid(id) > 0 ? true : false;
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoUpdateAgencyAffiliateRate(AgencyAffiliateRateViewModel viewModel, int? agencyId)
+        {
+            try
+            {
+                var agency = _agencyService
+                    .Queryable()
+                    .Where(x => x.Id == agencyId).FirstOrDefault();
+
+                // Update agency affiliate rate commission
+                agency.Tier1DirectRate = viewModel.Tier1DirectRate;
+                agency.Tier2DirectRate = viewModel.Tier2DirectRate;
+                agency.Tier3DirectRate = viewModel.Tier3DirectRate;
+                agency.Tier2SaleToTier1Rate = viewModel.Tier2SaleToTier1Rate;
+                agency.Tier3SaleToTier1Rate = viewModel.Tier3SaleToTier1Rate;
+                agency.Tier3SaleToTier2Rate = viewModel.Tier3SaleToTier2Rate;
+
+                _agencyService.Update(agency);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoUpdatetopAgencySetting(AgencyAffiliateSettingViewModel viewModel, int? agencyId)
+        {
+            try
+            {
+                var agency = _agencyService
+                    .Queryable()
+                    .Where(x => x.Id == agencyId).FirstOrDefault();
+
+                // Update top agency setting
+                if (viewModel.IsTier2TabVisible.HasValue)
+                {
+                    agency.IsTier2TabVisible = viewModel.IsTier2TabVisible.Value;
+                }
+                if (viewModel.IsTier3TabVisible.HasValue)
+                {
+                    agency.IsTier3TabVisible = viewModel.IsTier3TabVisible.Value;
+                }
+                if (viewModel.IsAutoPaymentEnable.HasValue)
+                {
+                    agency.IsAutoPaymentEnable = viewModel.IsAutoPaymentEnable.Value;
+                }
+
+                _agencyService.Update(agency);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult ConfirmPayment(int sysUserId)
+        {
+            var payments = _paymentService.Queryable().Where(x => x.SysUserId == sysUserId && !x.UpdatedDate.HasValue);
+
+            var viewModel = new ConfirmPaymentPartialViewViewModel();
+            viewModel.Period = payments.Count() > 1 ? $"{payments.FirstOrDefault().CreatedDate.AddMonths(-1).Month.ToString()} ~ {payments.LastOrDefault().CreatedDate.AddMonths(-1).Month.ToString()}"
+                                                    : $"{payments.FirstOrDefault()?.CreatedDate.AddMonths(-1).Month.ToString(Format.Amount)}";
+
+            viewModel.CommissionAmount = payments.Sum(x => x.Tier2SaleToTier1Sale * x.Tier1DirectRate / 100 + x.Tier2SaleToTier1Sale * x.Tier2SaleToTier1Rate / 100 + x.Tier3SaleToTier1Sale * x.Tier3SaleToTier1Rate / 100).ToString(Format.Amount);
+
+            return PartialView("_Payment", viewModel);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoPayment(int sysUserId)
+        {
+            try
+            {
+                var user = _sysUserService
+                    .Queryable()
+                    .Where(x => x.Id == sysUserId).FirstOrDefault();
+
+                var tokenToBePaid = this.TokenToBePaid(sysUserId);
+                if (tokenToBePaid > 0)
+                {
+                    user.TokenAmount += tokenToBePaid;
+
+                    var payments = _paymentService.Queryable().Where(x => x.SysUserId == sysUserId && !x.UpdatedDate.HasValue);
+                    foreach (var payment in payments)
+                    {
+                        payment.UpdatedDate = DateTime.Now;
+                        _paymentService.Update(payment);
+                    }
+                    _sysUserService.Update(user);
+                    _unitOfWork.SaveChanges();
+                }
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PaidSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        private decimal TokenToBePaid(int sysUserId)
+        {
+            var payments = _paymentService.Queryable().Where(x => x.SysUserId == sysUserId && !x.UpdatedDate.HasValue);
+            var tokenToBePaid = payments.Sum(x => x.Tier2SaleToTier1Sale * x.Tier1DirectRate / 100 + x.Tier2SaleToTier1Sale * x.Tier2SaleToTier1Rate / 100 + x.Tier3SaleToTier1Sale * x.Tier3SaleToTier1Rate / 100);
+            return tokenToBePaid;
+        }
+
         #endregion
 
         #region User
@@ -2305,14 +2517,14 @@ namespace CPL.Controllers
             viewModel.IsAccountActivationEnable = bool.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value);
             viewModel.CookieExpirations = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.CookieExpirations).Value);
 
-            viewModel.StandardAffiliate = new StandardAffiliateRateViewModel
+            viewModel.StandardAffiliateRate = new StandardAffiliateRateViewModel
             {
                 Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier1DirectRate).Value),
                 Tier2SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier2SaleToTier1Rate).Value),
                 Tier3SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier3SaleToTier1Rate).Value)
             };
 
-            viewModel.AgencyAffiliate = new AgencyAffiliateRateViewModel
+            viewModel.AgencyAffiliateRate = new AgencyAffiliateRateViewModel
             {
                 Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier1DirectRate).Value),
                 Tier2DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier2DirectRate).Value),
