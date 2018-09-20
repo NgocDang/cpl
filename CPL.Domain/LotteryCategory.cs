@@ -10,6 +10,7 @@ namespace CPL.Domain
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string ViewId { get; set; }
 
         public virtual ICollection<Lottery> Lotteries { get; set; }
     }

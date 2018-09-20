@@ -1,6 +1,8 @@
 ﻿using CPL.Common.Enums;
 using CPL.Misc.Enums;
 using CPL.Models;
+using Google.Apis.Analytics.v3;
+using Google.Apis.Analytics.v3.Data;
 using Google.Apis.AnalyticsReporting.v4;
 using Google.Apis.AnalyticsReporting.v4.Data;
 using Google.Apis.Auth.OAuth2;
@@ -19,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Misc
 {
@@ -27,6 +30,9 @@ namespace CPL.Misc
         IList<PageViewsViewModel> GetPageViews(string viewId, DateTime start, DateTime end);
         IList<BounceRateViewModel> GetBounceRate(string viewId, DateTime start, DateTime end);
         IList<DeviceCategoryViewModel> GetDeviceCategory(string viewId, DateTime start, DateTime end);
+        string CreateView(string viewName);
+        string CreateFilter(string filtername, string filterExpression);
+        void LinkFilterToView(string viewId, string filterId);
     }
 
     public class AnalyticService : IAnalyticService
@@ -34,6 +40,7 @@ namespace CPL.Misc
         private readonly IServiceProvider _serviceProvider;
         private readonly IHostingEnvironment _env;
         private readonly AnalyticsReportingService _reportingService;
+        private readonly AnalyticsService _analyticsService;
 
         public AnalyticService(IHostingEnvironment env,
             IServiceProvider serviceProvider)
@@ -41,13 +48,22 @@ namespace CPL.Misc
             _env = env;
             _serviceProvider = serviceProvider;
 
+
             // Initialize google analytics
-            string[] scopes = { AnalyticsReportingService.Scope.AnalyticsReadonly };
+            string[] reportingServiceScopes = { AnalyticsReportingService.Scope.AnalyticsReadonly };
             _reportingService = new AnalyticsReportingService(
                 new BaseClientService.Initializer
                 {
-                    HttpClientInitializer = GoogleCredential.FromJson(CPLConstant.Analytic.Credential).CreateScoped(scopes)
+                    HttpClientInitializer = GoogleCredential.FromJson(CPLConstant.Analytic.Credential).CreateScoped(reportingServiceScopes)
                 });
+
+            string[] analyticsServiceScope = { AnalyticsService.Scope.AnalyticsEdit };
+            _analyticsService = new AnalyticsService(
+                new BaseClientService.Initializer
+                {
+                    HttpClientInitializer = GoogleCredential.FromJson(CPLConstant.Analytic.Credential).CreateScoped(analyticsServiceScope)
+                });
+
         }
 
         public IList<BounceRateViewModel> GetBounceRate(string viewId, DateTime start, DateTime end)
@@ -179,6 +195,57 @@ namespace CPL.Misc
             }
 
             return pageViews;
+        }
+
+        public string CreateFilter(string filtername, string filterExpression)
+        {
+            var details = new FilterExpression()
+            {
+                CaseSensitive = true,
+                ExpressionValue = filterExpression,
+                Field = "PAGE_REQUEST_URI"
+            };
+
+            var body = new Filter()
+            {
+                Name = filtername,
+                Type = "INCLUDE",
+                IncludeDetails = details
+            };
+
+            var insertRequest = _analyticsService.Management.Filters.Insert(body, Analytic.AccountId);
+            var response = insertRequest.Execute();
+
+            return response.Id;
+        }
+
+        public string CreateView(string viewName)
+        {
+            var body = new Profile()
+            {
+                WebsiteUrl = Analytic.WebsiteUrl,
+                Timezone = Analytic.Timezone,
+                Name = viewName
+            };
+
+            var insertRequest = _analyticsService.Management.Profiles.Insert(body, Analytic.AccountId, Analytic.PropertyId);
+            var response = insertRequest.Execute();
+
+            return response.Id;
+        }
+
+        public void LinkFilterToView(string viewId, string filterId)
+        {
+            var filterRef = new FilterRef() {
+                Id = filterId
+            };
+
+            var body = new ProfileFilterLink() {
+                FilterRef = filterRef
+            };
+
+            var insertRequest = _analyticsService.Management.ProfileFilterLinks.Insert(body, Analytic.AccountId, Analytic.PropertyId, viewId);
+            var response = insertRequest.Execute();
         }
     }
 }

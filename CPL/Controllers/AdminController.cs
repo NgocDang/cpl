@@ -98,7 +98,9 @@ namespace CPL.Controllers
             //var deviceCategories = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
             //var bounceRates = _analyticService.GetBounceRate(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
             //var pageViews = _analyticService.GetPageViews(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
-
+            //var newViewId = _analyticService.CreateView("LotteryCategory4");
+            //var newFilterID = _analyticService.CreateFilter("LotteryCategory_4", @"/Lottery/Index/[0-9]+\?lottery-category-id=3");
+            //_analyticService.LinkFilterToView(newViewId, newFilterID);
             var viewModel = new AdminViewModel();
 
             // User management
@@ -1116,12 +1118,9 @@ namespace CPL.Controllers
             viewModel.TotalSale = lotteryTotalSale + (int)pricePredictionTotalSale;
 
             // 1.STATISTICAL INFORMATION - PAGE VIEWS
-            var homePageViews = _analyticService.GetPageViews(Analytic.HomeViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
-            var lotteryPageViews = _analyticService.GetPageViews(Analytic.LotteryViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
-            var pricePredictionPageViews = _analyticService.GetPageViews(Analytic.PricePredictionViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
-            viewModel.PageView = homePageViews.AsQueryable().Sum(x => x.Count) 
-                + lotteryPageViews.AsQueryable().Sum(x => x.Count) 
-                + pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
+            var homeViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.HomeViewId).Value;
+            var homePageViews = _analyticService.GetPageViews(homeViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            viewModel.PageView = homePageViews.AsQueryable().Sum(x => x.Count);
 
             // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
             var lotteryTotalPlayers = _lotteryHistoryService.Queryable()
@@ -1205,8 +1204,6 @@ namespace CPL.Controllers
             // 2.STATISTICAL CHART - PAGE VIEW CHANGES
             viewModel.PageViewChangesInJson = JsonConvert.SerializeObject(homePageViews
                 .OrderBy(x => x.Date)
-                .Concat(lotteryPageViews.OrderBy(x => x.Date))
-                .Concat(pricePredictionPageViews.OrderBy(x => x.Date))
                 .GroupBy(x => x.Date)
                 .Select(y => new SummaryChange
                 {
@@ -1286,17 +1283,20 @@ namespace CPL.Controllers
         {
             var data = new List<PieChartData>();
 
-            var deviceCategoriesHome = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+            var homeViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.HomeViewId).Value;
+            var deviceCategoriesHome = _analyticService.GetDeviceCategory(homeViewId, FirstDeploymentDate, DateTime.Now);
             var totalDesktopHome = deviceCategoriesHome.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
             var totalMobileHome = deviceCategoriesHome.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
             var totalTabletHome = deviceCategoriesHome.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
 
-            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.LotteryViewId, FirstDeploymentDate, DateTime.Now);
+            var lotteryViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.LotteryViewId).Value;
+            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(lotteryViewId, FirstDeploymentDate, DateTime.Now);
             var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
             var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
             var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
 
-            var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(CPLConstant.Analytic.PricePredictionViewId, FirstDeploymentDate, DateTime.Now);
+            var pricePredictionViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.PricePredictionViewId).Value;
+            var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(pricePredictionViewId, FirstDeploymentDate, DateTime.Now);
             var totalDesktopPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
             var totalMobilePricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
             var totalTabletPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
@@ -1304,6 +1304,65 @@ namespace CPL.Controllers
             var desktopChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Desktop"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = totalDesktopHome + totalDesktopLottery + totalDesktopPricePrediction };
             var mobileChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Mobile"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = totalMobileHome + totalMobileLottery + totalMobilePricePrediction };
             var tabletChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Tablet"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)3), Value = totalTabletHome + totalTabletLottery + totalTabletPricePrediction };
+
+            data.Add(desktopChartData);
+            data.Add(mobileChartData);
+            data.Add(tabletChartData);
+
+            return new JsonResult(new
+            {
+                success = true,
+                seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Device"),
+                data = JsonConvert.SerializeObject(data)
+            });
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetLotteryRevenuePieChart()
+        {
+            var data = new List<PieChartData>();
+            var lotteryCategories = _lotteryCategoryService.Queryable().ToList();
+
+            for(int i = 0; i < lotteryCategories.Count(); i++)
+            {
+                var totalSaleLottery = _lotteryHistoryService.Query()
+                                .Include(x => x.Lottery)
+                                .Select(x => x.Lottery).Where(x => x.LotteryCategoryId == lotteryCategories[i].Id).Sum(y => y?.UnitPrice);
+                var totalAwardLottery = _lotteryHistoryService.Query()
+                    .Include(x => x.LotteryPrize)
+                    .Select()
+                    .Where(x => x.Lottery.LotteryCategoryId == lotteryCategories[i].Id)
+                    .Select(x => x.LotteryPrize).Sum(y => y?.Value);
+                var revenueInLotteryGame = totalSaleLottery - totalAwardLottery;
+
+                var lotteryChartData = new PieChartData { Label = lotteryCategories[i].Name, Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)i+1), Value = revenueInLotteryGame.GetValueOrDefault(0) };
+                data.Add(lotteryChartData);
+            }
+
+            return new JsonResult(new
+            {
+                success = true,
+                seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Revenue"),
+                data = JsonConvert.SerializeObject(data)
+            });
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetLotteryDeviceCategoryPieChart()
+        {
+            var data = new List<PieChartData>();
+
+            var lotteryViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.LotteryViewId).Value;
+            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(lotteryViewId, FirstDeploymentDate, DateTime.Now);
+            var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+            var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+            var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
+
+            var desktopChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Desktop"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value =  totalDesktopLottery };
+            var mobileChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Mobile"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = totalMobileLottery };
+            var tabletChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Tablet"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)3), Value = totalTabletLottery };
 
             data.Add(desktopChartData);
             data.Add(mobileChartData);
@@ -1338,7 +1397,8 @@ namespace CPL.Controllers
                 .Sum(x => x.Lottery.UnitPrice);
 
             // 1.STATISTICAL INFORMATION - PAGE VIEWS
-            viewModel.PageView = _analyticService.GetPageViews(Analytic.LotteryViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now).AsQueryable().Sum(x => x.Count);
+            var lotteryViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.LotteryViewId).Value;
+            viewModel.PageView = _analyticService.GetPageViews(lotteryViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now).AsQueryable().Sum(x => x.Count);
 
             // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
             viewModel.TotalPlayers = _lotteryHistoryService.Queryable()
@@ -1444,7 +1504,8 @@ namespace CPL.Controllers
                 .Sum(x => x.Lottery.UnitPrice);
 
             // 1.STATISTICAL INFORMATION - PAGE VIEWS
-            viewModel.PageView = _analyticService.GetPageViews(Analytic.LotteryViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now).AsQueryable().Sum(x => x.Count);
+            var lotteryViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.LotteryViewId).Value;
+            viewModel.PageView = _analyticService.GetPageViews(lotteryViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now).AsQueryable().Sum(x => x.Count);
 
             // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
             viewModel.TotalPlayers = _lotteryHistoryService.Queryable()
