@@ -53,10 +53,10 @@
                         <div class="row" style="margin-top:10px;">
                             <div class="btn-group col-12 btn-up-down-group" role="group">
                                 <button type="button" data-value="true" class="btn btn-outline-success col-6 btn-up">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Up")
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "High")
                                 </button>
                                 <button type="button" data-value="false" class="btn btn-outline-danger col-6 btn-down">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Down")
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Low")
                                 </button>
                             </div>
                         </div>
