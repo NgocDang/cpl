@@ -772,9 +772,6 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
             var viewModel = Mapper.Map<UserDashboardAdminViewModel>(user);
-            decimal coinRate = CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value;
-            var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value;
-            viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
             return View(viewModel);
         }
 
@@ -915,8 +912,6 @@ namespace CPL.Controllers
                                                         Country = user.Country,
                                                         City = user.City,
                                                         IsDeleted = user.IsDeleted,
-                                                        BTCAmount = user.BTCAmount,
-                                                        ETHAmount = user.ETHAmount,
                                                         TokenAmount = user.TokenAmount,
                                                         TotalCPLUsed = (history != null) ? history.TotalCPLUsed : 0,
                                                         TotalCPLAwarded = (history != null) ? history.TotalCPLAwarded : 0,
@@ -976,8 +971,6 @@ namespace CPL.Controllers
                                                         Country = user.Country,
                                                         City = user.City,
                                                         IsDeleted = user.IsDeleted,
-                                                        BTCAmount = user.BTCAmount,
-                                                        ETHAmount = user.ETHAmount,
                                                         TokenAmount = user.TokenAmount,
                                                         TotalCPLUsed = (history != null) ? history.TotalCPLUsed : 0,
                                                         TotalCPLAwarded = (history != null) ? history.TotalCPLAwarded : 0,
@@ -1431,6 +1424,13 @@ namespace CPL.Controllers
                 .OrderBy(x => x.Date)
                 .Concat(lotteryPageViews.OrderBy(x => x.Date))
                 .Concat(pricePredictionPageViews.OrderBy(x => x.Date))
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.Sum(x => x.Count)
+                })
+                .OrderBy(x => x.Date)
                 .ToList());
 
             // 2.STATISTICAL CHART - TOTAL PLAYERS
@@ -1502,19 +1502,25 @@ namespace CPL.Controllers
         public IActionResult GetSummaryDeviceCategoryPieChart()
         {
             var data = new List<PieChartData>();
-            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+
+            var deviceCategoriesHome = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+            var totalDesktopHome = deviceCategoriesHome.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+            var totalMobileHome = deviceCategoriesHome.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+            var totalTabletHome = deviceCategoriesHome.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
+
+            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.LotteryViewId, FirstDeploymentDate, DateTime.Now);
             var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
             var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
             var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
 
-            var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+            var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(CPLConstant.Analytic.PricePredictionViewId, FirstDeploymentDate, DateTime.Now);
             var totalDesktopPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
             var totalMobilePricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
             var totalTabletPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
 
-            var desktopChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Desktop"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = totalDesktopLottery + totalDesktopPricePrediction };
-            var mobileChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Mobile"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = totalMobileLottery + totalMobilePricePrediction };
-            var tabletChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Tablet"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)3), Value = totalTabletLottery + totalTabletPricePrediction };
+            var desktopChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Desktop"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = totalDesktopHome + totalDesktopLottery + totalDesktopPricePrediction };
+            var mobileChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Mobile"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = totalMobileHome + totalMobileLottery + totalMobilePricePrediction };
+            var tabletChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Tablet"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)3), Value = totalTabletHome + totalTabletLottery + totalTabletPricePrediction };
 
             data.Add(desktopChartData);
             data.Add(mobileChartData);

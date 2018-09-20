@@ -31,7 +31,7 @@
                 PieChart.loadPercentageAjax($("#summary-nav .revenue-chart"), $("#summary-nav .revenue-no-data"), "/Admin/GetSummaryRevenuePieChart/")
             }
 
-            if ($("#summary-nav .device-category-chart").length > 0) {
+            if ($("#summary-nav .device-category-chart").html().trim().length === 0) {
                 PieChart.loadPercentageAjax($("#summary-nav .device-category-chart"), $("#summary-nav .device-category-no-data"), "/Admin/GetSummaryDeviceCategoryPieChart/")
             }
         })
@@ -144,12 +144,12 @@
             revenue.data.push([now, val]);
         }
         revenue.data.sort();
-
+        
         var pageViewChanges = JSON.parse(container.find(".page-view-changes").val());
         if (pageViewChanges.length !== 0) {
             $.each(pageViewChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
-                val = value.Count;
+                val = value.Value;
                 pageView.data.push([now, val]);
             });
         }
