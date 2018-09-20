@@ -184,15 +184,23 @@ namespace CPL.Misc
             var response = batchRequest.Execute();
 
             var pageViews = new List<PageViewsViewModel>();
-            foreach (var x in response.Reports.First().Data.Rows)
+            if (response.Reports.First().Data.Rows != null)
             {
-                if (x.Dimensions.Count > 0 && x.Metrics.Count > 0)
-                    pageViews.Add(new PageViewsViewModel
-                    {
-                        Date = DateTime.ParseExact(x.Dimensions.First(), "yyyyMMdd", null),
-                        Count = int.Parse(x.Metrics.First().Values.First())
-                    });
+                foreach (var x in response.Reports.First().Data.Rows)
+                {
+                    if (x.Dimensions.Count > 0 && x.Metrics.Count > 0)
+                        pageViews.Add(new PageViewsViewModel
+                        {
+                            Date = DateTime.ParseExact(x.Dimensions.First(), "yyyyMMdd", null),
+                            Count = int.Parse(x.Metrics.First().Values.First())
+                        });
+                }
             }
+            else pageViews.Add(new PageViewsViewModel
+            {
+                Date = DateTime.Now.Date,
+                Count = 0
+            });
 
             return pageViews;
         }

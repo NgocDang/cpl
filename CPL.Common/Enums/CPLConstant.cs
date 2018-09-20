@@ -80,7 +80,8 @@ namespace CPL.Common.Enums
             public static string LotteryViewId = "LotteryViewId";
             public static string PricePredictionViewId = "PricePredictionViewId";
 
-            public static string LotteryCategoryName = "LotteryCategory_";
+            public static string LotteryCategoryViewName = "LotteryCategory_";
+            public static string LotteryCategoryFilterExpression = @"/Lottery/Index/[0-9]+\?lottery-category-id=";
         }
 
         //BWallet
