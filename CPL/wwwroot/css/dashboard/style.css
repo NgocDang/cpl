@@ -1828,3 +1828,7 @@ button#btn-dropdown-item:focus {
 .highcharts-credits {
     display:none;
 }
+
+table.dataTable td:first-child {
+    outline: none !important
+}
