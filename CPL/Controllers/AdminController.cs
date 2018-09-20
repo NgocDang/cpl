@@ -647,7 +647,7 @@ namespace CPL.Controllers
                     .Queryable()
                     .Where(x => x.Id == agencyId).FirstOrDefault();
 
-                //// Update agency affiliate rate commission
+                // Update agency affiliate rate commission
                 agency.Tier1DirectRate = viewModel.Tier1DirectRate;
                 agency.Tier2DirectRate = viewModel.Tier2DirectRate;
                 agency.Tier3DirectRate = viewModel.Tier3DirectRate;

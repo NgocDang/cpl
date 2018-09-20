@@ -1,6 +1,5 @@
 ﻿var Profile = {
     init: function () {
-        Profile.bindSwitchery();
         Profile.bindDoEdit();
         Profile.bindEdit();
     },
