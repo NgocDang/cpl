@@ -356,7 +356,7 @@
                 toastr.error("Incorrect amount!");
             } else {
                 if (tabPane.find(".btn-up").hasClass("active") || tabPane.find(".btn-down").hasClass("active")) {
-                    tabPane.find(".predicted-trend-confirm").html(tabPane.find(".btn-up").hasClass("active") ? "UP" : "DOWN");
+                    tabPane.find(".predicted-trend-confirm").html(tabPane.find(".btn-up").hasClass("active") ? "High" : "Low");
                     if (tabPane.find(".btn-up").hasClass("active")) {
                         tabPane.find(".predicted-trend-confirm").removeClass("danger").addClass("success");
                         tabPane.find(".bet-amount-confirm").removeClass("danger").addClass("success");
@@ -364,11 +364,11 @@
                         tabPane.find(".predicted-trend-confirm").removeClass("success").addClass("danger");
                         tabPane.find(".bet-amount-confirm").removeClass("success").addClass("danger");
                     }
-                    tabPane.find(".bet-amount-confirm").html(tabPane.find(".bet-amount").val());
+                    tabPane.find(".bet-amount-confirm").html(Intl.NumberFormat('ja-JP').format(tabPane.find(".bet-amount").val()) + " CPL");
                     tabPane.find(".bet").hide();
                     tabPane.find(".bet-confirm").show();
                 } else {
-                    toastr.error("Please select UP or DOWN");
+                    toastr.error("Please select High or Low");
                 }
             }
         });
@@ -432,7 +432,7 @@
 
                 // Display the result in the element with id="demo"
                 $(element).closest(".tab-pane").find(".countdown-clock").html($("#close").val() + ": " + dateString + '  <i class="la la-clock-o clock-icon"></i>' + hours + ":" + minutes + ":" + seconds);
-            });
+            }, 1000);
         });
     },
 

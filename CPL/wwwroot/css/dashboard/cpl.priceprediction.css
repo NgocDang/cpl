@@ -23,12 +23,13 @@
     }
 }
 
-.topright {
+.top-right {
     border-radius: 4px;
     position: absolute;
     right: 15px;
     z-index: 1;
-    background-color: red;
+    border-color: #FF394F !important;
+    background-color: #f93147 !important;
     padding: 0.5rem !important;
     width: 180px;
     text-align: center;
