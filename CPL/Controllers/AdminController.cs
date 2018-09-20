@@ -1529,6 +1529,64 @@ namespace CPL.Controllers
             });
         }
 
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetLotteryRevenuePieChart()
+        {
+            var data = new List<PieChartData>();
+            var lotteryCategories = _lotteryCategoryService.Queryable().ToList();
+
+            for(int i = 0; i < lotteryCategories.Count(); i++)
+            {
+                var totalSaleLottery = _lotteryHistoryService.Query()
+                                .Include(x => x.Lottery)
+                                .Select(x => x.Lottery).Where(x => x.LotteryCategoryId == lotteryCategories[i].Id).Sum(y => y?.UnitPrice);
+                var totalAwardLottery = _lotteryHistoryService.Query()
+                    .Include(x => x.LotteryPrize)
+                    .Select()
+                    .Where(x => x.Lottery.LotteryCategoryId == lotteryCategories[i].Id)
+                    .Select(x => x.LotteryPrize).Sum(y => y?.Value);
+                var revenueInLotteryGame = totalSaleLottery - totalAwardLottery;
+
+                var lotteryChartData = new PieChartData { Label = lotteryCategories[i].Name, Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)i+1), Value = revenueInLotteryGame.GetValueOrDefault(0) };
+                data.Add(lotteryChartData);
+            }
+
+            return new JsonResult(new
+            {
+                success = true,
+                seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Revenue"),
+                data = JsonConvert.SerializeObject(data)
+            });
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetLotteryDeviceCategoryPieChart()
+        {
+            var data = new List<PieChartData>();
+
+            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.LotteryViewId, FirstDeploymentDate, DateTime.Now);
+            var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+            var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+            var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
+
+            var desktopChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Desktop"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value =  totalDesktopLottery };
+            var mobileChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Mobile"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = totalMobileLottery };
+            var tabletChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Tablet"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)3), Value = totalTabletLottery };
+
+            data.Add(desktopChartData);
+            data.Add(mobileChartData);
+            data.Add(tabletChartData);
+
+            return new JsonResult(new
+            {
+                success = true,
+                seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Device"),
+                data = JsonConvert.SerializeObject(data)
+            });
+        }
+
         [HttpPost]
         [Permission(EnumRole.Admin)]
         public JsonResult SearchPurchasedLotteryHistory(DataTableAjaxPostModel viewModel, int? lotteryCategoryId)

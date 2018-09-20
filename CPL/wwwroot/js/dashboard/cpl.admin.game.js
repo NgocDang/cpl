@@ -84,9 +84,11 @@
             xAxis: {
                 type: 'datetime',
                 dateTimeLabelFormats: { // don't display the dummy year
+                    day: '%b/%e',
                     month: '%e. %b',
                     year: '%b'
                 },
+
             },
             yAxis: {
                 title: {
@@ -184,12 +186,16 @@
     bindLotteryTab: function () {
         $('a#lottery-nav-tab').on('show.bs.tab', function (e) {
             if ($("#lottery-nav .revenue-chart").html().trim().length === 0) {
-                alert('LOTTERY Revenue chart should be loaded!');
+                PieChart.loadPercentageAjax($("#lottery-nav .revenue-chart"), $("#lottery-nav .revenue-no-data"), "/Admin/GetLotteryRevenuePieChart/")
             }
 
+        });
+
+        $('a#lottery-nav-tab').on('show.bs.tab', function (e) {
             if ($("#lottery-nav .device-category-chart").html().trim().length === 0) {
-                alert('LOTTERY Device category chart should be loaded!');
+                PieChart.loadPercentageAjax($("#lottery-nav .device-category-chart"), $("#lottery-nav .device-category-no-data"), "/Admin/GetLotteryDeviceCategoryPieChart/")
             }
+
         });
     },
     bindLotterySummaryTab: function () {
