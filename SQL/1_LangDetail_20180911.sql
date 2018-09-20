@@ -146,3 +146,10 @@ INSERT INTO LangDetail VALUES (2, N'PaidSuccessfully', N'支払いは正常に�
 
 INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliate', N'Top agency affiliate');
 INSERT INTO LangDetail VALUES (2, N'TopAgencyAffiliate', N'トップの代理店');
+
+--20180920-AdminAddTopAgency---
+INSERT INTO LangDetail VALUES (1, N'ListOfTopAgencyAffiliate', N'List of top agency affiliate');
+INSERT INTO LangDetail VALUES (2, N'ListOfTopAgencyAffiliate', N'トップ代理店アフィリエイトのリスト');
+
+INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliateTiers', N'Top agency affiliate tiers');
+INSERT INTO LangDetail VALUES (2, N'TopAgencyAffiliateTiers', N'上位機関のアフィリエイト層');
