@@ -6,6 +6,14 @@
         TopAgencyAffiliate.bindDoUpdateAgencyAffiliateSetting();
         TopAgencyAffiliate.bindConfirmPayment();
         TopAgencyAffiliate.bindDoPayment();
+
+        TopAgencyAffiliate.bindTier1Tab();
+        TopAgencyAffiliate.bindTier1TimeRangeChange();
+
+        var tab = $("#tab").val();
+        if (tab === "")
+            tab = "tier-1";
+        $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
     },
     bindSwitchery: function () {
         $.each($(".checkbox-switch"), function (index, element) {
@@ -136,6 +144,162 @@
         });
     },
 
+    bindTier1Tab: function () {
+        $('a#tier-1-nav-tab').on('show.bs.tab', function (e) {
+            debugger;
+            if ($("#tier-1-nav .tab-detail").html().trim().length === 0) {
+                TopAgencyAffiliate.loadTier1Statistics();
+            }
+        })
+    },
+    loadTier1Statistics: function () {
+        $.ajax({
+            url: "/Admin/GetTier1Statistics/",
+            type: "GET",
+            beforeSend: function () {
+                $("#tier-1-nav .tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+            },
+            data: {
+                sysUserId: $("#SysUserId").val(),
+                periodInDay: $("#tier-1-nav select.time-range").val()
+            },
+            success: function (data) {
+                $("#tier-1-nav .tab-detail").html(data);
+                //TopAgencyAffiliate.loadTier1StatisticsChart($("#tier-1-nav"))
+            },
+        });
+    },
+    bindTier1TimeRangeChange: function () {
+        $("#tier-1-nav select.time-range").on("changed.bs.select",
+            function (e, clickedIndex, newValue, oldValue) {
+                TopAgencyAffiliate.loadTier1Statistics();
+            });
+    },
+    loadTier1StatisticsChart: function (container) {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        Highcharts.setOptions({
+            lang: DTLang.getHighChartLang()
+        });
+        options = {
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: null
+            },
+            subtitle: {
+                text: null
+            },
+            exporting: {
+                enabled: false
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    day: '%b/%e',
+                    month: '%e. %b',
+                    year: '%b'
+                },
+
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+            },
+            tooltip: {
+                headerFormat: '<b>{series.name}</b><br>',
+                pointFormat: '{point.x:%e. %b}: {point.y}'
+            },
+
+            plotOptions: {
+                spline: {
+                    marker: {
+                        enabled: true
+                    }
+                }
+            },
+
+            series: []
+
+        };
+
+        var totalSale = { data: [], name: container.find(".total-sale").val(), color: '#4267b2' };
+        var directSale = { data: [], name: container.find(".direct-sale").val(), color: '#f7931a' };
+        var totalIntroducedUsers = { data: [], name: container.find(".total-introduced-users").val(), color: '#828384' };
+        var directIntroducedUsers = { data: [], name: container.find(".direct-introduced-users").val(), color: '#F69BF9' };
+
+        var directSaleChanges = JSON.parse(container.find(".direct-sale-changes").val());
+        if (directSaleChanges.length !== 0) {
+            $.each(directSaleChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                directSale.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            directSale.data.push([now, val]);
+        }
+        directSale.data.sort();
+
+        var totalSaleChanges = JSON.parse(container.find(".total-sale-changes").val());
+        if (totalSaleChanges.length !== 0) {
+            $.each(totalSaleChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                totalSale.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            totalSale.data.push([now, val]);
+        }
+        totalSale.data.sort();
+
+        var totalIntroducedUsersChanges = JSON.parse(container.find(".total-introduced-users-changes").val());
+        if (totalIntroducedUsersChanges.length !== 0) {
+            $.each(totalIntroducedUsersChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                totalIntroducedUsers.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            totalIntroducedUsers.data.push([now, val]);
+        }
+        totalIntroducedUsers.data.sort();
+
+        var directIntroducedUsersChanges = JSON.parse(container.find(".direct-introduced-users-changes").val());
+        if (directIntroducedUsersChanges.length != 0) {
+            $.each(directIntroducedUsersChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                directIntroducedUsers.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            directIntroducedUsers.data.push([now, val]);
+        }
+        directIntroducedUsers.data.sort();
+
+        // Push the completed series
+        options.series.push(totalSale, directSale, totalIntroducedUsers, directIntroducedUsers);
+
+        // Create the plot
+        container.find(".statistic-chart").highcharts(options);
+    },
 };
 
 $(document).ready(function () {

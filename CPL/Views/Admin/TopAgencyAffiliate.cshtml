@@ -6,6 +6,7 @@
 @section styles
     {
     <link href="~/css/dashboard/plugins/switchery/switchery.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/cpl.admin.game.css" asp-append-version="true" rel="stylesheet" />
 }
     <div class="app-content container center-layout mt-2 px-0">
         <div class="content-wrapper">
@@ -149,7 +150,7 @@
                                             <div class="row">
                                                 <div class="col-lg-6 col-12">
                                                     <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</strong></p>
-                                                    <h1><i class="la la-user"></i> @Model.TotalIntroducedUser.ToString("N0")</h1>
+                                                    <h1><i class="la la-user"></i> @Model.TotalIntroducedUsers.ToString("N0")</h1>
                                                 </div>
                                                 <div class="col-lg-6 col-12">
                                                     <div class="row">
@@ -159,11 +160,112 @@
                                                         </div>
                                                         <div class="col-lg-12 col-6">
                                                             <p class="text-muted mb-05">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yesterday")</p>
-                                                            <h3><i class="la la-user"></i> @Model.TotalIntroducedUserYesterday.ToString("N0")</h3>
+                                                            <h3><i class="la la-user"></i> @Model.TotalIntroducedUsersYesterday.ToString("N0")</h3>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ul class="nav nav-tabs border-0">
+                            <li class="nav-item">
+                                <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="tier-1-nav-tab" data-toggle="tab" href="#tier-1-nav" aria-controls="tier-1-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier1")</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="tier-2-nav-tab" data-toggle="tab" href="#tier-2-nav" aria-controls="tier-2-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier2")</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="tier-3-nav-tab" data-toggle="tab" href="#tier-3-nav" aria-controls="tier-3-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier3")</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content mb-1">
+                            <div role="tabpanel" class="tab-pane" id="tier-1-nav" aria-labelledby="tier-1-nav-tab" aria-expanded="true">
+                                <div class="card mb-1">
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label class="d-inline-block" for="TimeRange">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TimeRange")</label>
+                                                    <fieldset class="form-group col-lg-2 col-6 pl-0">
+                                                        <select name="TimeRange" class="selectpicker time-range" data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                                            @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
+                                                            {
+                                                                if (period == EnumPeriodInDay._7D) //Default selected value
+                                                                {
+                                                                    <option selected="selected" value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                            <div class="tab-detail"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="tier-2-nav" aria-labelledby="tier-2-nav-tab" aria-expanded="true">
+                                <div class="card mb-1">
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label class="d-inline-block" for="TimeRange">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TimeRange")</label>
+                                                    <fieldset class="form-group col-lg-2 col-6 pl-0">
+                                                        <select name="TimeRange" class="selectpicker time-range" data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                                            @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
+                                                            {
+                                                                if (period == EnumPeriodInDay._7D) //Default selected value
+                                                                {
+                                                                    <option selected="selected" value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                            <div class="tab-detail"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="tier-3-nav" aria-labelledby="tier-3-nav-tab" aria-expanded="true">
+                                <div class="card mb-1">
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label class="d-inline-block" for="TimeRange">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TimeRange")</label>
+                                                    <fieldset class="form-group col-lg-2 col-6 pl-0">
+                                                        <select name="TimeRange" class="selectpicker time-range" data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                                            @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
+                                                            {
+                                                                if (period == EnumPeriodInDay._7D) //Default selected value
+                                                                {
+                                                                    <option selected="selected" value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                            <div class="tab-detail"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -244,7 +346,7 @@
                                                     <div class="col-sm-8 col-12 mb-1">
                                                         <label for="IsTier2TabVisible" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsTier2TabVisible") &nbsp; </label>
                                                         <input id="is-tier2-tab-visible" checked="@Model.AgencyAffiliateSetting.IsTier2TabVisible" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier2TabVisible">
-                                                        
+
                                                         <label for="IsTier3TabVisible" class="form-check-label ml-md-5 mt-md-0 mt-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsTier3TabVisible") &nbsp; </label>
                                                         <input id="is-tier3-tab-visible" checked="@Model.AgencyAffiliateSetting.IsTier3TabVisible" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier3TabVisible">
                                                     </div>
@@ -263,6 +365,7 @@
                 }
             </div>
         </div>
+        @Html.Hidden("tab", Model.Tab)
         @Html.Hidden("AgencyId", Model.AgencyId)
         @Html.Hidden("SysUserId", Model.Id)
         @Html.Hidden("CopiedSuccessfully", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CopiedSuccessfully"))
@@ -271,6 +374,7 @@
     {
     <script src="~/js/dashboard/plugins/switchery/switchery.min.js"></script>
     <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
+    <script src="~/js/dashboard/plugins/bootstrap-selectpicker.js"></script>
     <script src="~/js/dashboard/cpl.affiliate.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.admin.topagencyaffiliate.js" asp-append-version="true"></script>
 }
