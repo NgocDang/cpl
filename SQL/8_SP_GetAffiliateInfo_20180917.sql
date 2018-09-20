@@ -204,6 +204,9 @@ BEGIN
 		AffiliateSale money,
 		TotalIntroducedUsers int,
 		AffiliateCreatedDate datetime,
+		Tier1DirectRate int,
+		Tier2SaleToTier1Rate int,
+		Tier3SaleToTier1Rate int,
 		RowNum int
 	);
 
@@ -355,9 +358,28 @@ WITH IntroducedUsersCTE AS
 	-- Affiliate created date --
 	----------------------------
 		su.AffiliateCreatedDate
-		AS AffiliateCreatedDate
+		AS AffiliateCreatedDate,
+
+	------------------------
+	-- Tier 1 Direct Rate --
+	------------------------
+		aff.Tier1DirectRate
+		AS Tier1DirectRate,
+
+	---------------------------
+	-- Tier 2 to Tier 1 Rate --
+	---------------------------
+		aff.Tier2SaleToTier1Rate
+		AS Tier2SaleToTier1Rate,
+
+	---------------------------
+	-- Tier 3 to Tier 2 Rate --
+	---------------------------
+		aff.Tier3SaleToTier1Rate
+		AS Tier3SaleToTier1Rate
 
 	FROM   SysUser su join IntroducedUsers iu on su.Id = iu.Id
+					  join Affiliate aff on su.AffiliateId = aff.Id
 	WHERE (su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))
 		or su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ',')))
 		and su.AffiliateId is not null 
@@ -417,10 +439,10 @@ IntroducedUsersWithRowNum AS
 		  CONVERT(nvarchar(23), AffiliateCreatedDate, 0) like ('%' + @SearchValue + '%'))
 	)
 	INSERT INTO @TableIntroducedUsers
-	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate, RowNum
+	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate, Tier1DirectRate, Tier2SaleToTier1Rate, Tier3SaleToTier1Rate, RowNum
 	FROM IntroducedUsersWithRowNum;
 	
-	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate
+	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate, Tier1DirectRate, Tier2SaleToTier1Rate, Tier3SaleToTier1Rate
 	FROM @TableIntroducedUsers
 	WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @PageSize);
 
