@@ -420,7 +420,7 @@ IntroducedUsersWithRowNum AS
 	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate, RowNum
 	FROM IntroducedUsersWithRowNum;
 	
-	SELECT * 
+	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate
 	FROM @TableIntroducedUsers
 	WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @PageSize);
 
