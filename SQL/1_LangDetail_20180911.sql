@@ -146,3 +146,9 @@ INSERT INTO LangDetail VALUES (2, N'PaidSuccessfully', N'支払いは正常に�
 
 INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliate', N'Top agency affiliate');
 INSERT INTO LangDetail VALUES (2, N'TopAgencyAffiliate', N'トップの代理店');
+
+-----------------------------------------------------------------------------------------
+-- LAN - 20180920 - LotteryCategory card in Admin -> GameManagement -> Lottery tab ------
+
+INSERT INTO LangDetail VALUES (1, N'AddANewLotteryCategory', N'Add new lottery category');
+INSERT INTO LangDetail VALUES (2, N'AddANewLotteryCategory', N'新しい宝くじカテゴリを追加');

@@ -6,6 +6,8 @@
 
         // Lottery Tab
         AdminGameManagement.bindLotteryTab();
+        AdminGameManagement.bindAddLotteryCategory();
+        AdminGameManagement.bindDoAddLotteryCategory();
 
         // Lottery Tab - Lottery Summary Tab
         AdminGameManagement.bindLotterySummaryTab();
@@ -196,6 +198,58 @@
                 PieChart.loadPercentageAjax($("#lottery-nav .device-category-chart"), $("#lottery-nav .device-category-no-data"), "/Admin/GetLotteryDeviceCategoryPieChart/")
             }
 
+        });
+    },
+    bindAddLotteryCategory: function () {
+        $("#lottery-nav").on("click", "#btn-add-lottery-category", function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/AddLotteryCategory/",
+                type: "GET",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                    $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
+                },
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#edit-lottery-category").modal("show");
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                    $(_this).html($(_this).text());
+                }
+            });
+        });
+    },
+    bindDoAddLotteryCategory: function () {
+        $("#modal").on("click", "#edit-lottery-category .btn-do-add", function () {
+            var isFormValid = $("#form-edit-lottery-category")[0].checkValidity();
+            $("#form-edit-lottery-category").addClass('was-validated');
+            var _this = this;
+
+            if (isFormValid) {
+                $.ajax({
+                    url: "/Admin/DoAddLotteryCategory",
+                    type: "POST",
+                    data: $("#form-edit-lottery-category").serialize(),
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message, 'Success!');
+                            $("#edit-lottery-category").modal("hide");
+                        }
+                        else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                    }
+                });
+            };
+            return false;
         });
     },
     bindLotterySummaryTab: function () {

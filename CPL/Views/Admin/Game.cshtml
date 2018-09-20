@@ -187,6 +187,13 @@
                                                 <div class="height-300 row justify-content-center align-items-center d-none device-category-no-data">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoData")</div>
                                             </div>
                                         </div>
+                                        <div class="card col-lg-4 col-12">
+                                            <div class="card-body">
+                                                <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryCategory")</p>
+                                                <a asp-controller="Admin" asp-action="Lottery" class="btn btn-outline-secondary" style="margin:2px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a> 
+                                                <button class="btn btn-outline-secondary" id="btn-add-lottery-category" style="margin:2px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AddANewLotteryCategory")</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
