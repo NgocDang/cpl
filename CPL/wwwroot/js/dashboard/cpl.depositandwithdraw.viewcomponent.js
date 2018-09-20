@@ -38,6 +38,9 @@
                             $(_this).parents("form").find(".amount-error").hide();
                             toastr.success(data.message, 'Success!');
                             ViewComponent.getDepositWithdrawViewComponent("withdraw");
+                            $(".user-token-amount").map(function (index, element) {
+                                $(element).text(data.token + " CPL");
+                            });
                         }
                         else {
                             if (data.requireProfile != null && !data.requireProfile) {

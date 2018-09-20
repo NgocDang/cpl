@@ -555,9 +555,6 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
             var viewModel = Mapper.Map<UserDashboardAdminViewModel>(user);
-            decimal coinRate = CurrencyPairRateHelper.GetCurrencyPairRate(EnumCurrencyPair.ETHBTC.ToString()).Value;
-            var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value;
-            viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
             return View(viewModel);
         }
 
@@ -698,8 +695,6 @@ namespace CPL.Controllers
                                                         Country = user.Country,
                                                         City = user.City,
                                                         IsDeleted = user.IsDeleted,
-                                                        BTCAmount = user.BTCAmount,
-                                                        ETHAmount = user.ETHAmount,
                                                         TokenAmount = user.TokenAmount,
                                                         TotalCPLUsed = (history != null) ? history.TotalCPLUsed : 0,
                                                         TotalCPLAwarded = (history != null) ? history.TotalCPLAwarded : 0,
@@ -759,8 +754,6 @@ namespace CPL.Controllers
                                                         Country = user.Country,
                                                         City = user.City,
                                                         IsDeleted = user.IsDeleted,
-                                                        BTCAmount = user.BTCAmount,
-                                                        ETHAmount = user.ETHAmount,
                                                         TokenAmount = user.TokenAmount,
                                                         TotalCPLUsed = (history != null) ? history.TotalCPLUsed : 0,
                                                         TotalCPLAwarded = (history != null) ? history.TotalCPLAwarded : 0,
