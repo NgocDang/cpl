@@ -25,9 +25,9 @@ namespace CPL.NotifyService
 {
     public class CPLNotifyService : MicroService, IMicroService
     {
-        public static IConfiguration Configuration { get; set; }
-        public static bool IsNotifyServiceRunning = false;
-        public static List<Task> Tasks = new List<Task>();
+        public IConfiguration Configuration { get; set; }
+        public bool IsNotifyServiceRunning = false;
+        public List<Task> Tasks = new List<Task>();
 
         //public string ETHNotifyFileName { get; set; }
         public string BTCNotifyFileName { get; set; }
@@ -57,9 +57,6 @@ namespace CPL.NotifyService
 
             // Initialize wcf 
             InitializeWCF();
-
-            //Init dependency transaction & dbcontext
-            InitializeRepositories();
 
             //Init setting
             IsNotifyServiceRunning = true;
@@ -100,8 +97,9 @@ namespace CPL.NotifyService
         //    {
         //        try
         //        {
-
-        //            var currentBlockNoSetting = Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == NotifyServiceConstant.ETHNotifyCurrentBlockNo);
+        //            //Init dependency transaction & dbcontext
+        //            var resolver = InitializeRepositories();
+        //            var currentBlockNoSetting = resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == NotifyServiceConstant.ETHNotifyCurrentBlockNo);
         //            var currentBlockNo = int.Parse(currentBlockNoSetting.Value);
         //            Task<EBlockService.EBlockRetrieveBlockTransactionResult> block;
         //            do
@@ -116,13 +114,13 @@ namespace CPL.NotifyService
 
         //            foreach (var tx in block.Result.Transactions)
         //            {
-        //                if (Resolver.SysUserService.Queryable().Any(x => x.ETHHDWalletAddress == tx.ToAddress))
-        //                    Resolver.ETHTransactionService.Insert(new ETHTransaction { CreatedDate = DateTime.Now, TxHashId = tx.TxHashId });
+        //                if (resolver.SysUserService.Queryable().Any(x => x.ETHHDWalletAddress == tx.ToAddress))
+        //                    resolver.ETHTransactionService.Insert(new ETHTransaction { CreatedDate = DateTime.Now, TxHashId = tx.TxHashId });
         //            }
 
         //            currentBlockNoSetting.Value = (++currentBlockNo).ToString();
-        //            Resolver.SettingService.Update(currentBlockNoSetting);
-        //            Resolver.UnitOfWork.SaveChanges();
+        //            resolver.SettingService.Update(currentBlockNoSetting);
+        //            resolver.UnitOfWork.SaveChanges();
         //        }
         //        catch (Exception ex)
         //        {
@@ -142,8 +140,10 @@ namespace CPL.NotifyService
             {
                 try
                 {
+                    //Init dependency transaction & dbcontext
+                    var resolver = InitializeRepositories();
 
-                    var currentBlockNoSetting = Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == NotifyServiceConstant.BTCNotifyCurrentBlockNo);
+                    var currentBlockNoSetting = resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == NotifyServiceConstant.BTCNotifyCurrentBlockNo);
                     var currentBlockNo = int.Parse(currentBlockNoSetting.Value);
                     Task<BBlockService.BBlockRetrieveBlockTransactionResult> block;
                     do
@@ -158,13 +158,13 @@ namespace CPL.NotifyService
 
                     foreach (var tx in block.Result.Transactions)
                     {
-                        if (Resolver.SysUserService.Queryable().Any(x => tx.To.Any(y => y.Address == x.BTCHDWalletAddress)))
-                            Resolver.BTCTransactionService.Insert(new BTCTransaction { CreatedDate = DateTime.Now, TxHashId = tx.TxHashId });
+                        if (resolver.SysUserService.Queryable().Any(x => tx.To.Any(y => y.Address == x.BTCHDWalletAddress)))
+                            resolver.BTCTransactionService.Insert(new BTCTransaction { CreatedDate = DateTime.Now, TxHashId = tx.TxHashId });
                     }
 
                     currentBlockNoSetting.Value = (++currentBlockNo).ToString();
-                    Resolver.SettingService.Update(currentBlockNoSetting);
-                    Resolver.UnitOfWork.SaveChanges();
+                    resolver.SettingService.Update(currentBlockNoSetting);
+                    resolver.UnitOfWork.SaveChanges();
                 }
                 catch (Exception ex)
                 {
@@ -187,7 +187,7 @@ namespace CPL.NotifyService
         /// <summary>
         /// Initializes the repositories.
         /// </summary>
-        private void InitializeRepositories()
+        private Resolver InitializeRepositories()
         {
             var builder = new ContainerBuilder();
 
@@ -211,12 +211,15 @@ namespace CPL.NotifyService
             builder.RegisterType<Repository<BTCTransaction>>().As<IRepositoryAsync<BTCTransaction>>().InstancePerLifetimeScope();
             //builder.RegisterType<Repository<ETHTransaction>>().As<IRepositoryAsync<ETHTransaction>>().InstancePerLifetimeScope();
 
-            Resolver.Container = builder.Build();
-            Resolver.UnitOfWork = Resolver.Container.Resolve<IUnitOfWorkAsync>();
-            Resolver.SysUserService = Resolver.Container.Resolve<ISysUserService>();
-            Resolver.SettingService = Resolver.Container.Resolve<ISettingService>();
-            Resolver.BTCTransactionService = Resolver.Container.Resolve<IBTCTransactionService>();
-            //Resolver.ETHTransactionService = Resolver.Container.Resolve<IETHTransactionService>();
+            var container = builder.Build();
+            return new Resolver(
+                container,
+                container.Resolve<IUnitOfWorkAsync>(),
+                container.Resolve<ISysUserService>(),
+                container.Resolve<IBTCTransactionService>(),
+                //container.Resolve<IETHTransactionService>(),
+                container.Resolve<ISettingService>()
+                );
         }
 
         /// <summary>
