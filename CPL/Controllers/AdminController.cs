@@ -178,14 +178,14 @@ namespace CPL.Controllers
             viewModel.AccountActivationEnable = bool.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value) ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "On") : LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Off");
             viewModel.CookieExpirations = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.CookieExpirations).Value);
 
-            viewModel.StandardAffiliate = new StandardAffiliateRateViewModel
+            viewModel.StandardAffiliateRate = new StandardAffiliateRateViewModel
             {
                 Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier1DirectRate).Value),
                 Tier2SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier2SaleToTier1Rate).Value),
                 Tier3SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier3SaleToTier1Rate).Value)
             };
 
-            viewModel.AgencyAffiliate = new AgencyAffiliateRateViewModel
+            viewModel.AgencyAffiliateRate = new AgencyAffiliateRateViewModel
             {
                 Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier1DirectRate).Value),
                 Tier2DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier2DirectRate).Value),
@@ -736,11 +736,9 @@ namespace CPL.Controllers
                         payment.UpdatedDate = DateTime.Now;
                         _paymentService.Update(payment);
                     }
+                    _sysUserService.Update(user);
+                    _unitOfWork.SaveChanges();
                 }
-
-                _sysUserService.Update(user);
-                _unitOfWork.SaveChanges();
-
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PaymentSuccessfully") });
             }
             catch (Exception ex)
@@ -753,7 +751,6 @@ namespace CPL.Controllers
         {
             var payments = _paymentService.Queryable().Where(x => x.SysUserId == sysUserId && !x.UpdatedDate.HasValue);
             var tokenToBePaid = payments.Sum(x => x.Tier2SaleToTier1Sale * x.Tier1DirectRate / 100 + x.Tier2SaleToTier1Sale * x.Tier2SaleToTier1Rate / 100 + x.Tier3SaleToTier1Sale * x.Tier3SaleToTier1Rate / 100);
-
             return tokenToBePaid;
         }
 
@@ -2239,14 +2236,14 @@ namespace CPL.Controllers
             viewModel.IsAccountActivationEnable = bool.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.IsAccountActivationEnable).Value);
             viewModel.CookieExpirations = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.CookieExpirations).Value);
 
-            viewModel.StandardAffiliate = new StandardAffiliateRateViewModel
+            viewModel.StandardAffiliateRate = new StandardAffiliateRateViewModel
             {
                 Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier1DirectRate).Value),
                 Tier2SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier2SaleToTier1Rate).Value),
                 Tier3SaleToTier1Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.StandardAffiliate.Tier3SaleToTier1Rate).Value)
             };
 
-            viewModel.AgencyAffiliate = new AgencyAffiliateRateViewModel
+            viewModel.AgencyAffiliateRate = new AgencyAffiliateRateViewModel
             {
                 Tier1DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier1DirectRate).Value),
                 Tier2DirectRate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier2DirectRate).Value),

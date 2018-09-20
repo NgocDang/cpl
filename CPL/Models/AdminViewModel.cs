@@ -35,8 +35,8 @@ namespace CPL.Models
         public string AccountActivationEnable { get; set; }
         public int CookieExpirations { get; set; }
 
-        public StandardAffiliateRateViewModel StandardAffiliate { get; set; }
-        public AgencyAffiliateRateViewModel AgencyAffiliate { get; set; }
+        public StandardAffiliateRateViewModel StandardAffiliateRate { get; set; }
+        public AgencyAffiliateRateViewModel AgencyAffiliateRate { get; set; }
 
         public int NumberOfAgencyAffiliateExpiredDays { get; set; }
     }
