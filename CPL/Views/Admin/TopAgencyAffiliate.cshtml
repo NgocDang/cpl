@@ -1,7 +1,7 @@
-﻿@model TopAgencyViewModel
+﻿@model TopAgencyAffiliateViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate");
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TopAgencyAffiliate");
 }
 @section styles
     {
@@ -11,7 +11,7 @@
         <div class="content-wrapper">
             <div class="content-header row">
                 <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
-                    <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")</h3>
+                    <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TopAgencyAffiliate")</h3>
                     <div class="row breadcrumbs-top d-inline-block">
                         <div class="breadcrumb-wrapper col-12">
                             <ol class="breadcrumb">
@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="content-body">
-                <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")</h6>
+                <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TopAgencyAffiliate")</h6>
                 @if (Model.IsKYCVerificationActivated && (!Model.KYCVerified.HasValue || !Model.KYCVerified.Value))
                 {
                     <div class="card">
@@ -149,17 +149,17 @@
                                             <div class="row">
                                                 <div class="col-lg-6 col-12">
                                                     <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</strong></p>
-                                                    <h1><i class="la la-user"></i> @Model.TotalUserRegister.ToString("N0")</h1>
+                                                    <h1><i class="la la-user"></i> @Model.TotalIntroducedUser.ToString("N0")</h1>
                                                 </div>
                                                 <div class="col-lg-6 col-12">
                                                     <div class="row">
                                                         <div class="col-lg-12 col-6">
                                                             <p class="text-muted mb-05">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Today")</p>
-                                                            <h3><i class="la la-user"></i> @Model.TotalUserRegisterToday.ToString("N0")</h3>
+                                                            <h3><i class="la la-user"></i> @Model.TotalIntroducedUserToday.ToString("N0")</h3>
                                                         </div>
                                                         <div class="col-lg-12 col-6">
                                                             <p class="text-muted mb-05">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yesterday")</p>
-                                                            <h3><i class="la la-user"></i> @Model.TotalUserRegisterYesterday.ToString("N0")</h3>
+                                                            <h3><i class="la la-user"></i> @Model.TotalIntroducedUserYesterday.ToString("N0")</h3>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -243,14 +243,14 @@
                                                 <div class="row">
                                                     <div class="col-sm-8 col-12 mb-1">
                                                         <label for="IsTier2TabVisible" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsTier2TabVisible") &nbsp; </label>
-                                                        <input id="is-tier2-tab-visible" checked="@Model.TopAgencySetting.IsTier2TabVisible" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier2TabVisible">
+                                                        <input id="is-tier2-tab-visible" checked="@Model.AgencyAffiliateSetting.IsTier2TabVisible" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier2TabVisible">
                                                         
                                                         <label for="IsTier3TabVisible" class="form-check-label ml-md-5 mt-md-0 mt-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsTier3TabVisible") &nbsp; </label>
-                                                        <input id="is-tier3-tab-visible" checked="@Model.TopAgencySetting.IsTier3TabVisible" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier3TabVisible">
+                                                        <input id="is-tier3-tab-visible" checked="@Model.AgencyAffiliateSetting.IsTier3TabVisible" type="checkbox" class="form-check-input checkbox-switch" required name="IsTier3TabVisible">
                                                     </div>
                                                     <div class="col-sm-4 col-12 mb-1 text-lg-right">
                                                         <label for="IsAutoPaymentEnable" class="form-check-label">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "IsAutoPaymentEnable") &nbsp; </label>
-                                                        <input id="is-auto-payment-enable" checked="@Model.TopAgencySetting.IsAutoPaymentEnable" type="checkbox" class="form-check-input checkbox-switch" required name="IsAutoPaymentEnable">
+                                                        <input id="is-auto-payment-enable" checked="@Model.AgencyAffiliateSetting.IsAutoPaymentEnable" type="checkbox" class="form-check-input checkbox-switch" required name="IsAutoPaymentEnable">
                                                     </div>
                                                 </div>
                                             </div>

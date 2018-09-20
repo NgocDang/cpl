@@ -289,7 +289,7 @@ namespace CPL.Controllers
             };
             SqlParameter[] parameters = {
                 new SqlParameter() {
-                    ParameterName = "@UserId",
+                    ParameterName = "@SysUserId",
                     SqlDbType = SqlDbType.Int,
                     Value = user.Id,
                     Direction = ParameterDirection.Input
@@ -297,19 +297,19 @@ namespace CPL.Controllers
                 TotalSaleParam, TodaySaleParam, YesterdaySaleParam
             };
 
-            _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @UserId, @TotalSale OUTPUT, @TodaySale OUTPUT, @YesterdaySale OUTPUT", parameters);
+            _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @SysUserId, @TotalSale OUTPUT, @TodaySale OUTPUT, @YesterdaySale OUTPUT", parameters);
 
             viewModel.TotalSale = Convert.ToInt32((TotalSaleParam.Value as int?).GetValueOrDefault(0));
             viewModel.TotalSaleToday = Convert.ToInt32((TodaySaleParam.Value as int?).GetValueOrDefault(0));
             viewModel.TotalSaleYesterday = Convert.ToInt32((YesterdaySaleParam.Value as int?).GetValueOrDefault(0));
 
             // Total user register
-            viewModel.TotalUserRegister = _sysUserService.Queryable()
-                                           .Where(x => x.IsIntroducedById != null && x.IsIntroducedById == user.Id).Count();
-            viewModel.TotalUserRegisterToday = _sysUserService.Queryable()
+            viewModel.TotalIntroducedUser = _sysUserService.Queryable()
+                                           .Count(x => x.IsIntroducedById != null && x.IsIntroducedById == user.Id);
+            viewModel.TotalIntroducedUserToday = _sysUserService.Queryable()
                                             .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
                                             && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date).Count();
-            viewModel.TotalUserRegisterYesterday = _sysUserService.Queryable()
+            viewModel.TotalIntroducedUserYesterday = _sysUserService.Queryable()
                                             .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
                                             && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date).Count();
 

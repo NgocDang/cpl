@@ -3,8 +3,8 @@
     init: function () {
         TopAgencyAffiliate.bindSwitchery();
         TopAgencyAffiliate.bindDoUpdateAgencyAffiliateRate();
-        TopAgencyAffiliate.bindDoUpdateTopAgencySetting();
-        TopAgencyAffiliate.bindViewPayment();
+        TopAgencyAffiliate.bindDoUpdateAgencyAffiliateSetting();
+        TopAgencyAffiliate.bindConfirmPayment();
         TopAgencyAffiliate.bindDoPayment();
     },
     bindSwitchery: function () {
@@ -12,7 +12,7 @@
             var switches = new Switchery(element, { size: 'small' });
         });
     },
-    bindDoUpdateTopAgencySetting: function () {
+    bindDoUpdateAgencyAffiliateSetting: function () {
         $("#form-top-agency-setting").on("click", ".switchery", function () {
             var _this = this;
             var _postData = {};
@@ -54,9 +54,8 @@
                 _formData.forEach(function (element) {
                     _postData[element['name']] = parseInt(element['value']);
                 });
-                debugger;
                 $.ajax({
-                    url: "/Admin/DoUpdateCommisionTopAgencyAffiliateRate/",
+                    url: "/Admin/DoUpdateAgencyAffiliateRate/",
                     type: "POST",
                     dataType: 'json',
                     beforeSend: function () {
@@ -85,11 +84,11 @@
             return false;
         });
     },
-    bindViewPayment: function () {
+    bindConfirmPayment: function () {
         $("#form-agency-affiliate-tier").on("click", "#btn-payment", function () {
             var _this = this;
             $.ajax({
-                url: "/Admin/ViewPayment",
+                url: "/Admin/ConfirmPayment",
                 type: "GET",
                 beforeSend: function () {
                     $(_this).attr("disabled", true);

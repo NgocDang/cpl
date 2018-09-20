@@ -20,8 +20,8 @@ namespace CPL.Models
         public int TotalSaleToday { get; set; }
         public int TotalSaleYesterday { get; set; }
 
-        public int TotalUserRegister { get; set; }
-        public int TotalUserRegisterToday { get; set; }
-        public int TotalUserRegisterYesterday { get; set; }
+        public int TotalIntroducedUser { get; set; }
+        public int TotalIntroducedUserToday { get; set; }
+        public int TotalIntroducedUserYesterday { get; set; }
     }
 }

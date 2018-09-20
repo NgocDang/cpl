@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class ViewPaymentPartialViewViewModel
+    public class ConfirmPaymentPartialViewViewModel
     {
         public int SysUserId { get; set; }
         public string CommissionAmount { get; set; }
