@@ -113,3 +113,36 @@ update LangDetail set Value = N'Up', name = N'Up' where name = N'Up'
 update LangDetail set Value = N'Down', name = N'Down' where name = N'Down'
 update LangDetail set Value = N'今すぐ購入' where name = N'Bet' and LangId = 2
 ------------------------------------------------------------------------------------------
+
+
+-- 20180919-AdminTopAgency---
+
+INSERT INTO LangDetail VALUES (1, N'Pay', N'Pay');
+INSERT INTO LangDetail VALUES (2, N'Pay', N'支払う');
+
+INSERT INTO LangDetail VALUES (1, N'IsTier2TabVisible', N'Is tier2 tab visible');
+INSERT INTO LangDetail VALUES (2, N'IsTier2TabVisible', N'Tier2タブが可視かどうか');
+
+INSERT INTO LangDetail VALUES (1, N'IsTier3TabVisible', N'Is tier3 tab visible');
+INSERT INTO LangDetail VALUES (2, N'IsTier3TabVisible', N'Tier3タブが可視かどうか');
+
+INSERT INTO LangDetail VALUES (1, N'IsAutoPaymentEnable', N'Is auto payment enable');
+INSERT INTO LangDetail VALUES (2, N'IsAutoPaymentEnable', N'自動支払いが有効かどうか');
+
+INSERT INTO LangDetail VALUES (1, N'Payment', N'Payment');
+INSERT INTO LangDetail VALUES (2, N'Payment', N'支払い');
+
+INSERT INTO LangDetail VALUES (1, N'ConfirmPayment', N'Do you want to pay commision ?');
+INSERT INTO LangDetail VALUES (2, N'ConfirmPayment', N'手数料を払いたいですか？');
+
+INSERT INTO LangDetail VALUES (1, N'CommissionAmount', N'Commission amount');
+INSERT INTO LangDetail VALUES (2, N'CommissionAmount', N'手数料額');
+
+INSERT INTO LangDetail VALUES (1, N'PeriodInMonth', N'Period in month');
+INSERT INTO LangDetail VALUES (2, N'PeriodInMonth', N'月の期間');
+
+INSERT INTO LangDetail VALUES (1, N'PaidSuccessfully', N'Paid successfully !');
+INSERT INTO LangDetail VALUES (2, N'PaidSuccessfully', N'支払いは正常に完了しました');
+
+INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliate', N'Top agency affiliate');
+INSERT INTO LangDetail VALUES (2, N'TopAgencyAffiliate', N'トップの代理店');
