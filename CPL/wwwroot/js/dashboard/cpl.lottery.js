@@ -10,7 +10,7 @@
             var isFormValid = $('#form-purchase-lottery')[0].checkValidity();
             $("#form-purchase-lottery").addClass('was-validated');
             if (isFormValid) {
-                $("#total-amount").html(new Intl.NumberFormat('vn-VN').format($("#number-of-ticket").data().unitPrice * $("#number-of-ticket").val()));
+                $("#total-amount").html(new Intl.NumberFormat('ja-JP').format($("#number-of-ticket").data().unitPrice * $("#number-of-ticket").val()));
             } else 
                 $("#total-amount").html(0);
         });

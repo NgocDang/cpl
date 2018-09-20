@@ -84,9 +84,11 @@
             xAxis: {
                 type: 'datetime',
                 dateTimeLabelFormats: { // don't display the dummy year
+                    day: '%b/%e',
                     month: '%e. %b',
                     year: '%b'
                 },
+
             },
             yAxis: {
                 title: {
