@@ -206,7 +206,7 @@
                 AdminGameManagement.loadLotterySummaryStatistics();
             }
 
-            if ($("#lottery-summary-nav .purchased-lottery-summary-history").html().trim().length <= 2100) {
+            if ($("#lottery-summary-nav .purchased-lottery-summary-history table tbody").length == 0) {
                 AdminGameManagement.loadLotteryHistoryDataTable("#lottery-summary-nav", null);
             }
             
@@ -364,7 +364,7 @@
                 AdminGameManagement.loadLotteryCategoryStatistics("#lottery-category-nav-" + $(_this).data().lotteryCategoryId, $(_this).data().lotteryCategoryId);
             }
 
-            if ($("#lottery-category-nav-" + $(_this).data().lotteryCategoryId + " .purchased-lottery-category-history").html().trim().length <= 2200) {
+            if ($("#lottery-category-nav-" + $(_this).data().lotteryCategoryId + " .purchased-lottery-category-history table tbody").length == 0) {
                 AdminGameManagement.loadLotteryHistoryDataTable("#lottery-category-nav-" + $(_this).data().lotteryCategoryId, $(_this).data().lotteryCategoryId);
             }
         });
