@@ -795,42 +795,40 @@ namespace CPL.Controllers
                 sortDir = model.order[0].dir.ToLower() == "asc";
             }
 
-            Func<SysUser, bool> topAgencyAffiliateCondition = x => x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue;
-
-            var topAgencyAffliates = _sysUserService.Query()
-                                    .Include(x => x.Agency)
-                                    .Include(x => x.IntroducedUsers)
-                                    .Select()
-                                    .Where(topAgencyAffiliateCondition)
-                                    .Select(x => new AllTopAgencyAffiliateViewModel
-                                    {
-                                        Id = x.Id,
-                                        FirstName = x.FirstName,
-                                        LastName = x.LastName,
-                                        Email = x.Email,
-                                        IsLocked = x.IsLocked,
-                                        TotalIntroducer = x.IntroducedUsers.TotalDirectIntroducedUsers,
-                                        AgencyId = x.AgencyId,
-                                        TotalSale = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0),
-                                        TotalSaleInString = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0).ToString(Format.Amount),
-                                        AffiliateCreatedDate = x.AffiliateCreatedDate,
-                                        AffiliateCreatedDateInString = x.AffiliateCreatedDate.GetValueOrDefault().ToString(Format.DateTime),
-                                        Tier1DirectRate = x.Agency.Tier1DirectRate,
-                                        Tier2DirectRate = x.Agency.Tier2DirectRate,
-                                        Tier3DirectRate = x.Agency.Tier3DirectRate,
-                                        Tier2SaleToTier1Rate = x.Agency.Tier2SaleToTier1Rate,
-                                        Tier3SaleToTier1Rate = x.Agency.Tier3SaleToTier1Rate,
-                                        Tier3SaleToTier2Rate = x.Agency.Tier3SaleToTier2Rate,
-                                    })
-                                    .AsQueryable();
-
+            Func<SysUser, bool> topAgencyAffiliateCondition = x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue);
             filteredResultsCount = totalResultsCount = _sysUserService.Queryable().Count(topAgencyAffiliateCondition);
+            var topAgencyAffliates = _sysUserService.Query()
+                                        .Include(x => x.Agency)
+                                        .Include(x => x.IntroducedUsers)
+                                        .Select()
+                                        .Where(topAgencyAffiliateCondition)
+                                        .Select(x => new AllTopAgencyAffiliateViewModel
+                                        {
+                                            Id = x.Id,
+                                            FirstName = x.FirstName,
+                                            LastName = x.LastName,
+                                            Email = x.Email,
+                                            IsLocked = x.IsLocked,
+                                            TotalIntroducer = x.IntroducedUsers.TotalDirectIntroducedUsers,
+                                            AgencyId = x.AgencyId,
+                                            TotalSale = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0),
+                                            TotalSaleInString = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0).ToString(Format.Amount),
+                                            AffiliateCreatedDate = x.AffiliateCreatedDate,
+                                            AffiliateCreatedDateInString = x.AffiliateCreatedDate.GetValueOrDefault().ToString(Format.DateTime),
+                                            Tier1DirectRate = x.Agency.Tier1DirectRate,
+                                            Tier2DirectRate = x.Agency.Tier2DirectRate,
+                                            Tier3DirectRate = x.Agency.Tier3DirectRate,
+                                            Tier2SaleToTier1Rate = x.Agency.Tier2SaleToTier1Rate,
+                                            Tier3SaleToTier1Rate = x.Agency.Tier3SaleToTier1Rate,
+                                            Tier3SaleToTier2Rate = x.Agency.Tier3SaleToTier2Rate,
+                                        })
+                                        .AsQueryable();
 
             // search the dbase taking into consideration table sorting and paging
             if (!string.IsNullOrEmpty(searchBy))
             {
                 Expression<Func<AllTopAgencyAffiliateViewModel, bool>> searchAllTopAgencyAffiliateCondition = x => (x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy);
-                Func<SysUser, bool> searchSysUserCondition = x => (x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy);
+                Func<SysUser, bool> searchSysUserCondition = x => !x.IsDeleted &&((x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy));
 
                 filteredResultsCount = _sysUserService.Queryable()
                         .Where(topAgencyAffiliateCondition)
