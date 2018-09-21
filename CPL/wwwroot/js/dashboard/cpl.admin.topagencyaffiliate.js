@@ -1,6 +1,7 @@
 ﻿var TopAgencyAffiliate = {
     TopAgencyAffiliateDataTable: null,
     init: function () {
+        TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadTopAgencyAffiliateDataTable();
         TopAgencyAffiliate.bindSwitchery();
         TopAgencyAffiliate.bindDoUpdateAgencyAffiliateRate();
         TopAgencyAffiliate.bindDoUpdateAgencyAffiliateSetting();
@@ -10,10 +11,74 @@
         TopAgencyAffiliate.bindTopAgencyTab();
         TopAgencyAffiliate.bindTopAgencyTimeRangeChange();
 
+
+
         var tab = $("#tab").val();
         if (tab === "")
             tab = "top-agency";
         $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
+    },
+    loadTopAgencyAffiliateDataTable: function () {
+        return $('#dt-top-agency-affiliate').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                url: "/Admin/SearchTopAgencyAffiliate",
+                type: 'POST',
+                data: function (data) {
+                    sysUserId: $("#SysUserId").val()
+                },
+                complete: function (data) {
+                    var table = TopAgencyAffiliate.TopAgencyAffiliateDataTable;
+                }
+            },
+            'order': [[1, 'asc']],
+            "language": DTLang.getLang(),
+            "columns": [
+                {
+                    "data": "Tier",
+                    "render": function (data, type, full, meta) {
+                        return full.tier;
+                    }
+                },
+                {
+                    "data": "TotalCPLUsed",
+                    "render": function (data, type, full, meta) {
+                        return full.totalCPLUsed;
+                    }
+                },
+                {
+                    "data": "TotalCPLAwarded",
+                    "render": function (data, type, full, meta) {
+                        return full.totalCPLAwarded;
+                    }
+                },
+                {
+                    "data": "TotalIntroducedUsers",
+                    "render": function (data, type, full, meta) {
+                        return full.totalIntroducedUsers;
+                    }
+                },
+                {
+                    "data": "AffiliateCreatedDate",
+                    "render": function (data, type, full, meta) {
+                        return full.affiliateCreatedDateInString;
+                    }
+                },
+                {
+                    "data": "Action",
+                    "render": function (data, type, full, meta) {
+                        var html = "<a style='margin: 2px' href='/Admin/TopAgencyAffiliate/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#Affiliate").val() + "</a>";
+                        html += "<a style='margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#View").val() + "</a>";
+
+                        return html;
+
+                    },
+                    "orderable": false
+                }
+            ]
+        });
     },
     bindSwitchery: function () {
         $.each($(".checkbox-switch"), function (index, element) {
@@ -142,7 +207,6 @@
             return false;
         });
     },
-
     bindTopAgencyTab: function () {
         $('a#top-agency-nav-tab').on('show.bs.tab', function (e) {
             if ($("#top-agency-nav .tab-detail").html().trim().length === 0) {
