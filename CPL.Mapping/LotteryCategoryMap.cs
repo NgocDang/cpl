@@ -19,6 +19,7 @@ namespace CPL.Mapping
             builder.Property(t => t.Id).HasColumnName("Id");
             builder.Property(t => t.Name).HasColumnName("Name");
             builder.Property(t => t.Description).HasColumnName("Description");
+            builder.Property(t => t.ViewId).HasColumnName("ViewId");
         }
     }
 }
