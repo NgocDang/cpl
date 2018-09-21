@@ -841,7 +841,7 @@ namespace CPL.Controllers
                                             LastName = x.LastName,
                                             Email = x.Email,
                                             IsLocked = x.IsLocked,
-                                            TotalIntroducer = x.IntroducedUsers.TotalDirectIntroducedUsers,
+                                            TotalIntroducedUsers = x.IntroducedUsers.TotalDirectIntroducedUsers,
                                             AgencyId = x.AgencyId,
                                             TotalSale = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0),
                                             TotalSaleInString = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0).ToString(Format.Amount),
