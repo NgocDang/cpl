@@ -85,9 +85,9 @@
                     "data": "Tier2DirectRate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier2DirectRate" data-pk=' + full.agencyId + ' href="#">' + full.tier2DirectRate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier2DirectRate + '" data-name="Tier2DirectRate" data-pk=' + full.agencyId + ' href="#">' + full.tier2DirectRate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier2DirectRate" data-pk=' + full.agencyId + '>' + full.tier2DirectRate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier2DirectRate + '" data-name="Tier2DirectRate" data-pk=' + full.agencyId + '>' + full.tier2DirectRate + '</a>';
                     },
                     "orderable": false
                 },
@@ -95,9 +95,9 @@
                     "data": "Tier3DirectRate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier3DirectRate" data-pk=' + full.agencyId + ' href="#">' + full.tier3DirectRate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier3DirectRate + '" data-name="Tier3DirectRate" data-pk=' + full.agencyId + ' href="#">' + full.tier3DirectRate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier3DirectRate" data-pk=' + full.agencyId + '>' + full.tier3DirectRate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier3DirectRate + '" data-name="Tier3DirectRate" data-pk=' + full.agencyId + '>' + full.tier3DirectRate + '</a>';
                     },
                     "orderable": false
                 },
@@ -105,9 +105,9 @@
                     "data": "Tier2SaleToTier1Rate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.agencyId + ' href="#">' + full.tier2SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier2SaleToTier1Rate + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.agencyId + ' href="#">' + full.tier2SaleToTier1Rate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.agencyId + '>' + full.tier2SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier2SaleToTier1Rate + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.agencyId + '>' + full.tier2SaleToTier1Rate + '</a>';
                     },
                     "orderable": false
                 },
@@ -115,9 +115,9 @@
                     "data": "Tier3SaleToTier1Rate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.agencyId + ' href="#">' + full.tier3SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier3SaleToTier1Rate + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.agencyId + ' href="#">' + full.tier3SaleToTier1Rate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.agencyId + '>' + full.tier3SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier3SaleToTier1Rate + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.agencyId + '>' + full.tier3SaleToTier1Rate + '</a>';
                     },
                     "orderable": false
                 },
@@ -125,9 +125,9 @@
                     "data": "Tier3SaleToTier2Rate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier3SaleToTier2Rate" data-pk=' + full.agencyId + ' href="#">' + full.tier3SaleToTier2Rate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier3SaleToTier2Rate + '" data-name="Tier3SaleToTier2Rate" data-pk=' + full.agencyId + ' href="#">' + full.tier3SaleToTier2Rate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier3SaleToTier2Rate" data-pk=' + full.agencyId + '>' + full.tier3SaleToTier2Rate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier3SaleToTier2Rate + '" data-name="Tier3SaleToTier2Rate" data-pk=' + full.agencyId + '>' + full.tier3SaleToTier2Rate + '</a>';
                     },
                     "orderable": false
                 },
@@ -160,26 +160,11 @@
     loadEditableOnRow: function (element) {
         $(element).find('a.editable').editable({
             url: function (params) {
-                var requestData = '';
-                if (params.name == 'Tier1DirectRate')
-                    requestData = { Id: params.pk, Tier1DirectRate: params.value }
-                else if (params.name == 'Tier2DirectRate')
-                    requestData = { Id: params.pk, Tier2DirectRate: params.value }
-                else if (params.name == 'Tier3DirectRate')
-                    requestData = { Id: params.pk, Tier3DirectRate: params.value }
-                else if (params.name == 'Tier2SaleToTier1Rate')
-                    requestData = { Id: params.pk, Tier2SaleToTier1Rate: params.value }
-                else if (params.name == 'Tier3SaleToTier1Rate')
-                    requestData = { Id: params.pk, Tier3SaleToTier1Rate: params.value }
-                else if (params.name == 'Tier3SaleToTier2Rate')
-                    requestData = { Id: params.pk, Tier3SaleToTier2Rate: params.value }
-                else
-                    return;
                 return $.ajax({
                     cache: false,
                     async: true,
                     type: 'POST',
-                    data: requestData,
+                    data: { agencyId: params.pk, value: params.value, name:params.name },
                     url: 'DoUpdateAllTopAgencyAffiliateRate',
                     success: function (data) {
                         toastr.success(data.message, 'Success!');
