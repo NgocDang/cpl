@@ -25,3 +25,6 @@
         text-align: center;
     }
 }
+html body {
+    background: #F4F5FA !important;
+}

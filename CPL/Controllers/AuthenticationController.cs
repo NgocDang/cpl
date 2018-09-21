@@ -138,7 +138,10 @@ namespace CPL.Controllers
         public IActionResult VerifyPIN(AccountLoginModel viewModel, MobileModel mobileModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Email == viewModel.Email);
-            var tfa = new TwoFactorAuthenticator();
+            var tfa = new TwoFactorAuthenticator()
+            {
+                DefaultClockDriftTolerance = TimeSpan.FromSeconds(30)
+            };
             bool isCorrectPIN = tfa.ValidateTwoFactorPIN($"{CPLConstant.TwoFactorAuthenticationSecretKey}{user.Id}", viewModel.PIN);
 
             if (isCorrectPIN)

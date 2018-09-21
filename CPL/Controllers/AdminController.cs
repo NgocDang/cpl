@@ -108,15 +108,17 @@ namespace CPL.Controllers
             //var deviceCategories = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
             //var bounceRates = _analyticService.GetBounceRate(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
             //var pageViews = _analyticService.GetPageViews(CPLConstant.Analytic.HomeViewId, DateTime.Now.AddDays(-7), DateTime.Now);
-
+            //var newViewId = _analyticService.CreateView("LotteryCategory4");
+            //var newFilterID = _analyticService.CreateFilter("LotteryCategory_4", @"/Lottery/Index/[0-9]+\?lottery-category-id=3");
+            //_analyticService.LinkFilterToView(newViewId, newFilterID);
             var viewModel = new AdminViewModel();
 
             // User management
-            viewModel.TotalKYCPending = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && !x.KYCVerified.Value);
-            viewModel.TotalKYCVerified = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && x.KYCVerified.Value);
-            viewModel.TotalUser = _sysUserService.Queryable().Count();
-            viewModel.TotalUserToday = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy"));
-            viewModel.TotalUserYesterday = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.AddDays(-1).ToString("dd/MM/yyyy"));
+            viewModel.TotalKYCPending = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.KYCVerified.HasValue && !x.KYCVerified.Value);
+            viewModel.TotalKYCVerified = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.KYCVerified.HasValue && x.KYCVerified.Value);
+            viewModel.TotalUser = _sysUserService.Queryable().Count(x => !x.IsDeleted);
+            viewModel.TotalUserToday = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy"));
+            viewModel.TotalUserYesterday = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.AddDays(-1).ToString("dd/MM/yyyy"));
 
             // Game management
             var lotteryGames = _lotteryService.Queryable().Where(x => !x.IsDeleted);
@@ -157,19 +159,19 @@ namespace CPL.Controllers
             viewModel.TotalSaleInGameYesterday = totalSaleInLotteryGameYesterday + (int)totalSaleIPricePredictionGameYesterday;
 
             // Affiliate
-            viewModel.TotalAgencyAffiliate = _sysUserService.Queryable().Count(x => x.AgencyId != null && x.AgencyId > 0);
+            viewModel.TotalAgencyAffiliate = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.AgencyId != null && x.AgencyId > 0);
             viewModel.TotalAgencyAffiliateToday = _sysUserService.Queryable()
-                                                    .Where(x => x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date)
+                                                    .Where(x => !x.IsDeleted && x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date)
                                                     .Count(x => x.AgencyId != null && x.AgencyId > 0);
             viewModel.TotalAgencyAffiliateYesterday = _sysUserService.Queryable()
-                                                    .Where(x => x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date)
+                                                    .Where(x => !x.IsDeleted && x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date)
                                                     .Count(x => x.AgencyId != null && x.AgencyId > 0);
-            viewModel.TotalStandardAffiliate = _sysUserService.Queryable().Count(x => x.AgencyId == null && x.AffiliateId != null && x.AffiliateId > 0);
+            viewModel.TotalStandardAffiliate = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.AgencyId == null && x.AffiliateId != null && x.AffiliateId > 0);
             viewModel.TotalStandardAffiliateToday = _sysUserService.Queryable()
-                                                    .Where(x => x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date)
+                                                    .Where(x => !x.IsDeleted && x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date)
                                                     .Count(x => x.AgencyId == null && x.AffiliateId != null && x.AffiliateId > 0);
             viewModel.TotalStandardAffiliateYesterday = _sysUserService.Queryable()
-                                                    .Where(x => x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date)
+                                                    .Where(x => !x.IsDeleted && x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date)
                                                     .Count(x => x.AgencyId == null && x.AffiliateId != null && x.AffiliateId > 0);
 
             //Setting
@@ -195,8 +197,8 @@ namespace CPL.Controllers
                 Tier3SaleToTier2Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3SaleToTier2Rate).Value)
             };
 
-            viewModel.TotalAffiliateApplicationApproved = _sysUserService.Queryable().Count(x => x.AffiliateId.HasValue && x.AffiliateId.Value != (int)EnumAffiliateApplicationStatus.PENDING);
-            viewModel.TotalAffiliateApplicationPending = _sysUserService.Queryable().Count(x => x.AffiliateId.HasValue && x.AffiliateId == (int)EnumAffiliateApplicationStatus.PENDING);
+            viewModel.TotalAffiliateApplicationApproved = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.AffiliateId.HasValue && x.AffiliateId.Value != (int)EnumAffiliateApplicationStatus.PENDING);
+            viewModel.TotalAffiliateApplicationPending = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.AffiliateId.HasValue && x.AffiliateId == (int)EnumAffiliateApplicationStatus.PENDING);
 
             viewModel.NumberOfAgencyAffiliateExpiredDays = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.NumberOfAgencyAffiliateExpiredDays).Value);
 
@@ -293,10 +295,10 @@ namespace CPL.Controllers
             if (string.IsNullOrEmpty(searchBy))
             {
                 filteredResultsCount = totalResultsCount = _sysUserService.Queryable()
-                        .Count(x => x.AffiliateId.HasValue);
+                        .Count(x => !x.IsDeleted && x.AffiliateId.HasValue);
 
                 return _sysUserService.Queryable()
-                            .Where(x => x.AffiliateId.HasValue)
+                            .Where(x => !x.IsDeleted && x.AffiliateId.HasValue)
                             .OrderBy("AffiliateCreatedDate", false)
                             .Select(x => Mapper.Map<SysUserViewModel>(x))
                             .OrderBy(sortBy, sortDir)
@@ -307,15 +309,15 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.AffiliateId.HasValue)
+                        .Where(x => !x.IsDeleted && x.AffiliateId.HasValue)
                         .Count(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy));
 
                 totalResultsCount = _sysUserService.Queryable()
-                        .Count(x => x.AffiliateId.HasValue);
+                        .Count(x => !x.IsDeleted && x.AffiliateId.HasValue);
 
                 return _sysUserService.Queryable()
-                        .Where(x => x.AffiliateId.HasValue)
+                        .Where(x => !x.IsDeleted && x.AffiliateId.HasValue)
                         .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy))
                         .Select(x => Mapper.Map<SysUserViewModel>(x))
@@ -389,14 +391,14 @@ namespace CPL.Controllers
             if (string.IsNullOrEmpty(searchBy))
             {
                 filteredResultsCount = totalResultsCount = _sysUserService.Queryable()
-                        .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
+                        .Count(x => !x.IsDeleted && x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
 
                 var standardAffliate =
                             _sysUserService.Query()
                             .Include(x => x.Affiliate)
                             .Include(x => x.IntroducedUsers)
                             .Select()
-                            .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
+                            .Where(x => !x.IsDeleted && x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
                             .Select(x => new StandardAffliateViewModel
                             {
                                 Id = x.Id,
@@ -425,19 +427,19 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
+                        .Where(x => !x.IsDeleted && x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
                         .Count(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy));
 
                 totalResultsCount = _sysUserService.Queryable()
-                        .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
+                        .Count(x => !x.IsDeleted && x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
 
                 var standardAffliate =
                             _sysUserService.Query()
                             .Include(x => x.Affiliate)
                             .Include(x => x.IntroducedUsers)
                             .Select()
-                            .Where(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
+                            .Where(x => !x.IsDeleted && x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue)
                             .Select(x => new StandardAffliateViewModel
                             {
                                 Id = x.Id,
@@ -899,10 +901,10 @@ namespace CPL.Controllers
             if (string.IsNullOrEmpty(searchBy))
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Count();
+                        .Count(x => !x.IsDeleted);
 
                 totalResultsCount = _sysUserService.Queryable()
-                        .Count();
+                        .Count(x => !x.IsDeleted);
 
                 // total CPL used and total CPL awarded in lottery game 
                 var lotteryHistories = _lotteryHistoryService.Query()
@@ -923,7 +925,7 @@ namespace CPL.Controllers
                                     .GroupBy(x => x.Id)
                                     .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.TotalCPLUsed), TotalCPLAwarded = y.Sum(x => x.TotalCPLAwarded) });
 
-                var sysUsers = _sysUserService.Queryable()
+                var sysUsers = _sysUserService.Queryable().Where(x => !x.IsDeleted)
                             .Skip(skip)
                             .Take(take)
                             .ToList();
@@ -955,11 +957,11 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
-                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
+                        .Where(x => !x.IsDeleted &&(x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
+                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy)))
                         .Count();
 
-                totalResultsCount = _sysUserService.Queryable()
+                totalResultsCount = _sysUserService.Queryable().Where(x => !x.IsDeleted)
                         .Count();
 
                 // total CPL used and total CPL awarded in lottery game 
@@ -982,8 +984,8 @@ namespace CPL.Controllers
                                     .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.TotalCPLUsed), TotalCPLAwarded = y.Sum(x => x.TotalCPLAwarded) });
 
                 var sysUsers = _sysUserService.Queryable()
-                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
-                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
+                        .Where(x => !x.IsDeleted && (x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
+                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy)))
                         .Skip(skip)
                         .Take(take);
 
@@ -1121,15 +1123,15 @@ namespace CPL.Controllers
             if (string.IsNullOrEmpty(searchBy))
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.KYCVerified.HasValue)
+                        .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                         .Count();
 
                 totalResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.KYCVerified.HasValue)
+                        .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                         .Count();
 
                 return _sysUserService.Queryable()
-                            .Where(x => x.KYCVerified.HasValue)
+                            .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                             .OrderBy("KYCCreatedDate", false)
                             .Select(x => Mapper.Map<SysUserViewModel>(x))
                             .OrderBy(sortBy, sortDir)
@@ -1140,17 +1142,17 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.KYCVerified.HasValue)
+                        .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                         .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy))
                         .Count();
 
                 totalResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.KYCVerified.HasValue)
+                        .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                         .Count();
 
                 return _sysUserService.Queryable()
-                        .Where(x => x.KYCVerified.HasValue)
+                        .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                         .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy))
                         .Select(x => Mapper.Map<SysUserViewModel>(x))
@@ -1363,12 +1365,9 @@ namespace CPL.Controllers
             viewModel.TotalSale = lotteryTotalSale + (int)pricePredictionTotalSale;
 
             // 1.STATISTICAL INFORMATION - PAGE VIEWS
-            var homePageViews = _analyticService.GetPageViews(Analytic.HomeViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
-            var lotteryPageViews = _analyticService.GetPageViews(Analytic.LotteryViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
-            var pricePredictionPageViews = _analyticService.GetPageViews(Analytic.PricePredictionViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
-            viewModel.PageView = homePageViews.AsQueryable().Sum(x => x.Count)
-                + lotteryPageViews.AsQueryable().Sum(x => x.Count)
-                + pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
+            var homeViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.HomeViewId).Value;
+            var homePageViews = _analyticService.GetPageViews(homeViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            viewModel.PageView = homePageViews.AsQueryable().Sum(x => x.Count);
 
             // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
             var lotteryTotalPlayers = _lotteryHistoryService.Queryable()
@@ -1456,8 +1455,6 @@ namespace CPL.Controllers
             // 2.STATISTICAL CHART - PAGE VIEW CHANGES
             viewModel.PageViewChangesInJson = JsonConvert.SerializeObject(homePageViews
                 .OrderBy(x => x.Date)
-                .Concat(lotteryPageViews.OrderBy(x => x.Date))
-                .Concat(pricePredictionPageViews.OrderBy(x => x.Date))
                 .GroupBy(x => x.Date)
                 .Select(y => new SummaryChange
                 {
@@ -1540,17 +1537,20 @@ namespace CPL.Controllers
         {
             var data = new List<PieChartData>();
 
-            var deviceCategoriesHome = _analyticService.GetDeviceCategory(CPLConstant.Analytic.HomeViewId, FirstDeploymentDate, DateTime.Now);
+            var homeViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.HomeViewId).Value;
+            var deviceCategoriesHome = _analyticService.GetDeviceCategory(homeViewId, FirstDeploymentDate, DateTime.Now);
             var totalDesktopHome = deviceCategoriesHome.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
             var totalMobileHome = deviceCategoriesHome.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
             var totalTabletHome = deviceCategoriesHome.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
 
-            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.LotteryViewId, FirstDeploymentDate, DateTime.Now);
+            var lotteryViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.LotteryViewId).Value;
+            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(lotteryViewId, FirstDeploymentDate, DateTime.Now);
             var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
             var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
             var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
 
-            var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(CPLConstant.Analytic.PricePredictionViewId, FirstDeploymentDate, DateTime.Now);
+            var pricePredictionViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.PricePredictionViewId).Value;
+            var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(pricePredictionViewId, FirstDeploymentDate, DateTime.Now);
             var totalDesktopPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
             var totalMobilePricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
             var totalTabletPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
@@ -1608,7 +1608,8 @@ namespace CPL.Controllers
         {
             var data = new List<PieChartData>();
 
-            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(CPLConstant.Analytic.LotteryViewId, FirstDeploymentDate, DateTime.Now);
+            var lotteryViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.LotteryViewId).Value;
+            var deviceCategoriesLottery = _analyticService.GetDeviceCategory(lotteryViewId, FirstDeploymentDate, DateTime.Now);
             var totalDesktopLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
             var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
             var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
@@ -1627,6 +1628,218 @@ namespace CPL.Controllers
                 seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Device"),
                 data = JsonConvert.SerializeObject(data)
             });
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetLotterySummaryStatistics(int periodInDay)
+        {
+            var viewModel = new LotteryCategoryStatisticsViewModel();
+
+            // 1.STATISTICAL INFORMATION 
+            // 1.STATISTICAL INFORMATION - TOTAL REVENUE
+            viewModel.TotalRevenue = Convert.ToInt32(_lotteryHistoryService.Query()
+                .Include(x => x.Lottery)
+                .Include(x => x.LotteryPrize)
+                .Select()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)));
+
+            // 1.STATISTICAL INFORMATION - TOTAL SALE
+            viewModel.TotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Lottery.UnitPrice);
+
+            // 1.STATISTICAL INFORMATION - PAGE VIEWS
+            var lotteryViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.LotteryViewId).Value;
+            var lotteryPageViews = _analyticService.GetPageViews(lotteryViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            viewModel.PageView = lotteryPageViews.AsQueryable().Sum(x => x.Count);
+
+            // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
+            viewModel.TotalPlayers = _lotteryHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .Select(x => x.SysUserId)
+                .Distinct()
+                .Count();
+
+            // 1.STATISTICAL INFORMATION - TODAY PLAYERS
+            viewModel.TodayPlayers = _lotteryHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date)
+                .GroupBy(x => x.SysUserId)
+                .Count();
+
+            // 2.STATISTICAL CHART
+            // 2.STATISTICAL CHART - TOTAL SALE CHANGES
+            var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange
+                        {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = y.Sum(x => x.Lottery.UnitPrice)
+                        });
+
+            viewModel.TotalSaleChangesInJson = JsonConvert.SerializeObject((lotterySale ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.Sum(x => x.Value)
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
+            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange
+                        {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)))
+                        });
+
+            viewModel.TotalRevenueChangesInJson = JsonConvert.SerializeObject((lotteryRevenue ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.Sum(x => x.Value)
+                }).OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - PAGE VIEW CHANGES
+            viewModel.PageViewChangesInJson = JsonConvert.SerializeObject(lotteryPageViews
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL PLAYERS
+            var lotteryPlayers = _lotteryHistoryService.Queryable()
+                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new PlayersChange
+                        {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            SysUserIds = y.Select(x => x.SysUserId)
+                        }).ToList();
+
+            viewModel.TotalPlayersChangesInJson = JsonConvert.SerializeObject((lotteryPlayers ?? Enumerable.Empty<PlayersChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.SelectMany(x => x.SysUserIds).Distinct().Count()
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            return PartialView("_LotteryCategoryStatistics", viewModel);
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetLotteryCategoryStatistics(int periodInDay, int lotteryCategoryId)
+        {
+            var viewModel = new LotteryCategoryStatisticsViewModel();
+
+            // 1.STATISTICAL INFORMATION 
+            // 1.STATISTICAL INFORMATION - TOTAL REVENUE
+            viewModel.TotalRevenue = Convert.ToInt32(_lotteryHistoryService.Query()
+                .Include(x => x.Lottery)
+                .Include(x => x.LotteryPrize)
+                .Select()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Lottery.LotteryCategoryId == lotteryCategoryId)
+                .Sum(x => x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)));
+
+            // 1.STATISTICAL INFORMATION - TOTAL SALE
+            viewModel.TotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Lottery.LotteryCategoryId == lotteryCategoryId)
+                .Sum(x => x.Lottery.UnitPrice);
+
+            // 1.STATISTICAL INFORMATION - PAGE VIEWS
+            var lotteryViewId = _lotteryCategoryService.Queryable().FirstOrDefault(x => x.Id == lotteryCategoryId).ViewId;
+            var lotteryPageViews = _analyticService.GetPageViews(lotteryViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            viewModel.PageView = lotteryPageViews.AsQueryable().Sum(x => x.Count);
+
+            // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
+            viewModel.TotalPlayers = _lotteryHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Lottery.LotteryCategoryId == lotteryCategoryId)
+                .Select(x => x.SysUserId)
+                .Distinct()
+                .Count();
+
+            // 1.STATISTICAL INFORMATION - TODAY PLAYERS
+            viewModel.TodayPlayers = _lotteryHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date && x.Lottery.LotteryCategoryId == lotteryCategoryId)
+                .GroupBy(x => x.SysUserId)
+                .Count();
+
+            // 2.STATISTICAL CHART
+            // 2.STATISTICAL CHART - TOTAL SALE CHANGES
+            var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Lottery.LotteryCategoryId == lotteryCategoryId)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange
+                        {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = y.Sum(x => x.Lottery.UnitPrice)
+                        });
+
+            viewModel.TotalSaleChangesInJson = JsonConvert.SerializeObject((lotterySale ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.Sum(x => x.Value)
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
+            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Lottery.LotteryCategoryId == lotteryCategoryId)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange
+                        {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)))
+                        });
+
+            viewModel.TotalRevenueChangesInJson = JsonConvert.SerializeObject((lotteryRevenue ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.Sum(x => x.Value)
+                }).OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - PAGE VIEW CHANGES
+            viewModel.PageViewChangesInJson = JsonConvert.SerializeObject(lotteryPageViews
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL PLAYERS
+            var lotteryPlayers = _lotteryHistoryService.Queryable()
+                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now && x.Lottery.LotteryCategoryId == lotteryCategoryId)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new PlayersChange
+                        {
+                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
+                            SysUserIds = y.Select(x => x.SysUserId)
+                        }).ToList();
+
+            viewModel.TotalPlayersChangesInJson = JsonConvert.SerializeObject((lotteryPlayers ?? Enumerable.Empty<PlayersChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.SelectMany(x => x.SysUserIds).Distinct().Count()
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            return PartialView("_LotteryCategoryStatistics", viewModel);
         }
 
         [HttpPost]
@@ -1959,13 +2172,25 @@ namespace CPL.Controllers
                     return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExistingCategory") });
                 else
                 {
-                    _lotteryCategoryService.Insert(new LotteryCategory()
+                    var lotteryCategory = new LotteryCategory()
                     {
                         Name = viewModel.Name,
-                        Description = viewModel.Description
-                    });
+                        Description = viewModel.Description,
+                        ViewId = string.Empty
+                    };
+                    _lotteryCategoryService.Insert(lotteryCategory);
 
                     _unitOfWork.SaveChanges();
+
+                    var analyticsViewId = _analyticService.CreateView(Analytic.LotteryCategoryViewName + lotteryCategory.Id);
+                    var analyticsFilterId = _analyticService.CreateFilter(Analytic.LotteryCategoryViewName + lotteryCategory.Id, Analytic.LotteryCategoryFilterExpression + lotteryCategory.Id);
+                    _analyticService.LinkFilterToView(analyticsViewId, analyticsFilterId);
+
+                    lotteryCategory.ViewId = analyticsViewId;
+                    _lotteryCategoryService.Update(lotteryCategory);
+
+                    _unitOfWork.SaveChanges();
+
                     var newCategory = _lotteryCategoryService.Queryable().FirstOrDefault(x => x.Name == viewModel.Name);
                     return new JsonResult(new { success = true, id = newCategory.Id, name = newCategory.Name, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
                 }

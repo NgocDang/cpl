@@ -7,7 +7,12 @@ GO
 CREATE PROCEDURE [dbo].[usp_GetAffiliateInfo]
 	-- Add the parameters for the stored procedure here
 	@SysUserId int,
-	@PeriodInDay int
+	@PeriodInDay int,
+	@PageSize int,
+	@PageIndex int,
+	@OrderColumn nvarchar(30),
+	@OrderDirection nvarchar(5),
+	@SearchValue nvarchar(100)
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -16,7 +21,7 @@ BEGIN
     -- Insert statements for procedure here
 
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////--
---/////////////////////////////////////////////// SALE & INTRODUCED USERS ///////////////////////////////////////////////--
+--/////////////////////////////////// DATATABLE #1 -  SALE & INTRODUCED USERS ///////////////////////////////////////////--
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////--
 
 	SELECT 
@@ -167,23 +172,46 @@ BEGIN
 
 
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////--
---///////////////////////////////////// INTRODUCED TIER 2 & TIER 3 USERS IN DETAILS /////////////////////////////////////--
+--////////////////////////////// DATATABLE #2 - INTRODUCED TIER 2 & TIER 3 USERS IN DETAILS /////////////////////////////--
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////--
 
--------------------- TEST PURPOSE --------------------
+-------------------- BEGIN SETTING PARAM FOR TESTING PURPOSE --------------------
 	--DECLARE @SysUserId int;
 	--SET @SysUserId = 1;
 
 	--DECLARE @PeriodInDay int;
 	--SET @PeriodInDay = 300;
+-------------------- END SETTING PARAM FOR TESTING PURPOSE --------------------
 
 	DECLARE @DirectIntroducedUsers nvarchar(MAX);
 	DECLARE @Tier2IntroducedUsers nvarchar(MAX);
+	DECLARE @FilteredCount int;
+	DECLARE @TotalCount int;
 	SELECT  @DirectIntroducedUsers = DirectIntroducedUsers, 
 			@Tier2IntroducedUsers = Tier2IntroducedUsers 
 	FROM	IntroducedUsers
 	WHERE	Id = @SysUserId;
--------------------- TEST PURPOSE --------------------
+
+------------------------------------------------------------------------------------
+-------------------------- 2.1 CONSTRUCT SQL QUERY FIRST --------------------------- 
+------------------------------------------------------------------------------------
+	DECLARE @TableIntroducedUsers TABLE
+	(
+		Id int, 
+		KindOfTier nvarchar(20),
+		UsedCPL money,
+		LostCPL money,
+		AffiliateSale money,
+		TotalIntroducedUsers int,
+		AffiliateCreatedDate datetime,
+		Tier1DirectRate int,
+		Tier2SaleToTier1Rate int,
+		Tier3SaleToTier1Rate int,
+		RowNum int
+	);
+
+WITH IntroducedUsersCTE AS 
+(
 	SELECT 
 		--------
 		-- Id --
@@ -194,10 +222,10 @@ BEGIN
 		-- KindOfTier --
 		----------------
 		CASE WHEN su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))
-			 THEN 2 -- Tier 2
-			 WHEN su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ','))
-			 THEN 3 -- Tier 3
-			 END
+				THEN 'Tier 2' -- Tier 2
+				WHEN su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ','))
+				THEN 'Tier 3' -- Tier 3
+				END
 		AS KindOfTier,
 
 		-------------
@@ -212,7 +240,7 @@ BEGIN
 		ISNULL((SELECT SUM(Amount) 
 				FROM PricePredictionHistory join PricePrediction on PricePredictionHistory.PricePredictionId = PricePrediction.Id
 				WHERE PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
-					    and PricePrediction.ResultTime >= DATEADD(d, -@PeriodInDay, getdate())
+						and PricePrediction.ResultTime >= DATEADD(d, -@PeriodInDay, getdate())
 						and PricePredictionHistory.SysUserId = su.Id),0)
 		As UsedCPL,
 								 
@@ -234,20 +262,20 @@ BEGIN
 		ISNULL((SELECT SUM(Amount) 
 				FROM PricePredictionHistory join PricePrediction on PricePredictionHistory.PricePredictionId = PricePrediction.Id
 				WHERE PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
-					    and PricePrediction.ResultTime >= DATEADD(d, -@PeriodInDay, getdate())
+						and PricePrediction.ResultTime >= DATEADD(d, -@PeriodInDay, getdate())
 						and PricePredictionHistory.SysUserId = su.Id),0)
 		-
 		ISNULL((SELECT SUM(TotalAward) 
 				FROM PricePredictionHistory join PricePrediction on PricePredictionHistory.PricePredictionId = PricePrediction.Id
 				WHERE PricePredictionHistory.Result = 'WIN' -- WIN / LOSE 
-					    and PricePrediction.ResultTime >= DATEADD(d, -@PeriodInDay, getdate())
+						and PricePrediction.ResultTime >= DATEADD(d, -@PeriodInDay, getdate())
 						and PricePredictionHistory.SysUserId = su.Id),0)
 		As LostCPL,
 
 		-------------------
 		-- AffiliateSale --
 		-------------------
-		    ---------------------------
+			---------------------------
 			-- Direct affiliate sale --
 			---------------------------
 			ISNULL((SELECT SUM(UnitPrice) as TotalCPLUsedInLottery
@@ -326,15 +354,102 @@ BEGIN
 		ISNULL((LEN((SELECT DirectIntroducedUsers FROM IntroducedUsers WHERE IntroducedUsers.Id = su.Id)) - LEN(REPLACE((SELECT DirectIntroducedUsers FROM IntroducedUsers WHERE IntroducedUsers.Id = su.Id),',','')) + 1),0)
 		AS TotalIntroducedUsers,
 
-    ----------------------------
+	----------------------------
 	-- Affiliate created date --
 	----------------------------
 		su.AffiliateCreatedDate
-		AS AffiliateCreatedDate
+		AS AffiliateCreatedDate,
+
+	------------------------
+	-- Tier 1 Direct Rate --
+	------------------------
+		aff.Tier1DirectRate
+		AS Tier1DirectRate,
+
+	---------------------------
+	-- Tier 2 to Tier 1 Rate --
+	---------------------------
+		aff.Tier2SaleToTier1Rate
+		AS Tier2SaleToTier1Rate,
+
+	---------------------------
+	-- Tier 3 to Tier 2 Rate --
+	---------------------------
+		aff.Tier3SaleToTier1Rate
+		AS Tier3SaleToTier1Rate
 
 	FROM   SysUser su join IntroducedUsers iu on su.Id = iu.Id
+					  join Affiliate aff on su.AffiliateId = aff.Id
 	WHERE (su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))
 		or su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ',')))
-	   and su.AffiliateId is not null 
-	   and su.AffiliateId > 0
+		and su.AffiliateId is not null 
+		and su.AffiliateId > 0
+),
+
+------------------------------------------------------------------------------------------
+---------------------------- 2.2 APPLY SORT / SEARCH / PAGING  --------------------------- 
+------------------------------------------------------------------------------------------
+
+IntroducedUsersWithRowNum AS
+(	
+	SELECT *, 
+		RowNum = ROW_NUMBER() OVER (
+			ORDER BY -- ASC
+			CASE WHEN @OrderDirection = N'asc' THEN ''
+				 WHEN @OrderColumn = N'KindOfTier' THEN KindOfTier
+				 END DESC,
+			CASE WHEN @OrderDirection = N'asc' THEN cast(null as money)
+				 WHEN @OrderColumn = N'UsedCPL' THEN UsedCPL
+				 END DESC,
+			CASE WHEN @OrderDirection = N'asc' THEN cast(null as money)
+				 WHEN @OrderColumn = N'LostCPL' THEN LostCPL
+				 END DESC,
+			CASE WHEN @OrderDirection = N'asc' THEN cast(null as money)
+				 WHEN @OrderColumn = N'AffiliateSale' THEN AffiliateSale
+				 END DESC,
+			CASE WHEN @OrderDirection = N'asc' THEN 0
+				 WHEN @OrderColumn = N'TotalIntroducedUsers' THEN TotalIntroducedUsers
+				 END DESC,
+			CASE WHEN @OrderDirection = N'asc' THEN cast(null as datetime)
+				 WHEN @OrderColumn = N'AffiliateCreatedDate' THEN AffiliateCreatedDate
+				 END DESC,
+
+				-- DESC
+			CASE WHEN @OrderDirection = N'desc' THEN ''
+				 WHEN @OrderColumn = N'KindOfTier' THEN KindOfTier
+				 END ASC,
+			CASE WHEN @OrderDirection = N'desc' THEN cast(null as money)
+				 WHEN @OrderColumn = N'UsedCPL' THEN UsedCPL
+				 END ASC,
+			CASE WHEN @OrderDirection = N'desc' THEN cast(null as money)
+				 WHEN @OrderColumn = N'LostCPL' THEN LostCPL
+				 END ASC,
+			CASE WHEN @OrderDirection = N'desc' THEN cast(null as money)
+				 WHEN @OrderColumn = N'AffiliateSale' THEN AffiliateSale
+				 END ASC,
+			CASE WHEN @OrderDirection = N'desc' THEN 0
+				 WHEN @OrderColumn = N'TotalIntroducedUsers' THEN TotalIntroducedUsers
+				 END ASC,
+			CASE WHEN @OrderDirection = N'desc' THEN cast(null as datetime)
+				 WHEN @OrderColumn = N'AffiliateCreatedDate' THEN AffiliateCreatedDate
+				 END ASC)
+	FROM IntroducedUsersCTE
+	WHERE(KindOfTier like '%' + @SearchValue + '%'
+		  OR 
+		  CONVERT(nvarchar(23), AffiliateCreatedDate, 0) like ('%' + @SearchValue + '%'))
+	)
+	INSERT INTO @TableIntroducedUsers
+	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate, Tier1DirectRate, Tier2SaleToTier1Rate, Tier3SaleToTier1Rate, RowNum
+	FROM IntroducedUsersWithRowNum;
+	
+	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate, Tier1DirectRate, Tier2SaleToTier1Rate, Tier3SaleToTier1Rate
+	FROM @TableIntroducedUsers
+	WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @PageSize);
+
+	SELECT TotalDirectIntroducedUsers + TotalTier2IntroducedUsers as TotalCount
+	FROM IntroducedUsers
+	WHERE Id = @SysUserId
+
+	SELECT COUNT(*) as FilteredCount
+	FROM   @TableIntroducedUsers
 END

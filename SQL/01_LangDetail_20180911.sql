@@ -158,3 +158,8 @@ INSERT INTO LangDetail VALUES (2, N'TotalIntroducedUsers', N'総導入ユーザ�
 INSERT INTO LangDetail VALUES (1, N'DirectIntroducedUsers', N'Direct Introduced Users');
 INSERT INTO LangDetail VALUES (2, N'DirectIntroducedUsers', N'直接導入されたユーザー');
 ---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+
+--20180921----
+INSERT INTO LangDetail VALUES (1, N'OverBettingTime', N'Betting time for this game is over');
+INSERT INTO LangDetail VALUES (2, N'OverBettingTime', N'このゲームの賭けの時間は終わった');

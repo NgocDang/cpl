@@ -1,4 +1,8 @@
-﻿.blurry-text {
+﻿html body {
+    background: #F4F5FA !important;
+}
+
+.blurry-text {
     opacity: 0.4;
 }
 

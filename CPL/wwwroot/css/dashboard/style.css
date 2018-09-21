@@ -1828,3 +1828,13 @@ button#btn-dropdown-item:focus {
 .highcharts-credits {
     display:none;
 }
+
+table.dataTable td:first-child {
+    outline: none !important
+}
+
+.row-separator {
+    background: #F4F5FA;
+    margin-left: -21px; 
+    margin-right: -21px;
+}

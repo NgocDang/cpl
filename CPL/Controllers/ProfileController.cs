@@ -193,7 +193,10 @@ namespace CPL.Controllers
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             var viewModel = Mapper.Map<SecurityViewModel>(user);
-            var tfa = new TwoFactorAuthenticator();
+            var tfa = new TwoFactorAuthenticator()
+            {
+                DefaultClockDriftTolerance = TimeSpan.FromSeconds(30)
+            };
             var setupInfo = tfa.GenerateSetupCode(CPLConstant.AppName, user.Email, $"{CPLConstant.TwoFactorAuthenticationSecretKey}{user.Id}", 300, 300);
             viewModel.QrCodeSetupImageUrl = setupInfo.QrCodeSetupImageUrl;
             return View(viewModel);
@@ -323,7 +326,10 @@ namespace CPL.Controllers
             if (value)
             {
                 var userId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
-                var tfa = new TwoFactorAuthenticator();
+                var tfa = new TwoFactorAuthenticator()
+                {
+                    DefaultClockDriftTolerance = TimeSpan.FromSeconds(30)
+                };
                 bool isCorrectPIN = tfa.ValidateTwoFactorPIN($"{CPLConstant.TwoFactorAuthenticationSecretKey}{userId}", pin);
 
                 if (isCorrectPIN)
