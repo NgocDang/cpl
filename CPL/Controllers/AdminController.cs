@@ -388,21 +388,20 @@ namespace CPL.Controllers
                 sortDir = model.order[0].dir.ToLower() == "asc";
             }
 
-            Func<SysUser, bool> StandardAffiliateCondition = x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 &&
-                                                                 (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue)));
-
             // search the dbase taking into consideration table sorting and paging
             if (string.IsNullOrEmpty(searchBy))
             {
                 filteredResultsCount = totalResultsCount = _sysUserService.Queryable()
-                        .Count(StandardAffiliateCondition);
+                        .Count(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 &&
+                                                                 (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue))));
 
                 var standardAffliate =
                             _sysUserService.Query()
                             .Include(x => x.Affiliate)
                             .Include(x => x.IntroducedUsers)
                             .Select()
-                            .Where(StandardAffiliateCondition)
+                            .Where(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 &&
+                                                                 (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue))))
                             .Select(x => new StandardAffliateViewModel
                             {
                                 Id = x.Id,
@@ -431,7 +430,8 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(StandardAffiliateCondition)
+                        .Where(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 &&
+                                                                 (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue))))
                         .Count(x => (x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy) || x.Email.Contains(searchBy));
 
                 totalResultsCount = _sysUserService.Queryable()
@@ -442,7 +442,8 @@ namespace CPL.Controllers
                             .Include(x => x.Affiliate)
                             .Include(x => x.IntroducedUsers)
                             .Select()
-                            .Where(StandardAffiliateCondition)
+                            .Where(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 &&
+                                                                 (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue))))
                             .Select(x => new StandardAffliateViewModel
                             {
                                 Id = x.Id,
@@ -839,13 +840,12 @@ namespace CPL.Controllers
                 sortDir = model.order[0].dir.ToLower() == "asc";
             }
 
-            Func<SysUser, bool> topAgencyAffiliateCondition = x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue);
-            filteredResultsCount = totalResultsCount = _sysUserService.Queryable().Count(topAgencyAffiliateCondition);
-            var topAgencyAffliates = _sysUserService.Query()
+            filteredResultsCount = totalResultsCount = _sysUserService.Queryable().Count(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue));
+            var topAgencyAffiliates = _sysUserService.Query()
                                         .Include(x => x.Agency)
                                         .Include(x => x.IntroducedUsers)
                                         .Select()
-                                        .Where(topAgencyAffiliateCondition)
+                                        .Where(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue))
                                         .Select(x => new AllTopAgencyAffiliateViewModel
                                         {
                                             Id = x.Id,
@@ -871,17 +871,14 @@ namespace CPL.Controllers
             // search the dbase taking into consideration table sorting and paging
             if (!string.IsNullOrEmpty(searchBy))
             {
-                Expression<Func<AllTopAgencyAffiliateViewModel, bool>> searchAllTopAgencyAffiliateCondition = x => (x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy);
-                Func<SysUser, bool> searchSysUserCondition = x => !x.IsDeleted &&((x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy));
-
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(topAgencyAffiliateCondition)
-                        .Count(searchSysUserCondition);
+                        .Where(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue))
+                        .Count(x => !x.IsDeleted && ((x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy)));
 
-                topAgencyAffliates = topAgencyAffliates.Where(searchAllTopAgencyAffiliateCondition);
+                topAgencyAffiliates = topAgencyAffiliates.Where(x => (x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy));
             }
 
-            return topAgencyAffliates.OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
+            return topAgencyAffiliates.OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
         }
 
         [HttpPost]
