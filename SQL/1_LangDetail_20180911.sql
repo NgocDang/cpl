@@ -146,7 +146,11 @@ INSERT INTO LangDetail VALUES (2, N'PaidSuccessfully', N'支払いは正常に�
 
 INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliate', N'Top agency affiliate');
 INSERT INTO LangDetail VALUES (2, N'TopAgencyAffiliate', N'トップの代理店');
+------------------------------------------------------------------------------------------
 
+--20180921----
+INSERT INTO LangDetail VALUES (1, N'OverBettingTime', N'Betting time for this game is over');
+INSERT INTO LangDetail VALUES (2, N'OverBettingTime', N'このゲームの賭けの時間は終わった');
 --20180920-AdminAddTopAgency---
 INSERT INTO LangDetail VALUES (1, N'ListOfTopAgencyAffiliate', N'List of top agency affiliate');
 INSERT INTO LangDetail VALUES (2, N'ListOfTopAgencyAffiliate', N'トップ代理店アフィリエイトのリスト');

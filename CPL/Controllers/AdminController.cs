@@ -113,11 +113,11 @@ namespace CPL.Controllers
             var viewModel = new AdminViewModel();
 
             // User management
-            viewModel.TotalKYCPending = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && !x.KYCVerified.Value);
-            viewModel.TotalKYCVerified = _sysUserService.Queryable().Count(x => x.KYCVerified.HasValue && x.KYCVerified.Value);
-            viewModel.TotalUser = _sysUserService.Queryable().Count();
-            viewModel.TotalUserToday = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy"));
-            viewModel.TotalUserYesterday = _sysUserService.Queryable().Count(x => x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.AddDays(-1).ToString("dd/MM/yyyy"));
+            viewModel.TotalKYCPending = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.KYCVerified.HasValue && !x.KYCVerified.Value);
+            viewModel.TotalKYCVerified = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.KYCVerified.HasValue && x.KYCVerified.Value);
+            viewModel.TotalUser = _sysUserService.Queryable().Count(x => !x.IsDeleted);
+            viewModel.TotalUserToday = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.ToString("dd/MM/yyyy"));
+            viewModel.TotalUserYesterday = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.CreatedDate.ToString("dd/MM/yyyy") == DateTime.Now.AddDays(-1).ToString("dd/MM/yyyy"));
 
             // Game management
             var lotteryGames = _lotteryService.Queryable().Where(x => !x.IsDeleted);
@@ -158,19 +158,19 @@ namespace CPL.Controllers
             viewModel.TotalSaleInGameYesterday = totalSaleInLotteryGameYesterday + (int)totalSaleIPricePredictionGameYesterday;
 
             // Affiliate
-            viewModel.TotalAgencyAffiliate = _sysUserService.Queryable().Count(x => x.AgencyId != null && x.AgencyId > 0);
+            viewModel.TotalAgencyAffiliate = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.AgencyId != null && x.AgencyId > 0);
             viewModel.TotalAgencyAffiliateToday = _sysUserService.Queryable()
-                                                    .Where(x => x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date)
+                                                    .Where(x => !x.IsDeleted && x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date)
                                                     .Count(x => x.AgencyId != null && x.AgencyId > 0);
             viewModel.TotalAgencyAffiliateYesterday = _sysUserService.Queryable()
-                                                    .Where(x => x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date)
+                                                    .Where(x => !x.IsDeleted && x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date)
                                                     .Count(x => x.AgencyId != null && x.AgencyId > 0);
-            viewModel.TotalStandardAffiliate = _sysUserService.Queryable().Count(x => x.AgencyId == null && x.AffiliateId != null && x.AffiliateId > 0);
+            viewModel.TotalStandardAffiliate = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.AgencyId == null && x.AffiliateId != null && x.AffiliateId > 0);
             viewModel.TotalStandardAffiliateToday = _sysUserService.Queryable()
-                                                    .Where(x => x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date)
+                                                    .Where(x => !x.IsDeleted && x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date)
                                                     .Count(x => x.AgencyId == null && x.AffiliateId != null && x.AffiliateId > 0);
             viewModel.TotalStandardAffiliateYesterday = _sysUserService.Queryable()
-                                                    .Where(x => x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date)
+                                                    .Where(x => !x.IsDeleted && x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date)
                                                     .Count(x => x.AgencyId == null && x.AffiliateId != null && x.AffiliateId > 0);
 
             //Setting
@@ -196,8 +196,8 @@ namespace CPL.Controllers
                 Tier3SaleToTier2Rate = int.Parse(settings.FirstOrDefault(x => x.Name == CPLConstant.AgencyAffiliate.Tier3SaleToTier2Rate).Value)
             };
 
-            viewModel.TotalAffiliateApplicationApproved = _sysUserService.Queryable().Count(x => x.AffiliateId.HasValue && x.AffiliateId.Value != (int)EnumAffiliateApplicationStatus.PENDING);
-            viewModel.TotalAffiliateApplicationPending = _sysUserService.Queryable().Count(x => x.AffiliateId.HasValue && x.AffiliateId == (int)EnumAffiliateApplicationStatus.PENDING);
+            viewModel.TotalAffiliateApplicationApproved = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.AffiliateId.HasValue && x.AffiliateId.Value != (int)EnumAffiliateApplicationStatus.PENDING);
+            viewModel.TotalAffiliateApplicationPending = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.AffiliateId.HasValue && x.AffiliateId == (int)EnumAffiliateApplicationStatus.PENDING);
 
             viewModel.NumberOfAgencyAffiliateExpiredDays = int.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.NumberOfAgencyAffiliateExpiredDays).Value);
 
@@ -294,10 +294,10 @@ namespace CPL.Controllers
             if (string.IsNullOrEmpty(searchBy))
             {
                 filteredResultsCount = totalResultsCount = _sysUserService.Queryable()
-                        .Count(x => x.AffiliateId.HasValue);
+                        .Count(x => !x.IsDeleted && x.AffiliateId.HasValue);
 
                 return _sysUserService.Queryable()
-                            .Where(x => x.AffiliateId.HasValue)
+                            .Where(x => !x.IsDeleted && x.AffiliateId.HasValue)
                             .OrderBy("AffiliateCreatedDate", false)
                             .Select(x => Mapper.Map<SysUserViewModel>(x))
                             .OrderBy(sortBy, sortDir)
@@ -308,15 +308,15 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.AffiliateId.HasValue)
+                        .Where(x => !x.IsDeleted && x.AffiliateId.HasValue)
                         .Count(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy));
 
                 totalResultsCount = _sysUserService.Queryable()
-                        .Count(x => x.AffiliateId.HasValue);
+                        .Count(x => !x.IsDeleted && x.AffiliateId.HasValue);
 
                 return _sysUserService.Queryable()
-                        .Where(x => x.AffiliateId.HasValue)
+                        .Where(x => !x.IsDeleted && x.AffiliateId.HasValue)
                         .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy))
                         .Select(x => Mapper.Map<SysUserViewModel>(x))
@@ -386,7 +386,7 @@ namespace CPL.Controllers
                 sortDir = model.order[0].dir.ToLower() == "asc";
             }
 
-            Func<SysUser, bool> StandardAffiliateCondition = x => x.AffiliateId.HasValue && x.AffiliateId > 0 &&
+            Func<SysUser, bool> StandardAffiliateCondition = x => !x.IsDeleted && x.AffiliateId.HasValue && x.AffiliateId > 0 &&
                                                                  (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue));
 
             // search the dbase taking into consideration table sorting and paging
@@ -433,7 +433,7 @@ namespace CPL.Controllers
                         .Count(x => (x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy) || x.Email.Contains(searchBy));
 
                 totalResultsCount = _sysUserService.Queryable()
-                        .Count(StandardAffiliateCondition);
+                        .Count(x => x.AffiliateId.HasValue && x.AffiliateId > 0 && !x.AgencyId.HasValue);
 
                 var standardAffliate =
                             _sysUserService.Query()
@@ -996,10 +996,10 @@ namespace CPL.Controllers
             if (string.IsNullOrEmpty(searchBy))
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Count();
+                        .Count(x => !x.IsDeleted);
 
                 totalResultsCount = _sysUserService.Queryable()
-                        .Count();
+                        .Count(x => !x.IsDeleted);
 
                 // total CPL used and total CPL awarded in lottery game 
                 var lotteryHistories = _lotteryHistoryService.Query()
@@ -1020,7 +1020,7 @@ namespace CPL.Controllers
                                     .GroupBy(x => x.Id)
                                     .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.TotalCPLUsed), TotalCPLAwarded = y.Sum(x => x.TotalCPLAwarded) });
 
-                var sysUsers = _sysUserService.Queryable()
+                var sysUsers = _sysUserService.Queryable().Where(x => !x.IsDeleted)
                             .Skip(skip)
                             .Take(take)
                             .ToList();
@@ -1052,11 +1052,11 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
-                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
+                        .Where(x => !x.IsDeleted &&(x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
+                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy)))
                         .Count();
 
-                totalResultsCount = _sysUserService.Queryable()
+                totalResultsCount = _sysUserService.Queryable().Where(x => !x.IsDeleted)
                         .Count();
 
                 // total CPL used and total CPL awarded in lottery game 
@@ -1079,8 +1079,8 @@ namespace CPL.Controllers
                                     .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.TotalCPLUsed), TotalCPLAwarded = y.Sum(x => x.TotalCPLAwarded) });
 
                 var sysUsers = _sysUserService.Queryable()
-                        .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
-                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy))
+                        .Where(x => !x.IsDeleted && (x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
+                        || x.Email.Contains(searchBy) || x.StreetAddress.Contains(searchBy) || x.Mobile.Contains(searchBy)))
                         .Skip(skip)
                         .Take(take);
 
@@ -1217,15 +1217,15 @@ namespace CPL.Controllers
             if (string.IsNullOrEmpty(searchBy))
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.KYCVerified.HasValue)
+                        .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                         .Count();
 
                 totalResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.KYCVerified.HasValue)
+                        .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                         .Count();
 
                 return _sysUserService.Queryable()
-                            .Where(x => x.KYCVerified.HasValue)
+                            .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                             .OrderBy("KYCCreatedDate", false)
                             .Select(x => Mapper.Map<SysUserViewModel>(x))
                             .OrderBy(sortBy, sortDir)
@@ -1236,17 +1236,17 @@ namespace CPL.Controllers
             else
             {
                 filteredResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.KYCVerified.HasValue)
+                        .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                         .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy))
                         .Count();
 
                 totalResultsCount = _sysUserService.Queryable()
-                        .Where(x => x.KYCVerified.HasValue)
+                        .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                         .Count();
 
                 return _sysUserService.Queryable()
-                        .Where(x => x.KYCVerified.HasValue)
+                        .Where(x => !x.IsDeleted && x.KYCVerified.HasValue)
                         .Where(x => x.FirstName.Contains(searchBy) || x.LastName.Contains(searchBy)
                         || x.Email.Contains(searchBy))
                         .Select(x => Mapper.Map<SysUserViewModel>(x))
