@@ -50,8 +50,8 @@
                                 </thead>
                             </table>
                         </div>
-                        <div class="card-footer">
-                            <button type="button" id="btn-add" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Add") <i class="la la-plus"></i></button>
+                        <div class="card-footer text-right">
+                            <button type="button" id="btn-add" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Add") <i class="la la-plus font-size-15px"></i></button>
                         </div>
                     </div>
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")" id="edit" />
