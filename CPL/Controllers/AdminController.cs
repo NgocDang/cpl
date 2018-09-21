@@ -997,19 +997,6 @@ namespace CPL.Controllers
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
             user.KYCVerified = true;
 
-            // Transfer prize
-            var lotteryHistorys = _lotteryHistoryService
-                              .Query().Include(x => x.LotteryPrize).Select()
-                              .Where(x => x.SysUserId == user.Id && x.Result == EnumGameResult.KYC_PENDING.ToString())
-                              .ToList();
-            foreach (var lotteryHistory in lotteryHistorys)
-            {
-                user.TokenAmount += lotteryHistory.LotteryPrize.Value;
-                // Update status
-                lotteryHistory.Result = EnumGameResult.WIN.ToString();
-                _lotteryHistoryService.Update(lotteryHistory);
-            }
-
             // Save DB
             _sysUserService.Update(user);
             _unitOfWork.SaveChanges();
