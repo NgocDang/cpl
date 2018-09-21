@@ -17,7 +17,7 @@
             "autoWidth": false,
             "stateSave": (Utils.getJsonFromUrl().search == null) ? true : false,
             "ajax": {
-                url: "/Admin/SearchTopAgencyAffiliate",
+                url: "/Admin/SearchAllTopAgencyAffiliate",
                 type: 'POST',
                 data: function (data) {
                     if (data.search.value == "") {

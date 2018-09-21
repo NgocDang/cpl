@@ -764,12 +764,12 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult SearchTopAgencyAffiliate(DataTableAjaxPostModel viewModel)
+        public JsonResult SearchAllTopAgencyAffiliate(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchTopAgencyAffiliateFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            var res = SearchAllTopAgencyAffiliateFunc(viewModel, out filteredResultsCount, out totalResultsCount);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -781,7 +781,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<AllTopAgencyAffiliateViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        public IList<AllTopAgencyAffiliateViewModel> SearchAllTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
             var take = model.length;
