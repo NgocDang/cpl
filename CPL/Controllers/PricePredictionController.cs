@@ -200,57 +200,65 @@ namespace CPL.Controllers
         public IActionResult ConfirmPrediction(int pricePredictionId, decimal betAmount, bool predictedTrend)
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            if (user != null)
+            var pricePrediction = _pricePredictionService.Queryable().FirstOrDefault(x => x.Id == pricePredictionId);
+            if(DateTime.Now > pricePrediction.CloseBettingTime)
             {
-                var currentUser = _sysUserService.Query().Select().FirstOrDefault(x => x.Id == user.Id);
-                if (betAmount < currentUser.TokenAmount)
-                {
-                    var predictionRecord = new PricePredictionHistory() { PricePredictionId = pricePredictionId, Amount = betAmount, CreatedDate = DateTime.Now, Prediction = predictedTrend, SysUserId = user.Id };
-                    _pricePredictionHistoryService.Insert(predictionRecord);
-
-                    currentUser.TokenAmount -= betAmount;
-                    _sysUserService.Update(currentUser);
-
-                    _unitOfWork.SaveChanges();
-
-                    decimal upPercentage;
-                    decimal downPercentage;
-                    //Calculate percentage
-                    decimal upPrediction = _pricePredictionHistoryService
-                        .Queryable()
-                        .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.UP.ToBoolean())
-                        .Count();
-
-                    decimal downPrediction = _pricePredictionHistoryService
-                        .Queryable()
-                        .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.DOWN.ToBoolean())
-                        .Count();
-
-
-                    if (upPrediction + downPrediction == 0)
-                    {
-                        upPercentage = downPercentage = 50;
-                    }
-                    else
-                    {
-                        upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
-                        downPercentage = 100 - upPercentage;
-                    }
-                    //////////////////////////
-
-
-                    _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage, pricePredictionId);
-
-
-                    return new JsonResult(new { success = true, token = currentUser.TokenAmount.ToString("N0"), message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "BettingSuccessfully") });
-                }
-                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "OverBettingTime") });
             }
-            return new JsonResult(new
+            else
             {
-                success = true,
-                url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("LogIn", "Authentication")}?returnUrl={Url.Action("Index", "PricePrediction")}"
-            });
+                if (user != null)
+                {
+                    var currentUser = _sysUserService.Query().Select().FirstOrDefault(x => x.Id == user.Id);
+                    if (betAmount < currentUser.TokenAmount)
+                    {
+                        var predictionRecord = new PricePredictionHistory() { PricePredictionId = pricePredictionId, Amount = betAmount, CreatedDate = DateTime.Now, Prediction = predictedTrend, SysUserId = user.Id };
+                        _pricePredictionHistoryService.Insert(predictionRecord);
+
+                        currentUser.TokenAmount -= betAmount;
+                        _sysUserService.Update(currentUser);
+
+                        _unitOfWork.SaveChanges();
+
+                        decimal upPercentage;
+                        decimal downPercentage;
+                        //Calculate percentage
+                        decimal upPrediction = _pricePredictionHistoryService
+                            .Queryable()
+                            .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.UP.ToBoolean())
+                            .Count();
+
+                        decimal downPrediction = _pricePredictionHistoryService
+                            .Queryable()
+                            .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.DOWN.ToBoolean())
+                            .Count();
+
+
+                        if (upPrediction + downPrediction == 0)
+                        {
+                            upPercentage = downPercentage = 50;
+                        }
+                        else
+                        {
+                            upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
+                            downPercentage = 100 - upPercentage;
+                        }
+                        //////////////////////////
+
+
+                        _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage, pricePredictionId);
+
+
+                        return new JsonResult(new { success = true, token = currentUser.TokenAmount.ToString("N0"), message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "BettingSuccessfully") });
+                    }
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
+                }
+                return new JsonResult(new
+                {
+                    success = true,
+                    url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{Url.Action("LogIn", "Authentication")}?returnUrl={Url.Action("Index", "PricePrediction")}"
+                });
+            }
         }
 
 
