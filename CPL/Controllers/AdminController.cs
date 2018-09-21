@@ -883,40 +883,16 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult DoUpdateAllTopAgencyAffiliateRate(AllTopAgencyAffiliateDataModel dataModel)
+        public IActionResult DoUpdateAllTopAgencyAffiliateRate(string name, int value, int pk)
         {
             try
             {
-                var user = _sysUserService.Queryable().FirstOrDefault(x => x.AgencyId == dataModel.Id);
-                if (user != null && !user.IsLocked)
-                {
-                    var agencyAffiliate = _agencyService.Queryable().FirstOrDefault(x => x.Id == dataModel.Id);
+                var agencyAffiliate = _agencyService.Queryable().FirstOrDefault(x => x.Id == pk);
+                agencyAffiliate.Tier1DirectRate = value;
+                _agencyService.Update(agencyAffiliate);
+                _unitOfWork.SaveChanges();
 
-                    if (dataModel.Tier1DirectRate.HasValue)
-                        agencyAffiliate.Tier1DirectRate = dataModel.Tier1DirectRate.Value;
-
-                    if (dataModel.Tier2DirectRate.HasValue)
-                        agencyAffiliate.Tier2DirectRate = dataModel.Tier2DirectRate.Value;
-
-                    if (dataModel.Tier3DirectRate.HasValue)
-                        agencyAffiliate.Tier3DirectRate = dataModel.Tier3DirectRate.Value;
-
-                    if (dataModel.Tier2SaleToTier1Rate.HasValue)
-                        agencyAffiliate.Tier2SaleToTier1Rate = dataModel.Tier2SaleToTier1Rate.Value;
-
-                    if (dataModel.Tier3SaleToTier1Rate.HasValue)
-                        agencyAffiliate.Tier3SaleToTier1Rate = dataModel.Tier3SaleToTier1Rate.Value;
-
-                    if (dataModel.Tier3SaleToTier2Rate.HasValue)
-                        agencyAffiliate.Tier3SaleToTier2Rate = dataModel.Tier3SaleToTier2Rate.Value;
-
-                    _agencyService.Update(agencyAffiliate);
-                    _unitOfWork.SaveChanges();
-
-                    return new JsonResult(new { success = true, isLocked = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
-                }
-                else
-                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+                return new JsonResult(new { success = true, isLocked = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
             }
             catch (Exception ex)
             {

@@ -75,9 +75,9 @@
                     "data": "Tier1DirectRate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.agencyId + ' href="#">' + full.tier1DirectRate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier1DirectRate + '" data-name="Tier1DirectRate" data-pk=' + full.agencyId + ' href="#">' + full.tier1DirectRate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.agencyId + '>' + full.tier1DirectRate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier1DirectRate + '"data-name="Tier1DirectRate" data-pk=' + full.agencyId + '>' + full.tier1DirectRate + '</a>';
                     },
                     "orderable": false
                 },
@@ -160,7 +160,6 @@
     loadEditableOnRow: function (element) {
         $(element).find('a.editable').editable({
             url: function (params) {
-                debugger;
                 var requestData = '';
                 if (params.name == 'Tier1DirectRate')
                     requestData = { Id: params.pk, Tier1DirectRate: params.value }
