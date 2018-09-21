@@ -11,5 +11,7 @@ namespace CPL.Models
 
         public AgencyAffiliateRateViewModel AgencyAffiliateRate { get; set; }
         public AgencyAffiliateSettingViewModel AgencyAffiliateSetting { get; set; }
+
+        public string Tab { get; set; }
     }
 }

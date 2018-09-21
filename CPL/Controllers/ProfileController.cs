@@ -307,12 +307,12 @@ namespace CPL.Controllers
             viewModel.TotalSaleYesterday = Convert.ToInt32((YesterdaySaleParam.Value as int?).GetValueOrDefault(0));
 
             // Total user register
-            viewModel.TotalIntroducedUser = _sysUserService.Queryable()
+            viewModel.TotalIntroducedUsers = _sysUserService.Queryable()
                                            .Count(x => x.IsIntroducedById != null && x.IsIntroducedById == user.Id);
             viewModel.TotalIntroducedUserToday = _sysUserService.Queryable()
                                             .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
                                             && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date).Count();
-            viewModel.TotalIntroducedUserYesterday = _sysUserService.Queryable()
+            viewModel.TotalIntroducedUsersYesterday = _sysUserService.Queryable()
                                             .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
                                             && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date).Count();
 
