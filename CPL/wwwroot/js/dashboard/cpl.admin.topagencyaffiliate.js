@@ -7,8 +7,8 @@
         TopAgencyAffiliate.bindConfirmPayment();
         TopAgencyAffiliate.bindDoPayment();
 
-        TopAgencyAffiliate.bindTier1Tab();
-        TopAgencyAffiliate.bindTier1TimeRangeChange();
+        TopAgencyAffiliate.bindTopAgencyTab();
+        TopAgencyAffiliate.bindTopAgencyTimeRangeChange();
 
         var tab = $("#tab").val();
         if (tab === "")
@@ -25,7 +25,6 @@
             var _this = this;
             var _postData = {};
             var _data = [{ name: $(_this).prev().prop("name"), value: $(_this).prev().is(":checked") }];
-            debugger;
             _data.forEach(function (element) {
                 _postData[element['name']] = element['value'];
             });
@@ -144,9 +143,8 @@
         });
     },
 
-    bindTier1Tab: function () {
+    bindTopAgencyTab: function () {
         $('a#top-agency-nav-tab').on('show.bs.tab', function (e) {
-            debugger;
             if ($("#top-agency-nav .tab-detail").html().trim().length === 0) {
                 TopAgencyAffiliate.loadTier1Statistics();
             }
@@ -169,7 +167,7 @@
             },
         });
     },
-    bindTier1TimeRangeChange: function () {
+    bindTopAgencyTimeRangeChange: function () {
         $("#top-agency-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 TopAgencyAffiliate.loadTier1Statistics();

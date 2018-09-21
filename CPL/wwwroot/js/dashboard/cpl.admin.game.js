@@ -18,7 +18,7 @@
         // Show tab base on URL tab parameter
         var tab = $("#tab").val();
         if (tab === "") 
-            tab = "tier-1";
+            tab = "summary";
         $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
     },
     bindSummaryTab: function () {

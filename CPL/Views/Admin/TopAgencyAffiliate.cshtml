@@ -328,7 +328,7 @@
                                         </div>
                                     </div>
                                     <div class="card-footer border-top-blue-grey border-top-lighten-5 text-right">
-                                        <button class="btn btn-sm btn-primary mr-md-2 mr-1" id="btn-update">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
+                                        <button class="btn btn-sm btn-primary" id="btn-update">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
                                         <button class="btn btn-sm btn-secondary" id="btn-payment" @(!Model.CanDoPayment ? "disabled" : "")>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pay")</button>
                                     </div>
                                 </form>
