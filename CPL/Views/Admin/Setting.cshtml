@@ -6,6 +6,7 @@
 @section styles
     {
     <link href="~/css/dashboard/plugins/switchery/switchery.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/dashboard/cpl.admin.setting.css" asp-append-version="true" />
 }
 <div class="app-content container center-layout mt-2 px-0">
     <div class="content-wrapper">
@@ -16,7 +17,7 @@
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                                <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             </li>
                             <li class="breadcrumb-item active">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Setting")

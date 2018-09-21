@@ -24,5 +24,4 @@ namespace CPL.Models
         public EnumDeviceCategory DeviceCategory { get; set; }
         public int Count { get; set; }
     }
-
 }

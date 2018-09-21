@@ -17,7 +17,7 @@
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                                <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             </li>
                             <li class="breadcrumb-item active">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")
@@ -259,7 +259,6 @@
                             <div class="col-12 pl-0">
                                 <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-file-o font-large-1"></i></a>
                                 <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</a>
-                                <hr class="mt-1 mb-0">
                             </div>
                         </div>
                     </div>

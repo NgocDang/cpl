@@ -83,3 +83,7 @@ label:hover:before {
 .dt-checkboxes-cell {
     outline: none!important
 }
+
+html body {
+    background: #F4F5FA !important;
+}
