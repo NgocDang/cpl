@@ -17,8 +17,11 @@
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
-                            </li>
+                                    <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a asp-controller="Admin" asp-action="AllTopAgencyAffiliate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllTopAgencyAffiliate")</a>
+                                </li>
                             <li class="breadcrumb-item active">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")
                             </li>
@@ -285,42 +288,42 @@
                                                 <div class="col-md-4 col-sm-12">
                                                     <fieldset class="form-group">
                                                         <label for="Tier1DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1")</label>
-                                                        <input type="number" min="0" name="Tier1DirectRate" class="form-control" max="100" id="Tier1DirectRate" value="@Model.AgencyAffiliateRate.Tier1DirectRate" required>
+                                                        <input type="number" min="0" name="Tier1DirectRate" class="form-control" max="100" value="@Model.AgencyAffiliateRate.Tier1DirectRate" required>
                                                         <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1Required")</div>
                                                     </fieldset>
                                                 </div>
                                                 <div class="col-md-4 col-sm-12">
                                                     <fieldset class="form-group">
                                                         <label for="Tier2DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier2")</label>
-                                                        <input type="number" min="0" name="Tier2DirectRate" class="form-control" max="100" id="Tier2DirectRate" value="@Model.AgencyAffiliateRate.Tier2DirectRate" required>
+                                                        <input type="number" min="0" name="Tier2DirectRate" class="form-control" max="100" value="@Model.AgencyAffiliateRate.Tier2DirectRate" required>
                                                         <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier2Required")</div>
                                                     </fieldset>
                                                 </div>
                                                 <div class="col-md-4 col-sm-12">
                                                     <fieldset class="form-group">
                                                         <label for="Tier3DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier3")</label>
-                                                        <input type="number" min="0" name="Tier3DirectRate" class="form-control" max="100" id="Tier3DirectRate" value="@Model.AgencyAffiliateRate.Tier3DirectRate" required>
+                                                        <input type="number" min="0" name="Tier3DirectRate" class="form-control" max="100" value="@Model.AgencyAffiliateRate.Tier3DirectRate" required>
                                                         <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier3Required")</div>
                                                     </fieldset>
                                                 </div>
                                                 <div class="col-md-4 col-sm-12">
                                                     <fieldset class="form-group">
                                                         <label for="Tier2SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1")</label>
-                                                        <input type="number" min="0" name="Tier2SaleToTier1Rate" class="form-control" max="100" id="Tier2SaleToTier1Rate" value="@Model.AgencyAffiliateRate.Tier2SaleToTier1Rate" required>
+                                                        <input type="number" min="0" name="Tier2SaleToTier1Rate" class="form-control" max="100"  value="@Model.AgencyAffiliateRate.Tier2SaleToTier1Rate" required>
                                                         <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1Required")</div>
                                                     </fieldset>
                                                 </div>
                                                 <div class="col-md-4 col-sm-12">
                                                     <fieldset class="form-group">
                                                         <label for="Tier3SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1")</label>
-                                                        <input type="number" min="0" name="Tier3SaleToTier1Rate" class="form-control" max="100" id="Tier3SaleToTier1Rate" value="@Model.AgencyAffiliateRate.Tier3SaleToTier1Rate" required>
+                                                        <input type="number" min="0" name="Tier3SaleToTier1Rate" class="form-control" max="100" value="@Model.AgencyAffiliateRate.Tier3SaleToTier1Rate" required>
                                                         <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1Required")</div>
                                                     </fieldset>
                                                 </div>
                                                 <div class="col-md-4 col-sm-12">
                                                     <fieldset class="form-group">
                                                         <label for="Tier3SaleToTier2Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier2")</label>
-                                                        <input type="number" min="0" name="Tier3SaleToTier2Rate" class="form-control" max="100" id="Tier3SaleToTier2Rate" value="@Model.AgencyAffiliateRate.Tier3SaleToTier2Rate" required>
+                                                        <input type="number" min="0" name="Tier3SaleToTier2Rate" class="form-control" max="100" value="@Model.AgencyAffiliateRate.Tier3SaleToTier2Rate" required>
                                                         <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier2Required")</div>
                                                     </fieldset>
                                                 </div>

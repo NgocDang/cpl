@@ -21,7 +21,7 @@
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                                <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
                             </li>
                             <li class="breadcrumb-item active">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliate")
@@ -45,11 +45,11 @@
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</th>
                                         <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
                                         <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSaleInCPL")</th>
-                                        <th class="border-top-0" data-priority="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducer")</th>
+                                        <th class="border-top-0" data-priority="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducedUsers")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateCreatedDate")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier1") %</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier2") %</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Tier3") %</th>
+                                        <th class="border-top-0">1</th>
+                                        <th class="border-top-0">2>1</th>
+                                        <th class="border-top-0">3>1</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
 
                                     </tr>
@@ -73,21 +73,21 @@
                                         <div class="col-md-4 col-sm-12">
                                             <fieldset class="form-group">
                                                 <label for="Tier1DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1")</label>
-                                                <input type="number" min="0" max="100" name="Tier1DirectRate" class="form-control" maxlength="30" id="Tier1DirectRate" value="0" required>
+                                                <input type="number" min="0" max="100" name="Tier1DirectRate" class="form-control" id="Tier1DirectRate" value="0" required>
                                                 <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier1Required")</div>
                                             </fieldset>
                                         </div>
                                         <div class="col-md-4 col-sm-12">
                                             <fieldset class="form-group">
                                                 <label for="Tier2SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier2")</label>
-                                                <input type="number" min="0" max="100" name="Tier2SaleToTier1Rate" class="form-control" maxlength="30" id="Tier2SaleToTier1Rate" value="0" required>
+                                                <input type="number" min="0" max="100" name="Tier2SaleToTier1Rate" class="form-control" id="Tier2SaleToTier1Rate" value="0" required>
                                                 <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier2Required")</div>
                                             </fieldset>
                                         </div>
                                         <div class="col-md-4 col-sm-12">
                                             <fieldset class="form-group">
                                                 <label for="Tier3SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier3")</label>
-                                                <input type="number" min="0" max="100" name="Tier3SaleToTier1Rate" class="form-control" maxlength="30" id="Tier3SaleToTier1Rate" value="0" required>
+                                                <input type="number" min="0" max="100" name="Tier3SaleToTier1Rate" class="form-control" id="Tier3SaleToTier1Rate" value="0" required>
                                                 <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardCommissionTier3Required")</div>
                                             </fieldset>
                                         </div>
@@ -113,7 +113,7 @@
     <script src="~/js/dashboard/plugins/datatables/Checkboxes-1.2.11/js/dataTables.checkboxes.min.js"></script>
     <script src="~/js/dashboard/plugins/editable/bootstrap-editable.min.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
-    <script src="~/js/dashboard/cpl.admin.standardaffiliate.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.admin.allstandardaffiliate.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.utils.js"></script>
 }
 

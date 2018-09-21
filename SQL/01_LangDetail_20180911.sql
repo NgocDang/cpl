@@ -144,7 +144,7 @@ INSERT INTO LangDetail VALUES (2, N'PeriodInMonth', N'月の期間');
 INSERT INTO LangDetail VALUES (1, N'PaidSuccessfully', N'Paid successfully !');
 INSERT INTO LangDetail VALUES (2, N'PaidSuccessfully', N'支払いは正常に完了しました');
 
-INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliate', N'Top agency affiliate');
+INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliate', N'Top Agency Affiliate');
 INSERT INTO LangDetail VALUES (2, N'TopAgencyAffiliate', N'トップの代理店');
 
 ----------------------------------------------------------------------------------
@@ -173,3 +173,15 @@ INSERT INTO LangDetail VALUES (2, N'OverBettingTime', N'このゲームの賭け
 
 INSERT INTO LangDetail VALUES (1, N'AddANewLotteryCategory', N'Add new lottery category');
 INSERT INTO LangDetail VALUES (2, N'AddANewLotteryCategory', N'新しい宝くじカテゴリを追加');
+
+--20180920-AdminAddTopAgency---
+INSERT INTO LangDetail VALUES (1, N'ListOfTopAgencyAffiliate', N'List of top agency affiliate');
+INSERT INTO LangDetail VALUES (2, N'ListOfTopAgencyAffiliate', N'トップ代理店アフィリエイトのリスト');
+
+INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliateTiers', N'Top agency affiliate tiers');
+INSERT INTO LangDetail VALUES (2, N'TopAgencyAffiliateTiers', N'上位機関のアフィリエイト層');
+
+INSERT INTO LangDetail VALUES (1, N'AllTopAgencyAffiliate', N'All top agency affiliate');
+INSERT INTO LangDetail VALUES (2, N'AllTopAgencyAffiliate', N'すべてのトップ代理店アフィリエイト');
+
+DELETE LangDetail WHERE Name = 'TotalIntroducer';

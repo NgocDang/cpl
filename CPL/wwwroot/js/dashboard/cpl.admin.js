@@ -22,8 +22,7 @@
             if (key == 13) {
                 var searchstring = document.getElementById('search-standard-affiliate');
                 if (searchstring.value != null && searchstring.value.replace(/\s+/g, '') != "")
-                    // TODO: Change xxxxx by Action for Standard Affiliate
-                    window.location.href = "/Admin/StandardAffiliate?search=" + searchstring.value.replace(/\s+/g, '');
+                    window.location.href = "/Admin/AllStandardAffiliate?search=" + searchstring.value.replace(/\s+/g, '');
             }
         });
     },
@@ -33,8 +32,7 @@
             if (key == 13) {
                 var searchstring = document.getElementById('search-agency-affiliate');
                 if (searchstring.value != null && searchstring.value.replace(/\s+/g, '') != "")
-                    // TODO: Change xxxxx by Action for Agency Affiliate
-                    window.location.href = "/Admin/xxxxx?search=" + searchstring.value.replace(/\s+/g, '');
+                    window.location.href = "/Admin/AllTopAgencyAffiliate?search=" + searchstring.value.replace(/\s+/g, '');
             }
         });
     },
