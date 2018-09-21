@@ -167,3 +167,9 @@ INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TopAgency', N
 --20180921----
 INSERT INTO LangDetail VALUES (1, N'OverBettingTime', N'Betting time for this game is over');
 INSERT INTO LangDetail VALUES (2, N'OverBettingTime', N'このゲームの賭けの時間は終わった');
+
+-----------------------------------------------------------------------------------------
+-- LAN - 20180920 - LotteryCategory card in Admin -> GameManagement -> Lottery tab ------
+
+INSERT INTO LangDetail VALUES (1, N'AddANewLotteryCategory', N'Add new lottery category');
+INSERT INTO LangDetail VALUES (2, N'AddANewLotteryCategory', N'新しい宝くじカテゴリを追加');
