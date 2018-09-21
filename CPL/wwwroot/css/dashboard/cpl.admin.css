@@ -14,3 +14,7 @@
 .search-box input {
     border-color: #E8E8E8;
 }
+
+html body {
+    background: #F4F5FA !important;
+}

@@ -144,7 +144,6 @@ namespace CPL.Misc
                 {
                     if (x.Dimensions.Count > 0 && x.Metrics.Count > 0)
                     {
-                        //if (string.Compare(x.Dimensions.First(), EnumDeviceCategory.DESKTOP.ToString(), true) == 0)
                         deviceCategories.Add(new DeviceCategoryViewModel
                         {
                             DeviceCategory = (EnumDeviceCategory)Enum.Parse(typeof(EnumDeviceCategory), x.Dimensions[0], true),
