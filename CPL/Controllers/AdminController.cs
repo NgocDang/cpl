@@ -884,46 +884,6 @@ namespace CPL.Controllers
                 return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
             }
         }
-
-        [HttpPost]
-        [Permission(EnumRole.Admin)]
-        public IActionResult DoUpdateAllTopAgencyAffiliateRates(AllTopAgencyAffiliateDataModel viewModel)
-        {
-            try
-            {
-                foreach (var id in viewModel.Ids)
-                {
-                    var agencyAffiliate = _agencyService.Queryable().FirstOrDefault(x => x.Id == id);
-
-                    if (viewModel.Tier1DirectRate.HasValue)
-                        agencyAffiliate.Tier1DirectRate = viewModel.Tier1DirectRate.Value;
-
-                    if (viewModel.Tier2DirectRate.HasValue)
-                        agencyAffiliate.Tier2DirectRate = viewModel.Tier2DirectRate.Value;
-
-                    if (viewModel.Tier3DirectRate.HasValue)
-                        agencyAffiliate.Tier3DirectRate = viewModel.Tier3DirectRate.Value;
-
-                    if (viewModel.Tier2SaleToTier1Rate.HasValue)
-                        agencyAffiliate.Tier2SaleToTier1Rate = viewModel.Tier2SaleToTier1Rate.Value;
-
-                    if (viewModel.Tier3SaleToTier1Rate.HasValue)
-                        agencyAffiliate.Tier3SaleToTier1Rate = viewModel.Tier3SaleToTier1Rate.Value;
-
-                    if (viewModel.Tier3SaleToTier2Rate.HasValue)
-                        agencyAffiliate.Tier3SaleToTier2Rate = viewModel.Tier3SaleToTier2Rate.Value;
-
-                    _agencyService.Update(agencyAffiliate);
-                }
-
-                _unitOfWork.SaveChanges();
-                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
-            }
-        }
         #endregion
 
         #region User

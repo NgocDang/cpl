@@ -1,11 +1,8 @@
 ﻿var AllTopAgencyAffiliate = {
     AllTopAgencyAffiliateDataTable: null,
     init: function () {
-        AllTopAgencyAffiliate.isCheckAllRow = false;
         AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable = AllTopAgencyAffiliate.loadAllTopAgencyAffiliateDataTable();
         AllTopAgencyAffiliate.initAllTopAgencyAffiliateDataTable();
-        AllTopAgencyAffiliate.bindDoLock();
-        AllTopAgencyAffiliate.bindDoUpdateRateMultipleRow();
     },
     initAllTopAgencyAffiliateDataTable: function () {
         AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
@@ -14,7 +11,6 @@
         AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.column(0).checkboxes.deselectAll();
     },
     loadAllTopAgencyAffiliateDataTable: function () {
-        debugger;
         return $('#dt-all-top-agency-affiliate').DataTable({
             "processing": true,
             "serverSide": true,
@@ -31,30 +27,8 @@
                 complete: function (data) {
                     AllTopAgencyAffiliate.loadEditable();
                     var table = AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable;
-                    table.cells(
-                        table.rows(function (idx, data, node) {
-                            return data.isLocked === true;
-                        }).indexes(),
-                        0
-                    ).checkboxes.disable();
                 }
             },
-            'columnDefs': [
-                {
-                    'targets': 0,
-                    'render': function (data, type, row, meta) {
-                        if (type === 'display') {
-                            data = '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>';
-                        }
-
-                        return data;
-                    },
-                    'checkboxes': {
-                        'selectRow': true,
-                        'selectAllRender': '<div class="checkbox"><input type="checkbox" class="dt-checkboxes"><label></label></div>'
-                    }
-                }
-            ],
             'deferRender': true,
             'select': {
                 'style': 'multi'
@@ -62,9 +36,6 @@
             'order': [[1, 'asc']],
             "language": DTLang.getLang(),
             "columns": [
-                {
-                    "data": "agencyId"
-                },
                 {
                     "data": "FirstName",
                     "render": function (data, type, full, meta) {
@@ -164,63 +135,15 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        if (full.isLocked === false)
-                            return "<div class='text-lg-center'>" +
-                                "<button data-id='" + full.id + "'class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#lock").val() + "</button> " +
-                                "</div>";
-                        else
-                            return "<div class='text-lg-center'>" +
-                                "<button data-id='" + full.id + "'class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#unlock").val() + "</button> " +
-                                "</div>";
+                        var html = "<a style='margin: 2px' href='/Admin/TopAgencyAffiliate/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#Affiliate").val() + "</a>";
+                        html += "<a style='margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#View").val() + "</a>";
+
+                        return html;
+
                     },
                     "orderable": false
                 }
             ]
-        });
-    },
-    bindDoLock: function () {
-        $("#dt-all-top-agency-affiliate").on("click", ".btn-lock", function () {
-            var _this = this;
-            var table = AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable;
-            $.ajax({
-                url: "/Admin/DoLockAffiliate/",
-                type: "POST",
-                beforeSend: function () {
-                    $(_this).attr("disabled", true);
-                    $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
-                },
-                data: {
-                    id: $(_this).data().id
-                },
-                success: function (data) {
-                    if (data.success) {
-                        if (data.isLocked == false) {
-                            $(_this).html($("#lock").val());
-                            $(_this).closest("tr").find("a.editable").removeClass("editable-locked");
-                            $(_this).closest("tr").find("a.editable").addClass("editable-unlocked");
-                            $(_this).closest("tr").find("a.editable").attr("href", "#");
-                            table.cell(table.row($(_this).closest("tr")).index(), 0).checkboxes.enable();
-                            if (AllTopAgencyAffiliate.isCheckAllRow)
-                                table.cell(table.row($(_this).closest("tr")).index(), 0).checkboxes.select(true);
-                        }
-                        else {
-                            $(_this).html($("#unlock").val());
-                            $(_this).closest("tr").find("a.editable").removeClass("editable-unlocked");
-                            $(_this).closest("tr").find("a.editable").addClass("editable-locked");
-                            $(_this).closest("tr").find("a.editable").removeAttr("href");
-                            table.cell(table.row($(_this).closest("tr")).index(), 0).checkboxes.select(false);
-                            table.cell(table.row($(_this).closest("tr")).index(), 0).checkboxes.disable();
-                        }
-                        $(_this).closest("tr").find('a.editable').editable('toggleDisabled');
-                        toastr.success(data.message, 'Success!');
-                    }
-                    else
-                        toastr.error(data.message, 'Error!');
-                },
-                complete: function (data) {
-                    $(_this).attr("disabled", false);
-                }
-            });
         });
     },
     loadEditable: function () {
@@ -271,61 +194,6 @@
         });
         $(element).find('a.editable-locked').editable('toggleDisabled');
     },
-    bindDoUpdateRateMultipleRow: function () {
-        $("#form-comission-rate-setting").on("click", "#btn-update", function () {
-            debugger;
-            var rows_selected = AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.column(0).checkboxes.selected();
-            var _postData = {};
-            if (rows_selected.count() == 0)
-                return false;
-            else {
-                if (AllTopAgencyAffiliate.isCheckAllRow == true) {
-                    _postData["IsCheckedAll"] = true;
-                }
-                _postData["Ids"] = new Array(rows_selected.count());
-                $.each(rows_selected, function (i, value) {
-                    _postData["Ids"][i] = parseInt(value);
-                });
-            }
-            var isFormValid = $("#form-comission-rate-setting")[0].checkValidity();
-            $("#form-comission-rate-setting").addClass('was-validated');
-            var _this = this;
-            if (isFormValid) {
-                var _formData = $("#form-comission-rate-setting").serializeArray();
-                _formData.forEach(function (element) {
-                    _postData[element['name']] = parseInt(element['value']);
-                });
-                var _data = _postData;
-                $.ajax({
-                    url: "/Admin/DoUpdateAllTopAgencyAffiliateRates/",
-                    type: "POST",
-                    dataType: 'json',
-                    beforeSend: function () {
-                        $(_this).attr("disabled", true);
-                        $(_this).html("<i class='fa fa-spinner fa-spin'> </i> " + $(_this).text());
-                    },
-                    data: { 'viewModel': _data },
-                    success: function (data) {
-                        if (data.success) {
-                            toastr.success(data.message, 'Success!');
-                            AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.ajax.reload();
-                            AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.column(0).checkboxes.deselectAll();
-                            $("#form-comission-rate-setting")[0].reset();
-                        } else {
-                            toastr.error(data.message, 'Error!');
-                        }
-                    },
-                    complete: function (data) {
-                        $(_this).attr("disabled", false);
-                        $(_this).html($(_this).text());
-                        $("#form-comission-rate-setting").removeClass('was-validated');
-                    }
-                });
-            }
-
-            return false;
-        });
-    }
 };
 
 $(document).ready(function () {

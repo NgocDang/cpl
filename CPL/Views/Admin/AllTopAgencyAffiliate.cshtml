@@ -16,15 +16,15 @@
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TopAgencyAffiliate")</h3>
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllTopAgencyAffiliate")</h3>
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                                <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
                             </li>
                             <li class="breadcrumb-item active">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TopAgencyAffiliate")
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllTopAgencyAffiliate")
                             </li>
                         </ol>
                     </div>
@@ -40,12 +40,11 @@
                             <table id="dt-all-top-agency-affiliate" class="table responsive table-hover table-xl mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="border-top-0" id="checkbox-header" data-priority="1"></th>
-                                        <th class="border-top-0 none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</th>
-                                        <th class="border-top-0 none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</th>
-                                        <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
-                                        <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSaleInCPL")</th>
-                                        <th class="border-top-0" data-priority="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducer")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FirstName")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LastName")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSaleInCPL")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducer")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateCreatedDate")</th>
                                         <th class="border-top-0">1</th>
                                         <th class="border-top-0">2</th>
@@ -62,70 +61,11 @@
                         <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "UnLock")" id="unlock" />
                     </div>
                 </div>
-                <div class="col-12" id="comission-rate-setting">
-                    <h6 class="my-2">Comission Rate Setting​</h6>
-                    <div class="card">
-                        <form id="form-comission-rate-setting" method="POST" action="#" class="needs-validation" novalidate="">
-                            <div class="card-content">
-                                <div class="card-header">
-                                    <h5 class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyAffiliateTiers")</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-4 col-sm-12">
-                                            <fieldset class="form-group">
-                                                <label for="Tier1DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1")</label>
-                                                <input type="number" min="0" name="Tier1DirectRate" class="form-control" max="100" id="Tier1DirectRate" value="0" required>
-                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1Required")</div>
-                                            </fieldset>
-                                        </div>
-                                        <div class="col-md-4 col-sm-12">
-                                            <fieldset class="form-group">
-                                                <label for="Tier2DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier2")</label>
-                                                <input type="number" min="0" name="Tier2DirectRate" class="form-control" max="100" id="Tier2DirectRate" value="0" required>
-                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier2Required")</div>
-                                            </fieldset>
-                                        </div>
-                                        <div class="col-md-4 col-sm-12">
-                                            <fieldset class="form-group">
-                                                <label for="Tier3DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier3")</label>
-                                                <input type="number" min="0" name="Tier3DirectRate" class="form-control" max="100" id="Tier3DirectRate" value="0" required>
-                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier3Required")</div>
-                                            </fieldset>
-                                        </div>
-                                        <div class="col-md-4 col-sm-12">
-                                            <fieldset class="form-group">
-                                                <label for="Tier2SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1")</label>
-                                                <input type="number" min="0" name="Tier2SaleToTier1Rate" class="form-control" max="100" id="Tier2SaleToTier1Rate" value="0" required>
-                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1Required")</div>
-                                            </fieldset>
-                                        </div>
-                                        <div class="col-md-4 col-sm-12">
-                                            <fieldset class="form-group">
-                                                <label for="Tier3SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1")</label>
-                                                <input type="number" min="0" name="Tier3SaleToTier1Rate" class="form-control" max="100" id="Tier3SaleToTier1Rate" value="0" required>
-                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1Required")</div>
-                                            </fieldset>
-                                        </div>
-                                        <div class="col-md-4 col-sm-12">
-                                            <fieldset class="form-group">
-                                                <label for="Tier3SaleToTier2Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier2")</label>
-                                                <input type="number" min="0" name="Tier3SaleToTier2Rate" class="form-control" max="100" id="Tier3SaleToTier2Rate" value="0" required>
-                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier2Required")</div>
-                                            </fieldset>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer border-top-blue-grey border-top-lighten-5 text-right">
-                                <button class="btn btn-sm btn-primary" id="btn-update">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Update")</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
+    @Html.Hidden("Affiliate", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate"))
+    @Html.Hidden("View", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View"))
 </div>
 
 @section scripts
