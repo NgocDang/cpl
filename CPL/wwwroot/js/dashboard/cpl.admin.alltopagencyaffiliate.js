@@ -60,9 +60,9 @@
                     }
                 },
                 {
-                    "data": "TotalIntroducer",
+                    "data": "TotalIntroducedUsers",
                     "render": function (data, type, full, meta) {
-                        return full.totalIntroducer;
+                        return full.totalIntroducedUsers;
                     }
                 },
                 {

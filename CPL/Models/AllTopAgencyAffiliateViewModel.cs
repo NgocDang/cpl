@@ -14,7 +14,7 @@ namespace CPL.Models
         public int? AffiliateId { get; set; }
         public int? AgencyId { get; set; }
 
-        public int TotalIntroducer { get; set; }
+        public int TotalIntroducedUsers { get; set; }
 
         public DateTime? AffiliateCreatedDate { get; set; }
         public string Action { get; set; }
