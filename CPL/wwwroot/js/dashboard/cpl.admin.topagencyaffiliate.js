@@ -12,7 +12,7 @@
 
         var tab = $("#tab").val();
         if (tab === "")
-            tab = "tier-1";
+            tab = "top-agency";
         $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
     },
     bindSwitchery: function () {
@@ -145,32 +145,32 @@
     },
 
     bindTier1Tab: function () {
-        $('a#tier-1-nav-tab').on('show.bs.tab', function (e) {
+        $('a#top-agency-nav-tab').on('show.bs.tab', function (e) {
             debugger;
-            if ($("#tier-1-nav .tab-detail").html().trim().length === 0) {
+            if ($("#top-agency-nav .tab-detail").html().trim().length === 0) {
                 TopAgencyAffiliate.loadTier1Statistics();
             }
         })
     },
     loadTier1Statistics: function () {
         $.ajax({
-            url: "/Admin/GetTier1Statistics/",
+            url: "/Admin/GetTopAgencyStatistics/",
             type: "GET",
             beforeSend: function () {
-                $("#tier-1-nav .tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+                $("#top-agency-nav .tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
             },
             data: {
                 sysUserId: $("#SysUserId").val(),
-                periodInDay: $("#tier-1-nav select.time-range").val()
+                periodInDay: $("#top-agency-nav select.time-range").val()
             },
             success: function (data) {
-                $("#tier-1-nav .tab-detail").html(data);
-                //TopAgencyAffiliate.loadTier1StatisticsChart($("#tier-1-nav"))
+                $("#top-agency-nav .tab-detail").html(data);
+                //TopAgencyAffiliate.loadTier1StatisticsChart($("#top-agency-nav"))
             },
         });
     },
     bindTier1TimeRangeChange: function () {
-        $("#tier-1-nav select.time-range").on("changed.bs.select",
+        $("#top-agency-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 TopAgencyAffiliate.loadTier1Statistics();
             });

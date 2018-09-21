@@ -757,24 +757,30 @@ namespace CPL.Controllers
         }
 
         /// <summary>
-        /// Gets the tier1 statistics.
+        /// Gets the Top agency statistics.
         /// </summary>
         /// <param name="sysUserId">The system user identifier.</param>
         /// <param name="periodInDay">The period in day.</param>
         /// <returns></returns>
         [HttpGet]
         [Permission(EnumRole.Admin)]
-        public IActionResult GetTier1Statistics(int sysUserId, int periodInDay)
+        public IActionResult GetTopAgencyStatistics(int sysUserId, int periodInDay, int pageSize = 10, int pageIndex = 1, 
+                                                    string orderColumn = "UsedCPL", string orderDirection = "desc", string searchValue = "")
         {
             List<SqlParameter> storeParams = new List<SqlParameter>()
             {
                 new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
                 new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
+                new SqlParameter() {ParameterName = "@PageSize", SqlDbType = SqlDbType.Int, Value = pageSize},
+                new SqlParameter() {ParameterName = "@PageIndex", SqlDbType = SqlDbType.Int, Value = pageIndex},
+                new SqlParameter() {ParameterName = "@OrderColumn", SqlDbType = SqlDbType.NVarChar, Value = orderColumn},
+                new SqlParameter() {ParameterName = "@OrderDirection", SqlDbType = SqlDbType.NVarChar, Value = orderDirection},
+                new SqlParameter() {ParameterName = "@SearchValue", SqlDbType = SqlDbType.NVarChar, Value = searchValue},
             };
 
             var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo", storeParams);
 
-            //Table[0]////////////////////////////////////////////////
+            //Table[0]//////////////////////////////////////////////////////
             //TotalSale|DirectSale|TotalIntroducedUsers|DirectIntroducedUsers
             //123//////456/////////789//////////////////10//////////////////
 
