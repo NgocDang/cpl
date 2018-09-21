@@ -22,7 +22,7 @@
             if (key == 13) {
                 var searchstring = document.getElementById('search-standard-affiliate');
                 if (searchstring.value != null && searchstring.value.replace(/\s+/g, '') != "")
-                    window.location.href = "/Admin/StandardAffiliate?search=" + searchstring.value.replace(/\s+/g, '');
+                    window.location.href = "/Admin/AllStandardAffiliate?search=" + searchstring.value.replace(/\s+/g, '');
             }
         });
     },

@@ -348,7 +348,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IActionResult StandardAffiliate()
+        public IActionResult AllStandardAffiliate()
         {
             return View();
         }
@@ -388,8 +388,8 @@ namespace CPL.Controllers
                 sortDir = model.order[0].dir.ToLower() == "asc";
             }
 
-            Func<SysUser, bool> StandardAffiliateCondition = x => !x.IsDeleted && x.AffiliateId.HasValue && x.AffiliateId > 0 &&
-                                                                 (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue));
+            Func<SysUser, bool> StandardAffiliateCondition = x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 &&
+                                                                 (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue)));
 
             // search the dbase taking into consideration table sorting and paging
             if (string.IsNullOrEmpty(searchBy))
