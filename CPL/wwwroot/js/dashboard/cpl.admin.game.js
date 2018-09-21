@@ -187,6 +187,8 @@
     },
     bindLotteryTab: function () {
         $('a#lottery-nav-tab').on('show.bs.tab', function (e) {
+            $("a#lottery-summary-nav-tab").tab("show");
+
             if ($("#lottery-nav .revenue-chart").html().trim().length === 0) {
                 PieChart.loadPercentageAjax($("#lottery-nav .revenue-chart"), $("#lottery-nav .revenue-no-data"), "/Admin/GetLotteryRevenuePieChart/")
             }
@@ -253,33 +255,396 @@
         });
     },
     bindLotterySummaryTab: function () {
-        $('a#lottery-summary-nav-tab').on('show.bs.tab', function (e) {
+        $("a#lottery-summary-nav-tab").on('show.bs.tab', function (e) {
             if ($("#lottery-summary-nav .tab-detail").html().trim().length === 0) {
-                alert('LOTTERY Summary statistics should be loaded!');
+                AdminGameManagement.loadLotterySummaryStatistics();
+            }
+
+            if ($("#lottery-summary-nav .purchased-lottery-summary-history table tbody").length == 0) {
+                AdminGameManagement.loadLotteryHistoryDataTable("#lottery-summary-nav", null);
+            }
+            
+        });
+    },
+    loadLotterySummaryStatistics: function () {
+        $.ajax({
+            url: "/Admin/GetLotterySummaryStatistics/",
+            type: "GET",
+            beforeSend: function () {
+                $("#lottery-summary-nav .tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+            },
+            data: {
+                periodInDay: $("#lottery-summary-nav select.time-range").val()
+            },
+            success: function (data) {
+                $("#lottery-summary-nav .tab-detail").html(data);
+                AdminGameManagement.loadLotterySummaryStatisticsChart($("#lottery-summary-nav"))
+            },
+        });
+    },
+    loadLotterySummaryStatisticsChart: function (container) {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
             }
         });
+
+        Highcharts.setOptions({
+            lang: DTLang.getHighChartLang()
+        });
+        options = {
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: null
+            },
+            subtitle: {
+                text: null
+            },
+            exporting: {
+                enabled: false
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    month: '%e. %b',
+                    year: '%b'
+                },
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+            },
+            tooltip: {
+                headerFormat: '<b>{series.name}</b><br>',
+                pointFormat: '{point.x:%e. %b}: {point.y}'
+            },
+
+            plotOptions: {
+                spline: {
+                    marker: {
+                        enabled: true
+                    }
+                }
+            },
+
+            series: []
+
+        };
+
+        var revenue = { data: [], name: container.find(".total-revenue").val(), color: '#4267b2' };
+        var sale = { data: [], name: container.find(".total-sale").val(), color: '#f7931a' };
+        var pageView = { data: [], name: container.find(".page-view").val(), color: '#828384' };
+        var totalPlayers = { data: [], name: container.find(".total-players").val(), color: '#F69BF9' };
+
+        var totalSaleChanges = JSON.parse(container.find(".total-sale-changes").val());
+        if (totalSaleChanges.length !== 0) {
+            $.each(totalSaleChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                sale.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            sale.data.push([now, val]);
+        }
+        sale.data.sort();
+
+        var totalRevenueChanges = JSON.parse(container.find(".total-revenue-changes").val());
+        if (totalRevenueChanges.length !== 0) {
+            $.each(totalRevenueChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                revenue.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            revenue.data.push([now, val]);
+        }
+        revenue.data.sort();
+
+        var pageViewChanges = JSON.parse(container.find(".page-view-changes").val());
+        if (pageViewChanges.length !== 0) {
+            $.each(pageViewChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Count;
+                pageView.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            pageView.data.push([now, val]);
+        }
+        pageView.data.sort();
+
+        var totalPlayersChanges = JSON.parse(container.find(".total-players-changes").val());
+        if (totalPlayersChanges.length != 0) {
+            $.each(totalPlayersChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                totalPlayers.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            totalPlayers.data.push([now, val]);
+        }
+        totalPlayers.data.sort();
+
+        // Push the completed series
+        options.series.push(revenue, sale, pageView, totalPlayers);
+
+        // Create the plot
+        container.find(".statistic-chart").highcharts(options);
     },
     bindLotterySummaryTimeRangeChange: function () {
         $("#lottery-summary-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
-                alert('Time range change - LOTTERY Summary statistics should be reloaded!');
+                AdminGameManagement.loadLotterySummaryStatistics();
             });
     },
     bindLotteryCategoryTabs: function () {
         $('a.lottery-category-nav-tab').on('show.bs.tab', function (e) {
             var _this = this;
             if ($("#lottery-category-nav-" + $(_this).data().lotteryCategoryId + " .tab-detail").html().trim().length === 0) {
-                alert('LOTTERY Category ' + $(_this).data().lotteryCategoryId + ' statistics should be loaded!');
+                AdminGameManagement.loadLotteryCategoryStatistics("#lottery-category-nav-" + $(_this).data().lotteryCategoryId, $(_this).data().lotteryCategoryId);
+            }
+
+            if ($("#lottery-category-nav-" + $(_this).data().lotteryCategoryId + " .purchased-lottery-category-history table tbody").length == 0) {
+                AdminGameManagement.loadLotteryHistoryDataTable("#lottery-category-nav-" + $(_this).data().lotteryCategoryId, $(_this).data().lotteryCategoryId);
             }
         });
+    },
+    loadLotteryCategoryStatistics: function (container, lotteryCategoryId) {
+        $.ajax({
+            url: "/Admin/GetLotteryCategoryStatistics/",
+            type: "GET",
+            beforeSend: function () {
+                $(container + " .tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+            },
+            data: {
+                periodInDay: $(container + " select.time-range").val(),
+                lotteryCategoryId: lotteryCategoryId
+            },
+            success: function (data) {
+                $(container + " .tab-detail").html(data);
+                AdminGameManagement.loadLotteryCategoryStatisticsChart($(container))
+            },
+        });
+    },
+    loadLotteryCategoryStatisticsChart: function (container) {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        Highcharts.setOptions({
+            lang: DTLang.getHighChartLang()
+        });
+        options = {
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: null
+            },
+            subtitle: {
+                text: null
+            },
+            exporting: {
+                enabled: false
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    month: '%e. %b',
+                    year: '%b'
+                },
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+            },
+            tooltip: {
+                headerFormat: '<b>{series.name}</b><br>',
+                pointFormat: '{point.x:%e. %b}: {point.y}'
+            },
+
+            plotOptions: {
+                spline: {
+                    marker: {
+                        enabled: true
+                    }
+                }
+            },
+
+            series: []
+
+        };
+
+        var revenue = { data: [], name: container.find(".total-revenue").val(), color: '#4267b2' };
+        var sale = { data: [], name: container.find(".total-sale").val(), color: '#f7931a' };
+        var pageView = { data: [], name: container.find(".page-view").val(), color: '#828384' };
+        var totalPlayers = { data: [], name: container.find(".total-players").val(), color: '#F69BF9' };
+
+        var totalSaleChanges = JSON.parse(container.find(".total-sale-changes").val());
+        if (totalSaleChanges.length !== 0) {
+            $.each(totalSaleChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                sale.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            sale.data.push([now, val]);
+        }
+        sale.data.sort();
+
+        var totalRevenueChanges = JSON.parse(container.find(".total-revenue-changes").val());
+        if (totalRevenueChanges.length !== 0) {
+            $.each(totalRevenueChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                revenue.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            revenue.data.push([now, val]);
+        }
+        revenue.data.sort();
+
+        var pageViewChanges = JSON.parse(container.find(".page-view-changes").val());
+        if (pageViewChanges.length !== 0) {
+            $.each(pageViewChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Count;
+                pageView.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            pageView.data.push([now, val]);
+        }
+        pageView.data.sort();
+
+        var totalPlayersChanges = JSON.parse(container.find(".total-players-changes").val());
+        if (totalPlayersChanges.length != 0) {
+            $.each(totalPlayersChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                totalPlayers.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            totalPlayers.data.push([now, val]);
+        }
+        totalPlayers.data.sort();
+
+        // Push the completed series
+        options.series.push(revenue, sale, pageView, totalPlayers);
+
+        // Create the plot
+        container.find(".statistic-chart").highcharts(options);
     },
     bindLotteryCategoryTimeRangeChange: function () {
         $("#lottery-nav select.time-range[data-lottery-category-id]").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 var _this = this;
-                alert('Time range change - LOTTERY Category ' + $(_this).data().lotteryCategoryId + ' statistics should be reloaded!');
+                AdminGameManagement.loadLotteryCategoryStatistics("#lottery-category-nav-" + $(_this).data().lotteryCategoryId, $(_this).data().lotteryCategoryId);
             });
-    }
+    },
+    loadLotteryHistoryDataTable: function (parentElement, lotteryCategoryId) {
+        return $(parentElement + " .dt-purchased-lottery-history").DataTable({
+            "processing": true,
+            "serverSide": true,
+            "autoWidth": false,
+            "ajax": {
+                url: "/Admin/SearchPurchasedLotteryHistory",
+                type: 'POST',
+                data: {
+                    lotteryCategoryId: lotteryCategoryId
+                }
+            },
+            "language": DTLang.getLang(),
+            "columns": [
+                {
+                    "data": "UserName",
+                    "render": function (data, type, full, meta) {
+                        return full.userName;
+                    }
+                },
+                {
+                    "data": "StatusInString",
+                    "render": function (data, type, full, meta) {
+                        if (full.status == 1) {
+                            return "<p class='text-sm-center'><span class='badge badge-info'>" + $("#pending").val() + "</span></p>";
+                        }
+                        else if (full.status == 2) {
+                            return "<p class='text-sm-center'><span class='badge badge-success'>" + $("#active").val() + "</span></p>";
+                        }
+                        else if (full.status == 3) {
+                            return "<p class='text-sm-center'><span class='badge badge-secondary'>" + $("#completed").val() + "</span></p>";
+                        }
+                        else if (full.status == 4) {
+                            return "<p class='text-sm-center'><span class='badge badge-warning'>" + $("#deactivated").val() + "</span></p>";
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "data": "NumberOfTicket",
+                    "render": function (data, type, full, meta) {
+                        return full.numberOfTicket;
+                    }
+                },
+                {
+                    "data": "NumberOfTicketInString",
+                    "render": function (data, type, full, meta) {
+                        return full.totalPurchasePrice;
+                    }
+                },
+                {
+                    "data": "Title",
+                    "render": function (data, type, full, meta) {
+                        return full.title;
+                    }
+                },
+                {
+                    "data": "PurchaseDateTimeInString",
+                    "render": function (data, type, full, meta) {
+                        return full.purchaseDateTimeInString;
+                    }
+                },
+                {
+                    "data": "Details",
+                    "render": function (data, type, full, meta) {
+                        var html = "<a style='line-height:12px;margin:2px' href='/Admin/User/" + full.sysUserId + "' target='_blank' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
+                        return html;
+                    },
+                    "orderable": false
+                }
+            ],
+        });
+    },
 }
 
 $(document).ready(function () {

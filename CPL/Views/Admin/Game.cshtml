@@ -24,7 +24,7 @@
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                                <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                             </li>
                             <li class="breadcrumb-item active">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "GameManagement")
@@ -38,10 +38,10 @@
             <div class="tab-component">
                 <ul class="nav nav-tabs border-0">
                     <li class="nav-item">
-                        <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="summary-nav-tab" data-toggle="tab" href="#summary-nav" aria-controls="summary-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
+                        <a class="nav-link font-medium-2 text-uppercase font-weight-bold px-2 border-0" id="summary-nav-tab" data-toggle="tab" href="#summary-nav" aria-controls="summary-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link font-medium-2 font-weight-bold px-2 border-0" id="lottery-nav-tab" data-toggle="tab" href="#lottery-nav" aria-controls="lottery-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
+                        <a class="nav-link font-medium-2 text-uppercase font-weight-bold px-2 border-0" id="lottery-nav-tab" data-toggle="tab" href="#lottery-nav" aria-controls="lottery-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
                     </li>
                 </ul>
                 <div class="tab-content mb-1">
@@ -70,6 +70,9 @@
                                         </div>
                                     </div>
                                     <div class="tab-detail"></div>
+                                    <div class="row row-separator">
+                                        <div class="col-12">&nbsp;</div>
+                                    </div>
                                     <div class="row">
                                         <div class="card col-lg-4 col-12">
                                             <div class="card-header pl-0">
@@ -98,19 +101,19 @@
                         <div class="card mb-1">
                             <div class="card-content">
                                 <div class="card-body px-0">
-                                    <ul class="nav nav-tabs border-0">
+                                    <ul class="nav nav-tabs nav-underline">
                                         <li class="nav-item">
-                                            <a class="nav-link font-medium-2 font-weight-bold active px-2 border-0" id="lottery-summary-nav-tab" data-toggle="tab" href="#lottery-summary-nav" aria-controls="lottery-category-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
+                                            <a class="nav-link font-medium-1 font-weight-bold px-2" id="lottery-summary-nav-tab" data-toggle="tab" href="#lottery-summary-nav" aria-controls="lottery-category-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
                                         </li>
                                         @for (int i = 0; i < Model.LotteryCategories.Count; i++)
                                         {
                                             <li class="nav-item">
-                                                <a class="nav-link font-medium-2 font-weight-bold px-2 border-0 lottery-category-nav-tab" data-lottery-category-id="@Model.LotteryCategories[i].Id" id="lottery-category-nav-tab-@Model.LotteryCategories[i].Id" data-toggle="tab" href="#lottery-category-nav-@Model.LotteryCategories[i].Id" aria-controls="lottery-category-nav" aria-expanded="true">@Model.LotteryCategories[i].Name</a>
+                                                <a class="nav-link font-medium-1 font-weight-bold px-2 lottery-category-nav-tab" data-lottery-category-id="@Model.LotteryCategories[i].Id" id="lottery-category-nav-tab-@Model.LotteryCategories[i].Id" data-toggle="tab" href="#lottery-category-nav-@Model.LotteryCategories[i].Id" aria-controls="lottery-category-nav" aria-expanded="true">@Model.LotteryCategories[i].Name</a>
                                             </li>
                                         }
                                     </ul>
                                     <div class="tab-content mb-1">
-                                        <div role="tabpanel" class="tab-pane active" id="lottery-summary-nav" aria-labelledby="lottery-summary-nav-tab" aria-expanded="true">
+                                        <div role="tabpanel" class="tab-pane" id="lottery-summary-nav" aria-labelledby="lottery-summary-nav-tab" aria-expanded="true">
                                             <div class="card mb-1">
                                                 <div class="card-content">
                                                     <div class="card-body">
@@ -135,6 +138,37 @@
                                                             </div>
                                                         </div>
                                                         <div class="tab-detail"></div>
+                                                        <div class="row row-separator">
+                                                            <div class="col-12">&nbsp;</div>
+                                                        </div>
+                                                        <div class="purchased-lottery-summary-history">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="card mb-0">
+                                                                        <div class="card-content">
+                                                                            <div class="card-header px-0">
+                                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")
+                                                                            </div>
+                                                                            <div class="card-body px-0 py-0">
+                                                                                <table class="table responsive table-hover table-xl mb-0 dt-purchased-lottery-history">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfTicket")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPurchasePrice")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchaseDateTime")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Details")</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -166,11 +200,45 @@
                                                                 </div>
                                                             </div>
                                                             <div class="tab-detail"></div>
+                                                            <div class="row row-separator">
+                                                                <div class="col-12">&nbsp;</div>
+                                                            </div>
+                                                            <div class="purchased-lottery-category-history">
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <div class="card mb-0">
+                                                                            <div class="card-content">
+                                                                                <div class="card-header px-0">
+                                                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryHistory")
+                                                                                </div>
+                                                                                <div class="card-body px-0 py-0">
+                                                                                    <table class="table responsive table-hover table-xl mb-0 dt-purchased-lottery-history">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfTicket")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPurchasePrice")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchaseDateTime")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Details")</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         }
+                                    </div>
+                                    <div class="row row-separator">
+                                        <div class="col-12">&nbsp;</div>
                                     </div>
                                     <div class="row">
                                         <div class="card col-lg-4 col-12">
@@ -200,7 +268,12 @@
                         </div>
                     </div>
                 </div>
-                @Html.HiddenFor(x=>x.Tab, new { @id="tab"})
+                @Html.Hidden("view", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View"))
+                @Html.Hidden("pending", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Pending"))
+                @Html.Hidden("active", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Active"))
+                @Html.Hidden("completed", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Completed"))
+                @Html.Hidden("deactivated", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deactivated"))
+                @Html.HiddenFor(x => x.Tab, new { @id = "tab" })
             </div>
         </div>
     </div>
@@ -223,6 +296,5 @@
     <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
     <script src="~/js/dashboard/plugins/bootstrap-selectpicker.js"></script>
     <script src="~/js/dashboard/cpl.admin.game.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.admin.lotteryhistory.viewcomponent.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.piechart.js" asp-append-version="true"></script>
 }

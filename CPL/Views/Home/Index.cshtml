@@ -35,7 +35,7 @@
                             <div class="card-header card-header-game font-weight-bold font-sm-size-15px">
                                 @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0"))
                             </div>
-                            <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id">
+                            <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id" asp-route-lottery-category-id="@lottery.LotteryCategory.Id">
                                 @foreach (var detail in lottery.LotteryDetails)
                                 {
                                     @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
@@ -45,7 +45,7 @@
                                 }
                             </a>
                             <div class="card-body">
-                                <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id" class="btn btn-primary btn-block font-sm-size-15px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</a>
+                                <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id" asp-route-lottery-category-id="@lottery.LotteryCategory.Id" class="btn btn-primary btn-block font-sm-size-15px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</a>
                             </div>
                         </div>
                     </div>
