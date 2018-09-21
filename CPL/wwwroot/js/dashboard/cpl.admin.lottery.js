@@ -886,6 +886,7 @@
                     type: "GET",
                     beforeSend: function () {
                         $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
                     },
                     success: function (data) {
                         $("#edit-lottery").modal("hide");
@@ -894,6 +895,7 @@
                     },
                     complete: function (data) {
                         $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text());
                     }
                 });
             };
@@ -914,6 +916,7 @@
                     data: $("#form-edit-lottery-category").serialize(),
                     beforeSend: function () {
                         $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text() + " <i class='la la-plus font-size-15px'></i>");
                     },
                     success: function (data) {
                         if (data.success) {
@@ -931,6 +934,7 @@
                     },
                     complete: function (data) {
                         $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text() + " <i class='la la-plus font-size-15px'></i>");
                     }
                 });
             };

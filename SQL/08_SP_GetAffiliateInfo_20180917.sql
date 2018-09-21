@@ -207,6 +207,7 @@ BEGIN
 		Tier1DirectRate int,
 		Tier2SaleToTier1Rate int,
 		Tier3SaleToTier1Rate int,
+		IsLocked bit,
 		RowNum int
 	);
 
@@ -376,7 +377,13 @@ WITH IntroducedUsersCTE AS
 	-- Tier 3 to Tier 2 Rate --
 	---------------------------
 		aff.Tier3SaleToTier1Rate
-		AS Tier3SaleToTier1Rate
+		AS Tier3SaleToTier1Rate,
+
+	---------------
+	-- Is Locked --
+	---------------
+		su.IsLocked
+		AS IsLocked
 
 	FROM   SysUser su join IntroducedUsers iu on su.Id = iu.Id
 					  join Affiliate aff on su.AffiliateId = aff.Id
@@ -439,10 +446,10 @@ IntroducedUsersWithRowNum AS
 		  CONVERT(nvarchar(23), AffiliateCreatedDate, 0) like ('%' + @SearchValue + '%'))
 	)
 	INSERT INTO @TableIntroducedUsers
-	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate, Tier1DirectRate, Tier2SaleToTier1Rate, Tier3SaleToTier1Rate, RowNum
+	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate, Tier1DirectRate, Tier2SaleToTier1Rate, Tier3SaleToTier1Rate, IsLocked, RowNum
 	FROM IntroducedUsersWithRowNum;
 	
-	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate, Tier1DirectRate, Tier2SaleToTier1Rate, Tier3SaleToTier1Rate
+	SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalIntroducedUsers, AffiliateCreatedDate, Tier1DirectRate, Tier2SaleToTier1Rate, Tier3SaleToTier1Rate, IsLocked
 	FROM @TableIntroducedUsers
 	WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @PageSize);
 
