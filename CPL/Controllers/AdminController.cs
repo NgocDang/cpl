@@ -503,7 +503,7 @@ namespace CPL.Controllers
             try
             {
                 var standardAffiliate = _affiliateService.Queryable().FirstOrDefault(x => x.Id == affiliateId);
-                var property = typeof(StandardAffiliate).GetProperty(name);
+                var property = typeof(Affiliate).GetProperty(name);
                 property.SetValue(standardAffiliate, value, null);
                 _affiliateService.Update(standardAffiliate);
                 _unitOfWork.SaveChanges();

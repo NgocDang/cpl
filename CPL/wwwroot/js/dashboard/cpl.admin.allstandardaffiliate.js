@@ -214,7 +214,10 @@
                     data: { affiliateId: params.pk, value: params.value, name: params.name },
                     url: 'DoUpdateAllStandardAffiliateRate',
                     success: function (data) {
-                        toastr.success(data.message, 'Success!');
+                        if (data.success)
+                            toastr.success(data.message, 'Success!');
+                        else
+                            toastr.error(data.message, 'Error!');
                     },
                     error: function (data) {
                         toastr.error(data.message, 'Error!');
