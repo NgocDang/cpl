@@ -406,7 +406,7 @@ namespace CPL.Controllers
                                 LastName = x.LastName,
                                 Email = x.Email,
                                 IsLocked = x.IsLocked,
-                                TotalIntroducer = x.IntroducedUsers.TotalDirectIntroducedUsers,
+                                TotalIntroducedUsers = x.IntroducedUsers.TotalDirectIntroducedUsers,
                                 AffiliateId = x.AffiliateId,
                                 TotalSale = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0),
                                 TotalSaleInString = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0).ToString(Format.Amount),
@@ -447,7 +447,7 @@ namespace CPL.Controllers
                                 LastName = x.LastName,
                                 Email = x.Email,
                                 IsLocked = x.IsLocked,
-                                TotalIntroducer = x.IntroducedUsers.TotalDirectIntroducedUsers,
+                                TotalIntroducedUsers = x.IntroducedUsers.TotalDirectIntroducedUsers,
                                 AffiliateId = x.AffiliateId,
                                 TotalSale = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0),
                                 TotalSaleInString = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0).ToString(Format.Amount),
@@ -553,9 +553,9 @@ namespace CPL.Controllers
             }
         }
 
-        
+
         [Permission(EnumRole.Admin)]
-        public IActionResult TopAgencyAffiliate(int id)
+        public IActionResult TopAgencyAffiliate(int id, string tab)
         {
             var user = _sysUserService
                 .Query()
@@ -608,12 +608,12 @@ namespace CPL.Controllers
             viewModel.TotalSaleYesterday = Convert.ToInt32((YesterdaySaleParam.Value as int?).GetValueOrDefault(0));
 
             // Total user register
-            viewModel.TotalIntroducedUser = _sysUserService.Queryable()
+            viewModel.TotalIntroducedUsers = _sysUserService.Queryable()
                                            .Count(x => x.IsIntroducedById != null && x.IsIntroducedById == user.Id);
             viewModel.TotalIntroducedUserToday = _sysUserService.Queryable()
                                             .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
                                             && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date).Count();
-            viewModel.TotalIntroducedUserYesterday = _sysUserService.Queryable()
+            viewModel.TotalIntroducedUsersYesterday = _sysUserService.Queryable()
                                             .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
                                             && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date).Count();
 
@@ -635,6 +635,8 @@ namespace CPL.Controllers
             };
 
             viewModel.CanDoPayment = this.TokenToBePaid(id) > 0 ? true : false;
+
+            viewModel.Tab = tab;
 
             return View(viewModel);
         }
@@ -752,6 +754,45 @@ namespace CPL.Controllers
             var payments = _paymentService.Queryable().Where(x => x.SysUserId == sysUserId && !x.UpdatedDate.HasValue);
             var tokenToBePaid = payments.Sum(x => x.Tier2SaleToTier1Sale * x.Tier1DirectRate / 100 + x.Tier2SaleToTier1Sale * x.Tier2SaleToTier1Rate / 100 + x.Tier3SaleToTier1Sale * x.Tier3SaleToTier1Rate / 100);
             return tokenToBePaid;
+        }
+
+        /// <summary>
+        /// Gets the Top agency statistics.
+        /// </summary>
+        /// <param name="sysUserId">The system user identifier.</param>
+        /// <param name="periodInDay">The period in day.</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetTopAgencyStatistics(int sysUserId, int periodInDay, int pageSize = 10, int pageIndex = 1, 
+                                                    string orderColumn = "UsedCPL", string orderDirection = "desc", string searchValue = "")
+        {
+            List<SqlParameter> storeParams = new List<SqlParameter>()
+            {
+                new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
+                new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
+                new SqlParameter() {ParameterName = "@PageSize", SqlDbType = SqlDbType.Int, Value = pageSize},
+                new SqlParameter() {ParameterName = "@PageIndex", SqlDbType = SqlDbType.Int, Value = pageIndex},
+                new SqlParameter() {ParameterName = "@OrderColumn", SqlDbType = SqlDbType.NVarChar, Value = orderColumn},
+                new SqlParameter() {ParameterName = "@OrderDirection", SqlDbType = SqlDbType.NVarChar, Value = orderDirection},
+                new SqlParameter() {ParameterName = "@SearchValue", SqlDbType = SqlDbType.NVarChar, Value = searchValue},
+            };
+
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo", storeParams);
+
+            //Table[0]//////////////////////////////////////////////////////
+            //TotalSale|DirectSale|TotalIntroducedUsers|DirectIntroducedUsers
+            //123//////456/////////789//////////////////10//////////////////
+
+            var viewModel = new TopAgencyAffiliateStatisticsViewModel
+            {
+                TotalSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]),
+                DirectSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[1]),
+                TotalIntroducedUsers = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[2]),
+                DirectIntroducedUsers = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[3])
+            };
+
+            return PartialView("_TopAgencyAffiliateStatistics", viewModel);
         }
 
         #endregion
@@ -1363,7 +1404,8 @@ namespace CPL.Controllers
             var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange {
+                        .Select(y => new SummaryChange
+                        {
                             Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
                             Value = y.Sum(x => x.Lottery.UnitPrice)
                         });
@@ -1371,7 +1413,8 @@ namespace CPL.Controllers
             var pricePredictionSale = _pricePredictionHistoryService.Queryable()
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange {
+                        .Select(y => new SummaryChange
+                        {
                             Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
                             Value = y.Sum(x => (int)x.Amount)
                         });
@@ -1391,7 +1434,8 @@ namespace CPL.Controllers
             var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange {
+                        .Select(y => new SummaryChange
+                        {
                             Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
                             Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)))
                         });
@@ -1399,7 +1443,8 @@ namespace CPL.Controllers
             var pricePredictionRevenue = _pricePredictionHistoryService.Queryable()
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange {
+                        .Select(y => new SummaryChange
+                        {
                             Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
                             Value = (int)y.Sum(x => x.Amount - x.Award.GetValueOrDefault(0))
                         });
@@ -1429,7 +1474,8 @@ namespace CPL.Controllers
             var lotteryPlayers = _lotteryHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new PlayersChange {
+                        .Select(y => new PlayersChange
+                        {
                             Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
                             SysUserIds = y.Select(x => x.SysUserId)
                         }).ToList();
@@ -1437,7 +1483,8 @@ namespace CPL.Controllers
             var pricePredictionPlayers = _pricePredictionHistoryService.Queryable()
                         .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
                         .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new PlayersChange {
+                        .Select(y => new PlayersChange
+                        {
                             Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
                             SysUserIds = y.Select(x => x.SysUserId)
                         })
@@ -1482,7 +1529,8 @@ namespace CPL.Controllers
             data.Add(lotteryChartData);
             data.Add(pricePredictionChartData);
 
-            return new JsonResult(new {
+            return new JsonResult(new
+            {
                 success = true,
                 seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Revenue"),
                 data = JsonConvert.SerializeObject(data)
@@ -1536,7 +1584,7 @@ namespace CPL.Controllers
             var data = new List<PieChartData>();
             var lotteryCategories = _lotteryCategoryService.Queryable().ToList();
 
-            for(int i = 0; i < lotteryCategories.Count(); i++)
+            for (int i = 0; i < lotteryCategories.Count(); i++)
             {
                 var totalSaleLottery = _lotteryHistoryService.Query()
                                 .Include(x => x.Lottery)
@@ -1548,7 +1596,7 @@ namespace CPL.Controllers
                     .Select(x => x.LotteryPrize).Sum(y => y?.Value);
                 var revenueInLotteryGame = totalSaleLottery - totalAwardLottery;
 
-                var lotteryChartData = new PieChartData { Label = lotteryCategories[i].Name, Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)i+1), Value = revenueInLotteryGame.GetValueOrDefault(0) };
+                var lotteryChartData = new PieChartData { Label = lotteryCategories[i].Name, Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)i + 1), Value = revenueInLotteryGame.GetValueOrDefault(0) };
                 data.Add(lotteryChartData);
             }
 
@@ -1572,7 +1620,7 @@ namespace CPL.Controllers
             var totalMobileLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
             var totalTabletLottery = deviceCategoriesLottery.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
 
-            var desktopChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Desktop"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value =  totalDesktopLottery };
+            var desktopChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Desktop"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = totalDesktopLottery };
             var mobileChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Mobile"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = totalMobileLottery };
             var tabletChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Tablet"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)3), Value = totalTabletLottery };
 

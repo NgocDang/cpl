@@ -146,6 +146,22 @@ INSERT INTO LangDetail VALUES (2, N'PaidSuccessfully', N'支払いは正常に�
 
 INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliate', N'Top agency affiliate');
 INSERT INTO LangDetail VALUES (2, N'TopAgencyAffiliate', N'トップの代理店');
+
+----------------------------------------------------------------------------------
+
+--20180920-AdminTopAgency--
+INSERT INTO LangDetail VALUES (1, N'DirectSale', N'Direct Sale');
+INSERT INTO LangDetail VALUES (2, N'DirectSale', N'直販');
+
+INSERT INTO LangDetail VALUES (1, N'TotalIntroducedUsers', N'Total Introduced Users');
+INSERT INTO LangDetail VALUES (2, N'TotalIntroducedUsers', N'総導入ユーザー数');
+
+INSERT INTO LangDetail VALUES (1, N'DirectIntroducedUsers', N'Direct Introduced Users');
+INSERT INTO LangDetail VALUES (2, N'DirectIntroducedUsers', N'直接導入されたユーザー');
+
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (1, N'TopAgency', N'Top Agency')
+INSERT [dbo].[LangDetail] ([LangId], [Name], [Value]) VALUES (2, N'TopAgency', N'トップエージェンシー')
+---------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------
 
 --20180921----
