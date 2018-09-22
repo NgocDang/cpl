@@ -11,8 +11,6 @@
         TopAgencyAffiliate.bindTopAgencyTab();
         TopAgencyAffiliate.bindTopAgencyTimeRangeChange();
 
-
-
         var tab = $("#tab").val();
         if (tab === "")
             tab = "top-agency";
@@ -26,32 +24,38 @@
             "ajax": {
                 url: "/Admin/SearchTopAgencyAffiliate",
                 type: 'POST',
-                data: function (data) {
+                data: {
                     sysUserId: $("#SysUserId").val()
                 },
                 complete: function (data) {
                     var table = TopAgencyAffiliate.TopAgencyAffiliateDataTable;
                 }
             },
-            'order': [[1, 'asc']],
+            'order': [[0, 'asc']],
             "language": DTLang.getLang(),
             "columns": [
                 {
-                    "data": "Tier",
+                    "data": "KindOfTier",
                     "render": function (data, type, full, meta) {
-                        return full.tier;
+                        return full.kindOfTier;
                     }
                 },
                 {
-                    "data": "TotalCPLUsed",
+                    "data": "UsedCPL",
                     "render": function (data, type, full, meta) {
-                        return full.totalCPLUsed;
+                        return full.usedCPL;
                     }
                 },
                 {
-                    "data": "TotalCPLAwarded",
+                    "data": "LostCPL",
                     "render": function (data, type, full, meta) {
-                        return full.totalCPLAwarded;
+                        return full.lostCPL;
+                    }
+                },
+                {
+                    "data": "AffiliateSale",
+                    "render": function (data, type, full, meta) {
+                        return full.affiliateSale;
                     }
                 },
                 {
@@ -69,9 +73,7 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        var html = "<a style='margin: 2px' href='/Admin/TopAgencyAffiliate/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#Affiliate").val() + "</a>";
-                        html += "<a style='margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#View").val() + "</a>";
-
+                        var html = "<a style='margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#View").val() + "</a>";
                         return html;
 
                     },

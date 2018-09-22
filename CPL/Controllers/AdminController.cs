@@ -634,7 +634,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult SearchTopAgencyAffiliate(DataTableAjaxPostModel viewModel, int sysUserId = 1)
+        public JsonResult SearchTopAgencyAffiliate(DataTableAjaxPostModel viewModel, int sysUserId)
         {
             // action inside a standard controller
             int filteredResultsCount;
@@ -653,117 +653,41 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IList<TopAgencyAffiliateIntroducedUsersViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId)
         {
-            var searchBy = (model.search != null) ? model.search.value : null;
-            var take = model.length;
-            var skip = model.start;
+            var searchBy = (model.search.value != null) ? model.search.value : string.Empty;
+            var pageSize = model.length;
+            var pageIndex = model.start + 1;
 
             string sortBy = "";
-            bool sortDir = true;
+            string sortDir = "KindOfTier";
 
             if (model.order != null)
             {
                 // in this example we just default sort on the 1st column
                 sortBy = model.columns[model.order[0].column].data;
-                sortDir = model.order[0].dir.ToLower() == "asc";
+                sortDir = model.order[0].dir.ToLower();
             }
 
             List<SqlParameter> storeParams = new List<SqlParameter>()
             {
                 new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
                 new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = 1000},
-                new SqlParameter() {ParameterName = "@PageSize", SqlDbType = SqlDbType.Int, Value = /*model.length*/ 100},
-                new SqlParameter() {ParameterName = "@PageIndex", SqlDbType = SqlDbType.Int, Value = /*model.start*/ 1},
-                new SqlParameter() {ParameterName = "@OrderColumn", SqlDbType = SqlDbType.NVarChar, Value = "UsedCPL"},
+                new SqlParameter() {ParameterName = "@PageSize", SqlDbType = SqlDbType.Int, Value = pageSize},
+                new SqlParameter() {ParameterName = "@PageIndex", SqlDbType = SqlDbType.Int, Value = pageIndex},
+                new SqlParameter() {ParameterName = "@OrderColumn", SqlDbType = SqlDbType.NVarChar, Value = sortBy},
                 new SqlParameter() {ParameterName = "@OrderDirection", SqlDbType = SqlDbType.NVarChar, Value = sortDir},
-                new SqlParameter() {ParameterName = "@SearchValue", SqlDbType = SqlDbType.NVarChar, Value = " "},
+                new SqlParameter() {ParameterName = "@SearchValue", SqlDbType = SqlDbType.NVarChar, Value = searchBy},
             };
 
             var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo", storeParams);
 
-            DataTable table = dataSet.Tables[1];
-            DataTableReader reader = table.CreateDataReader();
-            List<Dictionary<string, object>> dictionaries = new List<Dictionary<string, object>>();
+            DataTable table = dataSet.Tables[1]; // TODO
+            var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
+            var viewModels = Mapper.Map<List<DataRow>, List<TopAgencyAffiliateIntroducedUsersViewModel>>(rows); // see details in Map profile
 
-            foreach (DataRow row in table.Rows)
-            {
-                Dictionary<string, object> dictionary = Enumerable.Range(0, table.Rows)
-                    .ToDictionary(i => reader.GetName(i), i => reader.GetValue(i));
+            totalResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["TotalCount"]);
+            filteredResultsCount = Convert.ToInt32((dataSet.Tables[3].Rows[0])["FilteredCount"]);
 
-                dictionaries.Add(dictionary);
-
-            }
-
-            // Convert the DataTable to a list of dictionaries
-            if (table.Row.HasRows)
-            {
-                while (reader.Read())
-                {
-                    Dictionary<string, object> dictionary = Enumerable.Range(0, reader.FieldCount)
-                        .ToDictionary(i => reader.GetName(i), i => reader.GetValue(i));
-
-                    dictionaries.Add(dictionary);
-                }
-            }
-
-            foreach (var item in )
-            {
-
-            }
-
-            //Table[0]//////////////////////////////////////////////////////
-            //TotalSale|DirectSale|TotalIntroducedUsers|DirectIntroducedUsers
-            //123//////456/////////789//////////////////10//////////////////
-
-            var viewModel = new TopAgencyAffiliateStatisticsViewModel
-            {
-                TotalSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]),
-                DirectSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[1]),
-                TotalIntroducedUsers = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[2]),
-                DirectIntroducedUsers = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[3])
-            };
-
-            filteredResultsCount = totalResultsCount = 0;
-
-            return null;
-            //filteredResultsCount = totalResultsCount = _sysUserService.Queryable().Count(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue));
-            //var topAgencyAffiliates = _sysUserService.Query()
-            //                            .Include(x => x.Agency)
-            //                            .Include(x => x.IntroducedUsers)
-            //                            .Select()
-            //                            .Where(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue))
-            //                            .Select(x => new AllTopAgencyAffiliateViewModel
-            //                            {
-            //                                Id = x.Id,
-            //                                FirstName = x.FirstName,
-            //                                LastName = x.LastName,
-            //                                Email = x.Email,
-            //                                IsLocked = x.IsLocked,
-            //                                TotalIntroducedUsers = x.IntroducedUsers.TotalDirectIntroducedUsers,
-            //                                AgencyId = x.AgencyId,
-            //                                TotalSale = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0),
-            //                                TotalSaleInString = Math.Max(x.IntroducedUsers.DirectAffiliateSale + x.IntroducedUsers.Tier2AffiliateSale + x.IntroducedUsers.Tier3AffiliateSale, 0).ToString(Format.Amount),
-            //                                AffiliateCreatedDate = x.AffiliateCreatedDate,
-            //                                AffiliateCreatedDateInString = x.AffiliateCreatedDate.GetValueOrDefault().ToString(Format.DateTime),
-            //                                Tier1DirectRate = x.Agency.Tier1DirectRate,
-            //                                Tier2DirectRate = x.Agency.Tier2DirectRate,
-            //                                Tier3DirectRate = x.Agency.Tier3DirectRate,
-            //                                Tier2SaleToTier1Rate = x.Agency.Tier2SaleToTier1Rate,
-            //                                Tier3SaleToTier1Rate = x.Agency.Tier3SaleToTier1Rate,
-            //                                Tier3SaleToTier2Rate = x.Agency.Tier3SaleToTier2Rate,
-            //                            })
-            //                            .AsQueryable();
-
-            //// search the dbase taking into consideration table sorting and paging
-            //if (!string.IsNullOrEmpty(searchBy))
-            //{
-            //    filteredResultsCount = _sysUserService.Queryable()
-            //            .Where(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue))
-            //            .Count(x => !x.IsDeleted && ((x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy)));
-
-            //    topAgencyAffiliates = topAgencyAffiliates.Where(x => (x.FirstName ?? "").ToLower().Contains(searchBy) || (x.LastName ?? "").ToLower().Contains(searchBy) || x.Email.ToLower().Contains(searchBy));
-            //}
-
-            //return topAgencyAffiliates.OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
+            return viewModels;
         }
 
         [HttpPost]

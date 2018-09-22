@@ -7,10 +7,12 @@ namespace CPL.Models
 {
     public class TopAgencyAffiliateIntroducedUsersViewModel
     {
-        public int sysUserId { get; set; }
-        public decimal TotalCPLUsed { get; set; }
-        public decimal TotalCPLAwarded { get; set; }
+        public int Id { get; set; }
+        public string KindOfTier { get; set; }
+        public decimal UsedCPL { get; set; }
+        public decimal LostCPL { get; set; }
+        public decimal AffiliateSale { get; set; }
         public int TotalIntroducedUsers { get; set; }
-        public DateTime? AffiliateCreatedDate { get; set; }
+        public string AffiliateCreatedDateInString { get; set; }
     }
 }

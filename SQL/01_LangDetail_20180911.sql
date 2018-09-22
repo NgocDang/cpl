@@ -144,7 +144,7 @@ INSERT INTO LangDetail VALUES (2, N'PeriodInMonth', N'月の期間');
 INSERT INTO LangDetail VALUES (1, N'PaidSuccessfully', N'Paid successfully !');
 INSERT INTO LangDetail VALUES (2, N'PaidSuccessfully', N'支払いは正常に完了しました');
 
-INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliate', N'Top Agency Affiliate');
+INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliate', N'Top agency affiliate');
 INSERT INTO LangDetail VALUES (2, N'TopAgencyAffiliate', N'トップの代理店');
 
 ----------------------------------------------------------------------------------
@@ -185,3 +185,10 @@ INSERT INTO LangDetail VALUES (1, N'AllTopAgencyAffiliate', N'All top agency aff
 INSERT INTO LangDetail VALUES (2, N'AllTopAgencyAffiliate', N'すべてのトップ代理店アフィリエイト');
 
 DELETE LangDetail WHERE Name = 'TotalIntroducer';
+
+--DAM - 20180922 - Admin/TopAgencyAffiliate/Id ----------
+INSERT INTO LangDetail VALUES (1, N'TotalCPLLost', N'Total CPL lost');
+INSERT INTO LangDetail VALUES (2, N'TotalCPLLost', N'紛失総CPL');
+
+INSERT INTO LangDetail VALUES (1, N'KindOfTier', N'Kind of tier');
+INSERT INTO LangDetail VALUES (2, N'KindOfTier', N'層の種類');
