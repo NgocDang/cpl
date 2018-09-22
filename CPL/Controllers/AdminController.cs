@@ -498,28 +498,16 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult DoUpdateStandardAffiliateRate(StandardAffliateDataModel model)
+        public IActionResult DoUpdateAllStandardAffiliateRate(string name, int value, int affiliateId)
         {
             try
             {
-                var standardAffiliate = _affiliateService.Queryable().FirstOrDefault(x => x.Id == model.Id);
-
-                var user = _sysUserService.Queryable().FirstOrDefault(x => x.AffiliateId == model.Id);
-                if (user != null && !user.IsLocked)
-                {
-                    if (model.Tier1DirectRate != null)
-                        standardAffiliate.Tier1DirectRate = model.Tier1DirectRate.Value;
-                    if (model.Tier2SaleToTier1Rate != null)
-                        standardAffiliate.Tier2SaleToTier1Rate = model.Tier2SaleToTier1Rate.Value;
-                    if (model.Tier3SaleToTier1Rate != null)
-                        standardAffiliate.Tier3SaleToTier1Rate = model.Tier3SaleToTier1Rate.Value;
-
-                    _affiliateService.Update(standardAffiliate);
-                    _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true, isLocked = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
-                }
-                else
-                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+                var standardAffiliate = _affiliateService.Queryable().FirstOrDefault(x => x.Id == affiliateId);
+                var property = typeof(Affiliate).GetProperty(name);
+                property.SetValue(standardAffiliate, value, null);
+                _affiliateService.Update(standardAffiliate);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, isLocked = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
             }
             catch (Exception ex)
             {
@@ -1017,12 +1005,14 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult DoUpdateAllTopAgencyAffiliateRate(string name, int value, int pk)
+        public IActionResult DoUpdateAllTopAgencyAffiliateRate(string name, int value, int agencyId)
         {
             try
             {
-                var agencyAffiliate = _agencyService.Queryable().FirstOrDefault(x => x.Id == pk);
-                agencyAffiliate.Tier1DirectRate = value;
+                var agencyAffiliate = _agencyService.Queryable().FirstOrDefault(x => x.Id == agencyId);
+
+                var property = typeof(Agency).GetProperty(name);
+                property.SetValue(agencyAffiliate, value, null);
                 _agencyService.Update(agencyAffiliate);
                 _unitOfWork.SaveChanges();
 
@@ -1274,19 +1264,6 @@ namespace CPL.Controllers
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == id);
             user.KYCVerified = true;
-
-            // Transfer prize
-            var lotteryHistorys = _lotteryHistoryService
-                              .Query().Include(x => x.LotteryPrize).Select()
-                              .Where(x => x.SysUserId == user.Id && x.Result == EnumGameResult.KYC_PENDING.ToString())
-                              .ToList();
-            foreach (var lotteryHistory in lotteryHistorys)
-            {
-                user.TokenAmount += lotteryHistory.LotteryPrize.Value;
-                // Update status
-                lotteryHistory.Result = EnumGameResult.WIN.ToString();
-                _lotteryHistoryService.Update(lotteryHistory);
-            }
 
             // Save DB
             _sysUserService.Update(user);

@@ -144,7 +144,7 @@ INSERT INTO LangDetail VALUES (2, N'PeriodInMonth', N'月の期間');
 INSERT INTO LangDetail VALUES (1, N'PaidSuccessfully', N'Paid successfully !');
 INSERT INTO LangDetail VALUES (2, N'PaidSuccessfully', N'支払いは正常に完了しました');
 
-INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliate', N'Top agency affiliate');
+INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliate', N'Top Agency Affiliate');
 INSERT INTO LangDetail VALUES (2, N'TopAgencyAffiliate', N'トップの代理店');
 
 ----------------------------------------------------------------------------------

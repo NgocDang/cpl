@@ -104,9 +104,9 @@
                     "data": "Tier1DirectRate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + ' href="#">' + full.tier1DirectRate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier1DirectRate + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + ' href="#">' + full.tier1DirectRate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + '>' + full.tier1DirectRate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier1DirectRate + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + '>' + full.tier1DirectRate + '</a>';
                     },
                     "orderable": false
                 },
@@ -114,9 +114,9 @@
                     "data": "Tier2SaleToTier1Rate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier2SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier2SaleToTier1Rate + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier2SaleToTier1Rate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier2SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier2SaleToTier1Rate + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier2SaleToTier1Rate + '</a>';
                     },
                     "orderable": false
                 },
@@ -124,9 +124,9 @@
                     "data": "Tier3SaleToTier1Rate",
                     "render": function (data, type, full, meta) {
                         if (full.isLocked === false)
-                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier3SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier3SaleToTier1Rate + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier3SaleToTier1Rate + '</a>';
                         else
-                            return '<a class="editable editable-locked" id="' + full.id + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier3SaleToTier1Rate + '</a>';
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier3SaleToTier1Rate + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier3SaleToTier1Rate + '</a>';
                     },
                     "orderable": false
                 },
@@ -207,23 +207,17 @@
     loadEditableOnRow: function (element) {
         $(element).find('a.editable').editable({
             url: function (params) {
-                var requestData = '';
-                if (params.name == 'Tier1DirectRate')
-                    requestData = { Id: params.pk, Tier1DirectRate: params.value }
-                else if (params.name == 'Tier2SaleToTier1Rate')
-                    requestData = { Id: params.pk, Tier2SaleToTier1Rate: params.value }
-                else if (params.name == 'Tier3SaleToTier1Rate')
-                    requestData = { Id: params.pk, Tier3SaleToTier1Rate: params.value }
-                else
-                    return;
                 return $.ajax({
                     cache: false,
                     async: true,
                     type: 'POST',
-                    data: requestData,
-                    url: 'DoUpdateStandardAffiliateRate',
+                    data: { affiliateId: params.pk, value: params.value, name: params.name },
+                    url: 'DoUpdateAllStandardAffiliateRate',
                     success: function (data) {
-                        toastr.success(data.message, 'Success!');
+                        if (data.success)
+                            toastr.success(data.message, 'Success!');
+                        else
+                            toastr.error(data.message, 'Error!');
                     },
                     error: function (data) {
                         toastr.error(data.message, 'Error!');
