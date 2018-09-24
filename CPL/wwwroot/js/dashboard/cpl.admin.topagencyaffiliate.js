@@ -1,7 +1,6 @@
 ﻿var TopAgencyAffiliate = {
     TopAgencyAffiliateDataTable: null,
     init: function () {
-        TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadTopAgencyAffiliateDataTable();
         TopAgencyAffiliate.bindSwitchery();
         TopAgencyAffiliate.bindDoUpdateAgencyAffiliateRate();
         TopAgencyAffiliate.bindDoUpdateAgencyAffiliateSetting();
@@ -9,22 +8,22 @@
         TopAgencyAffiliate.bindDoPayment();
 
         TopAgencyAffiliate.bindTopAgencyTab();
+        TopAgencyAffiliate.bindTier2AgencyTab();
+        TopAgencyAffiliate.bindTier3AgencyTab();
         TopAgencyAffiliate.bindTopAgencyTimeRangeChange();
-
-        TopAgencyAffiliate.initTopAgencyAffiliateDataTable();
 
         var tab = $("#tab").val();
         if (tab === "")
             tab = "top-agency";
         $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
     },
-    initTopAgencyAffiliateDataTable: function () {
+    initTopAgencyAffiliateDataTable: function (parentElement) {
         TopAgencyAffiliate.TopAgencyAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
-            TopAgencyAffiliate.loadEditable();
+            TopAgencyAffiliate.loadEditable(parentElement);
         });
     },
-    loadTopAgencyAffiliateDataTable: function () {
-        return $('#dt-top-agency-affiliate').DataTable({
+    loadTopAgencyAffiliateDataTable: function (parentElement, kindOfTier) {
+        return $(parentElement + " .dt-top-agency-affiliate").DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
@@ -32,10 +31,11 @@
                 url: "/Admin/SearchTopAgencyAffiliate",
                 type: 'POST',
                 data: {
-                    sysUserId: $("#SysUserId").val()
+                    sysUserId: $("#SysUserId").val(),
+                    kindOfTier: kindOfTier
                 },
                 complete: function (data) {
-                    TopAgencyAffiliate.loadEditable();
+                    TopAgencyAffiliate.loadEditable(parentElement);
                 }
             },
             'order': [[0, 'asc']],
@@ -252,8 +252,31 @@
             if ($("#top-agency-nav .tab-detail").html().trim().length === 0) {
                 TopAgencyAffiliate.loadTier1Statistics();
             }
+
+            if ($("#top-agency-nav table tbody").length == 0) {
+                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadTopAgencyAffiliateDataTable("#top-agency-nav", "1");
+                TopAgencyAffiliate.initTopAgencyAffiliateDataTable("#top-agency-nav");
+            }
+
         })
     },
+    bindTier2AgencyTab: function () {
+        $('a#tier-2-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#tier-2-nav table tbody").length == 0) {
+                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadTopAgencyAffiliateDataTable("#tier-2-nav", "2");
+                TopAgencyAffiliate.initTopAgencyAffiliateDataTable("#tier-2-nav");
+            }
+        })
+    },
+    bindTier3AgencyTab: function () {
+        $('a#tier-3-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#tier-3-nav table tbody").length == 0) {
+                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadTopAgencyAffiliateDataTable("#tier-3-nav", "3");
+                TopAgencyAffiliate.initTopAgencyAffiliateDataTable("#tier-3-nav");
+            }
+        })
+    },
+
     loadTier1Statistics: function () {
         $.ajax({
             url: "/Admin/GetTopAgencyStatistics/",
@@ -402,7 +425,7 @@
         // Create the plot
         container.find(".statistic-chart").highcharts(options);
     },
-    loadEditable: function () {
+    loadEditable: function (parentElement) {
         $.fn.editable.defaults.clear = false;
         $.fn.editable.defaults.mode = 'popup';
         $.fn.editable.defaults.placement = 'top';
@@ -410,7 +433,7 @@
         $.fn.editable.defaults.step = '1.00';
         $.fn.editable.defaults.min = '0.00';
         $.fn.editable.defaults.max = '100.00';
-        $("#dt-top-agency-affiliate tr").each(function (index, element) {
+        $(parentElement + " .dt-top-agency-affiliate tr").each(function (index, element) {
             TopAgencyAffiliate.loadEditableOnRow(element);
         });
     },

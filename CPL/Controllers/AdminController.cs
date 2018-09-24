@@ -634,12 +634,12 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult SearchTopAgencyAffiliate(DataTableAjaxPostModel viewModel, int sysUserId)
+        public JsonResult SearchTopAgencyAffiliate(DataTableAjaxPostModel viewModel, int sysUserId, string kindOfTier)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchTopAgencyAffiliateFunc(viewModel, out filteredResultsCount, out totalResultsCount, sysUserId);
+            var res = SearchTopAgencyAffiliateFunc(viewModel, out filteredResultsCount, out totalResultsCount, sysUserId, kindOfTier);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -651,7 +651,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<TopAgencyAffiliateIntroducedUsersViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId)
+        public IList<TopAgencyAffiliateIntroducedUsersViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier)
         {
             var searchBy = (model.search.value != null) ? model.search.value : string.Empty;
             var pageSize = model.length;
@@ -678,7 +678,21 @@ namespace CPL.Controllers
                 new SqlParameter() {ParameterName = "@SearchValue", SqlDbType = SqlDbType.NVarChar, Value = searchBy},
             };
 
-            var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo", storeParams);
+            var uspName = string.Empty;
+            if (kindOfTier == ((int)KindOfTier.TIER1).ToString())
+            {
+                uspName = "usp_GetAffiliateInfo";
+            }
+            else if (kindOfTier == ((int)KindOfTier.TIER2).ToString())
+            {
+                // TODO
+            }
+            else if (kindOfTier == ((int)KindOfTier.TIER3).ToString())
+            {
+                // TODO
+            }
+
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure(uspName, storeParams);
 
             DataTable table = dataSet.Tables[1]; // TODO
             var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
