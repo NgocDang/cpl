@@ -11,10 +11,17 @@
         TopAgencyAffiliate.bindTopAgencyTab();
         TopAgencyAffiliate.bindTopAgencyTimeRangeChange();
 
+        TopAgencyAffiliate.initTopAgencyAffiliateDataTable();
+
         var tab = $("#tab").val();
         if (tab === "")
             tab = "top-agency";
         $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
+    },
+    initTopAgencyAffiliateDataTable: function () {
+        TopAgencyAffiliate.TopAgencyAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+            TopAgencyAffiliate.loadEditable();
+        });
     },
     loadTopAgencyAffiliateDataTable: function () {
         return $('#dt-top-agency-affiliate').DataTable({
@@ -28,7 +35,7 @@
                     sysUserId: $("#SysUserId").val()
                 },
                 complete: function (data) {
-                    var table = TopAgencyAffiliate.TopAgencyAffiliateDataTable;
+                    TopAgencyAffiliate.loadEditable();
                 }
             },
             'order': [[0, 'asc']],
@@ -69,6 +76,37 @@
                     "render": function (data, type, full, meta) {
                         return full.affiliateCreatedDateInString;
                     }
+                },
+                {
+                    "data": "Tier1DirectRate",
+                    "render": function (data, type, full, meta) {
+                        if (full.isLocked === false)
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier1DirectRate + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + ' href="#">' + full.tier1DirectRate + '</a>';
+                        else
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier1DirectRate + '" data-name="Tier1DirectRate" data-pk=' + full.affiliateId + '>' + full.tier1DirectRate + '</a>';
+
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "Tier2SaleToTier1Rate",
+                    "render": function (data, type, full, meta) {
+                        if (full.isLocked === false)
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier2SaleToTier1Rate + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier2SaleToTier1Rate + '</a>';
+                        else
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier2SaleToTier1Rate + '" data-name="Tier2SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier2SaleToTier1Rate + '</a>';
+                    },
+                    "orderable": false
+                },
+                {
+                    "data": "Tier3SaleToTier1Rate",
+                    "render": function (data, type, full, meta) {
+                        if (full.isLocked === false)
+                            return '<a class="editable editable-unlocked" id="' + full.id + '" data-value="' + full.tier3SaleToTier1Rate + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + ' href="#">' + full.tier3SaleToTier1Rate + '</a>';
+                        else
+                            return '<a class="editable editable-locked" id="' + full.id + '" data-value="' + full.tier3SaleToTier1Rate + '" data-name="Tier3SaleToTier1Rate" data-pk=' + full.affiliateId + '>' + full.tier3SaleToTier1Rate + '</a>';
+                    },
+                    "orderable": false
                 },
                 {
                     "data": "Action",
@@ -363,6 +401,41 @@
 
         // Create the plot
         container.find(".statistic-chart").highcharts(options);
+    },
+    loadEditable: function () {
+        $.fn.editable.defaults.clear = false;
+        $.fn.editable.defaults.mode = 'popup';
+        $.fn.editable.defaults.placement = 'top';
+        $.fn.editable.defaults.type = 'number';
+        $.fn.editable.defaults.step = '1.00';
+        $.fn.editable.defaults.min = '0.00';
+        $.fn.editable.defaults.max = '100.00';
+        $("#dt-top-agency-affiliate tr").each(function (index, element) {
+            TopAgencyAffiliate.loadEditableOnRow(element);
+        });
+    },
+    loadEditableOnRow: function (element) {
+        $(element).find('a.editable').editable({
+            url: function (params) {
+                return $.ajax({
+                    cache: false,
+                    async: true,
+                    type: 'POST',
+                    data: { affiliateId: params.pk, value: params.value, name: params.name },
+                    url: '../DoUpdateStandardAffiliateRate',
+                    success: function (data) {
+                        if (data.success)
+                            toastr.success(data.message, 'Success!');
+                        else
+                            toastr.error(data.message, 'Error!');
+                    },
+                    error: function (data) {
+                        toastr.error(data.message, 'Error!');
+                    }
+                });
+            },
+        });
+        $(element).find('a.editable-locked').editable('toggleDisabled');
     },
 };
 

@@ -20,7 +20,12 @@ namespace CPL.Misc.AutoMapper
                      .ForMember(dest => dest.LostCPL, opt => opt.MapFrom(src => Convert.ToDecimal(src["LostCPL"])))
                      .ForMember(dest => dest.AffiliateSale, opt => opt.MapFrom(src => Convert.ToDecimal(src["AffiliateSale"])))
                      .ForMember(dest => dest.TotalIntroducedUsers, opt => opt.MapFrom(src => Convert.ToInt32(src["TotalIntroducedUsers"])))
-                     .ForMember(dest => dest.AffiliateCreatedDateInString, opt => opt.MapFrom(src => (Convert.ToDateTime(src["AffiliateCreatedDate"])).ToString(Format.DateTime)));
+                     .ForMember(dest => dest.AffiliateCreatedDateInString, opt => opt.MapFrom(src => (Convert.ToDateTime(src["AffiliateCreatedDate"])).ToString(Format.DateTime)))
+                     //.ForMember(dest => dest.AffiliateId, opt => opt.MapFrom(src => Convert.ToInt32(src["AffiliateId"])))
+                     .ForMember(dest => dest.Tier1DirectRate, opt => opt.MapFrom(src => Convert.ToInt32(src["Tier1DirectRate"])))
+                     .ForMember(dest => dest.Tier2SaleToTier1Rate, opt => opt.MapFrom(src => Convert.ToInt32(src["Tier2SaleToTier1Rate"])))
+                     .ForMember(dest => dest.Tier3SaleToTier1Rate, opt => opt.MapFrom(src => Convert.ToInt32(src["Tier3SaleToTier1Rate"])))
+                     .ForMember(dest => dest.IsLocked, opt => opt.MapFrom(src => Convert.ToInt32(src["IsLocked"])));
         }
     }
 }

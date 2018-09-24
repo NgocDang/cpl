@@ -14,5 +14,12 @@ namespace CPL.Models
         public decimal AffiliateSale { get; set; }
         public int TotalIntroducedUsers { get; set; }
         public string AffiliateCreatedDateInString { get; set; }
+
+        //public int AffiliateId { get; set; }
+        public int? Tier1DirectRate { get; set; }
+        public int? Tier2SaleToTier1Rate { get; set; }
+        public int? Tier3SaleToTier1Rate { get; set; }
+
+        public bool IsLocked { get; set; }
     }
 }

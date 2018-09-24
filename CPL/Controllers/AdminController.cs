@@ -498,7 +498,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult DoUpdateAllStandardAffiliateRate(string name, int value, int affiliateId)
+        public IActionResult DoUpdateStandardAffiliateRate(string name, int value, int affiliateId)
         {
             try
             {
@@ -657,7 +657,7 @@ namespace CPL.Controllers
             var pageSize = model.length;
             var pageIndex = model.start + 1;
 
-            string sortBy = "";
+            string sortBy = string.Empty;
             string sortDir = "KindOfTier";
 
             if (model.order != null)
@@ -682,7 +682,7 @@ namespace CPL.Controllers
 
             DataTable table = dataSet.Tables[1]; // TODO
             var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
-            var viewModels = Mapper.Map<List<DataRow>, List<TopAgencyAffiliateIntroducedUsersViewModel>>(rows); // see details in Map profile
+            var viewModels = Mapper.Map<List<DataRow>, List<TopAgencyAffiliateIntroducedUsersViewModel>>(rows);
 
             totalResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["TotalCount"]);
             filteredResultsCount = Convert.ToInt32((dataSet.Tables[3].Rows[0])["FilteredCount"]);

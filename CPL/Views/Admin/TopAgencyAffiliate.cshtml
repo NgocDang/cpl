@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
+    <link href="~/css/dashboard/plugins/editable/bootstrap-editable.css" rel="stylesheet" />
     <link href="~/css/dashboard/plugins/switchery/switchery.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/dashboard/cpl.admin.topagencyaffiliate.css" asp-append-version="true" />
 }
@@ -278,7 +279,7 @@
                     </div>
 
                     <div class="row">
-                        <div id="transaction-history-view-component" class="col-12">
+                        <div class="col-12">
                             <div class="card">
                                 <div class="card-content">
                                     <table id="dt-top-agency-affiliate" class="table responsive table-hover table-xl mb-0">
@@ -290,6 +291,9 @@
                                                 <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSaleInCPL")</th>
                                                 <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducedUsers")</th>
                                                 <th class="border-top-0" data-priority="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateCreatedDate")</th>
+                                                <th class="border-top-0">1</th>
+                                                <th class="border-top-0">2>1</th>
+                                                <th class="border-top-0">3>1</th>
                                                 <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
                                             </tr>
                                         </thead>
@@ -406,6 +410,7 @@
     <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/plugins/editable/bootstrap-editable.min.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/cpl.affiliate.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.admin.topagencyaffiliate.js" asp-append-version="true"></script>
