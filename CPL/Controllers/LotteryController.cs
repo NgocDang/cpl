@@ -126,10 +126,10 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public IActionResult ConfirmPurchaseTicket(LotteryTicketPurchaseViewModel viewModel)
+        public IActionResult ConfirmPurchaseTicket(LotteryTicketPurchaseViewModel viewModel, MobileModel mobileModel)
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            if (user == null)
+            if (user == null && !mobileModel.IsMobile)
             {
                 var loginViewModel = new AccountLoginModel();
 
@@ -141,7 +141,29 @@ namespace CPL.Controllers
             {
                 try
                 {
-                    var currentUser = _sysUserService.Query().Select().Where(x => x.Id == user.Id).FirstOrDefault();
+                    int userId;
+                    if (mobileModel.IsMobile)
+                    {
+                        if (mobileModel.MobileUserId.HasValue)
+                        {
+                            userId = mobileModel.MobileUserId.Value;
+                        }
+                        else
+                        {
+                            return new JsonResult(new
+                            {
+                                code = EnumResponseStatus.ERROR,
+                                error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs
+                            });
+                        }
+                    }
+                    else
+                    {
+                        userId = user.Id;
+                    }
+
+                    var currentUser = _sysUserService.Query().Select().Where(x => x.Id == userId).FirstOrDefault();
+                    
                     var lotteryId = viewModel.LotteryId;
 
                     var lotteryRecordList = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).ToList();
@@ -214,15 +236,62 @@ namespace CPL.Controllers
 
                             _unitOfWork.SaveChanges();
 
-                            return new JsonResult(new { success = true, token = currentUser.TokenAmount.ToString("N0"), hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful), message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully") });
+                            if (mobileModel.IsMobile)
+                            {
+                                return new JsonResult(new
+                                {
+                                    code = EnumResponseStatus.SUCCESS,
+                                    token = currentUser.TokenAmount.ToString("N0"),
+                                    hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful),
+                                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully")
+                                });
+                            }
+
+                            return new JsonResult(new { success = true,
+                                                        token = currentUser.TokenAmount.ToString("N0"),
+                                                        hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful),
+                                                        message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully") });
                         }
                         else
+                        {
+                            if (mobileModel.IsMobile)
+                            {
+                                return new JsonResult(new
+                                {
+                                    code = EnumResponseStatus.WARNING,
+                                    error_message_key = CPLConstant.MobileAppConstant.LotteryDetailNotEnoughCPL
+                                });
+                            }
+
                             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotEnoughCPL") });
-                    }else
-                        return new JsonResult(new { success = false, message = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NoTicketsLeft"), currentLottery.Volume - lotteryRecordList.Count())});
+                        }
+                            
+                    }
+                    else
+                    {
+                        if (mobileModel.IsMobile)
+                        {
+                            return new JsonResult(new
+                            {
+                                code = EnumResponseStatus.WARNING,
+                                error_message_key = CPLConstant.MobileAppConstant.LotteryDetailNoTicketsLeft
+                            });
+                        }
+
+                        return new JsonResult(new { success = false, message = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NoTicketsLeft"), currentLottery.Volume - lotteryRecordList.Count()) });
+                    }
                 }
                 catch (Exception ex)
                 {
+                    if (mobileModel.IsMobile)
+                    {
+                        return new JsonResult(new
+                        {
+                            code = EnumResponseStatus.ERROR,
+                            error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs,
+                            error_message = ex.Message
+                        });
+                    }
                     return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
                 }
             }

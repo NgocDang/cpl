@@ -182,6 +182,11 @@ namespace CPL.Common.Enums
 
             public static string RegisterScreenInputEmailExist = "RegisterScreen_Input_Email_Exist";
 
+            public static string LotteryDetailNoTicketsLeft = "LotteryDetail_No_Tickets_Left";
+            public static string LotteryDetailNotEnoughCPL = "LotteryDetail_Not_Enough_CPL";
+            
+
+
             public static string CommonErrorOccurs = "Common_ErrorOccurs";
         }
 
