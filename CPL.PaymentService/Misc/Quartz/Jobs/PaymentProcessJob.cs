@@ -28,7 +28,6 @@ namespace CPL.PaymentService.Misc.Quartz.Jobs
         {
             var payments = resolver.PaymentService.Query()
                 .Include(x=>x.SysUser)
-                .Select()
                 .Where(x => !x.UpdatedDate.HasValue)
                 .ToList();
 

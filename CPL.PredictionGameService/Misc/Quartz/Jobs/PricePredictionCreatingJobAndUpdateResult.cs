@@ -122,7 +122,6 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 var pricePredictionHistories = resolver.PricePredictionHistoryService
                     .Query()
                     .Include(x => x.SysUser)
-                    .Select()
                     .Where(x => x.PricePredictionId == pricePredictionId);
 
                 // result of game
