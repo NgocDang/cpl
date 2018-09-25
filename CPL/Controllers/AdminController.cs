@@ -890,7 +890,6 @@ namespace CPL.Controllers
             var user = _sysUserService
                 .Query()
                 .Include(x => x.Affiliate)
-                .Select()
                 .FirstOrDefault(x => x.Id == id && x.AffiliateId.GetValueOrDefault(0) > 0);
             var viewModel = Mapper.Map<StandardAffiliateViewModel>(user);
 
