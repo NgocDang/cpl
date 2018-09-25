@@ -1,22 +1,22 @@
-﻿@model TopAgencyAffiliateStatisticsViewModel
+﻿@model TopAgencyAffiliateInfoViewModel
 
 <div class="row">
     <div class="col-12 statistic">
         <div class="row">
             <div class="col-lg-3 col-6 border-right mt-1">
-                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue")</h6>
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")</h6>
                 <p class="lighten-2 mb-0 font-weight-bold">@Model.TotalSale.ToString(CPLConstant.Format.Amount)</p>
             </div>
             <div class="col-lg-3 col-6 border-right mt-1">
-                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")</h6>
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DirectSale")</h6>
                 <p class="lighten-2 mb-0 font-weight-bold">@Model.DirectSale.ToString(CPLConstant.Format.Amount)</p>
             </div>
             <div class="col-lg-3 col-6 border-right mt-1">
-                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PageView")</h6>
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducedUsers")</h6>
                 <p class="lighten-2 mb-0 font-weight-bold">@Model.TotalIntroducedUsers</p>
             </div>
             <div class="col-lg-3 col-6 mt-1">
-                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPlayers")</h6>
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DirectIntroducedUsers")</h6>
                 <p class="lighten-2 mb-0 font-weight-bold">@Model.DirectIntroducedUsers</p>
             </div>
         </div>

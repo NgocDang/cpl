@@ -212,7 +212,7 @@
                     async: true,
                     type: 'POST',
                     data: { affiliateId: params.pk, value: params.value, name: params.name },
-                    url: 'DoUpdateAllStandardAffiliateRate',
+                    url: 'DoUpdateStandardAffiliateRate',
                     success: function (data) {
                         if (data.success)
                             toastr.success(data.message, 'Success!');
