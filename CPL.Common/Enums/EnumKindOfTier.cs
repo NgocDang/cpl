@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Common.Enums
 {
-    public enum KindOfTier
+    public enum EnumKindOfTier
     {
         TIER1 = 1,
         TIER2 = 2,

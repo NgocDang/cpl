@@ -124,13 +124,13 @@ namespace CPL.Controllers
         {
             try
             {
-                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id== mobileModel.MobileUserId && x.IsDeleted == false);
+
 
                 return new JsonResult(
                     new
                     {
                         code = EnumResponseStatus.SUCCESS,
-                        data = user
+                        data = _getUserInfo(mobileModel)
                     }
                 );
             }
@@ -153,7 +153,6 @@ namespace CPL.Controllers
         {
             try
             {
-                var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == mobileModel.MobileUserId && x.IsDeleted == false);
 
                 return new JsonResult(
                     new
@@ -162,7 +161,8 @@ namespace CPL.Controllers
                         data = new {
                             banners = _getBannersList(),
                             news = _getLatestNewsList(),
-                            lotteries = _getLotteriesList()
+                            lotteries = _getLotteriesList(),
+                            userinfo = _getUserInfo(mobileModel)
                         }
                     }
                 );
@@ -177,6 +177,13 @@ namespace CPL.Controllers
                     }
                 );
             }
+        }
+
+        private SysUserViewModel _getUserInfo(MobileModel mobileModel)
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == mobileModel.MobileUserId && x.IsDeleted == false);
+
+            return Mapper.Map<SysUserViewModel>(user);
         }
 
         private NewsViewModel _getLatestNewsList()
@@ -194,14 +201,10 @@ namespace CPL.Controllers
                                 .Where(x => !x.IsDeleted
                                         && (x.LotteryHistories.Count() < x.Volume
                                         && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
-                                .OrderByDescending(x => x.CreatedDate);
-
-            var viewModel = new HomeViewModel();
-            viewModel.Lotteries = lotteries
-                .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
-                .ToList();
-
-            return lotteries.Select(x => Mapper.Map<HomeLotteryViewModel>(x)).ToList();
+                                .OrderByDescending(x => x.CreatedDate)
+                                .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
+                                .ToList();
+            return lotteries;
         }
 
         private List<MobileBannerViewModel> _getBannersList()

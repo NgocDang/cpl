@@ -10,7 +10,7 @@ namespace CPL.Models
         public bool CanDoPayment { get; set; }
 
         public AgencyAffiliateRateViewModel AgencyAffiliateRate { get; set; }
-        public AgencyAffiliateSettingViewModel AgencyAffiliateSetting { get; set; }
+        public AffiliateSettingViewModel AgencyAffiliateSetting { get; set; }
 
         public string Tab { get; set; }
     }
