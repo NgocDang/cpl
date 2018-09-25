@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class StandardAffliateViewModel
+    public class AllStandardAffiliateViewModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
