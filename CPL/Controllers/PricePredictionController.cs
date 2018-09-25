@@ -146,7 +146,6 @@ namespace CPL.Controllers
             totalResultsCount = _pricePredictionHistoryService
                                  .Query()
                                  .Include(x => x.PricePrediction)
-                                 .Select()
                                  .Where(x => x.SysUserId == user.Id)
                                  .Count();
 
@@ -154,7 +153,6 @@ namespace CPL.Controllers
             var pricePredictionHistory = _pricePredictionHistoryService
                                           .Query()
                                           .Include(x => x.PricePrediction)
-                                          .Select()
                                           .Where(x => x.SysUserId == user.Id)
                                           .Select(x => new PricePredictionHistoryViewModel
                                           {
@@ -209,7 +207,7 @@ namespace CPL.Controllers
             {
                 if (user != null)
                 {
-                    var currentUser = _sysUserService.Query().Select().FirstOrDefault(x => x.Id == user.Id);
+                    var currentUser = _sysUserService.Queryable().FirstOrDefault(x => x.Id == user.Id);
                     if (betAmount < currentUser.TokenAmount)
                     {
                         var predictionRecord = new PricePredictionHistory() { PricePredictionId = pricePredictionId, Amount = betAmount, CreatedDate = DateTime.Now, Prediction = predictedTrend, SysUserId = user.Id };
@@ -267,7 +265,7 @@ namespace CPL.Controllers
         public IActionResult AddNewGame(PricePredictionIndexViewModel viewModel)
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            var currentUser = _sysUserService.Query().Select().FirstOrDefault(x => x.Id == user.Id && x.IsAdmin == true);
+            var currentUser = _sysUserService.Queryable().FirstOrDefault(x => x.Id == user.Id && x.IsAdmin == true);
             if (currentUser != null)
             {
                 // Update database

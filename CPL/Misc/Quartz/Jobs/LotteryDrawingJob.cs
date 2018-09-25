@@ -7,6 +7,7 @@ using CPL.Infrastructure.Repositories;
 using CPL.Misc.Quartz;
 using CPL.Misc.Utils;
 using CPL.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
@@ -35,7 +36,6 @@ namespace CPL.Misc.Quartz.Jobs
             var lotteries = lotteryService.Query()
                     .Include(x => x.LotteryHistories)
                     .Include(x => x.LotteryPrizes)
-                    .Select()
                     .Where(x => x.Status.Equals((int)EnumLotteryGameStatus.ACTIVE)
                                 && x.Volume.Equals(x.LotteryHistories.Count)
                                 && !x.LotteryHistories.Any(y => string.Equals(y.CreatedDate.Date, DateTime.Now.Date)))
@@ -59,8 +59,6 @@ namespace CPL.Misc.Quartz.Jobs
 
                     var dataHistories = lotteryHistoryService.Query()
                                         .Include(x => x.SysUser)
-                                        .Select()
-                                        .AsQueryable()
                                         .Where(x => x.LotteryId == lottery.Id)
                                         .OrderBy(x => x.TicketIndex)
                                         .ToList();

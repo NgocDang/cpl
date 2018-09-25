@@ -67,7 +67,6 @@ namespace CPL.Controllers
                 .Include(x => x.LotteryCategory)
                 .Include(x => x.LotteryDetails)
                 .Include(x => x.LotteryHistories)
-                .Select()
                 .Where(x => !x.IsDeleted && (x.LotteryHistories.Count() < x.Volume && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
                 .OrderByDescending(x => x.CreatedDate);
 

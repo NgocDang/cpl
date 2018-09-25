@@ -135,12 +135,10 @@ namespace CPL.Controllers
 
             var totalSaleInLotteryGameToday = _lotteryHistoryService.Query()
                                         .Include(x => x.Lottery)
-                                        .Select()
                                         .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.Date))
                                         .Sum(x => x.Lottery.UnitPrice);
             var totalSaleInLotteryGameYesterday = _lotteryHistoryService.Query()
                                         .Include(x => x.Lottery)
-                                        .Select()
                                         .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.AddDays(-1).Date))
                                         .Sum(x => x.Lottery.UnitPrice);
             // price prediction game
@@ -399,7 +397,6 @@ namespace CPL.Controllers
                             _sysUserService.Query()
                             .Include(x => x.Affiliate)
                             .Include(x => x.IntroducedUsers)
-                            .Select()
                             .Where(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 &&
                                                                  (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue))))
                             .Select(x => new StandardAffliateViewModel
@@ -441,7 +438,6 @@ namespace CPL.Controllers
                             _sysUserService.Query()
                             .Include(x => x.Affiliate)
                             .Include(x => x.IntroducedUsers)
-                            .Select()
                             .Where(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 &&
                                                                  (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue))))
                             .Select(x => new StandardAffliateViewModel
@@ -551,7 +547,6 @@ namespace CPL.Controllers
             var user = _sysUserService
                 .Query()
                 .Include(x => x.Agency)
-                .Select()
                 .FirstOrDefault(x => x.Id == id && x.AffiliateId.GetValueOrDefault(0) > 0 && x.AgencyId.HasValue);
             var viewModel = Mapper.Map<TopAgencyAffiliateViewModel>(user);
 
@@ -832,7 +827,6 @@ namespace CPL.Controllers
             var topAgencyAffiliates = _sysUserService.Query()
                                         .Include(x => x.Agency)
                                         .Include(x => x.IntroducedUsers)
-                                        .Select()
                                         .Where(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue))
                                         .Select(x => new AllTopAgencyAffiliateViewModel
                                         {
@@ -1010,7 +1004,6 @@ namespace CPL.Controllers
                 var lotteryHistories = _lotteryHistoryService.Query()
                                     .Include(x => x.Lottery)
                                     .Include(x => x.LotteryPrize)
-                                    .Select()
                                     .AsQueryable()
                                     .GroupBy(x => x.SysUserId)
                                     .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.Lottery.UnitPrice), TotalCPLAwarded = (int)y.Sum(x => (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0) });
@@ -1068,7 +1061,6 @@ namespace CPL.Controllers
                 var lotteryHistories = _lotteryHistoryService.Query()
                                     .Include(x => x.Lottery)
                                     .Include(x => x.LotteryPrize)
-                                    .Select()
                                     .AsQueryable()
                                     .GroupBy(x => x.SysUserId)
                                     .Select(y => new SysUserViewModel { Id = y.Key, TotalCPLUsed = y.Sum(x => x.Lottery.UnitPrice), TotalCPLAwarded = (int)y.Sum(x => (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0) });
@@ -1431,7 +1423,6 @@ namespace CPL.Controllers
             var lotteryTotalRevenue = _lotteryHistoryService.Query()
                 .Include(x => x.Lottery)
                 .Include(x => x.LotteryPrize)
-                .Select()
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                 .Sum(x => x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0));
 
@@ -1442,7 +1433,7 @@ namespace CPL.Controllers
             viewModel.TotalRevenue = Convert.ToInt32(lotteryTotalRevenue + pricePredictionTotalRevenue);
 
             // 1.STATISTICAL INFORMATION - TOTAL SALE
-            var lotteryTotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+            var lotteryTotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery)
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                 .Sum(x => x.Lottery.UnitPrice);
             var pricePredictionTotalSale = _pricePredictionHistoryService.Queryable()
@@ -1481,7 +1472,7 @@ namespace CPL.Controllers
 
             // 2.STATISTICAL CHART
             // 2.STATISTICAL CHART - TOTAL SALE CHANGES
-            var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+            var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery)
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange
@@ -1511,7 +1502,7 @@ namespace CPL.Controllers
                 .ToList());
 
             // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
-            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
+            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize)
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange
@@ -1590,10 +1581,10 @@ namespace CPL.Controllers
             var data = new List<PieChartData>();
             var totalSaleLotteryGame = _lotteryHistoryService.Query()
                                 .Include(x => x.Lottery)
-                                .Select(x => x.Lottery).Sum(y => y?.UnitPrice);
+                                .Select(x => x.Lottery).Sum(y => y.UnitPrice);
             var totalAwardLotteryGame = _lotteryHistoryService.Query()
                 .Include(x => x.LotteryPrize)
-                .Select(x => x.LotteryPrize).Sum(y => y?.Value);
+                .Select(x => x.LotteryPrize).Sum(y => y.Value);
             var revenueInLotteryGame = totalSaleLotteryGame - totalAwardLotteryGame;
 
             // price prediction game
@@ -1603,7 +1594,7 @@ namespace CPL.Controllers
                                                 .Sum(x => x.Award);
             var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
 
-            var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame.GetValueOrDefault(0) };
+            var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame };
             var pricePredictionChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PricePrediction"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = revenueInPricePredictionGame.GetValueOrDefault(0) };
 
             data.Add(lotteryChartData);
@@ -1668,15 +1659,14 @@ namespace CPL.Controllers
             {
                 var totalSaleLottery = _lotteryHistoryService.Query()
                                 .Include(x => x.Lottery)
-                                .Select(x => x.Lottery).Where(x => x.LotteryCategoryId == lotteryCategories[i].Id).Sum(y => y?.UnitPrice);
+                                .Select(x => x.Lottery).Where(x => x.LotteryCategoryId == lotteryCategories[i].Id).Sum(y => y.UnitPrice);
                 var totalAwardLottery = _lotteryHistoryService.Query()
                     .Include(x => x.LotteryPrize)
-                    .Select()
                     .Where(x => x.Lottery.LotteryCategoryId == lotteryCategories[i].Id)
-                    .Select(x => x.LotteryPrize).Sum(y => y?.Value);
+                    .Select(x => x.LotteryPrize).Sum(y => y.Value);
                 var revenueInLotteryGame = totalSaleLottery - totalAwardLottery;
 
-                var lotteryChartData = new PieChartData { Label = lotteryCategories[i].Name, Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)i + 1), Value = revenueInLotteryGame.GetValueOrDefault(0) };
+                var lotteryChartData = new PieChartData { Label = lotteryCategories[i].Name, Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)i + 1), Value = revenueInLotteryGame};
                 data.Add(lotteryChartData);
             }
 
@@ -1727,12 +1717,11 @@ namespace CPL.Controllers
             viewModel.TotalRevenue = Convert.ToInt32(_lotteryHistoryService.Query()
                 .Include(x => x.Lottery)
                 .Include(x => x.LotteryPrize)
-                .Select()
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                 .Sum(x => x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)));
 
             // 1.STATISTICAL INFORMATION - TOTAL SALE
-            viewModel.TotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+            viewModel.TotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery)
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                 .Sum(x => x.Lottery.UnitPrice);
 
@@ -1756,7 +1745,7 @@ namespace CPL.Controllers
 
             // 2.STATISTICAL CHART
             // 2.STATISTICAL CHART - TOTAL SALE CHANGES
-            var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+            var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery)
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange
@@ -1776,7 +1765,7 @@ namespace CPL.Controllers
                 .ToList());
 
             // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
-            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
+            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize)
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange
@@ -1833,12 +1822,11 @@ namespace CPL.Controllers
             viewModel.TotalRevenue = Convert.ToInt32(_lotteryHistoryService.Query()
                 .Include(x => x.Lottery)
                 .Include(x => x.LotteryPrize)
-                .Select()
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Lottery.LotteryCategoryId == lotteryCategoryId)
                 .Sum(x => x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)));
 
             // 1.STATISTICAL INFORMATION - TOTAL SALE
-            viewModel.TotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+            viewModel.TotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery)
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Lottery.LotteryCategoryId == lotteryCategoryId)
                 .Sum(x => x.Lottery.UnitPrice);
 
@@ -1862,7 +1850,7 @@ namespace CPL.Controllers
 
             // 2.STATISTICAL CHART
             // 2.STATISTICAL CHART - TOTAL SALE CHANGES
-            var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery).Select()
+            var lotterySale = _lotteryHistoryService.Query().Include(x => x.Lottery)
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Lottery.LotteryCategoryId == lotteryCategoryId)
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange
@@ -1882,7 +1870,7 @@ namespace CPL.Controllers
                 .ToList());
 
             // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
-            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
+            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize)
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Lottery.LotteryCategoryId == lotteryCategoryId)
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange
@@ -1967,7 +1955,6 @@ namespace CPL.Controllers
                     .Query()
                     .Include(x => x.Lottery)
                     .Include(x => x.SysUser)
-                    .Select()
                     .Where(x => !lotteryCategoryId.HasValue || x.Lottery.LotteryCategoryId == lotteryCategoryId)
                     .GroupBy(x => new { x.CreatedDate, x.LotteryId, x.SysUserId })
                     .Select(y => new AdminLotteryHistoryViewComponentViewModel
@@ -1989,11 +1976,13 @@ namespace CPL.Controllers
                 searchBy = searchBy.ToLower();
                 bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.StatusInString.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
                                     || x.NumberOfTicketInString.ToLower().Contains(searchBy) || x.Title.ToLower().Contains(searchBy);
+
                 purchasedLotteryHistory = purchasedLotteryHistory
-                        .Where(condition);
+                                        .Where(condition)
+                                        .AsQueryable();
 
                 filteredResultsCount = purchasedLotteryHistory
-                        .Count();
+                                       .Count();
             }
 
             return purchasedLotteryHistory
@@ -2058,8 +2047,6 @@ namespace CPL.Controllers
 
                 return _lotteryService.Query()
                             .Include(x => x.LotteryDetails)
-                            .Select()
-                            .AsQueryable()
                             .Where(x => !x.IsDeleted)
                             .Select(x => Mapper.Map<LotteryViewModel>(x))
                             .OrderBy(sortBy, sortDir)
@@ -2078,8 +2065,6 @@ namespace CPL.Controllers
 
                 return _lotteryService.Query()
                         .Include(x => x.LotteryDetails)
-                        .Select()
-                        .AsQueryable()
                         .Where(x => !x.IsDeleted && (x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.Title.Contains(searchBy)))
                         .Select(x => Mapper.Map<LotteryViewModel>(x))
                         .OrderBy(sortBy, sortDir)
@@ -2097,7 +2082,6 @@ namespace CPL.Controllers
             lottery = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
                                                         .Include(x => x.LotteryDetails)
-                                                        .Select()
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
 
             foreach (var detail in lottery.LotteryDetails)
@@ -2166,7 +2150,6 @@ namespace CPL.Controllers
 
                 var result = _lotteryHistoryService.Query()
                     .Include(x => x.SysUser)
-                    .Select()
                     .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId)
                     .Select(x => Mapper.Map<UserLotteryPrizeViewModel>(x.SysUser))
                     .AsQueryable()
@@ -2180,7 +2163,6 @@ namespace CPL.Controllers
             {
                 filteredResultsCount = _lotteryHistoryService.Query()
                     .Include(x => x.SysUser)
-                    .Select()
                     .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
                     .Count();
 
@@ -2189,7 +2171,6 @@ namespace CPL.Controllers
 
                 return _lotteryHistoryService.Query()
                         .Include(x => x.SysUser)
-                        .Select()
                         .Where(x => x.LotteryId == lotteryId && x.LotteryPrizeId == lotteryPrizeId && x.SysUser.Email.Contains(searchBy))
                         .Select(x => Mapper.Map<UserLotteryPrizeViewModel>(x.SysUser))
                         .AsQueryable()
@@ -2206,7 +2187,6 @@ namespace CPL.Controllers
             lotteries = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
                                                         .Include(x => x.LotteryDetails)
-                                                        .Select()
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
 
             foreach (var detail in lotteries.LotteryDetails)
@@ -2215,7 +2195,7 @@ namespace CPL.Controllers
                 detail.Lang = lang;
             }
 
-            lotteries.LotteryCategories = _lotteryCategoryService.Query().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
+            lotteries.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
 
             return PartialView("_EditLottery", lotteries);
         }
@@ -2237,7 +2217,7 @@ namespace CPL.Controllers
                 });
             }
 
-            lottery.LotteryCategories = _lotteryCategoryService.Query().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
+            lottery.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
             return PartialView("_EditLottery", lottery);
         }
 
@@ -2569,7 +2549,7 @@ namespace CPL.Controllers
 
                 // refund money for user
                 var amountToken = lottery.UnitPrice;
-                var lotteryHistories = _lotteryHistoryService.Query().Include(x => x.SysUser).Select().Where(x => x.LotteryId == id).ToList();
+                var lotteryHistories = _lotteryHistoryService.Query().Include(x => x.SysUser).Where(x => x.LotteryId == id).ToList();
                 foreach (var lotteryHistory in lotteryHistories)
                 {
                     lotteryHistory.Result = EnumGameResult.REFUND.ToString();

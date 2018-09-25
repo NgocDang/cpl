@@ -3,6 +3,7 @@ using CPL.Core.Interfaces;
 using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace CPL.ViewComponents
@@ -40,10 +41,9 @@ namespace CPL.ViewComponents
                     .Query()
                     .Include(x => x.Lottery)
                     .Include(x => x.LotteryPrize)
-                    .Select()
                     .Where(x => x.SysUserId == user.Id && x.Lottery.UpdatedDate.HasValue)
                     .OrderByDescending(x => x.Lottery.UpdatedDate)
-                    .ThenByDescending(x => x.LotteryPrize?.Value)
+                    .ThenByDescending(x => x.LotteryPrize.Value)
                     .FirstOrDefault()?.Lottery;
 
                 if (lastestLottery != null)
@@ -55,7 +55,6 @@ namespace CPL.ViewComponents
                         var lotteryHistory = _lotteryHistoryService
                             .Query()
                             .Include(x => x.LotteryPrize)
-                            .Select()
                             .Where(x => x.SysUserId == user.Id && x.LotteryPrizeId.HasValue && x.LotteryId == lastestLottery.Id)
                             .OrderByDescending(x => x.LotteryPrize.Value)
                             .FirstOrDefault();
