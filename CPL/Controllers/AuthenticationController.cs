@@ -186,7 +186,7 @@ namespace CPL.Controllers
                 var agencyToken = _agencyTokenService.Queryable().FirstOrDefault(x => x.Token == token && x.ExpiredDate >= DateTime.Now && !x.SysUserId.HasValue);
                 if (agencyToken != null)
                 {
-                    if (Utils.IsMobile())
+                    if (MobileHelper.IsMobile(HttpContext))
                     {
                         return Redirect("cryptoodds://SetAgencyToken/" + token + "/" + (affiliateCookieExpirations * 60 * 24));
                     }
@@ -206,7 +206,7 @@ namespace CPL.Controllers
             // Update id using cookie
             if (id.HasValue)
             {
-                if (Utils.IsMobile())
+                if (MobileHelper.IsMobile(HttpContext))
                 {
                     return Redirect("cryptoodds://SetIntroductionId/" + id.Value.ToString() + "/" + (affiliateCookieExpirations * 60 * 24));
                 }
@@ -545,7 +545,7 @@ namespace CPL.Controllers
                     template.Body = _viewRenderService.RenderToStringAsync("/Views/Authentication/_MemberEmailTemplate.cshtml", memberEmailTemplateViewModel).Result;
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), user.Email);
 
-                    if (Utils.IsMobile())
+                    if (MobileHelper.IsMobile(HttpContext))
                     {
                         return Redirect("cryptoodds://Activated");
                     }

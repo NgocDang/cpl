@@ -601,7 +601,7 @@ namespace CPL.Controllers
             // Total user register
             viewModel.TotalIntroducedUsers = _sysUserService.Queryable()
                                            .Count(x => x.IsIntroducedById != null && x.IsIntroducedById == user.Id);
-            viewModel.TotalIntroducedUserToday = _sysUserService.Queryable()
+            viewModel.TotalIntroducedUsersToday = _sysUserService.Queryable()
                                             .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
                                             && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date).Count();
             viewModel.TotalIntroducedUsersYesterday = _sysUserService.Queryable()
