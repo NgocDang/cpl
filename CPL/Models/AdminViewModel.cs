@@ -58,7 +58,7 @@ namespace CPL.Models
         public int Tier3SaleToTier2Rate { get; set; }
     }
 
-    public class AgencyAffiliateSettingViewModel
+    public class AffiliateSettingViewModel
     {
         public bool? IsAutoPaymentEnable { get; set; }
         public bool? IsTier2TabVisible { get; set; }
