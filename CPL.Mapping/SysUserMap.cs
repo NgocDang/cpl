@@ -52,6 +52,11 @@ namespace CPL.Mapping
                 .WithMany(x => x.DirectIntroducedUsers)
                 .IsRequired(false)
                 .HasForeignKey(x => x.IsIntroducedById);
+
+            builder.HasOne(x => x.IntroducedUsers)
+                .WithOne(x => x.SysUser)
+                .IsRequired(true)
+                .HasForeignKey<IntroducedUsers>(x => x.Id);
         }
     }
 }
