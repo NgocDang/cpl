@@ -196,3 +196,6 @@ INSERT INTO LangDetail VALUES (2, N'TotalCPLLost', N'紛失総CPL');
 
 INSERT INTO LangDetail VALUES (1, N'KindOfTier', N'Kind of tier');
 INSERT INTO LangDetail VALUES (2, N'KindOfTier', N'層の種類');
+
+INSERT INTO LangDetail VALUES (1, N'TotalDirectIntroducedUsers', N'Total Direct Introduced Users');
+INSERT INTO LangDetail VALUES (2, N'TotalDirectIntroducedUsers', N'直接導入されたユーザーの総数');
