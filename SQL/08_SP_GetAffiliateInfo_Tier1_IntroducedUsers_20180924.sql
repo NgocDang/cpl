@@ -419,8 +419,6 @@ WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @Page
 
 SELECT ISNULL((LEN(@DirectIntroducedUsersOnPeriod) - LEN(REPLACE(@DirectIntroducedUsersOnPeriod,',','')) + 1),0)
 	 + ISNULL((LEN(@Tier2IntroducedUsersOnPeriod) - LEN(REPLACE(@Tier2IntroducedUsersOnPeriod,',','')) + 1),0) as TotalCount
-FROM IntroducedUsers
-WHERE Id = @SysUserId
 
 --///////////////////////////////////////////////////////////////////////////////////////--
 --////////////////////////////// DATATABLE #3 - Filtered Count //////////////////////////--
