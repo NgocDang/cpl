@@ -1437,7 +1437,7 @@ namespace CPL.Controllers
 
             var pricePredictionTotalRevenue = _pricePredictionHistoryService.Queryable()
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
-                .Sum(x => x.Amount - x.Award.GetValueOrDefault(0));
+                .Sum(x => x.Amount - x.TotalAward.GetValueOrDefault(0));
 
             viewModel.TotalRevenue = Convert.ToInt32(lotteryTotalRevenue + pricePredictionTotalRevenue);
 
@@ -1511,29 +1511,73 @@ namespace CPL.Controllers
                 .ToList());
 
             // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
-            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
-                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
-                        .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange
-                        {
-                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
-                            Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)))
-                        });
+            var lotteryUses = _lotteryHistoryService
+                .Query()
+                .Include(x => x.Lottery)
+                .Select()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .GroupBy(x => x.CreatedDate.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.Sum(x => x.Lottery.UnitPrice)
+                }).ToList();
 
-            var pricePredictionRevenue = _pricePredictionHistoryService.Queryable()
-                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
-                        .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange
-                        {
-                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
-                            Value = (int)y.Sum(x => x.Amount - x.Award.GetValueOrDefault(0))
-                        });
+            var lotteryAwards = _lotteryHistoryService
+                .Query()
+                .Include(x => x.LotteryPrize)
+                .Select()
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .GroupBy(x => x.UpdatedDate.GetValueOrDefault().Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = - y.Sum(x => x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0) // "-" stand for lost token.
+                }).ToList();
+
+            var lotteryRevenue =  lotteryUses.Union(lotteryAwards)
+                                  .GroupBy(x => x.Date)
+                                  .Select(x => new SummaryChange
+                                  {
+                                      Date = x.Key,
+                                      Value = x.Sum(y => y.Value)
+                                  })
+                                  .ToList();
+
+            var pricePredictionUses = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .GroupBy(x => x.CreatedDate.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date =  y.Key,
+                    Value = y.Sum(x => x.Amount)
+                })
+                .ToList();
+
+            var pricePredictionAwards = _pricePredictionHistoryService.Queryable()
+            .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay))
+            .GroupBy(x => x.UpdatedDate.GetValueOrDefault().Date)
+            .Select(y => new SummaryChange
+            {
+                Date = y.Key,
+                Value = - y.Sum(x => x.TotalAward.GetValueOrDefault(0)) // "-" stand for lost token.
+            })
+            .ToList();
+
+            var pricePredictionRevenue = pricePredictionUses.Union(pricePredictionAwards)
+                                                            .GroupBy(x => x.Date)
+                                                            .Select(x => new SummaryChange
+                                                            {
+                                                                Date = x.Key,
+                                                                Value = x.Sum(y => y.Value)
+                                                            })
+                                                            .ToList();
 
             viewModel.TotalRevenueChangesInJson = JsonConvert.SerializeObject((lotteryRevenue ?? Enumerable.Empty<SummaryChange>())
                 .Concat(pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>()).GroupBy(x => x.Date)
                 .Select(y => new SummaryChange
                 {
-                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Date = y.Key,
                     Value = y.Sum(x => x.Value)
                 }).OrderBy(x => x.Date)
                 .ToList());
@@ -1600,7 +1644,7 @@ namespace CPL.Controllers
             var totalSalePricePrediction = _pricePredictionHistoryService.Queryable()
                                                 .Sum(x => x.Amount);
             var totalAwardPricePrediction = _pricePredictionHistoryService.Queryable()
-                                                .Sum(x => x.Award);
+                                                .Sum(x => x.TotalAward);
             var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
 
             var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame.GetValueOrDefault(0) };
@@ -1776,14 +1820,40 @@ namespace CPL.Controllers
                 .ToList());
 
             // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
-            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
-                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
-                        .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange
-                        {
-                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
-                            Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)))
-                        });
+            var lotteryUse = _lotteryHistoryService
+                 .Query()
+                 .Include(x => x.Lottery)
+                 .Select()
+                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                 .GroupBy(x => x.CreatedDate.Date)
+                 .Select(y => new SummaryChange
+                 {
+                     Date = y.Key,
+                     Value = y.Sum(x => x.Lottery.UnitPrice)
+                 })
+                 .ToList();
+
+            var lotteryAwards = _lotteryHistoryService
+                .Query()
+                .Include(x => x.LotteryPrize)
+                .Select()
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .GroupBy(x => x.UpdatedDate.GetValueOrDefault().Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = -y.Sum(x => x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0) // "-" stand for lost token.
+                })
+                .ToList();
+
+            var lotteryRevenue = lotteryUse.Union(lotteryAwards)
+                                  .GroupBy(x => x.Date)
+                                  .Select(x => new SummaryChange
+                                  {
+                                      Date = x.Key,
+                                      Value = x.Sum(y => y.Value)
+                                  })
+                                  .ToList();
 
             viewModel.TotalRevenueChangesInJson = JsonConvert.SerializeObject((lotteryRevenue ?? Enumerable.Empty<SummaryChange>())
                 .GroupBy(x => x.Date)
@@ -1882,14 +1952,40 @@ namespace CPL.Controllers
                 .ToList());
 
             // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
-            var lotteryRevenue = _lotteryHistoryService.Query().Include(x => x.Lottery).Include(x => x.LotteryPrize).Select()
-                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Lottery.LotteryCategoryId == lotteryCategoryId)
-                        .GroupBy(x => x.CreatedDate.Date)
-                        .Select(y => new SummaryChange
-                        {
-                            Date = y.Select(x => x.CreatedDate.Date).FirstOrDefault(),
-                            Value = y.Sum(x => Convert.ToInt32(x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)))
-                        });
+            var lotteryUse = _lotteryHistoryService
+                .Query()
+                .Include(x => x.Lottery)
+                .Select()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .GroupBy(x => x.CreatedDate.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.Sum(x => x.Lottery.UnitPrice)
+                })
+                .ToList();
+
+            var lotteryAward = _lotteryHistoryService
+                .Query()
+                .Include(x => x.LotteryPrize)
+                .Select()
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .GroupBy(x => x.UpdatedDate.GetValueOrDefault().Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = -y.Sum(x => x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0) // "-" stand for lost token.
+                })
+                .ToList();
+
+            var lotteryRevenue = lotteryUse.Union(lotteryAward)
+                                  .GroupBy(x => x.Date)
+                                  .Select(x => new SummaryChange
+                                  {
+                                      Date = x.Key,
+                                      Value = x.Sum(y => y.Value)
+                                  })
+                                  .ToList();
 
             viewModel.TotalRevenueChangesInJson = JsonConvert.SerializeObject((lotteryRevenue ?? Enumerable.Empty<SummaryChange>())
                 .GroupBy(x => x.Date)
