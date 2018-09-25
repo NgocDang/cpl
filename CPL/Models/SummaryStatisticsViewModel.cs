@@ -22,7 +22,7 @@ namespace CPL.Models
     public class SummaryChange
     {
         public DateTime Date { get; set; }
-        public decimal Value { get; set; }
+        public int Value { get; set; }
     }
 
     public class PlayersChange

@@ -1532,7 +1532,7 @@ namespace CPL.Controllers
                 .Select(y => new SummaryChange
                 {
                     Date = y.Key,
-                    Value = - y.Sum(x => x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0) // "-" stand for lost token.
+                    Value = -(int)y.Sum(x => x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0) // "-" stand for lost token.
                 }).ToList();
 
             var lotteryRevenue =  lotteryUses.Union(lotteryAwards)
@@ -1550,7 +1550,7 @@ namespace CPL.Controllers
                 .Select(y => new SummaryChange
                 {
                     Date =  y.Key,
-                    Value = y.Sum(x => x.Amount)
+                    Value = (int)y.Sum(x => x.Amount)
                 })
                 .ToList();
 
@@ -1560,7 +1560,7 @@ namespace CPL.Controllers
             .Select(y => new SummaryChange
             {
                 Date = y.Key,
-                Value = - y.Sum(x => x.TotalAward.GetValueOrDefault(0)) // "-" stand for lost token.
+                Value = -(int)y.Sum(x => x.TotalAward.GetValueOrDefault(0)) // "-" stand for lost token.
             })
             .ToList();
 
@@ -1820,7 +1820,7 @@ namespace CPL.Controllers
                 .ToList());
 
             // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
-            var lotteryUse = _lotteryHistoryService
+            var lotteryUses = _lotteryHistoryService
                  .Query()
                  .Include(x => x.Lottery)
                  .Select()
@@ -1842,11 +1842,11 @@ namespace CPL.Controllers
                 .Select(y => new SummaryChange
                 {
                     Date = y.Key,
-                    Value = -y.Sum(x => x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0) // "-" stand for lost token.
+                    Value = -(int)y.Sum(x => x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0) // "-" stand for lost token.
                 })
                 .ToList();
 
-            var lotteryRevenue = lotteryUse.Union(lotteryAwards)
+            var lotteryRevenue = lotteryUses.Union(lotteryAwards)
                                   .GroupBy(x => x.Date)
                                   .Select(x => new SummaryChange
                                   {
@@ -1952,7 +1952,7 @@ namespace CPL.Controllers
                 .ToList());
 
             // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
-            var lotteryUse = _lotteryHistoryService
+            var lotteryUses = _lotteryHistoryService
                 .Query()
                 .Include(x => x.Lottery)
                 .Select()
@@ -1965,7 +1965,7 @@ namespace CPL.Controllers
                 })
                 .ToList();
 
-            var lotteryAward = _lotteryHistoryService
+            var lotteryAwards = _lotteryHistoryService
                 .Query()
                 .Include(x => x.LotteryPrize)
                 .Select()
@@ -1974,11 +1974,11 @@ namespace CPL.Controllers
                 .Select(y => new SummaryChange
                 {
                     Date = y.Key,
-                    Value = -y.Sum(x => x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0) // "-" stand for lost token.
+                    Value = -(int)y.Sum(x => x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0) // "-" stand for lost token.
                 })
                 .ToList();
 
-            var lotteryRevenue = lotteryUse.Union(lotteryAward)
+            var lotteryRevenue = lotteryUses.Union(lotteryAwards)
                                   .GroupBy(x => x.Date)
                                   .Select(x => new SummaryChange
                                   {
