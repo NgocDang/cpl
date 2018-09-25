@@ -9,7 +9,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].[usp_GetAffiliateInfo_IntroducedUsers]
+CREATE PROCEDURE [dbo].[usp_GetAffiliateInfo_Tier1_IntroducedUsers]
 	-- Add the parameters for the stored procedure here
 	@SysUserId int,
 	@PeriodInDay int,
