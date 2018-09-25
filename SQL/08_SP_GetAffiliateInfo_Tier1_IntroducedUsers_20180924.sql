@@ -50,7 +50,7 @@ WHERE Tier2.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
 	and Tier2.IsIntroducedById in 
 		(SELECT Id 
 		 FROM SysUser Tier1
-		 WHERE Tier1.IsIntroducedById = @SysUserId and Tier1.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate()))
+		 WHERE Tier1.IsIntroducedById = @SysUserId)
 
 ------------------------------------------------------------------------------------
 -------------------------- 1.1 CONSTRUCT SQL QUERY FIRST --------------------------- 

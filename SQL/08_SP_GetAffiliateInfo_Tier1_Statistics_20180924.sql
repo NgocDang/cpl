@@ -21,21 +21,11 @@ BEGIN
 	SET NOCOUNT ON;
     -- Insert statements for procedure here
 
-DECLARE @DirectIntroducedUsers nvarchar(MAX)
-DECLARE @Tier2IntroducedUsers nvarchar(MAX)
-DECLARE @Tier3IntroducedUsers nvarchar(MAX)
 DECLARE @DirectIntroducedUsersOnPeriod nvarchar(MAX)
 DECLARE @Tier2IntroducedUsersOnPeriod nvarchar(MAX)
 DECLARE @Tier3IntroducedUsersOnPeriod nvarchar(MAX)
 
--- INTRODUCED USERS REGARDLESS PERIOD
-SELECT	@DirectIntroducedUsers = IntroducedUsers.DirectIntroducedUsers,
-		@Tier2IntroducedUsers = IntroducedUsers.Tier2IntroducedUsers,
-		@Tier3IntroducedUsers = IntroducedUsers.Tier3IntroducedUsers
-FROM IntroducedUsers 
-WHERE IntroducedUsers.Id = @SysUserId;
-
--- INTRODUCED USER ON PERIOD
+-- INTRODUCED USERS ON PERIOD
 SELECT @DirectIntroducedUsersOnPeriod = STRING_AGG(Id, ',')
 FROM SysUser Tier1
 WHERE Tier1.IsIntroducedById = @SysUserId and Tier1.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
@@ -47,7 +37,7 @@ WHERE	  Tier2.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
 	  and Tier2.IsIntroducedById in 
 			(SELECT	Id 
 			 FROM	SysUser Tier1
-			 WHERE	Tier1.IsIntroducedById = @SysUserId and Tier1.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate()))
+			 WHERE	Tier1.IsIntroducedById = @SysUserId)
 
 --Tier 3 Introduced Users on period
 SELECT @Tier3IntroducedUsersOnPeriod = STRING_AGG(Id, ',') 
@@ -56,11 +46,10 @@ WHERE	  Tier3.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
 	  and Tier3.IsIntroducedById in 
 		   (SELECT	Id 
 			FROM	SysUser Tier2
-			WHERE	Tier2.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and Tier2.IsIntroducedById in 
+			WHERE	Tier2.IsIntroducedById in 
 					   (SELECT	Id
 						FROM	SysUser Tier1 
-						WHERE	Tier1.IsIntroducedById = @SysUserId and Tier1.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())))
+						WHERE	Tier1.IsIntroducedById = @SysUserId))
 
 
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////--
@@ -75,25 +64,25 @@ SELECT
 			FROM LotteryHistory join Lottery on LotteryHistory.LotteryId = Lottery.Id
 			WHERE LotteryHistory.Result is not null and LotteryHistory.Result <> 'REFUND' -- WIN / LOSE 
 					and LotteryHistory.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-					and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))),0)
+					and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))),0)
 	-
 	ISNULL((SELECT SUM(Value) as TotalDirectCPLAwardedInLottery
 		FROM LotteryHistory join LotteryPrize on LotteryHistory.LotteryPrizeId  = LotteryPrize.Id
 		WHERE LotteryHistory.Result is not null and LotteryHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and LotteryHistory.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))),0)
+				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))),0)
 	+
 	ISNULL((SELECT SUM(Amount) as TotalDirectCPLUsedInPricePrediction
 		FROM PricePredictionHistory 
 		WHERE PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and PricePredictionHistory.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))),0)
+				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))),0)
 	-
 	ISNULL((SELECT SUM(TotalAward) as TotalDirectCPLAwardedInPricePrediction
 		FROM PricePredictionHistory 
 		WHERE   PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and PricePredictionHistory.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))),0)
+				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))),0)
 	+
 	--------------------------------------------------------------------------
 	-- Total Affiliate Sale | Tier 2 Affiliate Sale to Tier 1 Afiliate Sale --
@@ -102,25 +91,25 @@ SELECT
 		FROM LotteryHistory join Lottery on LotteryHistory.LotteryId = Lottery.Id
 		WHERE LotteryHistory.Result is not null and LotteryHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and LotteryHistory.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ','))),0)
+				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsersOnPeriod, ','))),0)
 	-
 	ISNULL((SELECT SUM(Value) as TotalDirectCPLAwardedInLottery
 		FROM LotteryHistory join LotteryPrize on LotteryHistory.LotteryPrizeId  = LotteryPrize.Id
 		WHERE LotteryHistory.Result is not null and LotteryHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and LotteryHistory.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ','))),0)
+				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsersOnPeriod, ','))),0)
 	+
 	ISNULL((SELECT SUM(Amount) as TotalDirectCPLUsedInPricePrediction
 		FROM PricePredictionHistory 
 		WHERE PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and PricePredictionHistory.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ','))),0)
+				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsersOnPeriod, ','))),0)
 	-
 	ISNULL((SELECT SUM(TotalAward) as TotalDirectCPLAwardedInPricePrediction
 		FROM PricePredictionHistory 
 		WHERE PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and PricePredictionHistory.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ','))),0)
+				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsersOnPeriod, ','))),0)
 	+
 	--------------------------------------------------------------------------
 	-- Total Affiliate Sale | Tier 3 Affiliate Sale to Tier 1 Afiliate Sale --
@@ -129,25 +118,25 @@ SELECT
 		FROM LotteryHistory join Lottery on LotteryHistory.LotteryId = Lottery.Id
 		WHERE LotteryHistory.Result is not null and LotteryHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and LotteryHistory.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsers, ','))),0)
+				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsersOnPeriod, ','))),0)
 	-
 	ISNULL((SELECT SUM(Value) as TotalDirectCPLAwardedInLottery
 		FROM LotteryHistory join LotteryPrize on LotteryHistory.LotteryPrizeId  = LotteryPrize.Id
 		WHERE LotteryHistory.Result is not null and LotteryHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and LotteryHistory.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsers, ','))),0)
+				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsersOnPeriod, ','))),0)
 	+
 	ISNULL((SELECT SUM(Amount) as TotalDirectCPLUsedInPricePrediction
 		FROM PricePredictionHistory 
 		WHERE	PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and PricePredictionHistory.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsers, ','))),0)
+				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsersOnPeriod, ','))),0)
 	-
 	ISNULL((SELECT SUM(TotalAward) as TotalDirectCPLAwardedInPricePrediction
 		FROM PricePredictionHistory 
 		WHERE	PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and PricePredictionHistory.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate()) 
-				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsers, ','))),0)
+				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsersOnPeriod, ','))),0)
 AS TotalAffiliateSale,
 
 ---------------------------
@@ -157,25 +146,25 @@ AS TotalAffiliateSale,
 			FROM LotteryHistory join Lottery on LotteryHistory.LotteryId = Lottery.Id
 			WHERE LotteryHistory.Result is not null and LotteryHistory.Result <> 'REFUND' -- WIN / LOSE 
 					and Lottery.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-					and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))),0)
+					and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))),0)
 	-
 	ISNULL((SELECT SUM(Value) as TotalDirectCPLAwardedInLottery
 		FROM LotteryHistory join LotteryPrize on LotteryHistory.LotteryPrizeId  = LotteryPrize.Id
 		WHERE LotteryHistory.Result is not null and LotteryHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and LotteryHistory.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))),0)
+				and LotteryHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))),0)
 	+
 	ISNULL((SELECT SUM(Amount) as TotalDirectCPLUsedInPricePrediction
 		FROM PricePredictionHistory 
 		WHERE PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and PricePredictionHistory.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))),0)
+				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))),0)
 	-
 	ISNULL((SELECT SUM(TotalAward) as TotalDirectCPLAwardedInPricePrediction
 		FROM PricePredictionHistory 
 		WHERE   PricePredictionHistory.Result is not null and PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 				and PricePredictionHistory.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))),0)
+				and PricePredictionHistory.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))),0)
 AS DirectAffiliateSale,
 
 --------------------------
@@ -214,7 +203,7 @@ SELECT	SUM(l.UnitPrice),
 FROM	 LotteryHistory lh join Lottery l on l.Id = lh.LotteryId
 WHERE	lh.Result is not null and lh.Result <> 'REFUND' -- WIN / LOSE 
 	and lh.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))
+	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))
 GROUP BY CAST(lh.CreatedDate AS DATE)
 
 ---------------------------------------------------------
@@ -234,7 +223,7 @@ SELECT	SUM(lp.Value),
 FROM	 LotteryHistory lh join LotteryPrize lp on lh.LotteryPrizeId = lp.Id
 WHERE	lh.Result is not null and lh.Result <> 'REFUND' -- WIN / LOSE 
 	and lh.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))
+	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))
 GROUP BY CAST(lh.UpdatedDate AS DATE)
 
 
@@ -252,7 +241,7 @@ SELECT	SUM(l.UnitPrice),
 FROM	 LotteryHistory lh join Lottery l on l.Id = lh.LotteryId
 WHERE	lh.Result is not null and lh.Result <> 'REFUND' -- WIN / LOSE 
 	and lh.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ','))
+	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsersOnPeriod, ','))
 GROUP BY CAST(lh.CreatedDate AS DATE)
 
 -- 1.2.2 AFFILIATE SALE - TIER 2 INTRODUCED USERS - AWARDED CPL IN LOTTERY
@@ -268,7 +257,7 @@ SELECT	SUM(lp.Value),
 FROM	 LotteryHistory lh join LotteryPrize lp on lh.LotteryPrizeId = lp.Id
 WHERE	lh.Result is not null and lh.Result <> 'REFUND' -- WIN / LOSE 
 	and lh.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ','))
+	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsersOnPeriod, ','))
 GROUP BY CAST(lh.UpdatedDate AS DATE)
 
 
@@ -286,7 +275,7 @@ SELECT	SUM(l.UnitPrice),
 FROM	 LotteryHistory lh join Lottery l on l.Id = lh.LotteryId
 WHERE	lh.Result is not null and lh.Result <> 'REFUND' -- WIN / LOSE 
 	and lh.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsers, ','))
+	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsersOnPeriod, ','))
 GROUP BY CAST(lh.CreatedDate AS DATE)
 
 --  1.3.2 AFFILIATE SALE - TIER 3 INTRODUCED USERS - AWARDED CPL IN LOTTERY
@@ -302,7 +291,7 @@ SELECT	SUM(lp.Value),
 FROM	 LotteryHistory lh join LotteryPrize lp on lh.LotteryPrizeId = lp.Id
 WHERE	lh.Result is not null and lh.Result <> 'REFUND' -- WIN / LOSE 
 	and lh.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsers, ','))
+	and lh.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsersOnPeriod, ','))
 GROUP BY CAST(lh.UpdatedDate AS DATE)
 
 
@@ -322,7 +311,7 @@ SELECT	SUM(pph.Amount),
 FROM	PricePredictionHistory pph 
 		WHERE	pph.Result is not null and pph.Result <> 'REFUND' -- WIN / LOSE 
 				and pph.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))
+				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))
 GROUP BY CAST(pph.CreatedDate AS DATE)
 
 --  2.1.2 AFFILIATE SALE - DIRECT INTRODUCED USERS - AWARDED CPL IN PRICE PREDICTION
@@ -338,7 +327,7 @@ SELECT	SUM(pph.TotalAward),
 FROM	PricePredictionHistory pph 
 		WHERE	pph.Result is not null and pph.Result <> 'REFUND' -- WIN / LOSE 
 				and pph.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))
+				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsersOnPeriod, ','))
 GROUP BY CAST(pph.UpdatedDate AS DATE)
 
 
@@ -355,7 +344,7 @@ SELECT	SUM(pph.Amount),
 FROM	PricePredictionHistory pph 
 		WHERE	pph.Result is not null and pph.Result <> 'REFUND' -- WIN / LOSE 
 				and pph.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ','))
+				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsersOnPeriod, ','))
 GROUP BY CAST(pph.CreatedDate AS DATE)
 
 --  2.2.2 AFFILIATE SALE - TIER 2 INTRODUCED USERS - AWARDED CPL IN PRICE PREDICTION
@@ -371,7 +360,7 @@ SELECT	SUM(pph.TotalAward),
 FROM	PricePredictionHistory pph 
 		WHERE	pph.Result is not null and pph.Result <> 'REFUND' -- WIN / LOSE 
 				and pph.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ','))
+				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsersOnPeriod, ','))
 GROUP BY CAST(pph.UpdatedDate AS DATE)
 
 
@@ -389,7 +378,7 @@ SELECT	SUM(pph.Amount),
 FROM	PricePredictionHistory pph 
 		WHERE	pph.Result is not null and pph.Result <> 'REFUND' -- WIN / LOSE 
 				and pph.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsers, ','))
+				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsersOnPeriod, ','))
 GROUP BY CAST(pph.CreatedDate AS DATE)
 
 --  2.3.2 AFFILIATE SALE - TIER 3 INTRODUCED USERS - AWARDED CPL IN PRICE PREDICTION
@@ -405,7 +394,7 @@ SELECT	SUM(pph.TotalAward),
 FROM	PricePredictionHistory pph 
 		WHERE	pph.Result is not null and pph.Result <> 'REFUND' -- WIN / LOSE 
 				and pph.UpdatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsers, ','))
+				and pph.SysUserId in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier3IntroducedUsersOnPeriod, ','))
 GROUP BY CAST(pph.UpdatedDate AS DATE)
 
 
@@ -515,8 +504,7 @@ SELECT	COUNT(Id), CAST(CreatedDate AS DATE)
 			and SysUser.IsIntroducedById in (
 				SELECT	Id
 				FROM	SysUser 
-				WHERE	SysUser.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-					and SysUser.IsIntroducedById =  @SysUserId)
+				WHERE	SysUser.IsIntroducedById =  @SysUserId)
 GROUP BY CAST(CreatedDate AS DATE)
 
 --  3.3 NUMBER - TIER 3 INTRODUCED USERS
@@ -533,12 +521,10 @@ SELECT	COUNT(Id), CAST(CreatedDate AS DATE)
 			and SysUser.IsIntroducedById in (
 				SELECT	Id
 				FROM	SysUser 
-				WHERE	SysUser.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-					and SysUser.IsIntroducedById in (
+				WHERE	SysUser.IsIntroducedById in (
 						SELECT	Id
 						FROM	SysUser 
-						WHERE	SysUser.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-							and SysUser.IsIntroducedById =  @SysUserId))
+						WHERE	SysUser.IsIntroducedById =  @SysUserId))
 GROUP BY CAST(CreatedDate AS DATE)
 
 DECLARE @TableTotalIntroducedUsers TABLE
