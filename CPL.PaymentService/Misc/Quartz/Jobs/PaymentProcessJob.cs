@@ -32,7 +32,7 @@ namespace CPL.PaymentService.Misc.Quartz.Jobs
                 .ThenInclude(y => y.Affiliate)
                 .Include(x => x.SysUser)
                 .ThenInclude(y => y.Agency)
-                .Where(x => !x.UpdatedDate.HasValue && x.SysUser.Affiliate.IsAutoPaymentEnable && x.SysUser.Agency.IsAutoPaymentEnable)
+                .Where(x => !x.UpdatedDate.HasValue && (x.SysUser.Affiliate.IsAutoPaymentEnable || x.SysUser.Agency.IsAutoPaymentEnable))
                 .ToList();
 
             foreach(var payment in payments)
