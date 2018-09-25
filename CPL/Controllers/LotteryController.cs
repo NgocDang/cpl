@@ -9,6 +9,7 @@ using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,12 +58,10 @@ namespace CPL.Controllers
         {
             if (id.HasValue)
             {
-                var lottery = _lotteryService
-                                .Query()
-                                .Include(x => x.LotteryHistories)
+                var lottery = _lotteryService.Query()
                                 .Include(x => x.LotteryDetails)
+                                .Include(x => x.LotteryHistories)
                                 //.Include(x => x.LotteryPrizes)
-                                .Select()
                                 .FirstOrDefault(x => x.Id == id && !x.IsDeleted && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED));
                 if (lottery == null)
                     return RedirectToAction("Index", "Home");
@@ -162,7 +161,7 @@ namespace CPL.Controllers
                         userId = user.Id;
                     }
 
-                    var currentUser = _sysUserService.Query().Select().Where(x => x.Id == userId).FirstOrDefault();
+                    var currentUser = _sysUserService.Queryable().Where(x => x.Id == userId).FirstOrDefault();
                     
                     var lotteryId = viewModel.LotteryId;
 

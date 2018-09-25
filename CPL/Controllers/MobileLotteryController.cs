@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CPL.Controllers
 {
@@ -37,10 +38,9 @@ namespace CPL.Controllers
             {
                 var lottery = _lotteryService
                                  .Query()
-                                 .Include(x => x.LotteryHistories)
                                  .Include(x => x.LotteryDetails)
+                                 .Include(x => x.LotteryHistories)
                                  //.Include(x => x.LotteryPrizes)
-                                 .Select()
                                  .FirstOrDefault(x => x.Id == lotteryId && !x.IsDeleted && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED));
 
                 if (lottery != null)

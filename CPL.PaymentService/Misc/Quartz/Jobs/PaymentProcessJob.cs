@@ -3,6 +3,7 @@ using CPL.Common.Misc;
 using CPL.Core.Services;
 using CPL.Domain;
 using CPL.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Quartz;
 using Quartz.Impl;
 using System;
@@ -28,8 +29,10 @@ namespace CPL.PaymentService.Misc.Quartz.Jobs
         {
             var payments = resolver.PaymentService.Query()
                 .Include(x=>x.SysUser)
-                .Select()
-                .Where(x => !x.UpdatedDate.HasValue)
+                .ThenInclude(y => y.Affiliate)
+                .Include(x => x.SysUser)
+                .ThenInclude(y => y.Agency)
+                .Where(x => !x.UpdatedDate.HasValue && (x.SysUser.Affiliate.IsAutoPaymentEnable || x.SysUser.Agency.IsAutoPaymentEnable))
                 .ToList();
 
             foreach(var payment in payments)

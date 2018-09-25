@@ -1,4 +1,5 @@
 ﻿using CPL.Common.Interfaces;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,6 @@ namespace CPL.Infrastructure.Interfaces
         IQueryFluent<TEntity> Query();
         IQueryable<TEntity> Queryable();
         IRepository<T> GetRepository<T>() where T : class, IObjectState;
+        IIncludableQueryable<TEntity, TResult> Include<TResult>(Expression<Func<TEntity, TResult>> expression);
     }
 }
