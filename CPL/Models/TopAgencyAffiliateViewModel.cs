@@ -12,7 +12,7 @@ namespace CPL.Models
         public decimal UsedCPL { get; set; }
         public decimal LostCPL { get; set; }
         public decimal AffiliateSale { get; set; }
-        public int TotalIntroducedUsers { get; set; }
+        public int TotalDirectIntroducedUsers { get; set; }
         public string AffiliateCreatedDateInString { get; set; }
 
         //public int AffiliateId { get; set; }

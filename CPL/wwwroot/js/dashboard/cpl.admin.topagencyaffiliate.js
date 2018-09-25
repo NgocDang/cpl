@@ -8,8 +8,8 @@
         TopAgencyAffiliate.bindDoPayment();
 
         TopAgencyAffiliate.bindTopAgencyTab();
-        TopAgencyAffiliate.bindTier2AgencyTab();
-        TopAgencyAffiliate.bindTier3AgencyTab();
+        TopAgencyAffiliate.bindTier2Tab();
+        TopAgencyAffiliate.bindTier3Tab();
         TopAgencyAffiliate.bindTopAgencyTimeRangeChange();
 
         var tab = $("#tab").val();
@@ -66,7 +66,7 @@
                     }
                 },
                 {
-                    "data": "TotalIntroducedUsers",
+                    "data": "TotalDirectIntroducedUsers",
                     "render": function (data, type, full, meta) {
                         return full.totalIntroducedUsers;
                     }
@@ -260,7 +260,7 @@
 
         })
     },
-    bindTier2AgencyTab: function () {
+    bindTier2Tab: function () {
         $('a#tier-2-nav-tab').on('show.bs.tab', function (e) {
             if ($("#tier-2-nav table tbody").length == 0) {
                 TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadTopAgencyAffiliateDataTable("#tier-2-nav", "2");
@@ -268,7 +268,7 @@
             }
         })
     },
-    bindTier3AgencyTab: function () {
+    bindTier3Tab: function () {
         $('a#tier-3-nav-tab').on('show.bs.tab', function (e) {
             if ($("#tier-3-nav table tbody").length == 0) {
                 TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadTopAgencyAffiliateDataTable("#tier-3-nav", "3");

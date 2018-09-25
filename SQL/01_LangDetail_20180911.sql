@@ -181,7 +181,7 @@ INSERT INTO LangDetail VALUES (2, N'ListOfTopAgencyAffiliate', N'トップ代理
 INSERT INTO LangDetail VALUES (1, N'TopAgencyAffiliateTiers', N'Top agency affiliate tiers');
 INSERT INTO LangDetail VALUES (2, N'TopAgencyAffiliateTiers', N'上位機関のアフィリエイト層');
 
-INSERT INTO LangDetail VALUES (1, N'AllTopAgencyAffiliate', N'All top agency affiliate');
+INSERT INTO LangDetail VALUES (1, N'AllTopAgencyAffiliate', N'All Top Agency Affiliate');
 INSERT INTO LangDetail VALUES (2, N'AllTopAgencyAffiliate', N'すべてのトップ代理店アフィリエイト');
 
 DELETE LangDetail WHERE Name = 'TotalIntroducer';
