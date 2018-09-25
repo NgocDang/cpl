@@ -266,6 +266,7 @@ WITH DirectIntroducedUsersCTE AS
 	WHERE (su.IsIntroducedById in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@TierXUsers, ',')))
 		and su.AffiliateId is not null 
 		and su.AffiliateId > 0
+		and su.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
 ),
 
 ------------------------------------------------------------------------------------------
