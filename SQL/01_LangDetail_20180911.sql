@@ -188,7 +188,7 @@ DELETE LangDetail WHERE Name = 'TotalIntroducer';
 -----------------------------------------------------------------------------------------
 
 --20180924--StandardAffiliate for Admin-------------------------------------------------
-INSERT INTO LangDetail VALUES (1, N'AllStandardAffiliate', N'All standard affiliate');
+INSERT INTO LangDetail VALUES (1, N'AllStandardAffiliate', N'All Standard Affiliate');
 INSERT INTO LangDetail VALUES (2, N'AllStandardAffiliate', N'すべての標準アフィリエイト');
 
 INSERT INTO LangDetail VALUES (1, N'TotalCPLLost', N'Total CPL lost');
