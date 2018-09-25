@@ -460,13 +460,13 @@ FROM (
 ) AS TableTotalAffiliateSale
 GROUP BY _Date
 
-DECLARE @TableDirectAffiliateSale TABLE
+DECLARE @TableTotalDirectAffiliateSale TABLE
 (
 	Value money, 
 	Date datetime
 );
 
-INSERT INTO @TableDirectAffiliateSale
+INSERT INTO @TableTotalDirectAffiliateSale
 SELECT SUM(Value), Date
 FROM (
 	SELECT	ISNULL(dulottery.Value, 0) - ISNULL(dalottery.Value, 0) 
@@ -488,13 +488,13 @@ GROUP BY Date
 
 
 --  3.1 NUMBER - DIRECT INTRODUCED USERS
-DECLARE @TableDirectIntroducedUsers TABLE
+DECLARE @TableTotalDirectIntroducedUsers TABLE
 (
 	Value int, 
 	Date datetime
 );
 
-INSERT INTO @TableDirectIntroducedUsers
+INSERT INTO @TableTotalDirectIntroducedUsers
 SELECT	COUNT(Id), CAST(CreatedDate AS DATE)
 		FROM	SysUser 
 		WHERE	CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
@@ -554,7 +554,7 @@ FROM (
 	SELECT	ISNULL(diu.Value, 0) + ISNULL(t2iu.Value, 0) + ISNULL(t3iu.Value, 0)
 			as Value, 
 			COALESCE(diu.Date, t2iu.Date, t3iu.Date) as Date
-	FROM	@TableDirectIntroducedUsers diu
+	FROM	@TableTotalDirectIntroducedUsers diu
 			full outer join @TableTier2IntroducedUsers t2iu on diu.Date = t2iu.Date
 			full outer join @TableTier3IntroducedUsers t3iu on diu.Date = t3iu.Date
 	GROUP BY ISNULL(diu.Value, 0) + ISNULL(t2iu.Value, 0) + ISNULL(t3iu.Value, 0),
@@ -569,20 +569,20 @@ SELECT	SUM(ISNULL(tas.Value, 0)) as TotalAffiliateSale,
 		SUM(ISNULL(tiu.Value, 0)) as TotalIntroducedUsers, 
 		SUM(ISNULL(diu.Value, 0)) as DirectIntroducedUsers, 
 		COALESCE(das.Date, tas.Date, tiu.Date, diu.Date) as Date
-FROM	@TableDirectAffiliateSale das
+FROM	@TableTotalDirectAffiliateSale das
 		full outer join @TableTotalAffiliateSale tas on das.Date = tas.Date
 		full outer join @TableTotalIntroducedUsers tiu on das.Date = tiu.Date
-		full outer join @TableDirectIntroducedUsers diu on das.Date = diu.Date
+		full outer join @TableTotalDirectIntroducedUsers diu on das.Date = diu.Date
 GROUP BY COALESCE(das.Date, tas.Date, tiu.Date, diu.Date)
 
 --SELECT * 
 --FROM @TableTotalAffiliateSale;
 
 --SELECT *
---FROM @TableDirectAffiliateSale;
+--FROM @TableTotalDirectAffiliateSale;
 
 --SELECT * 
---FROM @TableDirectIntroducedUsers
+--FROM @TableTotalDirectIntroducedUsers
 
 --SELECT * 
 --FROM @TableTier2IntroducedUsers

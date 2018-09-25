@@ -9,8 +9,9 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].[usp_GetAffiliateInfo_Tier1_IntroducedUsers]
+CREATE PROCEDURE [dbo].[usp_GetAffiliateInfo_NonTier1_IntroducedUsers]
 	-- Add the parameters for the stored procedure here
+	@Tier int,
 	@SysUserId int,
 	@PeriodInDay int,
 	@PageSize int,
@@ -24,38 +25,36 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////--
---////////////////////////////// DATATABLE #1 - INTRODUCED TIER 2 & TIER 3 USERS IN DETAILS /////////////////////////////--
+--////////////////////////////// DATATABLE #1 - TIER X'S DIRECT INTRODUCED USERS IN DETAILS /////////////////////////////--
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////--
 
 -------------------- BEGIN SETTING PARAM FOR TESTING PURPOSE --------------------
-	--DECLARE @SysUserId int;
-	--SET @SysUserId = 1;
+--DECLARE @SysUserId int;
+--SET @SysUserId = 1;
 
-	--DECLARE @PeriodInDay int;
-	--SET @PeriodInDay = 300;
+--DECLARE @PeriodInDay int;
+--SET @PeriodInDay = 300;
 -------------------- END SETTING PARAM FOR TESTING PURPOSE --------------------
 
-DECLARE @DirectIntroducedUsers nvarchar(MAX);
-DECLARE @Tier2IntroducedUsers nvarchar(MAX);
+
+DECLARE @TierXUsers nvarchar(MAX);
 DECLARE @FilteredCount int;
 DECLARE @TotalCount int;
 
-SELECT @DirectIntroducedUsers = STRING_AGG(Id, ',')
-FROM SysUser Tier1
-WHERE Tier1.IsIntroducedById = @SysUserId and Tier1.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
 
-SELECT @Tier2IntroducedUsers = STRING_AGG(Id, ',') 
-FROM SysUser Tier2 
-WHERE Tier2.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
-	and Tier2.IsIntroducedById in 
-		(SELECT Id 
-		 FROM SysUser Tier1
-		 WHERE Tier1.IsIntroducedById = @SysUserId and Tier1.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate()))
+SELECT	@TierXUsers = 
+		CASE @Tier 
+			WHEN 2 THEN IntroducedUsers.DirectIntroducedUsers
+			WHEN 3 THEN IntroducedUsers.Tier2IntroducedUsers 
+		END
+FROM IntroducedUsers 
+WHERE IntroducedUsers.Id = @SysUserId;
+
 
 ------------------------------------------------------------------------------------
 -------------------------- 1.1 CONSTRUCT SQL QUERY FIRST --------------------------- 
 ------------------------------------------------------------------------------------
-DECLARE @TableIntroducedUsers TABLE
+DECLARE @TableDirectIntroducedUsers TABLE
 (
 	Id int, 
 	KindOfTier nvarchar(20),
@@ -72,7 +71,7 @@ DECLARE @TableIntroducedUsers TABLE
 	RowNum int
 );
 
-WITH IntroducedUsersCTE AS 
+WITH DirectIntroducedUsersCTE AS 
 (
 	SELECT 
 		--------
@@ -83,11 +82,12 @@ WITH IntroducedUsersCTE AS
 		----------------
 		-- KindOfTier --
 		----------------
-		CASE WHEN su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))
-				THEN 'Tier 2' -- Tier 2
-				WHEN su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ','))
-				THEN 'Tier 3' -- Tier 3
-				END
+		CASE @Tier 
+			WHEN 2
+			THEN 'Tier 3' 
+			WHEN 3
+			THEN 'Tier 4' 
+		END
 		AS KindOfTier,
 
 		-------------
@@ -100,7 +100,7 @@ WITH IntroducedUsersCTE AS
 						and LotteryHistory.SysUserId = su.Id),0)
 		+
 		ISNULL((SELECT SUM(Amount) 
-				FROM PricePredictionHistory join PricePrediction on PricePredictionHistory.PricePredictionId = PricePrediction.Id
+				FROM PricePredictionHistory
 				WHERE PricePredictionHistory.Result <> 'REFUND' -- WIN / LOSE 
 						and PricePredictionHistory.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
 						and PricePredictionHistory.SysUserId = su.Id),0)
@@ -263,17 +263,16 @@ WITH IntroducedUsersCTE AS
 		AS IsLocked
 
 	FROM   SysUser su join Affiliate aff on su.AffiliateId = aff.Id
-	WHERE (su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@DirectIntroducedUsers, ','))
-		or su.Id in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@Tier2IntroducedUsers, ',')))
+	WHERE (su.IsIntroducedById in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@TierXUsers, ',')))
 		and su.AffiliateId is not null 
 		and su.AffiliateId > 0
 ),
 
 ------------------------------------------------------------------------------------------
----------------------------- 1.2 APPLY SORT / SEARCH / PAGING  --------------------------- 
+---------------------------- 2.2 APPLY SORT / SEARCH / PAGING  --------------------------- 
 ------------------------------------------------------------------------------------------
 
-IntroducedUsersWithRowNumCTE AS
+DirectIntroducedUsersWithRowNumCTE AS
 (	
 	SELECT *, 
 		RowNum = ROW_NUMBER() OVER (
@@ -316,17 +315,17 @@ IntroducedUsersWithRowNumCTE AS
 			CASE WHEN @OrderDirection = N'desc' THEN cast(null as datetime)
 				 WHEN @OrderColumn = N'AffiliateCreatedDate' THEN AffiliateCreatedDate
 				 END ASC)
-	FROM IntroducedUsersCTE
+	FROM DirectIntroducedUsersCTE
 	WHERE(KindOfTier like '%' + @SearchValue + '%'
 		  OR 
 		  CONVERT(nvarchar(23), AffiliateCreatedDate, 0) like ('%' + @SearchValue + '%'))
 )
-INSERT INTO @TableIntroducedUsers
+INSERT INTO @TableDirectIntroducedUsers
 SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalDirectIntroducedUsers, AffiliateCreatedDate, Tier1DirectRate, Tier2SaleToTier1Rate, Tier3SaleToTier1Rate, AffiliateId, IsLocked, RowNum
-FROM IntroducedUsersWithRowNumCTE;
+FROM DirectIntroducedUsersWithRowNumCTE;
 
 SELECT Id, KindOfTier, UsedCPL, LostCPL, AffiliateSale, TotalDirectIntroducedUsers, AffiliateCreatedDate, Tier1DirectRate, Tier2SaleToTier1Rate, Tier3SaleToTier1Rate, AffiliateId, IsLocked
-FROM @TableIntroducedUsers
+FROM @TableDirectIntroducedUsers
 WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @PageSize);
 
 --///////////////////////////////////////////////////////////////////////////////////////--
@@ -334,7 +333,14 @@ WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @Page
 --///////////////////////////////////////////////////////////////////////////////////////--
 
 
-SELECT TotalDirectIntroducedUsers + TotalTier2IntroducedUsers as TotalCount
+SELECT 
+	CASE @Tier 
+		WHEN 2
+		THEN TotalTier2IntroducedUsers
+		WHEN 3
+		THEN TotalTier3IntroducedUsers
+	END
+	AS TotalCount
 FROM IntroducedUsers
 WHERE Id = @SysUserId
 
@@ -343,5 +349,5 @@ WHERE Id = @SysUserId
 --///////////////////////////////////////////////////////////////////////////////////////--
 
 SELECT COUNT(*) as FilteredCount
-FROM   @TableIntroducedUsers
+FROM   @TableDirectIntroducedUsers
 END
