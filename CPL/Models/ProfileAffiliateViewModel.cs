@@ -21,7 +21,7 @@ namespace CPL.Models
         public int TotalSaleYesterday { get; set; }
 
         public int TotalIntroducedUsers { get; set; }
-        public int TotalIntroducedUserToday { get; set; }
+        public int TotalIntroducedUsersToday { get; set; }
         public int TotalIntroducedUsersYesterday { get; set; }
     }
 }
