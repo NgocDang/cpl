@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class TopAgencyAffiliateStatisticsViewModel
+    public class TopAgencyAffiliateInfoViewModel
     {
         public int TotalSale { get; set; }
         public int DirectSale { get; set; }
