@@ -25,8 +25,8 @@
                 type: 'POST',
                 data: {
                     sysUserId: $("#SysUserId").val(),
-                    kindOfTier: StandardAffiliate.StandardAffiliateDataTable == null ? tabPaneElement.data().kindOfTier : $("#" + StandardAffiliate.StandardAffiliateDataTable.data().node().id).closest(".tab-pane").data().kindOfTier,
-                    periodInDay: StandardAffiliate.StandardAffiliateDataTable == null ? tabPaneElement.find("select.time-range").val() : $("#" + StandardAffiliate.StandardAffiliateDataTable.data().node().id).closest(".tab-pane").find("select.time-range").val()
+                    kindOfTier: StandardAffiliate.StandardAffiliateDataTable == null ? tabPaneElement.data().kindOfTier : $("#" + StandardAffiliate.StandardAffiliateDataTable.table().node().id).closest(".tab-pane").data().kindOfTier,
+                    periodInDay: StandardAffiliate.StandardAffiliateDataTable == null ? tabPaneElement.find("select.time-range").val() : $("#" + StandardAffiliate.StandardAffiliateDataTable.table().node().id).closest(".tab-pane").find("select.time-range").val()
                 },
                 complete: function (data) {
                     StandardAffiliate.loadEditable(tabPaneElement);

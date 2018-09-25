@@ -634,12 +634,12 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult SearchTopAgencyAffiliate(DataTableAjaxPostModel viewModel, int sysUserId, string kindOfTier)
+        public JsonResult SearchTopAgencyAffiliate(DataTableAjaxPostModel viewModel, int sysUserId, string kindOfTier, int periodInDay)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchTopAgencyAffiliateFunc(viewModel, out filteredResultsCount, out totalResultsCount, sysUserId, kindOfTier);
+            var res = SearchTopAgencyAffiliateFunc(viewModel, out filteredResultsCount, out totalResultsCount, sysUserId, kindOfTier, periodInDay);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -651,7 +651,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<TopAgencyAffiliateIntroducedUsersViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier)
+        public IList<TopAgencyAffiliateIntroducedUsersViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier, int periodInDay)
         {
             var searchBy = (model.search.value != null) ? model.search.value : string.Empty;
             var pageSize = model.length;
@@ -670,7 +670,7 @@ namespace CPL.Controllers
             List<SqlParameter> storeParams = new List<SqlParameter>()
             {
                 new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
-                new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = 1000},
+                new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
                 new SqlParameter() {ParameterName = "@PageSize", SqlDbType = SqlDbType.Int, Value = pageSize},
                 new SqlParameter() {ParameterName = "@PageIndex", SqlDbType = SqlDbType.Int, Value = pageIndex},
                 new SqlParameter() {ParameterName = "@OrderColumn", SqlDbType = SqlDbType.NVarChar, Value = sortBy},
@@ -679,27 +679,29 @@ namespace CPL.Controllers
             };
 
             var uspName = string.Empty;
-            if (kindOfTier == ((int)KindOfTier.TIER1).ToString())
+            if (kindOfTier == ((int)EnumKindOfTier.TIER1).ToString())
             {
-                uspName = "usp_GetAffiliateInfo";
+                uspName = "[usp_GetAffiliateInfo_Tier1_IntroducedUsers]";
             }
-            else if (kindOfTier == ((int)KindOfTier.TIER2).ToString())
+            else if (kindOfTier == ((int)EnumKindOfTier.TIER2).ToString())
             {
-                // TODO
+                uspName = "[usp_GetAffiliateInfo_NonTier1_IntroducedUsers]";
+                storeParams.Add(new SqlParameter() { ParameterName = "@Tier", SqlDbType = SqlDbType.Int, Value = (int)EnumKindOfTier.TIER2 });
             }
-            else if (kindOfTier == ((int)KindOfTier.TIER3).ToString())
+            else if (kindOfTier == ((int)EnumKindOfTier.TIER3).ToString())
             {
-                // TODO
+                uspName = "[usp_GetAffiliateInfo_NonTier1_IntroducedUsers]";
+                storeParams.Add(new SqlParameter() { ParameterName = "@Tier", SqlDbType = SqlDbType.Int, Value = (int)EnumKindOfTier.TIER3 });
             }
 
             var dataSet = _dataContextAsync.ExecuteStoredProcedure(uspName, storeParams);
 
-            DataTable table = dataSet.Tables[1]; // TODO
+            DataTable table = dataSet.Tables[0];
             var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
             var viewModels = Mapper.Map<List<DataRow>, List<TopAgencyAffiliateIntroducedUsersViewModel>>(rows);
 
-            totalResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["TotalCount"]);
-            filteredResultsCount = Convert.ToInt32((dataSet.Tables[3].Rows[0])["FilteredCount"]);
+            totalResultsCount = Convert.ToInt32((dataSet.Tables[1].Rows[0])["TotalCount"]);
+            filteredResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["FilteredCount"]);
 
             return viewModels;
         }
@@ -834,14 +836,9 @@ namespace CPL.Controllers
             {
                 new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
                 new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
-                new SqlParameter() {ParameterName = "@PageSize", SqlDbType = SqlDbType.Int, Value = pageSize},
-                new SqlParameter() {ParameterName = "@PageIndex", SqlDbType = SqlDbType.Int, Value = pageIndex},
-                new SqlParameter() {ParameterName = "@OrderColumn", SqlDbType = SqlDbType.NVarChar, Value = orderColumn},
-                new SqlParameter() {ParameterName = "@OrderDirection", SqlDbType = SqlDbType.NVarChar, Value = orderDirection},
-                new SqlParameter() {ParameterName = "@SearchValue", SqlDbType = SqlDbType.NVarChar, Value = searchValue},
             };
 
-            var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo", storeParams);
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo_Tier1_Statistics", storeParams);
 
             //Table[0]//////////////////////////////////////////////////////
             //TotalSale|DirectSale|TotalIntroducedUsers|DirectIntroducedUsers
@@ -1102,7 +1099,7 @@ namespace CPL.Controllers
         {
             var searchBy = (model.search.value != null) ? model.search.value : string.Empty;
             var pageSize = model.length;
-            var pageIndex = model.start;
+            var pageIndex = model.start + 1;
 
             string sortBy = string.Empty;
             string sortDir = "UsedCPL";

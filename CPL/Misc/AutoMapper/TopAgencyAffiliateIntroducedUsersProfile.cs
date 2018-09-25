@@ -21,7 +21,7 @@ namespace CPL.Misc.AutoMapper
                      .ForMember(dest => dest.AffiliateSale, opt => opt.MapFrom(src => Convert.ToDecimal(src["AffiliateSale"])))
                      .ForMember(dest => dest.TotalDirectIntroducedUsers, opt => opt.MapFrom(src => Convert.ToInt32(src["TotalDirectIntroducedUsers"])))
                      .ForMember(dest => dest.AffiliateCreatedDateInString, opt => opt.MapFrom(src => (Convert.ToDateTime(src["AffiliateCreatedDate"])).ToString(Format.DateTime)))
-                     //.ForMember(dest => dest.AffiliateId, opt => opt.MapFrom(src => Convert.ToInt32(src["AffiliateId"])))
+                     .ForMember(dest => dest.AffiliateId, opt => opt.MapFrom(src => Convert.ToInt32(src["AffiliateId"])))
                      .ForMember(dest => dest.Tier1DirectRate, opt => opt.MapFrom(src => Convert.ToInt32(src["Tier1DirectRate"])))
                      .ForMember(dest => dest.Tier2SaleToTier1Rate, opt => opt.MapFrom(src => Convert.ToInt32(src["Tier2SaleToTier1Rate"])))
                      .ForMember(dest => dest.Tier3SaleToTier1Rate, opt => opt.MapFrom(src => Convert.ToInt32(src["Tier3SaleToTier1Rate"])))

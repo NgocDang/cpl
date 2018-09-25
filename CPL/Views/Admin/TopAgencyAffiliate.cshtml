@@ -162,7 +162,7 @@
                                                 <div class="row">
                                                     <div class="col-lg-12 col-6">
                                                         <p class="text-muted mb-05">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Today")</p>
-                                                        <h3><i class="la la-user"></i> @Model.TotalIntroducedUserToday.ToString("N0")</h3>
+                                                        <h3><i class="la la-user"></i> @Model.TotalIntroducedUsersToday.ToString("N0")</h3>
                                                     </div>
                                                     <div class="col-lg-12 col-6">
                                                         <p class="text-muted mb-05">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yesterday")</p>
@@ -189,7 +189,7 @@
                         </li>
                     </ul>
                     <div class="tab-content mb-1">
-                        <div role="tabpanel" class="tab-pane" id="top-agency-nav" aria-labelledby="top-agency-nav-tab" aria-expanded="true">
+                        <div role="tabpanel" class="tab-pane" id="top-agency-nav" aria-labelledby="top-agency-nav-tab" aria-expanded="true" data-kind-of-tier="1">
                             <div class="card mb-1">
                                 <div class="card-content">
                                     <div class="card-body">
@@ -238,7 +238,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="tier-2-nav" aria-labelledby="tier-2-nav-tab" aria-expanded="true">
+                        <div role="tabpanel" class="tab-pane" id="tier-2-nav" aria-labelledby="tier-2-nav-tab" aria-expanded="true" data-kind-of-tier="2">
                             <div class="card mb-1">
                                 <div class="card-content">
                                     <div class="card-body">
@@ -287,7 +287,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="tier-3-nav" aria-labelledby="tier-3-nav-tab" aria-expanded="true">
+                        <div role="tabpanel" class="tab-pane" id="tier-3-nav" aria-labelledby="tier-3-nav-tab" aria-expanded="true" data-kind-of-tier="3">
                             <div class="card mb-1">
                                 <div class="card-content">
                                     <div class="card-body">
@@ -446,6 +446,10 @@
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/editable/bootstrap-editable.min.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/highcharts.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/series-label.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/exporting.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
     <script src="~/js/dashboard/cpl.affiliate.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.admin.topagencyaffiliate.js" asp-append-version="true"></script>
 }

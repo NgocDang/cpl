@@ -1,5 +1,7 @@
 ﻿var TopAgencyAffiliate = {
     TopAgencyAffiliateDataTable: null,
+    Tier2AffiliateDataTable: null,
+    Tier3AffiliateDataTable: null,
     init: function () {
         TopAgencyAffiliate.bindSwitchery();
         TopAgencyAffiliate.bindDoUpdateAgencyAffiliateRate();
@@ -17,13 +19,23 @@
             tab = "top-agency";
         $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
     },
-    initTopAgencyAffiliateDataTable: function (parentElement) {
-        TopAgencyAffiliate.TopAgencyAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
-            TopAgencyAffiliate.loadEditable(parentElement);
-        });
+    initAffiliateDataTable: function (tabPaneElement) {
+        if (tabPaneElement.data().kindOfTier == 1)
+            TopAgencyAffiliate.TopAgencyAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+                TopAgencyAffiliate.loadEditable(tabPaneElement);
+            });
+        else if (tabPaneElement.data().kindOfTier == 2)
+            TopAgencyAffiliate.Tier2AffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+                TopAgencyAffiliate.loadEditable(tabPaneElement);
+            });
+        else // (tabPaneElement.data().kindOfTier == 3)
+            TopAgencyAffiliate.Tier3AffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+                TopAgencyAffiliate.loadEditable(tabPaneElement);
+            });
+
     },
-    loadTopAgencyAffiliateDataTable: function (parentElement, kindOfTier) {
-        return $(parentElement + " .dt-top-agency-affiliate").DataTable({
+    loadAffiliateDataTable: function (tabPaneElement) {
+        return tabPaneElement.find(".dt-top-agency-affiliate").DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
@@ -32,10 +44,11 @@
                 type: 'POST',
                 data: {
                     sysUserId: $("#SysUserId").val(),
-                    kindOfTier: kindOfTier
+                    kindOfTier: tabPaneElement.data().kindOfTier,
+                    periodInDay: tabPaneElement.find("select.time-range").val()
                 },
                 complete: function (data) {
-                    TopAgencyAffiliate.loadEditable(parentElement);
+                    TopAgencyAffiliate.loadEditable(tabPaneElement);
                 }
             },
             'order': [[0, 'asc']],
@@ -68,7 +81,7 @@
                 {
                     "data": "TotalDirectIntroducedUsers",
                     "render": function (data, type, full, meta) {
-                        return full.totalIntroducedUsers;
+                        return full.totalDirectIntroducedUsers;
                     }
                 },
                 {
@@ -250,12 +263,12 @@
     bindTopAgencyTab: function () {
         $('a#top-agency-nav-tab').on('show.bs.tab', function (e) {
             if ($("#top-agency-nav .tab-detail").html().trim().length === 0) {
-                TopAgencyAffiliate.loadTier1Statistics();
+                TopAgencyAffiliate.loadTopAgencyStatistics();
             }
 
             if ($("#top-agency-nav table tbody").length == 0) {
-                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadTopAgencyAffiliateDataTable("#top-agency-nav", "1");
-                TopAgencyAffiliate.initTopAgencyAffiliateDataTable("#top-agency-nav");
+                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#top-agency-nav"));
+                TopAgencyAffiliate.initAffiliateDataTable($("#top-agency-nav"));
             }
 
         })
@@ -263,21 +276,21 @@
     bindTier2Tab: function () {
         $('a#tier-2-nav-tab').on('show.bs.tab', function (e) {
             if ($("#tier-2-nav table tbody").length == 0) {
-                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadTopAgencyAffiliateDataTable("#tier-2-nav", "2");
-                TopAgencyAffiliate.initTopAgencyAffiliateDataTable("#tier-2-nav");
+                TopAgencyAffiliate.Tier2AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-2-nav"));
+                TopAgencyAffiliate.initAffiliateDataTable($("#tier-2-nav"));
             }
         })
     },
     bindTier3Tab: function () {
         $('a#tier-3-nav-tab').on('show.bs.tab', function (e) {
             if ($("#tier-3-nav table tbody").length == 0) {
-                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadTopAgencyAffiliateDataTable("#tier-3-nav", "3");
-                TopAgencyAffiliate.initTopAgencyAffiliateDataTable("#tier-3-nav");
+                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-3-nav"));
+                TopAgencyAffiliate.initAffiliateDataTable($("#tier-3-nav"));
             }
         })
     },
 
-    loadTier1Statistics: function () {
+    loadTopAgencyStatistics: function () {
         $.ajax({
             url: "/Admin/GetTopAgencyStatistics/",
             type: "GET",
@@ -290,15 +303,17 @@
             },
             success: function (data) {
                 $("#top-agency-nav .tab-detail").html(data);
-                //TopAgencyAffiliate.loadTier1StatisticsChart($("#top-agency-nav"))
+                TopAgencyAffiliate.loadTier1StatisticsChart($("#top-agency-nav"))
             },
         });
     },
     bindTopAgencyTimeRangeChange: function () {
         $("#top-agency-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
-                TopAgencyAffiliate.loadTier1Statistics();
-            });
+                TopAgencyAffiliate.loadTopAgencyStatistics();
+                TopAgencyAffiliate.TopAgencyAffiliateDataTable.destroy();
+                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#top-agency-nav"));
+        });
     },
     loadTier1StatisticsChart: function (container) {
         Highcharts.setOptions({
@@ -425,7 +440,7 @@
         // Create the plot
         container.find(".statistic-chart").highcharts(options);
     },
-    loadEditable: function (parentElement) {
+    loadEditable: function (jQueryElement) {
         $.fn.editable.defaults.clear = false;
         $.fn.editable.defaults.mode = 'popup';
         $.fn.editable.defaults.placement = 'top';
@@ -433,7 +448,7 @@
         $.fn.editable.defaults.step = '1.00';
         $.fn.editable.defaults.min = '0.00';
         $.fn.editable.defaults.max = '100.00';
-        $(parentElement + " .dt-top-agency-affiliate tr").each(function (index, element) {
+        jQueryElement.find(".dt-top-agency-affiliate tr").each(function (index, element) {
             TopAgencyAffiliate.loadEditableOnRow(element);
         });
     },
