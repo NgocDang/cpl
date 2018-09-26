@@ -2467,8 +2467,10 @@ namespace CPL.Controllers
                     .Include(x => x.Lottery)
                     .Include(x => x.SysUser)
                     .Where(x => !lotteryCategoryId.HasValue || x.Lottery.LotteryCategoryId == lotteryCategoryId)
-                    .GroupBy(x => new { x.CreatedDate, x.LotteryId, x.SysUserId })
-                    .Select(y => new AdminLotteryHistoryViewComponentViewModel
+                    .GroupBy(x => new { x.CreatedDate.Date, x.LotteryId, x.SysUserId });
+
+            var purchasedLotteryHistoryView = purchasedLotteryHistory
+                .Select(y => new AdminLotteryHistoryViewComponentViewModel
                     {
                         SysUserId = y.Key.SysUserId,
                         UserName = y.FirstOrDefault().SysUser.Email,
@@ -2476,10 +2478,10 @@ namespace CPL.Controllers
                         NumberOfTicket = y.Count(),
                         TotalPurchasePrice = y.Sum(x => x.Lottery.UnitPrice),
                         Title = y.FirstOrDefault().Lottery.Title,
-                        PurchaseDateTime = y.Key.CreatedDate,
+                        PurchaseDateTime = y.Key.Date,
                     });
 
-            filteredResultsCount = totalResultsCount = purchasedLotteryHistory.AsEnumerable().Count();
+            filteredResultsCount = totalResultsCount = purchasedLotteryHistory.Count();
 
             // search the dbase taking into consideration table sorting and paging
             if (!string.IsNullOrEmpty(searchBy))
@@ -2488,15 +2490,15 @@ namespace CPL.Controllers
                 bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.StatusInString.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
                                     || x.NumberOfTicketInString.ToLower().Contains(searchBy) || x.Title.ToLower().Contains(searchBy);
 
-                purchasedLotteryHistory = purchasedLotteryHistory
+                purchasedLotteryHistoryView = purchasedLotteryHistoryView
                                         .Where(condition)
                                         .AsQueryable();
 
-                filteredResultsCount = purchasedLotteryHistory.AsEnumerable()
+                filteredResultsCount = purchasedLotteryHistory
                                        .Count();
             }
 
-            return purchasedLotteryHistory
+            return purchasedLotteryHistoryView
                   .AsQueryable()
                   .OrderBy(sortBy, sortDir)
                   .Skip(skip)
