@@ -1,15 +1,6 @@
-﻿var Affiliate = {
+﻿var SubmitAffiliate = {
     init: function () {
-        Affiliate.bindDoSubmit();
-        Affiliate.bindCopy();
-    },
-    bindCopy: function () {
-        if ($(".btn-copy").length > 0) {
-            var clipboard = new ClipboardJS('.btn-copy');
-            clipboard.on('success', function (e) {
-                toastr.success($("#CopiedSuccessfully").val());
-            });
-        }
+        SubmitAffiliate.bindDoSubmit();
     },
     bindDoSubmit: function () {
         $("#btn-do-submit-affiliate").on("click", function () {
@@ -50,5 +41,5 @@
 };
 
 $(document).ready(function () {
-    Affiliate.init();
+    SubmitAffiliate.init();
 });
