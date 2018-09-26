@@ -2479,7 +2479,7 @@ namespace CPL.Controllers
                         PurchaseDateTime = y.Key.CreatedDate,
                     });
 
-            filteredResultsCount = totalResultsCount = purchasedLotteryHistory.ToList().Count();
+            filteredResultsCount = totalResultsCount = purchasedLotteryHistory.AsEnumerable().Count();
 
             // search the dbase taking into consideration table sorting and paging
             if (!string.IsNullOrEmpty(searchBy))
@@ -2492,7 +2492,7 @@ namespace CPL.Controllers
                                         .Where(condition)
                                         .AsQueryable();
 
-                filteredResultsCount = purchasedLotteryHistory.ToList()
+                filteredResultsCount = purchasedLotteryHistory.AsEnumerable()
                                        .Count();
             }
 
