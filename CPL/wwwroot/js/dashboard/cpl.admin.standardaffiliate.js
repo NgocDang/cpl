@@ -466,7 +466,7 @@
                     async: true,
                     type: 'POST',
                     data: { affiliateId: params.pk, value: params.value, name: params.name },
-                    url: '../DoUpdateStandardAffiliateRate',
+                    url: '../DoUpdateRateOnStandardAffiliate',
                     success: function (data) {
                         if (data.success)
                             toastr.success(data.message, 'Success!');
@@ -494,7 +494,7 @@
                     _postData[element['name']] = parseInt(element['value']);
                 });
                 $.ajax({
-                    url: "/Admin/DoUpdatestandardAffiliateMultiRate/",
+                    url: "/Admin/DoUpdateRatesOnStandardAffiliate/",
                     type: "POST",
                     dataType: 'json',
                     beforeSend: function () {

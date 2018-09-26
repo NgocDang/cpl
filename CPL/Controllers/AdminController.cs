@@ -495,7 +495,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult DoUpdateStandardAffiliateRate(string name, int value, int affiliateId)
+        public IActionResult DoUpdateRateOnStandardAffiliate(string name, int value, int affiliateId)
         {
             try
             {
@@ -514,7 +514,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult DoUpdatestandardAffiliateMultiRate(StandardAffiliateRateViewModel viewModel, int? affiliateId)
+        public IActionResult DoUpdateRatesOnStandardAffiliate(StandardAffiliateRateViewModel viewModel, int? affiliateId)
         {
             try
             {
@@ -539,7 +539,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult DoUpdateStandardAffiliateRates(StandardAffliateDataModel viewModel)
+        public IActionResult DoUpdateRatesOnStandardAffiliates(StandardAffliateDataModel viewModel)
         {
             try
             {
@@ -762,7 +762,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public IActionResult DoUpdateAgencyAffiliateRate(AgencyAffiliateRateViewModel viewModel, int? agencyId)
+        public IActionResult DoUpdateRateOnAgencyAffiliate(AgencyAffiliateRateViewModel viewModel, int? agencyId)
         {
             try
             {
