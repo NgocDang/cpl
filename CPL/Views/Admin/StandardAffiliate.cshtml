@@ -224,7 +224,7 @@
                                                             <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalCPLUsed")</th>
                                                             <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalCPLLost")</th>
                                                             <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSaleInCPL")</th>
-                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducedUsers")</th>
+                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalDirectIntroducedUsers")</th>
                                                             <th class="border-top-0" data-priority="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateCreatedDate")</th>
                                                             <th class="border-top-0">1</th>
                                                             <th class="border-top-0">2>1</th>
@@ -269,10 +269,11 @@
                                                 <table class="table responsive table-hover table-xl mb-0 dt-standard-affiliate">
                                                     <thead>
                                                         <tr>
-                                                            <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalCPLUsed")</th>
-                                                            <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalCPLLost")</th>
+                                                            <th class="border-top-0 none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KindOfTier")</th>
+                                                            <th class="border-top-0" data-priority="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalCPLUsed")</th>
+                                                            <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalCPLLost")</th>
                                                             <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSaleInCPL")</th>
-                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducedUsers")</th>
+                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalDirectIntroducedUsers")</th>
                                                             <th class="border-top-0" data-priority="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateCreatedDate")</th>
                                                             <th class="border-top-0">1</th>
                                                             <th class="border-top-0">2>1</th>
@@ -287,7 +288,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="tier-3-nav" aria-labelledby="tier-3-nav-tab" aria-expanded="true">
+                        <div role="tabpanel" class="tab-pane" id="tier-3-nav" aria-labelledby="tier-3-nav-tab" aria-expanded="true" data-kind-of-tier="3">
                             <div class="card mb-1">
                                 <div class="card-content">
                                     <div class="card-body">
@@ -317,10 +318,11 @@
                                                 <table class="table responsive table-hover table-xl mb-0 dt-standard-affiliate">
                                                     <thead>
                                                         <tr>
-                                                            <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalCPLUsed")</th>
-                                                            <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalCPLLost")</th>
+                                                            <th class="border-top-0 none">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KindOfTier")</th>
+                                                            <th class="border-top-0" data-priority="1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalCPLUsed")</th>
+                                                            <th class="border-top-0" data-priority="2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalCPLLost")</th>
                                                             <th class="border-top-0" data-priority="3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSaleInCPL")</th>
-                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducedUsers")</th>
+                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalDirectIntroducedUsers")</th>
                                                             <th class="border-top-0" data-priority="4">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateCreatedDate")</th>
                                                             <th class="border-top-0">1</th>
                                                             <th class="border-top-0">2>1</th>
@@ -413,16 +415,22 @@
     @Html.Hidden("AffiliateId", Model.AffiliateId)
     @Html.Hidden("SysUserId", Model.Id)
     @Html.Hidden("CopiedSuccessfully", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CopiedSuccessfully"))
+    @Html.Hidden("View", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View"))
 </div>
 @section scripts
     {
     <script src="~/js/dashboard/plugins/switchery/switchery.min.js"></script>
     <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
     <script src="~/js/dashboard/plugins/bootstrap-selectpicker.js"></script>
+    <script src="~/js/dashboard/plugins/moment.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/editable/bootstrap-editable.min.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/highcharts.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/series-label.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/exporting.js"></script>
+    <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/cpl.admin.standardaffiliate.js" asp-append-version="true"></script>
 }

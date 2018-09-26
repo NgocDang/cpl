@@ -1,9 +1,18 @@
 ﻿var StandardAffiliate = {
-    StandardAffiliateDataTable: null,
+    Tier1StandardAffiliateDataTable: null,
+    Tier2StandardAffiliateDataTable: null,
+    Tier3StandardAffiliateDataTable: null,
     init: function () {
         StandardAffiliate.bindSwitchery();
+
         StandardAffiliate.bindTier1Tab();
         StandardAffiliate.bindTier1TimeRangeChange();
+
+        StandardAffiliate.bindTier2Tab();
+        StandardAffiliate.bindTier2TimeRangeChange();
+
+        StandardAffiliate.bindTier3Tab();
+        StandardAffiliate.bindTier3TimeRangeChange();
 
         var tab = $("#tab").val();
         if (tab === "")
@@ -11,9 +20,18 @@
         $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
     },
     initStandardAffiliateIntroducedUsersDataTable: function (tabPaneElement) {
-        StandardAffiliate.StandardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
-            StandardAffiliate.loadEditable(tabPaneElement);
-        });
+        if (tabPaneElement.data().kindOfTier == 1)
+            StandardAffiliate.Tier1StandardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+                StandardAffiliate.loadEditable(tabPaneElement);
+            });
+        else if (tabPaneElement.data().kindOfTier == 2)
+            StandardAffiliate.Tier2StandardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+                StandardAffiliate.loadEditable(tabPaneElement);
+            });
+        else // (tabPaneElement.data().kindOfTier == 3)
+            StandardAffiliate.Tier3StandardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+                StandardAffiliate.loadEditable(tabPaneElement);
+            });
     },
     loadStandardAffiliateIntroducedUsersDataTable: function (tabPaneElement) {
         return tabPaneElement.find(".dt-standard-affiliate").DataTable({
@@ -60,9 +78,9 @@
                     }
                 },
                 {
-                    "data": "TotalIntroducedUsers",
+                    "data": "TotalDirectIntroducedUsers",
                     "render": function (data, type, full, meta) {
-                        return full.totalIntroducedUsers;
+                        return full.totalDirectIntroducedUsers;
                     }
                 },
                 {
@@ -126,37 +144,95 @@
                 StandardAffiliate.loadStatistics($("#tier-1-nav"));
             }
             if ($("#tier-1-nav table tbody").length == 0) {
-                StandardAffiliate.StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
+                StandardAffiliate.Tier1StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
                 StandardAffiliate.initStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
             }
         });
     },
-    loadStatistics: function (tabPaneElement) {
-        $.ajax({
-            url: "/Admin/GetStandardAffiliateStatistics/",
-            type: "GET",
-            beforeSend: function () {
-                tabPaneElement.find(".tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
-            },
-            data: {
-                sysUserId: $("#SysUserId").val(),
-                periodInDay: tabPaneElement.find("select.time-range").val()
-            },
-            success: function (data) {
-                tabPaneElement.find(".tab-detail").html(data);
-                //TopAgencyAffiliate.loadTier1StatisticsChart($("#tier-1-nav"))
-            },
+    bindTier2Tab: function () {
+        $('a#tier-2-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#tier-2-nav .tab-detail").html().trim().length === 0) {
+                StandardAffiliate.loadStatistics($("#tier-2-nav"));
+            }
+            if ($("#tier-2-nav table tbody").length == 0) {
+                StandardAffiliate.Tier2StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
+                StandardAffiliate.initStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
+            }
         });
+    },
+    bindTier3Tab: function () {
+        $('a#tier-3-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#tier-3-nav .tab-detail").html().trim().length === 0) {
+                StandardAffiliate.loadStatistics($("#tier-3-nav"));
+            }
+            if ($("#tier-3-nav table tbody").length == 0) {
+                StandardAffiliate.Tier3StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
+                StandardAffiliate.initStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
+            }
+        });
+    },
+    loadStatistics: function (tabPaneElement) {
+        if (tabPaneElement.data().kindOfTier == 1) {
+            $.ajax({
+                url: "/Admin/GetTier1StandardAffiliateStatistics/",
+                type: "GET",
+                beforeSend: function () {
+                    tabPaneElement.find(".tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+                },
+                data: {
+                    sysUserId: $("#SysUserId").val(),
+                    periodInDay: tabPaneElement.find("select.time-range").val()
+                },
+                success: function (data) {
+                    tabPaneElement.find(".tab-detail").html(data);
+                    StandardAffiliate.loadTier1StatisticsChart(tabPaneElement)
+                },
+            });
+        } else {
+            $.ajax({
+                url: "/Admin/GetNonTier1StandardAffiliateStatistics/",
+                type: "GET",
+                beforeSend: function () {
+                    tabPaneElement.find(".tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+                },
+                data: {
+                    sysUserId: $("#SysUserId").val(),
+                    periodInDay: tabPaneElement.find("select.time-range").val(),
+                    kindOfTier: tabPaneElement.data().kindOfTier
+                },
+                success: function (data) {
+                    tabPaneElement.find(".tab-detail").html(data);
+                    StandardAffiliate.loadNonTier1StatisticsChart(tabPaneElement)
+                },
+            });
+        }
+        
     },
     bindTier1TimeRangeChange: function () {
         $("#tier-1-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 StandardAffiliate.loadStatistics($("#tier-1-nav"));
-                StandardAffiliate.StandardAffiliateDataTable.ajax.reload();
-                StandardAffiliate.initStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
+                StandardAffiliate.Tier1StandardAffiliateDataTable.destroy();
+                StandardAffiliate.Tier1StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
             });
     },
-    loadTier1StatisticsChart: function (container) {
+    bindTier2TimeRangeChange: function () {
+        $("#tier-2-nav select.time-range").on("changed.bs.select",
+            function (e, clickedIndex, newValue, oldValue) {
+                StandardAffiliate.loadStatistics($("#tier-2-nav"));
+                StandardAffiliate.Tier2StandardAffiliateDataTable.destroy();
+                StandardAffiliate.Tier2StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
+            });
+    },
+    bindTier3TimeRangeChange: function () {
+        $("#tier-3-nav select.time-range").on("changed.bs.select",
+            function (e, clickedIndex, newValue, oldValue) {
+                StandardAffiliate.loadStatistics($("#tier-3-nav"));
+                StandardAffiliate.Tier3StandardAffiliateDataTable.destroy();
+                StandardAffiliate.Tier3StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
+            });
+    },
+    loadTier1StatisticsChart: function (tabPaneElement) {
         Highcharts.setOptions({
             global: {
                 useUTC: false
@@ -210,42 +286,42 @@
 
         };
 
-        var totalSale = { data: [], name: container.find(".total-sale").val(), color: '#4267b2' };
-        var directSale = { data: [], name: container.find(".direct-sale").val(), color: '#f7931a' };
-        var totalIntroducedUsers = { data: [], name: container.find(".total-introduced-users").val(), color: '#828384' };
-        var directIntroducedUsers = { data: [], name: container.find(".direct-introduced-users").val(), color: '#F69BF9' };
+        var totalAffiliateSale = { data: [], name: tabPaneElement.find(".total-affiliate-sale").val(), color: '#4267b2' };
+        var directAffiliateSale = { data: [], name: tabPaneElement.find(".direct-affiliate-sale").val(), color: '#f7931a' };
+        var totalIntroducedUsers = { data: [], name: tabPaneElement.find(".total-introduced-users").val(), color: '#828384' };
+        var directIntroducedUsers = { data: [], name: tabPaneElement.find(".direct-introduced-users").val(), color: '#F69BF9' };
 
-        var directSaleChanges = JSON.parse(container.find(".direct-sale-changes").val());
-        if (directSaleChanges.length !== 0) {
-            $.each(directSaleChanges, function (index, value) {
+        var directAffiliateSaleChanges = JSON.parse(tabPaneElement.find(".direct-affiliate-sale-changes").val());
+        if (directAffiliateSaleChanges.length !== 0) {
+            $.each(directAffiliateSaleChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
                 val = value.Value;
-                directSale.data.push([now, val]);
+                directAffiliateSale.data.push([now, val]);
             });
         }
         else {
             now = moment().valueOf();
             val = 0;
-            directSale.data.push([now, val]);
+            directAffiliateSale.data.push([now, val]);
         }
-        directSale.data.sort();
+        directAffiliateSale.data.sort();
 
-        var totalSaleChanges = JSON.parse(container.find(".total-sale-changes").val());
-        if (totalSaleChanges.length !== 0) {
-            $.each(totalSaleChanges, function (index, value) {
+        var totalAffiliateSaleChanges = JSON.parse(tabPaneElement.find(".total-affiliate-sale-changes").val());
+        if (totalAffiliateSaleChanges.length !== 0) {
+            $.each(totalAffiliateSaleChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
                 val = value.Value;
-                totalSale.data.push([now, val]);
+                totalAffiliateSale.data.push([now, val]);
             });
         }
         else {
             now = moment().valueOf();
             val = 0;
-            totalSale.data.push([now, val]);
+            totalAffiliateSale.data.push([now, val]);
         }
-        totalSale.data.sort();
+        totalAffiliateSale.data.sort();
 
-        var totalIntroducedUsersChanges = JSON.parse(container.find(".total-introduced-users-changes").val());
+        var totalIntroducedUsersChanges = JSON.parse(tabPaneElement.find(".total-introduced-users-changes").val());
         if (totalIntroducedUsersChanges.length !== 0) {
             $.each(totalIntroducedUsersChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
@@ -260,7 +336,7 @@
         }
         totalIntroducedUsers.data.sort();
 
-        var directIntroducedUsersChanges = JSON.parse(container.find(".direct-introduced-users-changes").val());
+        var directIntroducedUsersChanges = JSON.parse(tabPaneElement.find(".direct-introduced-users-changes").val());
         if (directIntroducedUsersChanges.length != 0) {
             $.each(directIntroducedUsersChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
@@ -276,10 +352,87 @@
         directIntroducedUsers.data.sort();
 
         // Push the completed series
-        options.series.push(totalSale, directSale, totalIntroducedUsers, directIntroducedUsers);
+        options.series.push(totalAffiliateSale, directAffiliateSale, totalIntroducedUsers, directIntroducedUsers);
 
         // Create the plot
-        container.find(".statistic-chart").highcharts(options);
+        tabPaneElement.find(".statistic-chart").highcharts(options);
+    },
+    loadNonTier1StatisticsChart: function (tabPaneElement) {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        Highcharts.setOptions({
+            lang: DTLang.getHighChartLang()
+        });
+        options = {
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: null
+            },
+            subtitle: {
+                text: null
+            },
+            exporting: {
+                enabled: false
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    day: '%b/%e',
+                    month: '%e. %b',
+                    year: '%b'
+                },
+
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+            },
+            tooltip: {
+                headerFormat: '<b>{series.name}</b><br>',
+                pointFormat: '{point.x:%e. %b}: {point.y}'
+            },
+
+            plotOptions: {
+                spline: {
+                    marker: {
+                        enabled: true
+                    }
+                }
+            },
+
+            series: []
+
+        };
+
+        var totalAffiliateSale = { data: [], name: tabPaneElement.find(".total-affiliate-sale").val(), color: '#4267b2' };
+
+        var totalAffiliateSaleChanges = JSON.parse(tabPaneElement.find(".total-affiliate-sale-changes").val());
+        if (totalAffiliateSaleChanges.length !== 0) {
+            $.each(totalAffiliateSaleChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                totalAffiliateSale.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            totalAffiliateSale.data.push([now, val]);
+        }
+        totalAffiliateSale.data.sort();
+
+        // Push the completed series
+        options.series.push(totalAffiliateSale);
+
+        // Create the plot
+        tabPaneElement.find(".statistic-chart").highcharts(options);
     },
     loadEditable: function (jQueryElement) {
         $.fn.editable.defaults.clear = false;

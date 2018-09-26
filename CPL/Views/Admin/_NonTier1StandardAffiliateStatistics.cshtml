@@ -1,0 +1,21 @@
+﻿@model NonTier1StandardAffiliateInfoViewModel
+
+<div class="row">
+    <div class="col-12 statistic">
+        <div class="row">
+            <div class="col-lg-3 col-6 border-right mt-1">
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")</h6>
+                <p class="lighten-2 mb-0 font-weight-bold">@Model.TotalAffiliateSale.ToString(CPLConstant.Format.Amount)</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 mt-1">
+        <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StatisticChart")</h6>
+        <div class="height-400 statistic-chart">
+        </div>
+        @Html.HiddenFor(x => x.TotalAffiliateSaleChangesInJson, new { @class = "total-affiliate-sale-changes" })
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")" class="total-affiliate-sale" />
+    </div>
+</div>
