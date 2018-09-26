@@ -1,4 +1,4 @@
-﻿@model NonTier1StandardAffiliateInfoViewModel
+﻿@model NonTopAgencyAffiliateInfoViewModel
 
 <div class="row">
     <div class="col-12 statistic">
@@ -16,6 +16,6 @@
         <div class="height-400 statistic-chart">
         </div>
         @Html.HiddenFor(x => x.TotalAffiliateSaleChangesInJson, new { @class = "total-affiliate-sale-changes" })
-        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")" class="total-affiliate-sale" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAffiliateSale")" class="total-affiliate-sale" />
     </div>
 </div>

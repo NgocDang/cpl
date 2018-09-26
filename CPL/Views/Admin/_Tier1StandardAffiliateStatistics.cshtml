@@ -4,11 +4,11 @@
     <div class="col-12 statistic">
         <div class="row">
             <div class="col-lg-3 col-6 border-right mt-1">
-                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")</h6>
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAffiliateSale")</h6>
                 <p class="lighten-2 mb-0 font-weight-bold">@Model.TotalAffiliateSale.ToString(CPLConstant.Format.Amount)</p>
             </div>
             <div class="col-lg-3 col-6 border-right mt-1">
-                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DirectSale")</h6>
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DirectAffiliateSale")</h6>
                 <p class="lighten-2 mb-0 font-weight-bold">@Model.DirectAffiliateSale.ToString(CPLConstant.Format.Amount)</p>
             </div>
             <div class="col-lg-3 col-6 border-right mt-1">

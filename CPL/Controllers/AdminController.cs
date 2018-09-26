@@ -835,21 +835,71 @@ namespace CPL.Controllers
 
             var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo_Tier1_Statistics", storeParams);
 
+            var totalAffiliateSaleChanges = new List<SummaryChange>();
+            var directAffiliateSaleChanges = new List<SummaryChange>();
+            var totalIntroducedUsersChanges = new List<SummaryChange>();
+            var directIntroducedUsersChanges = new List<SummaryChange>();
+
+            for (int i = 0; i < dataSet.Tables[1].Rows.Count; i++)
+            {
+                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["TotalAffiliateSale"])) });
+                directAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["DirectAffiliateSale"])) });
+                totalIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["TotalIntroducedUsers"])) });
+                directIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["DirectIntroducedUsers"])) });
+            }
+
             //Table[0]//////////////////////////////////////////////////////
             //TotalSale|DirectSale|TotalIntroducedUsers|DirectIntroducedUsers
             //123//////456/////////789//////////////////10//////////////////
 
             var viewModel = new TopAgencyAffiliateInfoViewModel
             {
-                TotalSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]),
-                DirectSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[1]),
+                TotalAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]),
+                DirectAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[1]),
                 TotalIntroducedUsers = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[2]),
-                DirectIntroducedUsers = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[3])
+                DirectIntroducedUsers = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[3]),
+
+                TotalAffiliateSaleChangesInJson = JsonConvert.SerializeObject(totalAffiliateSaleChanges),
+                DirectAffiliateSaleChangesInJson = JsonConvert.SerializeObject(directAffiliateSaleChanges),
+                TotalIntroducedUsersChangesInJson = JsonConvert.SerializeObject(totalIntroducedUsersChanges),
+                DirectIntroducedUsersChangesInJson = JsonConvert.SerializeObject(directIntroducedUsersChanges),
             };
 
             return PartialView("_TopAgencyAffiliateStatistics", viewModel);
         }
 
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetNonTopAgencyStatistics(int sysUserId, int periodInDay, string kindOfTier, int pageSize = 10, int pageIndex = 1,
+                                                    string orderColumn = "UsedCPL", string orderDirection = "desc", string searchValue = "")
+        {
+            List<SqlParameter> storeParams = new List<SqlParameter>() {
+                    new SqlParameter() {ParameterName = "@Tier", SqlDbType = SqlDbType.Int, Value= int.Parse(kindOfTier)},
+                    new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
+                    new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
+                };
+
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo_NonTier1_Statistics", storeParams);
+
+            var totalAffiliateSaleChanges = new List<SummaryChange>();
+
+            for (int i = 0; i < dataSet.Tables[1].Rows.Count; i++)
+            {
+                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["TotalAffiliateSale"])) });
+            }
+
+            //Table[0]//////////////////////////////////////////////////////
+            //TotalSale
+            //123//////
+            var viewModel = new NonTopAgencyAffiliateInfoViewModel
+            {
+                TotalAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]),
+
+                TotalAffiliateSaleChangesInJson = JsonConvert.SerializeObject(totalAffiliateSaleChanges),
+            };
+
+            return PartialView("_NonTopAgencyAffiliateStatistics", viewModel);
+        }
 
         [Permission(EnumRole.Admin)]
         public IActionResult AllTopAgencyAffiliate()

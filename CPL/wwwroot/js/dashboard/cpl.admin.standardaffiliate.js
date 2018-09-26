@@ -43,8 +43,8 @@
                 type: 'POST',
                 data: {
                     sysUserId: $("#SysUserId").val(),
-                    kindOfTier: StandardAffiliate.StandardAffiliateDataTable == null ? tabPaneElement.data().kindOfTier : $("#" + StandardAffiliate.StandardAffiliateDataTable.table().node().id).closest(".tab-pane").data().kindOfTier,
-                    periodInDay: StandardAffiliate.StandardAffiliateDataTable == null ? tabPaneElement.find("select.time-range").val() : $("#" + StandardAffiliate.StandardAffiliateDataTable.table().node().id).closest(".tab-pane").find("select.time-range").val()
+                    kindOfTier: tabPaneElement.data().kindOfTier,
+                    periodInDay: tabPaneElement.find("select.time-range").val()
                 },
                 complete: function (data) {
                     StandardAffiliate.loadEditable(tabPaneElement);
@@ -181,11 +181,11 @@
                 },
                 data: {
                     sysUserId: $("#SysUserId").val(),
-                    periodInDay: tabPaneElement.find("select.time-range").val()
+                    periodInDay: tabPaneElement.find("select.time-range").val(),
                 },
                 success: function (data) {
                     tabPaneElement.find(".tab-detail").html(data);
-                    StandardAffiliate.loadTier1StatisticsChart(tabPaneElement)
+                    StandardAffiliate.loadTier1StatisticsChart(tabPaneElement);
                 },
             });
         } else {
@@ -202,11 +202,10 @@
                 },
                 success: function (data) {
                     tabPaneElement.find(".tab-detail").html(data);
-                    StandardAffiliate.loadNonTier1StatisticsChart(tabPaneElement)
+                    StandardAffiliate.loadNonTier1StatisticsChart(tabPaneElement);
                 },
             });
         }
-        
     },
     bindTier1TimeRangeChange: function () {
         $("#tier-1-nav select.time-range").on("changed.bs.select",
