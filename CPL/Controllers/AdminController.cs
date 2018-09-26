@@ -645,7 +645,7 @@ namespace CPL.Controllers
                 TotalSaleParam, TodaySaleParam, YesterdaySaleParam
             };
 
-            _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @SysUserId, @TotalSale OUTPUT, @TodaySale OUTPUT, @YesterdaySale OUTPUT", parameters);
+            _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @SysUserId, @TotalAffiliateSale OUTPUT, @TodayAffiliateSale OUTPUT, @YesterdayAffiliateSale OUTPUT", parameters);
 
             viewModel.TotalSale = Convert.ToInt32((TotalSaleParam.Value as int?).GetValueOrDefault(0));
             viewModel.TotalSaleToday = Convert.ToInt32((TodaySaleParam.Value as int?).GetValueOrDefault(0));
@@ -900,10 +900,10 @@ namespace CPL.Controllers
 
             for (int i = 0; i < dataSet.Tables[1].Rows.Count; i++)
             {
-                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["TotalAffiliateSale"])) });
-                directAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["DirectAffiliateSale"])) });
-                totalIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["TotalIntroducedUsers"])) });
-                directIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["DirectIntroducedUsers"])) });
+                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalAffiliateSale"])) });
+                directAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["DirectAffiliateSale"])) });
+                totalIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalIntroducedUsers"])) });
+                directIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["DirectIntroducedUsers"])) });
             }
 
             //Table[0]//////////////////////////////////////////////////////
@@ -943,7 +943,7 @@ namespace CPL.Controllers
 
             for (int i = 0; i < dataSet.Tables[1].Rows.Count; i++)
             {
-                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["TotalAffiliateSale"])) });
+                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalAffiliateSale"])) });
             }
 
             //Table[0]//////////////////////////////////////////////////////
@@ -1163,10 +1163,10 @@ namespace CPL.Controllers
 
             for (int i = 0; i < dataSet.Tables[1].Rows.Count; i++)
             {
-                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["TotalAffiliateSale"])) });
-                directAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["DirectAffiliateSale"])) });
-                totalIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["TotalIntroducedUsers"])) });
-                directIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["DirectIntroducedUsers"])) });
+                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalAffiliateSale"])) });
+                directAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["DirectAffiliateSale"])) });
+                totalIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalIntroducedUsers"])) });
+                directIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["DirectIntroducedUsers"])) });
             }
 
             //Table[0]//////////////////////////////////////////////////////
@@ -1205,7 +1205,7 @@ namespace CPL.Controllers
 
             for (int i = 0; i < dataSet.Tables[1].Rows.Count; i++)
             {
-                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[0])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[0])["TotalAffiliateSale"])) });
+                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalAffiliateSale"])) });
             }
 
             //Table[0]//////////////////////////////////////////////////////
