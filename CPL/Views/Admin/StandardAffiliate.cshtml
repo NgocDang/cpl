@@ -351,29 +351,32 @@
                                             <h5 class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliateTiers")</h5>
                                         </div>
                                         <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-4 col-sm-12">
-                                                    <fieldset class="form-group">
-                                                        <label for="Tier1DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1")</label>
-                                                        <input type="number" min="0" name="Tier1DirectRate" class="form-control" max="100" value="@Model.StandardAffiliateRate.Tier1DirectRate" required @(Model.IsLocked ? "disabled" : "")>
-                                                        <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1Required")</div>
-                                                    </fieldset>
+                                            <fieldset @(Model.IsLocked ? "disabled" : "")>
+
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <fieldset class="form-group">
+                                                            <label for="Tier1DirectRate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1")</label>
+                                                            <input type="number" min="0" name="Tier1DirectRate" class="form-control" max="100" value="@Model.StandardAffiliateRate.Tier1DirectRate" required @(Model.IsLocked ? "disabled" : "")>
+                                                            <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionDirectSaleTier1Required")</div>
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <fieldset class="form-group">
+                                                            <label for="Tier2SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1")</label>
+                                                            <input type="number" min="0" name="Tier2SaleToTier1Rate" class="form-control" max="100" value="@Model.StandardAffiliateRate.Tier2SaleToTier1Rate" required @(Model.IsLocked ? "disabled" : "")>
+                                                            <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1Required")</div>
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <fieldset class="form-group">
+                                                            <label for="Tier3SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1")</label>
+                                                            <input type="number" min="0" name="Tier3SaleToTier1Rate" class="form-control" max="100" value="@Model.StandardAffiliateRate.Tier3SaleToTier1Rate" required @(Model.IsLocked ? "disabled" : "")>
+                                                            <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1Required")</div>
+                                                        </fieldset>
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-4 col-sm-12">
-                                                    <fieldset class="form-group">
-                                                        <label for="Tier2SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1")</label>
-                                                        <input type="number" min="0" name="Tier2SaleToTier1Rate" class="form-control" max="100" value="@Model.StandardAffiliateRate.Tier2SaleToTier1Rate" required @(Model.IsLocked ? "disabled" : "")>
-                                                        <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier2SaleToTier1Required")</div>
-                                                    </fieldset>
-                                                </div>
-                                                <div class="col-md-4 col-sm-12">
-                                                    <fieldset class="form-group">
-                                                        <label for="Tier3SaleToTier1Rate">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1")</label>
-                                                        <input type="number" min="0" name="Tier3SaleToTier1Rate" class="form-control" max="100" value="@Model.StandardAffiliateRate.Tier3SaleToTier1Rate" required @(Model.IsLocked ? "disabled" : "")>
-                                                        <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AgencyCommissionTier3SaleToTier1Required")</div>
-                                                    </fieldset>
-                                                </div>
-                                            </div>
+                                            </fieldset>
                                         </div>
                                     </div>
                                     <div class="card-footer border-top-blue-grey border-top-lighten-5 text-right">
@@ -388,7 +391,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                                <form id="form-tier-1-setting" method="POST" action="#" class="needs-validation" novalidate="">
+                                <form id="form-standard-affiliate-setting" method="POST" action="#" class="needs-validation" novalidate="">
                                     <div class="card-content">
                                         <div class="card-body mt-1">
                                             <div class="row">
