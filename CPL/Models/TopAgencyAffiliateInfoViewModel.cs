@@ -7,13 +7,13 @@ namespace CPL.Models
 {
     public class TopAgencyAffiliateInfoViewModel
     {
-        public int TotalSale { get; set; }
-        public int DirectSale { get; set; }
+        public int TotalAffiliateSale { get; set; }
+        public int DirectAffiliateSale { get; set; }
         public int TotalIntroducedUsers { get; set; }
         public int DirectIntroducedUsers { get; set; }
 
-        public string TotalSaleChangesInJson { get; set; }
-        public string DirectSaleChangesInJson { get; set; }
+        public string TotalAffiliateSaleChangesInJson { get; set; }
+        public string DirectAffiliateSaleChangesInJson { get; set; }
         public string TotalIntroducedUsersChangesInJson { get; set; }
         public string DirectIntroducedUsersChangesInJson { get; set; }
     }
