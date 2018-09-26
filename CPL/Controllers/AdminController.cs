@@ -911,7 +911,7 @@ namespace CPL.Controllers
             //TotalSale|DirectSale|TotalIntroducedUsers|DirectIntroducedUsers
             //123//////456/////////789//////////////////10//////////////////
 
-            var viewModel = new TopAgencyAffiliateInfoViewModel
+            var viewModel = new TopAgencyAffiliateInfoAdminViewModel
             {
                 TotalAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]),
                 DirectAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[1]),
@@ -950,7 +950,7 @@ namespace CPL.Controllers
             //Table[0]//////////////////////////////////////////////////////
             //TotalSale
             //123//////
-            var viewModel = new NonTopAgencyAffiliateInfoViewModel
+            var viewModel = new NonTopAgencyAffiliateInfoAdminViewModel
             {
                 TotalAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]),
 

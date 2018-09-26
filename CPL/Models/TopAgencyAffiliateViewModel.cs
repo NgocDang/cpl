@@ -17,5 +17,10 @@ namespace CPL.Models
         public int TotalIntroducedUsers { get; set; }
         public int TotalIntroducedUsersToday { get; set; }
         public int TotalIntroducedUsersYesterday { get; set; }
+
+        public bool IsTier2TabVisible { get; set; }
+        public bool IsTier3TabVisible { get; set; }
+
+        public string Tab { get; set; }
     }
 }

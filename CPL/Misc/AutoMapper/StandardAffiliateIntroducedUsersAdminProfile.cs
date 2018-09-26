@@ -9,9 +9,9 @@ using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Misc.AutoMapper
 {
-    public class StandardAffiliateIntroducedUsersProfile : Profile
+    public class StandardAffiliateIntroducedUsersAdminProfile : Profile
     {
-        public StandardAffiliateIntroducedUsersProfile()
+        public StandardAffiliateIntroducedUsersAdminProfile()
         {
             CreateMap<DataRow, StandardAffiliateIntroducedUsersAdminViewModel>()
                      .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Convert.ToInt32(src["Id"])))
