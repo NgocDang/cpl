@@ -1825,10 +1825,6 @@ button#btn-dropdown-item:focus {
     padding-right: 0.1rem !important;
 }
 
-.highcharts-credits {
-    display:none;
-}
-
 table.dataTable td:first-child {
     outline: none !important
 }
