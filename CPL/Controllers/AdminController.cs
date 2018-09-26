@@ -2057,8 +2057,8 @@ namespace CPL.Controllers
                                                 .Sum(x => x.TotalAward);
             var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
 
-            var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame };
-            var pricePredictionChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PricePrediction"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = revenueInPricePredictionGame.GetValueOrDefault(0) };
+            var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame >= 0 ? revenueInLotteryGame : 0};
+            var pricePredictionChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PricePrediction"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = revenueInPricePredictionGame.GetValueOrDefault(0) >= 0 ? revenueInPricePredictionGame.GetValueOrDefault(0) : 0 };
 
             data.Add(lotteryChartData);
             data.Add(pricePredictionChartData);
@@ -2129,7 +2129,7 @@ namespace CPL.Controllers
                     .Select(x => x.LotteryPrize).Sum(y => y.Value);
                 var revenueInLotteryGame = totalSaleLottery - totalAwardLottery;
 
-                var lotteryChartData = new PieChartData { Label = lotteryCategories[i].Name, Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)i + 1), Value = revenueInLotteryGame };
+                var lotteryChartData = new PieChartData { Label = lotteryCategories[i].Name, Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)i + 1), Value = revenueInLotteryGame >= 0 ? revenueInLotteryGame : 0 };
                 data.Add(lotteryChartData);
             }
 
