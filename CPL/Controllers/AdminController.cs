@@ -548,7 +548,7 @@ namespace CPL.Controllers
                 .Query()
                 .Include(x => x.Agency)
                 .FirstOrDefault(x => x.Id == id && x.AffiliateId.GetValueOrDefault(0) > 0 && x.AgencyId.HasValue);
-            var viewModel = Mapper.Map<TopAgencyAffiliateViewModel>(user);
+            var viewModel = Mapper.Map<TopAgencyAffiliateAdminViewModel>(user);
 
             viewModel.IsKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
 
@@ -646,7 +646,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<TopAgencyAffiliateIntroducedUsersViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier, int periodInDay)
+        public IList<TopAgencyAffiliateIntroducedUsersAdminViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier, int periodInDay)
         {
             var searchBy = (model.search.value != null) ? model.search.value : string.Empty;
             var pageSize = model.length;
@@ -693,7 +693,7 @@ namespace CPL.Controllers
 
             DataTable table = dataSet.Tables[0];
             var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
-            var viewModels = Mapper.Map<List<DataRow>, List<TopAgencyAffiliateIntroducedUsersViewModel>>(rows);
+            var viewModels = Mapper.Map<List<DataRow>, List<TopAgencyAffiliateIntroducedUsersAdminViewModel>>(rows);
 
             totalResultsCount = Convert.ToInt32((dataSet.Tables[1].Rows[0])["TotalCount"]);
             filteredResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["FilteredCount"]);
@@ -960,7 +960,7 @@ namespace CPL.Controllers
                 .Query()
                 .Include(x => x.Affiliate)
                 .FirstOrDefault(x => x.Id == id && x.AffiliateId.GetValueOrDefault(0) > 0);
-            var viewModel = Mapper.Map<StandardAffiliateViewModel>(user);
+            var viewModel = Mapper.Map<StandardAffiliateAdminViewModel>(user);
 
             viewModel.IsKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
 
@@ -1088,7 +1088,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<StandardAffiliateIntroducedUsersViewModel> SearchStandardAffiliateIntroducedUsersFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier, int periodInDay)
+        public IList<StandardAffiliateIntroducedUsersAdminViewModel> SearchStandardAffiliateIntroducedUsersFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier, int periodInDay)
         {
             var searchBy = (model.search.value != null) ? model.search.value : string.Empty;
             var pageSize = model.length;
@@ -1134,7 +1134,7 @@ namespace CPL.Controllers
 
             DataTable table = dataSet.Tables[1]; // TODO
             var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
-            var viewModels = Mapper.Map<List<DataRow>, List<StandardAffiliateIntroducedUsersViewModel>>(rows);
+            var viewModels = Mapper.Map<List<DataRow>, List<StandardAffiliateIntroducedUsersAdminViewModel>>(rows);
 
             totalResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["TotalCount"]);
             filteredResultsCount = Convert.ToInt32((dataSet.Tables[3].Rows[0])["FilteredCount"]);

@@ -5,21 +5,17 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class TopAgencyAffiliateIntroducedUsersViewModel
+    public class TopAgencyAffiliateViewModel
     {
         public int Id { get; set; }
-        public string KindOfTier { get; set; }
-        public decimal UsedCPL { get; set; }
-        public decimal LostCPL { get; set; }
-        public decimal AffiliateSale { get; set; }
-        public int TotalDirectIntroducedUsers { get; set; }
-        public string AffiliateCreatedDateInString { get; set; }
+        public string AffiliateUrl { get; set; }
 
-        public int AffiliateId { get; set; }
-        public int? Tier1DirectRate { get; set; }
-        public int? Tier2SaleToTier1Rate { get; set; }
-        public int? Tier3SaleToTier1Rate { get; set; }
+        public int TotalAffiliateSale { get; set; }
+        public int TodayAffiliateSale { get; set; }
+        public int YesterdayAfiliateSale { get; set; }
 
-        public bool IsLocked { get; set; }
+        public int TotalIntroducedUsers { get; set; }
+        public int TotalIntroducedUsersToday { get; set; }
+        public int TotalIntroducedUsersYesterday { get; set; }
     }
 }
