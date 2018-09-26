@@ -9,7 +9,7 @@ using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Misc.AutoMapper
 {
-    public class StandardAffiliateIntroducedUsersProfile: Profile
+    public class StandardAffiliateIntroducedUsersProfile : Profile
     {
         public StandardAffiliateIntroducedUsersProfile()
         {
@@ -27,5 +27,5 @@ namespace CPL.Misc.AutoMapper
                      .ForMember(dest => dest.Tier3SaleToTier1Rate, opt => opt.MapFrom(src => Convert.ToInt32(src["Tier3SaleToTier1Rate"])))
                      .ForMember(dest => dest.IsLocked, opt => opt.MapFrom(src => Convert.ToInt32(src["IsLocked"])));
         }
-}
+    }
 }

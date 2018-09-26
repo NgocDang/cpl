@@ -4,16 +4,22 @@
     Tier3AffiliateDataTable: null,
     init: function () {
         TopAgencyAffiliateAdmin.bindCopy();
-        TopAgencyAffiliateAdmin.bindSwitchery();
-        TopAgencyAffiliateAdmin.bindDoUpdateAgencyAffiliateRate();
-        TopAgencyAffiliateAdmin.bindDoUpdateAgencyAffiliateSetting();
-        TopAgencyAffiliateAdmin.bindConfirmPayment();
-        TopAgencyAffiliateAdmin.bindDoPayment();
+        TopAgencyAffiliate.bindSwitchery();
 
-        TopAgencyAffiliateAdmin.bindTopAgencyTab();
-        TopAgencyAffiliateAdmin.bindTier2Tab();
-        TopAgencyAffiliateAdmin.bindTier3Tab();
-        TopAgencyAffiliateAdmin.bindTopAgencyTimeRangeChange();
+        TopAgencyAffiliate.bindTopAgencyTab();
+        TopAgencyAffiliate.bindTopAgencyTimeRangeChange();
+        TopAgencyAffiliate.bindDoUpdateAgencyAffiliateRate();
+        TopAgencyAffiliate.bindDoUpdateAgencyAffiliateSetting();
+        TopAgencyAffiliate.bindConfirmPayment();
+        TopAgencyAffiliate.bindDoPayment();
+
+        TopAgencyAffiliate.bindTier2Tab();
+        TopAgencyAffiliate.bindTier2TimeRangeChange();
+
+        TopAgencyAffiliate.bindTier3Tab();
+        TopAgencyAffiliate.bindTier3TimeRangeChange();
+        
+        
 
         var tab = $("#tab").val();
         if (tab === "")
@@ -272,7 +278,7 @@
     bindTopAgencyTab: function () {
         $('a#top-agency-nav-tab').on('show.bs.tab', function (e) {
             if ($("#top-agency-nav .tab-detail").html().trim().length === 0) {
-                TopAgencyAffiliateAdmin.loadTopAgencyStatistics();
+                TopAgencyAffiliate.loadStatistics($("#top-agency-nav"));
             }
 
             if ($("#top-agency-nav table tbody").length == 0) {
@@ -284,6 +290,10 @@
     },
     bindTier2Tab: function () {
         $('a#tier-2-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#tier-2-nav .tab-detail").html().trim().length === 0) {
+                TopAgencyAffiliate.loadStatistics($("#tier-2-nav"));
+            }
+
             if ($("#tier-2-nav table tbody").length == 0) {
                 TopAgencyAffiliateAdmin.Tier2AffiliateDataTable = TopAgencyAffiliateAdmin.loadAffiliateDataTable($("#tier-2-nav"));
                 TopAgencyAffiliateAdmin.initAffiliateDataTable($("#tier-2-nav"));
@@ -292,39 +302,77 @@
     },
     bindTier3Tab: function () {
         $('a#tier-3-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#tier-3-nav .tab-detail").html().trim().length === 0) {
+                TopAgencyAffiliate.loadStatistics($("#tier-3-nav"));
+            }
+
             if ($("#tier-3-nav table tbody").length == 0) {
-                TopAgencyAffiliateAdmin.TopAgencyAffiliateDataTable = TopAgencyAffiliateAdmin.loadAffiliateDataTable($("#tier-3-nav"));
-                TopAgencyAffiliateAdmin.initAffiliateDataTable($("#tier-3-nav"));
+                TopAgencyAffiliate.Tier3AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-3-nav"));
+                TopAgencyAffiliate.initAffiliateDataTable($("#tier-3-nav"));
             }
         })
     },
-
-    loadTopAgencyStatistics: function () {
-        $.ajax({
-            url: "/Admin/GetTopAgencyStatistics/",
-            type: "GET",
-            beforeSend: function () {
-                $("#top-agency-nav .tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
-            },
-            data: {
-                sysUserId: $("#SysUserId").val(),
-                periodInDay: $("#top-agency-nav select.time-range").val()
-            },
-            success: function (data) {
-                $("#top-agency-nav .tab-detail").html(data);
-                TopAgencyAffiliateAdmin.loadTier1StatisticsChart($("#top-agency-nav"))
-            },
-        });
+    loadStatistics: function (tabPaneElement) {
+        if (tabPaneElement.data().kindOfTier == 1) {
+            $.ajax({
+                url: "/Admin/GetTopAgencyStatistics/",
+                type: "GET",
+                beforeSend: function () {
+                    tabPaneElement.find(".tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+                },
+                data: {
+                    sysUserId: $("#SysUserId").val(),
+                    periodInDay: tabPaneElement.find("select.time-range").val(),
+                },
+                success: function (data) {
+                    tabPaneElement.find(".tab-detail").html(data);
+                    TopAgencyAffiliate.loadTopAgencyStatisticsChart(tabPaneElement);
+                },
+            });
+        } else {
+            $.ajax({
+                url: "/Admin/GetNonTopAgencyStatistics/",
+                type: "GET",
+                beforeSend: function () {
+                    tabPaneElement.find(".tab-detail").html("<div class='text-center py-5'><img src='/css/dashboard/plugins/img/loading.gif' class='img-fluid' /></div>");
+                },
+                data: {
+                    sysUserId: $("#SysUserId").val(),
+                    periodInDay: tabPaneElement.find("select.time-range").val(),
+                    kindOfTier: tabPaneElement.data().kindOfTier
+                },
+                success: function (data) {
+                    tabPaneElement.find(".tab-detail").html(data);
+                    TopAgencyAffiliate.loadNonTopAgencyStatisticsChart(tabPaneElement);
+                },
+            });
+        }
     },
     bindTopAgencyTimeRangeChange: function () {
         $("#top-agency-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
-                TopAgencyAffiliateAdmin.loadTopAgencyStatistics();
-                TopAgencyAffiliateAdmin.TopAgencyAffiliateDataTable.destroy();
-                TopAgencyAffiliateAdmin.TopAgencyAffiliateDataTable = TopAgencyAffiliateAdmin.loadAffiliateDataTable($("#top-agency-nav"));
+                TopAgencyAffiliate.loadStatistics($("#top-agency-nav"));
+                TopAgencyAffiliate.TopAgencyAffiliateDataTable.destroy();
+                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#top-agency-nav"));
         });
     },
-    loadTier1StatisticsChart: function (container) {
+    bindTier2TimeRangeChange: function () {
+        $("#tier-2-nav select.time-range").on("changed.bs.select",
+            function (e, clickedIndex, newValue, oldValue) {
+                TopAgencyAffiliate.loadStatistics($("#tier-2-nav"));
+                TopAgencyAffiliate.Tier2AffiliateDataTable.destroy();
+                TopAgencyAffiliate.Tier2AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-2-nav"));
+            });
+    },
+    bindTier3TimeRangeChange: function () {
+        $("#tier-3-nav select.time-range").on("changed.bs.select",
+            function (e, clickedIndex, newValue, oldValue) {
+                TopAgencyAffiliate.loadStatistics($("#tier-3-nav"));
+                TopAgencyAffiliate.Tier3AffiliateDataTable.destroy();
+                TopAgencyAffiliate.Tier3AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-3-nav"));
+            });
+    },
+    loadTopAgencyStatisticsChart: function (tabPaneElement) {
         Highcharts.setOptions({
             global: {
                 useUTC: false
@@ -378,42 +426,42 @@
 
         };
 
-        var totalSale = { data: [], name: container.find(".total-sale").val(), color: '#4267b2' };
-        var directSale = { data: [], name: container.find(".direct-sale").val(), color: '#f7931a' };
-        var totalIntroducedUsers = { data: [], name: container.find(".total-introduced-users").val(), color: '#828384' };
-        var directIntroducedUsers = { data: [], name: container.find(".direct-introduced-users").val(), color: '#F69BF9' };
+        var totalAffiliateSale = { data: [], name: tabPaneElement.find(".total-affiliate-sale").val(), color: '#4267b2' };
+        var directAffiliateSale = { data: [], name: tabPaneElement.find(".direct-affiliate-sale").val(), color: '#f7931a' };
+        var totalIntroducedUsers = { data: [], name: tabPaneElement.find(".total-introduced-users").val(), color: '#828384' };
+        var directIntroducedUsers = { data: [], name: tabPaneElement.find(".direct-introduced-users").val(), color: '#F69BF9' };
 
-        var directSaleChanges = JSON.parse(container.find(".direct-sale-changes").val());
-        if (directSaleChanges.length !== 0) {
-            $.each(directSaleChanges, function (index, value) {
+        var directAffiliateSaleChanges = JSON.parse(tabPaneElement.find(".direct-affiliate-sale-changes").val());
+        if (directAffiliateSaleChanges.length !== 0) {
+            $.each(directAffiliateSaleChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
                 val = value.Value;
-                directSale.data.push([now, val]);
+                directAffiliateSale.data.push([now, val]);
             });
         }
         else {
             now = moment().valueOf();
             val = 0;
-            directSale.data.push([now, val]);
+            directAffiliateSale.data.push([now, val]);
         }
-        directSale.data.sort();
+        directAffiliateSale.data.sort();
 
-        var totalSaleChanges = JSON.parse(container.find(".total-sale-changes").val());
-        if (totalSaleChanges.length !== 0) {
-            $.each(totalSaleChanges, function (index, value) {
+        var totalAffiliateSaleChanges = JSON.parse(tabPaneElement.find(".total-affiliate-sale-changes").val());
+        if (totalAffiliateSaleChanges.length !== 0) {
+            $.each(totalAffiliateSaleChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
                 val = value.Value;
-                totalSale.data.push([now, val]);
+                totalAffiliateSale.data.push([now, val]);
             });
         }
         else {
             now = moment().valueOf();
             val = 0;
-            totalSale.data.push([now, val]);
+            totalAffiliateSale.data.push([now, val]);
         }
-        totalSale.data.sort();
+        totalAffiliateSale.data.sort();
 
-        var totalIntroducedUsersChanges = JSON.parse(container.find(".total-introduced-users-changes").val());
+        var totalIntroducedUsersChanges = JSON.parse(tabPaneElement.find(".total-introduced-users-changes").val());
         if (totalIntroducedUsersChanges.length !== 0) {
             $.each(totalIntroducedUsersChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
@@ -428,7 +476,7 @@
         }
         totalIntroducedUsers.data.sort();
 
-        var directIntroducedUsersChanges = JSON.parse(container.find(".direct-introduced-users-changes").val());
+        var directIntroducedUsersChanges = JSON.parse(tabPaneElement.find(".direct-introduced-users-changes").val());
         if (directIntroducedUsersChanges.length != 0) {
             $.each(directIntroducedUsersChanges, function (index, value) {
                 now = moment(value.Date).valueOf();
@@ -444,10 +492,87 @@
         directIntroducedUsers.data.sort();
 
         // Push the completed series
-        options.series.push(totalSale, directSale, totalIntroducedUsers, directIntroducedUsers);
+        options.series.push(totalAffiliateSale, directAffiliateSale, totalIntroducedUsers, directIntroducedUsers);
 
         // Create the plot
-        container.find(".statistic-chart").highcharts(options);
+        tabPaneElement.find(".statistic-chart").highcharts(options);
+    },
+    loadNonTopAgencyStatisticsChart: function (tabPaneElement) {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        Highcharts.setOptions({
+            lang: DTLang.getHighChartLang()
+        });
+        options = {
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: null
+            },
+            subtitle: {
+                text: null
+            },
+            exporting: {
+                enabled: false
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { // don't display the dummy year
+                    day: '%b/%e',
+                    month: '%e. %b',
+                    year: '%b'
+                },
+
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+            },
+            tooltip: {
+                headerFormat: '<b>{series.name}</b><br>',
+                pointFormat: '{point.x:%e. %b}: {point.y}'
+            },
+
+            plotOptions: {
+                spline: {
+                    marker: {
+                        enabled: true
+                    }
+                }
+            },
+
+            series: []
+
+        };
+
+        var totalAffiliateSale = { data: [], name: tabPaneElement.find(".total-affiliate-sale").val(), color: '#4267b2' };
+
+        var totalAffiliateSaleChanges = JSON.parse(tabPaneElement.find(".total-affiliate-sale-changes").val());
+        if (totalAffiliateSaleChanges.length !== 0) {
+            $.each(totalAffiliateSaleChanges, function (index, value) {
+                now = moment(value.Date).valueOf();
+                val = value.Value;
+                totalAffiliateSale.data.push([now, val]);
+            });
+        }
+        else {
+            now = moment().valueOf();
+            val = 0;
+            totalAffiliateSale.data.push([now, val]);
+        }
+        totalAffiliateSale.data.sort();
+
+        // Push the completed series
+        options.series.push(totalAffiliateSale);
+
+        // Create the plot
+        tabPaneElement.find(".statistic-chart").highcharts(options);
     },
     loadEditable: function (jQueryElement) {
         $.fn.editable.defaults.clear = false;
