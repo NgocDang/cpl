@@ -189,7 +189,7 @@
                         </li>
                     </ul>
                     <div class="tab-content mb-1">
-                        <div role="tabpanel" class="tab-pane" id="top-agency-nav" aria-labelledby="top-agency-nav-tab" aria-expanded="true" data-kind-of-tier="1">
+                        <div role="tabpanel" class="tab-pane" id="top-agency-nav" aria-labelledby="top-agency-nav-tab" aria-expanded="true" data-kind-of-tier="@((int)EnumKindOfTier.TIER1)">
                             <div class="card mb-1">
                                 <div class="card-content">
                                     <div class="card-body">
@@ -239,7 +239,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="tier-2-nav" aria-labelledby="tier-2-nav-tab" aria-expanded="true" data-kind-of-tier="2">
+                        <div role="tabpanel" class="tab-pane" id="tier-2-nav" aria-labelledby="tier-2-nav-tab" aria-expanded="true" data-kind-of-tier="@((int)EnumKindOfTier.TIER2)">
                             <div class="card mb-1">
                                 <div class="card-content">
                                     <div class="card-body">
@@ -289,7 +289,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="tier-3-nav" aria-labelledby="tier-3-nav-tab" aria-expanded="true" data-kind-of-tier="3">
+                        <div role="tabpanel" class="tab-pane" id="tier-3-nav" aria-labelledby="tier-3-nav-tab" aria-expanded="true" data-kind-of-tier="@((int)EnumKindOfTier.TIER3)">
                             <div class="card mb-1">
                                 <div class="card-content">
                                     <div class="card-body">
@@ -453,6 +453,7 @@
     <script src="~/js/dashboard/plugins/high-charts/series-label.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/exporting.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
+    <script src="~/js/dashboard/plugins/moment.min.js"></script>
     <script src="~/js/dashboard/cpl.affiliate.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.admin.topagencyaffiliate.js" asp-append-version="true"></script>
 }
