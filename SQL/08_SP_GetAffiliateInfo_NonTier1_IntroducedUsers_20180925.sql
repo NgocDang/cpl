@@ -417,7 +417,7 @@ WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @Page
 --///////////////////////////////////////////////////////////////////////////////////////--
 
 
-SELECT	COUNT(*)
+SELECT	COUNT(*) as TotalCount
 FROM	SysUser
 WHERE	SysUser.CreatedDate >= DATEADD(d, -@PeriodInDay, getdate())
 	and SysUser.IsIntroducedById in (SELECT CAST(Value AS int) FROM STRING_SPLIT(@TierXUsers, ','))
