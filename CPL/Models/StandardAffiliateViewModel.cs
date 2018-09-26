@@ -12,7 +12,7 @@ namespace CPL.Models
 
         public int TotalAffiliateSale { get; set; }
         public int TodayAffiliateSale { get; set; }
-        public int YesterdayAfiliateSale { get; set; }
+        public int YesterdayAffiliateSale { get; set; }
 
         public int TotalIntroducedUsers { get; set; }
         public int TotalIntroducedUsersToday { get; set; }
