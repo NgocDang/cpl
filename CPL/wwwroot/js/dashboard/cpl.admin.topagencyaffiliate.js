@@ -4,20 +4,20 @@
     Tier3AffiliateDataTable: null,
     init: function () {
         TopAgencyAffiliateAdmin.bindCopy();
-        TopAgencyAffiliate.bindSwitchery();
+        TopAgencyAffiliateAdmin.bindSwitchery();
 
-        TopAgencyAffiliate.bindTopAgencyTab();
-        TopAgencyAffiliate.bindTopAgencyTimeRangeChange();
-        TopAgencyAffiliate.bindDoUpdateAgencyAffiliateRate();
-        TopAgencyAffiliate.bindDoUpdateAgencyAffiliateSetting();
-        TopAgencyAffiliate.bindConfirmPayment();
-        TopAgencyAffiliate.bindDoPayment();
+        TopAgencyAffiliateAdmin.bindTopAgencyTab();
+        TopAgencyAffiliateAdmin.bindTopAgencyTimeRangeChange();
+        TopAgencyAffiliateAdmin.bindDoUpdateAgencyAffiliateRate();
+        TopAgencyAffiliateAdmin.bindDoUpdateAgencyAffiliateSetting();
+        TopAgencyAffiliateAdmin.bindConfirmPayment();
+        TopAgencyAffiliateAdmin.bindDoPayment();
 
-        TopAgencyAffiliate.bindTier2Tab();
-        TopAgencyAffiliate.bindTier2TimeRangeChange();
+        TopAgencyAffiliateAdmin.bindTier2Tab();
+        TopAgencyAffiliateAdmin.bindTier2TimeRangeChange();
 
-        TopAgencyAffiliate.bindTier3Tab();
-        TopAgencyAffiliate.bindTier3TimeRangeChange();
+        TopAgencyAffiliateAdmin.bindTier3Tab();
+        TopAgencyAffiliateAdmin.bindTier3TimeRangeChange();
         
         
 
@@ -278,7 +278,7 @@
     bindTopAgencyTab: function () {
         $('a#top-agency-nav-tab').on('show.bs.tab', function (e) {
             if ($("#top-agency-nav .tab-detail").html().trim().length === 0) {
-                TopAgencyAffiliate.loadStatistics($("#top-agency-nav"));
+                TopAgencyAffiliateAdmin.loadStatistics($("#top-agency-nav"));
             }
 
             if ($("#top-agency-nav table tbody").length == 0) {
@@ -291,7 +291,7 @@
     bindTier2Tab: function () {
         $('a#tier-2-nav-tab').on('show.bs.tab', function (e) {
             if ($("#tier-2-nav .tab-detail").html().trim().length === 0) {
-                TopAgencyAffiliate.loadStatistics($("#tier-2-nav"));
+                TopAgencyAffiliateAdmin.loadStatistics($("#tier-2-nav"));
             }
 
             if ($("#tier-2-nav table tbody").length == 0) {
@@ -303,12 +303,12 @@
     bindTier3Tab: function () {
         $('a#tier-3-nav-tab').on('show.bs.tab', function (e) {
             if ($("#tier-3-nav .tab-detail").html().trim().length === 0) {
-                TopAgencyAffiliate.loadStatistics($("#tier-3-nav"));
+                TopAgencyAffiliateAdmin.loadStatistics($("#tier-3-nav"));
             }
 
             if ($("#tier-3-nav table tbody").length == 0) {
-                TopAgencyAffiliate.Tier3AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-3-nav"));
-                TopAgencyAffiliate.initAffiliateDataTable($("#tier-3-nav"));
+                TopAgencyAffiliateAdmin.Tier3AffiliateDataTable = TopAgencyAffiliateAdmin.loadAffiliateDataTable($("#tier-3-nav"));
+                TopAgencyAffiliateAdmin.initAffiliateDataTable($("#tier-3-nav"));
             }
         })
     },
@@ -326,7 +326,7 @@
                 },
                 success: function (data) {
                     tabPaneElement.find(".tab-detail").html(data);
-                    TopAgencyAffiliate.loadTopAgencyStatisticsChart(tabPaneElement);
+                    TopAgencyAffiliateAdmin.loadTopAgencyStatisticsChart(tabPaneElement);
                 },
             });
         } else {
@@ -343,7 +343,7 @@
                 },
                 success: function (data) {
                     tabPaneElement.find(".tab-detail").html(data);
-                    TopAgencyAffiliate.loadNonTopAgencyStatisticsChart(tabPaneElement);
+                    TopAgencyAffiliateAdmin.loadNonTopAgencyStatisticsChart(tabPaneElement);
                 },
             });
         }
@@ -351,25 +351,25 @@
     bindTopAgencyTimeRangeChange: function () {
         $("#top-agency-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
-                TopAgencyAffiliate.loadStatistics($("#top-agency-nav"));
-                TopAgencyAffiliate.TopAgencyAffiliateDataTable.destroy();
-                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#top-agency-nav"));
+                TopAgencyAffiliateAdmin.loadStatistics($("#top-agency-nav"));
+                TopAgencyAffiliateAdmin.TopAgencyAffiliateDataTable.destroy();
+                TopAgencyAffiliateAdmin.TopAgencyAffiliateDataTable = TopAgencyAffiliateAdmin.loadAffiliateDataTable($("#top-agency-nav"));
         });
     },
     bindTier2TimeRangeChange: function () {
         $("#tier-2-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
-                TopAgencyAffiliate.loadStatistics($("#tier-2-nav"));
-                TopAgencyAffiliate.Tier2AffiliateDataTable.destroy();
-                TopAgencyAffiliate.Tier2AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-2-nav"));
+                TopAgencyAffiliateAdmin.loadStatistics($("#tier-2-nav"));
+                TopAgencyAffiliateAdmin.Tier2AffiliateDataTable.destroy();
+                TopAgencyAffiliateAdmin.Tier2AffiliateDataTable = TopAgencyAffiliateAdmin.loadAffiliateDataTable($("#tier-2-nav"));
             });
     },
     bindTier3TimeRangeChange: function () {
         $("#tier-3-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
-                TopAgencyAffiliate.loadStatistics($("#tier-3-nav"));
-                TopAgencyAffiliate.Tier3AffiliateDataTable.destroy();
-                TopAgencyAffiliate.Tier3AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-3-nav"));
+                TopAgencyAffiliateAdmin.loadStatistics($("#tier-3-nav"));
+                TopAgencyAffiliateAdmin.Tier3AffiliateDataTable.destroy();
+                TopAgencyAffiliateAdmin.Tier3AffiliateDataTable = TopAgencyAffiliateAdmin.loadAffiliateDataTable($("#tier-3-nav"));
             });
     },
     loadTopAgencyStatisticsChart: function (tabPaneElement) {

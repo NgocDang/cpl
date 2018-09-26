@@ -4,20 +4,20 @@
     Tier3StandardAffiliateDataTable: null,
     init: function () {
         StandardAffiliateAdmin.bindCopy();
-        StandardAffiliate.bindSwitchery();
+        StandardAffiliateAdmin.bindSwitchery();
 
-        StandardAffiliate.bindTier1Tab();
-        StandardAffiliate.bindTier1TimeRangeChange();
-        StandardAffiliate.bindDoUpdateStandardAffiliateMultiRate();
-        StandardAffiliate.bindDoUpdateStandardAffiliateSetting();
-        StandardAffiliate.bindConfirmPayment();
-        StandardAffiliate.bindDoPayment();
+        StandardAffiliateAdmin.bindTier1Tab();
+        StandardAffiliateAdmin.bindTier1TimeRangeChange();
+        StandardAffiliateAdmin.bindDoUpdateStandardAffiliateMultiRate();
+        StandardAffiliateAdmin.bindDoUpdateStandardAffiliateSetting();
+        StandardAffiliateAdmin.bindConfirmPayment();
+        StandardAffiliateAdmin.bindDoPayment();
 
-        StandardAffiliate.bindTier2Tab();
-        StandardAffiliate.bindTier2TimeRangeChange();
+        StandardAffiliateAdmin.bindTier2Tab();
+        StandardAffiliateAdmin.bindTier2TimeRangeChange();
 
-        StandardAffiliate.bindTier3Tab();
-        StandardAffiliate.bindTier3TimeRangeChange();
+        StandardAffiliateAdmin.bindTier3Tab();
+        StandardAffiliateAdmin.bindTier3TimeRangeChange();
 
         var tab = $("#tab").val();
         if (tab === "")
@@ -165,22 +165,22 @@
     bindTier2Tab: function () {
         $('a#tier-2-nav-tab').on('show.bs.tab', function (e) {
             if ($("#tier-2-nav .tab-detail").html().trim().length === 0) {
-                StandardAffiliate.loadStatistics($("#tier-2-nav"));
+                StandardAffiliateAdmin.loadStatistics($("#tier-2-nav"));
             }
             if ($("#tier-2-nav table tbody").length == 0) {
-                StandardAffiliate.Tier2StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
-                StandardAffiliate.initStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
+                StandardAffiliateAdmin.Tier2StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
+                StandardAffiliateAdmin.initStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
             }
         });
     },
     bindTier3Tab: function () {
         $('a#tier-3-nav-tab').on('show.bs.tab', function (e) {
             if ($("#tier-3-nav .tab-detail").html().trim().length === 0) {
-                StandardAffiliate.loadStatistics($("#tier-3-nav"));
+                StandardAffiliateAdmin.loadStatistics($("#tier-3-nav"));
             }
             if ($("#tier-3-nav table tbody").length == 0) {
-                StandardAffiliate.Tier3StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
-                StandardAffiliate.initStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
+                StandardAffiliateAdmin.Tier3StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
+                StandardAffiliateAdmin.initStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
             }
         });
     },
@@ -198,7 +198,7 @@
                 },
                 success: function (data) {
                     tabPaneElement.find(".tab-detail").html(data);
-                    StandardAffiliate.loadTier1StatisticsChart(tabPaneElement);
+                    StandardAffiliateAdmin.loadTier1StatisticsChart(tabPaneElement);
                 },
             });
         } else {
@@ -215,7 +215,7 @@
                 },
                 success: function (data) {
                     tabPaneElement.find(".tab-detail").html(data);
-                    StandardAffiliate.loadNonTier1StatisticsChart(tabPaneElement);
+                    StandardAffiliateAdmin.loadNonTier1StatisticsChart(tabPaneElement);
                 },
             });
         }
@@ -225,23 +225,23 @@
             function (e, clickedIndex, newValue, oldValue) {
                 StandardAffiliateAdmin.loadStatistics($("#tier-1-nav"));
                 StandardAffiliateAdmin.Tier1StandardAffiliateDataTable.destroy();
-                StandardAffiliateAdmin.Tier1StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
+                StandardAffiliateAdmin.Tier1StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
             });
     },
     bindTier2TimeRangeChange: function () {
         $("#tier-2-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
-                StandardAffiliate.loadStatistics($("#tier-2-nav"));
-                StandardAffiliate.Tier2StandardAffiliateDataTable.destroy();
-                StandardAffiliate.Tier2StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
+                StandardAffiliateAdmin.loadStatistics($("#tier-2-nav"));
+                StandardAffiliateAdmin.Tier2StandardAffiliateDataTable.destroy();
+                StandardAffiliateAdmin.Tier2StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
             });
     },
     bindTier3TimeRangeChange: function () {
         $("#tier-3-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
-                StandardAffiliate.loadStatistics($("#tier-3-nav"));
-                StandardAffiliate.Tier3StandardAffiliateDataTable.destroy();
-                StandardAffiliate.Tier3StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
+                StandardAffiliateAdmin.loadStatistics($("#tier-3-nav"));
+                StandardAffiliateAdmin.Tier3StandardAffiliateDataTable.destroy();
+                StandardAffiliateAdmin.Tier3StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
             });
     },
     loadTier1StatisticsChart: function (tabPaneElement) {
@@ -483,7 +483,6 @@
     },
     bindDoUpdateStandardAffiliateMultiRate: function () {
         $("#form-standard-affiliate-tier").on("click", "#btn-update", function () {
-            debugger;
             var isFormValid = $("#form-standard-affiliate-tier")[0].checkValidity();
             $("#form-standard-affiliate-tier").addClass('was-validated');
             var _this = this;
