@@ -50,7 +50,9 @@
                             <div class="card-body">
                                 <form id="form-submit-affiliate" class="form-horizontal" action="">
                                     <div class="row px-1">
-                                        <div class="col-12 mb-2 p-2" style="height: 300px;overflow-y: scroll;background-color: #e9ecef">@Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateProgramPolicy"))</div>
+                                        <div class="col-12 mb-2 p-2" style="height: 300px;overflow-y: scroll;background-color: #e9ecef">
+                                            @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffiliateProgramPolicy"))
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-12 text-right">
