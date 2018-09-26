@@ -292,7 +292,7 @@ namespace CPL.Controllers
                         .Include(x => x.Lottery)
                         .Include(x => x.LotteryPrize)
                         .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, x.LotteryPrize.Value })
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
                         .GroupBy(x => x.LotteryId)
                         .Select(y => new GameHistoryViewModel
                         {
@@ -333,7 +333,7 @@ namespace CPL.Controllers
                         .Include(x => x.Lottery)
                         .Include(x => x.LotteryPrize)
                         .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, x.LotteryPrize.Value })
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
                         .GroupBy(x => x.LotteryId)
                         .Select(y => new GameHistoryViewModel
                         {
@@ -376,7 +376,7 @@ namespace CPL.Controllers
                         .Include(x => x.Lottery)
                         .Include(x => x.LotteryPrize)
                         .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, x.LotteryPrize.Value })
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
                         .GroupBy(x => x.LotteryId)
                         .Select(y => new GameHistoryViewModel
                         {
@@ -426,7 +426,7 @@ namespace CPL.Controllers
                         .Include(x => x.Lottery)
                         .Include(x => x.LotteryPrize)
                         .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, x.LotteryPrize.Value })
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
                         .GroupBy(x => x.LotteryId)
                         .Select(y => new GameHistoryViewModel
                         {

@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "_Layout";
-    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliate");
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllStandardAffiliate");
 }
 
 @section styles
@@ -16,7 +16,7 @@
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
-                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliate")</h3>
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllStandardAffiliate")</h3>
                 <div class="row breadcrumbs-top d-inline-block">
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
@@ -24,7 +24,7 @@
                                 <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
                             </li>
                             <li class="breadcrumb-item active">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StandardAffiliate")
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllStandardAffiliate")
                             </li>
                         </ol>
                     </div>
@@ -103,6 +103,8 @@
             </div>
         </div>
     </div>
+    @Html.Hidden("Affiliate", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate"))
+    @Html.Hidden("View", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View"))
 </div>
 
 @section scripts

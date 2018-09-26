@@ -354,12 +354,12 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult SearchStandardAffiliate(DataTableAjaxPostModel viewModel)
+        public JsonResult SearchAllStandardAffiliate(DataTableAjaxPostModel viewModel)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchStandardAffiliateFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            var res = SearchAllStandardAffiliateFunc(viewModel, out filteredResultsCount, out totalResultsCount);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -371,7 +371,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<AllStandardAffiliateViewModel> SearchStandardAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        public IList<AllStandardAffiliateViewModel> SearchAllStandardAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
             var take = model.length;
@@ -514,6 +514,31 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
+        public IActionResult DoUpdatestandardAffiliateMultiRate(StandardAffiliateRateViewModel viewModel, int? affiliateId)
+        {
+            try
+            {
+                var affiliate = _affiliateService
+                    .Queryable()
+                    .Where(x => x.Id == affiliateId).FirstOrDefault();
+
+                // Update agency affiliate rate commission
+                affiliate.Tier1DirectRate = viewModel.Tier1DirectRate;
+                affiliate.Tier2SaleToTier1Rate = viewModel.Tier2SaleToTier1Rate;
+                affiliate.Tier3SaleToTier1Rate = viewModel.Tier3SaleToTier1Rate;
+
+                _affiliateService.Update(affiliate);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
         public IActionResult DoUpdateStandardAffiliateRates(StandardAffliateDataModel viewModel)
         {
             try
@@ -541,6 +566,39 @@ namespace CPL.Controllers
             }
         }
 
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public IActionResult DoUpdateStandardAffiliateSetting(AffiliateSettingViewModel viewModel, int? affiliateId)
+        {
+            try
+            {
+                var affiliate = _affiliateService
+                    .Queryable()
+                    .Where(x => x.Id == affiliateId).FirstOrDefault();
+
+                // Update top agency setting
+                if (viewModel.IsTier2TabVisible.HasValue)
+                {
+                    affiliate.IsTier2TabVisible = viewModel.IsTier2TabVisible.Value;
+                }
+                if (viewModel.IsTier3TabVisible.HasValue)
+                {
+                    affiliate.IsTier3TabVisible = viewModel.IsTier3TabVisible.Value;
+                }
+                if (viewModel.IsAutoPaymentEnable.HasValue)
+                {
+                    affiliate.IsAutoPaymentEnable = viewModel.IsAutoPaymentEnable.Value;
+                }
+
+                _affiliateService.Update(affiliate);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
 
         [Permission(EnumRole.Admin)]
         public IActionResult TopAgencyAffiliate(int id, string tab)

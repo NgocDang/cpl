@@ -20,7 +20,7 @@
             "autoWidth": false,
             "stateSave": (Utils.getJsonFromUrl().search == null) ? true : false,
             "ajax": {
-                url: "/Admin/SearchStandardAffiliate",
+                url: "/Admin/SearchAllStandardAffiliate",
                 type: 'POST',
                 data: function (data) {
                     if (data.search.value == "") {
@@ -133,14 +133,19 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
+                        var html = "";
                         if (full.isLocked === false)
-                            return "<div class='text-lg-center'>" +
+                            html += "<div style='margin: 2px'>" +
                                 "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#lock").val() + "</button> " +
                                 "</div>";
                         else
-                            return "<div class='text-lg-center'>" +
+                            html += "<div>" +
                                 "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#unlock").val() + "</button> " +
                                 "</div>";
+                        html += "<a style='margin: 2px' href='/Admin/StandardAffiliate/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#Affiliate").val() + "</a>";
+                        html += "<a style='margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#View").val() + "</a>";
+
+                        return html;
                     },
                     "orderable": false
                 }
