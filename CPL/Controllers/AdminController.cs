@@ -158,14 +158,15 @@ namespace CPL.Controllers
             viewModel.TotalSaleInGameYesterday = totalSaleInLotteryGameYesterday + (int)totalSaleIPricePredictionGameYesterday;
 
             // Affiliate
-            viewModel.TotalAgencyAffiliate = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.AgencyId != null && x.AgencyId > 0);
+            viewModel.TotalAgencyAffiliate = _sysUserService.Queryable().Count(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 && x.AgencyId.HasValue && !x.IsIntroducedById.HasValue));
             viewModel.TotalAgencyAffiliateToday = _sysUserService.Queryable()
                                                     .Where(x => !x.IsDeleted && x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date)
                                                     .Count(x => x.AgencyId != null && x.AgencyId > 0);
             viewModel.TotalAgencyAffiliateYesterday = _sysUserService.Queryable()
                                                     .Where(x => !x.IsDeleted && x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date)
                                                     .Count(x => x.AgencyId != null && x.AgencyId > 0);
-            viewModel.TotalStandardAffiliate = _sysUserService.Queryable().Count(x => !x.IsDeleted && x.AgencyId == null && x.AffiliateId != null && x.AffiliateId > 0);
+            viewModel.TotalStandardAffiliate = _sysUserService.Queryable().Count(x => !x.IsDeleted && (x.AffiliateId.HasValue && x.AffiliateId > 0 &&
+                                                                 (!x.AgencyId.HasValue || (x.AgencyId.HasValue && x.IsIntroducedById.HasValue))));
             viewModel.TotalStandardAffiliateToday = _sysUserService.Queryable()
                                                     .Where(x => !x.IsDeleted && x.AffiliateCreatedDate != null && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date)
                                                     .Count(x => x.AgencyId == null && x.AffiliateId != null && x.AffiliateId > 0);
