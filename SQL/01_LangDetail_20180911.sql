@@ -198,3 +198,9 @@ INSERT INTO LangDetail VALUES (2, N'KindOfTier', N'層の種類');
 
 INSERT INTO LangDetail VALUES (1, N'TotalDirectIntroducedUsers', N'Total Direct Introduced Users');
 INSERT INTO LangDetail VALUES (2, N'TotalDirectIntroducedUsers', N'直接導入されたユーザーの総数');
+
+INSERT INTO LangDetail VALUES (1, N'TotalAffiliateSale', N'Total Affiliate Sale');
+INSERT INTO LangDetail VALUES (2, N'TotalAffiliateSale', N'総アフィリエイトセール');
+
+INSERT INTO LangDetail VALUES (1, N'DirectAffiliateSale', N'Direct Affiliate Sale');
+INSERT INTO LangDetail VALUES (2, N'DirectAffiliateSale', N'ダイレクトアフィリエイトセール');
