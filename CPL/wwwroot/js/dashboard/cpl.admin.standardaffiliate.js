@@ -4,6 +4,10 @@
         StandardAffiliate.bindSwitchery();
         StandardAffiliate.bindTier1Tab();
         StandardAffiliate.bindTier1TimeRangeChange();
+        StandardAffiliate.bindDoUpdateStandardAffiliateMultiRate();
+        StandardAffiliate.bindDoUpdateStandardAffiliateSetting();
+        StandardAffiliate.bindConfirmPayment();
+        StandardAffiliate.bindDoPayment();
 
         var tab = $("#tab").val();
         if (tab === "")
@@ -315,6 +319,129 @@
             },
         });
         $(element).find('a.editable-locked').editable('toggleDisabled');
+    },
+    bindDoUpdateStandardAffiliateMultiRate: function () {
+        $("#form-standard-affiliate-tier").on("click", "#btn-update", function () {
+            debugger;
+            var isFormValid = $("#form-standard-affiliate-tier")[0].checkValidity();
+            $("#form-standard-affiliate-tier").addClass('was-validated');
+            var _this = this;
+
+            if (isFormValid) {
+                var _postData = {};
+                var _formData = $("#form-standard-affiliate-tier").serializeArray();
+                _formData.forEach(function (element) {
+                    _postData[element['name']] = parseInt(element['value']);
+                });
+                $.ajax({
+                    url: "/Admin/DoUpdatestandardAffiliateMultiRate/",
+                    type: "POST",
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'> </i> " + $(_this).text());
+                    },
+                    data: {
+                        'viewModel': _postData,
+                        'affiliateId': $("#AffiliateId").val()
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message, 'Success!');
+                        } else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text());
+                        $("#form-standard-affiliate-tier").removeClass('was-validated');
+                    }
+                });
+            }
+
+            return false;
+        });
+    },
+    bindDoUpdateStandardAffiliateSetting: function () {
+        $("#form-standard-affiliate-setting").on("click", ".switchery", function () {
+            var _this = this;
+            var _postData = {};
+            var _data = [{ name: $(_this).prev().prop("name"), value: $(_this).prev().is(":checked") }];
+            _data.forEach(function (element) {
+                _postData[element['name']] = element['value'];
+            });
+            $.ajax({
+                url: "/Admin/DoUpdateStandardAffiliateSetting/",
+                type: "POST",
+                dataType: 'json',
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: { 'viewModel': _postData, 'affiliateId': $("#AffiliateId").val() },
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message, 'Success!');
+                    } else {
+                        toastr.error(data.message, 'Error!');
+                    }
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                }
+            });
+        });
+    },
+    bindConfirmPayment: function () {
+        $("#form-standard-affiliate-tier").on("click", "#btn-payment", function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/ConfirmPayment",
+                type: "GET",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: {
+                    sysUserId: $("#SysUserId").val()
+                },
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#view-payment").modal("show");
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                }
+            });
+            return false;
+        });
+    },
+    bindDoPayment: function () {
+        $("#modal").on("click", "#btn-confirm-payment", function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/DoPayment",
+                type: "POST",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: {
+                    sysUserId: $("#SysUserId").val()
+                },
+                success: function (data) {
+                    if (data.success) {
+                        $("#view-payment").modal("hide");
+                        toastr.success(data.message, "Success!");
+                        $("#btn-payment").attr("disabled", true);
+                    } else {
+                        toastr.error(data.message, "Error!");
+                    }
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                }
+            });
+            return false;
+        });
     },
 };
 
