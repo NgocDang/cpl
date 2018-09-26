@@ -40,23 +40,23 @@
 
     <!--  TEST -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125563668-2"></script>
+    @*<script async src="https://www.googletagmanager.com/gtag/js?id=UA-125563668-2"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'UA-125563668-2');
-    </script>
+    </script>*@
 
     <!-- PROD -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    @*<script async src="https://www.googletagmanager.com/gtag/js?id=UA-125563668-1"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125563668-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'UA-125563668-1');
-    </script>*@
+    </script>
 
     @Html.Hidden("LangId", Context.Session.GetInt32("LangId").Value)
     @RenderSection("scripts", required: false)
