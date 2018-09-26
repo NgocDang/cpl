@@ -159,6 +159,12 @@
     <Content Update="Views\Profile\Security.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Profile\_NonTier1StandardAffiliateStatistics.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Profile\_Tier1StandardAffiliateStatistics.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Shared\Components\Footer\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
