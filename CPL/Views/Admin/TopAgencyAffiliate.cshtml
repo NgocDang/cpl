@@ -1,4 +1,4 @@
-﻿@model TopAgencyAffiliateViewModel
+﻿@model TopAgencyAffiliateAdminViewModel
 @{
     Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TopAgencyAffiliate");
@@ -128,17 +128,17 @@
                                         <div class="row">
                                             <div class="col-lg-6 col-12">
                                                 <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</strong></p>
-                                                <h1>@Model.TotalSale.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h1>
+                                                <h1>@Model.TotalAffiliateSale.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h1>
                                             </div>
                                             <div class="col-lg-6 col-12">
                                                 <div class="row">
                                                     <div class="col-lg-12 col-6">
                                                         <p class="text-muted mb-05">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Today")</p>
-                                                        <h3>@Model.TotalSaleToday.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h3>
+                                                        <h3>@Model.TodayAffiliateSale.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h3>
                                                     </div>
                                                     <div class="col-lg-12 col-6">
                                                         <p class="text-muted mb-05">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yesterday")</p>
-                                                        <h3>@Model.TotalSaleYesterday.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h3>
+                                                        <h3>@Model.YesterdayAffiliateSale.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h3>
                                                     </div>
                                                 </div>
                                             </div>
@@ -454,6 +454,5 @@
     <script src="~/js/dashboard/plugins/high-charts/exporting.js"></script>
     <script src="~/js/dashboard/plugins/high-charts/export-data.js"></script>
     <script src="~/js/dashboard/plugins/moment.min.js"></script>
-    <script src="~/js/dashboard/cpl.affiliate.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.admin.topagencyaffiliate.js" asp-append-version="true"></script>
 }

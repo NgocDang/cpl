@@ -21,6 +21,7 @@ using CPL.Common.Enums;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
+using CPL.Domain;
 
 namespace CPL.Controllers
 {
@@ -261,50 +262,70 @@ namespace CPL.Controllers
         public IActionResult Affiliate()
         {
             var user = _sysUserService.Queryable().Where(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).FirstOrDefault();
-            var viewModel = Mapper.Map<ProfileAffiliateViewModel>(user);
+            var isKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
 
-            viewModel.IsKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
+            if((isKYCVerificationActivated && (!user.KYCVerified.HasValue || !user.KYCVerified.Value))
+                || !user.AffiliateId.HasValue // Not joined yet
+                || user.AffiliateId.Value == (int)EnumAffiliateApplicationStatus.PENDING) //Pending
+            {
+                var viewModel = Mapper.Map<SubmitAffiliateViewModel>(user);
+                viewModel.IsKYCVerificationActivated = isKYCVerificationActivated;
+                return View("SubmitAffiliate", viewModel);
+            } else if (user.AgencyId.HasValue && !user.IsIntroducedById.HasValue) // TopAgency
+            {
+                var viewModel = TopAgencyAffiliate(user);
+                return View("TopAgencyAffiliate", viewModel);
+            } else //if (!user.AgencyId.HasValue || (user.AgencyId.HasValue && user.IsIntroducedById.HasValue)) // Standard Affiliate
+            {
+                var viewModel = StandardAffiliate(user);
+                return View("StandardAffiliate", viewModel);
+            }
+        }
+
+        private TopAgencyAffiliateViewModel TopAgencyAffiliate(SysUser user)
+        {
+            var viewModel = Mapper.Map<TopAgencyAffiliateViewModel>(user);
 
             // Affiliate url
             viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
 
             // Total sale
-            SqlParameter TotalSaleParam = new SqlParameter()
+            SqlParameter TotalAffiliateSaleParam = new SqlParameter()
             {
-                ParameterName = "@TotalSale",
+                ParameterName = "@TotalAffiliateSale",
                 SqlDbType = SqlDbType.Money,
                 Direction = ParameterDirection.Output,
                 IsNullable = true
             };
-            SqlParameter TodaySaleParam = new SqlParameter()
+            SqlParameter TodayAffiliateSaleParam = new SqlParameter()
             {
-                ParameterName = "@TodaySale",
+                ParameterName = "@TodayAffiliateSale",
                 SqlDbType = SqlDbType.Money,
                 Direction = ParameterDirection.Output,
                 IsNullable = true
             };
-            SqlParameter YesterdaySaleParam = new SqlParameter()
+            SqlParameter YesterdayAffiliateSaleParam = new SqlParameter()
             {
-                ParameterName = "@YesterdaySale",
+                ParameterName = "@YesterdayAffiliateSale",
                 SqlDbType = SqlDbType.Money,
                 Direction = ParameterDirection.Output,
                 IsNullable = true
             };
             SqlParameter[] parameters = {
-                new SqlParameter() {
-                    ParameterName = "@SysUserId",
-                    SqlDbType = SqlDbType.Int,
-                    Value = user.Id,
-                    Direction = ParameterDirection.Input
-                },
-                TotalSaleParam, TodaySaleParam, YesterdaySaleParam
-            };
+                    new SqlParameter() {
+                        ParameterName = "@SysUserId",
+                        SqlDbType = SqlDbType.Int,
+                        Value = user.Id,
+                        Direction = ParameterDirection.Input
+                    },
+                    TotalAffiliateSaleParam, TodayAffiliateSaleParam, YesterdayAffiliateSaleParam
+                };
 
-            _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @SysUserId, @TotalSale OUTPUT, @TodaySale OUTPUT, @YesterdaySale OUTPUT", parameters);
+            _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @SysUserId, @TotalAffiliateSale OUTPUT, @TodayAffiliateSale OUTPUT, @YesterdayAffiliateSale OUTPUT", parameters);
 
-            viewModel.TotalSale = Convert.ToInt32((TotalSaleParam.Value as int?).GetValueOrDefault(0));
-            viewModel.TotalSaleToday = Convert.ToInt32((TodaySaleParam.Value as int?).GetValueOrDefault(0));
-            viewModel.TotalSaleYesterday = Convert.ToInt32((YesterdaySaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TotalAffiliateSale = Convert.ToInt32((TotalAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TodayAffiliateSale = Convert.ToInt32((TodayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.YesterdayAffiliateSale = Convert.ToInt32((YesterdayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
 
             // Total user register
             viewModel.TotalIntroducedUsers = _sysUserService.Queryable()
@@ -316,7 +337,65 @@ namespace CPL.Controllers
                                             .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
                                             && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date).Count();
 
-            return View(viewModel);
+            return viewModel;
+        }
+
+        private StandardAffiliateViewModel StandardAffiliate(SysUser user)
+        {
+            var viewModel = Mapper.Map<StandardAffiliateViewModel>(user);
+
+            // Affiliate url
+            viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
+
+            // Total sale
+            SqlParameter TotalAffiliateSaleParam = new SqlParameter()
+            {
+                ParameterName = "@TotalAffiliateSale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter TodayAffiliateSaleParam = new SqlParameter()
+            {
+                ParameterName = "@TodayAffiliateSale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter YesterdayAffiliateSaleParam = new SqlParameter()
+            {
+                ParameterName = "@YesterdayAffiliateSale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter[] parameters = {
+                    new SqlParameter() {
+                        ParameterName = "@SysUserId",
+                        SqlDbType = SqlDbType.Int,
+                        Value = user.Id,
+                        Direction = ParameterDirection.Input
+                    },
+                    TotalAffiliateSaleParam, TodayAffiliateSaleParam, YesterdayAffiliateSaleParam
+                };
+
+            _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @SysUserId, @TotalAffiliateSale OUTPUT, @TodayAffiliateSale OUTPUT, @YesterdayAffiliateSale OUTPUT", parameters);
+
+            viewModel.TotalAffiliateSale = Convert.ToInt32((TotalAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TodayAffiliateSale = Convert.ToInt32((TodayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.YesterdayAffiliateSale = Convert.ToInt32((YesterdayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+
+            // Total user register
+            viewModel.TotalIntroducedUsers = _sysUserService.Queryable()
+                                           .Count(x => x.IsIntroducedById != null && x.IsIntroducedById == user.Id);
+            viewModel.TotalIntroducedUsersToday = _sysUserService.Queryable()
+                                            .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date).Count();
+            viewModel.TotalIntroducedUsersYesterday = _sysUserService.Queryable()
+                                            .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date).Count();
+
+            return viewModel;
         }
 
         [HttpPost]

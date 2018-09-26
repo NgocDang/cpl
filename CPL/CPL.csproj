@@ -147,7 +147,13 @@
     <Content Update="Views\Lottery\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Profile\Affiliate.cshtml">
+    <Content Update="Views\Profile\TopAgencyAffiliate.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Profile\StandardAffiliate.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Profile\SubmitAffiliate.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Profile\Security.cshtml">

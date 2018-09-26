@@ -607,7 +607,7 @@ namespace CPL.Controllers
                 .Query()
                 .Include(x => x.Agency)
                 .FirstOrDefault(x => x.Id == id && x.AffiliateId.GetValueOrDefault(0) > 0 && x.AgencyId.HasValue);
-            var viewModel = Mapper.Map<TopAgencyAffiliateViewModel>(user);
+            var viewModel = Mapper.Map<TopAgencyAffiliateAdminViewModel>(user);
 
             viewModel.IsKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
 
@@ -615,21 +615,21 @@ namespace CPL.Controllers
             viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
 
             // Total sale
-            SqlParameter TotalSaleParam = new SqlParameter()
+            SqlParameter TotalAffiliateSaleParam = new SqlParameter()
             {
                 ParameterName = "@TotalAffiliateSale",
                 SqlDbType = SqlDbType.Money,
                 Direction = ParameterDirection.Output,
                 IsNullable = true
             };
-            SqlParameter TodaySaleParam = new SqlParameter()
+            SqlParameter TodayAffiliateSaleParam = new SqlParameter()
             {
                 ParameterName = "@TodayAffiliateSale",
                 SqlDbType = SqlDbType.Money,
                 Direction = ParameterDirection.Output,
                 IsNullable = true
             };
-            SqlParameter YesterdaySaleParam = new SqlParameter()
+            SqlParameter YesterdayAffiliateSaleParam = new SqlParameter()
             {
                 ParameterName = "@YesterdayAffiliateSale",
                 SqlDbType = SqlDbType.Money,
@@ -643,14 +643,14 @@ namespace CPL.Controllers
                     Value = user.Id,
                     Direction = ParameterDirection.Input
                 },
-                TotalSaleParam, TodaySaleParam, YesterdaySaleParam
+                TotalAffiliateSaleParam, TodayAffiliateSaleParam, YesterdayAffiliateSaleParam
             };
 
             _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @SysUserId, @TotalAffiliateSale OUTPUT, @TodayAffiliateSale OUTPUT, @YesterdayAffiliateSale OUTPUT", parameters);
 
-            viewModel.TotalSale = Convert.ToInt32((TotalSaleParam.Value as int?).GetValueOrDefault(0));
-            viewModel.TotalSaleToday = Convert.ToInt32((TodaySaleParam.Value as int?).GetValueOrDefault(0));
-            viewModel.TotalSaleYesterday = Convert.ToInt32((YesterdaySaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TotalAffiliateSale = Convert.ToInt32((TotalAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TodayAffiliateSale = Convert.ToInt32((TodayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.YesterdayAffiliateSale = Convert.ToInt32((YesterdayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
 
             // Total user register
             viewModel.TotalIntroducedUsers = _sysUserService.Queryable()
@@ -705,7 +705,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<TopAgencyAffiliateIntroducedUsersViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier, int periodInDay)
+        public IList<TopAgencyAffiliateIntroducedUsersAdminViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier, int periodInDay)
         {
             var searchBy = (model.search.value != null) ? model.search.value : string.Empty;
             var pageSize = model.length;
@@ -752,7 +752,7 @@ namespace CPL.Controllers
 
             DataTable table = dataSet.Tables[0];
             var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
-            var viewModels = Mapper.Map<List<DataRow>, List<TopAgencyAffiliateIntroducedUsersViewModel>>(rows);
+            var viewModels = Mapper.Map<List<DataRow>, List<TopAgencyAffiliateIntroducedUsersAdminViewModel>>(rows);
 
             totalResultsCount = Convert.ToInt32((dataSet.Tables[1].Rows[0])["TotalCount"]);
             filteredResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["FilteredCount"]);
@@ -1069,7 +1069,7 @@ namespace CPL.Controllers
                 .Query()
                 .Include(x => x.Affiliate)
                 .FirstOrDefault(x => x.Id == id && x.AffiliateId.GetValueOrDefault(0) > 0);
-            var viewModel = Mapper.Map<StandardAffiliateViewModel>(user);
+            var viewModel = Mapper.Map<StandardAffiliateAdminViewModel>(user);
 
             viewModel.IsKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
 
@@ -1077,21 +1077,21 @@ namespace CPL.Controllers
             viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
 
             // Total sale
-            SqlParameter TotalSaleParam = new SqlParameter()
+            SqlParameter TotalAffiliateSaleParam = new SqlParameter()
             {
                 ParameterName = "@TotalSale",
                 SqlDbType = SqlDbType.Money,
                 Direction = ParameterDirection.Output,
                 IsNullable = true
             };
-            SqlParameter TodaySaleParam = new SqlParameter()
+            SqlParameter TodayAffiliateSaleParam = new SqlParameter()
             {
                 ParameterName = "@TodaySale",
                 SqlDbType = SqlDbType.Money,
                 Direction = ParameterDirection.Output,
                 IsNullable = true
             };
-            SqlParameter YesterdaySaleParam = new SqlParameter()
+            SqlParameter YesterdayAffiliateSaleParam = new SqlParameter()
             {
                 ParameterName = "@YesterdaySale",
                 SqlDbType = SqlDbType.Money,
@@ -1105,14 +1105,14 @@ namespace CPL.Controllers
                     Value = user.Id,
                     Direction = ParameterDirection.Input
                 },
-                TotalSaleParam, TodaySaleParam, YesterdaySaleParam
+                TotalAffiliateSaleParam, TodayAffiliateSaleParam, YesterdayAffiliateSaleParam
             };
 
             _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @SysUserId, @TotalSale OUTPUT, @TodaySale OUTPUT, @YesterdaySale OUTPUT", parameters);
 
-            viewModel.TotalSale = Convert.ToInt32((TotalSaleParam.Value as int?).GetValueOrDefault(0));
-            viewModel.TotalSaleToday = Convert.ToInt32((TodaySaleParam.Value as int?).GetValueOrDefault(0));
-            viewModel.TotalSaleYesterday = Convert.ToInt32((YesterdaySaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TotalAffiliateSale = Convert.ToInt32((TotalAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TodayAffiliateSale = Convert.ToInt32((TodayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.YesterdayAffiliateSale = Convert.ToInt32((YesterdayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
 
             // Total user register
             viewModel.TotalIntroducedUsers = _sysUserService.Queryable()
@@ -1241,7 +1241,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<StandardAffiliateIntroducedUsersViewModel> SearchStandardAffiliateIntroducedUsersFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier, int periodInDay)
+        public IList<StandardAffiliateIntroducedUsersAdminViewModel> SearchStandardAffiliateIntroducedUsersFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier, int periodInDay)
         {
             var searchBy = (model.search.value != null) ? model.search.value : string.Empty;
             var pageSize = model.length;
@@ -1259,7 +1259,7 @@ namespace CPL.Controllers
 
             var uspName = string.Empty;
 
-            List<StandardAffiliateIntroducedUsersViewModel> viewModel = new List<StandardAffiliateIntroducedUsersViewModel>();
+            List<StandardAffiliateIntroducedUsersAdminViewModel> viewModel = new List<StandardAffiliateIntroducedUsersAdminViewModel>();
             List<SqlParameter> storeParams = new List<SqlParameter>();
 
             if (kindOfTier == ((int)EnumKindOfTier.TIER1).ToString())
@@ -1296,7 +1296,7 @@ namespace CPL.Controllers
             var dataSet = _dataContextAsync.ExecuteStoredProcedure(uspName, storeParams);
             DataTable table = dataSet.Tables[0]; // TODO
             var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
-            var viewModels = Mapper.Map<List<DataRow>, List<StandardAffiliateIntroducedUsersViewModel>>(rows);
+            var viewModels = Mapper.Map<List<DataRow>, List<StandardAffiliateIntroducedUsersAdminViewModel>>(rows);
 
             totalResultsCount = Convert.ToInt32((dataSet.Tables[1].Rows[0])["TotalCount"]);
             filteredResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["FilteredCount"]);

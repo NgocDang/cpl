@@ -1,0 +1,123 @@
+﻿@model TopAgencyAffiliateViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate");
+}
+@section styles
+    {
+}
+<div class="app-content container center-layout mt-2 px-0">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="breadcrumb-wrapper col-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate") 222
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")</h6>
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="row pb-1">
+                                    <div class="col-lg-9 col-12 pr-sm-0">
+                                        <label class="font-weight-bold" for="Url">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffliateUrl")</label>
+                                        <input readonly type="text" id="Url" value="@Model.AffiliateUrl" class="form-control" name="Url">
+                                    </div>
+                                    <div class="col-lg-3 col-12">
+                                        <label class="text-muted d-sm-block d-none">&nbsp;</label>
+                                        <button type="button" class="btn btn-copy d-block mt-sm-0 mt-1 w-100" data-clipboard-target="#Url"><i class="fas fa-copy"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copy")</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-9 col-12">
+                                        <p class="text-muted">
+                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AffliateUrlComment")
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Sales")</h6>
+                    <div class="card ">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-6 col-12">
+                                        <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</strong></p>
+                                        <h1>@Model.TotalAffiliateSale.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h1>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-6">
+                                                <p class="text-muted mb-05">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Today")</p>
+                                                <h3>@Model.TodayAffiliateSale.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h3>
+                                            </div>
+                                            <div class="col-lg-12 col-6">
+                                                <p class="text-muted mb-05">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yesterday")</p>
+                                                <h3>@Model.YesterdayAffiliateSale.ToString("N0") @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-12">
+                    <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</h6>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-6 col-12">
+                                        <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</strong></p>
+                                        <h1><i class="la la-user"></i> @Model.TotalIntroducedUsers.ToString("N0")</h1>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-6">
+                                                <p class="text-muted mb-05">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Today")</p>
+                                                <h3><i class="la la-user"></i> @Model.TotalIntroducedUsersToday.ToString("N0")</h3>
+                                            </div>
+                                            <div class="col-lg-12 col-6">
+                                                <p class="text-muted mb-05">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yesterday")</p>
+                                                <h3><i class="la la-user"></i> @Model.TotalIntroducedUsersYesterday.ToString("N0")</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Hidden("CopiedSuccessfully", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CopiedSuccessfully"))
+</div>
+@section scripts
+    {
+    <script src="~/js/dashboard/cpl.topagencyaffiliate.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
+}

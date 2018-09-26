@@ -13,7 +13,7 @@ namespace CPL.Misc.AutoMapper
     {
         public TopAgencyAffiliateIntroducedUsersProfile()
         {
-            CreateMap<DataRow, TopAgencyAffiliateIntroducedUsersViewModel>()
+            CreateMap<DataRow, TopAgencyAffiliateIntroducedUsersAdminViewModel>()
                      .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Convert.ToInt32(src["Id"])))
                      .ForMember(dest => dest.KindOfTier, opt => opt.MapFrom(src => Convert.ToString(src["KindOfTier"])))
                      .ForMember(dest => dest.UsedCPL, opt => opt.MapFrom(src => Convert.ToDecimal(src["UsedCPL"])))

@@ -31,9 +31,11 @@ namespace CPL.Misc.MapperCreate
             CreateMap<SysUserViewModel, DashboardNavbarViewModel>();
             CreateMap<SysUserViewModel, KYCViewModel>();
 
-            CreateMap<SysUser, ProfileAffiliateViewModel>();
+            CreateMap<SysUser, SubmitAffiliateViewModel>();
             CreateMap<SysUser, TopAgencyAffiliateViewModel>();
             CreateMap<SysUser, StandardAffiliateViewModel>();
+            CreateMap<SysUser, TopAgencyAffiliateAdminViewModel>();
+            CreateMap<SysUser, StandardAffiliateAdminViewModel>();
 
             CreateMap<SysUser, DashboardViewModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));

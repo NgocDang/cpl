@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class StandardAffiliateIntroducedUsersViewModel
+    public class TopAgencyAffiliateIntroducedUsersAdminViewModel
     {
         public int Id { get; set; }
         public string KindOfTier { get; set; }
