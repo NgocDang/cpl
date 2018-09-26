@@ -617,21 +617,21 @@ namespace CPL.Controllers
             // Total sale
             SqlParameter TotalSaleParam = new SqlParameter()
             {
-                ParameterName = "@TotalSale",
+                ParameterName = "@TotalAffiliateSale",
                 SqlDbType = SqlDbType.Money,
                 Direction = ParameterDirection.Output,
                 IsNullable = true
             };
             SqlParameter TodaySaleParam = new SqlParameter()
             {
-                ParameterName = "@TodaySale",
+                ParameterName = "@TodayAffiliateSale",
                 SqlDbType = SqlDbType.Money,
                 Direction = ParameterDirection.Output,
                 IsNullable = true
             };
             SqlParameter YesterdaySaleParam = new SqlParameter()
             {
-                ParameterName = "@YesterdaySale",
+                ParameterName = "@YesterdayAffiliateSale",
                 SqlDbType = SqlDbType.Money,
                 Direction = ParameterDirection.Output,
                 IsNullable = true

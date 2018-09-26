@@ -31,8 +31,8 @@
         @Html.HiddenFor(x => x.DirectAffiliateSaleChangesInJson, new { @class = "direct-affiliate-sale-changes" })
         @Html.HiddenFor(x => x.TotalIntroducedUsersChangesInJson, new { @class = "total-introduced-users-changes" })
         @Html.HiddenFor(x => x.DirectIntroducedUsersChangesInJson, new { @class = "direct-introduced-users-changes" })
-        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")" class="total-affiliate-sale" />
-        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DirectSale")" class="direct-affiliate-sale" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAffiliateSale")" class="total-affiliate-sale" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DirectAffiliateSale")" class="direct-affiliate-sale" />
         <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducedUsers")" class="total-introduced-users" />
         <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DirectIntroducedUsers")" class="direct-introduced-users" />
     </div>
