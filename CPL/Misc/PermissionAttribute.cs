@@ -51,7 +51,7 @@ namespace CPL.Misc
                     var langId = int.Parse(context.HttpContext.Request.Query["MobileLangId"].ToString());
                     context.HttpContext.Session.SetInt32("LangId", langId);
                 }
-            } else if (context.HttpContext.Request.Method == "POST" && context.ActionArguments["mobileModel"] != null)
+            } else if (context.HttpContext.Request.Method == "POST" && context.ActionArguments.ContainsKey("mobileModel"))
             {
                 var mobileModel = (MobileModel)context.ActionArguments["mobileModel"];
                 if (mobileModel.MobileUserId.HasValue)
