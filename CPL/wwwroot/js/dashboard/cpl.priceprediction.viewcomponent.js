@@ -5,13 +5,15 @@
     charts: [],
     init: function () {
         PricePredictionViewComponent.bindLoadPredictionResult();
+        PricePredictionViewComponent.bindCountDownTick();
         PricePredictionViewComponent.loadBTCPriceChart();
+        
         PricePredictionViewComponent.bindLoadBTCCurrentRate();
         PricePredictionViewComponent.bindBet();
         PricePredictionViewComponent.bindConfirmBet();
         PricePredictionViewComponent.bindBack();
         PricePredictionViewComponent.bindDoBet();
-        PricePredictionViewComponent.bindCountDownTick();
+        
     },
     bindLoadPredictionResult: function () {
         var progressConnection = new signalR.HubConnection("/predictedUserProgress");
@@ -243,15 +245,6 @@
                             });
                         }
 
-                        // Fill Delay Time
-                        //var count = currentTime - PricePredictionViewComponent.bctDelayTime;
-                        //for (var i = 0; i < count; i++) {
-                        //    data.push({
-                        //        x: moment.utc((PricePredictionViewComponent.bctDelayTime + i) * 1000).valueOf(),
-                        //        y: null
-                        //    });
-                        //}
-
                         return data;
                     }())
                 }]
@@ -431,7 +424,7 @@
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                 // Display the result in the element with id="demo"
-                $(element).closest(".tab-pane").find(".countdown-clock").html($("#close").val() + ": " + dateString + '  <i class="la la-clock-o clock-icon"></i>' + hours + ":" + minutes + ":" + seconds);
+                $(element).closest(".tab-pane").find(".countdown-clock").html($("#close").val() + ": " + dateString + '  <i class="la la-clock-o clock-icon"></i>' + hours + ":" + minutes + ":" + seconds).show();
             }, 1000);
         });
     },
