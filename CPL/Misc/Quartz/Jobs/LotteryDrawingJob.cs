@@ -7,6 +7,7 @@ using CPL.Infrastructure.Repositories;
 using CPL.Misc.Quartz;
 using CPL.Misc.Utils;
 using CPL.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
@@ -35,7 +36,6 @@ namespace CPL.Misc.Quartz.Jobs
             var lotteries = lotteryService.Query()
                     .Include(x => x.LotteryHistories)
                     .Include(x => x.LotteryPrizes)
-                    .Select()
                     .Where(x => x.Status.Equals((int)EnumLotteryGameStatus.ACTIVE)
                                 && x.Volume.Equals(x.LotteryHistories.Count)
                                 && !x.LotteryHistories.Any(y => string.Equals(y.CreatedDate.Date, DateTime.Now.Date)))
@@ -57,17 +57,21 @@ namespace CPL.Misc.Quartz.Jobs
 
                     var histories = listOfWinner.Concat(listOfLoser).OrderBy(x => x.TicketIndex).ToList();
 
-                    var dataHistories = lotteryHistoryService.Queryable()
+                    var dataHistories = lotteryHistoryService.Query()
+                                        .Include(x => x.SysUser)
                                         .Where(x => x.LotteryId == lottery.Id)
-                                        .OrderBy(x=>x.TicketIndex)
+                                        .OrderBy(x => x.TicketIndex)
                                         .ToList();
 
-                    for (var i=0;i< lottery.Volume; i++)
+                    for (var i = 0; i < lottery.Volume; i++)
                     {
                         dataHistories[i].LotteryPrizeId = histories[i].LotteryPrizeId;
                         dataHistories[i].Result = string.IsNullOrEmpty(histories[i].Result) ? EnumGameResult.LOSE.ToString() : histories[i].Result;
                         dataHistories[i].UpdatedDate = DateTime.Now;
                         lotteryHistoryService.Update(dataHistories[i]);
+
+                        dataHistories[i].SysUser.TokenAmount += histories[i].Award ?? 0m;
+                        sysUserService.Update(dataHistories[i].SysUser);
                     }
 
                     var dataLottery = lotteryService.Queryable()
@@ -104,24 +108,19 @@ namespace CPL.Misc.Quartz.Jobs
                         var winnerIndexInGroup = new Random().Next(0, CPLConstant.LotteryGroupSize);
                         var winner = lotteryHistoriesGroupedList[index][winnerIndexInGroup];
                         winner.LotteryPrizeId = lottery.LotteryPrizes[i].Id;
-                        if (IsKYCVerified(listOfSysUser, winner.SysUserId))
-                            winner.Result = EnumGameResult.WIN.ToString();
-                        else
-                            winner.Result = EnumGameResult.KYC_PENDING.ToString();
+                        winner.Award = lottery.LotteryPrizes[i].Value;
+                        winner.Result = EnumGameResult.WIN.ToString();
 
                         listOfWinnerTicket.Add(winner);
-                        lotteryHistoriesGroupedList[index].RemoveAt(winnerIndexInGroup); 
+                        lotteryHistoriesGroupedList[index].RemoveAt(winnerIndexInGroup);
                     }
                     else
                     {
                         var winnerIndexInGroup = new Random().Next(0, CPLConstant.LotteryGroupSize - 1);
                         var winner = lotteryHistoriesGroupedList[index][winnerIndexInGroup];
                         winner.LotteryPrizeId = lottery.LotteryPrizes[i].Id;
-
-                        if (IsKYCVerified(listOfSysUser, winner.SysUserId))
-                            winner.Result = EnumGameResult.WIN.ToString();
-                        else
-                            winner.Result = EnumGameResult.KYC_PENDING.ToString();
+                        winner.Award = lottery.LotteryPrizes[i].Value;
+                        winner.Result = EnumGameResult.WIN.ToString();
 
                         listOfWinnerTicket.Add(winner);
                         lotteryHistoriesGroupedList[index].RemoveAt(winnerIndexInGroup);

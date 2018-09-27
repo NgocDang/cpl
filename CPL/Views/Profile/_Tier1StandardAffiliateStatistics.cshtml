@@ -1,0 +1,39 @@
+﻿@model Tier1StandardAffiliateInfoViewModel
+
+<div class="row">
+    <div class="col-12 statistic">
+        <div class="row">
+            <div class="col-lg-3 col-6 border-right mt-1">
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAffiliateSale")</h6>
+                <p class="lighten-2 mb-0 font-weight-bold">@Model.TotalAffiliateSale.ToString(CPLConstant.Format.Amount)</p>
+            </div>
+            <div class="col-lg-3 col-6 border-right mt-1">
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DirectAffiliateSale")</h6>
+                <p class="lighten-2 mb-0 font-weight-bold">@Model.DirectAffiliateSale.ToString(CPLConstant.Format.Amount)</p>
+            </div>
+            <div class="col-lg-3 col-6 border-right mt-1">
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducedUsers")</h6>
+                <p class="lighten-2 mb-0 font-weight-bold">@Model.TotalIntroducedUsers</p>
+            </div>
+            <div class="col-lg-3 col-6 mt-1">
+                <h6 class="blue-grey">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DirectIntroducedUsers")</h6>
+                <p class="lighten-2 mb-0 font-weight-bold">@Model.DirectIntroducedUsers</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 mt-1">
+        <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "StatisticChart")</h6>
+        <div class="height-400 statistic-chart">
+        </div>
+        @Html.HiddenFor(x => x.TotalAffiliateSaleChangesInJson, new { @class = "total-affiliate-sale-changes" })
+        @Html.HiddenFor(x => x.DirectAffiliateSaleChangesInJson, new { @class = "direct-affiliate-sale-changes" })
+        @Html.HiddenFor(x => x.TotalIntroducedUsersChangesInJson, new { @class = "total-introduced-users-changes" })
+        @Html.HiddenFor(x => x.DirectIntroducedUsersChangesInJson, new { @class = "direct-introduced-users-changes" })
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAffiliateSale")" class="total-affiliate-sale" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DirectAffiliateSale")" class="direct-affiliate-sale" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalIntroducedUsers")" class="total-introduced-users" />
+        <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DirectIntroducedUsers")" class="direct-introduced-users" />
+    </div>
+</div>

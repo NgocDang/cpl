@@ -1819,3 +1819,18 @@ button#btn-dropdown-item:focus {
 .btn-outline-success:not(:disabled):not(.disabled).active, .btn-outline-success:not(:disabled):not(.disabled):active, .show > .btn-outline-success.dropdown-toggle {
     color:#FFF;
 }
+
+.px-01 {
+    padding-left: 0.1rem !important;
+    padding-right: 0.1rem !important;
+}
+
+table.dataTable td:first-child {
+    outline: none !important
+}
+
+.row-separator {
+    background: #F4F5FA;
+    margin-left: -21px; 
+    margin-right: -21px;
+}

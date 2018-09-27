@@ -16,6 +16,10 @@ using System.Net;
 using CPL.Common.Enums;
 using LinqKit;
 using CPL.Misc.Utils;
+using CPL.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace CPL.Controllers
 {
@@ -30,6 +34,7 @@ namespace CPL.Controllers
         private readonly ILotteryService _lotteryService;
         private readonly ITemplateService _templateService;
         private readonly INewsService _newsService;
+        private readonly IDataContextAsync _context;
 
         public HomeController(
             ILangService langService,
@@ -39,6 +44,7 @@ namespace CPL.Controllers
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
             ILotteryService lotteryService,
+            IDataContextAsync context,
             ITemplateService templateService,
             INewsService newsService)
         {
@@ -50,17 +56,18 @@ namespace CPL.Controllers
             this._unitOfWork = unitOfWork;
             this._lotteryService = lotteryService;
             this._templateService = templateService;
-            _newsService = newsService;
+            this._context = context;
+            this._newsService = newsService;
         }
 
         [Permission(EnumRole.Guest)]
         public IActionResult Index()
         {
-
             var lotteries = _lotteryService.Query()
+                .Include(x => x.LotteryCategory)
+                .Include(x => x.LotteryDetails)
                 .Include(x => x.LotteryHistories)
-                .Select()
-                .Where(x => x.LotteryHistories.Count() < x.Volume && x.Status == (int)EnumLotteryGameStatus.ACTIVE)
+                .Where(x => !x.IsDeleted && (x.LotteryHistories.Count() < x.Volume && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
                 .OrderByDescending(x => x.CreatedDate);
 
             var viewModel = new HomeViewModel();

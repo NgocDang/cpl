@@ -24,6 +24,7 @@ namespace CPL.Models
         public string Result { get; set; }
         public decimal? Award { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public decimal? TotalAward { get; set; }
 
         public string PurcharseTimeInString { get; set; }
         public string ToBeComparedPriceInString { get; set; }
@@ -31,5 +32,8 @@ namespace CPL.Models
         public string BonusInString { get; set; }
         public string ResultPriceInString { get; set; }
         public string ResultTimeInString { get; set; }
+
+        public string CurrencyPair { get; set; }
+        public string CurrencyPairInString { get; set; }
     }
 }

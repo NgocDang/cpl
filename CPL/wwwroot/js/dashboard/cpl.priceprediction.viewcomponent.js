@@ -5,12 +5,15 @@
     charts: [],
     init: function () {
         PricePredictionViewComponent.bindLoadPredictionResult();
+        PricePredictionViewComponent.bindCountDownTick();
         PricePredictionViewComponent.loadBTCPriceChart();
+        
         PricePredictionViewComponent.bindLoadBTCCurrentRate();
         PricePredictionViewComponent.bindBet();
         PricePredictionViewComponent.bindConfirmBet();
         PricePredictionViewComponent.bindBack();
         PricePredictionViewComponent.bindDoBet();
+        
     },
     bindLoadPredictionResult: function () {
         var progressConnection = new signalR.HubConnection("/predictedUserProgress");
@@ -72,39 +75,9 @@
             Highcharts.setOptions({
                 global: {
                     useUTC: false
-                }
+                },
+                lang: DTLang.getHighChartLang()
             });
-            if (parseInt($("#LangId").val()) == 1) {
-                Highcharts.setOptions({
-                    lang: {
-                        months: [
-                            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-                        ],
-                        weekdays: [
-                            'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-                        ],
-                        shortMonths: [
-                            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-                        ]
-                    }
-                });
-            }
-            else if (parseInt($("#LangId").val()) == 2) {
-                Highcharts.setOptions({
-                    lang: {
-                        months: [
-                            '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
-                        ],
-                        weekdays: [
-                            '月曜日', '火曜日', '水曜日', '木曜日',
-                            '金曜日', '土曜日', '日曜日'
-                        ],
-                        shortMonths: [
-                            '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
-                        ]
-                    }
-                });
-            }
 
             $(element).highcharts({
                 chart: {
@@ -176,14 +149,18 @@
                     }
                 },
                 title: {
-                    text: $("#btcPricePredictionChartTitle").val()
+                    text: $("#btcPricePredictionChartTitle").val(),
+                    align: 'left'
                 },
                 xAxis: {
                     type: 'datetime',
+                    dateTimeLabelFormats: {
+                        day: '%b/%e'
+                    },
                     tickPixelInterval: 150,
                     plotLines: [{
                         label: {
-                            text: 'Open (' + openTime.format("HH:mm") + ')',
+                            text: $("#open").val() + ' (' + openTime.format("HH:mm") + ')',
                             //rotation: 0,
                             zIndex: 4
                         },
@@ -195,7 +172,7 @@
                     },
                     {
                         label: {
-                            text: 'Close (' + closeTime.format("HH:mm") + ')',
+                            text: $("#close").val() + ' (' + closeTime.format("HH:mm") + ')',
                             //rotation: 0,
                             //x: -90,
                             zIndex: 4
@@ -208,7 +185,7 @@
                     },
                     {
                         label: {
-                            text: 'Result (' + resultTime.format("HH:mm") + ')',
+                            text: $("#result").val() + ' (' + resultTime.format("HH:mm") + ')',
                             //rotation: 0,
                             zIndex: 4
                         },
@@ -220,9 +197,7 @@
                     }]
                 },
                 yAxis: {
-                    title: {
-                        text: $("#price").val()
-                    },
+                    title: null,
                     plotLines: [{
                         label: {
                             text: "",
@@ -253,7 +228,7 @@
                         // generate an array of random data
                         var data = [];
                         var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-                        var btcPrices = JSON.parse($("#PreviousBtcRate").val());
+                        var btcPrices = JSON.parse($("#price-prediction-nav-bar").parent().find(".tab-pane.active #PreviousBtcRate").val());
                         for (i = 0; i < btcPrices.length; i++) {
                             data.push({
                                 x: moment(btcPrices[i].Time * 1000).valueOf(), // Convert to milisecond
@@ -269,15 +244,6 @@
                                 y: null
                             });
                         }
-
-                        // Fill Delay Time
-                        //var count = currentTime - PricePredictionViewComponent.bctDelayTime;
-                        //for (var i = 0; i < count; i++) {
-                        //    data.push({
-                        //        x: moment.utc((PricePredictionViewComponent.bctDelayTime + i) * 1000).valueOf(),
-                        //        y: null
-                        //    });
-                        //}
 
                         return data;
                     }())
@@ -383,7 +349,7 @@
                 toastr.error("Incorrect amount!");
             } else {
                 if (tabPane.find(".btn-up").hasClass("active") || tabPane.find(".btn-down").hasClass("active")) {
-                    tabPane.find(".predicted-trend-confirm").html(tabPane.find(".btn-up").hasClass("active") ? "UP" : "DOWN");
+                    tabPane.find(".predicted-trend-confirm").html(tabPane.find(".btn-up").hasClass("active") ? "High" : "Low");
                     if (tabPane.find(".btn-up").hasClass("active")) {
                         tabPane.find(".predicted-trend-confirm").removeClass("danger").addClass("success");
                         tabPane.find(".bet-amount-confirm").removeClass("danger").addClass("success");
@@ -391,11 +357,11 @@
                         tabPane.find(".predicted-trend-confirm").removeClass("success").addClass("danger");
                         tabPane.find(".bet-amount-confirm").removeClass("success").addClass("danger");
                     }
-                    tabPane.find(".bet-amount-confirm").html(tabPane.find(".bet-amount").val());
+                    tabPane.find(".bet-amount-confirm").html(Intl.NumberFormat('ja-JP').format(tabPane.find(".bet-amount").val()) + " CPL");
                     tabPane.find(".bet").hide();
                     tabPane.find(".bet-confirm").show();
                 } else {
-                    toastr.error("Please select UP or DOWN");
+                    toastr.error("Please select High or Low");
                 }
             }
         });
@@ -439,6 +405,30 @@
             });
         });
     },
+    bindCountDownTick: function () {
+        $(".tab-pane.active .countdown-clock").each(function (index, element) {
+            var closeTime = moment(parseInt($(element).closest(".tab-pane").find("#CloseBettingTime").val()));
+            var dateString = closeTime.format("HH:mm") == "00:00" ? "24:00" : closeTime.format("HH:mm");
+            // Update the count down every 1 second
+            var x = setInterval(function () {
+
+                // Get todays date and time
+                var now = new Date().getTime();
+
+                // Find the distance between now and the count down date
+                var distance = closeTime - now;
+
+                // Time calculations for days, hours, minutes and seconds
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Display the result in the element with id="demo"
+                $(element).closest(".tab-pane").find(".countdown-clock").html($("#close").val() + ": " + dateString + '  <i class="la la-clock-o clock-icon"></i>' + hours + ":" + minutes + ":" + seconds).show();
+            }, 1000);
+        });
+    },
+
 };
 
 $(document).ready(function () {

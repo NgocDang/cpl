@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
-    <link href="~/css/dashboard/cpl.news.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/css/dashboard/cpl.news.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard/cpl.admin.news.css" asp-append-version="true" />
 }
 <div class="app-content container center-layout mt-2 px-0">
     <div class="content-wrapper">
@@ -22,7 +23,7 @@
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                                <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
                             </li>
                             <li class="breadcrumb-item active">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")
@@ -49,8 +50,8 @@
                                 </thead>
                             </table>
                         </div>
-                        <div class="card-footer">
-                            <button type="button" id="btn-add" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Add") <i class="la la-plus"></i></button>
+                        <div class="card-footer text-right">
+                            <button type="button" id="btn-add" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Add") <i class="la la-plus font-size-15px"></i></button>
                         </div>
                     </div>
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")" id="edit" />

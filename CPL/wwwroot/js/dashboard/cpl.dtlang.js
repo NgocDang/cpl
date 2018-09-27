@@ -128,5 +128,50 @@
                 }
             }
         }
-    }
+    },
+    getHighChartLang: function () {
+        if ($("#LangId").val() == 1) // English 
+        {
+            return {
+                months: [
+                    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'
+                ],
+                weekdays: [
+                    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+                ],
+                shortMonths: [
+                    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'
+                ]
+            }
+        }
+        else if ($("#LangId").val() == 2) { // Japanese
+            return {
+                months: [
+                    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'
+                ],
+                weekdays: [
+                    '月曜日', '火曜日', '水曜日', '木曜日',
+                    '金曜日', '土曜日', '日曜日'
+                ],
+                shortMonths: [
+                    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'
+                ]
+            }
+        }
+        else if ($("#LangId").val() == 3) { // Korean
+            return {
+
+            }
+        }
+        else if ($("#LangId").val() == 4) { // Chinese 
+            return {
+
+            }
+        }
+        else if ($("#LangId").val() == 5) { // Chinese 
+            return {
+
+            }
+        }
+    },
 };

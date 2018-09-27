@@ -9,11 +9,23 @@ namespace CPL.NotifyService.Misc
 {
     public class Resolver
     {
-        public static IContainer Container { get; set; }
-        public static IUnitOfWorkAsync UnitOfWork { get; set; }
-        public static ISysUserService SysUserService { get; set; }
-        public static IBTCTransactionService BTCTransactionService { get; set; }
-        public static IETHTransactionService ETHTransactionService { get; set; }
-        public static ISettingService SettingService { get; set; }
+        public IContainer Container { get; set; }
+        public IUnitOfWorkAsync UnitOfWork { get; set; }
+        public ISysUserService SysUserService { get; set; }
+        public IBTCTransactionService BTCTransactionService { get; set; }
+        //public static IETHTransactionService ETHTransactionService { get; set; }
+        public ISettingService SettingService { get; set; }
+
+        public Resolver(IContainer container, IUnitOfWorkAsync unitOfWork, ISysUserService sysUserService,
+            IBTCTransactionService btcTransactionService, ISettingService settingService)
+            //IETHTransactionService ethTransactionService,)
+        {
+            Container = container;
+            UnitOfWork = unitOfWork;
+            SysUserService = sysUserService;
+            BTCTransactionService = btcTransactionService;
+            //ETHTransactionService = ethTransactionService;
+            SettingService = settingService;
+        }
     }
 }

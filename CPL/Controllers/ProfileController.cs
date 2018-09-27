@@ -18,6 +18,11 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Google.Authenticator;
 using CPL.Common.Enums;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Data;
+using CPL.Domain;
+using Newtonsoft.Json;
 
 namespace CPL.Controllers
 {
@@ -30,9 +35,12 @@ namespace CPL.Controllers
         private readonly IUnitOfWorkAsync _unitOfWork;
         private readonly ISettingService _settingService;
         private readonly ISysUserService _sysUserService;
+        private readonly IAgencyService _agencyService;
+        private readonly IAffiliateService _affiliateService;
         private readonly ICoinTransactionService _coinTransactionService;
         private readonly ITemplateService _templateService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
+        private readonly IDataContextAsync _dataContextAsync;
 
         public ProfileController(
             IHostingEnvironment hostingEnvironment,
@@ -42,9 +50,12 @@ namespace CPL.Controllers
             IUnitOfWorkAsync unitOfWork,
             ISettingService settingService,
             ISysUserService sysUserService,
+            IAffiliateService affiliateService,
             ICoinTransactionService coinTransactionService,
             ILotteryHistoryService lotteryHistoryService,
-            ITemplateService templateService)
+            IDataContextAsync dataContextAsync,
+            ITemplateService templateService,
+            IAgencyService agencyService)
         {
             this._hostingEnvironment = hostingEnvironment;
             this._langService = langService;
@@ -53,9 +64,12 @@ namespace CPL.Controllers
             this._settingService = settingService;
             this._coinTransactionService = coinTransactionService;
             this._sysUserService = sysUserService;
+            this._affiliateService = affiliateService;
             this._unitOfWork = unitOfWork;
             this._templateService = templateService;
+            this._dataContextAsync = dataContextAsync;
             this._lotteryHistoryService = lotteryHistoryService;
+            this._agencyService = agencyService;
         }
 
         [Permission(EnumRole.User)]
@@ -187,7 +201,10 @@ namespace CPL.Controllers
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
             var viewModel = Mapper.Map<SecurityViewModel>(user);
-            var tfa = new TwoFactorAuthenticator();
+            var tfa = new TwoFactorAuthenticator()
+            {
+                DefaultClockDriftTolerance = TimeSpan.FromSeconds(30)
+            };
             var setupInfo = tfa.GenerateSetupCode(CPLConstant.AppName, user.Email, $"{CPLConstant.TwoFactorAuthenticationSecretKey}{user.Id}", 300, 300);
             viewModel.QrCodeSetupImageUrl = setupInfo.QrCodeSetupImageUrl;
             return View(viewModel);
@@ -252,10 +269,147 @@ namespace CPL.Controllers
         public IActionResult Affiliate()
         {
             var user = _sysUserService.Queryable().Where(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).FirstOrDefault();
-            var viewModel = Mapper.Map<ProfileAffiliateViewModel>(user);
+            var isKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
+
+            if((isKYCVerificationActivated && (!user.KYCVerified.HasValue || !user.KYCVerified.Value))
+                || !user.AffiliateId.HasValue // Not joined yet
+                || user.AffiliateId.Value == (int)EnumAffiliateApplicationStatus.PENDING) //Pending
+            {
+                var viewModel = Mapper.Map<SubmitAffiliateViewModel>(user);
+                viewModel.IsKYCVerificationActivated = isKYCVerificationActivated;
+                return View("SubmitAffiliate", viewModel);
+            } else if (user.AgencyId.HasValue && !user.IsIntroducedById.HasValue) // TopAgency
+            {
+                var viewModel = TopAgencyAffiliate(user);
+                return View("TopAgencyAffiliate", viewModel);
+            } else //if (!user.AgencyId.HasValue || (user.AgencyId.HasValue && user.IsIntroducedById.HasValue)) // Standard Affiliate
+            {
+                var viewModel = StandardAffiliate(user);
+                return View("StandardAffiliate", viewModel);
+            }
+        }
+
+        private TopAgencyAffiliateViewModel TopAgencyAffiliate(SysUser user)
+        {
+            var viewModel = Mapper.Map<TopAgencyAffiliateViewModel>(user);
+            var agency = _agencyService.Queryable().FirstOrDefault(x => x.Id == user.AgencyId);
+
+            // Affiliate url
             viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
-            viewModel.IsKYCVerificationActivated = bool.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.IsKYCVerificationActivated).Value);
-            return View(viewModel);
+            viewModel.IsTier2TabVisible = agency.IsTier2TabVisible;
+            viewModel.IsTier3TabVisible = agency.IsTier3TabVisible;
+
+            // Total sale
+            SqlParameter TotalAffiliateSaleParam = new SqlParameter()
+            {
+                ParameterName = "@TotalAffiliateSale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter TodayAffiliateSaleParam = new SqlParameter()
+            {
+                ParameterName = "@TodayAffiliateSale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter YesterdayAffiliateSaleParam = new SqlParameter()
+            {
+                ParameterName = "@YesterdayAffiliateSale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter[] parameters = {
+                    new SqlParameter() {
+                        ParameterName = "@SysUserId",
+                        SqlDbType = SqlDbType.Int,
+                        Value = user.Id,
+                        Direction = ParameterDirection.Input
+                    },
+                    TotalAffiliateSaleParam, TodayAffiliateSaleParam, YesterdayAffiliateSaleParam
+                };
+
+            _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @SysUserId, @TotalAffiliateSale OUTPUT, @TodayAffiliateSale OUTPUT, @YesterdayAffiliateSale OUTPUT", parameters);
+
+            viewModel.TotalAffiliateSale = Convert.ToInt32((TotalAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TodayAffiliateSale = Convert.ToInt32((TodayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.YesterdayAffiliateSale = Convert.ToInt32((YesterdayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+
+            // Total user register
+            viewModel.TotalIntroducedUsers = _sysUserService.Queryable()
+                                           .Count(x => x.IsIntroducedById != null && x.IsIntroducedById == user.Id);
+            viewModel.TotalIntroducedUsersToday = _sysUserService.Queryable()
+                                            .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date).Count();
+            viewModel.TotalIntroducedUsersYesterday = _sysUserService.Queryable()
+                                            .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date).Count();
+
+            return viewModel;
+        }
+
+        private StandardAffiliateViewModel StandardAffiliate(SysUser user)
+        {
+            var viewModel = Mapper.Map<StandardAffiliateViewModel>(user);
+            var affiliate = _affiliateService.Queryable().FirstOrDefault(x => x.Id == user.AffiliateId);
+
+            // Affiliate url
+            viewModel.AffiliateUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}" + Url.Action("Register", "Authentication", new { id = viewModel.Id });
+            viewModel.IsTier2TabVisible = affiliate.IsTier2TabVisible;
+            viewModel.IsTier3TabVisible = affiliate.IsTier3TabVisible;
+
+            // Total sale
+            SqlParameter TotalAffiliateSaleParam = new SqlParameter()
+            {
+                ParameterName = "@TotalAffiliateSale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter TodayAffiliateSaleParam = new SqlParameter()
+            {
+                ParameterName = "@TodayAffiliateSale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter YesterdayAffiliateSaleParam = new SqlParameter()
+            {
+                ParameterName = "@YesterdayAffiliateSale",
+                SqlDbType = SqlDbType.Money,
+                Direction = ParameterDirection.Output,
+                IsNullable = true
+            };
+            SqlParameter[] parameters = {
+                    new SqlParameter() {
+                        ParameterName = "@SysUserId",
+                        SqlDbType = SqlDbType.Int,
+                        Value = user.Id,
+                        Direction = ParameterDirection.Input
+                    },
+                    TotalAffiliateSaleParam, TodayAffiliateSaleParam, YesterdayAffiliateSaleParam
+                };
+
+            _dataContextAsync.ExecuteSqlCommand("exec dbo.usp_GetAffiliateSale @SysUserId, @TotalAffiliateSale OUTPUT, @TodayAffiliateSale OUTPUT, @YesterdayAffiliateSale OUTPUT", parameters);
+
+            viewModel.TotalAffiliateSale = Convert.ToInt32((TotalAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.TodayAffiliateSale = Convert.ToInt32((TodayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+            viewModel.YesterdayAffiliateSale = Convert.ToInt32((YesterdayAffiliateSaleParam.Value as int?).GetValueOrDefault(0));
+
+            // Total user register
+            viewModel.TotalIntroducedUsers = _sysUserService.Queryable()
+                                           .Count(x => x.IsIntroducedById != null && x.IsIntroducedById == user.Id);
+            viewModel.TotalIntroducedUsersToday = _sysUserService.Queryable()
+                                            .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.Date).Count();
+            viewModel.TotalIntroducedUsersYesterday = _sysUserService.Queryable()
+                                            .Where(x => x.IsIntroducedById.HasValue && x.IsIntroducedById.Value == user.Id
+                                            && x.AffiliateCreatedDate.HasValue && x.AffiliateCreatedDate.Value.Date == DateTime.Now.AddDays(-1).Date).Count();
+
+            
+            return viewModel;
         }
 
         [HttpPost]
@@ -265,7 +419,10 @@ namespace CPL.Controllers
             if (value)
             {
                 var userId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
-                var tfa = new TwoFactorAuthenticator();
+                var tfa = new TwoFactorAuthenticator()
+                {
+                    DefaultClockDriftTolerance = TimeSpan.FromSeconds(30)
+                };
                 bool isCorrectPIN = tfa.ValidateTwoFactorPIN($"{CPLConstant.TwoFactorAuthenticationSecretKey}{userId}", pin);
 
                 if (isCorrectPIN)
@@ -351,6 +508,319 @@ namespace CPL.Controllers
                 });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.User)]
+        public IActionResult GetTopAgencyStatistics(int sysUserId, int periodInDay, int pageSize = 10, int pageIndex = 1,
+                                                    string orderColumn = "UsedCPL", string orderDirection = "desc", string searchValue = "")
+        {
+            List<SqlParameter> storeParams = new List<SqlParameter>()
+            {
+                new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
+                new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
+            };
+
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo_Tier1_Statistics", storeParams);
+
+            var totalAffiliateSaleChanges = new List<SummaryChange>();
+            var directAffiliateSaleChanges = new List<SummaryChange>();
+            var totalIntroducedUsersChanges = new List<SummaryChange>();
+            var directIntroducedUsersChanges = new List<SummaryChange>();
+
+            for (int i = 0; i < dataSet.Tables[1].Rows.Count; i++)
+            {
+                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalAffiliateSale"])) });
+                directAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["DirectAffiliateSale"])) });
+                totalIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalIntroducedUsers"])) });
+                directIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["DirectIntroducedUsers"])) });
+            }
+
+            //Table[0]//////////////////////////////////////////////////////
+            //TotalSale|DirectSale|TotalIntroducedUsers|DirectIntroducedUsers
+            //123//////456/////////789//////////////////10//////////////////
+
+            var viewModel = new TopAgencyAffiliateInfoViewModel
+            {
+                TotalAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]),
+                DirectAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[1]),
+                TotalIntroducedUsers = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[2]),
+                DirectIntroducedUsers = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[3]),
+
+                TotalAffiliateSaleChangesInJson = JsonConvert.SerializeObject(totalAffiliateSaleChanges),
+                DirectAffiliateSaleChangesInJson = JsonConvert.SerializeObject(directAffiliateSaleChanges),
+                TotalIntroducedUsersChangesInJson = JsonConvert.SerializeObject(totalIntroducedUsersChanges),
+                DirectIntroducedUsersChangesInJson = JsonConvert.SerializeObject(directIntroducedUsersChanges),
+            };
+
+            return PartialView("_TopAgencyAffiliateStatistics", viewModel);
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.User)]
+        public IActionResult GetNonTopAgencyStatistics(int sysUserId, int periodInDay, string kindOfTier, int pageSize = 10, int pageIndex = 1,
+                                                    string orderColumn = "UsedCPL", string orderDirection = "desc", string searchValue = "")
+        {
+            List<SqlParameter> storeParams = new List<SqlParameter>() {
+                    new SqlParameter() {ParameterName = "@Tier", SqlDbType = SqlDbType.Int, Value= int.Parse(kindOfTier)},
+                    new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
+                    new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
+                };
+
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo_NonTier1_Statistics", storeParams);
+
+            var totalAffiliateSaleChanges = new List<SummaryChange>();
+
+            for (int i = 0; i < dataSet.Tables[1].Rows.Count; i++)
+            {
+                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalAffiliateSale"])) });
+            }
+
+            //Table[0]//////////////////////////////////////////////////////
+            //TotalSale
+            //123//////
+            var viewModel = new NonTopAgencyAffiliateInfoViewModel
+            {
+                TotalAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]),
+
+                TotalAffiliateSaleChangesInJson = JsonConvert.SerializeObject(totalAffiliateSaleChanges),
+            };
+
+            return PartialView("_NonTopAgencyAffiliateStatistics", viewModel);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.User)]
+        public JsonResult SearchTopAgencyAffiliate(DataTableAjaxPostModel viewModel, int sysUserId, string kindOfTier, int periodInDay)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchTopAgencyAffiliateFunc(viewModel, out filteredResultsCount, out totalResultsCount, sysUserId, kindOfTier, periodInDay);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.User)]
+        public IList<TopAgencyAffiliateIntroducedUsersViewModel> SearchTopAgencyAffiliateFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier, int periodInDay)
+        {
+            var searchBy = (model.search.value != null) ? model.search.value : string.Empty;
+            var pageSize = model.length;
+            var pageIndex = model.start + 1;
+
+            string sortBy = string.Empty;
+            string sortDir = "KindOfTier";
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower();
+            }
+
+            List<SqlParameter> storeParams = new List<SqlParameter>()
+            {
+                new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
+                new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
+                new SqlParameter() {ParameterName = "@PageSize", SqlDbType = SqlDbType.Int, Value = pageSize},
+                new SqlParameter() {ParameterName = "@PageIndex", SqlDbType = SqlDbType.Int, Value = pageIndex},
+                new SqlParameter() {ParameterName = "@OrderColumn", SqlDbType = SqlDbType.NVarChar, Value = sortBy},
+                new SqlParameter() {ParameterName = "@OrderDirection", SqlDbType = SqlDbType.NVarChar, Value = sortDir},
+                new SqlParameter() {ParameterName = "@SearchValue", SqlDbType = SqlDbType.NVarChar, Value = searchBy},
+            };
+
+            var uspName = string.Empty;
+            if (kindOfTier == ((int)EnumKindOfTier.TIER1).ToString())
+            {
+                uspName = "[usp_GetAffiliateInfo_Tier1_IntroducedUsers]";
+            }
+            else if (kindOfTier == ((int)EnumKindOfTier.TIER2).ToString())
+            {
+                uspName = "[usp_GetAffiliateInfo_NonTier1_IntroducedUsers]";
+                storeParams.Add(new SqlParameter() { ParameterName = "@Tier", SqlDbType = SqlDbType.Int, Value = (int)EnumKindOfTier.TIER2 });
+            }
+            else if (kindOfTier == ((int)EnumKindOfTier.TIER3).ToString())
+            {
+                uspName = "[usp_GetAffiliateInfo_NonTier1_IntroducedUsers]";
+                storeParams.Add(new SqlParameter() { ParameterName = "@Tier", SqlDbType = SqlDbType.Int, Value = (int)EnumKindOfTier.TIER3 });
+            }
+
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure(uspName, storeParams);
+
+            DataTable table = dataSet.Tables[0];
+            var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
+            var viewModels = Mapper.Map<List<DataRow>, List<TopAgencyAffiliateIntroducedUsersViewModel>>(rows);
+
+            totalResultsCount = Convert.ToInt32((dataSet.Tables[1].Rows[0])["TotalCount"]);
+            filteredResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["FilteredCount"]);
+
+            return viewModels;
+        }
+
+
+        [HttpGet]
+        [Permission(EnumRole.User)]
+        public IActionResult GetTier1StandardAffiliateStatistics(int sysUserId, int periodInDay, int pageSize = 10, int pageIndex = 1,
+                                                   string orderColumn = "UsedCPL", string orderDirection = "desc", string searchValue = "")
+        {
+            List<SqlParameter> storeParams = new List<SqlParameter>() {
+                    new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
+                    new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
+                };
+
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo_Tier1_Statistics", storeParams);
+
+            var totalAffiliateSaleChanges = new List<SummaryChange>();
+            var directAffiliateSaleChanges = new List<SummaryChange>();
+            var totalIntroducedUsersChanges = new List<SummaryChange>();
+            var directIntroducedUsersChanges = new List<SummaryChange>();
+
+            for (int i = 0; i < dataSet.Tables[1].Rows.Count; i++)
+            {
+                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalAffiliateSale"])) });
+                directAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["DirectAffiliateSale"])) });
+                totalIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalIntroducedUsers"])) });
+                directIntroducedUsersChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["DirectIntroducedUsers"])) });
+            }
+
+            //Table[0]//////////////////////////////////////////////////////
+            //TotalSale|DirectSale|TotalIntroducedUsers|DirectIntroducedUsers
+            //123//////456/////////789//////////////////10//////////////////
+            var viewModel = new Tier1StandardAffiliateInfoViewModel
+            {
+                TotalAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]),
+                DirectAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[1]),
+                TotalIntroducedUsers = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[2]),
+                DirectIntroducedUsers = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[3]),
+
+                TotalAffiliateSaleChangesInJson = JsonConvert.SerializeObject(totalAffiliateSaleChanges),
+                DirectAffiliateSaleChangesInJson = JsonConvert.SerializeObject(directAffiliateSaleChanges),
+                TotalIntroducedUsersChangesInJson = JsonConvert.SerializeObject(totalIntroducedUsersChanges),
+                DirectIntroducedUsersChangesInJson = JsonConvert.SerializeObject(directIntroducedUsersChanges),
+            };
+
+            return PartialView("_Tier1StandardAffiliateStatistics", viewModel);
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.User)]
+        public IActionResult GetNonTier1StandardAffiliateStatistics(int sysUserId, int periodInDay, string kindOfTier, int pageSize = 10, int pageIndex = 1,
+                                                    string orderColumn = "UsedCPL", string orderDirection = "desc", string searchValue = "")
+        {
+            List<SqlParameter> storeParams = new List<SqlParameter>() {
+                    new SqlParameter() {ParameterName = "@Tier", SqlDbType = SqlDbType.Int, Value= int.Parse(kindOfTier)},
+                    new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
+                    new SqlParameter() {ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
+                };
+
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure("usp_GetAffiliateInfo_NonTier1_Statistics", storeParams);
+
+            var totalAffiliateSaleChanges = new List<SummaryChange>();
+
+            for (int i = 0; i < dataSet.Tables[1].Rows.Count; i++)
+            {
+                totalAffiliateSaleChanges.Add(new SummaryChange { Date = DateTime.Parse(((dataSet.Tables[1].Rows[i])["Date"]).ToString()), Value = Convert.ToInt32(((dataSet.Tables[1].Rows[i])["TotalAffiliateSale"])) });
+            }
+
+            //Table[0]//////////////////////////////////////////////////////
+            //TotalSale
+            //123//////
+            var viewModel = new NonTier1StandardAffiliateInfoViewModel
+            {
+                TotalAffiliateSale = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]),
+
+                TotalAffiliateSaleChangesInJson = JsonConvert.SerializeObject(totalAffiliateSaleChanges),
+            };
+
+            return PartialView("_NonTier1StandardAffiliateStatistics", viewModel);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.User)]
+        public JsonResult SearchStandardAffiliateIntroducedUsers(DataTableAjaxPostModel viewModel, int sysUserId, string kindOfTier, int periodInDay)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchStandardAffiliateIntroducedUsersFunc(viewModel, out filteredResultsCount, out totalResultsCount, sysUserId, kindOfTier, periodInDay);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.User)]
+        public IList<StandardAffiliateIntroducedUsersViewModel> SearchStandardAffiliateIntroducedUsersFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int sysUserId, string kindOfTier, int periodInDay)
+        {
+            var searchBy = (model.search.value != null) ? model.search.value : string.Empty;
+            var pageSize = model.length;
+            var pageIndex = model.start + 1;
+
+            string sortBy = string.Empty;
+            string sortDir = "UsedCPL";
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower();
+            }
+
+            var uspName = string.Empty;
+
+            List<StandardAffiliateIntroducedUsersViewModel> viewModel = new List<StandardAffiliateIntroducedUsersViewModel>();
+            List<SqlParameter> storeParams = new List<SqlParameter>();
+
+            if (kindOfTier == ((int)EnumKindOfTier.TIER1).ToString())
+            {
+                storeParams = new List<SqlParameter>()            {
+                    new SqlParameter() { ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value = sysUserId},
+                    new SqlParameter() { ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
+                    new SqlParameter() { ParameterName = "@PageSize", SqlDbType = SqlDbType.Int, Value = pageSize},
+                    new SqlParameter() { ParameterName = "@PageIndex", SqlDbType = SqlDbType.Int, Value = pageIndex},
+                    new SqlParameter() { ParameterName = "@OrderColumn", SqlDbType = SqlDbType.NVarChar, Value = sortBy},
+                    new SqlParameter() { ParameterName = "@OrderDirection", SqlDbType = SqlDbType.NVarChar, Value = sortDir},
+                    new SqlParameter() { ParameterName = "@SearchValue", SqlDbType = SqlDbType.NVarChar, Value = searchBy},
+                };
+
+                uspName = "usp_GetAffiliateInfo_Tier1_IntroducedUsers";
+
+            }
+            else
+            {
+                storeParams = new List<SqlParameter>()            {
+                    new SqlParameter() { ParameterName = "@Tier", SqlDbType = SqlDbType.Int, Value = int.Parse(kindOfTier)},
+                    new SqlParameter() { ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value = sysUserId},
+                    new SqlParameter() { ParameterName = "@PeriodInDay", SqlDbType = SqlDbType.Int, Value = periodInDay},
+                    new SqlParameter() { ParameterName = "@PageSize", SqlDbType = SqlDbType.Int, Value = pageSize},
+                    new SqlParameter() { ParameterName = "@PageIndex", SqlDbType = SqlDbType.Int, Value = pageIndex},
+                    new SqlParameter() { ParameterName = "@OrderColumn", SqlDbType = SqlDbType.NVarChar, Value = sortBy},
+                    new SqlParameter() { ParameterName = "@OrderDirection", SqlDbType = SqlDbType.NVarChar, Value = sortDir},
+                    new SqlParameter() { ParameterName = "@SearchValue", SqlDbType = SqlDbType.NVarChar, Value = searchBy},
+                };
+
+                uspName = "usp_GetAffiliateInfo_NonTier1_IntroducedUsers";
+            }
+
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure(uspName, storeParams);
+            DataTable table = dataSet.Tables[0]; 
+            var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
+            var viewModels = Mapper.Map<List<DataRow>, List<StandardAffiliateIntroducedUsersViewModel>>(rows);
+
+            totalResultsCount = Convert.ToInt32((dataSet.Tables[1].Rows[0])["TotalCount"]);
+            filteredResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["FilteredCount"]);
+
+            return viewModels;
         }
     }
 }

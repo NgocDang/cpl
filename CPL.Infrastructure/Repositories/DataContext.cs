@@ -3,6 +3,9 @@ using CPL.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -130,6 +133,28 @@ namespace CPL.Infrastructure.Repositories
             {
                 ((IObjectState)dbEntityEntry.Entity).ObjectState = StateHelper.ConvertState(dbEntityEntry.State);
             }
+        }
+
+        public void ExecuteSqlCommand(RawSqlString sql, params object[] parameters)
+        {
+            this.Database.ExecuteSqlCommand(sql, parameters);
+        }
+
+        public DataSet ExecuteStoredProcedure(string sqlCommandText, IList<SqlParameter> parameters)
+        {
+            var dataSet = new DataSet();
+            using (var command = this.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = sqlCommandText;
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddRange(parameters.ToArray());
+
+                using (SqlDataAdapter adapter = new SqlDataAdapter(command as SqlCommand))
+                {
+                    adapter.Fill(dataSet);
+                }
+            }
+            return dataSet;
         }
     }
 }

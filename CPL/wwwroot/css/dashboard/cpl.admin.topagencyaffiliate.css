@@ -1,0 +1,26 @@
+﻿.nav-tabs .nav-item {
+    z-index: 9;
+}
+
+.border-right {
+    border-right: 1px solid #ECEFF1 !important;
+}
+
+@media (max-width: 990px) {
+    .border-right {
+        border: none !important;
+    }
+}
+
+@media (max-width: 465px) {
+    .mobile-tab-name {
+        word-break: break-word;
+        width: 90px;
+        line-height: 18px;
+        height: 100%;
+        text-align: center;
+    }
+}
+html body {
+    background: #F4F5FA !important;
+}

@@ -1,0 +1,27 @@
+﻿@model ConfirmPaymentPartialViewViewModel
+
+<div class="modal" tabindex="-1" id="view-payment" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Payment")</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+            </div>
+            <div class="modal-body">
+                <h3 class="text-center form-group mb-3">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ConfirmPayment")</h3>
+                <div class="row form-group ml-2 mr-2">
+                    <div class="col-6">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CommissionAmount")</div>
+                    <div class="col-6 text-right font-weight-bold text-danger">@Model.CommissionAmount @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TokenSymbol")</div>
+                </div>
+                <div class="row form-group ml-2 mr-2">
+                    <div class="col-6">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PeriodInMonth")</div>
+                    <div class="col-6 text-right font-weight-bold">@Model.Period</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn-confirm-payment" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Yes")</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
+            </div>
+        </div>
+    </div>
+</div>

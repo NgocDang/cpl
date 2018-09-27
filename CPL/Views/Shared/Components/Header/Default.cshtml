@@ -116,7 +116,7 @@
                 </ul>
                 <ul class="nav navbar-nav float-right nav-language">
                     <li class="dropdown dropdown-language nav-item">
-                        <a class="dropdown-toggle nav-link pr-0" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="dropdown-toggle nav-link pr-0 pb-1" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="flag-icon @Model.Lang.Image"></i>
                             <span class="font-small-3 selected-language d-lg-inline d-none">@Model.Lang.Name</span>
                         </a>
@@ -160,12 +160,6 @@
                     <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-bold" asp-controller="Exchange" asp-action="Index">
-                    <i class="la la-arrows-h"></i>
-                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Exchange")</span>
-                </a>
-            </li>
             <li class="dropdown nav-item" data-menu="dropdown">
                 <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
                     <i class="la la-history"></i>
@@ -177,6 +171,9 @@
                     </li>
                     <li>
                         <a class="dropdown-item" asp-controller="History" asp-action="Lottery"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" asp-controller="History" asp-action="PricePrediction"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
                     </li>
                     <li>
                         <a class="dropdown-item" asp-controller="History" asp-action="Transaction"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transaction")</a>

@@ -17,27 +17,28 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card mb-md-2 mb-05">
-                        <img src="~/images/lottery/@Model.DesktopSlideImage" class="img-fluid d-md-block d-none" alt="@Model.Title">
-                        <img src="~/images/lottery/@Model.MobileSlideImage" class="img-fluid d-md-none d-block" alt="@Model.Title">
+                        @foreach (var detail in Model.LotteryDetails)
+                        {
+                            @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                            {
+                                <img src="~/images/lottery/@detail.DesktopTopImage" class="img-fluid d-md-block d-none" alt="@Model.Title">
+                                <img src="~/images/lottery/@detail.MobileTopImage" class="img-fluid d-md-none d-block" alt="@Model.Title">
+                            }
+                        }
+
                     </div>
                 </div>
             </div>
-            @if (Model.SysUserId.HasValue)
-            {
-                <div class="row">
-                    <div class="col-sm-6 col-12 d-none d-md-block d-lg-block d-xl-block" id="rate-component">
-                        @await Component.InvokeAsync("Rate")
-                    </div>
-                    <div class="col-sm-6 col-12 mb-05">
-                        @await Component.InvokeAsync("LotteryResult")
-                    </div>
-                </div>
-            }
-
             <div class="row mb-05">
                 <div class="col-lg-6 col-12 d-sm-block d-none">
                     <div class="card">
-                        <img class="img-fluid" src="~/images/lottery/@Model.PrizeImage" />
+                        @foreach (var detail in Model.LotteryDetails)
+                        {
+                            @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                            {
+                                <img class="img-fluid" src="~/images/lottery/@detail.PrizeImage" />
+                            }
+                        }
                     </div>
                 </div>
                 <div class="col-lg-6 col-12">
@@ -55,23 +56,26 @@
                                                 @Model.UnitPrice.ToString("N0") CPL
                                             </div>
                                         </div>
-                                        <div class="row mb-3 text-md-left text-center">
-                                            <div class="col-md-6 col-12 font-medium-5 font-weight-bold">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAmount")
+                                        @if (Model.Status != (int)EnumLotteryGameStatus.DEACTIVATED)
+                                        {
+                                            <div class="row mb-3 text-md-left text-center">
+                                                <div class="col-md-6 col-12 font-medium-5 font-weight-bold">
+                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAmount")
+                                                </div>
+                                                <div class="col-md-6 col-12 text-md-right font-medium-5 font-weight-bold">
+                                                    <span id="total-amount">@Model.UnitPrice.ToString("N0")</span> CPL
+                                                </div>
                                             </div>
-                                            <div class="col-md-6 col-12 text-md-right font-medium-5 font-weight-bold">
-                                                <span id="total-amount">@Model.UnitPrice.ToString("N0")</span> CPL
+                                            <div class="row mb-2">
+                                                <div class="form-group col-12">
+                                                    <input type="number" data-unit-price="@Model.UnitPrice" name="number-of-ticket" class="form-control" id="number-of-ticket" value="1" min="1" max="@(Model.Volume - @Model.LotteryHistories.Count())" required aria-describedby="basic-addon4">
+                                                    <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button type="button" class="btn btn-primary btn-block font-weight-bold" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="form-group col-12">
-                                                <input type="number" data-unit-price="@Model.UnitPrice" name="number-of-ticket" class="form-control" id="number-of-ticket" value="1" min="1" max="@(Model.Volume - @Model.LotteryHistories.Count())" required aria-describedby="basic-addon4">
-                                                <div class="invalid-feedback">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberTicketRequired")</div>
-                                            </div>
-                                            <div class="col-12">
-                                                <button type="button" class="btn btn-primary btn-block font-weight-bold" id="btn-purchase-lottery"><i class="fas fa-money-bill-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
-                                            </div>
-                                        </div>
+                                        }
                                         <div class="row mb-1">
                                             <div class="col-12">
                                                 <hr />
@@ -164,14 +168,26 @@
                         </div>
                     </div>
                     <div class="mb-05 d-sm-none d-block">
-                        <img class="img-fluid" src="~/images/lottery/@Model.PrizeImage" />
+                        @foreach (var detail in Model.LotteryDetails)
+                        {
+                            @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                            {
+                                <img class="img-fluid" src="~/images/lottery/@detail.PrizeImage" />
+                            }
+                        }
                     </div>
                     <div class="card mb-md-1 mb-05">
                         <div class="card-content">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12 mb-0">
-                                        @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryDescription"))
+                                        @foreach (var detail in Model.LotteryDetails)
+                                        {
+                                            @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                                            {
+                                                @Html.Raw(detail.Description)
+                                            }
+                                        }
                                     </div>
                                 </div>
                             </div>

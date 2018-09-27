@@ -15,6 +15,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
     <PackageReference Include="BCrypt.Net-Next" Version="2.1.3" />
+    <PackageReference Include="Google.Apis.Analytics.v3" Version="1.35.2.1268" />
+    <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.35.1.1321" />
     <PackageReference Include="GoogleAuthenticator" Version="1.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0" />
@@ -127,6 +129,12 @@
     <Content Update="Views\Admin\_AffiliateApproveEmailTemplate.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Admin\_EditLotteryCategory.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Admin\_LotteryCategoryStatistics.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Contact\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -139,10 +147,22 @@
     <Content Update="Views\Lottery\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Profile\Affiliate.cshtml">
+    <Content Update="Views\Profile\TopAgencyAffiliate.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Profile\StandardAffiliate.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Profile\SubmitAffiliate.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Profile\Security.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Profile\_NonTier1StandardAffiliateStatistics.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Profile\_Tier1StandardAffiliateStatistics.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Shared\Components\Footer\Default.cshtml">

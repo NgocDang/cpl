@@ -7,11 +7,18 @@
   <ItemGroup>
     <PackageReference Include="CommonServiceLocator" Version="2.0.3" />
     <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="1.1.15" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CPL.Domain\CPL.Domain.csproj" />
     <ProjectReference Include="..\CPL.Mapping\CPL.Mapping.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Data.SqlClient">
+      <HintPath>..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\system.data.sqlclient\4.5.1\ref\netstandard2.0\System.Data.SqlClient.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

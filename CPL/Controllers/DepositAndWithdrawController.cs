@@ -102,7 +102,10 @@ namespace CPL.Controllers
                 try
                 {
                     // Validate max BTC Amount
-                    if (viewModel.Amount > user.BTCAmount)
+                    var btcToTokenRate = decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
+                    var availableBTCAmount = user.TokenAmount / btcToTokenRate;
+
+                    if (viewModel.Amount > availableBTCAmount)
                         return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
 
                     //Validate BTC wallet address
@@ -130,9 +133,10 @@ namespace CPL.Controllers
                             Type = (int)EnumCoinTransactionType.WITHDRAW_BTC
                         });
 
-                        user.BTCAmount -= viewModel.Amount;
+                        user.TokenAmount -= viewModel.Amount * btcToTokenRate;
                         _sysUserService.Update(user);
                         _unitOfWork.SaveChanges();
+
                     }
                     else
                     {
@@ -144,55 +148,55 @@ namespace CPL.Controllers
                     return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
                 }
             }
-            else if (viewModel.Currency == EnumCurrency.ETH.ToString())
-            {
-                try
-                {
-                    // Validate max ETH Amount
-                    if (viewModel.Amount > user.ETHAmount)
-                        return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
+            //else if (viewModel.Currency == EnumCurrency.ETH.ToString())
+            //{
+            //    try
+            //    {
+            //        // Validate max ETH Amount
+            //        if (viewModel.Amount > user.ETHAmount)
+            //            return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
 
-                    //Validate ETH wallet address
-                    if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidETHAddress(viewModel.Address)))
-                        return new JsonResult(new { success = false, name = "wallet", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidETHAddress") });
+            //        //Validate ETH wallet address
+            //        if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidETHAddress(viewModel.Address)))
+            //            return new JsonResult(new { success = false, name = "wallet", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidETHAddress") });
 
-                    // Transfer
-                    var txHashIdTask = ServiceClient.EAccountClient.TransferByPrivateKeyAsync(Authentication.Token, CPLConstant.ETHWithdrawPrivateKey, viewModel.Address, viewModel.Amount, CPLConstant.DurationInSecond);
-                    txHashIdTask.Wait();
-                    txHashId = txHashIdTask.Result.TxId;
+            //        // Transfer
+            //        var txHashIdTask = ServiceClient.EAccountClient.TransferByPrivateKeyAsync(Authentication.Token, CPLConstant.ETHWithdrawPrivateKey, viewModel.Address, viewModel.Amount, CPLConstant.DurationInSecond);
+            //        txHashIdTask.Wait();
+            //        txHashId = txHashIdTask.Result.TxId;
 
-                    // Save to DB
-                    if (txHashId != null)
-                    {
-                        _coinTransactionService.Insert(new CoinTransaction()
-                        {
-                            SysUserId = user.Id,
-                            FromWalletAddress = CPLConstant.ETHWithdrawAddress,
-                            ToWalletAddress = viewModel.Address,
-                            CoinAmount = viewModel.Amount,
-                            CreatedDate = DateTime.Now,
-                            CurrencyId = (int)EnumCurrency.ETH,
-                            Status = EnumCoinTransactionStatus.PENDING.ToBoolean(),
-                            TxHashId = txHashId,
-                            Type = (int)EnumCoinTransactionType.WITHDRAW_ETH
-                        });
+            //        // Save to DB
+            //        if (txHashId != null)
+            //        {
+            //            _coinTransactionService.Insert(new CoinTransaction()
+            //            {
+            //                SysUserId = user.Id,
+            //                FromWalletAddress = CPLConstant.ETHWithdrawAddress,
+            //                ToWalletAddress = viewModel.Address,
+            //                CoinAmount = viewModel.Amount,
+            //                CreatedDate = DateTime.Now,
+            //                CurrencyId = (int)EnumCurrency.ETH,
+            //                Status = EnumCoinTransactionStatus.PENDING.ToBoolean(),
+            //                TxHashId = txHashId,
+            //                Type = (int)EnumCoinTransactionType.WITHDRAW_ETH
+            //            });
 
-                        user.ETHAmount -= viewModel.Amount;
-                        _sysUserService.Update(user);
-                        _unitOfWork.SaveChanges();
-                    }
-                    else
-                    {
-                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
-                }
-            }
+            //            user.ETHAmount -= viewModel.Amount;
+            //            _sysUserService.Update(user);
+            //            _unitOfWork.SaveChanges();
+            //        }
+            //        else
+            //        {
+            //            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            //    }
+            //}
 
-            return new JsonResult(new { success = true, profileKyc = true, txhashid = txHashId, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
+            return new JsonResult(new { success = true, token = user.TokenAmount.ToString("N0"), profileKyc = true, txhashid = txHashId, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
         }
 
         [HttpPost]

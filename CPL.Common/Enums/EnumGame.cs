@@ -8,7 +8,8 @@ namespace CPL.Common.Enums
     {
         WIN = 1,
         LOSE = 2,
-        KYC_PENDING = 3
+        KYC_PENDING = 3,
+        REFUND = 4
     }
 
     public enum EnumPricePredictionStatus
@@ -28,7 +29,8 @@ namespace CPL.Common.Enums
     {
         PENDING = 1,
         ACTIVE = 2,
-        COMPLETED = 3
+        COMPLETED = 3,
+        DEACTIVATED = 4,
     }
 
     public enum EnumPricePredictionGameStatus

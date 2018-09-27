@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace CPL.Common.Misc
 {
     public class Utils
     {
         private static ReaderWriterLockSlim _readWriteLock = new ReaderWriterLockSlim();
+
         public static void FileAppendThreadSafe(string path, string message)
         {
             // Set Status to Locked
@@ -55,6 +55,17 @@ namespace CPL.Common.Misc
         public static double ToJSTimeStamp(DateTime dt)
         {
             return dt.ToUniversalTime().Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+        }
+
+        public static string ConvertObjToQueryString(object obj)
+        {
+            var result = new List<string>();
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(obj))
+            {
+                result.Add(property.Name + "=" + property.GetValue(obj));
+            }
+
+            return string.Join("&", result);
         }
     }
 }

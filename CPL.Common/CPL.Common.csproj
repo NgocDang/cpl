@@ -41,6 +41,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,9 +58,10 @@
     <Compile Include="Enums\EnumCurrency.cs" />
     <Compile Include="Enums\EnumEnvironment.cs" />
     <Compile Include="Enums\EnumGame.cs" />
+    <Compile Include="Enums\EnumKindOfTier.cs" />
     <Compile Include="Enums\EnumLangContentFieldName.cs" />
     <Compile Include="Enums\ObjectState.cs" />
-    <Compile Include="CurrenciesPairRateHelper\CurrenciesPairRateHelper.cs" />
+    <Compile Include="CurrencyPairRateHelper\CurrencyPairRateHelper.cs" />
     <Compile Include="Interfaces\IObjectState.cs" />
     <Compile Include="Misc\Utils.cs" />
     <Compile Include="Models\Entity.cs" />

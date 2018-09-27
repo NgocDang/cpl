@@ -27,8 +27,7 @@ namespace CPL.ViewComponents
         {
             var lotteries = _lotteryService.Query()
                 .Include(x => x.LotteryHistories)
-                .Select()
-                .Where(x => x.LotteryHistories.Count() < x.Volume && x.Status == (int)EnumLotteryGameStatus.ACTIVE)
+                .Where(x => !x.IsDeleted && (x.LotteryHistories.Count() < x.Volume && x.Status == (int)EnumLotteryGameStatus.ACTIVE))
                 .OrderByDescending(x => x.CreatedDate);
 
             var viewModel = new HomeViewModel();

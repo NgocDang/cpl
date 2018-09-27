@@ -3,6 +3,7 @@ using CPL.Common.Interfaces;
 using CPL.Infrastructure.Interfaces;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,7 +25,7 @@ namespace CPL.Infrastructure.Repositories
         {
             this._context = context;
             this._unitOfWork = unitOfWork;
-
+            
             var dbContext = context as DbContext;
             if (dbContext != null)
             {
@@ -138,42 +139,9 @@ namespace CPL.Infrastructure.Repositories
             return true;
         }
 
-        internal IQueryable<TEntity> Select(
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            List<Expression<Func<TEntity, object>>> includes = null,
-            int? page = null,
-            int? pageSize = null)
+        public IIncludableQueryable<TEntity, TResult> Include<TResult>(Expression<Func<TEntity, TResult>> expression)
         {
-            IQueryable<TEntity> query = this._dbSet;
-
-            if (includes != null)
-            {
-                query = includes.Aggregate(query, (current, include) => current.Include(include));
-            }
-            if (orderBy != null)
-            {
-                query = orderBy(query);
-            }
-            if (filter != null)
-            {
-                query = query.AsExpandable().Where(filter);
-            }
-            if (page != null && pageSize != null)
-            {
-                query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
-            }
-            return query;
-        }
-
-        internal async Task<IEnumerable<TEntity>> SelectAsync(
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            List<Expression<Func<TEntity, object>>> includes = null,
-            int? page = null,
-            int? pageSize = null)
-        {
-            return await Select(filter, orderBy, includes, page, pageSize).ToListAsync();
+            return this._dbSet.Include(expression);
         }
 
         public virtual void InsertOrUpdateGraph(TEntity entity)

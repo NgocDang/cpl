@@ -1,5 +1,6 @@
 ﻿using CPL.Common.Interfaces;
 using CPL.Infrastructure.Interfaces;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,31 +39,9 @@ namespace CPL.Infrastructure.Repositories
             return this;
         }
 
-        public IQueryFluent<TEntity> Include(Expression<Func<TEntity, object>> expression)
+        public IIncludableQueryable<TEntity, TResult> Include<TResult>(Expression<Func<TEntity, TResult>> expression)
         {
-            this._includes.Add(expression);
-            return this;
-        }
-
-        public IEnumerable<TEntity> SelectPage(int page, int pageSize, out int totalCount)
-        {
-            totalCount = this._repository.Select(this._expression).Count();
-            return this._repository.Select(this._expression, this._orderBy, this._includes, page, pageSize);
-        }
-
-        public IEnumerable<TEntity> Select()
-        {
-            return this._repository.Select(this._expression, this._orderBy, this._includes);
-        }
-
-        public IEnumerable<TResult> Select<TResult>(Expression<Func<TEntity, TResult>> selector)
-        {
-            return this._repository.Select(this._expression, this._orderBy, this._includes).Select(selector);
-        }
-
-        public async Task<IEnumerable<TEntity>> SelectAsync()
-        {
-            return await this._repository.SelectAsync(this._expression, this._orderBy, this._includes);
+            return this._repository.Include<TResult>(expression);
         }
 
         public IQueryable<TEntity> SqlQuery(string query, params object[] parameters)

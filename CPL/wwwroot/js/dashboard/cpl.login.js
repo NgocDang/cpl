@@ -63,7 +63,8 @@
             else {
                 return true;
             }
-        }
+            return true;
+        };
     },
     bindDoVerifyPIN: function () {
         $("form-two-factor").validate();

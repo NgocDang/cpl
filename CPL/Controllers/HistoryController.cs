@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using CPL.Common.CurrenciesPairRateHelper;
+using CPL.Common.CurrencyPairRateHelper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
+using CPL.Domain;
 using CPL.Misc;
 using CPL.Misc.Enums;
 using CPL.Misc.Utils;
 using CPL.Models;
 using CPL.ViewComponents;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using static CPL.Common.Enums.CPLConstant;
 
@@ -36,14 +38,6 @@ namespace CPL.Controllers
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._settingService = settingService;
             this._coinTransactionService = coinTransactionService;
-        }
-
-        [Permission(EnumRole.User)]
-        public IActionResult Game()
-        {
-            var viewModel = new GameHistoryIndexViewModel();
-            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
-            return View(viewModel);
         }
 
         #region Lottery History
@@ -78,7 +72,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
-        public IList<LotteryHistoryViewModel> SearchLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, 
+        public IList<LotteryHistoryViewModel> SearchLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount,
             DateTime? createdDate, int? lotteryId, int sysUserId)
         {
             if (sysUserId == 0)
@@ -101,22 +95,34 @@ namespace CPL.Controllers
 
             if (createdDate.HasValue || lotteryId.HasValue)
             {
-                totalResultsCount = _lotteryHistoryService
-                                 .Query()
-                                 .Include(x => x.Lottery)
-                                 .Include(x => x.LotteryPrize)
-                                 .Select()
-                                 .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && (createdDate.HasValue ? x.CreatedDate.Date == createdDate.Value.Date : true))
+                IQueryable<LotteryHistory> lotteryHistory;// = new Queryable<LotteryHistoryViewModel>();
+                if (createdDate.HasValue)
+                {
+                    totalResultsCount = _lotteryHistoryService.Queryable()
+                                 .Where(x => x.CreatedDate.Date == createdDate.Value.Date && x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value)
                                  .Count();
-
-                // search the dbase taking into consideration table sorting and paging
-                var lotteryHistory = _lotteryHistoryService
+                    lotteryHistory = _lotteryHistoryService
                                               .Query()
                                               .Include(x => x.Lottery)
                                               .Include(x => x.LotteryPrize)
-                                              .Select()
-                                              .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && (createdDate.HasValue ? x.CreatedDate.Date == createdDate.Value.Date : true))
-                                              .Select(x => new LotteryHistoryViewModel
+                                              .Where(x => x.CreatedDate.Date == createdDate.Value.Date && x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value);
+                }
+                else
+                {
+                    totalResultsCount = _lotteryHistoryService.Queryable()
+                                 .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value)
+                                 .Count();
+
+                    lotteryHistory = _lotteryHistoryService
+                                              .Query()
+                                              .Include(x => x.Lottery)
+                                              .Include(x => x.LotteryPrize)
+                                              .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value);
+                }
+
+
+                // search the dbase taking into consideration table sorting and paging
+                var lotteryHistoryViewModel = lotteryHistory.Select(x => new LotteryHistoryViewModel
                                               {
                                                   CreatedDate = x.CreatedDate,
                                                   CreatedDateInString = x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss"),
@@ -124,7 +130,7 @@ namespace CPL.Controllers
                                                   LotteryStartDateInString = x.Lottery.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss"),
                                                   LotteryPhase = x.Lottery.Phase,
                                                   LotteryPhaseInString = x.Lottery.Phase.ToString("D3"),
-                                                  Result = x.Result == EnumGameResult.WIN.ToString() ? "Win" : (x.Result == EnumGameResult.LOSE.ToString() ? "Lose" : (x.Result == EnumGameResult.KYC_PENDING.ToString() ? "KYC Pending" : string.Empty)),
+                                                  Result = x.Result,
                                                   Award = x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0,
                                                   AwardInString = x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value.ToString("#,##0.##") : 0.ToString("#,##0.##"),
                                                   TicketNumber = !string.IsNullOrEmpty(x.TicketNumber) ? $"{x.Lottery.Phase.ToString("D3")}{CPLConstant.ProjectName}{x.TicketNumber}" : string.Empty,
@@ -138,7 +144,7 @@ namespace CPL.Controllers
                 }
                 else
                 {
-                    lotteryHistory = lotteryHistory
+                    lotteryHistoryViewModel = lotteryHistoryViewModel
                                             .Where(x => x.CreatedDateInString.ToLower().Contains(searchBy)
                                                         || x.LotteryPhaseInString.ToLower().Contains(searchBy)
                                                         || x.Result.ToLower().Contains(searchBy)
@@ -149,7 +155,11 @@ namespace CPL.Controllers
                     filteredResultsCount = lotteryHistory.Count();
                 }
 
-                return lotteryHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
+                return lotteryHistoryViewModel.AsQueryable()
+                    .OrderBy(sortBy, sortDir)
+                    .Skip(skip)
+                    .Take(take)
+                    .ToList();
             }
             else
             {
@@ -157,7 +167,6 @@ namespace CPL.Controllers
                                  .Query()
                                  .Include(x => x.Lottery)
                                  .Include(x => x.LotteryPrize)
-                                 .Select()
                                  .Where(x => x.SysUserId == sysUserId)
                                  .Count();
 
@@ -166,7 +175,6 @@ namespace CPL.Controllers
                                               .Query()
                                               .Include(x => x.Lottery)
                                               .Include(x => x.LotteryPrize)
-                                              .Select()
                                               .Where(x => x.SysUserId == sysUserId)
                                               .Select(x => new LotteryHistoryViewModel
                                               {
@@ -176,7 +184,7 @@ namespace CPL.Controllers
                                                   LotteryStartDateInString = x.Lottery.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss"),
                                                   LotteryPhase = x.Lottery.Phase,
                                                   LotteryPhaseInString = x.Lottery.Phase.ToString("D3"),
-                                                  Result = x.Result == EnumGameResult.WIN.ToString() ? "Win" : (x.Result == EnumGameResult.LOSE.ToString() ? "Lose" : (x.Result == EnumGameResult.KYC_PENDING.ToString() ? "KYC Pending" : string.Empty)),
+                                                  Result = x.Result,
                                                   Award = x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0,
                                                   AwardInString = x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value.ToString("#,##0.##") : 0.ToString("#,##0.##"),
                                                   TicketNumber = !string.IsNullOrEmpty(x.TicketNumber) ? $"{x.Lottery.Phase.ToString("D3")}{CPLConstant.ProjectName}{x.TicketNumber}" : string.Empty,
@@ -207,6 +215,15 @@ namespace CPL.Controllers
         #endregion
 
         #region Game History
+
+        [Permission(EnumRole.User)]
+        public IActionResult Game()
+        {
+            var viewModel = new GameHistoryIndexViewModel();
+            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
+            return View(viewModel);
+        }
+
         [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
         public JsonResult SearchGameHistory(DataTableAjaxPostModel viewModel, int sysUserId)
         {
@@ -260,7 +277,6 @@ namespace CPL.Controllers
                         .Where(x => x.SysUserId == user.Id)
                         .Count();
 
-
                 totalResultsCount = _lotteryHistoryService
                         .Queryable()
                         .Where(x => x.SysUserId == user.Id)
@@ -274,9 +290,9 @@ namespace CPL.Controllers
 
                 var lotteryHistory = _lotteryHistoryService.Query()
                         .Include(x => x.Lottery)
-                        .Include(x => x.LotteryPrize).Select()
+                        .Include(x => x.LotteryPrize)
                         .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, x.LotteryPrize?.Value})
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
                         .GroupBy(x => x.LotteryId)
                         .Select(y => new GameHistoryViewModel
                         {
@@ -284,16 +300,16 @@ namespace CPL.Controllers
                             CreatedDateInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("yyyy/MM/dd"),
                             CreatedTimeInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("HH:mm:ss"),
                             GameType = EnumGameType.LOTTERY.ToString(),
-                            GameId = y.Select(x=>x.LotteryId).FirstOrDefault(),
+                            GameId = y.Select(x => x.LotteryId).FirstOrDefault(),
                             Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : (y.Any(x => x.Result == EnumGameResult.LOSE.ToString()) ? EnumGameResult.LOSE.ToString() : string.Empty)),
                             AmountInString = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("#,##0"),
                             Amount = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()),
-                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value.GetValueOrDefault(0))).ToString("#,##0"),
-                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value.GetValueOrDefault(0))),
+                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)).ToString("#,##0"),
+                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)),
                             BalanceInString = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value.GetValueOrDefault(0)) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("+#,##0;-#,##0") : string.Empty,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("+#,##0;-#,##0") : string.Empty,
                             Balance = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value.GetValueOrDefault(0)) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()) : 0,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()) : 0,
                         })
                         .AsQueryable()
                         .ToList();
@@ -315,9 +331,9 @@ namespace CPL.Controllers
             {
                 filteredResultsCount = _lotteryHistoryService.Query()
                         .Include(x => x.Lottery)
-                        .Include(x => x.LotteryPrize).Select()
+                        .Include(x => x.LotteryPrize)
                         .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, x.LotteryPrize?.Value})
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
                         .GroupBy(x => x.LotteryId)
                         .Select(y => new GameHistoryViewModel
                         {
@@ -329,19 +345,17 @@ namespace CPL.Controllers
                             Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : EnumGameResult.LOSE.ToString()),
                             AmountInString = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("#,##0"),
                             Amount = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()),
-                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value.GetValueOrDefault(0))).ToString("#,##0"),
-                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value.GetValueOrDefault(0))),
+                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)).ToString("#,##0"),
+                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)),
                             BalanceInString = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value.GetValueOrDefault(0)) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("+#,##0;-#,##0") : string.Empty,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("+#,##0;-#,##0") : string.Empty,
                             Balance = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value.GetValueOrDefault(0)) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()) : 0,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()) : 0,
                         })
                         .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
                         .Count()
                         +
-                        _pricePredictionHistoryService.Query()
-                        .Select()
-                        .AsQueryable()
+                        _pricePredictionHistoryService.Queryable()
                         .Where(x => x.SysUserId == user.Id)
                         .Select(x => Mapper.Map<GameHistoryViewModel>(x))
                         .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
@@ -360,9 +374,9 @@ namespace CPL.Controllers
 
                 var lotteryHistory = _lotteryHistoryService.Query()
                         .Include(x => x.Lottery)
-                        .Include(x => x.LotteryPrize).Select()
+                        .Include(x => x.LotteryPrize)
                         .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, x.LotteryPrize?.Value})
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
                         .GroupBy(x => x.LotteryId)
                         .Select(y => new GameHistoryViewModel
                         {
@@ -374,21 +388,19 @@ namespace CPL.Controllers
                             Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : EnumGameResult.LOSE.ToString()),
                             AmountInString = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("#,##0"),
                             Amount = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()),
-                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value.GetValueOrDefault(0))).ToString("#,##0"),
-                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value.GetValueOrDefault(0))),
+                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)).ToString("#,##0"),
+                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)),
                             BalanceInString = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value.GetValueOrDefault(0)) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("+#,##0;-#,##0") : string.Empty,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("+#,##0;-#,##0") : string.Empty,
                             Balance = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value.GetValueOrDefault(0)) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()) : 0,
+                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()) : 0,
                         })
                         .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
                         .AsQueryable()
                         .ToList();
 
                 var pricePredictionHistory = _pricePredictionHistoryService
-                        .Query()
-                        .Select()
-                        .AsQueryable()
+                        .Queryable()
                         .Where(x => x.SysUserId == user.Id)
                         .Select(x => Mapper.Map<GameHistoryViewModel>(x))
                         .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
@@ -401,6 +413,60 @@ namespace CPL.Controllers
                     .Take(take)
                     .ToList();
             }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.User)]
+        public IActionResult GetDataLineChart()
+        {
+            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
+            var viewModel = Mapper.Map<GameHistoryViewModel>(user);
+
+            var lotteryHistory = _lotteryHistoryService.Query()
+                        .Include(x => x.Lottery)
+                        .Include(x => x.LotteryPrize)
+                        .Where(x => x.SysUserId == user.Id)
+                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
+                        .GroupBy(x => x.LotteryId)
+                        .Select(y => new GameHistoryViewModel
+                        {
+                            CreatedDate = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault(),
+                            Amount = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()),
+                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)),
+                        })
+                        .AsQueryable()
+                        .ToList();
+
+            var pricePredictionHistory = _pricePredictionHistoryService
+                    .Queryable()
+                    .Where(x => x.SysUserId == user.Id)
+                    .Select(x => Mapper.Map<GameHistoryViewModel>(x))
+                    .ToList();
+
+            var gameHistoryList = lotteryHistory.Concat(pricePredictionHistory).ToList();
+
+            viewModel.MonthlyInvest = gameHistoryList.AsQueryable()
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Amount) })
+                        .ToList();
+            viewModel.MonthlyInvest.Reverse();
+
+            viewModel.AssetChange = gameHistoryList.AsQueryable()
+                        .Where(x => x.Result != string.Empty)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => (x.Award.Value - x.Amount)) })
+                        .ToList();
+            viewModel.AssetChange.Reverse();
+
+            viewModel.BonusChange = gameHistoryList.AsQueryable()
+                        .Where(x => x.Result != string.Empty)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Award.Value) })
+                        .ToList();
+            viewModel.BonusChange.Reverse();
+
+
+            return new JsonResult(new { success = true, message = JsonConvert.SerializeObject(viewModel) });
         }
         #endregion
 
@@ -460,7 +526,6 @@ namespace CPL.Controllers
             var transactionHistory = _coinTransactionService
                                           .Query()
                                           .Include(x => x.Currency)
-                                          .Select()
                                           .Where(x => x.SysUserId == user.Id && (_currencyId == 0 ? true : x.CurrencyId == _currencyId))
                                           .Select(x => new CoinTransactionViewModel
                                           {
@@ -508,7 +573,6 @@ namespace CPL.Controllers
             var viewModel = _coinTransactionService
                                     .Query()
                                     .Include(x => x.Currency)
-                                    .Select()
                                     .Where(x => /*x.SysUserId == sysUserId &&*/ x.Id == id)
                                     .Select(x => new CoinTransactionViewModel
                                     {
@@ -537,6 +601,14 @@ namespace CPL.Controllers
         #endregion
 
         #region Price Prediction History
+
+        [Permission(EnumRole.User)]
+        public IActionResult PricePrediction()
+        {
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            var viewModel = new PricePredictionHistoryIndexViewModel { SysUserId = user.Id };
+            return View(viewModel);
+        }
 
         [Permission(EnumRole.User, EnumEntity.PricePredictionHistory, EnumAction.Read)]
         public JsonResult SearchPricePredictionHistory(DataTableAjaxPostModel viewModel, int? sysUserId)
@@ -576,7 +648,6 @@ namespace CPL.Controllers
             totalResultsCount = _pricePredictionHistoryService
                                  .Query()
                                  .Include(x => x.PricePrediction)
-                                 .Select()
                                  .Where(x => x.SysUserId == user.Id)
                                  .Count();
 
@@ -584,16 +655,17 @@ namespace CPL.Controllers
             var pricePredictionHistory = _pricePredictionHistoryService
                                           .Query()
                                           .Include(x => x.PricePrediction)
-                                          .Select()
                                           .Where(x => x.SysUserId == user.Id)
                                           .Select(x => new PricePredictionHistoryViewModel
                                           {
                                               ToBeComparedPrice = x.PricePrediction.ToBeComparedPrice,
                                               ToBeComparedPriceInString = $"{x.PricePrediction.ToBeComparedPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
+                                              CurrencyPair = x.PricePrediction.Coinbase,
+                                              CurrencyPairInString = EnumHelper<EnumCurrencyPair>.GetDisplayValue((EnumCurrencyPair)Enum.Parse(typeof(EnumCurrencyPair), x.PricePrediction.Coinbase)),
                                               ResultPrice = x.PricePrediction.ResultPrice,
                                               ResultPriceInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
                                               ResultTime = x.PricePrediction.ResultTime,
-                                              ResultTimeInString = x.PricePrediction.ResultTime.ToString(),
+                                              ResultTimeInString = x.PricePrediction.ResultTime.ToString("yyyy/MM/dd hh:mm:ss"),
                                               Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
                                               Status = x.UpdatedDate.HasValue == true ? EnumPricePredictionGameStatus.COMPLETED.ToString() : EnumPricePredictionGameStatus.ACTIVE.ToString(),
                                               PurcharseTime = x.CreatedDate,
@@ -602,7 +674,7 @@ namespace CPL.Controllers
                                               BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
                                               Amount = x.Amount,
                                               AmountInString = $"{x.Amount.ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
-                                              Result = x.Result == EnumGameResult.WIN.ToString() ? "Win" : (x.Result == EnumGameResult.LOSE.ToString() ? "Lose" : (x.Result == EnumGameResult.KYC_PENDING.ToString() ? "KYC Pending" : string.Empty)),
+                                              Result = x.Result,
                                           });
 
             if (string.IsNullOrEmpty(searchBy))
@@ -620,6 +692,7 @@ namespace CPL.Controllers
                                                     || x.AmountInString.ToLower().Contains(searchBy)
                                                     || x.BonusInString.ToLower().Contains(searchBy)
                                                     || x.ResultPriceInString.ToLower().Contains(searchBy)
+                                                    || x.CurrencyPairInString.ToLower().Contains(searchBy)
                                                     || x.ResultTimeInString.ToLower().Contains(searchBy));
 
                 filteredResultsCount = pricePredictionHistory.Count();
@@ -629,90 +702,5 @@ namespace CPL.Controllers
         }
 
         #endregion
-
-        [HttpPost]
-        [Permission(EnumRole.User)]
-        public IActionResult GetDataPieChart()
-        {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
-            var viewModel = Mapper.Map<GameHistoryViewModel>(user);
-            decimal coinRate = CurrenciesPairRateHelper.GetCurrenciesPairRate(EnumCurrenciesPair.ETHBTC.ToString()).Value;
-            var tokenRate = _settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value;
-            viewModel.TotalBalance = user.ETHAmount * coinRate + user.TokenAmount / decimal.Parse(tokenRate) + user.BTCAmount;
-
-            // Holding Percentage
-            viewModel.HoldingPercentage = new HoldingPercentageViewModel();
-
-            if (user.TokenAmount > 0)
-            {
-                viewModel.HoldingPercentage.CPLPercentage = user.TokenAmount / decimal.Parse(tokenRate) / viewModel.TotalBalance * 100;
-            }
-            if (user.TokenAmount > 0)
-            {
-                viewModel.HoldingPercentage.ETHPercentage = user.ETHAmount * coinRate / viewModel.TotalBalance * 100;
-            }
-            if (user.BTCAmount > 0)
-            {
-                viewModel.HoldingPercentage.BTCPercentage = user.BTCAmount / viewModel.TotalBalance * 100;
-            }
-
-            var mess = JsonConvert.SerializeObject(viewModel.HoldingPercentage, Formatting.Indented);
-            return new JsonResult(new { success = true, message = mess });
-        }
-
-        [HttpPost]
-        [Permission(EnumRole.User)]
-        public IActionResult GetDataLineChart()
-        {
-            var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id);
-            var viewModel = Mapper.Map<GameHistoryViewModel>(user);
-
-            var lotteryHistory = _lotteryHistoryService.Query()
-                        .Include(x => x.Lottery)
-                        .Include(x => x.LotteryPrize).Select()
-                        .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, x.LotteryPrize?.Value })
-                        .GroupBy(x => x.LotteryId)
-                        .Select(y => new GameHistoryViewModel
-                        {
-                            CreatedDate = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault(),
-                            Amount = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()),
-                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value.GetValueOrDefault(0))),
-                        })
-                        .AsQueryable()
-                        .ToList();
-
-            var pricePredictionHistory = _pricePredictionHistoryService
-                    .Queryable()
-                    .Where(x => x.SysUserId == user.Id)
-                    .Select(x => Mapper.Map<GameHistoryViewModel>(x))
-                    .ToList();
-
-            var gameHistoryList = lotteryHistory.Concat(pricePredictionHistory).ToList();
-
-            viewModel.MonthlyInvest = gameHistoryList.AsQueryable()
-                        .GroupBy(x => x.CreatedDate.Day)
-                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Amount) })
-                        .ToList();
-            viewModel.MonthlyInvest.Reverse();
-
-            viewModel.AssetChange = gameHistoryList.AsQueryable()
-                        .Where(x => x.Result != string.Empty)
-                        .GroupBy(x => x.CreatedDate.Day)
-                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => (x.Award.Value - x.Amount)) })
-                        .ToList();
-            viewModel.AssetChange.Reverse();
-
-            viewModel.BonusChange = gameHistoryList.AsQueryable()
-                        .Where(x => x.Result != string.Empty)
-                        .GroupBy(x => x.CreatedDate.Day)
-                        .Select(y => new WalletChangeViewModel { Date = y.Select(x => x.CreatedDate.ToString("yyyy-MM-dd")).FirstOrDefault(), Amount = y.Sum(x => x.Award.Value) })
-                        .ToList();
-            viewModel.BonusChange.Reverse();
-
-
-            var mess = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
-            return new JsonResult(new { success = true, message = mess });
-        }
     }
 }

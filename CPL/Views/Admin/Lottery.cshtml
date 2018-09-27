@@ -21,7 +21,7 @@
                     <div class="breadcrumb-wrapper col-12">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a asp-controller="Dashboard" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                                <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
                             </li>
                             <li class="breadcrumb-item active">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")
@@ -46,7 +46,7 @@
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Volume")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Price")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</th>
-                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopSlideImage")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopTopImage")</th>
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopListingImage")</th>
                                         @*<th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileListingImage")</th>*@
                                         <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
@@ -54,7 +54,7 @@
                                 </thead>
                             </table>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer text-right">
                             <button type="button" id="btn-add" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Add") <i class="la la-plus font-size-15px"></i></button>
                         </div>
                     </div>
@@ -65,6 +65,8 @@
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Activate")" id="activate" />
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Active")" id="active" />
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Completed")" id="completed" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deactivated")" id="deactivated" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deactivate")" id="deactivate" />
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Prize")" id="prize-text" />
                 </div>
             </div>
@@ -79,6 +81,7 @@
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/switchery/switchery.min.js"></script>
+    <script src="~/js/dashboard/plugins/bootstrap-selectpicker.js"></script>
     <script src="~/js/dashboard/plugins/intl-tel-input/js/intlTelInput.js"></script>
     <script src="~/js/dashboard/plugins/intl-tel-input/js/utils.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>

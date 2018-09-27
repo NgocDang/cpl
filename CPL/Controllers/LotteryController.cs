@@ -9,6 +9,7 @@ using CPL.Misc.Utils;
 using CPL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,12 +58,14 @@ namespace CPL.Controllers
         {
             if (id.HasValue)
             {
-                var lottery = _lotteryService
-                                .Query()
+                var lottery = _lotteryService.Query()
+                                .Include(x => x.LotteryDetails)
                                 .Include(x => x.LotteryHistories)
                                 //.Include(x => x.LotteryPrizes)
-                                .Select()
-                                .FirstOrDefault(x => x.Id == id);
+                                .FirstOrDefault(x => x.Id == id && !x.IsDeleted && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED));
+                if (lottery == null)
+                    return RedirectToAction("Index", "Home");
+
                 var viewModel = Mapper.Map<LotteryIndexViewModel>(lottery);
                 var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
                 if (user != null)
@@ -113,7 +116,7 @@ namespace CPL.Controllers
         {
             var viewModel = new LotteryTicketPurchaseViewModel();
 
-            viewModel.TicketPrice = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault().UnitPrice;
+            viewModel.TicketPrice = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == lotteryId).UnitPrice;
             viewModel.TotalTickets = amount;
             viewModel.TotalPriceOfTickets = viewModel.TotalTickets * viewModel.TicketPrice;
 
@@ -122,10 +125,10 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public IActionResult ConfirmPurchaseTicket(LotteryTicketPurchaseViewModel viewModel)
+        public IActionResult ConfirmPurchaseTicket(LotteryTicketPurchaseViewModel viewModel, MobileModel mobileModel)
         {
             var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            if (user == null)
+            if (user == null && !mobileModel.IsMobile)
             {
                 var loginViewModel = new AccountLoginModel();
 
@@ -137,7 +140,29 @@ namespace CPL.Controllers
             {
                 try
                 {
-                    var currentUser = _sysUserService.Query().Select().Where(x => x.Id == user.Id).FirstOrDefault();
+                    int userId;
+                    if (mobileModel.IsMobile)
+                    {
+                        if (mobileModel.MobileUserId.HasValue)
+                        {
+                            userId = mobileModel.MobileUserId.Value;
+                        }
+                        else
+                        {
+                            return new JsonResult(new
+                            {
+                                code = EnumResponseStatus.ERROR,
+                                error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs
+                            });
+                        }
+                    }
+                    else
+                    {
+                        userId = user.Id;
+                    }
+
+                    var currentUser = _sysUserService.Queryable().Where(x => x.Id == userId).FirstOrDefault();
+                    
                     var lotteryId = viewModel.LotteryId;
 
                     var lotteryRecordList = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).ToList();
@@ -146,11 +171,11 @@ namespace CPL.Controllers
                     if (lotteryRecordList.Count > 0)
                         lastTicketIndex = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).Max(x => x.TicketIndex);
 
-                    var unitPrice = _lotteryService.Queryable().Where(x => x.Id == lotteryId.Value).FirstOrDefault().UnitPrice;
+                    var unitPrice = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == lotteryId.Value).UnitPrice;
 
                     var totalPriceOfTickets = viewModel.TotalTickets * unitPrice;
 
-                    var currentLottery = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault();
+                    var currentLottery = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == lotteryId);
 
                     if (viewModel.TotalTickets <= currentLottery.Volume - lotteryRecordList.Count())
                     {
@@ -159,7 +184,7 @@ namespace CPL.Controllers
                             /// Example paramsInJson: {"1":{"uint32":"4"},"2":{"address":"0xB43eA1802458754A122d02418Fe71326030C6412"}, "3": {"uint32[]":"[1, 2, 3]"}}
                             var userAddress = user.ETHHDWalletAddress;
                             var ticketIndexList = new List<int>[viewModel.TotalTickets / 10 + 1];
-                            var lotteryPhase = _lotteryService.Queryable().Where(x => x.Id == lotteryId).FirstOrDefault().Phase;
+                            var lotteryPhase = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == lotteryId).Phase;
 
                             var listIndex = 0;
                             ticketIndexList[listIndex] = new List<int>();
@@ -177,13 +202,13 @@ namespace CPL.Controllers
 
                             var totalOfTicketSuccessful = 0;
 
+                            var buyTime = DateTime.Now;
                             foreach (var ticket in ticketIndexList)
                             {
                                 if (ticket == null) continue;
 
                                 var paramJson = string.Format(CPLConstant.RandomParamInJson, lotteryPhase, userAddress, string.Join(",", ticket.ToArray()));
 
-                                var buyTime = DateTime.Now;
                                 var ticketGenResult = ServiceClient.ETokenClient.CallTransactionAsync(Authentication.Token, CPLConstant.OwnerAddress, CPLConstant.OwnerPassword, "random", CPLConstant.GasPriceMultiplicator, CPLConstant.DurationInSecond, paramJson);
                                 ticketGenResult.Wait();
 
@@ -210,15 +235,62 @@ namespace CPL.Controllers
 
                             _unitOfWork.SaveChanges();
 
-                            return new JsonResult(new { success = true, token = currentUser.TokenAmount.ToString("N0"), hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful), message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully") });
+                            if (mobileModel.IsMobile)
+                            {
+                                return new JsonResult(new
+                                {
+                                    code = EnumResponseStatus.SUCCESS,
+                                    token = currentUser.TokenAmount.ToString("N0"),
+                                    hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful),
+                                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully")
+                                });
+                            }
+
+                            return new JsonResult(new { success = true,
+                                                        token = currentUser.TokenAmount.ToString("N0"),
+                                                        hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful),
+                                                        message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully") });
                         }
                         else
+                        {
+                            if (mobileModel.IsMobile)
+                            {
+                                return new JsonResult(new
+                                {
+                                    code = EnumResponseStatus.WARNING,
+                                    error_message_key = CPLConstant.MobileAppConstant.LotteryDetailNotEnoughCPL
+                                });
+                            }
+
                             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NotEnoughCPL") });
-                    }else
-                        return new JsonResult(new { success = false, message = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NoTicketsLeft"), currentLottery.Volume - lotteryRecordList.Count())});
+                        }
+                            
+                    }
+                    else
+                    {
+                        if (mobileModel.IsMobile)
+                        {
+                            return new JsonResult(new
+                            {
+                                code = EnumResponseStatus.WARNING,
+                                error_message_key = CPLConstant.MobileAppConstant.LotteryDetailNoTicketsLeft
+                            });
+                        }
+
+                        return new JsonResult(new { success = false, message = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NoTicketsLeft"), currentLottery.Volume - lotteryRecordList.Count()) });
+                    }
                 }
                 catch (Exception ex)
                 {
+                    if (mobileModel.IsMobile)
+                    {
+                        return new JsonResult(new
+                        {
+                            code = EnumResponseStatus.ERROR,
+                            error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs,
+                            error_message = ex.Message
+                        });
+                    }
                     return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
                 }
             }
