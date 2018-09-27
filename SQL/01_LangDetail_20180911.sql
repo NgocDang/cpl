@@ -162,3 +162,12 @@ INSERT  INTO LangDetail VALUES (2, N'TotalRevenue', N'総収入');
 
 INSERT  INTO LangDetail VALUES (1, N'TotalSale', N'Total Sale');
 INSERT  INTO LangDetail VALUES (2, N'TotalSale', N'総売上');
+
+UPDATE LangDetail SET Value = N'Affiliate Generated URL' WHERE Name = N'AffliateUrl' and LangId = 1;
+
+update LangDetail set Value = N'BTC/USDT' where name = N'BTCPricePredictionChartTitle'
+update LangDetail set Value = N'High', name = N'High' where name = N'Up'
+update LangDetail set Value = N'Low', name = N'Low' where name = N'Down'
+update LangDetail set Value = N'今すぐ購入' where name = N'Bet' and LangId = 2
+
+DELETE LangDetail WHERE Name = 'TotalIntroducer';
