@@ -226,7 +226,7 @@
                         // generate an array of random data
                         var data = [];
                         var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-                        var btcPrices = JSON.parse($("#PreviousBtcRate").val());
+                        var btcPrices = JSON.parse($("#price-prediction-nav-bar").parent().find(".tab-pane.active #PreviousBtcRate").val());
                         for (i = 0; i < btcPrices.length; i++) {
                             data.push({
                                 x: moment(btcPrices[i].Time * 1000).valueOf(), // Convert to milisecond
