@@ -37,21 +37,7 @@ namespace CPL.Misc
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             // If mobile 
-            if (context.HttpContext.Request.Method == "GET" && !string.IsNullOrEmpty(context.HttpContext.Request.Query["IsMobile"].ToString()) && bool.Parse(context.HttpContext.Request.Query["IsMobile"].ToString()))
-            {
-                if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["MobileUserId"].ToString()))
-                {
-                    var mobileUserId = int.Parse(context.HttpContext.Request.Query["MobileUserId"].ToString());
-                    var sysUserService = (ISysUserService)context.HttpContext.RequestServices.GetService(typeof(ISysUserService));
-                    context.HttpContext.Session.SetObjectAsJson("CurrentUser", sysUserService.Queryable().FirstOrDefault(x => x.Id == mobileUserId));
-                }
-
-                if (!string.IsNullOrEmpty(context.HttpContext.Request.Query["MobileLangId"].ToString()))
-                {
-                    var langId = int.Parse(context.HttpContext.Request.Query["MobileLangId"].ToString());
-                    context.HttpContext.Session.SetInt32("LangId", langId);
-                }
-            } else if (context.HttpContext.Request.Method == "POST" && context.ActionArguments.ContainsKey("mobileModel"))
+            if (context.ActionArguments.ContainsKey("mobileModel"))
             {
                 var mobileModel = (MobileModel)context.ActionArguments["mobileModel"];
                 if (mobileModel.MobileUserId.HasValue)
