@@ -1829,7 +1829,7 @@ namespace CPL.Controllers
         {
             var viewModel = new GameManagementIndexViewModel();
             viewModel.Tab = tab;
-            viewModel.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
+            viewModel.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryAdminViewModel>(x)).ToList();
             return View(viewModel);
         }
 
@@ -2533,7 +2533,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<LotteryViewModel> SearchLotteryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        public IList<LotteryAdminViewModel> SearchLotteryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
             var take = model.length;
@@ -2561,7 +2561,7 @@ namespace CPL.Controllers
                 return _lotteryService.Query()
                             .Include(x => x.LotteryDetails)
                             .Where(x => !x.IsDeleted)
-                            .Select(x => Mapper.Map<LotteryViewModel>(x))
+                            .Select(x => Mapper.Map<LotteryAdminViewModel>(x))
                             .OrderBy(sortBy, sortDir)
                             .Skip(skip)
                             .Take(take)
@@ -2579,7 +2579,7 @@ namespace CPL.Controllers
                 return _lotteryService.Query()
                         .Include(x => x.LotteryDetails)
                         .Where(x => !x.IsDeleted && (x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.Title.Contains(searchBy)))
-                        .Select(x => Mapper.Map<LotteryViewModel>(x))
+                        .Select(x => Mapper.Map<LotteryAdminViewModel>(x))
                         .OrderBy(sortBy, sortDir)
                         .Skip(skip)
                         .Take(take)
@@ -2590,9 +2590,9 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IActionResult ViewLottery(int id)
         {
-            var lottery = new LotteryViewModel();
+            var lottery = new LotteryAdminViewModel();
 
-            lottery = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
+            lottery = Mapper.Map<LotteryAdminViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
                                                         .Include(x => x.LotteryDetails)
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
@@ -2696,8 +2696,8 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IActionResult EditLottery(int id)
         {
-            var lotteries = new LotteryViewModel();
-            lotteries = Mapper.Map<LotteryViewModel>(_lotteryService.Query()
+            var lotteries = new LotteryAdminViewModel();
+            lotteries = Mapper.Map<LotteryAdminViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
                                                         .Include(x => x.LotteryDetails)
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
@@ -2708,7 +2708,7 @@ namespace CPL.Controllers
                 detail.Lang = lang;
             }
 
-            lotteries.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
+            lotteries.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryAdminViewModel>(x)).ToList();
 
             return PartialView("_EditLottery", lotteries);
         }
@@ -2716,7 +2716,7 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IActionResult AddLottery()
         {
-            var lottery = new LotteryViewModel();
+            var lottery = new LotteryAdminViewModel();
 
             var langs = _langService.Queryable()
                 .Select(x => Mapper.Map<LangViewModel>(x))
@@ -2724,26 +2724,26 @@ namespace CPL.Controllers
 
             foreach (var lang in langs)
             {
-                lottery.LotteryDetails.Add(new LotteryDetailViewModel()
+                lottery.LotteryDetails.Add(new LotteryDetailAdminViewModel()
                 {
                     Lang = lang
                 });
             }
 
-            lottery.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryViewModel>(x)).ToList();
+            lottery.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryAdminViewModel>(x)).ToList();
             return PartialView("_EditLottery", lottery);
         }
 
         [Permission(EnumRole.Admin)]
         public IActionResult AddLotteryCategory()
         {
-            var lotteryCategory = new LotteryCategoryViewModel();
+            var lotteryCategory = new LotteryCategoryAdminViewModel();
             return PartialView("_EditLotteryCategory", lotteryCategory);
         }
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult DoAddLotteryCategory(LotteryCategoryViewModel viewModel)
+        public JsonResult DoAddLotteryCategory(LotteryCategoryAdminViewModel viewModel)
         {
             try
             {
@@ -2785,7 +2785,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult DoEditLottery(LotteryViewModel viewModel)
+        public JsonResult DoEditLottery(LotteryAdminViewModel viewModel)
         {
             try
             {
@@ -2928,7 +2928,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult DoAddLottery(LotteryViewModel viewModel)
+        public JsonResult DoAddLottery(LotteryAdminViewModel viewModel)
         {
             try
             {

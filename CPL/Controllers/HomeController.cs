@@ -70,9 +70,9 @@ namespace CPL.Controllers
                 .Where(x => !x.IsDeleted && (x.LotteryHistories.Count() < x.Volume && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
                 .OrderByDescending(x => x.CreatedDate);
 
-            var viewModel = new HomeViewModel();
+            var viewModel = new LotteryIndexViewModel();
             viewModel.Lotteries = lotteries
-                .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
+                .Select(x => Mapper.Map<LotteryIndexLotteryViewModel>(x))
                 .ToList();
 
             var lastNews = _newsService.Queryable().LastOrDefault();

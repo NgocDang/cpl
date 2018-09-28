@@ -9,6 +9,6 @@ namespace CPL.Models
     public class GameManagementIndexViewModel
     {
         public string Tab { get; set; }
-        public List<LotteryCategoryViewModel> LotteryCategories { get; set; }
+        public List<LotteryCategoryAdminViewModel> LotteryCategories { get; set; }
     }
 }
