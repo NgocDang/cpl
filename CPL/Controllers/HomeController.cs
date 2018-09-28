@@ -63,22 +63,7 @@ namespace CPL.Controllers
         [Permission(EnumRole.Guest)]
         public IActionResult Index()
         {
-            var lotteries = _lotteryService.Query()
-                .Include(x => x.LotteryCategory)
-                .Include(x => x.LotteryDetails)
-                .Include(x => x.LotteryHistories)
-                .Where(x => !x.IsDeleted && (x.LotteryHistories.Count() < x.Volume && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
-                .OrderByDescending(x => x.CreatedDate);
-
-            var viewModel = new HomeViewModel();
-            viewModel.Lotteries = lotteries
-                .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
-                .ToList();
-
-            var lastNews = _newsService.Queryable().LastOrDefault();
-            viewModel.News = Mapper.Map<NewsViewModel>(lastNews);
-
-            return View(viewModel);
+            return new EmptyResult();
         }
 
         [Permission(EnumRole.Guest)]

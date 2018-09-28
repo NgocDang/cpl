@@ -30,13 +30,13 @@ namespace CPL.ViewComponents
                 .Where(x => !x.IsDeleted && (x.LotteryHistories.Count() < x.Volume && x.Status == (int)EnumLotteryGameStatus.ACTIVE))
                 .OrderByDescending(x => x.CreatedDate);
 
-            var viewModel = new HomeViewModel();
+            var viewModel = new LotteryIndexViewModel();
             viewModel.Lotteries = lotteries
-                .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
+                .Select(x => Mapper.Map<LotteryIndexLotteryViewModel>(x))
                 .ToList();
 
             viewModel.Slides = lotteries
-                .Select(x => Mapper.Map<HomeSlideViewModel>(x))
+                .Select(x => Mapper.Map<LotteryIndexSlideViewModel>(x))
                 .ToList();
 
             return View(viewModel);

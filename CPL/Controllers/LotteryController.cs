@@ -26,6 +26,7 @@ namespace CPL.Controllers
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
         private readonly ILotteryService _lotteryService;
+        private readonly INewsService _newsService;
         private readonly ILotteryPrizeService _lotteryPrizeService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
 
@@ -38,6 +39,7 @@ namespace CPL.Controllers
             ITemplateService templateService,
             ISysUserService sysUserService,
             ILotteryService lotteryService,
+            INewsService newsService,
             ILotteryPrizeService lotteryPrizeService,
             ILotteryHistoryService lotteryHistoryService)
         {
@@ -48,52 +50,52 @@ namespace CPL.Controllers
             this._unitOfWork = unitOfWork;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
+            this._newsService = newsService;
             this._lotteryService = lotteryService;
             this._lotteryPrizeService = lotteryPrizeService;
             this._lotteryHistoryService = lotteryHistoryService;
         }
 
         [Permission(EnumRole.Guest)]
-        public IActionResult Index(int? id)
+        public IActionResult Index()
         {
-            if (id.HasValue)
-            {
-                var lottery = _lotteryService.Query()
-                                .Include(x => x.LotteryDetails)
-                                .Include(x => x.LotteryHistories)
-                                //.Include(x => x.LotteryPrizes)
-                                .FirstOrDefault(x => x.Id == id && !x.IsDeleted && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED));
-                if (lottery == null)
-                    return RedirectToAction("Index", "Home");
+            var lotteries = _lotteryService.Query()
+                .Include(x => x.LotteryCategory)
+                .Include(x => x.LotteryDetails)
+                .Include(x => x.LotteryHistories)
+                .Where(x => !x.IsDeleted && (x.LotteryHistories.Count() < x.Volume && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
+                .OrderByDescending(x => x.CreatedDate);
 
-                var viewModel = Mapper.Map<LotteryIndexViewModel>(lottery);
-                var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-                if (user != null)
-                    viewModel.SysUserId = user.Id;
+            var viewModel = new LotteryIndexViewModel();
+            viewModel.Lotteries = lotteries
+                .Select(x => Mapper.Map<LotteryIndexLotteryViewModel>(x))
+                .ToList();
 
-                // DO NOT DELETE! THIS BLOCK OF CODE TO CALCULATE THE WINNING POSSIBILITY
-                //foreach (var lottery in viewModel.Lotteries)
-                //{
-                //    var numberOfGroup = lottery.Volume / CPLConstant.LotteryGroupSize;
-                //    var groups = Enumerable.Repeat(0, numberOfGroup).ToArray();
-                //    var groupSize = CPLConstant.LotteryGroupSize;
+            var lastNews = _newsService.Queryable().LastOrDefault();
+            viewModel.News = Mapper.Map<NewsViewModel>(lastNews);
 
-                //    for (var i = lottery.LotteryPrizes.Count - 1; i >= 0; i--)
-                //    {
-                //        lottery.LotteryPrizes[i].Probability = Math.Round(((decimal)lottery.LotteryPrizes[i].Volume / (decimal)numberOfGroup) * (1m / (decimal)groupSize) * 100m, 4);
-                //        ProbabilityCalculate(ref groups, ref numberOfGroup, ref groupSize, lottery.LotteryPrizes[i].Volume);
-                //    }
-                //}
+            return View(viewModel);
+        }
 
-                if (viewModel.Volume > 0)
-                    viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.LotteryHistories.Count() / (decimal)viewModel.Volume * 100m).ToString();
+        [Permission(EnumRole.Guest)]
+        public IActionResult Detail(int id)
+        {
+            var lottery = _lotteryService.Query()
+                            .Include(x => x.LotteryDetails)
+                            .Include(x => x.LotteryHistories)
+                            .FirstOrDefault(x => x.Id == id && !x.IsDeleted && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED));
+            if (lottery == null)
+                return RedirectToAction("Index");
 
-                return View(viewModel);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            var viewModel = Mapper.Map<LotteryViewModel>(lottery);
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            if (user != null)
+                viewModel.SysUserId = user.Id;
+
+            if (viewModel.Volume > 0)
+                viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.LotteryHistories.Count() / (decimal)viewModel.Volume * 100m).ToString();
+
+            return View(viewModel);
         }
 
         private void ProbabilityCalculate(ref int[] groups, ref int numberOfGroup, ref int groupSize, int numberOfGroupWasRemoved)

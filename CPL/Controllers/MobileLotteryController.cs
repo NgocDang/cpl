@@ -49,7 +49,7 @@ namespace CPL.Controllers
                         new
                         {
                             code = EnumResponseStatus.SUCCESS,
-                            data = Mapper.Map<LotteryIndexViewModel>(lottery)
+                            data = Mapper.Map<LotteryViewModel>(lottery)
                         }
                     );
                 }

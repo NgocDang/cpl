@@ -12,13 +12,13 @@ namespace CPL.Misc.AutoMapper
     {
         public LotteryProfile()
         {
-            CreateMap<Lottery, LotteryViewModel>()
+            CreateMap<Lottery, LotteryAdminViewModel>()
                 .ForMember(dest => dest.CreatedDateInString, opt => opt.MapFrom(src => src.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss")));
-            CreateMap<Lottery, LotteryIndexViewModel>();
-            CreateMap<LotteryViewModel, Lottery>();
-            CreateMap<Lottery, HomeLotteryViewModel>()
+            CreateMap<Lottery, LotteryViewModel>();
+            CreateMap<LotteryAdminViewModel, Lottery>();
+            CreateMap<Lottery, LotteryIndexLotteryViewModel>()
                 .ForMember(dest => dest.NumberOfTicketLeft, opt => opt.MapFrom(src => src.Volume - src.LotteryHistories.Count));
-            CreateMap<Lottery, HomeSlideViewModel>();
+            CreateMap<Lottery, LotteryIndexSlideViewModel>();
         }
     }
 }

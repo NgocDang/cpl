@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPL.Models
 {
-    public class LotteryDetailViewModel
+    public class LotteryDetailAdminViewModel
     {
         public int Id { get; set; }
         public int LotteryId { get; set; }
@@ -19,5 +19,10 @@ namespace CPL.Models
         public string Description { get; set; }
 
         public LangViewModel Lang { get; set; }
+        public IFormFile DesktopTopImageFile { get; set; }
+        public IFormFile MobileTopImageFile { get; set; }
+        public IFormFile PrizeImageFile { get; set; }
+        public IFormFile DesktopListingImageFile { get; set; }
+        public IFormFile MobileListingImageFile { get; set; }
     }
 }

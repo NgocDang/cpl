@@ -12,6 +12,7 @@ namespace CPL.Misc.AutoMapper
     {
         public LotteryDetailProfile()
         {
+            CreateMap<LotteryDetail, LotteryDetailAdminViewModel>();
             CreateMap<LotteryDetail, LotteryDetailViewModel>();
         }
     }

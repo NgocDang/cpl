@@ -193,7 +193,7 @@ namespace CPL.Controllers
             return Mapper.Map<NewsViewModel>(lastestNews);
         }
 
-        private List<HomeLotteryViewModel> _getLotteriesList()
+        private List<LotteryIndexLotteryViewModel> _getLotteriesList()
         {
             var lotteries = _lotteryService.Query()
                                 .Include(x => x.LotteryHistories)
@@ -201,7 +201,7 @@ namespace CPL.Controllers
                                         && (x.LotteryHistories.Count() < x.Volume
                                         && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
                                 .OrderByDescending(x => x.CreatedDate)
-                                .Select(x => Mapper.Map<HomeLotteryViewModel>(x))
+                                .Select(x => Mapper.Map<LotteryIndexLotteryViewModel>(x))
                                 .ToList();
             return lotteries;
         }
