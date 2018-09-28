@@ -161,7 +161,7 @@ namespace CPL.Controllers
                         userId = user.Id;
                     }
 
-                    var currentUser = _sysUserService.Queryable().Where(x => x.Id == userId).FirstOrDefault();
+                    var userEntity = _sysUserService.Queryable().FirstOrDefault(x => x.Id == userId);
                     
                     var lotteryId = viewModel.LotteryId;
 
@@ -179,10 +179,10 @@ namespace CPL.Controllers
 
                     if (viewModel.TotalTickets <= currentLottery.Volume - lotteryRecordList.Count())
                     {
-                        if (totalPriceOfTickets <= currentUser.TokenAmount)
+                        if (totalPriceOfTickets <= userEntity.TokenAmount)
                         {
                             /// Example paramsInJson: {"1":{"uint32":"4"},"2":{"address":"0xB43eA1802458754A122d02418Fe71326030C6412"}, "3": {"uint32[]":"[1, 2, 3]"}}
-                            var userAddress = user.ETHHDWalletAddress;
+                            var userAddress = userEntity.ETHHDWalletAddress;
                             var ticketIndexList = new List<int>[viewModel.TotalTickets / 10 + 1];
                             var lotteryPhase = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == lotteryId).Phase;
 
@@ -220,7 +220,7 @@ namespace CPL.Controllers
                                         {
                                             CreatedDate = buyTime,
                                             LotteryId = lotteryId.Value,
-                                            SysUserId = user.Id,
+                                            SysUserId = userEntity.Id,
                                             TicketIndex = ticket[i],
                                             TxHashId = ticketGenResult.Result.TxId
                                         };
@@ -230,8 +230,8 @@ namespace CPL.Controllers
                                     }
                                 }
                             }
-                            currentUser.TokenAmount -= totalOfTicketSuccessful * unitPrice;
-                            _sysUserService.Update(currentUser);
+                            userEntity.TokenAmount -= totalOfTicketSuccessful * unitPrice;
+                            _sysUserService.Update(userEntity);
 
                             _unitOfWork.SaveChanges();
 
@@ -240,14 +240,14 @@ namespace CPL.Controllers
                                 return new JsonResult(new
                                 {
                                     code = EnumResponseStatus.SUCCESS,
-                                    token = currentUser.TokenAmount.ToString("N0"),
+                                    token = userEntity.TokenAmount.ToString("N0"),
                                     hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful),
                                     message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully")
                                 });
                             }
 
                             return new JsonResult(new { success = true,
-                                                        token = currentUser.TokenAmount.ToString("N0"),
+                                                        token = userEntity.TokenAmount.ToString("N0"),
                                                         hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful),
                                                         message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully") });
                         }
