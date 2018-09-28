@@ -1,12 +1,12 @@
 ﻿@model LotteryIndexViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Home");
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery");
 }
 @section styles{
     <link href="~/css/dashboard/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/css/dashboard/plugins/owl-carousel/owl.theme.default.min.css" rel="stylesheet" />
-    <link href="~/css/dashboard/cpl.home.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/dashboard/cpl.lottery.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/dashboard/cpl.sliderbanner.css" rel="stylesheet" asp-append-version="true" />
 }
 
@@ -97,6 +97,6 @@
 @section scripts{
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.min.js"></script>
     <script src="~/js/dashboard/marquee.min.js"></script>
-    <script src="~/js/dashboard/cpl.home.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.lottery.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.sliderbanner.js" asp-append-version="true"></script>
 }

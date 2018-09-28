@@ -26,6 +26,7 @@ namespace CPL.Controllers
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
         private readonly ILotteryService _lotteryService;
+        private readonly INewsService _newsService;
         private readonly ILotteryPrizeService _lotteryPrizeService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
 
@@ -38,6 +39,7 @@ namespace CPL.Controllers
             ITemplateService templateService,
             ISysUserService sysUserService,
             ILotteryService lotteryService,
+            INewsService newsService,
             ILotteryPrizeService lotteryPrizeService,
             ILotteryHistoryService lotteryHistoryService)
         {
@@ -48,6 +50,7 @@ namespace CPL.Controllers
             this._unitOfWork = unitOfWork;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
+            this._newsService = newsService;
             this._lotteryService = lotteryService;
             this._lotteryPrizeService = lotteryPrizeService;
             this._lotteryHistoryService = lotteryHistoryService;
@@ -56,7 +59,22 @@ namespace CPL.Controllers
         [Permission(EnumRole.Guest)]
         public IActionResult Index()
         {
-            return View(new LotteryIndexViewModel());
+            var lotteries = _lotteryService.Query()
+                .Include(x => x.LotteryCategory)
+                .Include(x => x.LotteryDetails)
+                .Include(x => x.LotteryHistories)
+                .Where(x => !x.IsDeleted && (x.LotteryHistories.Count() < x.Volume && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
+                .OrderByDescending(x => x.CreatedDate);
+
+            var viewModel = new LotteryIndexViewModel();
+            viewModel.Lotteries = lotteries
+                .Select(x => Mapper.Map<LotteryIndexLotteryViewModel>(x))
+                .ToList();
+
+            var lastNews = _newsService.Queryable().LastOrDefault();
+            viewModel.News = Mapper.Map<NewsViewModel>(lastNews);
+
+            return View(viewModel);
         }
 
         [Permission(EnumRole.Guest)]
