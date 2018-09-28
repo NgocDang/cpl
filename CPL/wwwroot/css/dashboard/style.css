@@ -1834,3 +1834,44 @@ table.dataTable td:first-child {
     margin-left: -21px; 
     margin-right: -21px;
 }
+
+#short-content {
+    background-color: #FFEA87;
+    border-width: 2px !important;
+}
+
+#top-content
+{
+    margin-bottom: -25px;
+    z-index: 1;
+}
+
+#text-top-content {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    color:white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 575.98px) {
+    #top-content {
+        margin-bottom: -20px;
+    }
+    #text-top-content {
+        font-size: 16px;
+    }
+
+}
+
+@media screen and (max-width: 320px) {
+    #top-content {
+        margin-bottom: -17px;
+    }
+    #text-top-content {
+        font-size: 12px;
+    }
+
+}
