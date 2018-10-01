@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CPL.Models;
 using CPL.Misc;
@@ -11,15 +8,6 @@ using CPL.Core.Interfaces;
 using AutoMapper;
 using CPL.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
-using System.Net.Mail;
-using System.Net;
-using CPL.Common.Enums;
-using LinqKit;
-using CPL.Misc.Utils;
-using CPL.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Data.SqlClient;
 
 namespace CPL.Controllers
 {
@@ -63,7 +51,8 @@ namespace CPL.Controllers
         [Permission(EnumRole.Guest)]
         public IActionResult Index()
         {
-            return new EmptyResult();
+            var viewModel = new HomeViewModel();
+            return View(viewModel);
         }
 
         [Permission(EnumRole.Guest)]
