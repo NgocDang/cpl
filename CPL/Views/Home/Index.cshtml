@@ -21,15 +21,12 @@
             </div>
         </div>
         <div class="row border border-danger pt-3" id="short-content">
-            <div class="text-center col-md-4 col-12 order-sm-1 order-2">
+            <div class="text-center col-md-4 col-12 order-sm-1 order-2 mt-sm-0 mt-1">
                 <img src="~/images/home/screens.png" class="img-fluid" />
             </div>
             <div class="col-md-8 col-12 order-sm-12 order-1">
                 <p class="text-dark font-medium-2">
-                    クリプトオッズはオランダ領キュラソー政府発行のオンラインゲーミングライセンスを保有するオンラインゲーミングサイトです。<br />
-                    クリプトオッズは仮想通貨での入出金により匿名性を保ち、迅速な入出金が特徴のオンラインカジノです。スマホ一つで登録から一攫千金までお楽しみください。<br />
-                    コンテンツにはスマートコントラクト技術やランダムナンバージェネレーター(RNG)と呼ばれる数字をランダムに生成するシステムを使用しており、不正を排除したシステムで安全・安心なゲーミングを提供しています。
-                </p>
+                    @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoodds"))
             </div>
         </div>
         <div class="row text-center">
