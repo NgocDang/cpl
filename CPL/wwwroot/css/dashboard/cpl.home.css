@@ -36,6 +36,10 @@
     #top-content {
         margin-bottom: -20px;
     }
+
+    #text-top-content {
+        font-size: 14px;
+    }
 }
 
 @media screen and (max-width: 320px) {
@@ -47,3 +51,27 @@
         font-size: 12px;
     }
 }
+
+.next-arrow {
+    position: absolute;
+    right: 3px;
+    top: 35%;
+}
+
+.down-arrow {
+    position: absolute;
+    bottom: -10%;
+    left: 50%;
+    transform: translate(-50%, 10%);
+}
+
+.img-step {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.height-text-step{
+    height: 130px;
+}
+    
