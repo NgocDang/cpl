@@ -1328,9 +1328,66 @@ select.bs-select-hidden {
 }
 
 footer {
+    background: #f93147;
+}
+
+.info-bar {
     background: #ffd300;
 }
 
+.info-bar ul {
+    list-style: none;
+}
+
+.info-bar ul.big {
+    list-style: none;
+    font-size: 300%
+}
+
+    .info-bar ul.partners {
+        border-right: 1px solid #464855;
+    }
+
+        .info-bar ul.partners li a, .info-bar ul.links li a {
+            margin-right:20px;
+        }
+
+        .info-bar ul.partners li::after, .info-bar ul.links li::after {
+            position: relative;
+            content: "";
+            display: inline-block;
+            width: 0.6em;
+            height: 0.6em;
+            border-right: 0.1em solid black;
+            border-top: 0.1em solid black;
+            transform: rotate(45deg);
+            margin-right: 0.5em;
+            float: right;
+            top: 7px;
+            right: 20px;
+        }
+
+/* Change color */
+        .info-bar ul.partners li a.black:hover, .info-bar ul.links li a.black:hover {
+            color: #f93147 !important; /* For the text */
+        }
+
+        .info-bar ul.partners li:hover::after, .info-bar ul.links li:hover::after {
+            border-color: #f93147; /* For the arrow (which is a border) */
+        }
+
+.selected-language:after {
+    font-size: .8rem;
+    font-family: LineAwesome;
+    content: '\f110' !important;
+    border: none !important;
+    position: relative;
+    top: 0;
+    right: 0;
+    padding: 0 2px 0 6px;
+    margin: 0 .3em 0 0;
+    vertical-align: 0;
+}
 .header-navbar .navbar-header .navbar-brand .brand-logo {
     width: 60px;
 }
@@ -1618,6 +1675,11 @@ div.wrapper {
 
 footer {
     flex-shrink: 0;
+}
+
+.footer {
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
 
 @media (max-width: 489px) {
