@@ -16,14 +16,70 @@
 
 <section id="type-of-games">
     <div class="container">
-        <div class="row">
+        <div class="row my-1">
+            <a asp-controller="Lottery" asp-action="Index" class="mr-lg-0 mx-auto">
+                <div class="card-kind-of-games black" style="background-image: url('../../images/group 126.png'); background-position: center; background-repeat: no-repeat; background-size: cover;">
+                    <div class="text-padding mx-auto" style="text-align:center">
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</span>
+                    </div>
+                </div>
+            </a>
+            <a asp-controller="PricePrediction" asp-action="Index" class="mx-lg-4 mx-auto">
+                <div class="card-kind-of-games black" style="background-image: url('../../images/group 127.png'); background-position: center; background-repeat: no-repeat; background-size: cover;">
+                    <div class="text-padding mx-auto" style="text-align:center">
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</span>
+                    </div>
+                </div>
+            </a>
+            <a asp-controller="Slot" asp-action="Index" class="ml-lg-0 mx-auto">
+                <div class="card-kind-of-games black" style="background-image: url('../../images/group 128.png'); background-position: center; background-repeat: no-repeat; background-size: cover;">
+                    <div class="text-padding mx-auto" style="text-align:center">
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slot")</span>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </section>
 
 <section id="random-games">
     <div class="container">
-        <div class="row">
+        <div class="row my-1">
+            <div class="col-lg-6 col-md-6 col-12 card mx-0 px-0 border" style="background-color:white; border-color:#F0C401 !important; border-radius:0px">
+                <div class="card-content">
+                    <img class="img-fluid" src="~/images/Intersection 11.png" />
+                </div>
+                <div class="card-footer p-1">
+                    <div class="row">
+                        <div class="col-3 black card-random-games" style="text-align:center">
+                            <p class="my-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</p>
+                        </div>
+                        <div class="col-lg-6 col-5 px-lg-1 px-0">
+                            <input type="number" value="0" min="1" class="form-control" style="background-color:#FFEA87; border:none">
+                        </div>
+                        <div class="col-lg-3 col-4 mt-sm-0">
+                            <button type="button" class="btn btn-primary mt-sm-0 w-100 px-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12 card mx-0 px-0 border" style="background-color:white; border-color:#F63756 !important; border-radius:0px">
+                <div class="card-content">
+                    <img class="img-fluid" src="~/images/Intersection 9.png" />
+                </div>
+                <div class="card-footer p-1">
+                    <div class="col-lg-11 col-12 mx-auto">
+                        <div class="row">
+                            <div class="col-6 pl-0 pr-2">
+                                <button type="button" class="btn btn-md btn-success mt-sm-0 w-100" data-clipboard-target="#Url">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "High")</button>
+                            </div>
+                            <div class="col-6 pr-0 pl-2">
+                                <button type="button" class="btn btn-md btn-danger mt-sm-0 w-100" data-clipboard-target="#Url">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Low")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
