@@ -4,9 +4,15 @@
 .card-kind-of-games {
     width: 217.43px;
     height: 241.35px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
-
 .card-random-games {
+    background-color:white; 
+    border-radius:0px;
+}
+.card-random-games-footer {
     margin-top: 5px;
     margin-bottom: 0px;
     font-size: 20px;
@@ -23,9 +29,12 @@
     .card-kind-of-games {
         width: 96.78px;
         height: 107.53px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
-    .card-random-games {
+    .card-random-games-footer {
         margin-top: 10px;
         margin-bottom: 0px;
         font-size: 15px;
@@ -43,9 +52,12 @@
     .card-kind-of-games {
         width: 106.78px;
         height: 118.53px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
-    .card-random-games {
+    .card-random-games-footer {
         margin-top: 10px;
         margin-bottom: 0px;
         font-size: 14px;
@@ -63,9 +75,12 @@
     .card-kind-of-games {
         width: 96.78px;
         height: 107.53px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
-    .card-random-games {
+    .card-random-games-footer {
         margin-top: 10px;
         margin-bottom: 0px;
         font-size: 13px;
