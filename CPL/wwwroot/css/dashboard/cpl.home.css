@@ -2,7 +2,7 @@
     background-image: url('../../images/backgrounds/bg_02.jpg') !important;
 }
 
-#short-content {
+#what-is-crypto-odds-content {
     background-color: #FFEA87;
     border-width: 2px !important;
 }
@@ -12,7 +12,7 @@
     z-index: 1;
 }
 
-#text-top-content {
+.text-top-content {
     position: absolute;
     top: 30%;
     left: 50%;
@@ -27,7 +27,7 @@
         margin-bottom: -23px;
     }
 
-    #text-top-content {
+    .text-top-content {
         font-size: 16px;
     }
 }
@@ -37,7 +37,7 @@
         margin-bottom: -20px;
     }
 
-    #text-top-content {
+    .text-top-content {
         font-size: 14px;
     }
 }
@@ -47,7 +47,7 @@
         margin-bottom: -17px;
     }
 
-    #text-top-content {
+    .text-top-content {
         font-size: 12px;
     }
 }
@@ -73,5 +73,17 @@
 
 .height-text-step{
     height: 130px;
+}
+
+@media screen and (min-width: 425.1px) and (max-width: 768px) {
+    .height-text-step {
+        height: 200px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .height-text-step {
+        height: 200px;
+    }
 }
     
