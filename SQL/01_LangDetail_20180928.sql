@@ -14,7 +14,7 @@ insert into LangDetail values (1, N'PersonalInformationProtection', N'Personal i
 insert into LangDetail values (2, N'PersonalInformationProtection', N'個人情報保護について');
 
 --- DamTran - What is Crypto Odds - 2018/10/01
-USE CPL
+USE CPL;
 
 INSERT INTO LangDetail VALUES (1, N'WhatIsCryptoOdds', N'What is Crypto Odds');
 INSERT INTO LangDetail VALUES (2, N'WhatIsCryptoOdds', N'クリプトオッズとは');
