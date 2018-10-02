@@ -185,3 +185,89 @@ input[type=number]::-webkit-outer-spin-button {
         height: 200px;
     }
 }
+
+.item_btn {
+    position: absolute;
+    top: 500px;
+    z-index: 99;
+    left: 40%;
+    right: 40%
+}
+
+    .item_btn .shadow {
+        -webkit-box-shadow: 0 3px 0 #c21223;
+        box-shadow: 0 3px 0 #c21223;
+    }
+
+    .item_btn .btn {
+        background-image: url('../../images/btn.png');
+        max-width: 390px;
+        width: 100%;
+        height: 68px;
+        line-height: 52px;
+        border-radius: 1em;
+    }
+
+        .item_btn .btn span {
+            font-size: 1.25em;
+            font-weight: bold;
+        }
+
+
+.ef2_btn {
+    position: relative;
+}
+
+    .ef2_btn:after, .ef2_btn:before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        border-radius: 1em;
+    }
+
+    .ef2_btn.btn-primary:after, .ef2_btn.btn-primary:before {
+        -webkit-animation: btnAnimeRed 3s infinite;
+        animation: btnAnimeRed 3s infinite;
+        -webkit-box-shadow: 0 0 0 0 #ee162a;
+        box-shadow: 0 0 0 0 #ee162a;
+    }
+
+@-webkit-keyframes btnAnimeRed {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 #ee162a;
+        box-shadow: 0 0 0 0 #ee162a;
+    }
+
+    0%, 90% {
+        opacity: .7;
+    }
+
+    to {
+        -webkit-box-shadow: 0 0 0 14pt rgba(238, 22, 42, 0);
+        box-shadow: 0 0 0 14pt rgba(238, 22, 42, 0);
+        opacity: 0;
+    }
+}
+
+@keyframes btnAnimeRed {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 #ee162a;
+        box-shadow: 0 0 0 0 #ee162a;
+    }
+
+    0%, 90% {
+        opacity: .7;
+    }
+
+    to {
+        -webkit-box-shadow: 0 0 0 14pt rgba(238, 22, 42, 0);
+        box-shadow: 0 0 0 14pt rgba(238, 22, 42, 0);
+        opacity: 0;
+    }
+}

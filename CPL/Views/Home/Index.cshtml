@@ -9,30 +9,35 @@
     <link href="~/css/dashboard/cpl.home.css" rel="stylesheet" asp-append-version="true" />
 }
 
-<section id="slide">
-    <div class="owl-carousel owl-theme owl-loaded mt-0">
-        <div class="owl-stage-outer">
-            <div class="owl-stage">
-                @if (Model.Sliders != null)
-                {
-                    @foreach (var slide in Model.Sliders)
+    <section id="slide">
+        <div class="owl-carousel owl-theme owl-loaded mt-0">
+            <div class="owl-stage-outer">
+                <div class="owl-stage">
+                    @if (Model.Sliders != null)
                     {
-                        @foreach (var detail in slide.SliderDetails)
+                        @foreach (var slide in Model.Sliders)
                         {
-                            @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                            @foreach (var detail in slide.SliderDetails)
                             {
-                                <div class="owl-item px-0">
-                                    <a class="d-md-block d-none" href="@slide.Url"><img src="~/images/slider/@detail.DesktopImage" class="img-fluid img-border" /></a>
-                                    <a class="d-md-none d-block" href="@slide.Url"><img src="~/images/slider/@detail.MobileImage" class="img-fluid img-border" /></a>
-                                </div>
+                                @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                                {
+                                    <div class="owl-item px-0">
+                                        <a class="d-md-block d-none" href="@slide.Url"><img src="~/images/slider/@detail.DesktopImage" class="img-fluid img-border" /></a>
+                                        <a class="d-md-none d-block" href="@slide.Url"><img src="~/images/slider/@detail.MobileImage" class="img-fluid img-border" /></a>
+                                    </div>
+                                }
                             }
                         }
                     }
-                }
+                </div>
             </div>
         </div>
-    </div>
-</section>
+        <div class="item_btn">
+            <a href="#" class="btn btn-primary shadow ef2_btn op" tabindex="0">
+                <span>はじめての方はこちら</span>
+            </a>
+        </div>
+    </section>
 
 <section id="type-of-games">
     <div class="container mt-2 pb-2">
