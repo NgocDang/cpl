@@ -10,6 +10,7 @@ using CPL.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
 using CPL.Common.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace CPL.Controllers
 {
@@ -63,16 +64,30 @@ namespace CPL.Controllers
             var acitveLotteries = _lotteryService.Queryable()
                 .Where(x => !x.IsDeleted && x.Status == (int)EnumLotteryGameStatus.ACTIVE).ToList();
 
-            var closestPricePrediction = _pricePredictionService.Queryable()
+            var closestPricePrediction = _pricePredictionService.Query()
+                .Include(x => x.PricePredictionSetting)
+                    .ThenInclude(y => y.PricePredictionSettingDetails)
                 .Where(x => !x.UpdatedDate.HasValue && x.CloseBettingTime > DateTime.Now)
                 .OrderBy(x => x.CloseBettingTime)
                 .FirstOrDefault();
 
             int randomIndex = _randomPicker.Next(acitveLotteries.Count);
-            var randomLottery = _lotteryService.Queryable()
+            var randomLottery = _lotteryService.Query().Include(x => x.LotteryCategory)
                 .FirstOrDefault(x => x.Id == acitveLotteries[randomIndex].Id);
 
-            var viewModel = new HomeViewModel { RandomLotteryId = randomLottery?.Id, RandomLotteryCategoryId = randomLottery?.LotteryCategoryId, ClosestPricePredictionId = closestPricePrediction?.Id };
+            var viewModel = new HomeViewModel { RandomLotteryId = randomLottery?.Id,
+                                                RandomLotteryCategoryId = randomLottery?.LotteryCategoryId,
+                                                RandomLotteryTitle = randomLottery?.Title,
+                                                RandomLotteryDescription = randomLottery?.LotteryCategory?.Description,
+                                                ClosestPricePredictionId = closestPricePrediction?.Id,
+                                                ClosestPricePredictionTitle = closestPricePrediction
+                                                    ?.PricePredictionSetting
+                                                    ?.PricePredictionSettingDetails
+                                                    ?.FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).Title,
+                                                ClosestPricePredictionDescription = closestPricePrediction
+                                                    ?.PricePredictionSetting
+                                                    ?.PricePredictionSettingDetails
+                                                    ?.FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).ShortDescription };
             return View(viewModel);
         }
 

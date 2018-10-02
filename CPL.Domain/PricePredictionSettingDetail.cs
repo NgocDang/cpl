@@ -10,6 +10,7 @@ namespace CPL.Domain
         public int Id { get; set; }
         public int LangId { get; set; }
         public string Title { get; set; }
+        public string ShortDescription { get; set; }
 
         public int PricePredictionSettingId { get; set; }
 
