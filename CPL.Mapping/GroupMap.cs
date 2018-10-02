@@ -15,6 +15,7 @@ namespace CPL.Mapping
             builder.ToTable("Group");
             builder.Property(t => t.Id).HasColumnName("Id");
             builder.Property(t => t.Name).HasColumnName("Name");
+            builder.Property(t => t.Filter).HasColumnName("Filter");
         }
     }
 }
