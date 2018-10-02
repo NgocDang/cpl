@@ -100,3 +100,88 @@ input[type=number]::-webkit-outer-spin-button {
     background-size: 22px auto;
     right: -1.85rem;
 }
+
+#what-is-crypto-odds-content {
+    background-color: #FFEA87;
+    border-width: 2px !important;
+}
+
+#top-content {
+    margin-bottom: -25px;
+    z-index: 1;
+}
+
+.text-top-content {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 575.98px) {
+    #top-content {
+        margin-bottom: -23px;
+    }
+
+    .text-top-content {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    #top-content {
+        margin-bottom: -20px;
+    }
+
+    .text-top-content {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    #top-content {
+        margin-bottom: -17px;
+    }
+
+    .text-top-content {
+        font-size: 12px;
+    }
+}
+
+.next-arrow {
+    position: absolute;
+    right: 3px;
+    top: 35%;
+}
+
+.down-arrow {
+    position: absolute;
+    bottom: -10%;
+    left: 50%;
+    transform: translate(-50%, 10%);
+}
+
+.img-step {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.height-text-step{
+    height: 130px;
+}
+
+@media screen and (min-width: 425.1px) and (max-width: 768px) {
+    .height-text-step {
+        height: 200px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .height-text-step {
+        height: 200px;
+    }
+}
