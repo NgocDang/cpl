@@ -40,7 +40,7 @@
                                 <select name="Group" id="group-picker" class="selectpicker group-picker" data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                     @foreach (var group in Model.Groups)
                                     {
-                                        if (group.Id == 1) //Default selected value
+                                        if (group.Name == EnumGroupName.HOMEPAGE.ToString()) //Default selected value
                                         {
                                             <option selected="selected" value="@group.Id">@group.Name</option>
                                         }

@@ -8,6 +8,8 @@ using CPL.Core.Interfaces;
 using AutoMapper;
 using CPL.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using CPL.Common.Enums;
 
 namespace CPL.Controllers
 {
@@ -23,6 +25,7 @@ namespace CPL.Controllers
         private readonly ITemplateService _templateService;
         private readonly INewsService _newsService;
         private readonly IDataContextAsync _context;
+        private readonly ISliderService _sliderService;
 
         public HomeController(
             ILangService langService,
@@ -34,6 +37,7 @@ namespace CPL.Controllers
             ILotteryService lotteryService,
             IDataContextAsync context,
             ITemplateService templateService,
+            ISliderService sliderService,
             INewsService newsService)
         {
             this._langService = langService;
@@ -46,12 +50,23 @@ namespace CPL.Controllers
             this._templateService = templateService;
             this._context = context;
             this._newsService = newsService;
+            this._sliderService = sliderService;
         }
 
         [Permission(EnumRole.Guest)]
         public IActionResult Index()
         {
             var viewModel = new HomeViewModel();
+
+            viewModel.Sliders = _sliderService.Queryable()
+                                .Include(x => x.Group)
+                                .Include(x => x.SliderDetails)
+                                .Where(x => x.Group.Name == EnumGroupName.HOMEPAGE.ToString()
+                                            && x.Group.Filter == EnumGroupFilter.SLIDER.ToString()
+                                            && x.Status == (int)EnumSliderStatus.ACTIVE)
+                                .Select(x => Mapper.Map<SliderViewModel>(x))
+                                .ToList();
+
             return View(viewModel);
         }
 

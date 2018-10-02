@@ -3435,7 +3435,7 @@ namespace CPL.Controllers
                     .Query()
                     .Include(x => x.Group)
                     .Include(x => x.SliderDetails)
-                    .Where(x => (!groupId.HasValue && x.GroupId == 1) || x.Group.Id == groupId) //Default is group Homepage -> Id = 1
+                    .Where(x => (!groupId.HasValue && x.Group.Name == EnumGroupName.HOMEPAGE.ToString() && x.Group.Filter == EnumGroupFilter.SLIDER.ToString()) || x.Group.Id == groupId)
                     .Select(x => Mapper.Map<SliderAdminViewModel>(x));
 
             filteredResultsCount = totalResultsCount = sliders.Count();

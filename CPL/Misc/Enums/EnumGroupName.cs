@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CPL.Models
+namespace CPL.Misc.Enums
 {
-    public class HomeViewModel
+    public enum EnumGroupName
     {
-        public List<SliderViewModel> Sliders { get; set; }
+        HOMEPAGE
     }
 }
