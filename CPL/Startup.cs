@@ -55,6 +55,10 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<Notification>, Repository<Notification>>()
                 .AddScoped<IRepositoryAsync<LangMsgDetail>, Repository<LangMsgDetail>>()
                 .AddScoped<IRepositoryAsync<CoinTransaction>, Repository<CoinTransaction>>()
+                .AddScoped<IRepositoryAsync<PricePredictionCategory>, Repository<PricePredictionCategory>>()
+                .AddScoped<IRepositoryAsync<PricePredictionCategoryDetail>, Repository<PricePredictionCategoryDetail>>()
+                .AddScoped<IRepositoryAsync<PricePredictionSetting>, Repository<PricePredictionSetting>>()
+                .AddScoped<IRepositoryAsync<PricePredictionSettingDetail>, Repository<PricePredictionSettingDetail>>()
                 .AddScoped<IRepositoryAsync<PricePrediction>, Repository<PricePrediction>>()
                 .AddScoped<IRepositoryAsync<PricePredictionHistory>, Repository<PricePredictionHistory>>()
                 .AddScoped<IRepositoryAsync<Lottery>, Repository<Lottery>>()
@@ -71,6 +75,9 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<LotteryCategory>, Repository<LotteryCategory>>()
                 .AddScoped<IRepositoryAsync<LotteryDetail>, Repository<LotteryDetail>>()
                 .AddScoped<IRepositoryAsync<IntroducedUsers>, Repository<IntroducedUsers>>()
+                .AddScoped<IRepositoryAsync<Group>, Repository<Group>>()
+                .AddScoped<IRepositoryAsync<Slider>, Repository<Slider>>()
+                .AddScoped<IRepositoryAsync<SliderDetail>, Repository<SliderDetail>>()
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
 
@@ -99,6 +106,10 @@ namespace CPL
                 .AddTransient<IViewRenderService, ViewRenderService>()
                 .AddTransient<IAnalyticService, AnalyticService>()
                 .AddTransient<ICoinTransactionService, CoinTransactionService>()
+                .AddTransient<IPricePredictionCategoryService, PricePredictionCategoryService>()
+                .AddTransient<IPricePredictionCategoryDetailService, PricePredictionCategoryDetailService>()
+                .AddTransient<IPricePredictionSettingService, PricePredictionSettingService>()
+                .AddTransient<IPricePredictionSettingDetailService, PricePredictionSettingDetailService>()
                 .AddTransient<IPricePredictionService, PricePredictionService>()
                 .AddTransient<IPricePredictionHistoryService, PricePredictionHistoryService>()
                 .AddTransient<ILotteryService, LotteryService>()
@@ -116,6 +127,9 @@ namespace CPL
                 .AddTransient<IContactService, ContactService>()
                 .AddTransient<ILotteryCategoryService, LotteryCategoryService>()
                 .AddTransient<ILotteryDetailService, LotteryDetailService>()
+                .AddTransient<IGroupService, GroupService>()
+                .AddTransient<ISliderService, SliderService>()
+                .AddTransient<ISliderDetailService, SliderDetailService>()
                 .AddTransient<IIntroducedUsersService, IntroducedUsersService>();
 
             services.AddSignalR();

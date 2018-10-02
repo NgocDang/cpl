@@ -47,6 +47,12 @@ html body {
     box-shadow: 0px 5px 10px rgba(0,0,0,.1);
 }
 
+.mobile-logo {
+    height: 30px;
+    width: 30px;
+    display:inline-block;
+}
+
 @media (max-width: 767.98px) {
     .wrapper {
         margin: 0 0.25rem;
@@ -58,11 +64,14 @@ html body {
     }
 
     .main-menu.menu-fixed {
-        top: 4.1rem;
-        height: calc(100% - 4.1rem);
+        top: 7.55rem;
+        height: calc(100% - 7.55rem);
     }
 }
-
+.nav-menu-main {
+    height:35px;
+    width:35px;
+}
 @media screen and (max-width: 768px) {
     .g-recaptcha {
         transform: scale(0.9);
@@ -779,18 +788,34 @@ select.bs-select-hidden {
     border-left: .4em solid transparent
 }
 
-.dropdown-menu.dropdown-menu-right {
-    right: 0 !important;
-    left: auto !important
+.mobile-language {
+    position: fixed !important;
+    right: 5px;
+    top: 20px;
+    text-align: right;
+    z-index:10;
 }
 
-.bootstrap-select .dropdown-menu.inner li a, .dropdown-menu .dropdown-item {
-    font-size: .8571em;
-    padding-top: .6rem;
-    padding-bottom: .6rem;
-    margin-top: 5px;
-    transition: all .15s linear
+.mobile-user-menu {
+    right: 15px;
+    position: fixed !important;
 }
+
+    .mobile-user-menu .dropdown-menu.dropdown-menu-right {
+        margin-top: 50px !important;
+    }
+
+    .mobile-user-menu .dropdown-toggle::after {
+        content:'' !important;
+    }
+
+    .bootstrap-select .dropdown-menu.inner li a, .dropdown-menu .dropdown-item {
+        font-size: .8571em;
+        padding-top: .6rem;
+        padding-bottom: .6rem;
+        margin-top: 5px;
+        transition: all .15s linear
+    }
 
     .bootstrap-select .dropdown-menu.inner li a:focus, .bootstrap-select .dropdown-menu.inner li a:hover, .dropdown-menu .dropdown-item:focus, .dropdown-menu .dropdown-item:hover {
         background-color: hsla(0,0%,87%,.3)
@@ -1349,7 +1374,7 @@ footer {
     }
 
         .info-bar ul.partners li a, .info-bar ul.links li a {
-            margin-right:20px;
+            
         }
 
         .info-bar ul.partners li::after, .info-bar ul.links li::after {
@@ -1364,7 +1389,7 @@ footer {
             margin-right: 0.5em;
             float: right;
             top: 7px;
-            right: 20px;
+            right: 10px;
         }
 
 /* Change color */
@@ -1843,11 +1868,6 @@ button#btn-dropdown-item:focus {
     position: relative;
 }
 
-.mobile-menu {
-    position:absolute !important;
-    right:10px !important;
-}
-
 @media (min-width: 1140px) {
     .nav-language {
         position: absolute !important;
@@ -1873,7 +1893,10 @@ button#btn-dropdown-item:focus {
     top: 30%;
     right:0;
 }
-
+.py-05 {
+    padding-bottom: 0.5rem !important;
+    padding-top: 0.5rem !important;
+}
 .py-01 {
     padding-bottom: 0.1rem !important;
     padding-top: 0.1rem !important;
