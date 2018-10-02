@@ -4,18 +4,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CPL.Mapping
 {
-    public class GroupMap : IEntityTypeConfiguration<Group>
+    public class PricePredictionCategoryMap : IEntityTypeConfiguration<PricePredictionCategory>
     {
-        public void Configure(EntityTypeBuilder<Group> builder)
+        public void Configure(EntityTypeBuilder<PricePredictionCategory> builder)
         {
             // Primary Key
             builder.HasKey(t => t.Id);
 
             // Table & Column Mappings
-            builder.ToTable("Group");
+            builder.ToTable("PricePredictionCategory");
             builder.Property(t => t.Id).HasColumnName("Id");
-            builder.Property(t => t.Name).HasColumnName("Name");
-            builder.Property(t => t.Filter).HasColumnName("Filter");
         }
     }
 }

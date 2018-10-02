@@ -37,6 +37,7 @@ GO
 CREATE TABLE [dbo].[Group](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](200) NOT NULL,
+	[Filter] [nvarchar](50) NOT NULL,
  CONSTRAINT [PK_Group] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -44,4 +45,5 @@ CREATE TABLE [dbo].[Group](
 ) ON [PRIMARY]
 GO
 
-INSERT INTO [dbo].[Group]([Name]) VALUES (N'Homepage');
+INSERT INTO [dbo].[Group]([Name],[Filter]) VALUES (N'HOMEPAGE',N'SLIDER');
+INSERT INTO [dbo].[Group]([Name],[Filter]) VALUES (N'ALL',N'FAQ');
