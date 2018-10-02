@@ -20,7 +20,9 @@ namespace CPL.Domain
         public decimal? Volume { get; set; }
         public string Coinbase { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public int PricePredictionSettingId { get; set; }
 
+        public virtual PricePredictionSetting PricePredictionSetting { get; set; }
         public virtual ICollection<PricePredictionHistory> PricePredictionHistories { get; set; }
     }
 }

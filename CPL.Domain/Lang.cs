@@ -16,5 +16,7 @@ namespace CPL.Domain
         public virtual ICollection<MobileLangMsgDetail> MobileLangMsgDetails { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<LotteryDetail> LotteryDetails { get; set; }
+        public virtual ICollection<PricePredictionSettingDetail> PricePredictionSettingDetails { get; set; }
+        public virtual ICollection<PricePredictionCategory> PricePredictionCategories { get; set; }
     }
 }
