@@ -19,7 +19,19 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Guest)]
-        public IActionResult WhatIsCPL()
+        public IActionResult WhatIsCryptoLottery()
+        {
+            return View();
+        }
+
+        [Permission(EnumRole.Guest)]
+        public IActionResult WhatIsCryptoPricePrediction()
+        {
+            return View();
+        }
+
+        [Permission(EnumRole.Guest)]
+        public IActionResult WhatIsCryptoCasino()
         {
             return View();
         }
