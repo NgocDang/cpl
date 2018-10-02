@@ -1,0 +1,99 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slider");
+}
+@model SliderAdminViewModel
+
+@section styles
+    {
+    <link href="~/js/dashboard/plugins/lightbox/ekko-lightbox.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/js/dashboard/plugins/datatables/Responsive-2.2.1/css/responsive.bootstrap4.min.css" />
+    <link href="~/css/dashboard/cpl.admin.slider.css" rel="stylesheet" asp-append-version="true" />
+}
+<div class="app-content container center-layout mt-2 px-0">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-md-12 col-12 mb-2 breadcrumb-new">
+                <h3 class="content-header-title mb-0 d-inline-block"> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slider")</h3>
+                <div class="row breadcrumbs-top d-inline-block">
+                    <div class="breadcrumb-wrapper col-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Admin" asp-action="Index">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Admin")</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slider")
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-lg-4 col-6">
+                            <fieldset class="form-group">
+                                <select name="Group" id="group-picker" class="selectpicker group-picker" data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                    @foreach (var group in Model.Groups)
+                                    {
+                                        if (group.Id == 1) //Default selected value
+                                        {
+                                            <option selected="selected" value="@group.Id">@group.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@group.Id">@group.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <h6 class="my-2">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slider")</h6>
+                    <div class="card" id="slider-management">
+                        <div class="card-content">
+                            <table id="dt-all-slider" class="table responsive table-hover table-xl mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Url")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopImage")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                        <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Action")</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button type="button" id="btn-add" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Add") <i class="la la-plus font-size-15px"></i></button>
+                        </div>
+                    </div>
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View")" id="view" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Edit")" id="edit" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Active")" id="active" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Activate")" id="activate" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deactivated")" id="deactivated" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deactivate")" id="deactivate" />
+
+                    <input type="hidden" value="1" id="group-id" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/js/dashboard/plugins/lightbox/ekko-lightbox.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/plugins/bootstrap-selectpicker.js"></script>
+    <script src="~/js/dashboard/jquery.validate.min.js"></script>
+    <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/cpl.admin.slider.js" asp-append-version="true"></script>
+}

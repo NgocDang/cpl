@@ -50,6 +50,9 @@ namespace CPL.Controllers
         private readonly IIntroducedUsersService _introducedUsersService;
         private readonly IAgencyService _agencyService;
         private readonly IPaymentService _paymentService;
+        private readonly IGroupService _groupService;
+        private readonly ISliderService _sliderService;
+        private readonly ISliderDetailService _sliderDetailService;
         private readonly IDataContextAsync _dataContextAsync;
 
         public AdminController(
@@ -75,6 +78,9 @@ namespace CPL.Controllers
             IAgencyTokenService agencyTokenService,
             IAgencyService agencyService,
             IPaymentService paymentService,
+            IGroupService groupService,
+            ISliderService sliderService,
+            ISliderDetailService sliderDetailService,
             IDataContextAsync dataContextAsync)
         {
             this._langService = langService;
@@ -99,6 +105,9 @@ namespace CPL.Controllers
             this._introducedUsersService = introducedUsersService;
             this._agencyService = agencyService;
             this._paymentService = paymentService;
+            this._groupService = groupService;
+            this._sliderService = sliderService;
+            this._sliderDetailService = sliderDetailService;
             this._dataContextAsync = dataContextAsync;
         }
 
@@ -2057,7 +2066,7 @@ namespace CPL.Controllers
                                                 .Sum(x => x.TotalAward);
             var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
 
-            var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame >= 0 ? revenueInLotteryGame : 0};
+            var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame >= 0 ? revenueInLotteryGame : 0 };
             var pricePredictionChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PricePrediction"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = revenueInPricePredictionGame.GetValueOrDefault(0) >= 0 ? revenueInPricePredictionGame.GetValueOrDefault(0) : 0 };
 
             data.Add(lotteryChartData);
@@ -2471,15 +2480,15 @@ namespace CPL.Controllers
 
             var purchasedLotteryHistoryView = purchasedLotteryHistory
                 .Select(y => new AdminLotteryHistoryViewComponentViewModel
-                    {
-                        SysUserId = y.Key.SysUserId,
-                        UserName = y.FirstOrDefault().SysUser.Email,
-                        Status = y.FirstOrDefault().Lottery.Status,
-                        NumberOfTicket = y.Count(),
-                        TotalPurchasePrice = y.Sum(x => x.Lottery.UnitPrice),
-                        Title = y.FirstOrDefault().Lottery.Title,
-                        PurchaseDateTime = y.Key.Date,
-                    });
+                {
+                    SysUserId = y.Key.SysUserId,
+                    UserName = y.FirstOrDefault().SysUser.Email,
+                    Status = y.FirstOrDefault().Lottery.Status,
+                    NumberOfTicket = y.Count(),
+                    TotalPurchasePrice = y.Sum(x => x.Lottery.UnitPrice),
+                    Title = y.FirstOrDefault().Lottery.Title,
+                    PurchaseDateTime = y.Key.Date,
+                });
 
             filteredResultsCount = totalResultsCount = purchasedLotteryHistory.Count();
 
@@ -3181,5 +3190,313 @@ namespace CPL.Controllers
         }
 
         #endregion
+
+        #region Slider
+        [Permission(EnumRole.Admin)]
+        public IActionResult Slider()
+        {
+            var viewModel = new SliderAdminViewModel();
+
+            viewModel.Groups = _groupService.Queryable().Select(x => Mapper.Map<GroupViewModel>(x)).ToList();
+
+            return View(viewModel);
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult AddSlider()
+        {
+            var slider = new SliderAdminViewModel();
+
+            var langs = _langService.Queryable()
+                .Select(x => Mapper.Map<LangViewModel>(x))
+                .ToList();
+
+            foreach (var lang in langs)
+            {
+                slider.SliderDetails.Add(new SliderDetailAdminViewModel()
+                {
+                    Lang = lang
+                });
+            }
+
+            return PartialView("_EditSlider", slider);
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult EditSlider(int id)
+        {
+            var slider = Mapper.Map<SliderAdminViewModel>(_sliderService.Query()
+                                                            .Include(x => x.Group)
+                                                            .Include(x => x.SliderDetails)
+                                                            .FirstOrDefault(x => x.Id == id));
+
+            foreach (var detail in slider.SliderDetails)
+            {
+                var lang = Mapper.Map<LangViewModel>(_langService.Queryable().Where(x => x.Id == detail.LangId).FirstOrDefault());
+                detail.Lang = lang;
+            }
+
+            return PartialView("_EditSlider", slider);
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult ViewSlider(int id)
+        {
+            var slider = new SliderAdminViewModel();
+
+            slider = Mapper.Map<SliderAdminViewModel>(_sliderService.Query()
+                                                        .Include(x => x.SliderDetails)
+                                                        .Include(x => x.Group)
+                                                        .FirstOrDefault(x => x.Id == id));
+
+            foreach (var detail in slider.SliderDetails)
+            {
+                var lang = Mapper.Map<LangViewModel>(_langService.Queryable().Where(x => x.Id == detail.LangId).FirstOrDefault());
+                detail.Lang = lang;
+            }
+
+            return PartialView("_ViewSlider", slider);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoEditSlider(SliderAdminViewModel viewModel)
+        {
+            try
+            {
+                var slider = _sliderService.Queryable().FirstOrDefault(x => x.Id == viewModel.Id);
+
+                // slider
+                slider.Name = viewModel.Name;
+                slider.Url = string.IsNullOrEmpty(viewModel.Url) ? "#" : viewModel.Url;
+
+                var pathSlider = Path.Combine(_hostingEnvironment.WebRootPath, @"images\slider");
+                string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                foreach (var detail in viewModel.SliderDetails)
+                {
+                    var sliderDetail = _sliderDetailService.Queryable().FirstOrDefault(x => x.Id == detail.Id);
+
+                    // Desktop image
+                    if (detail.DesktopImageFile != null)
+                    {
+                        var desktopImage = $"{slider.Id.ToString()}_lang_{detail.LangId}_dt_{timestamp}_{detail.DesktopImageFile.FileName}";
+                        var desktopImagePath = Path.Combine(pathSlider, desktopImage);
+                        detail.DesktopImageFile.CopyTo(new FileStream(desktopImagePath, FileMode.Create));
+                        sliderDetail.DesktopImage = desktopImage;
+                    }
+
+                    // Mobile ima
+                    if (detail.MobileImageFile != null)
+                    {
+                        var mobileImage = $"{slider.Id.ToString()}_lang_{detail.LangId}_mb_{timestamp}_{detail.MobileImageFile.FileName}";
+                        var mobileImagePath = Path.Combine(pathSlider, mobileImage);
+                        detail.MobileImageFile.CopyTo(new FileStream(mobileImagePath, FileMode.Create));
+                        sliderDetail.MobileImage = mobileImage;
+                    }
+
+                    _sliderDetailService.Update(sliderDetail);
+                }
+
+                _sliderService.Update(slider);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoAddSlider(SliderAdminViewModel viewModel)
+        {
+            try
+            {
+                // Slider
+                var slider = new Slider();
+
+                slider.Name = viewModel.Name;
+                slider.Url = string.IsNullOrEmpty(viewModel.Url) ? "#" : viewModel.Url;
+                slider.GroupId = viewModel.GroupId;
+                slider.Status = (int)EnumSliderStatus.ACTIVE;
+
+                var pathSlider = Path.Combine(_hostingEnvironment.WebRootPath, @"images\slider");
+                string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                _sliderService.Insert(slider);
+                _unitOfWork.SaveChanges();
+
+                foreach (var detail in viewModel.SliderDetails)
+                {
+                    var sliderDetail = new SliderDetail();
+                    // Desktop image
+                    if (detail.DesktopImageFile != null)
+                    {
+                        var desktopImage = $"{slider.Id.ToString()}_lang_{detail.LangId}_dt_{timestamp}_{detail.DesktopImageFile.FileName}";
+                        var desktopImagePath = Path.Combine(pathSlider, desktopImage);
+                        detail.DesktopImageFile.CopyTo(new FileStream(desktopImagePath, FileMode.Create));
+                        sliderDetail.DesktopImage = desktopImage;
+                    }
+
+                    // Mobile ima
+                    if (detail.MobileImageFile != null)
+                    {
+                        var mobileImage = $"{slider.Id.ToString()}_lang_{detail.LangId}_mb_{timestamp}_{detail.MobileImageFile.FileName}";
+                        var mobileImagePath = Path.Combine(pathSlider, mobileImage);
+                        detail.MobileImageFile.CopyTo(new FileStream(mobileImagePath, FileMode.Create));
+                        sliderDetail.MobileImage = mobileImage;
+                    }
+
+                    sliderDetail.SliderId = slider.Id;
+                    sliderDetail.LangId = detail.LangId;
+
+                    _sliderDetailService.Insert(sliderDetail);
+                }
+
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoDeleteSlider(int id)
+        {
+            try
+            {
+                var slider = _sliderService.Queryable()
+                        .FirstOrDefault(x => x.Id == id);
+                var sliderDetails = _sliderDetailService.Queryable()
+                                    .Where(x => x.SliderId == id);
+                if (slider != null && sliderDetails != null)
+                {
+                    foreach (var detail in sliderDetails)
+                        _sliderDetailService.Delete(detail);
+                    _sliderService.Delete(slider);
+
+                    _unitOfWork.SaveChanges();
+                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
+                }
+                else
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult SearchSlider(DataTableAjaxPostModel viewModel, int? groupId)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchSliderFunc(viewModel, out filteredResultsCount, out totalResultsCount, groupId);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IList<SliderAdminViewModel> SearchSliderFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? groupId)
+        {
+            var searchBy = (model.search != null) ? model.search?.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            var sliders = _sliderService
+                    .Query()
+                    .Include(x => x.Group)
+                    .Include(x => x.SliderDetails)
+                    .Where(x => (!groupId.HasValue && x.GroupId == 1) || x.Group.Id == groupId) //Default is group Homepage -> Id = 1
+                    .Select(x => Mapper.Map<SliderAdminViewModel>(x));
+
+            filteredResultsCount = totalResultsCount = sliders.Count();
+
+            // search the dbase taking into consideration table sorting and paging
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                searchBy = searchBy.ToLower();
+                bool condition(SliderAdminViewModel x) => x.Name.ToLower().Contains(searchBy) || x.Url.ToLower().Contains(searchBy);
+
+                sliders = sliders
+                        .Where(condition)
+                        .AsQueryable();
+
+                filteredResultsCount = sliders.Count();
+            }
+
+            return sliders
+                  .AsQueryable()
+                  .OrderBy(sortBy, sortDir)
+                  .Skip(skip)
+                  .Take(take)
+                  .ToList();
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoActivateSlider(int id)
+        {
+            try
+            {
+                var slider = _sliderService.Queryable().FirstOrDefault(x => x.Id == id);
+                slider.Status = (int)EnumSliderStatus.ACTIVE;
+                _sliderService.Update(slider);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ActivateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoDeactivateSlider(int id)
+        {
+            try
+            {
+                var slider = _sliderService.Queryable().FirstOrDefault(x => x.Id == id);
+                slider.Status = (int)EnumSliderStatus.DEACTIVATED;
+                _sliderService.Update(slider);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeactivateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+        #endregion
+
     }
 }
