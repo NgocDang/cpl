@@ -24,6 +24,9 @@ namespace CPL.Infrastructure
         public DbSet<LangMsgDetail> LangMsgDetail { get; set; }
         public DbSet<Notification> Notification { get; set; }
         public DbSet<CoinTransaction> CoinTransaction { get; set; }
+        public DbSet<PricePredictionCategory> PricePredictionCategory { get; set; }
+        public DbSet<PricePredictionSetting> PricePredictionSetting { get; set; }
+        public DbSet<PricePredictionSettingDetail> PricePredictionSettingDetail { get; set; }
         public DbSet<PricePrediction> PricePrediction { get; set; }
         public DbSet<PricePredictionHistory> PricePredictionHistory { get; set; }
         public DbSet<Lottery> Lottery { get; set; }
