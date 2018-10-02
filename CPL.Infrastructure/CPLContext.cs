@@ -25,6 +25,7 @@ namespace CPL.Infrastructure
         public DbSet<Notification> Notification { get; set; }
         public DbSet<CoinTransaction> CoinTransaction { get; set; }
         public DbSet<PricePredictionCategory> PricePredictionCategory { get; set; }
+        public DbSet<PricePredictionCategoryDetail> PricePredictionCategoryDetail { get; set; }
         public DbSet<PricePredictionSetting> PricePredictionSetting { get; set; }
         public DbSet<PricePredictionSettingDetail> PricePredictionSettingDetail { get; set; }
         public DbSet<PricePrediction> PricePrediction { get; set; }
@@ -60,6 +61,10 @@ namespace CPL.Infrastructure
 
             modelBuilder.ApplyConfiguration(new CoinTransactionMap());
 
+            modelBuilder.ApplyConfiguration(new PricePredictionCategoryMap());
+            modelBuilder.ApplyConfiguration(new PricePredictionCategoryDetailMap());
+            modelBuilder.ApplyConfiguration(new PricePredictionSettingMap());
+            modelBuilder.ApplyConfiguration(new PricePredictionSettingDetailMap());
             modelBuilder.ApplyConfiguration(new PricePredictionMap());
             modelBuilder.ApplyConfiguration(new PricePredictionHistoryMap());
 

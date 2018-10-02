@@ -8,12 +8,8 @@ namespace CPL.Domain
     public class PricePredictionCategory : Entity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
 
-        public int LangId { get; set; }
-
-        public virtual Lang Lang { get; set; }
         public virtual ICollection<PricePredictionSetting> PricePredictionSettings { get; set; }
+        public virtual ICollection<PricePredictionCategoryDetail> PricePredictionCategoryDetails { get; set; }
     }
 }
