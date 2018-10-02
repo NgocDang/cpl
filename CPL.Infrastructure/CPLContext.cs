@@ -46,6 +46,9 @@ namespace CPL.Infrastructure
         public DbSet<Payment> Payment { get; set; }
         public DbSet<LotteryDetail> LotteryDetail { get; set; }
         public DbSet<IntroducedUsers> IntroducedUsers { get; set; }
+        public DbSet<Group>  Groups { get; set; }
+        public DbSet<Slider> Slider { get; set; }
+        public DbSet<SliderDetail> SliderDetail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -88,6 +91,10 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new ETHTransactionMap());
 
             modelBuilder.ApplyConfiguration(new IntroducedUsersMap());
+
+            modelBuilder.ApplyConfiguration(new GroupMap());
+            modelBuilder.ApplyConfiguration(new SliderMap());
+            modelBuilder.ApplyConfiguration(new SliderDetailMap());
 
             base.OnModelCreating(modelBuilder);
         }
