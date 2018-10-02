@@ -47,6 +47,12 @@ html body {
     box-shadow: 0px 5px 10px rgba(0,0,0,.1);
 }
 
+.mobile-logo {
+    height: 30px;
+    width: 30px;
+    display:inline-block;
+}
+
 @media (max-width: 767.98px) {
     .wrapper {
         margin: 0 0.25rem;
@@ -58,8 +64,8 @@ html body {
     }
 
     .main-menu.menu-fixed {
-        top: 4.1rem;
-        height: calc(100% - 4.1rem);
+        top: 7.15rem;
+        height: calc(100% - 7.15rem);
     }
 }
 
@@ -1349,7 +1355,7 @@ footer {
     }
 
         .info-bar ul.partners li a, .info-bar ul.links li a {
-            margin-right:20px;
+            
         }
 
         .info-bar ul.partners li::after, .info-bar ul.links li::after {
@@ -1364,7 +1370,7 @@ footer {
             margin-right: 0.5em;
             float: right;
             top: 7px;
-            right: 20px;
+            right: 10px;
         }
 
 /* Change color */
@@ -1699,13 +1705,14 @@ input[type=number]::-webkit-inner-spin-button {
     position: relative;
 }
 
-input[type=number]:hover::-webkit-inner-spin-button {
+input[type=number]::-webkit-inner-spin-button {
     background: #eee url('../../images/number_spin.png') no-repeat 50% 50%;
     width: 30px;
     height: 42px;
     padding: 0px;
     position: relative;
     right: -1rem;
+    opacity: 1;
 }
 
 .header-navbar .navbar-container ul.nav li > a.user-menu {
@@ -1847,6 +1854,7 @@ button#btn-dropdown-item:focus {
     right:10px !important;
 }
 
+
 @media (min-width: 1140px) {
     .nav-language {
         position: absolute !important;
@@ -1872,7 +1880,10 @@ button#btn-dropdown-item:focus {
     top: 30%;
     right:0;
 }
-
+.py-05 {
+    padding-bottom: 0.5rem !important;
+    padding-top: 0.5rem !important;
+}
 .py-01 {
     padding-bottom: 0.1rem !important;
     padding-top: 0.1rem !important;
