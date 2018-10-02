@@ -1699,13 +1699,14 @@ input[type=number]::-webkit-inner-spin-button {
     position: relative;
 }
 
-input[type=number]:hover::-webkit-inner-spin-button {
+input[type=number]::-webkit-inner-spin-button {
     background: #eee url('../../images/number_spin.png') no-repeat 50% 50%;
     width: 30px;
     height: 42px;
     padding: 0px;
     position: relative;
     right: -1rem;
+    opacity: 1;
 }
 
 .header-navbar .navbar-container ul.nav li > a.user-menu {
