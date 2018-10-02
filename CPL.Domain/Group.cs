@@ -9,6 +9,7 @@ namespace CPL.Domain
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Filter { get; set; }
 
         public virtual ICollection<Slider> Sliders { get; set; }
     }
