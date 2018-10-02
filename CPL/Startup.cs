@@ -71,6 +71,9 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<LotteryCategory>, Repository<LotteryCategory>>()
                 .AddScoped<IRepositoryAsync<LotteryDetail>, Repository<LotteryDetail>>()
                 .AddScoped<IRepositoryAsync<IntroducedUsers>, Repository<IntroducedUsers>>()
+                .AddScoped<IRepositoryAsync<Group>, Repository<Group>>()
+                .AddScoped<IRepositoryAsync<Slider>, Repository<Slider>>()
+                .AddScoped<IRepositoryAsync<SliderDetail>, Repository<SliderDetail>>()
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
 
@@ -116,6 +119,9 @@ namespace CPL
                 .AddTransient<IContactService, ContactService>()
                 .AddTransient<ILotteryCategoryService, LotteryCategoryService>()
                 .AddTransient<ILotteryDetailService, LotteryDetailService>()
+                .AddTransient<IGroupService, GroupService>()
+                .AddTransient<ISliderService, SliderService>()
+                .AddTransient<ISliderDetailService, SliderDetailService>()
                 .AddTransient<IIntroducedUsersService, IntroducedUsersService>();
 
             services.AddSignalR();
