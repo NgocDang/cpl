@@ -7,6 +7,6 @@ namespace CPL.Models
 {
     public class HomeViewModel
     {
-
+        public List<FAQViewModel> FAQs { get; set; }
     }
 }

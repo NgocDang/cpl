@@ -12,5 +12,6 @@ namespace CPL.Domain
         public string Filter { get; set; }
 
         public virtual ICollection<Slider> Sliders { get; set; }
+        public virtual ICollection<FAQ> FAQs { get; set; }
     }
 }

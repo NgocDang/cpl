@@ -87,7 +87,7 @@
 <section id="intro">
     <div class="container pl-sm-5 pr-sm-5 mt-2">
         <div class="ml-lg-5 mr-lg-5">
-            <div class="row text-center justify-content-center" id="top-content">
+            <div class="row text-center justify-content-center top-content">
                 <div class="col-lg-12 col-10">
                     <img src="~/images/home/top.png" class="img-fluid" />
                     <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoOdds")</p>
@@ -100,6 +100,7 @@
                 <div class="col-md-8 col-12 order-sm-12 order-1">
                     <p class="text-dark">
                         @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoOdds"))
+                    </p>
                 </div>
             </div>
             <div class="row text-center">
@@ -119,10 +120,10 @@
                 <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ForEnjoyingCryptOdds")</p>
             </div>
             <div class="col-12">
-                <p class="font-large-1 mt-sm-3 mt-2 font-weight-bold text-dark">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Easy3Steps")</p>
+                <p class="font-large-1 mt-sm-2 mt-1 font-weight-bold text-dark">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Easy3Steps")</p>
             </div>
         </div>
-        <div class="row ml-sm-2 row-eq-height">
+        <div class="row ml-sm-2">
             <div class="col-sm-4 col-12 pl-0 pr-0 pr-sm-3">
                 <div class="card">
                     <div class="card-content">
@@ -157,7 +158,7 @@
                 <i class="fas fa-caret-down font-large-4 text-primary down-arrow d-sm-none d-block"></i>
             </div>
 
-            <div class="col-sm-4 col-12 pl-0 pr-0 pr-sm-3 mt-sm-0 mt-2">
+            <div class="col-sm-4 col-12 px-0 pr-sm-3 mt-sm-0 mt-2">
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body text-center pt-0">
@@ -231,8 +232,37 @@
 </section>
 
 <section id="faq">
-    <div class="container">
-        <div class="row">
+    <div class="container mt-sm-5 mt-2">
+        <div class="row text-center justify-content-center top-content">
+            <div class="col-lg-12 col-10">
+                <img src="~/images/home/top.png" class="img-fluid" />
+                <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FAQ")</p>
+            </div>
+        </div>
+        <div class="row mt-2" >
+            <div class="col-lg-6 col-12">
+                <ul>
+                    @for (var i = 0; i < Model.FAQs.Count / 2; i++)
+                    {
+                        <li class="px-1 mb-1">
+                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq_@i">@Model.FAQs[i].Question<i class="la la-minus"></i></a>
+                            <p id="faq_@i" class="collapse mb-0 pb-1">@Model.FAQs[i].Answer</p>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+            <div class="col-lg-6 col-12">
+                <ul>
+                    @for (var i = Model.FAQs.Count / 2; i < Model.FAQs.Count; i++)
+                    {
+                        <li class="px-1 mb-1">
+                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq_@i">@Model.FAQs[i].Question<i class="la la-minus"></i></a>
+                            <p id="faq_@i" class="collapse mb-0 pb-1">@Model.FAQs[i].Answer</p>
+                        </li>
+                    }
+                </ul>
+            </div>
         </div>
     </div>
 </section>

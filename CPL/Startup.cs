@@ -78,6 +78,7 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<Group>, Repository<Group>>()
                 .AddScoped<IRepositoryAsync<Slider>, Repository<Slider>>()
                 .AddScoped<IRepositoryAsync<SliderDetail>, Repository<SliderDetail>>()
+                .AddScoped<IRepositoryAsync<FAQ>, Repository<FAQ>>()
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
 
@@ -130,6 +131,7 @@ namespace CPL
                 .AddTransient<IGroupService, GroupService>()
                 .AddTransient<ISliderService, SliderService>()
                 .AddTransient<ISliderDetailService, SliderDetailService>()
+                .AddTransient<IFAQService, FAQService>()
                 .AddTransient<IIntroducedUsersService, IntroducedUsersService>();
 
             services.AddSignalR();

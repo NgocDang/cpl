@@ -22,6 +22,7 @@ namespace CPL.Controllers
         private readonly ILotteryService _lotteryService;
         private readonly ITemplateService _templateService;
         private readonly INewsService _newsService;
+        private readonly IFAQService _faqService;
         private readonly IDataContextAsync _context;
 
         public HomeController(
@@ -33,6 +34,7 @@ namespace CPL.Controllers
             ISettingService settingService,
             ILotteryService lotteryService,
             IDataContextAsync context,
+            IFAQService faqService,
             ITemplateService templateService,
             INewsService newsService)
         {
@@ -42,6 +44,7 @@ namespace CPL.Controllers
             this._viewRenderService = viewRenderService;
             this._settingService = settingService;
             this._unitOfWork = unitOfWork;
+            this._faqService = faqService;
             this._lotteryService = lotteryService;
             this._templateService = templateService;
             this._context = context;
@@ -52,6 +55,12 @@ namespace CPL.Controllers
         public IActionResult Index()
         {
             var viewModel = new HomeViewModel();
+            viewModel.FAQs = _faqService.Query()
+                .Include(x => x.Group)
+                .Where(x => x.Group.Filter == EnumGroupFilter.FAQ.ToString() && x.LangId == HttpContext.Session.GetInt32("LangId").Value)
+                .Select(x => Mapper.Map<FAQViewModel>(x))
+                .ToList();
+
             return View(viewModel);
         }
 
