@@ -72,6 +72,7 @@ GO
 USE CPL;
 ALTER TABLE PricePrediction
 ADD PricePredictionSettingId INT NOT NULL DEFAULT (0);
+UPDATE PricePrediction SET PricePredictionSettingId = 1
 
 -- SAMPLE DB
 USE [CPL]
