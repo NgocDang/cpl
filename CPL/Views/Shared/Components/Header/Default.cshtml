@@ -5,7 +5,7 @@
         <div class="navbar-header d-md-none pt-1 pb-0">
             <ul class="nav navbar-nav flex-row">
                 <li class="nav-item d-md-none mr-0"><a class="nav-link nav-menu-main menu-toggle hidden-xs pt-0" href="#"><i class="ft-menu font-large-1"></i></a></li>
-                <li class="nav-item navbar-lottery-mobile justify-content-center align-items-center text-center w-25 @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active")">
+                <li class="nav-item navbar-lottery-mobile justify-content-center align-items-center text-center w-25 @(ViewContext.RouteData.Values["Controller"].ToString() == "Lottery" ? "active" : "")">
                     <a asp-controller="Lottery" asp-action="Index">
                         <img class="img-fluid px-1" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")"/>
                     </a>
@@ -98,8 +98,8 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav float-left game-menu">
-                    <li class="nav-item navbar-lottery-desktop justify-content-center align-items-center ml-2 pt-0 @(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active")">
-                        <a class="@(((ViewContext.RouteData.Values["Controller"].ToString() == "Slot") || (ViewContext.RouteData.Values["Controller"].ToString() == "PricePrediction")) ? "" : "active") " asp-controller="Lottery" asp-action="Index">
+                    <li class="nav-item navbar-lottery-desktop justify-content-center align-items-center ml-2 pt-0 @(ViewContext.RouteData.Values["Controller"].ToString() == "Lottery" ? "active" : "")">
+                        <a class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Lottery" ? "active" : "")" asp-controller="Lottery" asp-action="Index">
                             <img class="img-fluid px-1" src="~/images/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryTabImage")" />
                         </a>
                     </li>
