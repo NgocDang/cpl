@@ -45,42 +45,51 @@
 <section id="random-games">
     <div class="container mt-2">
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-12 card card-random-games mx-0 px-0 border" style="border-color:#F0C401 !important;">
-                <div class="card-content">
-                    <img class="img-fluid" src="~/images/homepage_lottery_random_card.png" />
-                </div>
-                <div class="card-footer p-1">
-                    <div class="row">
-                        <div class="col-3 black card-random-games-footer text-center">
-                            <p class="my-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</p>
-                        </div>
-                        <div class="col-lg-6 col-5 px-lg-1 px-0">
-                            <input type="number" value="0" min="1" class="form-control" style="background-color:#FFEA87; border:none">
-                        </div>
-                        <div class="col-lg-3 col-4 mt-sm-0">
-                            <button type="button" class="btn btn-primary mt-sm-0 w-100 px-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
-                        </div>
+            @if (Model.RandomLotteryId.HasValue)
+            {
+                <div class="col-lg-6 col-md-6 col-12 card card-random-games mx-0 px-0 border" style="border-color:#F0C401 !important;" id="lottery-game">
+                    <div class="card-content">
+                        <img class="img-fluid" src="~/images/homepage_lottery_random_card.png" />
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-12 card-random-games card mx-0 px-0 border" style="border-color:#F63756 !important;">
-                <div class="card-content">
-                    <img class="img-fluid" src="~/images/homepage_price_prediction_random_card.png" />
-                </div>
-                <div class="card-footer p-1">
-                    <div class="col-lg-11 col-12 mx-auto">
+                    <div class="card-footer p-1">
                         <div class="row">
-                            <div class="col-6 pl-0 pr-2">
-                                <button type="button" class="btn btn-md btn-success mt-sm-0 w-100">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "High")</button>
+                            <div class="col-3 black card-random-games-footer text-center">
+                                <p class="my-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</p>
                             </div>
-                            <div class="col-6 pr-0 pl-2">
-                                <button type="button" class="btn btn-md btn-danger mt-sm-0 w-100">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Low")</button>
+                            <div class="col-lg-6 col-5 px-lg-1 px-0">
+                                <input type="number" id="lottery-ticket-amount" value="1" min="1" class="form-control" style="background-color:#FFEA87; border:none; border-radius:unset">
+                            </div>
+                            <div class="col-lg-3 col-4 mt-sm-0">
+                                <button type="button" class="btn btn-primary mt-sm-0 w-100 px-0" id="lottery-purchase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
+            @if (Model.ClosestPricePredictionId.HasValue)
+            {
+                <div class="col-lg-6 col-md-6 col-12 card-random-games card mx-0 px-0 border" style="border-color:#F63756 !important;" id="price-prediction-game">
+                    <div class="card-content">
+                        <img class="img-fluid" src="~/images/homepage_price_prediction_random_card.png" />
+                    </div>
+                    <div class="card-footer p-1">
+                        <div class="col-lg-11 col-12 mx-auto">
+                            <div class="row">
+                                <div class="col-6 pl-0 pr-2">
+                                    <button type="button" data-predicted-trend="true" class="btn btn-md btn-success mt-sm-0 w-100">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "High")</button>
+                                </div>
+                                <div class="col-6 pr-0 pl-2">
+                                    <button type="button" data-predicted-trend="false" class="btn btn-md btn-danger mt-sm-0 w-100">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Low")</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
+        @Html.HiddenFor(x => x.RandomLotteryId, new { @id = "lottery-id" })
+        @Html.HiddenFor(x => x.RandomLotteryCategoryId, new { @id = "lottery-category-id" })
+        @Html.HiddenFor(x => x.ClosestPricePredictionId, new { @id = "price-prediction-id" })
     </div>
 </section>
 
@@ -143,7 +152,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <a class="btn btn-sm btn-primary d-block" asp-controller="Authentication" asp-action="Register" >
+                                    <a class="btn btn-sm btn-primary d-block" asp-controller="Authentication" asp-action="Register">
                                         <span>
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "RegisterFor30Seconds")
                                         </span>
@@ -215,7 +224,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <a class="btn btn-sm btn-primary d-block" asp-controller="Info" asp-action="HowToPlay" >
+                                    <a class="btn btn-sm btn-primary d-block" asp-controller="Info" asp-action="HowToPlay">
                                         <span>
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlay")
                                         </span>

@@ -65,7 +65,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Guest)]
-        public IActionResult Index()
+        public IActionResult Index(bool? predictedTrend)
         {
             //Test quartz job price prediction update result
             // Cmt out because of new PricePrediction logic
@@ -85,8 +85,22 @@ namespace CPL.Controllers
             // Move first tab to the end of the array
             viewModel.PricePredictionTabs = Enumerable.Range(1, viewModel.PricePredictionTabs.Count).Select(i => viewModel.PricePredictionTabs[i % viewModel.PricePredictionTabs.Count]).ToList();
 
-            if (viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now) != null)
-                viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).IsActive = true;
+            if(predictedTrend.HasValue)
+            {
+                if (viewModel.PricePredictionTabs.OrderBy(x => x.CloseBettingTime).FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now) != null)
+                {
+                    viewModel.PricePredictionTabs.OrderBy(x => x.CloseBettingTime).FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).IsActive = true;
+                    viewModel.PricePredictionTabs.OrderBy(x => x.CloseBettingTime).FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).PredictedTrend = predictedTrend;
+                }
+            }
+            else
+            {
+                if (viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now) != null)
+                {
+                    viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).IsActive = true;
+                    viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).PredictedTrend = predictedTrend;
+                }
+            }
 
             return View(viewModel);
         }

@@ -8,6 +8,8 @@ using CPL.Core.Interfaces;
 using AutoMapper;
 using CPL.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
+using System;
+using CPL.Common.Enums;
 
 namespace CPL.Controllers
 {
@@ -23,6 +25,9 @@ namespace CPL.Controllers
         private readonly ITemplateService _templateService;
         private readonly INewsService _newsService;
         private readonly IDataContextAsync _context;
+        private readonly IPricePredictionService _pricePredictionService;
+        private readonly ILotteryHistoryService _lotteryHistoryService;
+        private static Random _randomPicker = new Random();
 
         public HomeController(
             ILangService langService,
@@ -34,7 +39,9 @@ namespace CPL.Controllers
             ILotteryService lotteryService,
             IDataContextAsync context,
             ITemplateService templateService,
-            INewsService newsService)
+            INewsService newsService,
+            IPricePredictionService pricePredictionService,
+            ILotteryHistoryService lotteryHistoryService)
         {
             this._langService = langService;
             this._langDetailService = langDetailService;
@@ -46,12 +53,26 @@ namespace CPL.Controllers
             this._templateService = templateService;
             this._context = context;
             this._newsService = newsService;
+            this._pricePredictionService = pricePredictionService;
+            this._lotteryHistoryService = lotteryHistoryService;
         }
 
         [Permission(EnumRole.Guest)]
         public IActionResult Index()
         {
-            var viewModel = new HomeViewModel();
+            var acitveLotteries = _lotteryService.Queryable()
+                .Where(x => !x.IsDeleted && x.Status == (int)EnumLotteryGameStatus.ACTIVE).ToList();
+
+            var closestPricePrediction = _pricePredictionService.Queryable()
+                .Where(x => !x.UpdatedDate.HasValue && x.CloseBettingTime > DateTime.Now)
+                .OrderBy(x => x.CloseBettingTime)
+                .FirstOrDefault();
+
+            int randomIndex = _randomPicker.Next(acitveLotteries.Count);
+            var randomLottery = _lotteryService.Queryable()
+                .FirstOrDefault(x => x.Id == acitveLotteries[randomIndex].Id);
+
+            var viewModel = new HomeViewModel { RandomLotteryId = randomLottery?.Id, RandomLotteryCategoryId = randomLottery?.LotteryCategoryId, ClosestPricePredictionId = closestPricePrediction?.Id };
             return View(viewModel);
         }
 
