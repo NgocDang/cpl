@@ -13,6 +13,25 @@ insert into LangDetail values (2, N'WhatIsBitcoin', N'ビットコインとは')
 insert into LangDetail values (1, N'PersonalInformationProtection', N'Personal information protection');
 insert into LangDetail values (2, N'PersonalInformationProtection', N'個人情報保護について');
 
+update LangDetail set Name = N'AboutCPO', Value = N'About CPO' where Name = N'AboutCPL' and LangId = 1;
+update LangDetail set Name = N'AboutCPO', Value = N'CPOについて' where Name = N'AboutCPL' and LangId = 2;
+
+delete LangDetail where Name = 'WhatIsCPL';
+delete LangMsgDetail where Name = 'WhatIsCPL';
+
+insert into LangDetail values (1, N'WhatIsCryptoLottery', N'What is Crypto Lottery?');
+insert into LangDetail values (2, N'WhatIsCryptoLottery', N'暗号宝くじとは?');
+
+insert into LangDetail values (1, N'WhatIsCryptoPricePrediction', N'What is Crypto Price Prediction?');
+insert into LangDetail values (2, N'WhatIsCryptoPricePrediction', N'暗号の価格予測とは?');
+
+insert into LangDetail values (1, N'WhatIsCryptoCasino', N'What is Crypto Casino?');
+insert into LangDetail values (2, N'WhatIsCryptoCasino', N'クリプトカジノとは?');
+
+insert into LangDetail values (1, N'Campaign', N'Campaign');
+insert into LangDetail values (2, N'Campaign', N'キャンペーン');
+
+
 --- DamTran - What is Crypto Odds - 2018/10/01
 USE CPL
 

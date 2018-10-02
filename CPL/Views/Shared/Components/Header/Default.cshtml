@@ -146,11 +146,17 @@
             <li class="dropdown nav-item" data-menu="dropdown">
                 <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
                     <i class="la la-newspaper-o"></i>
-                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AboutCPL")</span>
+                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AboutCPO")</span>
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class="dropdown-item" asp-controller="Info" asp-action="WhatIsCPL"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCPL")</a>
+                        <a class="dropdown-item" asp-controller="Info" asp-action="WhatIsCryptoLottery"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoLottery")</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" asp-controller="Info" asp-action="WhatIsCryptoPricePrediction"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction")</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" asp-controller="Info" asp-action="WhatIsCryptoCasino"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoCasino")</a>
                     </li>
                     <li>
                         <a class="dropdown-item" asp-controller="Info" asp-action="HowToPlay"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlay")</a>
@@ -158,30 +164,16 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-bold" asp-controller="DepositAndWithdraw" asp-action="Index">
-                    <i class="la la-mail-forward"></i>
-                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</span>
+                <a class="nav-link text-bold" asp-controller="Info" asp-action="Campaign">
+                    <i class="la la la-bullhorn"></i>
+                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Campaign")</span>
                 </a>
             </li>
-            <li class="dropdown nav-item" data-menu="dropdown">
-                <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
-                    <i class="la la-history"></i>
-                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "History")</span>
+            <li class="nav-item">
+                <a class="nav-link" href="#faq">
+                    <i class="la la-question"></i>
+                    <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FAQ")</span>
                 </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a class="dropdown-item" asp-controller="History" asp-action="Game"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Game")</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" asp-controller="History" asp-action="Lottery"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" asp-controller="History" asp-action="PricePrediction"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" asp-controller="History" asp-action="Transaction"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Transaction")</a>
-                    </li>
-                </ul>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-bold" asp-controller="Contact" asp-action="Index">
@@ -217,6 +209,12 @@
                         }
                         <li>
                             <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="fas fa-tachometer-alt font-small-4"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" asp-controller="DepositAndWithdraw" asp-action="Withdraw"><i class="la la-mail-forward"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" asp-controller="History" asp-action="Game"><i class="la la-history"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "History")</a>
                         </li>
                         <li>
                             <a class="dropdown-item" asp-controller="Profile" asp-action="Security"><i class="la la-key"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Security")</a>
