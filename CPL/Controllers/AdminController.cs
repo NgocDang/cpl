@@ -3197,7 +3197,9 @@ namespace CPL.Controllers
         {
             var viewModel = new SliderAdminViewModel();
 
-            viewModel.Groups = _groupService.Queryable().Select(x => Mapper.Map<GroupViewModel>(x)).ToList();
+            viewModel.Groups = _groupService.Queryable()
+                                .Where(x => x.Filter == EnumGroupFilter.SLIDER.ToString())
+                                .Select(x => Mapper.Map<GroupViewModel>(x)).ToList();
 
             return View(viewModel);
         }
