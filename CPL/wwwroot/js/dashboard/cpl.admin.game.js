@@ -62,18 +62,16 @@
             $("#form-edit-price-prediction-category").addClass('was-validated');
             var _this = this;
             if (isFormValid) {
-                var formData = new FormData();
+                var _postData = {};
                 $(_this).parents("#form-edit-price-prediction-category").find("div.tab-pane").each(function (i, e) {
-                    formData.append('PricePredictionCategoryDetailAdminViewModels[' + i + '].LangId', $(this).find("#lang-id").val());
-                    formData.append('PricePredictionCategoryDetailAdminViewModels[' + i + '].Name', $(this).find("#name").val());
-                    formData.append('PricePredictionCategoryDetailAdminViewModels[' + i + '].Description', $(this).find("#description").val());
+                    _postData['PricePredictionCategoryDetailAdminViewModels[' + i + '].LangId'] = $(this).find("#lang-id").val();
+                    _postData['PricePredictionCategoryDetailAdminViewModels[' + i + '].Name'] = $(this).find("#name").val();
+                    _postData['PricePredictionCategoryDetailAdminViewModels[' + i + '].Description'] = $(this).find("#description").val();
                 });
                 $.ajax({
                     url: "/Admin/DoAddPricePredictionCategory",
                     type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
+                    data: _postData,
                     beforeSend: function () {
                         $(_this).attr("disabled", true);
                         $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text() + " <i class='la la-plus font-size-15px'></i>");
