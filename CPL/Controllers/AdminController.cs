@@ -2855,7 +2855,7 @@ namespace CPL.Controllers
 
                 purchasedPricePredictionHistoryView = purchasedPricePredictionHistoryView
                                         .Where(x => x.UserName.ToLower().Contains(searchBy) 
-                                                    || x.StatusInString.ToLower().Contains(searchBy) 
+                                                    //|| x.StatusInString.ToLower().Contains(searchBy) 
                                                     || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
                                                     || x.NumberOfPredictionInString.ToLower().Contains(searchBy)
                                                     || x.Title.ToLower().Contains(searchBy))
