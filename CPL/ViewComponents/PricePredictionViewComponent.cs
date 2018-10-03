@@ -35,9 +35,12 @@ namespace CPL.ViewComponents
         public IViewComponentResult Invoke(PricePredictionViewComponentViewModel viewModel)
         {
             var tokenAmount = viewModel.TokenAmount;
+            var predictedTrend = viewModel.PredictedTrend;
+
             viewModel = _pricePredictionService.Queryable().Where(x => x.Id == viewModel.Id)
                 .Select(x => Mapper.Map<PricePredictionViewComponentViewModel>(x)).FirstOrDefault();
             viewModel.TokenAmount = tokenAmount;
+            viewModel.PredictedTrend = predictedTrend;
 
             //Calculate percentage
             decimal upPrediction = _pricePredictionHistoryService

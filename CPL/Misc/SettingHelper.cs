@@ -21,4 +21,9 @@ namespace CPL.Misc
         public static EAccountService.EAccountClient EAccountClient { get; set; }
         public static BAccountService.BAccountClient BAccountClient { get; set; }
     }
+
+    public static class RandomPicker
+    {
+        public static Random Random { get; set; }
+    }
 }

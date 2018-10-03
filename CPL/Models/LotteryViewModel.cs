@@ -18,7 +18,9 @@ namespace CPL.Models
         public List<LotteryDetailViewModel> LotteryDetails { get; set; }
 
         public int? SysUserId { get; set; }
-        public string PrecentOfPerchasedTickets { get; set; }
+        public string PercentageOfPurchasedTickets { get; set; }
         public int UnitPrice { get; set; }
+
+        public int? LotteryTicketAmount { get; set; }
     }
 }

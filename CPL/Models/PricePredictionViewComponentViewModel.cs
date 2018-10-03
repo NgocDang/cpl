@@ -30,6 +30,8 @@ namespace CPL.Models
         public string PreviousBtcRate { get; set; }
         public decimal LowestBtcRate { get; set; }
 
+        public bool? PredictedTrend { get; set; }
+
         public List<PricePredictionHistoryViewModel> PricePredictionHistories { get; set; }
     }
 }

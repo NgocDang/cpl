@@ -16,6 +16,7 @@ namespace CPL.Mapping
             builder.Property(t => t.Id).HasColumnName("Id");
             builder.Property(t => t.Title).HasColumnName("Title");
             builder.Property(t => t.LangId).HasColumnName("LangId");
+            builder.Property(t => t.ShortDescription).HasColumnName("ShortDescription");
             builder.Property(t => t.PricePredictionSettingId).HasColumnName("PricePredictionSettingId");
 
             //Relationship
