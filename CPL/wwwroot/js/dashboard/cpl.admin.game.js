@@ -18,6 +18,9 @@
         AdminGameManagement.bindLotteryCategoryTimeRangeChange();
 
         // Price Prediction Tab - Price Prediction Summary Tab
+        AdminGameManagement.bindAddPricePredictionCategory();
+        AdminGameManagement.bindDoAddPricePredictionCategory();
+
         AdminGameManagement.bindPricePredictionTab();
         AdminGameManagement.bindPricePredictionSummaryTab();
         AdminGameManagement.bindPricePredictionSummaryTimeRangeChange();
@@ -32,21 +35,82 @@
             tab = "summary";
         $(".nav-tabs a[id='" + tab + "-nav-tab']").tab('show');
     },
+    bindAddPricePredictionCategory: function () {
+        $("#price-prediction-nav").on("click", "#btn-add-price-prediction-category", function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/AddPricePredictionCategory/",
+                type: "GET",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                    $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
+                },
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#edit-price-prediction-category").modal("show");
+                },
+                complete: function (data) {
+                    $(_this).attr("disabled", false);
+                    $(_this).html($(_this).text());
+                }
+            });
+        });
+    },
+    bindDoAddPricePredictionCategory: function () {
+        $("#modal").on("click", "#edit-price-prediction-category .btn-do-add", function () {
+            var isFormValid = $("#form-edit-price-prediction-category")[0].checkValidity();
+            $("#form-edit-price-prediction-category").addClass('was-validated');
+            var _this = this;
+            if (isFormValid) {
+                var formData = new FormData();
+                $(_this).parents("#form-edit-price-prediction-category").find("div.tab-pane").each(function (i, e) {
+                    formData.append('PricePredictionCategoryDetailAdminViewModels[' + i + '].LangId', $(this).find("#lang-id").val());
+                    formData.append('PricePredictionCategoryDetailAdminViewModels[' + i + '].Name', $(this).find("#name").val());
+                    formData.append('PricePredictionCategoryDetailAdminViewModels[' + i + '].Description', $(this).find("#description").val());
+                });
+                $.ajax({
+                    url: "/Admin/DoAddPricePredictionCategory",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text() + " <i class='la la-plus font-size-15px'></i>");
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message, 'Success!');
+                            $("#edit-price-prediction-category").modal("hide");
+                        }
+                        else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text() + " <i class='la la-plus font-size-15px'></i>");
+                    }
+                });
+            };
+            return false;
+        });
+    },
     bindPricePredictionTab: function () {
         $('a#price-prediction-nav-tab').on('show.bs.tab', function (e) {
             $("a#price-prediction-summary-nav-tab").tab("show");
 
-            //if ($("#price-prediction-nav .revenue-chart").html().trim().length === 0) {
-            //    PieChart.loadPercentageAjax($("#lottery-nav .revenue-chart"), $("#lottery-nav .revenue-no-data"), "/Admin/GetLotteryRevenuePieChart/")
-            //}
+            if ($("#price-prediction-nav .revenue-chart").html().trim().length === 0) {
+                PieChart.loadPercentageAjax($("#price-prediction-nav .revenue-chart"), $("#price-prediction-nav .revenue-no-data"), "/Admin/GetPricePredictionRevenuePieChart/")
+            }
 
         });
 
-        //$('a#lottery-nav-tab').on('show.bs.tab', function (e) {
-        //    if ($("#lottery-nav .device-category-chart").html().trim().length === 0) {
-        //        PieChart.loadPercentageAjax($("#lottery-nav .device-category-chart"), $("#lottery-nav .device-category-no-data"), "/Admin/GetLotteryDeviceCategoryPieChart/")
-         //   }
-        //});
+        $('a#price-prediction-nav-tab').on('show.bs.tab', function (e) {
+            if ($("#price-prediction-nav .device-category-chart").html().trim().length === 0) {
+                PieChart.loadPercentageAjax($("#price-prediction-nav .device-category-chart"), $("#price-prediction-nav .device-category-no-data"), "/Admin/GetPricePreicitonDeviceCategoryPieChart/")
+           }
+        });
     },
     bindPricePredictionSummaryTab: function () {
         $("a#price-prediction-summary-nav-tab").on('show.bs.tab', function (e) {

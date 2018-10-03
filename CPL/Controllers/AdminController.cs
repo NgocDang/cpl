@@ -54,6 +54,7 @@ namespace CPL.Controllers
         private readonly ISliderService _sliderService;
         private readonly ISliderDetailService _sliderDetailService;
 		private readonly IPricePredictionCategoryService _pricePredictionCategoryService;
+		private readonly IPricePredictionCategoryDetailService _pricePredictionCategoryDetailService;
         private readonly IDataContextAsync _dataContextAsync;
 
         public AdminController(
@@ -83,6 +84,7 @@ namespace CPL.Controllers
             ISliderService sliderService,
             ISliderDetailService sliderDetailService,
 			IPricePredictionCategoryService pricePredictionCategoryService,
+			IPricePredictionCategoryDetailService pricePredictionCategoryDetailService,
             IDataContextAsync dataContextAsync)
         {
             this._langService = langService;
@@ -111,6 +113,7 @@ namespace CPL.Controllers
             this._sliderService = sliderService;
             this._sliderDetailService = sliderDetailService;
 			this._pricePredictionCategoryService = pricePredictionCategoryService;
+            this._pricePredictionCategoryDetailService = pricePredictionCategoryDetailService;
             this._dataContextAsync = dataContextAsync;
         }
 
@@ -2882,6 +2885,140 @@ namespace CPL.Controllers
                   .ToList();
         }
 
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetPricePredictionRevenuePieChart()
+        {
+            var data = new List<PieChartData>();
+            var pricePredictionCategories = _pricePredictionCategoryService
+                                            .Query()
+                                            .Include(x => x.PricePredictionCategoryDetails)
+                                            .Select(x => new
+                                            {
+                                                x.Id,
+                                                x.PricePredictionCategoryDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Name
+                                            })
+                                            .ToList();
+
+            for (int i = 0; i < pricePredictionCategories.Count(); i++)
+            {
+                var totalSalePricePrediction = _pricePredictionHistoryService.Query()
+                                    .Include(x => x.PricePrediction)
+                                        .ThenInclude(x => x.PricePredictionSetting)
+                                    .Where(x => x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategories[i].Id)
+                                    .Sum(x => x.Amount);
+                var totalAwardPricePrediction = _pricePredictionHistoryService.Query()
+                                               .Include(x => x.PricePrediction)
+                                                    .ThenInclude(x => x.PricePredictionSetting)
+                                                .Where(x => x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategories[i].Id)
+                                                .Sum(x => x.TotalAward);
+                var revenueInPricePredictionGame = Convert.ToInt32(totalSalePricePrediction - totalAwardPricePrediction);
+
+                var pricePredictionChartData = new PieChartData { Label = pricePredictionCategories[i].Name, Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)i + 1), Value = revenueInPricePredictionGame >= 0 ? revenueInPricePredictionGame : 0 };
+                data.Add(pricePredictionChartData);
+            }
+
+            return new JsonResult(new
+            {
+                success = true,
+                seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Revenue"),
+                data = JsonConvert.SerializeObject(data)
+            });
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetPricePreicitonDeviceCategoryPieChart()
+        {
+            var data = new List<PieChartData>();
+
+            var pricePredictionViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.PricePredictionViewId).Value;
+            var deviceCategoriesPricePrediction = _analyticService.GetDeviceCategory(pricePredictionViewId, FirstDeploymentDate, DateTime.Now);
+            var totalDesktopPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.DESKTOP).Sum(x => x.Count);
+            var totalMobilePricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.MOBILE).Sum(x => x.Count);
+            var totalTabletPricePrediction = deviceCategoriesPricePrediction.Where(x => x.DeviceCategory == EnumDeviceCategory.TABLET).Sum(x => x.Count);
+
+            var desktopChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Desktop"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = totalDesktopPricePrediction };
+            var mobileChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Mobile"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = totalMobilePricePrediction };
+            var tabletChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Tablet"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)3), Value = totalTabletPricePrediction };
+
+            data.Add(desktopChartData);
+            data.Add(mobileChartData);
+            data.Add(tabletChartData);
+
+            return new JsonResult(new
+            {
+                success = true,
+                seriesName = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Device"),
+                data = JsonConvert.SerializeObject(data)
+            });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult AddPricePredictionCategory()
+        {
+            var pricePredictionCategory = new AddPricePredictionCategoryAdminViewModel();
+            var langs = _langService.Queryable()
+                        .Select(x => new { x.Id, x.Name })
+                        .ToList();
+
+            foreach (var lang in langs)
+            {
+                pricePredictionCategory.PricePredictionCategoryDetailAdminViewModels.Add(new PricePredictionCategoryDetailAdminViewModel
+                {
+                    LangId = lang.Id,
+                    LangName = lang.Name
+                });
+            }
+
+            return PartialView("_EditPricePredictionCategory", pricePredictionCategory);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoAddPricePredictionCategory(AddPricePredictionCategoryAdminViewModel viewModel)
+        {
+            try
+            {
+                // check exist
+                bool isExisted = false;
+                foreach (var detail in viewModel.PricePredictionCategoryDetailAdminViewModels)
+                {
+                    if (_pricePredictionCategoryDetailService.Queryable().Any(x => x.LangId == detail.LangId && x.Name == detail.Name))
+                    {
+                        isExisted = true;
+                        break;
+                    }
+                }
+                if (isExisted)
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExistingCategory") });
+                else
+                {
+                    var pricePredictionCategory = new PricePredictionCategory();
+
+                    _pricePredictionCategoryService.Insert(pricePredictionCategory);
+                    _unitOfWork.SaveChanges();
+
+                    foreach (var detail in viewModel.PricePredictionCategoryDetailAdminViewModels)
+                    {
+                        _pricePredictionCategoryDetailService.Insert(new PricePredictionCategoryDetail
+                        {
+                            PricePredictionCategoryId = pricePredictionCategory.Id,
+                            LangId = detail.LangId,
+                            Name = detail.Name,
+                            Description = detail.Description,
+                        });
+                    }
+                    _unitOfWork.SaveChanges();
+                    return new JsonResult(new { success = true,
+                                                message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
 
         #endregion
 
