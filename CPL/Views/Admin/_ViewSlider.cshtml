@@ -7,7 +7,7 @@
                 <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slider")</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
             </div>
-            <div class="modal-body p-2">
+            <div class="modal-body">
                 <div class="row">
                     <div class="col-12">
                         <p class="text-muted mb-3px font-size-13px">
@@ -22,7 +22,7 @@
                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Url")
                         </p>
                         <p>
-                            <strong>@Model.Url</strong>
+                            <a href="@Model.Url">@Model.Url</a>
                         </p>
                     </div>
                     <div id="slider-multilanguage" class="tab-component col-12">
@@ -48,7 +48,7 @@
                                                         <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopImage")</span> <span> ( @detail.Lang.Name )</span>
                                                     </p>
                                                     <p>
-                                                        <a data-toggle="lightbox" data-gallery="document-@detail.Id" href="/images/slider/@detail.DesktopImage"><img src="/images/slider/@detail.DesktopImage" class="img-thumbnail img-fluid border-0" alt="document-@detail.DesktopImage"></a>
+                                                        <a data-toggle="lightbox" data-gallery="document-view-@detail.Id" href="/images/slider/@detail.DesktopImage"><img src="/images/slider/@detail.DesktopImage" class="img-thumbnail img-fluid border-0" alt="document-view-@detail.DesktopImage"></a>
                                                     </p>
                                                 </div>
                                                 <div class="col-12">
@@ -56,7 +56,7 @@
                                                         <label for="mobile-image"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileImage")</span><span> ( @detail.Lang.Name )</span></label>
                                                     </p>
                                                     <p>
-                                                        <a data-toggle="lightbox" data-gallery="document-@detail.Id" href="/images/slider/@detail.MobileImage"><img src="/images/slider/@detail.MobileImage" class="img-thumbnail img-fluid border-0" alt="document-@detail?.MobileImage"></a>
+                                                        <a data-toggle="lightbox" data-gallery="document-view-@detail.Id" href="/images/slider/@detail.MobileImage"><img src="/images/slider/@detail.MobileImage" class="img-thumbnail img-fluid border-0" alt="document-view-@detail?.MobileImage"></a>
                                                     </p>
                                                 </div>
                                             </div>
