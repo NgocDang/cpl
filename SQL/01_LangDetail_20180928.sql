@@ -101,3 +101,6 @@ INSERT INTO LangDetail VALUES (2, N'DesktopImage', N'デスクトップイメー
 
 INSERT INTO LangDetail VALUES (1, N'MobileImage', N'Mobile image');
 INSERT INTO LangDetail VALUES (2, N'MobileImage', N'モバイルイメージ');
+
+INSERT INTO LangDetail VALUES (1, N'Group', N'Group');
+INSERT INTO LangDetail VALUES (2, N'Group', N'グループ');
