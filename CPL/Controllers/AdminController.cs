@@ -2604,13 +2604,8 @@ namespace CPL.Controllers
             lottery = Mapper.Map<LotteryAdminViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
                                                         .Include(x => x.LotteryDetails)
+                                                            .ThenInclude(y => y.Lang)
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
-
-            foreach (var detail in lottery.LotteryDetails)
-            {
-                var lang = Mapper.Map<LangViewModel>(_langService.Queryable().Where(x => x.Id == detail.LangId).FirstOrDefault());
-                detail.Lang = lang;
-            }
 
             lottery.LotteryCategory = _lotteryCategoryService.Queryable().Where(x => x.Id == lottery.LotteryCategoryId).FirstOrDefault().Name;
 
@@ -2709,12 +2704,22 @@ namespace CPL.Controllers
             lotteries = Mapper.Map<LotteryAdminViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
                                                         .Include(x => x.LotteryDetails)
+                                                            .ThenInclude(y => y.Lang)
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
 
-            foreach (var detail in lotteries.LotteryDetails)
+            var langs = _langService.Queryable()
+                .Select(x => Mapper.Map<LangViewModel>(x))
+                .ToList();
+
+            foreach (var lang in langs)
             {
-                var lang = Mapper.Map<LangViewModel>(_langService.Queryable().Where(x => x.Id == detail.LangId).FirstOrDefault());
-                detail.Lang = lang;
+                if (!lotteries.LotteryDetails.Any(x => x.LangId == lang.Id))
+                {
+                    lotteries.LotteryDetails.Add(new LotteryDetailAdminViewModel()
+                    {
+                        Lang = lang
+                    });
+                }
             }
 
             lotteries.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryAdminViewModel>(x)).ToList();
@@ -3230,12 +3235,21 @@ namespace CPL.Controllers
             var slider = Mapper.Map<SliderAdminViewModel>(_sliderService.Query()
                                                             .Include(x => x.Group)
                                                             .Include(x => x.SliderDetails)
+                                                                .ThenInclude(y => y.Lang)
                                                             .FirstOrDefault(x => x.Id == id));
+            var langs = _langService.Queryable()
+                .Select(x => Mapper.Map<LangViewModel>(x))
+                .ToList();
 
-            foreach (var detail in slider.SliderDetails)
+            foreach (var lang in langs)
             {
-                var lang = Mapper.Map<LangViewModel>(_langService.Queryable().Where(x => x.Id == detail.LangId).FirstOrDefault());
-                detail.Lang = lang;
+                if (!slider.SliderDetails.Any(x => x.LangId == lang.Id))
+                {
+                    slider.SliderDetails.Add(new SliderDetailAdminViewModel()
+                    {
+                        Lang = lang
+                    });
+                }
             }
 
             return PartialView("_EditSlider", slider);
@@ -3248,14 +3262,9 @@ namespace CPL.Controllers
 
             slider = Mapper.Map<SliderAdminViewModel>(_sliderService.Query()
                                                         .Include(x => x.SliderDetails)
+                                                            .ThenInclude(y => y.Lang)
                                                         .Include(x => x.Group)
                                                         .FirstOrDefault(x => x.Id == id));
-
-            foreach (var detail in slider.SliderDetails)
-            {
-                var lang = Mapper.Map<LangViewModel>(_langService.Queryable().Where(x => x.Id == detail.LangId).FirstOrDefault());
-                detail.Lang = lang;
-            }
 
             return PartialView("_ViewSlider", slider);
         }
@@ -3375,12 +3384,12 @@ namespace CPL.Controllers
             try
             {
                 var slider = _sliderService.Queryable()
+                        .Include(x => x.SliderDetails)
                         .FirstOrDefault(x => x.Id == id);
-                var sliderDetails = _sliderDetailService.Queryable()
-                                    .Where(x => x.SliderId == id);
-                if (slider != null && sliderDetails != null)
+
+                if (slider != null && slider.SliderDetails != null)
                 {
-                    foreach (var detail in sliderDetails)
+                    foreach (var detail in slider.SliderDetails)
                         _sliderDetailService.Delete(detail);
                     _sliderService.Delete(slider);
 
@@ -3398,7 +3407,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult SearchSlider(DataTableAjaxPostModel viewModel, int? groupId)
+        public JsonResult SearchSlider(DataTableAjaxPostModel viewModel, int groupId)
         {
             // action inside a standard controller
             int filteredResultsCount;
@@ -3415,7 +3424,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<SliderAdminViewModel> SearchSliderFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? groupId)
+        public IList<SliderAdminViewModel> SearchSliderFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int groupId)
         {
             var searchBy = (model.search != null) ? model.search?.value : null;
             var take = model.length;
@@ -3435,7 +3444,7 @@ namespace CPL.Controllers
                     .Query()
                     .Include(x => x.Group)
                     .Include(x => x.SliderDetails)
-                    .Where(x => (!groupId.HasValue && x.GroupId == 1) || x.Group.Id == groupId) //Default is group Homepage -> Id = 1
+                    .Where(x => x.Group.Id == groupId)
                     .Select(x => Mapper.Map<SliderAdminViewModel>(x));
 
             filteredResultsCount = totalResultsCount = sliders.Count();

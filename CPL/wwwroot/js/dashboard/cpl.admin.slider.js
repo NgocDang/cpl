@@ -21,7 +21,7 @@
         });
     },
 
-    loadSliderDataTable: function (groupId) {
+    loadSliderDataTable: function () {
         return $('#dt-all-slider').DataTable({
             "processing": true,
             "serverSide": true,
@@ -30,7 +30,7 @@
                 url: "/Admin/SearchSlider",
                 type: 'POST',
                 data: {
-                    groupId: groupId
+                    groupId: parseInt($("#group-id").val())
                 }
             },
             "language": DTLang.getLang(),
@@ -45,7 +45,7 @@
                 {
                     "data": "Url",
                     "render": function (data, type, full, meta) {
-                        return "<a href='" + full.url + "'><span class='badge badge-secondary'>" + full.url + "</span></a>";
+                        return "<a href='" + full.url + "'>" + full.url + "</a>";
                     },
                     "width": "20%"
                 },
@@ -53,6 +53,14 @@
                     "data": "DesktopImage",
                     "render": function (data, type, full, meta) {
                         return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "' href='/images/slider/" + full.sliderDetails[1].desktopImage + "' ><img src='/images/slider/" + full.sliderDetails[1].desktopImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.sliderDetails[1].desktopImage + "'> </a>";
+                    },
+                    "orderable": false,
+                    "width": "20%"
+                },
+                {
+                    "data": "MobileImage",
+                    "render": function (data, type, full, meta) {
+                        return "<a data-toggle='lightbox' data-gallery='document-" + full.id + "' href='/images/slider/" + full.sliderDetails[1].mobileImage + "' ><img src='/images/slider/" + full.sliderDetails[1].mobileImage + "' class='img-thumbnail img-fluid border-0' alt='document-" + full.sliderDetails[1].mobileImage + "'> </a>";
                     },
                     "orderable": false,
                     "width": "20%"
@@ -96,10 +104,11 @@
         $("#group-picker").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 var _this = this;
-                AdminSlider.sliderDataTable.destroy();
-                AdminSlider.sliderDataTable = AdminSlider.loadSliderDataTable(parseInt($(_this).val()));
 
                 $("#group-id").val($(_this).val());
+
+                AdminSlider.sliderDataTable.destroy();
+                AdminSlider.sliderDataTable = AdminSlider.loadSliderDataTable();
             });
     },
 
