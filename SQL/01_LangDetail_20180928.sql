@@ -63,3 +63,8 @@ INSERT INTO LangDetail VALUES (1, N'PlayGameDetail',
 INSERT INTO LangDetail VALUES (2, N'PlayGameDetail', 
 N'お好みのゲームを選択して <br />思う存分クリプトオッズをお楽しみ下さい');
 
+-- DamTran - PricePredictonStatisticsChart
+USE CPL;
+INSERT INTO LangDetail VALUES (1, N'NumberOfPrediction', N'Number Of Prediction');
+INSERT INTO LangDetail VALUES (2, N'NumberOfPrediction', N'予測数');
+
