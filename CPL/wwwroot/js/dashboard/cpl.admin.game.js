@@ -1005,7 +1005,7 @@
             "language": DTLang.getLang(),
             "columns": [
                 {
-                    "data": "Emai",
+                    "data": "Email",
                     "render": function (data, type, full, meta) {
                         return full.email;
                     }
