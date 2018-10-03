@@ -11,7 +11,7 @@
                 <div class="modal-body">
                     <div class="col-12">
                         <fieldset class="form-group">
-                            <label for="Name" class="small">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</label>
+                            <label for="Name">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</label>
                             @if (Model != null)
                             {
                                 <input id="Name" type="text" value="@Model.Name" class="form-control" required name="Name" autofocus>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-12">
                         <fieldset class="form-group">
-                            <label for="Url" class="small">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Url")</label>
+                            <label for="Url">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Url")</label>
                             @if (Model != null && Model.Url != "#")
                             {
                                 <input id="Url" type="text" value="@Model.Url" class="form-control" name="Url" autofocus>
