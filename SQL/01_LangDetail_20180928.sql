@@ -34,8 +34,8 @@ insert into LangDetail values (2, N'Campaign', N'キャンペーン');
 insert into LangDetail values (1, N'PhoneNumber', N'Phone number');
 insert into LangDetail values (2, N'PhoneNumber', N'電話番号');
 
-insert into LangDetail values (1, N'PhoneRequired', N'Please fill in phone number');
-insert into LangDetail values (2, N'PhoneRequired', N'電話番号を記入してください');
+insert into LangDetail values (1, N'PhoneNumberRequired', N'Please fill in phone number');
+insert into LangDetail values (2, N'PhoneNumberRequired', N'電話番号を記入してください');
 
 insert into LangDetail values (1, N'Message', N'Message');
 insert into LangDetail values (2, N'Message', N'メッセージ');
