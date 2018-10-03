@@ -1297,7 +1297,7 @@ namespace CPL.Controllers
             }
 
             var dataSet = _dataContextAsync.ExecuteStoredProcedure(uspName, storeParams);
-            DataTable table = dataSet.Tables[0]; // TODO
+            DataTable table = dataSet.Tables[0];
             var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
             var viewModels = Mapper.Map<List<DataRow>, List<StandardAffiliateIntroducedUsersAdminViewModel>>(rows);
 
@@ -2540,7 +2540,7 @@ namespace CPL.Controllers
                 .Sum(x => x.Amount));
 
             // 1.STATISTICAL INFORMATION - PAGE VIEWS
-            //var pricePredictionViewId = _lotteryCategoryService.Queryable().FirstOrDefault().ViewId; // TODO
+            var pricePredictionViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.PricePredictionViewId).Value;
             var pricePredictionPageViews = _analyticService.GetPageViews("182104782", DateTime.Now.AddDays(-periodInDay), DateTime.Now);
             viewModel.PageView = pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
 
@@ -2656,14 +2656,14 @@ namespace CPL.Controllers
 
             // 1.STATISTICAL INFORMATION 
             // 1.STATISTICAL INFORMATION - TOTAL REVENUE
-            viewModel.TotalRevenue = Convert.ToInt32(_pricePredictionHistoryService.Queryable()
+            viewModel.TotalRevenue = Convert.ToInt32(_pricePredictionHistoryService.Query()
                 .Include(x => x.PricePrediction)
                     .ThenInclude(x => x.PricePredictionSetting)
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
                 .Sum(x => x.Amount - x.TotalAward.GetValueOrDefault(0)));
 
             // 1.STATISTICAL INFORMATION - TOTAL SALE
-            viewModel.TotalSale = Convert.ToInt32(_pricePredictionHistoryService.Queryable()
+            viewModel.TotalSale = Convert.ToInt32(_pricePredictionHistoryService.Query()
                  .Include(x => x.PricePrediction)
                     .ThenInclude(x => x.PricePredictionSetting)
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
@@ -2675,7 +2675,7 @@ namespace CPL.Controllers
             viewModel.PageView = pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
 
             // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
-            viewModel.TotalPlayers = _pricePredictionHistoryService.Queryable()
+            viewModel.TotalPlayers = _pricePredictionHistoryService.Query()
                 .Include(x => x.PricePrediction)
                     .ThenInclude(x => x.PricePredictionSetting)
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
@@ -2684,7 +2684,7 @@ namespace CPL.Controllers
                 .Count();
 
             // 1.STATISTICAL INFORMATION - TODAY PLAYERS
-            viewModel.TodayPlayers = _pricePredictionHistoryService.Queryable()
+            viewModel.TodayPlayers = _pricePredictionHistoryService.Query()
                  .Include(x => x.PricePrediction)
                     .ThenInclude(x => x.PricePredictionSetting)
                 .Where(x => x.CreatedDate.Date == DateTime.Now.Date && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
@@ -2694,7 +2694,7 @@ namespace CPL.Controllers
             // 2.STATISTICAL CHART
             // 2.STATISTICAL CHART - TOTAL SALE CHANGES
             var pricePredictionSale = _pricePredictionHistoryService
-                        .Queryable()
+                        .Query()
                         .Include(x => x.PricePrediction)
                             .ThenInclude(x => x.PricePredictionSetting)
                         .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
@@ -2717,7 +2717,7 @@ namespace CPL.Controllers
 
             // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
             var pricePredictionUses = _pricePredictionHistoryService
-                .Queryable()
+                .Query()
                 .Include(x => x.PricePrediction)
                     .ThenInclude(x => x.PricePredictionSetting)
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
@@ -2730,7 +2730,7 @@ namespace CPL.Controllers
                 .ToList();
 
             var pricePredictionAwards = _pricePredictionHistoryService
-                .Queryable()
+                .Query()
                 .Include(x => x.PricePrediction)
                     .ThenInclude(x => x.PricePredictionSetting)
                 .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
@@ -2767,7 +2767,7 @@ namespace CPL.Controllers
 
             // 2.STATISTICAL CHART - TOTAL PLAYERS
             var pricePredictionPlayers = _pricePredictionHistoryService
-                .Queryable()
+                .Query()
                 .Include(x => x.PricePrediction)
                     .ThenInclude(x => x.PricePredictionSetting)
                 .Where(x => (periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
@@ -2872,6 +2872,7 @@ namespace CPL.Controllers
                   .Take(take)
                   .ToList();
         }
+
 
         #endregion
 
