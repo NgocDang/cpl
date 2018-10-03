@@ -2648,7 +2648,7 @@ namespace CPL.Controllers
                 .GroupBy(x => x.Date)
                 .Select(y => new SummaryChange
                 {
-                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Date = y.Key,
                     Value = y.SelectMany(x => x.SysUserIds).Distinct().Count()
                 })
                 .OrderBy(x => x.Date)
@@ -2679,8 +2679,8 @@ namespace CPL.Controllers
                 .Sum(x => x.Amount));
 
             // 1.STATISTICAL INFORMATION - PAGE VIEWS
-            //var pricePredictionViewId = _lotteryCategoryService.Queryable().FirstOrDefault(x => x.Id == pricePredictionCategoryId).ViewId; // TODO
-            var pricePredictionPageViews = _analyticService.GetPageViews("182104782", DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            var pricePredictionViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.PricePredictionViewId).Value;
+            var pricePredictionPageViews = _analyticService.GetPageViews(pricePredictionViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
             viewModel.PageView = pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
 
             // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
@@ -2792,7 +2792,7 @@ namespace CPL.Controllers
                 .GroupBy(x => x.Date)
                 .Select(y => new SummaryChange
                 {
-                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Date = y.Key,
                     Value = y.SelectMany(x => x.SysUserIds).Distinct().Count()
                 })
                 .OrderBy(x => x.Date)
