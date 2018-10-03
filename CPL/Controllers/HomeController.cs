@@ -124,6 +124,42 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Guest)]
+        [HttpPost]
+        public IActionResult DoSend(HomeMessageViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var template = _templateService.Queryable().FirstOrDefault(x => x.Name == EnumTemplate.Message.ToString());
+
+                    var messageEmailTemplateViewModel = Mapper.Map<MessageEmailTemplateViewModel>(viewModel);
+                    messageEmailTemplateViewModel.NameText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Name");
+                    messageEmailTemplateViewModel.CheersText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Cheers");
+                    messageEmailTemplateViewModel.ContactInfoText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ContactInfo");
+                    messageEmailTemplateViewModel.CPLTeamText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "CPLTeam");
+                    messageEmailTemplateViewModel.MessageText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Message");
+                    messageEmailTemplateViewModel.EmailText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Email");
+                    messageEmailTemplateViewModel.HiText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Hi");
+                    messageEmailTemplateViewModel.MessageFromCustomerText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "MessageFromCustomer");
+                    messageEmailTemplateViewModel.PhoneNumberText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PhoneNumber");
+                    messageEmailTemplateViewModel.WebsiteText = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Website");
+                    messageEmailTemplateViewModel.RootUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+
+                    template.Body = _viewRenderService.RenderToStringAsync("/Views/Home/_MessageEmailTemplate.cshtml", messageEmailTemplateViewModel).Result;
+                    EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), CPLConstant.SMTP.Contact);
+                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "MessageSentSuccessfully") });
+                }
+                catch (Exception ex)
+                {
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+                }
+
+            }
+            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+        }
+
+        [Permission(EnumRole.Guest)]
         public IActionResult UpdateLangDetail()
         {
             LangDetailHelper.LangDetails = _langDetailService.Queryable().Select(x => Mapper.Map<LangDetailViewModel>(x)).ToList();

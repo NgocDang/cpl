@@ -292,6 +292,11 @@ section#faq ul {
 
         section#faq ul li i {
             position: absolute;
-            top: 0.8rem;
+            top: 0.7rem;
             right: 0rem;
         }
+
+section#contact div.card{
+    box-shadow:none;
+    background:transparent;
+}

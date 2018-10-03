@@ -258,23 +258,22 @@
         <div class="row my-2 pb-2">
             <div class="col-lg-6 col-12">
                 <ul>
-                    @for (var i = 0; i < Model.FAQs.Count / 2; i++)
+                    @foreach(var faq in Model.FAQs.Take((Model.FAQs.Count() + 1) / 2))
                     {
                         <li class="px-1 mb-1 shadow-sm">
-                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq_@i">@Model.FAQs[i].Question<i class="la la-minus"></i></a>
-                            <p id="faq_@i" class="collapse mb-0 pb-1 pr-2 font-small-3">@Model.FAQs[i].Answer</p>
+                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq_@faq.Id">@faq.Question<i class="la la-minus"></i></a>
+                            <p id="faq_@faq.Id" class="collapse mb-0 pb-1 pr-2 font-small-3">@faq.Answer</p>
                         </li>
                     }
-
                 </ul>
             </div>
             <div class="col-lg-6 col-12">
                 <ul>
-                    @for (var i = Model.FAQs.Count / 2; i < Model.FAQs.Count; i++)
+                    @foreach (var faq in Model.FAQs.Skip((Model.FAQs.Count() + 1) / 2))
                     {
                         <li class="px-1 mb-1 shadow-sm">
-                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq_@i">@Model.FAQs[i].Question<i class="la la-minus"></i></a>
-                            <p id="faq_@i" class="collapse mb-0 pb-1 pr-2 font-small-3">@Model.FAQs[i].Answer</p>
+                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq_@faq.Id">@faq.Question<i class="la la-minus"></i></a>
+                            <p id="faq_@faq.Id" class="collapse mb-0 pb-1 pr-2 font-small-3">@faq.Answer</p>
                         </li>
                     }
                 </ul>
@@ -284,8 +283,69 @@
 </section>
 
 <section id="contact">
-    <div class="container">
+    <div class="container mt-sm-4 mt-3">
+        <div class="row text-center">
+            <div class="col-12">
+                <img src="~/images/home/top.png" class="img-fluid" />
+                <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")</p>
+            </div>
+        </div>
         <div class="row">
+            <div class="col-12 px-0">
+                <div class="card">
+                    <div class="card-content">
+                        <form id="form-message" class="form-horizontal" action="">
+                            <div class="card-body">
+                                <div class="row mt-1 mb-1">
+                                    <div class="col-lg-4 col-12 px-05">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="Name">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</label>
+                                            <input type="text" name="Name" class="form-control" maxlength="100" id="Subject" required autofocus="">
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NameRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-4 col-12 px-05">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                                            <input type="email" name="Email" class="form-control" maxlength="50" id="Email" required autofocus="">
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-4 col-12 px-05">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="PhoneNumber">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PhoneNumber")</label>
+                                            <input type="text" name="PhoneNumber" class="form-control" maxlength="50" id="PhoneNumber" required autofocus="">
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PhoneNumberRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 px-05">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="Message">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Message")</label>
+                                            <textarea name="Message" class="form-control" rows="7" id="Message" required autofocus=""></textarea>
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MessageRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" id="btn-do-send" class="btn btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Send")</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

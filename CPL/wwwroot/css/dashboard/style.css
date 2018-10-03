@@ -1897,6 +1897,11 @@ button#btn-dropdown-item:focus {
     padding-bottom: 0.5rem !important;
     padding-top: 0.5rem !important;
 }
+
+.px-05 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+}
 .py-01 {
     padding-bottom: 0.1rem !important;
     padding-top: 0.1rem !important;
