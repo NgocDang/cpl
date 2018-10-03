@@ -11,7 +11,7 @@
 
 <section id="slide">
     <div class="owl-carousel owl-theme mt-0">
-        @if (Model.Sliders != null)
+        @if (Model.Sliders.Count != 0)
         {
             @foreach (var slide in Model.Sliders)
             {
@@ -19,7 +19,7 @@
                 {
                     @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
                     {
-                        <div class="item px-0">
+                        <div class="item">
                             <a class="d-md-block d-none" href="@slide.Url"><img src="~/images/slider/@detail.DesktopImage" class="img-fluid img-border" /></a>
                             <a class="d-md-none d-block" href="@slide.Url"><img src="~/images/slider/@detail.MobileImage" class="img-fluid img-border" /></a>
                         </div>
@@ -29,7 +29,7 @@
         }
         else
         {
-            <div class="item px-0">
+            <div class="item">
                 <a class="d-md-block d-none" href="#"><img src="~/images/slider-dekstop.png" class="img-fluid img-border" /></a>
                 <a class="d-md-none d-block" href="#"><img src="~/images/slider-mobile.png" class="img-fluid img-border" /></a>
             </div>
