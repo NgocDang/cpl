@@ -1893,6 +1893,15 @@ button#btn-dropdown-item:focus {
     top: 30%;
     right:0;
 }
+.my-05 {
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.5rem !important;
+}
+
+.pt-05 {
+    padding-top: 0.5rem !important;
+}
+
 .py-05 {
     padding-bottom: 0.5rem !important;
     padding-top: 0.5rem !important;

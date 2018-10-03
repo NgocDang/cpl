@@ -25,8 +25,10 @@
                         Email: $("section#contact #Email").val()
                     },
                     success: function (data) {
-                        if (data.success)
+                        if (data.success) {
+                            $("#form-message")[0].reset();
                             toastr.success(data.message, 'Success!');
+                        }
                         else 
                             toastr.error(data.message, 'Error!');
                     },
