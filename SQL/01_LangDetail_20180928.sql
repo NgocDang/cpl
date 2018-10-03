@@ -104,3 +104,8 @@ INSERT INTO LangDetail VALUES (2, N'MobileImage', N'モバイルイメージ');
 
 INSERT INTO LangDetail VALUES (1, N'Group', N'Group');
 INSERT INTO LangDetail VALUES (2, N'Group', N'グループ');
+
+-- DamTran - PricePredictonStatisticsChart
+USE CPL;
+INSERT INTO LangDetail VALUES (1, N'NumberOfPrediction', N'Number Of Prediction');
+INSERT INTO LangDetail VALUES (2, N'NumberOfPrediction', N'予測数');

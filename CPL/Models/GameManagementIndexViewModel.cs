@@ -10,5 +10,6 @@ namespace CPL.Models
     {
         public string Tab { get; set; }
         public List<LotteryCategoryAdminViewModel> LotteryCategories { get; set; }
+        public List<PricePredictionCategoryAdminViewModel> PricePredictionCategories { get; set; }
     }
 }
