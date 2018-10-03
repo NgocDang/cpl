@@ -43,6 +43,9 @@
                     <li class="nav-item">
                         <a class="nav-link font-medium-2 text-uppercase font-weight-bold px-2 border-0" id="lottery-nav-tab" data-toggle="tab" href="#lottery-nav" aria-controls="lottery-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link font-medium-2 text-uppercase font-weight-bold px-2 border-0" id="price-prediction-nav-tab" data-toggle="tab" href="#price-prediction-nav" aria-controls="price-prediction-nav" aria-expanded="false">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</a>
+                    </li>
                 </ul>
                 <div class="tab-content mb-1">
                     <div role="tabpanel" class="tab-pane" id="summary-nav" aria-labelledby="summary-nav-tab" aria-expanded="true">
@@ -263,6 +266,176 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="price-prediction-nav" aria-labelledby="price-prediction-nav-tab" aria-expanded="true">
+                        <div class="card mb-1">
+                            <div class="card-content">
+                                <div class="card-body px-0">
+                                    <ul class="nav nav-tabs nav-underline">
+                                        <li class="nav-item">
+                                            <a class="nav-link font-medium-1 font-weight-bold px-2" id="price-prediction-summary-nav-tab" data-toggle="tab" href="#price-prediction-summary-nav" aria-controls="price-prediction-category-nav" aria-expanded="true">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Summary")</a>
+                                        </li>
+                                        @for (int i = 0; i < Model.PricePredictionCategories.Count; i++)
+                                        {
+                                            <li class="nav-item">
+                                                <a class="nav-link font-medium-1 font-weight-bold px-2 price-prediction-category-nav-tab" data-price-prediction-category-id="@Model.PricePredictionCategories[i].Id" id="price-prediction-category-nav-tab-@Model.PricePredictionCategories[i].Id" data-toggle="tab" href="#price-prediction-category-nav-@Model.PricePredictionCategories[i].Id" aria-controls="price-prediction-category-nav" aria-expanded="true">@Model.PricePredictionCategories[i].Name</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                    <div class="tab-content mb-1">
+                                        <div role="tabpanel" class="tab-pane" id="price-prediction-summary-nav" aria-labelledby="price-prediction-summary-nav-tab" aria-expanded="true">
+                                            <div class="card mb-1">
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <label class="d-inline-block" for="TimeRange">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TimeRange")</label>
+                                                                <fieldset class="form-group col-lg-2 col-6 pl-0">
+                                                                    <select name="TimeRange" class="selectpicker time-range" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                                                        @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
+                                                                        {
+                                                                            if (period == EnumPeriodInDay._7D) //Default selected value
+                                                                            {
+                                                                                <option selected="selected" value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                            }
+                                                                        }
+                                                                    </select>
+                                                                </fieldset>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tab-detail"></div>
+                                                        <div class="row row-separator">
+                                                            <div class="col-12">&nbsp;</div>
+                                                        </div>
+                                                        <div class="purchased-price-prediction-summary-history">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="card mb-0">
+                                                                        <div class="card-content">
+                                                                            <div class="card-header px-0">
+                                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionHistory")
+                                                                            </div>
+                                                                            <div class="card-body px-0 py-0">
+                                                                                <table class="table responsive table-hover table-xl mb-0 dt-purchased-price-prediction-history">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfPrediction")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPurchasePrice")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchaseDateTime")</th>
+                                                                                            <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Details")</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @for (int i = 0; i < Model.PricePredictionCategories.Count; i++)
+                                        {
+                                            <div role="tabpanel" class="tab-pane" id="price-prediction-category-nav-@Model.PricePredictionCategories[i].Id" aria-labelledby="price-prediction-category-nav-tab-@Model.PricePredictionCategories[i].Id" aria-expanded="true">
+                                                <div class="card mb-1">
+                                                    <div class="card-content">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <label class="d-inline-block" for="TimeRange">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TimeRange")</label>
+                                                                    <fieldset class="form-group col-lg-2 col-6 pl-0">
+                                                                        <select name="TimeRange" data-price-prediction-category-id="@Model.PricePredictionCategories[i].Id" class="selectpicker time-range" data-style="btn " title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                                                            @foreach (EnumPeriodInDay period in Enum.GetValues(typeof(EnumPeriodInDay)))
+                                                                            {
+                                                                                if (period == EnumPeriodInDay._7D) //Default selected value
+                                                                                {
+                                                                                    <option selected="selected" value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@Convert.ToInt32(period)">@(EnumHelper<EnumPeriodInDay>.GetDisplayValue((EnumPeriodInDay)Convert.ToInt32(period)))</option>
+                                                                                }
+                                                                            }
+                                                                        </select>
+                                                                    </fieldset>
+                                                                </div>
+                                                            </div>
+                                                            <div class="tab-detail"></div>
+                                                            <div class="row row-separator">
+                                                                <div class="col-12">&nbsp;</div>
+                                                            </div>
+                                                            <div class="purchased-price-prediction-category-history">
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <div class="card mb-0">
+                                                                            <div class="card-content">
+                                                                                <div class="card-header px-0">
+                                                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionHistory")
+                                                                                </div>
+                                                                                <div class="card-body px-0 py-0">
+                                                                                    <table class="table responsive table-hover table-xl mb-0 dt-purchased-price-prediction-history">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Status")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfPrediction")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalPurchasePrice")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PurchaseDateTime")</th>
+                                                                                                <th class="border-top-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Details")</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    @*<div class="row row-separator">
+                                        <div class="col-12">&nbsp;</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="card col-lg-4 col-12">
+                                            <div class="card-body">
+                                                <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Revenue")</p>
+                                                <div class="height-300 revenue-chart"></div>
+                                                <div class="height-300 row justify-content-center align-items-center d-none revenue-no-data">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoData")</div>
+                                            </div>
+                                        </div>
+                                        <div class="card col-lg-4 col-12">
+                                            <div class="card-body">
+                                                <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Device")</p>
+                                                <div class="height-300 device-category-chart"></div>
+                                                <div class="height-300 row justify-content-center align-items-center d-none device-category-no-data">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NoData")</div>
+                                            </div>
+                                        </div>
+                                        <div class="card col-lg-4 col-12">
+                                            <div class="card-body">
+                                                <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryCategory")</p>
+                                                <a asp-controller="Admin" asp-action="Lottery" class="btn btn-outline-secondary" style="margin:2px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
+                                                <button class="btn btn-outline-secondary" id="btn-add-lottery-category" style="margin:2px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AddANewLotteryCategory")</button>
+                                            </div>
+                                        </div>
+                                    </div>*@
                                 </div>
                             </div>
                         </div>

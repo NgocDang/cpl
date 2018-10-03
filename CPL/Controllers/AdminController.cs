@@ -50,6 +50,7 @@ namespace CPL.Controllers
         private readonly IIntroducedUsersService _introducedUsersService;
         private readonly IAgencyService _agencyService;
         private readonly IPaymentService _paymentService;
+        private readonly IPricePredictionCategoryService _pricePredictionCategoryService;
         private readonly IDataContextAsync _dataContextAsync;
 
         public AdminController(
@@ -75,6 +76,7 @@ namespace CPL.Controllers
             IAgencyTokenService agencyTokenService,
             IAgencyService agencyService,
             IPaymentService paymentService,
+            IPricePredictionCategoryService pricePredictionCategoryService,
             IDataContextAsync dataContextAsync)
         {
             this._langService = langService;
@@ -99,6 +101,7 @@ namespace CPL.Controllers
             this._introducedUsersService = introducedUsersService;
             this._agencyService = agencyService;
             this._paymentService = paymentService;
+            this._pricePredictionCategoryService = pricePredictionCategoryService;
             this._dataContextAsync = dataContextAsync;
         }
 
@@ -1830,6 +1833,16 @@ namespace CPL.Controllers
             var viewModel = new GameManagementIndexViewModel();
             viewModel.Tab = tab;
             viewModel.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryAdminViewModel>(x)).ToList();
+            viewModel.PricePredictionCategories = _pricePredictionCategoryService
+                .Queryable()
+                .Include(x => x.PricePredictionCategoryDetails)
+                .Select(x => new PricePredictionCategoryAdminViewModel
+                {
+                    Id = x.Id,
+                    Name = x.PricePredictionCategoryDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Name,
+                    Description = x.PricePredictionCategoryDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Description,
+                }).ToList();
+
             return View(viewModel);
         }
 
@@ -2111,6 +2124,7 @@ namespace CPL.Controllers
             });
         }
 
+        #region Lottery Game
         [HttpGet]
         [Permission(EnumRole.Admin)]
         public IActionResult GetLotteryRevenuePieChart()
@@ -2505,6 +2519,362 @@ namespace CPL.Controllers
                   .Take(take)
                   .ToList();
         }
+        #endregion
+
+        #region PricePrediction Game
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetPricePredictionSummaryStatistics(int periodInDay)
+        {
+            var viewModel = new PricePredictionCategoryStatisticsViewModel();
+
+            // 1.STATISTICAL INFORMATION 
+            // 1.STATISTICAL INFORMATION - TOTAL REVENUE
+            viewModel.TotalRevenue = Convert.ToInt32(_pricePredictionHistoryService.Queryable()
+                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                 .Sum(x => x.Amount - x.TotalAward.GetValueOrDefault(0)));
+
+            // 1.STATISTICAL INFORMATION - TOTAL SALE
+            viewModel.TotalSale = Convert.ToInt32(_pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Amount));
+
+            // 1.STATISTICAL INFORMATION - PAGE VIEWS
+            //var pricePredictionViewId = _lotteryCategoryService.Queryable().FirstOrDefault().ViewId; // TODO
+            var pricePredictionPageViews = _analyticService.GetPageViews("182104782", DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            viewModel.PageView = pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
+
+
+
+            // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
+            viewModel.TotalPlayers = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .Select(x => x.SysUserId)
+                .Distinct()
+                .Count();
+
+            // 1.STATISTICAL INFORMATION - TODAY PLAYERS
+            viewModel.TodayPlayers = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date)
+                .GroupBy(x => x.SysUserId)
+                .Count();
+
+            // 2.STATISTICAL CHART
+            // 2.STATISTICAL CHART - TOTAL SALE CHANGES
+            var pricePredictionSale = _pricePredictionHistoryService.Queryable()
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange
+                        {
+                            Date = y.Key,
+                            Value = y.Sum(x => (int)x.Amount)
+                        });
+
+            viewModel.TotalSaleChangesInJson = JsonConvert.SerializeObject((pricePredictionSale ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.Sum(x => x.Value)
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
+            var pricePredictionUses = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .GroupBy(x => x.CreatedDate.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = (int)y.Sum(x => x.Amount)
+                })
+                .ToList();
+
+            var pricePredictionAwards = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .GroupBy(x => x.UpdatedDate.GetValueOrDefault().Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = -(int)y.Sum(x => x.TotalAward.GetValueOrDefault(0)) // "-" stand for lost token.
+                })
+                .ToList();
+
+            var pricePredictionRevenue = pricePredictionUses.Union(pricePredictionAwards)
+                                  .GroupBy(x => x.Date)
+                                  .Select(x => new SummaryChange
+                                  {
+                                      Date = x.Key,
+                                      Value = x.Sum(y => y.Value)
+                                  })
+                                  .ToList();
+
+            viewModel.TotalRevenueChangesInJson = JsonConvert.SerializeObject((pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.Sum(x => x.Value)
+                }).OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - PAGE VIEW CHANGES
+            viewModel.PageViewChangesInJson = JsonConvert.SerializeObject(pricePredictionPageViews
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL PLAYERS
+            var pricePredictionPlayers = _pricePredictionHistoryService.Queryable()
+                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new PlayersChange
+                        {
+                            Date = y.Key,
+                            SysUserIds = y.Select(x => x.SysUserId)
+                        })
+                        .ToList();
+
+            viewModel.TotalPlayersChangesInJson = JsonConvert.SerializeObject((pricePredictionPlayers ?? Enumerable.Empty<PlayersChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.SelectMany(x => x.SysUserIds).Distinct().Count()
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            return PartialView("_PricePredictionCategoryStatistics", viewModel);
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetPricePredictionCategoryStatistics(int periodInDay, int pricePredictionCategoryId)
+        {
+            var viewModel = new PricePredictionCategoryStatisticsViewModel();
+
+            // 1.STATISTICAL INFORMATION 
+            // 1.STATISTICAL INFORMATION - TOTAL REVENUE
+            viewModel.TotalRevenue = Convert.ToInt32(_pricePredictionHistoryService.Queryable()
+                .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Sum(x => x.Amount - x.TotalAward.GetValueOrDefault(0)));
+
+            // 1.STATISTICAL INFORMATION - TOTAL SALE
+            viewModel.TotalSale = Convert.ToInt32(_pricePredictionHistoryService.Queryable()
+                 .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Sum(x => x.Amount));
+
+            // 1.STATISTICAL INFORMATION - PAGE VIEWS
+            //var pricePredictionViewId = _lotteryCategoryService.Queryable().FirstOrDefault(x => x.Id == pricePredictionCategoryId).ViewId; // TODO
+            var pricePredictionPageViews = _analyticService.GetPageViews("182104782", DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            viewModel.PageView = pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
+
+            // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
+            viewModel.TotalPlayers = _pricePredictionHistoryService.Queryable()
+                .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Select(x => x.SysUserId)
+                .Distinct()
+                .Count();
+
+            // 1.STATISTICAL INFORMATION - TODAY PLAYERS
+            viewModel.TodayPlayers = _pricePredictionHistoryService.Queryable()
+                 .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .GroupBy(x => x.SysUserId)
+                .Count();
+
+            // 2.STATISTICAL CHART
+            // 2.STATISTICAL CHART - TOTAL SALE CHANGES
+            var pricePredictionSale = _pricePredictionHistoryService
+                        .Queryable()
+                        .Include(x => x.PricePrediction)
+                            .ThenInclude(x => x.PricePredictionSetting)
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange
+                        {
+                            Date = y.Key,
+                            Value = y.Sum(x => (int)x.Amount)
+                        });
+
+            viewModel.TotalSaleChangesInJson = JsonConvert.SerializeObject((pricePredictionSale ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.Sum(x => x.Value)
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
+            var pricePredictionUses = _pricePredictionHistoryService
+                .Queryable()
+                .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .GroupBy(x => x.CreatedDate.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = (int)y.Sum(x => x.Amount)
+                })
+                .ToList();
+
+            var pricePredictionAwards = _pricePredictionHistoryService
+                .Queryable()
+                .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .GroupBy(x => x.UpdatedDate.GetValueOrDefault().Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = -(int)y.Sum(x => x.TotalAward.GetValueOrDefault(0)) // "-" stand for lost token.
+                })
+                .ToList();
+
+            var pricePredictionRevenue = pricePredictionUses.Union(pricePredictionAwards)
+                                  .GroupBy(x => x.Date)
+                                  .Select(x => new SummaryChange
+                                  {
+                                      Date = x.Key,
+                                      Value = x.Sum(y => y.Value)
+                                  })
+                                  .ToList();
+
+            viewModel.TotalRevenueChangesInJson = JsonConvert.SerializeObject((pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.Sum(x => x.Value)
+                }).OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - PAGE VIEW CHANGES
+            viewModel.PageViewChangesInJson = JsonConvert.SerializeObject(pricePredictionPageViews
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL PLAYERS
+            var pricePredictionPlayers = _pricePredictionHistoryService
+                .Queryable()
+                .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => (periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .GroupBy(x => x.CreatedDate.Date)
+                .Select(y => new PlayersChange
+                {
+                    Date = y.Key,
+                    SysUserIds = y.Select(x => x.SysUserId)
+                })
+                .ToList();
+
+            viewModel.TotalPlayersChangesInJson = JsonConvert.SerializeObject((pricePredictionPlayers ?? Enumerable.Empty<PlayersChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Select(x => x.Date).FirstOrDefault(),
+                    Value = y.SelectMany(x => x.SysUserIds).Distinct().Count()
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            return PartialView("_PricePredictionCategoryStatistics", viewModel);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult SearchPurchasedPricePredictionHistory(DataTableAjaxPostModel viewModel, int? pricePredictionCategoryId)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchPurchasedPricePredictionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, pricePredictionCategoryId);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IList<AdminPricePredictionHistoryViewComponentViewModel> SearchPurchasedPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? pricePredictionCategoryId)
+        {
+            var searchBy = (model.search != null) ? model.search?.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            var purchasedPricePredictionHistory = _pricePredictionHistoryService
+                    .Query()
+                    .Include(x => x.PricePrediction)
+                        .ThenInclude(x => x.PricePredictionSetting)
+                    .Where(x => !pricePredictionCategoryId.HasValue || x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                    .GroupBy(x => new { x.CreatedDate.Date, x.PricePredictionId, x.SysUserId });
+
+            var purchasedPricePredictionHistoryView = purchasedPricePredictionHistory
+                    .Select(y => new AdminPricePredictionHistoryViewComponentViewModel
+                    {
+                        SysUserId = y.Key.SysUserId,
+                        UserName = y.FirstOrDefault().SysUser.Email,
+                        //Status = y.FirstOrDefault().Lottery.Status, // TODO
+                        NumberOfPrediction = y.Count(),
+                        TotalPurchasePrice = y.Sum(x => x.Amount),
+                        //Title = y.FirstOrDefault().PricePrediction.PricePredictionSetting, // TODO
+                        PurchaseDateTime = y.Key.Date,
+                    });
+
+            filteredResultsCount = totalResultsCount = purchasedPricePredictionHistory.Count();
+
+            // search the dbase taking into consideration table sorting and paging
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                searchBy = searchBy.ToLower();
+
+                purchasedPricePredictionHistoryView = purchasedPricePredictionHistoryView
+                                        .Where(x => x.UserName.ToLower().Contains(searchBy) 
+                                                    || x.StatusInString.ToLower().Contains(searchBy) 
+                                                    || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
+                                                    || x.NumberOfPredictionInString.ToLower().Contains(searchBy)
+                                                    || x.Title.ToLower().Contains(searchBy))
+                                        .AsQueryable();
+
+                filteredResultsCount = purchasedPricePredictionHistoryView
+                                       .Count();
+            }
+
+            return purchasedPricePredictionHistoryView
+                  .AsQueryable()
+                  .OrderBy(sortBy, sortDir)
+                  .Skip(skip)
+                  .Take(take)
+                  .ToList();
+        }
+
+        #endregion
+
         #endregion
 
         #region Lottery
