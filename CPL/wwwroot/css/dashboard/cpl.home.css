@@ -1,6 +1,7 @@
 ﻿html body {
     background-image: url('../../images/backgrounds/bg_02.jpg') !important;
 }
+
 .card-kind-of-games {
     width: 217.43px;
     height: 241.35px;
@@ -8,10 +9,12 @@
     background-repeat: no-repeat;
     background-size: cover;
 }
+
 .card-random-games {
-    background-color:white; 
-    border-radius:0px;
+    background-color: white;
+    border-radius: 0px;
 }
+
 .card-random-games-footer {
     margin-top: 5px;
     margin-bottom: 0px;
@@ -170,7 +173,7 @@ input[type=number]::-webkit-outer-spin-button {
     left: 0px;
 }
 
-.height-text-step{
+.height-text-step {
     height: 130px;
 }
 
@@ -186,12 +189,155 @@ input[type=number]::-webkit-outer-spin-button {
     }
 }
 
-.item_btn {
+#slide .item_btn {
     position: absolute;
-    top: 500px;
+    width: 100%;
     z-index: 99;
-    left: 40%;
-    right: 40%
+}
+
+@media (max-width: 330px) {
+    #slide .item_btn .btn {
+        left: calc((100% - 180px) / 2);
+        width: 180px;
+        height: 36px;
+        top: -80px;
+        line-height: 20px;
+    }
+
+    .item_btn .btn span {
+        font-size: 0.9em !important;
+    }
+}
+
+@media (min-width: 331px) and (max-width: 430px) {
+    #slide .item_btn .btn {
+        left: calc((100% - 200px) / 2);
+        width: 200px;
+        height: 40px;
+        top: -85px;
+        line-height: 20px;
+    }
+    .item_btn .btn span {
+        font-size: 0.9em !important;
+    }
+}
+
+@media (min-width: 431px) and (max-width: 530px) {
+    #slide .item_btn .btn {
+        left: calc((100% - 220px) / 2);
+        width: 220px;
+        height: 44px;
+        top: -105px;
+        line-height: 25px;
+    }
+
+    .item_btn .btn span {
+        font-size: 1em !important;
+    }
+}
+
+@media (min-width: 531px) and (max-width: 600px) {
+    #slide .item_btn .btn {
+        left: calc((100% - 260px) / 2);
+        width: 260px;
+        height: 52px;
+        top: -115px;
+        line-height: 30px;
+    }
+
+    .item_btn .btn span {
+        font-size: 1.2em !important;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 767px) {
+    #slide .item_btn .btn {
+        left: calc((100% - 300px) / 2);
+        width: 300px;
+        height: 60px;
+        top: -135px;
+        line-height: 35px;
+    }
+
+    .item_btn .btn span {
+        font-size: 1.4em !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 870px) {
+    #slide .item_btn .btn {
+        left: calc((100% - 300px) / 2);
+        width: 300px;
+        height: 60px;
+        top: -90px;
+        line-height: 45px;
+    }
+
+    .item_btn .btn span {
+        font-size: 1.5em !important;
+    }
+}
+
+@media (min-width: 871px) and (max-width: 1024px) {
+    #slide .item_btn .btn {
+        left: calc((100% - 300px) / 2);
+        width: 300px;
+        height: 60px;
+        top: -95px;
+        line-height: 45px;
+    }
+
+    .item_btn .btn span {
+        font-size: 1.5em !important;
+    }
+}
+@media (min-width: 1025px) {
+    #slide .item_btn .btn {
+        left: calc((100% - 400px) / 2);
+        width: 400px;
+        height: 80px;
+        top: -125px;
+        line-height: 60px;
+    }
+
+    .item_btn .btn span {
+        font-size: 1.9em !important;
+        font-weight: 700 !important;
+    }
+}
+
+@media (min-width: 1325px) {
+    #slide .item_btn .btn {
+        left: calc((100% - 450px) / 2);
+        width: 450px;
+        height: 90px;
+        top: -155px;
+        line-height: 70px;
+    }
+
+    .item_btn .btn span {
+        font-size: 2.0em !important;
+        font-weight: 700 !important;
+    }
+}
+
+@media (min-width: 1700px) {
+    #slide .item_btn .btn {
+        left: calc((100% - 550px) / 2);
+        width: 550px;
+        height: 110px;
+        top: -190px;
+        line-height: 85px;
+    }
+
+    .item_btn .btn span {
+        font-size: 2.2em !important;
+        font-weight: 700 !important;
+    }
+}
+
+.item_btn {
+    position: relative;
 }
 
     .item_btn .shadow {
@@ -200,17 +346,23 @@ input[type=number]::-webkit-outer-spin-button {
     }
 
     .item_btn .btn {
-        background-image: url('../../images/btn.png');
-        max-width: 390px;
+        background: url('../../images/lottery/btn.png') no-repeat top left;
+        background-size:cover;
+        border: 0;
+        max-width: 600px;
         width: 100%;
         height: 68px;
         line-height: 52px;
-        border-radius: 1em;
+        border-radius: 5px;
     }
+
+        .item_btn .btn.btn-primary:active {
+            background: url('../../images/lottery/btn.png') no-repeat top left;
+            background-size: cover;
+        }
 
         .item_btn .btn span {
             font-size: 1.25em;
-            font-weight: bold;
         }
 
 
@@ -228,7 +380,7 @@ input[type=number]::-webkit-outer-spin-button {
         right: 0;
         bottom: 0;
         margin: auto;
-        border-radius: 1em;
+        border-radius: 5px;
     }
 
     .ef2_btn.btn-primary:after, .ef2_btn.btn-primary:before {
@@ -270,4 +422,9 @@ input[type=number]::-webkit-outer-spin-button {
         box-shadow: 0 0 0 14pt rgba(238, 22, 42, 0);
         opacity: 0;
     }
+}
+
+#slide .owl-item {
+    padding-left: 0;
+    padding-right: 0;
 }

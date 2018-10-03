@@ -9,35 +9,38 @@
     <link href="~/css/dashboard/cpl.home.css" rel="stylesheet" asp-append-version="true" />
 }
 
-    <section id="slide">
-        <div class="owl-carousel owl-theme owl-loaded mt-0">
-            <div class="owl-stage-outer">
-                <div class="owl-stage">
-                    @if (Model.Sliders != null)
+<section id="slide">
+    <div class="owl-carousel owl-theme mt-0">
+        @if (Model.Sliders != null)
+        {
+            @foreach (var slide in Model.Sliders)
+            {
+                @foreach (var detail in slide.SliderDetails)
+                {
+                    @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
                     {
-                        @foreach (var slide in Model.Sliders)
-                        {
-                            @foreach (var detail in slide.SliderDetails)
-                            {
-                                @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
-                                {
-                                    <div class="owl-item px-0">
-                                        <a class="d-md-block d-none" href="@slide.Url"><img src="~/images/slider/@detail.DesktopImage" class="img-fluid img-border" /></a>
-                                        <a class="d-md-none d-block" href="@slide.Url"><img src="~/images/slider/@detail.MobileImage" class="img-fluid img-border" /></a>
-                                    </div>
-                                }
-                            }
-                        }
+                        <div class="item px-0">
+                            <a class="d-md-block d-none" href="@slide.Url"><img src="~/images/slider/@detail.DesktopImage" class="img-fluid img-border" /></a>
+                            <a class="d-md-none d-block" href="@slide.Url"><img src="~/images/slider/@detail.MobileImage" class="img-fluid img-border" /></a>
+                        </div>
                     }
-                </div>
+                }
+            }
+        }
+        else
+        {
+            <div class="item px-0">
+                <a class="d-md-block d-none" href="#"><img src="~/images/slider-dekstop.png" class="img-fluid img-border" /></a>
+                <a class="d-md-none d-block" href="#"><img src="~/images/slider-mobile.png" class="img-fluid img-border" /></a>
             </div>
-        </div>
-        <div class="item_btn">
-            <a href="#" class="btn btn-primary shadow ef2_btn op" tabindex="0">
-                <span>はじめての方はこちら</span>
-            </a>
-        </div>
-    </section>
+        }
+    </div>
+    <div class="item_btn">
+        <a href="#" class="btn btn-primary shadow ef2_btn op" tabindex="0">
+            <span>   はじめての方はこちら </span>
+        </a>
+    </div>
+</section>
 
 <section id="type-of-games">
     <div class="container mt-2 pb-2">

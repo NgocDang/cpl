@@ -6,8 +6,9 @@
         $("#slide .owl-carousel").owlCarousel({
             items: 1,
             loop: true,
+            dots: false,
             autoplay: true,
-            dots: false
+            smartSpeed: 2500
         });
     }
 };
