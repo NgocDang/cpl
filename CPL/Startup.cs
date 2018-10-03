@@ -169,6 +169,8 @@ namespace CPL
                 routes.MapHub<UserPredictionProgressHub>("/predictedUserProgress");
             });
             app.UseMvcWithDefaultRoute();
+
+            RandomPicker.Random = new Random();
         }
 
         private void LoadWCF(IServiceProvider serviceProvider)

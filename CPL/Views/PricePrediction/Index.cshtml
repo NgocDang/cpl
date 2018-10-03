@@ -35,7 +35,7 @@
                                 <div role="tabpanel" class="tab-pane @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-labelledby="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id">
                                     @if (Model.PricePredictionTabs[i].IsActive)
                                     {
-                                        @await Component.InvokeAsync("PricePrediction", new PricePredictionViewComponentViewModel { Id = Model.PricePredictionTabs[i].Id, TokenAmount = Model.TokenAmount })
+                                        @await Component.InvokeAsync("PricePrediction", new PricePredictionViewComponentViewModel { Id = Model.PricePredictionTabs[i].Id, TokenAmount = Model.TokenAmount, PredictedTrend = Model.PricePredictionTabs[i].PredictedTrend })
                                     }
                                 </div>
                             }
