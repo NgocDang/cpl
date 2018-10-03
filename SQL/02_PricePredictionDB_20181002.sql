@@ -22,7 +22,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[PricePredictionCategoryDetail](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](200) NULL,
+	[Name] [nvarchar](200) NOT NULL,
 	[Description] [ntext] NULL,
 	[PricePredictionCategoryId] [int] NOT NULL,
 	[LangId] [int] NOT NULL,
