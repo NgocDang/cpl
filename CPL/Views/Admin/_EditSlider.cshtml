@@ -9,35 +9,38 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
                 </div>
                 <div class="modal-body">
-                    <div class="col-12">
-                        <fieldset class="form-group">
-                            <label for="Name" class="small">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</label>
-                            @if (Model != null)
-                            {
-                                <input id="Name" type="text" value="@Model.Name" class="form-control" required name="Name" autofocus>
-                            }
-                            else
-                            {
-                                <input id="Name" type="text" class="form-control" required name="Name" autofocus>
-                            }
-                            <div class="invalid-feedback">
-                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NameRequired")
-                            </div>
-                        </fieldset>
+                    <div class="row">
+                        <div class="col-12">
+                            <fieldset class="form-group">
+                                <label for="Name">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</label>
+                                @if (Model != null)
+                                {
+                                    <input id="Name" type="text" value="@Model.Name" class="form-control" required name="Name" autofocus>
+                                }
+                                else
+                                {
+                                    <input id="Name" type="text" class="form-control" required name="Name" autofocus>
+                                }
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NameRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-12">
+                            <fieldset class="form-group">
+                                <label for="Url">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Url")</label>
+                                @if (Model != null && Model.Url != "#")
+                                {
+                                    <input id="Url" type="text" value="@Model.Url" class="form-control" name="Url" autofocus>
+                                }
+                                else
+                                {
+                                    <input id="Url" type="text" class="form-control" name="Url" autofocus>
+                                }
+                            </fieldset>
+                        </div>
                     </div>
-                    <div class="col-12">
-                        <fieldset class="form-group">
-                            <label for="Url" class="small">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Url")</label>
-                            @if (Model != null && Model.Url != "#")
-                            {
-                                <input id="Url" type="text" value="@Model.Url" class="form-control" name="Url" autofocus>
-                            }
-                            else
-                            {
-                                <input id="Url" type="text" class="form-control" name="Url" autofocus>
-                            }
-                        </fieldset>
-                    </div>
+                    
                     <div id="slider-multilanguage" class="tab-component">
                         <ul class="nav nav-tabs border-0">
                             @foreach (var detail in Model.SliderDetails)
