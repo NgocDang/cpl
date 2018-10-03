@@ -59,14 +59,14 @@
                 </div>
             </a>
             <a asp-controller="PricePrediction" asp-action="Index" class="mx-lg-4 mx-auto">
-                <div class="card-kind-of-games black" style="background-image: url('../../images/homepage_price_prediction_game_card.png');">
+                <div class="card-kind-of-games black" style="background-image: url('../../images/homepage_price_prediction_game_card.gif');">
                     <div class="text-padding mx-auto text-center">
                         <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</span>
                     </div>
                 </div>
             </a>
             <a asp-controller="Slot" asp-action="Index" class="ml-lg-0 mx-auto">
-                <div class="card-kind-of-games black" style="background-image: url('../../images/homepage_slot_game_card.png');">
+                <div class="card-kind-of-games black" style="background-image: url('../../images/homepage_slot_game_card.gif');">
                     <div class="text-padding mx-auto text-center">
                         <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slot")</span>
                     </div>
@@ -137,7 +137,7 @@
 <section id="intro">
     <div class="container pl-sm-5 pr-sm-5 mt-2">
         <div class="ml-lg-5 mr-lg-5">
-            <div class="row text-center justify-content-center" id="top-content">
+            <div class="row text-center justify-content-center top-content">
                 <div class="col-lg-12 col-10">
                     <img src="~/images/home/top.png" class="img-fluid" />
                     <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoOdds")</p>
@@ -150,6 +150,7 @@
                 <div class="col-md-8 col-12 order-sm-12 order-1">
                     <p class="text-dark">
                         @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoOdds"))
+                    </p>
                 </div>
             </div>
             <div class="row text-center">
@@ -169,10 +170,10 @@
                 <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ForEnjoyingCryptOdds")</p>
             </div>
             <div class="col-12">
-                <p class="font-large-1 mt-sm-3 mt-2 font-weight-bold text-dark">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Easy3Steps")</p>
+                <p class="font-large-1 mt-sm-2 mt-1 font-weight-bold text-dark">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Easy3Steps")</p>
             </div>
         </div>
-        <div class="row ml-sm-2 row-eq-height">
+        <div class="row ml-sm-2">
             <div class="col-sm-4 col-12 pl-0 pr-0 pr-sm-3">
                 <div class="card">
                     <div class="card-content">
@@ -207,7 +208,7 @@
                 <i class="fas fa-caret-down font-large-4 text-primary down-arrow d-sm-none d-block"></i>
             </div>
 
-            <div class="col-sm-4 col-12 pl-0 pr-0 pr-sm-3 mt-sm-0 mt-2">
+            <div class="col-sm-4 col-12 px-0 pr-sm-3 mt-sm-0 mt-2">
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body text-center pt-0">
@@ -281,15 +282,112 @@
 </section>
 
 <section id="faq">
-    <div class="container">
-        <div class="row">
+    <div class="container mt-sm-5 mt-1">
+        <div class="row text-center justify-content-center top-content">
+            <div class="col-lg-12 col-10">
+                <img src="~/images/home/top.png" class="img-fluid" />
+                <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FAQ")</p>
+            </div>
+        </div>
+        <div class="row my-2 pb-2">
+            <div class="col-lg-6 col-12">
+                <ul>
+                    @foreach(var faq in Model.FAQs.Take((Model.FAQs.Count() + 1) / 2))
+                    {
+                        <li class="px-1 mb-1 shadow-sm">
+                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq_@faq.Id">@faq.Question<i class="la la-minus"></i></a>
+                            <div id="faq_@faq.Id" class="collapse">
+                                <p class="font-small-3 mb-0 pt-05 pb-1 pr-2">
+                                    @faq.Answer
+                                </p>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="col-lg-6 col-12">
+                <ul>
+                    @foreach (var faq in Model.FAQs.Skip((Model.FAQs.Count() + 1) / 2))
+                    {
+                        <li class="px-1 mb-1 shadow-sm">
+                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq_@faq.Id">@faq.Question<i class="la la-minus"></i></a>
+                            <div id="faq_@faq.Id" class="collapse">
+                                <p class="font-small-3 mb-0 pt-05 pb-1 pr-2">
+                                    @faq.Answer
+                                </p>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
         </div>
     </div>
 </section>
 
 <section id="contact">
-    <div class="container">
+    <div class="container mt-sm-4 mt-3">
+        <div class="row text-center">
+            <div class="col-12">
+                <img src="~/images/home/top.png" class="img-fluid" />
+                <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")</p>
+            </div>
+        </div>
         <div class="row">
+            <div class="col-12 px-0">
+                <div class="card">
+                    <div class="card-content">
+                        <form id="form-message" class="form-horizontal" action="">
+                            <div class="card-body">
+                                <div class="row mt-1 mb-1">
+                                    <div class="col-lg-4 col-12 px-05">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="Name">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</label>
+                                            <input type="text" name="Name" class="form-control" maxlength="100" id="Subject" required>
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NameRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-4 col-12 px-05">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                                            <input type="email" name="Email" class="form-control" maxlength="50" id="Email" required>
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-4 col-12 px-05">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="PhoneNumber">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PhoneNumber")</label>
+                                            <input type="text" name="PhoneNumber" class="form-control" maxlength="50" id="PhoneNumber" required>
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PhoneNumberRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 px-05">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="Message">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Message")</label>
+                                            <textarea name="Message" class="form-control" rows="7" id="Message" required></textarea>
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MessageRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" id="btn-do-send" class="btn btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Send")</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

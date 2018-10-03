@@ -106,7 +106,7 @@
                                 <div class="col-12">
                                     <fieldset class="form-group">
                                         <label for="Description">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Description")</label>
-                                        <textarea name="Description" class="form-control" row="5" id="Description" required autofocus=""></textarea>
+                                        <textarea name="Description" class="form-control" rows="5" id="Description" required autofocus=""></textarea>
                                         <div class="invalid-feedback">
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DescriptionRequired")
                                         </div>

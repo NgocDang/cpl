@@ -49,6 +49,7 @@ namespace CPL.Infrastructure
         public DbSet<Group>  Groups { get; set; }
         public DbSet<Slider> Slider { get; set; }
         public DbSet<SliderDetail> SliderDetail { get; set; }
+        public DbSet<FAQ> FAQ { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -95,6 +96,8 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new GroupMap());
             modelBuilder.ApplyConfiguration(new SliderMap());
             modelBuilder.ApplyConfiguration(new SliderDetailMap());
+
+            modelBuilder.ApplyConfiguration(new FAQMap());
 
             base.OnModelCreating(modelBuilder);
         }

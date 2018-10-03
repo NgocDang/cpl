@@ -151,6 +151,9 @@
     <Content Update="Views\DepositAndWithdraw\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Home\_MessageEmailTemplate.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Lottery\Detail.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

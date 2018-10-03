@@ -31,6 +31,17 @@ insert into LangDetail values (2, N'WhatIsCryptoCasino', N'クリプトカジノ
 insert into LangDetail values (1, N'Campaign', N'Campaign');
 insert into LangDetail values (2, N'Campaign', N'キャンペーン');
 
+insert into LangDetail values (1, N'PhoneNumber', N'Phone number');
+insert into LangDetail values (2, N'PhoneNumber', N'電話番号');
+
+insert into LangDetail values (1, N'PhoneNumberRequired', N'Please fill in phone number');
+insert into LangDetail values (2, N'PhoneNumberRequired', N'電話番号を記入してください');
+
+insert into LangDetail values (1, N'Message', N'Message');
+insert into LangDetail values (2, N'Message', N'メッセージ');
+
+insert into LangDetail values (1, N'MessageRequired', N'Please fill in message');
+insert into LangDetail values (2, N'MessageRequired', N'メッセージを記入してください');
 
 --- DamTran - What is Crypto Odds - 2018/10/01
 USE CPL;
