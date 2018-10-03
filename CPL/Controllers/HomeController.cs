@@ -8,6 +8,9 @@ using CPL.Core.Interfaces;
 using AutoMapper;
 using CPL.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
+using System;
+using CPL.Common.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace CPL.Controllers
 {
@@ -24,6 +27,8 @@ namespace CPL.Controllers
         private readonly INewsService _newsService;
         private readonly IFAQService _faqService;
         private readonly IDataContextAsync _context;
+        private readonly IPricePredictionService _pricePredictionService;
+        private readonly ILotteryHistoryService _lotteryHistoryService;
 
         public HomeController(
             ILangService langService,
@@ -36,7 +41,9 @@ namespace CPL.Controllers
             IDataContextAsync context,
             IFAQService faqService,
             ITemplateService templateService,
-            INewsService newsService)
+            INewsService newsService,
+            IPricePredictionService pricePredictionService,
+            ILotteryHistoryService lotteryHistoryService)
         {
             this._langService = langService;
             this._langDetailService = langDetailService;
@@ -49,12 +56,40 @@ namespace CPL.Controllers
             this._templateService = templateService;
             this._context = context;
             this._newsService = newsService;
+            this._pricePredictionService = pricePredictionService;
+            this._lotteryHistoryService = lotteryHistoryService;
         }
 
         [Permission(EnumRole.Guest)]
         public IActionResult Index()
         {
-            var viewModel = new HomeViewModel();
+            var activeLotteries = _lotteryService.Queryable()
+                .Where(x => !x.IsDeleted && x.Status == (int)EnumLotteryGameStatus.ACTIVE).ToList();
+
+            var closestPricePrediction = _pricePredictionService.Query()
+                .Include(x => x.PricePredictionSetting)
+                    .ThenInclude(y => y.PricePredictionSettingDetails)
+                .Where(x => !x.UpdatedDate.HasValue && x.CloseBettingTime > DateTime.Now)
+                .OrderBy(x => x.CloseBettingTime)
+                .FirstOrDefault();
+
+            int randomIndex = RandomPicker.Random.Next(activeLotteries.Count);
+            var randomLottery = _lotteryService.Query().Include(x => x.LotteryCategory)
+                .FirstOrDefault(x => x.Id == activeLotteries[randomIndex].Id);
+
+            var viewModel = new HomeViewModel { RandomLotteryId = randomLottery?.Id,
+                                                RandomLotteryCategoryId = randomLottery != null ? randomLottery.LotteryCategoryId : 0,
+                                                RandomLotteryTitle = randomLottery?.Title,
+                                                RandomLotteryDescription = randomLottery?.LotteryCategory.Description,
+                                                ClosestPricePredictionId = closestPricePrediction?.Id,
+                                                ClosestPricePredictionTitle = closestPricePrediction
+                                                    ?.PricePredictionSetting
+                                                    .PricePredictionSettingDetails
+                                                    .FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).Title,
+                                                ClosestPricePredictionDescription = closestPricePrediction
+                                                    ?.PricePredictionSetting
+                                                    .PricePredictionSettingDetails
+                                                    .FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).ShortDescription };
             viewModel.FAQs = _faqService.Query()
                 .Include(x => x.Group)
                 .Where(x => x.Group.Filter == EnumGroupFilter.FAQ.ToString() && x.LangId == HttpContext.Session.GetInt32("LangId").Value)

@@ -24,7 +24,17 @@
     width: 120px;
     line-height: 25px;
 }
-
+#lottery-game {
+    border-color: #F0C401 !important;
+}
+#price-prediction-game {
+    border-color: #F63756 !important;
+}
+#lottery-ticket-amount {
+    background-color: #FFEA87;
+    border: none;
+    border-radius: unset;
+}
 @media (max-width: 768px) {
     .card-kind-of-games {
         width: 96.78px;
@@ -45,6 +55,14 @@
         font-size: 13px;
         width: 70px;
         line-height: 12px;
+    }
+    .random-games-text-top-content {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -30%);
+        font-size: 12px !important;
+        font-weight: bold;
     }
 }
 
@@ -91,6 +109,14 @@
         font-size: 13px;
         width: 70px;
         line-height: 12px;
+    }
+    .random-games-text-top-content {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -30%);
+        font-size: 10px !important;
+        font-weight: bold;
     }
 }
 
@@ -184,4 +210,12 @@ input[type=number]::-webkit-outer-spin-button {
     .height-text-step {
         height: 200px;
     }
+}
+.random-games-text-top-content {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    font-size: 20px;
+    font-weight: bold;
 }

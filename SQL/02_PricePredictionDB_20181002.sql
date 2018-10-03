@@ -60,6 +60,7 @@ GO
 CREATE TABLE [dbo].[PricePredictionSettingDetail](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Title] [nvarchar](200) NULL,
+	[ShortDescription] [nvarchar](500) NULL,
 	[LangId] [int] NOT NULL,
 	[PricePredictionSettingId] [int] NOT NULL,
  CONSTRAINT [PK_PricePredictionSettingDetail] PRIMARY KEY CLUSTERED 
@@ -72,6 +73,7 @@ GO
 USE CPL;
 ALTER TABLE PricePrediction
 ADD PricePredictionSettingId INT NOT NULL DEFAULT (0);
+GO
 UPDATE PricePrediction SET PricePredictionSettingId = 1
 
 -- SAMPLE DB

@@ -17,7 +17,7 @@ namespace CPL.Domain
 
         public int PricePredictionCategoryId { get; set; }
 
-        public virtual PricePredictionCategory PricePredictionCategory { get; set; }
+        public virtual PricePredictionCategory PricePredictionCategory { get; set; }GetPricePredictionSummaryStatistics
         public virtual ICollection<PricePrediction> PricePredictions { get; set; }
         public virtual ICollection<PricePredictionSettingDetail> PricePredictionSettingDetails { get; set; }
     }

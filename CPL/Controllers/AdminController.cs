@@ -50,6 +50,10 @@ namespace CPL.Controllers
         private readonly IIntroducedUsersService _introducedUsersService;
         private readonly IAgencyService _agencyService;
         private readonly IPaymentService _paymentService;
+        private readonly IGroupService _groupService;
+        private readonly ISliderService _sliderService;
+        private readonly ISliderDetailService _sliderDetailService;
+		private readonly IPricePredictionCategoryService _pricePredictionCategoryService;
         private readonly IDataContextAsync _dataContextAsync;
 
         public AdminController(
@@ -75,6 +79,10 @@ namespace CPL.Controllers
             IAgencyTokenService agencyTokenService,
             IAgencyService agencyService,
             IPaymentService paymentService,
+            IGroupService groupService,
+            ISliderService sliderService,
+            ISliderDetailService sliderDetailService,
+			IPricePredictionCategoryService pricePredictionCategoryService,
             IDataContextAsync dataContextAsync)
         {
             this._langService = langService;
@@ -99,6 +107,10 @@ namespace CPL.Controllers
             this._introducedUsersService = introducedUsersService;
             this._agencyService = agencyService;
             this._paymentService = paymentService;
+            this._groupService = groupService;
+            this._sliderService = sliderService;
+            this._sliderDetailService = sliderDetailService;
+			this._pricePredictionCategoryService = pricePredictionCategoryService;
             this._dataContextAsync = dataContextAsync;
         }
 
@@ -1294,7 +1306,7 @@ namespace CPL.Controllers
             }
 
             var dataSet = _dataContextAsync.ExecuteStoredProcedure(uspName, storeParams);
-            DataTable table = dataSet.Tables[0]; // TODO
+            DataTable table = dataSet.Tables[0];
             var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
             var viewModels = Mapper.Map<List<DataRow>, List<StandardAffiliateIntroducedUsersAdminViewModel>>(rows);
 
@@ -1830,6 +1842,16 @@ namespace CPL.Controllers
             var viewModel = new GameManagementIndexViewModel();
             viewModel.Tab = tab;
             viewModel.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryAdminViewModel>(x)).ToList();
+            viewModel.PricePredictionCategories = _pricePredictionCategoryService
+                .Queryable()
+                .Include(x => x.PricePredictionCategoryDetails)
+                .Select(x => new PricePredictionCategoryAdminViewModel
+                {
+                    Id = x.Id,
+                    Name = x.PricePredictionCategoryDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Name,
+                    Description = x.PricePredictionCategoryDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Description,
+                }).ToList();
+
             return View(viewModel);
         }
 
@@ -2057,7 +2079,7 @@ namespace CPL.Controllers
                                                 .Sum(x => x.TotalAward);
             var revenueInPricePredictionGame = totalSalePricePrediction - totalAwardPricePrediction;
 
-            var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame >= 0 ? revenueInLotteryGame : 0};
+            var lotteryChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Lottery"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)1), Value = revenueInLotteryGame >= 0 ? revenueInLotteryGame : 0 };
             var pricePredictionChartData = new PieChartData { Label = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PricePrediction"), Color = EnumHelper<EnumPieChartColor>.GetDisplayValue((EnumPieChartColor)2), Value = revenueInPricePredictionGame.GetValueOrDefault(0) >= 0 ? revenueInPricePredictionGame.GetValueOrDefault(0) : 0 };
 
             data.Add(lotteryChartData);
@@ -2111,6 +2133,7 @@ namespace CPL.Controllers
             });
         }
 
+        #region Lottery Game
         [HttpGet]
         [Permission(EnumRole.Admin)]
         public IActionResult GetLotteryRevenuePieChart()
@@ -2446,7 +2469,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<AdminLotteryHistoryViewComponentViewModel> SearchPurchasedLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? lotteryCategoryId)
+        public IList<LotteryHistoryViewComponentAdminViewModel> SearchPurchasedLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? lotteryCategoryId)
         {
             var searchBy = (model.search != null) ? model.search?.value : null;
             var take = model.length;
@@ -2470,16 +2493,16 @@ namespace CPL.Controllers
                     .GroupBy(x => new { x.CreatedDate.Date, x.LotteryId, x.SysUserId });
 
             var purchasedLotteryHistoryView = purchasedLotteryHistory
-                .Select(y => new AdminLotteryHistoryViewComponentViewModel
-                    {
-                        SysUserId = y.Key.SysUserId,
-                        UserName = y.FirstOrDefault().SysUser.Email,
-                        Status = y.FirstOrDefault().Lottery.Status,
-                        NumberOfTicket = y.Count(),
-                        TotalPurchasePrice = y.Sum(x => x.Lottery.UnitPrice),
-                        Title = y.FirstOrDefault().Lottery.Title,
-                        PurchaseDateTime = y.Key.Date,
-                    });
+                .Select(y => new LotteryHistoryViewComponentAdminViewModel
+                {
+                    SysUserId = y.Key.SysUserId,
+                    Email = y.FirstOrDefault().SysUser.Email,
+                    Status = y.FirstOrDefault().Lottery.Status,
+                    NumberOfTicket = y.Count(),
+                    TotalPurchasePrice = y.Sum(x => x.Lottery.UnitPrice),
+                    Title = y.FirstOrDefault().Lottery.Title,
+                    PurchaseDateTime = y.Key.Date,
+                });
 
             filteredResultsCount = totalResultsCount = purchasedLotteryHistory.Count();
 
@@ -2487,7 +2510,7 @@ namespace CPL.Controllers
             if (!string.IsNullOrEmpty(searchBy))
             {
                 searchBy = searchBy.ToLower();
-                bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.StatusInString.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
+                bool condition(LotteryHistoryViewComponentAdminViewModel x) => x.Email.ToLower().Contains(searchBy) || x.StatusInString.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
                                     || x.NumberOfTicketInString.ToLower().Contains(searchBy) || x.Title.ToLower().Contains(searchBy);
 
                 purchasedLotteryHistoryView = purchasedLotteryHistoryView
@@ -2505,6 +2528,363 @@ namespace CPL.Controllers
                   .Take(take)
                   .ToList();
         }
+        #endregion
+
+        #region PricePrediction Game
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetPricePredictionSummaryStatistics(int periodInDay)
+        {
+            var viewModel = new PricePredictionCategoryStatisticsViewModel();
+
+            // 1.STATISTICAL INFORMATION 
+            // 1.STATISTICAL INFORMATION - TOTAL REVENUE
+            viewModel.TotalRevenue = Convert.ToInt32(_pricePredictionHistoryService.Queryable()
+                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                 .Sum(x => x.Amount - x.TotalAward.GetValueOrDefault(0)));
+
+            // 1.STATISTICAL INFORMATION - TOTAL SALE
+            viewModel.TotalSale = Convert.ToInt32(_pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Amount));
+
+            // 1.STATISTICAL INFORMATION - PAGE VIEWS
+            var pricePredictionViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.PricePredictionViewId).Value;
+            var pricePredictionPageViews = _analyticService.GetPageViews(pricePredictionViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            viewModel.PageView = pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
+
+
+
+            // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
+            viewModel.TotalPlayers = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .Select(x => x.SysUserId)
+                .Distinct()
+                .Count();
+
+            // 1.STATISTICAL INFORMATION - TODAY PLAYERS
+            viewModel.TodayPlayers = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date)
+                .GroupBy(x => x.SysUserId)
+                .Count();
+
+            // 2.STATISTICAL CHART
+            // 2.STATISTICAL CHART - TOTAL SALE CHANGES
+            var pricePredictionSale = _pricePredictionHistoryService.Queryable()
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange
+                        {
+                            Date = y.Key,
+                            Value = y.Sum(x => (int)x.Amount)
+                        });
+
+            viewModel.TotalSaleChangesInJson = JsonConvert.SerializeObject((pricePredictionSale ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.Sum(x => x.Value)
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
+            var pricePredictionUses = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .GroupBy(x => x.CreatedDate.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = (int)y.Sum(x => x.Amount)
+                })
+                .ToList();
+
+            var pricePredictionAwards = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay))
+                .GroupBy(x => x.UpdatedDate.GetValueOrDefault().Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = -(int)y.Sum(x => x.TotalAward.GetValueOrDefault(0)) // "-" stand for lost token.
+                })
+                .ToList();
+
+            var pricePredictionRevenue = pricePredictionUses.Union(pricePredictionAwards)
+                                  .GroupBy(x => x.Date)
+                                  .Select(x => new SummaryChange
+                                  {
+                                      Date = x.Key,
+                                      Value = x.Sum(y => y.Value)
+                                  })
+                                  .ToList();
+
+            viewModel.TotalRevenueChangesInJson = JsonConvert.SerializeObject((pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.Sum(x => x.Value)
+                }).OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - PAGE VIEW CHANGES
+            viewModel.PageViewChangesInJson = JsonConvert.SerializeObject(pricePredictionPageViews
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL PLAYERS
+            var pricePredictionPlayers = _pricePredictionHistoryService.Queryable()
+                        .Where(x => periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new PlayersChange
+                        {
+                            Date = y.Key,
+                            SysUserIds = y.Select(x => x.SysUserId)
+                        })
+                        .ToList();
+
+            viewModel.TotalPlayersChangesInJson = JsonConvert.SerializeObject((pricePredictionPlayers ?? Enumerable.Empty<PlayersChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.SelectMany(x => x.SysUserIds).Distinct().Count()
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            return PartialView("_PricePredictionCategoryStatistics", viewModel);
+        }
+
+        [HttpGet]
+        [Permission(EnumRole.Admin)]
+        public IActionResult GetPricePredictionCategoryStatistics(int periodInDay, int pricePredictionCategoryId)
+        {
+            var viewModel = new PricePredictionCategoryStatisticsViewModel();
+
+            // 1.STATISTICAL INFORMATION 
+            // 1.STATISTICAL INFORMATION - TOTAL REVENUE
+            viewModel.TotalRevenue = Convert.ToInt32(_pricePredictionHistoryService.Query()
+                .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Sum(x => x.Amount - x.TotalAward.GetValueOrDefault(0)));
+
+            // 1.STATISTICAL INFORMATION - TOTAL SALE
+            viewModel.TotalSale = Convert.ToInt32(_pricePredictionHistoryService.Query()
+                 .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Sum(x => x.Amount));
+
+            // 1.STATISTICAL INFORMATION - PAGE VIEWS
+            var pricePredictionViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.PricePredictionViewId).Value;
+            var pricePredictionPageViews = _analyticService.GetPageViews(pricePredictionViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            viewModel.PageView = pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
+
+            // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
+            viewModel.TotalPlayers = _pricePredictionHistoryService.Query()
+                .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Select(x => x.SysUserId)
+                .Distinct()
+                .Count();
+
+            // 1.STATISTICAL INFORMATION - TODAY PLAYERS
+            viewModel.TodayPlayers = _pricePredictionHistoryService.Query()
+                 .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .GroupBy(x => x.SysUserId)
+                .Count();
+
+            // 2.STATISTICAL CHART
+            // 2.STATISTICAL CHART - TOTAL SALE CHANGES
+            var pricePredictionSale = _pricePredictionHistoryService
+                        .Query()
+                        .Include(x => x.PricePrediction)
+                            .ThenInclude(x => x.PricePredictionSetting)
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                        .GroupBy(x => x.CreatedDate.Date)
+                        .Select(y => new SummaryChange
+                        {
+                            Date = y.Key,
+                            Value = y.Sum(x => (int)x.Amount)
+                        });
+
+            viewModel.TotalSaleChangesInJson = JsonConvert.SerializeObject((pricePredictionSale ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.Sum(x => x.Value)
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL REVENUE CHANGES
+            var pricePredictionUses = _pricePredictionHistoryService
+                .Query()
+                .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .GroupBy(x => x.CreatedDate.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = (int)y.Sum(x => x.Amount)
+                })
+                .ToList();
+
+            var pricePredictionAwards = _pricePredictionHistoryService
+                .Query()
+                .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .GroupBy(x => x.UpdatedDate.GetValueOrDefault().Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = -(int)y.Sum(x => x.TotalAward.GetValueOrDefault(0)) // "-" stand for lost token.
+                })
+                .ToList();
+
+            var pricePredictionRevenue = pricePredictionUses.Union(pricePredictionAwards)
+                                  .GroupBy(x => x.Date)
+                                  .Select(x => new SummaryChange
+                                  {
+                                      Date = x.Key,
+                                      Value = x.Sum(y => y.Value)
+                                  })
+                                  .ToList();
+
+            viewModel.TotalRevenueChangesInJson = JsonConvert.SerializeObject((pricePredictionRevenue ?? Enumerable.Empty<SummaryChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.Sum(x => x.Value)
+                }).OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - PAGE VIEW CHANGES
+            viewModel.PageViewChangesInJson = JsonConvert.SerializeObject(pricePredictionPageViews
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            // 2.STATISTICAL CHART - TOTAL PLAYERS
+            var pricePredictionPlayers = _pricePredictionHistoryService
+                .Query()
+                .Include(x => x.PricePrediction)
+                    .ThenInclude(x => x.PricePredictionSetting)
+                .Where(x => (periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .GroupBy(x => x.CreatedDate.Date)
+                .Select(y => new PlayersChange
+                {
+                    Date = y.Key,
+                    SysUserIds = y.Select(x => x.SysUserId)
+                })
+                .ToList();
+
+            viewModel.TotalPlayersChangesInJson = JsonConvert.SerializeObject((pricePredictionPlayers ?? Enumerable.Empty<PlayersChange>())
+                .GroupBy(x => x.Date)
+                .Select(y => new SummaryChange
+                {
+                    Date = y.Key,
+                    Value = y.SelectMany(x => x.SysUserIds).Distinct().Count()
+                })
+                .OrderBy(x => x.Date)
+                .ToList());
+
+            return PartialView("_PricePredictionCategoryStatistics", viewModel);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult SearchPurchasedPricePredictionHistory(DataTableAjaxPostModel viewModel, int? pricePredictionCategoryId)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchPurchasedPricePredictionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, pricePredictionCategoryId);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IList<PricePredictionHistoryViewComponentAdminViewModel> SearchPurchasedPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? pricePredictionCategoryId)
+        {
+            var searchBy = (model.search != null) ? model.search?.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            var purchasedPricePredictionHistory = _pricePredictionHistoryService
+                    .Query()
+                    .Include(x => x.PricePrediction)
+                        .ThenInclude(x => x.PricePredictionSetting)
+                    .Where(x => !pricePredictionCategoryId.HasValue || x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                    .GroupBy(x => new { x.CreatedDate.Date, x.PricePredictionId, x.SysUserId });
+
+            var purchasedPricePredictionHistoryView = purchasedPricePredictionHistory
+                    .Select(y => new PricePredictionHistoryViewComponentAdminViewModel
+                    {
+                        SysUserId = y.Key.SysUserId,
+                        Email = y.FirstOrDefault().SysUser.Email,
+                        //Status = y.FirstOrDefault().Lottery.Status, // TODO
+                        NumberOfPrediction = y.Count(),
+                        TotalPurchasePrice = y.Sum(x => x.Amount),
+                        //Title = y.FirstOrDefault().PricePrediction.PricePredictionSetting, // TODO
+                        PurchaseDateTime = y.Key.Date,
+                    });
+
+            filteredResultsCount = totalResultsCount = purchasedPricePredictionHistory.Count();
+
+            // search the dbase taking into consideration table sorting and paging
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                searchBy = searchBy.ToLower();
+
+                purchasedPricePredictionHistoryView = purchasedPricePredictionHistoryView
+                                        .Where(x => x.Email.ToLower().Contains(searchBy) 
+                                                    //|| x.StatusInString.ToLower().Contains(searchBy) 
+                                                    || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
+                                                    || x.NumberOfPredictionInString.ToLower().Contains(searchBy)
+                                                    || x.Title.ToLower().Contains(searchBy))
+                                        .AsQueryable();
+
+                filteredResultsCount = purchasedPricePredictionHistoryView
+                                       .Count();
+            }
+
+            return purchasedPricePredictionHistoryView
+                  .AsQueryable()
+                  .OrderBy(sortBy, sortDir)
+                  .Skip(skip)
+                  .Take(take)
+                  .ToList();
+        }
+
+
+        #endregion
+
         #endregion
 
         #region Lottery
@@ -2595,13 +2975,8 @@ namespace CPL.Controllers
             lottery = Mapper.Map<LotteryAdminViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
                                                         .Include(x => x.LotteryDetails)
+                                                            .ThenInclude(y => y.Lang)
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
-
-            foreach (var detail in lottery.LotteryDetails)
-            {
-                var lang = Mapper.Map<LangViewModel>(_langService.Queryable().Where(x => x.Id == detail.LangId).FirstOrDefault());
-                detail.Lang = lang;
-            }
 
             lottery.LotteryCategory = _lotteryCategoryService.Queryable().Where(x => x.Id == lottery.LotteryCategoryId).FirstOrDefault().Name;
 
@@ -2700,12 +3075,22 @@ namespace CPL.Controllers
             lotteries = Mapper.Map<LotteryAdminViewModel>(_lotteryService.Query()
                                                         .Include(x => x.LotteryPrizes)
                                                         .Include(x => x.LotteryDetails)
+                                                            .ThenInclude(y => y.Lang)
                                                         .FirstOrDefault(x => !x.IsDeleted && x.Id == id));
 
-            foreach (var detail in lotteries.LotteryDetails)
+            var langs = _langService.Queryable()
+                .Select(x => Mapper.Map<LangViewModel>(x))
+                .ToList();
+
+            foreach (var lang in langs)
             {
-                var lang = Mapper.Map<LangViewModel>(_langService.Queryable().Where(x => x.Id == detail.LangId).FirstOrDefault());
-                detail.Lang = lang;
+                if (!lotteries.LotteryDetails.Any(x => x.LangId == lang.Id))
+                {
+                    lotteries.LotteryDetails.Add(new LotteryDetailAdminViewModel()
+                    {
+                        Lang = lang
+                    });
+                }
             }
 
             lotteries.LotteryCategories = _lotteryCategoryService.Queryable().Select(x => Mapper.Map<LotteryCategoryAdminViewModel>(x)).ToList();
@@ -3181,5 +3566,319 @@ namespace CPL.Controllers
         }
 
         #endregion
+
+        #region Slider
+        [Permission(EnumRole.Admin)]
+        public IActionResult Slider()
+        {
+            var viewModel = new SliderAdminViewModel();
+
+            viewModel.Groups = _groupService.Queryable()
+                                .Where(x => x.Filter == EnumGroupFilter.SLIDER.ToString())
+                                .Select(x => Mapper.Map<GroupViewModel>(x)).ToList();
+
+            return View(viewModel);
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult AddSlider()
+        {
+            var slider = new SliderAdminViewModel();
+
+            var langs = _langService.Queryable()
+                .Select(x => Mapper.Map<LangViewModel>(x))
+                .ToList();
+
+            foreach (var lang in langs)
+            {
+                slider.SliderDetails.Add(new SliderDetailAdminViewModel()
+                {
+                    Lang = lang
+                });
+            }
+
+            return PartialView("_EditSlider", slider);
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult EditSlider(int id)
+        {
+            var slider = Mapper.Map<SliderAdminViewModel>(_sliderService.Query()
+                                                            .Include(x => x.Group)
+                                                            .Include(x => x.SliderDetails)
+                                                                .ThenInclude(y => y.Lang)
+                                                            .FirstOrDefault(x => x.Id == id));
+            var langs = _langService.Queryable()
+                .Select(x => Mapper.Map<LangViewModel>(x))
+                .ToList();
+
+            foreach (var lang in langs)
+            {
+                if (!slider.SliderDetails.Any(x => x.LangId == lang.Id))
+                {
+                    slider.SliderDetails.Add(new SliderDetailAdminViewModel()
+                    {
+                        Lang = lang
+                    });
+                }
+            }
+
+            return PartialView("_EditSlider", slider);
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult ViewSlider(int id)
+        {
+            var slider = new SliderAdminViewModel();
+
+            slider = Mapper.Map<SliderAdminViewModel>(_sliderService.Query()
+                                                        .Include(x => x.SliderDetails)
+                                                            .ThenInclude(y => y.Lang)
+                                                        .Include(x => x.Group)
+                                                        .FirstOrDefault(x => x.Id == id));
+
+            return PartialView("_ViewSlider", slider);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoEditSlider(SliderAdminViewModel viewModel)
+        {
+            try
+            {
+                var slider = _sliderService.Queryable().FirstOrDefault(x => x.Id == viewModel.Id);
+
+                // slider
+                slider.Name = viewModel.Name;
+                slider.Url = string.IsNullOrEmpty(viewModel.Url) ? "#" : viewModel.Url;
+
+                var pathSlider = Path.Combine(_hostingEnvironment.WebRootPath, @"images\slider");
+                string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                foreach (var detail in viewModel.SliderDetails)
+                {
+                    var sliderDetail = _sliderDetailService.Queryable().FirstOrDefault(x => x.Id == detail.Id);
+
+                    // Desktop image
+                    if (detail.DesktopImageFile != null)
+                    {
+                        var desktopImage = $"{slider.Id.ToString()}_lang_{detail.LangId}_dt_{timestamp}_{detail.DesktopImageFile.FileName}";
+                        var desktopImagePath = Path.Combine(pathSlider, desktopImage);
+                        detail.DesktopImageFile.CopyTo(new FileStream(desktopImagePath, FileMode.Create));
+                        sliderDetail.DesktopImage = desktopImage;
+                    }
+
+                    // Mobile ima
+                    if (detail.MobileImageFile != null)
+                    {
+                        var mobileImage = $"{slider.Id.ToString()}_lang_{detail.LangId}_mb_{timestamp}_{detail.MobileImageFile.FileName}";
+                        var mobileImagePath = Path.Combine(pathSlider, mobileImage);
+                        detail.MobileImageFile.CopyTo(new FileStream(mobileImagePath, FileMode.Create));
+                        sliderDetail.MobileImage = mobileImage;
+                    }
+
+                    _sliderDetailService.Update(sliderDetail);
+                }
+
+                _sliderService.Update(slider);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoAddSlider(SliderAdminViewModel viewModel)
+        {
+            try
+            {
+                // Slider
+                var slider = new Slider();
+
+                slider.Name = viewModel.Name;
+                slider.Url = string.IsNullOrEmpty(viewModel.Url) ? "#" : viewModel.Url;
+                slider.GroupId = viewModel.GroupId;
+                slider.Status = (int)EnumSliderStatus.ACTIVE;
+
+                var pathSlider = Path.Combine(_hostingEnvironment.WebRootPath, @"images\slider");
+                string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
+
+                _sliderService.Insert(slider);
+                _unitOfWork.SaveChanges();
+
+                foreach (var detail in viewModel.SliderDetails)
+                {
+                    var sliderDetail = new SliderDetail();
+                    // Desktop image
+                    if (detail.DesktopImageFile != null)
+                    {
+                        var desktopImage = $"{slider.Id.ToString()}_lang_{detail.LangId}_dt_{timestamp}_{detail.DesktopImageFile.FileName}";
+                        var desktopImagePath = Path.Combine(pathSlider, desktopImage);
+                        detail.DesktopImageFile.CopyTo(new FileStream(desktopImagePath, FileMode.Create));
+                        sliderDetail.DesktopImage = desktopImage;
+                    }
+
+                    // Mobile ima
+                    if (detail.MobileImageFile != null)
+                    {
+                        var mobileImage = $"{slider.Id.ToString()}_lang_{detail.LangId}_mb_{timestamp}_{detail.MobileImageFile.FileName}";
+                        var mobileImagePath = Path.Combine(pathSlider, mobileImage);
+                        detail.MobileImageFile.CopyTo(new FileStream(mobileImagePath, FileMode.Create));
+                        sliderDetail.MobileImage = mobileImage;
+                    }
+
+                    sliderDetail.SliderId = slider.Id;
+                    sliderDetail.LangId = detail.LangId;
+
+                    _sliderDetailService.Insert(sliderDetail);
+                }
+
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoDeleteSlider(int id)
+        {
+            try
+            {
+                var slider = _sliderService.Queryable()
+                        .Include(x => x.SliderDetails)
+                        .FirstOrDefault(x => x.Id == id);
+
+                if (slider != null && slider.SliderDetails != null)
+                {
+                    foreach (var detail in slider.SliderDetails)
+                        _sliderDetailService.Delete(detail);
+                    _sliderService.Delete(slider);
+
+                    _unitOfWork.SaveChanges();
+                    return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
+                }
+                else
+                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult SearchSlider(DataTableAjaxPostModel viewModel, int groupId)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchSliderFunc(viewModel, out filteredResultsCount, out totalResultsCount, groupId);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IList<SliderAdminViewModel> SearchSliderFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int groupId)
+        {
+            var searchBy = (model.search != null) ? model.search?.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            var sliders = _sliderService
+                    .Query()
+                    .Include(x => x.Group)
+                    .Include(x => x.SliderDetails)
+                    .Where(x => x.Group.Id == groupId)
+                    .Select(x => Mapper.Map<SliderAdminViewModel>(x));
+
+            filteredResultsCount = totalResultsCount = sliders.Count();
+
+            // search the dbase taking into consideration table sorting and paging
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                searchBy = searchBy.ToLower();
+                bool condition(SliderAdminViewModel x) => x.Name.ToLower().Contains(searchBy) || x.Url.ToLower().Contains(searchBy);
+
+                sliders = sliders
+                        .Where(condition)
+                        .AsQueryable();
+
+                filteredResultsCount = sliders.Count();
+            }
+
+            return sliders
+                  .AsQueryable()
+                  .OrderBy(sortBy, sortDir)
+                  .Skip(skip)
+                  .Take(take)
+                  .ToList();
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoActivateSlider(int id)
+        {
+            try
+            {
+                var slider = _sliderService.Queryable().FirstOrDefault(x => x.Id == id);
+                slider.Status = (int)EnumSliderStatus.ACTIVE;
+                _sliderService.Update(slider);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ActivateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoDeactivateSlider(int id)
+        {
+            try
+            {
+                var slider = _sliderService.Queryable().FirstOrDefault(x => x.Id == id);
+                slider.Status = (int)EnumSliderStatus.DEACTIVATED;
+                _sliderService.Update(slider);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeactivateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+        #endregion
+
     }
 }

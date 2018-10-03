@@ -78,7 +78,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Guest)]
-        public IActionResult Detail(int id)
+        public IActionResult Detail(int id, int? lotteryTicketAmount)
         {
             var lottery = _lotteryService.Query()
                             .Include(x => x.LotteryDetails)
@@ -93,7 +93,16 @@ namespace CPL.Controllers
                 viewModel.SysUserId = user.Id;
 
             if (viewModel.Volume > 0)
-                viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.LotteryHistories.Count() / (decimal)viewModel.Volume * 100m).ToString();
+                viewModel.PercentageOfPurchasedTickets = ((decimal)viewModel.LotteryHistories.Count() / (decimal)viewModel.Volume * 100m).ToString();
+
+            if(lotteryTicketAmount.HasValue)
+            {
+                var lotteryTicketsLeft = lottery.Volume - _lotteryHistoryService.Queryable().Count(x => x.LotteryId == lottery.Id);
+                if (lotteryTicketAmount > lotteryTicketsLeft)
+                    viewModel.LotteryTicketAmount = lotteryTicketsLeft;
+                else
+                    viewModel.LotteryTicketAmount = lotteryTicketAmount.Value;
+            }
 
             return View(viewModel);
         }
