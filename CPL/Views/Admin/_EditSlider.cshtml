@@ -1,0 +1,115 @@
+﻿@model SliderAdminViewModel
+
+<div class="modal" tabindex="-1" role="dialog" id="edit-slider" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-md mx-auto" role="document">
+        <div class="modal-content">
+            <form id="form-edit-slider" method="POST" action="#" class="needs-validation" novalidate="">
+                <div class="modal-header">
+                    <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slider")</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <fieldset class="form-group">
+                                <label for="Name">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</label>
+                                @if (Model != null)
+                                {
+                                    <input id="Name" type="text" value="@Model.Name" class="form-control" required name="Name" autofocus>
+                                }
+                                else
+                                {
+                                    <input id="Name" type="text" class="form-control" required name="Name" autofocus>
+                                }
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NameRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-12">
+                            <fieldset class="form-group">
+                                <label for="Url">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Url")</label>
+                                @if (Model != null && Model.Url != "#")
+                                {
+                                    <input id="Url" type="text" value="@Model.Url" class="form-control" name="Url" autofocus>
+                                }
+                                else
+                                {
+                                    <input id="Url" type="text" class="form-control" name="Url" autofocus>
+                                }
+                            </fieldset>
+                        </div>
+                    </div>
+                    
+                    <div id="slider-multilanguage" class="tab-component">
+                        <ul class="nav nav-tabs border-0">
+                            @foreach (var detail in Model.SliderDetails)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link font-medium-2 font-weight-bold px-2 border-0 @(detail.Lang.Id == Context.Session.GetInt32("LangId").Value ? "active" : "")" id="@detail.Lang.Id-nav-tab" data-toggle="tab" href="#@detail.Lang.Id-nav" aria-controls="@detail.Lang.Id-nav" aria-expanded="true">@detail.Lang.Name</a>
+                                </li>
+                            }
+
+                        </ul>
+                        <div class="tab-content mb-1">
+                            @foreach (var detail in Model.SliderDetails)
+                            {
+                                <div role="tabpanel" class="tab-pane @(detail.Lang.Id == Context.Session.GetInt32("LangId").Value ? "active" : "")" id="@detail.Lang.Id-nav" aria-labelledby="@detail.Lang.Id-nav-tab" aria-expanded="true">
+                                    <div class="card mb-1">
+                                        <div class="card-content">
+                                            <div class="card-body">
+                                                <div class="row pt-1">
+                                                    <input id="lang-id" type="hidden" value="@detail.Lang.Id">
+                                                    <input id="detail-id" type="hidden" value="@detail.Id">
+                                                    <div class="col-12">
+                                                        <fieldset class="form-group">
+                                                            <label for="desktop-image"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopImage")</span> <span> ( @detail.Lang.Name )</span></label>
+                                                            @if (!string.IsNullOrEmpty(detail.DesktopImage))
+                                                            {
+                                                                <input id="desktop-image" type="file" value="@detail.DesktopImage" class="form-control" accept="image/*" name="desktop-image" maxlength="200">
+                                                            }
+                                                            else
+                                                            {
+                                                                <input id="desktop-image" type="file" value="@detail.DesktopImage" class="form-control" accept="image/*" name="desktop-image" required maxlength="200">
+                                                            }
+                                                            <div class="invalid-feedback">
+                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopImageRequired")
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <fieldset class="form-group">
+                                                            <label for="mobile-image"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileImage")</span><span> ( @detail.Lang.Name )</span></label>
+                                                            @if (!string.IsNullOrEmpty(detail.MobileImage))
+                                                            {
+                                                                <input id="mobile-image" type="file" value="@detail.MobileImage" class="form-control" accept="image/*" name="mobile-image" maxlength="200">
+                                                            }
+                                                            else
+                                                            {
+                                                                <input id="mobile-image" type="file" value="@detail.MobileImage" class="form-control" accept="image/*" name="mobile-image" required maxlength="200">
+                                                            }
+                                                            <div class="invalid-feedback">
+                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileTopImageRequired")
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <input type="hidden" value="@Model.Id" id="slider-id" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-do-add" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Submit")</button>
+                    <button type="button" id="btn-do-edit" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Save")</button>
+                    <button type="button" id="btn-do-delete" class="btn btn-sm btn-danger">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Delete")</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

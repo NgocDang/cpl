@@ -13,6 +13,25 @@ insert into LangDetail values (2, N'WhatIsBitcoin', N'ビットコインとは')
 insert into LangDetail values (1, N'PersonalInformationProtection', N'Personal information protection');
 insert into LangDetail values (2, N'PersonalInformationProtection', N'個人情報保護について');
 
+update LangDetail set Name = N'AboutCPO', Value = N'About CPO' where Name = N'AboutCPL' and LangId = 1;
+update LangDetail set Name = N'AboutCPO', Value = N'CPOについて' where Name = N'AboutCPL' and LangId = 2;
+
+delete LangDetail where Name = 'WhatIsCPL';
+delete LangMsgDetail where Name = 'WhatIsCPL';
+
+insert into LangDetail values (1, N'WhatIsCryptoLottery', N'What is Crypto Lottery?');
+insert into LangDetail values (2, N'WhatIsCryptoLottery', N'暗号宝くじとは?');
+
+insert into LangDetail values (1, N'WhatIsCryptoPricePrediction', N'What is Crypto Price Prediction?');
+insert into LangDetail values (2, N'WhatIsCryptoPricePrediction', N'暗号の価格予測とは?');
+
+insert into LangDetail values (1, N'WhatIsCryptoCasino', N'What is Crypto Casino?');
+insert into LangDetail values (2, N'WhatIsCryptoCasino', N'クリプトカジノとは?');
+
+insert into LangDetail values (1, N'Campaign', N'Campaign');
+insert into LangDetail values (2, N'Campaign', N'キャンペーン');
+
+
 --- DamTran - What is Crypto Odds - 2018/10/01
 USE CPL;
 
@@ -63,8 +82,30 @@ INSERT INTO LangDetail VALUES (1, N'PlayGameDetail',
 INSERT INTO LangDetail VALUES (2, N'PlayGameDetail', 
 N'お好みのゲームを選択して <br />思う存分クリプトオッズをお楽しみ下さい');
 
+
+--- Slider --
+INSERT INTO LangDetail VALUES (1, N'Url', N'Url');
+INSERT INTO LangDetail VALUES (2, N'Url', N'Url');
+
+INSERT INTO LangDetail VALUES (1, N'NameRequired', N'Please fill in name of slider!');
+INSERT INTO LangDetail VALUES (2, N'NameRequired', N'スライダーの名前を記入してください！');
+
+INSERT INTO LangDetail VALUES (1, N'DesktopImageRequired', N'Please fill in image for desktop!');
+INSERT INTO LangDetail VALUES (2, N'DesktopImageRequired', N'デスクトップ用の画像を入力してください！');
+
+INSERT INTO LangDetail VALUES (1, N'MobileImageRequired', N'Please fill in image for mobile!');
+INSERT INTO LangDetail VALUES (2, N'MobileImageRequired', N'モバイル用の画像を入力してください！');
+
+INSERT INTO LangDetail VALUES (1, N'DesktopImage', N'Desktop image');
+INSERT INTO LangDetail VALUES (2, N'DesktopImage', N'デスクトップイメージ');
+
+INSERT INTO LangDetail VALUES (1, N'MobileImage', N'Mobile image');
+INSERT INTO LangDetail VALUES (2, N'MobileImage', N'モバイルイメージ');
+
+INSERT INTO LangDetail VALUES (1, N'Group', N'Group');
+INSERT INTO LangDetail VALUES (2, N'Group', N'グループ');
+
 -- DamTran - PricePredictonStatisticsChart
 USE CPL;
 INSERT INTO LangDetail VALUES (1, N'NumberOfPrediction', N'Number Of Prediction');
 INSERT INTO LangDetail VALUES (2, N'NumberOfPrediction', N'予測数');
-
