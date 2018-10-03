@@ -382,7 +382,7 @@ input[type=number]::-webkit-outer-spin-button {
     }
 
     .item_btn .btn {
-        background: url('../../images/lottery/btn.png') no-repeat top left;
+        background: url('../../images/btn.png') no-repeat top left;
         background-size:cover;
         border: 0;
         max-width: 600px;
@@ -393,7 +393,7 @@ input[type=number]::-webkit-outer-spin-button {
     }
 
         .item_btn .btn.btn-primary:active {
-            background: url('../../images/lottery/btn.png') no-repeat top left;
+            background: url('../../images/btn.png') no-repeat top left;
             background-size: cover;
         }
 
