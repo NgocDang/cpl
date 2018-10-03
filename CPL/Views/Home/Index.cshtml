@@ -37,7 +37,9 @@
     </div>
     <div class="item_btn">
         <a asp-controller="Authentication" asp-action="Register" class="btn btn-primary shadow ef2_btn op" tabindex="0">
-            <span>   @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BeTheFirstPerson") </span>
+            <span><i class="la la-angle-double-right"></i></span>&nbsp&nbsp
+            <span> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BeTheFirstPerson")  </span>&nbsp&nbsp
+            <span><i class="la la-angle-double-left"></i></span>
         </a>
     </div>
 </section>

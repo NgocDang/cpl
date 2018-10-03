@@ -235,7 +235,7 @@ input[type=number]::-webkit-outer-spin-button {
         left: calc((100% - 180px) / 2);
         width: 180px;
         height: 36px;
-        top: -80px;
+        top: -75px;
         line-height: 20px;
     }
 
@@ -262,7 +262,7 @@ input[type=number]::-webkit-outer-spin-button {
         left: calc((100% - 220px) / 2);
         width: 220px;
         height: 44px;
-        top: -105px;
+        top: -100px;
         line-height: 25px;
     }
 
@@ -276,7 +276,7 @@ input[type=number]::-webkit-outer-spin-button {
         left: calc((100% - 260px) / 2);
         width: 260px;
         height: 52px;
-        top: -115px;
+        top: -120px;
         line-height: 30px;
     }
 
@@ -290,7 +290,7 @@ input[type=number]::-webkit-outer-spin-button {
         left: calc((100% - 300px) / 2);
         width: 300px;
         height: 60px;
-        top: -135px;
+        top: -140px;
         line-height: 35px;
     }
 
@@ -301,11 +301,11 @@ input[type=number]::-webkit-outer-spin-button {
 
 @media (min-width: 768px) and (max-width: 870px) {
     #slide .item_btn .btn {
-        left: calc((100% - 300px) / 2);
-        width: 300px;
-        height: 60px;
-        top: -90px;
-        line-height: 45px;
+        left: calc((100% - 260px) / 2);
+        width: 260px;
+        height: 52px;
+        top: -85px;
+        line-height: 30px;
     }
 
     .item_btn .btn span {
@@ -329,45 +329,45 @@ input[type=number]::-webkit-outer-spin-button {
 
 @media (min-width: 1025px) {
     #slide .item_btn .btn {
-        left: calc((100% - 400px) / 2);
-        width: 400px;
-        height: 80px;
+        left: calc((100% - 300px) / 2);
+        width: 300px;
+        height: 60px;
         top: -125px;
-        line-height: 60px;
+        line-height: 45px;
     }
 
     .item_btn .btn span {
-        font-size: 1.9em !important;
+        font-size: 1.5em !important;
         font-weight: 700 !important;
     }
 }
 
 @media (min-width: 1325px) {
     #slide .item_btn .btn {
-        left: calc((100% - 450px) / 2);
-        width: 450px;
-        height: 90px;
+        left: calc((100% - 360px) / 2);
+        width: 360px;
+        height: 72px;
         top: -155px;
-        line-height: 70px;
+        line-height: 45px;
     }
 
     .item_btn .btn span {
-        font-size: 2.0em !important;
+        font-size: 1.8em !important;
         font-weight: 700 !important;
     }
 }
 
 @media (min-width: 1700px) {
     #slide .item_btn .btn {
-        left: calc((100% - 550px) / 2);
-        width: 550px;
-        height: 110px;
+        left: calc((100% - 360px) / 2);
+        width: 360px;
+        height: 72px;
         top: -190px;
-        line-height: 85px;
+        line-height: 45px;
     }
 
     .item_btn .btn span {
-        font-size: 2.2em !important;
+        font-size: 1.8em !important;
         font-weight: 700 !important;
     }
 }
@@ -433,7 +433,7 @@ input[type=number]::-webkit-outer-spin-button {
     }
 
     0%, 90% {
-        opacity: .8;
+        opacity: .6;
     }
 
     to {
@@ -450,7 +450,7 @@ input[type=number]::-webkit-outer-spin-button {
     }
 
     0%, 90% {
-        opacity: .8;
+        opacity: .6;
     }
 
     to {
