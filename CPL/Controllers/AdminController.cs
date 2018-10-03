@@ -54,7 +54,6 @@ namespace CPL.Controllers
         private readonly ISliderService _sliderService;
         private readonly ISliderDetailService _sliderDetailService;
 		private readonly IPricePredictionCategoryService _pricePredictionCategoryService;
-		private readonly IPricePredictionCategoryService _pricePredictionCategoryService;
         private readonly IDataContextAsync _dataContextAsync;
 
         public AdminController(
@@ -2551,7 +2550,7 @@ namespace CPL.Controllers
 
             // 1.STATISTICAL INFORMATION - PAGE VIEWS
             var pricePredictionViewId = _settingService.Queryable().FirstOrDefault(x => x.Name == Analytic.PricePredictionViewId).Value;
-            var pricePredictionPageViews = _analyticService.GetPageViews("182104782", DateTime.Now.AddDays(-periodInDay), DateTime.Now);
+            var pricePredictionPageViews = _analyticService.GetPageViews(pricePredictionViewId, DateTime.Now.AddDays(-periodInDay), DateTime.Now);
             viewModel.PageView = pricePredictionPageViews.AsQueryable().Sum(x => x.Count);
 
 
