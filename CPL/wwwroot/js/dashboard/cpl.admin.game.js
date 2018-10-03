@@ -431,7 +431,7 @@
                 {
                     "data": "Details",
                     "render": function (data, type, full, meta) {
-                        var html = "<a style='line-height:12px;margin:2px' href='/Admin/User/" + full.sysUserId + "' target='_blank' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
+                        var html = "<a style='margin:2px' href='/Admin/User/" + full.sysUserId + "' target='_blank' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
                         return html;
                     },
                     "orderable": false
@@ -1057,7 +1057,7 @@
                 {
                     "data": "Details",
                     "render": function (data, type, full, meta) {
-                        var html = "<a style='line-height:12px;margin:2px' href='/Admin/User/" + full.sysUserId + "' target='_blank' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
+                        var html = "<a style='margin:2px' href='/Admin/User/" + full.sysUserId + "' target='_blank' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
                         return html;
                     },
                     "orderable": false
