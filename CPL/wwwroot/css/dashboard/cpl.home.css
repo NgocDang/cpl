@@ -10,7 +10,6 @@
 }
 .card-random-games {
     background-color:white; 
-    border-radius:0px;
 }
 .card-random-games-footer {
     margin-top: 5px;
@@ -130,6 +129,7 @@ input[type=number]::-webkit-outer-spin-button {
 #what-is-crypto-odds-content {
     background-color: #FFEA87;
     border-width: 2px !important;
+    border-radius:.35rem;
 }
 
 .top-content {
@@ -219,3 +219,79 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 20px;
     font-weight: bold;
 }
+
+
+section#faq {
+    background-color: #FFEA87;
+}
+
+    section#faq .top-content {
+        margin-bottom: 0px;
+    }
+
+        section#faq .top-content img {
+            margin-top: -40px;
+        }
+
+        section#faq .top-content p.text-top-content {
+            margin-top: -28px;
+        }
+
+@media screen and (max-width: 575.98px) {
+    section#faq .top-content img {
+        margin-top: -40px;
+    }
+
+    section#faq .top-content p.text-top-content {
+        margin-top: -28px;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    section#faq .top-content img {
+        margin-top: -35px;
+    }
+
+    section#faq .top-content p.text-top-content {
+        margin-top: -22px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    section#faq .top-content img {
+        margin-top: -32px;
+    }
+
+    section#faq .top-content p.text-top-content {
+        margin-top: -20px;
+    }
+}
+
+section#faq ul {
+    padding: 0;
+    list-style: none;
+}
+
+    section#faq ul li {
+        background: #fff;
+        border-radius: .35rem;
+    }
+
+        section#faq ul li p {
+            margin-top: -0.5rem;
+        }
+
+        section#faq ul li a {
+            display: block;
+            position: relative;
+        }
+
+            section#faq ul li a.collapsed i::before {
+                content: "\f2c2" !important;
+            }
+
+        section#faq ul li i {
+            position: absolute;
+            top: 0.8rem;
+            right: 0rem;
+        }
