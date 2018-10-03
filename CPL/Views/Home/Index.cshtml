@@ -50,9 +50,9 @@
                 <div class="col-lg-6 col-md-6 col-12 card card-random-games mx-0 px-0 border" id="lottery-game">
                     <div class="card-content">
                         <img class="img-fluid" src="~/images/homepage_lottery_random_card.png" />
-                        <div class="random-games-text-top-content">
-                            <p class="pl-5 text-center text-dark">@Model.RandomLotteryTitle</p>
-                            <p class="pl-3 text-center text-dark">@Model.RandomLotteryDescription</p>
+                        <div class="random-games-text-top-content text-dark">
+                            <p class="pl-5 text-center">@Html.Raw(Model.RandomLotteryTitle)</p>
+                            <p class="pl-3 text-center">@Html.Raw(Model.RandomLotteryDescription)</p>
                         </div>
                     </div>
                     <div class="card-footer p-1">
@@ -75,9 +75,9 @@
                 <div class="col-lg-6 col-md-6 col-12 card-random-games card mx-0 px-0 border" id="price-prediction-game">
                     <div class="card-content">
                         <img class="img-fluid" src="~/images/homepage_price_prediction_random_card.png" />
-                        <div class="random-games-text-top-content">
-                            <p class="pl-5 text-center text-dark">@Html.Raw(Model.ClosestPricePredictionTitle)</p>
-                            <p class="pl-3 text-center text-dark">@Html.Raw(Model.ClosestPricePredictionDescription)</p>
+                        <div class="random-games-text-top-content text-white">
+                            <p class="pl-5 text-center">@Html.Raw(Model.ClosestPricePredictionTitle)</p>
+                            <p class="pl-3 text-center">@Html.Raw(Model.ClosestPricePredictionDescription)</p>
                         </div>
                     </div>
                     <div class="card-footer p-1">
