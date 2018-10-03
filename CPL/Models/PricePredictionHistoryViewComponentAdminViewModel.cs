@@ -7,10 +7,10 @@ using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Models
 {
-    public class AdminPricePredictionHistoryViewComponentViewModel
+    public class PricePredictionHistoryViewComponentAdminViewModel
     {
         public int SysUserId { get; set; }
-        public string UserName { get; set; }
+        public string Email { get; set; }
         public int Status { get; set; }
         public int NumberOfPrediction { get; set; }
         public decimal TotalPurchasePrice { get; set; }

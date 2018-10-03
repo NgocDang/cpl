@@ -2469,7 +2469,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<AdminLotteryHistoryViewComponentViewModel> SearchPurchasedLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? lotteryCategoryId)
+        public IList<LotteryHistoryViewComponentAdminViewModel> SearchPurchasedLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? lotteryCategoryId)
         {
             var searchBy = (model.search != null) ? model.search?.value : null;
             var take = model.length;
@@ -2493,10 +2493,10 @@ namespace CPL.Controllers
                     .GroupBy(x => new { x.CreatedDate.Date, x.LotteryId, x.SysUserId });
 
             var purchasedLotteryHistoryView = purchasedLotteryHistory
-                .Select(y => new AdminLotteryHistoryViewComponentViewModel
+                .Select(y => new LotteryHistoryViewComponentAdminViewModel
                 {
                     SysUserId = y.Key.SysUserId,
-                    UserName = y.FirstOrDefault().SysUser.Email,
+                    Email = y.FirstOrDefault().SysUser.Email,
                     Status = y.FirstOrDefault().Lottery.Status,
                     NumberOfTicket = y.Count(),
                     TotalPurchasePrice = y.Sum(x => x.Lottery.UnitPrice),
@@ -2510,7 +2510,7 @@ namespace CPL.Controllers
             if (!string.IsNullOrEmpty(searchBy))
             {
                 searchBy = searchBy.ToLower();
-                bool condition(AdminLotteryHistoryViewComponentViewModel x) => x.UserName.ToLower().Contains(searchBy) || x.StatusInString.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
+                bool condition(LotteryHistoryViewComponentAdminViewModel x) => x.Email.ToLower().Contains(searchBy) || x.StatusInString.ToLower().Contains(searchBy) || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
                                     || x.NumberOfTicketInString.ToLower().Contains(searchBy) || x.Title.ToLower().Contains(searchBy);
 
                 purchasedLotteryHistoryView = purchasedLotteryHistoryView
@@ -2820,7 +2820,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
-        public IList<AdminPricePredictionHistoryViewComponentViewModel> SearchPurchasedPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? pricePredictionCategoryId)
+        public IList<PricePredictionHistoryViewComponentAdminViewModel> SearchPurchasedPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? pricePredictionCategoryId)
         {
             var searchBy = (model.search != null) ? model.search?.value : null;
             var take = model.length;
@@ -2844,10 +2844,10 @@ namespace CPL.Controllers
                     .GroupBy(x => new { x.CreatedDate.Date, x.PricePredictionId, x.SysUserId });
 
             var purchasedPricePredictionHistoryView = purchasedPricePredictionHistory
-                    .Select(y => new AdminPricePredictionHistoryViewComponentViewModel
+                    .Select(y => new PricePredictionHistoryViewComponentAdminViewModel
                     {
                         SysUserId = y.Key.SysUserId,
-                        UserName = y.FirstOrDefault().SysUser.Email,
+                        Email = y.FirstOrDefault().SysUser.Email,
                         //Status = y.FirstOrDefault().Lottery.Status, // TODO
                         NumberOfPrediction = y.Count(),
                         TotalPurchasePrice = y.Sum(x => x.Amount),
@@ -2863,7 +2863,7 @@ namespace CPL.Controllers
                 searchBy = searchBy.ToLower();
 
                 purchasedPricePredictionHistoryView = purchasedPricePredictionHistoryView
-                                        .Where(x => x.UserName.ToLower().Contains(searchBy) 
+                                        .Where(x => x.Email.ToLower().Contains(searchBy) 
                                                     //|| x.StatusInString.ToLower().Contains(searchBy) 
                                                     || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
                                                     || x.NumberOfPredictionInString.ToLower().Contains(searchBy)

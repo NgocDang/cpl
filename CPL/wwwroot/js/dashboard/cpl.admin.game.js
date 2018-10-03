@@ -15,7 +15,7 @@
 
         // Lottery Tab - Lottery Category Tab
         AdminGameManagement.bindLotteryCategoryTabs();
-        AdminGameManagement.bindPricePredictionSummaryTimeRangeChange();
+        AdminGameManagement.bindLotteryCategoryTimeRangeChange();
 
         // Price Prediction Tab - Price Prediction Summary Tab
         AdminGameManagement.bindPricePredictionTab();
@@ -379,9 +379,9 @@
             "language": DTLang.getLang(),
             "columns": [
                 {
-                    "data": "UserName",
+                    "data": "Email",
                     "render": function (data, type, full, meta) {
-                        return full.userName;
+                        return full.email;
                     }
                 },
                 {
@@ -1005,9 +1005,9 @@
             "language": DTLang.getLang(),
             "columns": [
                 {
-                    "data": "UserName",
+                    "data": "Emai",
                     "render": function (data, type, full, meta) {
-                        return full.userName;
+                        return full.email;
                     }
                 },
                 {
