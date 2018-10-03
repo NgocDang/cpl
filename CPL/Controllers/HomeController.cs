@@ -28,6 +28,7 @@ namespace CPL.Controllers
         private readonly IDataContextAsync _context;
         private readonly IPricePredictionService _pricePredictionService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
+        private readonly ISliderService _sliderService;
 
         public HomeController(
             ILangService langService,
@@ -39,9 +40,10 @@ namespace CPL.Controllers
             ILotteryService lotteryService,
             IDataContextAsync context,
             ITemplateService templateService,
-            INewsService newsService,
             IPricePredictionService pricePredictionService,
-            ILotteryHistoryService lotteryHistoryService)
+            ILotteryHistoryService lotteryHistoryService,
+            ISliderService sliderService,
+            INewsService newsService)
         {
             this._langService = langService;
             this._langDetailService = langDetailService;
@@ -55,6 +57,7 @@ namespace CPL.Controllers
             this._newsService = newsService;
             this._pricePredictionService = pricePredictionService;
             this._lotteryHistoryService = lotteryHistoryService;
+            this._sliderService = sliderService;
         }
 
         [Permission(EnumRole.Guest)]
@@ -87,6 +90,16 @@ namespace CPL.Controllers
                                                     ?.PricePredictionSetting
                                                     .PricePredictionSettingDetails
                                                     .FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).ShortDescription };
+
+            viewModel.Sliders = _sliderService.Queryable()
+                                .Include(x => x.Group)
+                                .Include(x => x.SliderDetails)
+                                .Where(x => x.Group.Name == EnumGroupName.HOMEPAGE.ToString()
+                                            && x.Group.Filter == EnumGroupFilter.SLIDER.ToString()
+                                            && x.Status == (int)EnumSliderStatus.ACTIVE)
+                                .Select(x => Mapper.Map<SliderViewModel>(x))
+                                .ToList();
+
             return View(viewModel);
         }
 

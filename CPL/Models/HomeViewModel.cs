@@ -15,5 +15,6 @@ namespace CPL.Models
         public int? ClosestPricePredictionId { get; set; }
         public string ClosestPricePredictionTitle { get; set; }
         public string ClosestPricePredictionDescription { get; set; }
+        public List<SliderViewModel> Sliders { get; set; }
     }
 }

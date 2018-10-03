@@ -4,13 +4,47 @@
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Home");
 }
 @section styles{
+    <link href="~/css/dashboard/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/css/dashboard/plugins/owl-carousel/owl.theme.default.min.css" rel="stylesheet" />
     <link href="~/css/dashboard/cpl.home.css" rel="stylesheet" asp-append-version="true" />
 }
 
 <section id="slide">
-    <div class="container">
-        <div class="row">
-        </div>
+    <div class="owl-carousel owl-theme mt-0">
+        @if (Model.Sliders.Count != 0)
+        {
+            @foreach (var slide in Model.Sliders)
+            {
+                @foreach (var detail in slide.SliderDetails)
+                {
+                    @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                    {
+                        <div class="item">
+                            <a class="d-md-block d-none" href="@slide.Url"><img src="~/images/slider/@detail.DesktopImage" class="img-fluid img-border" /></a>
+                            <a class="d-md-none d-block" href="@slide.Url"><img src="~/images/slider/@detail.MobileImage" class="img-fluid img-border" /></a>
+                        </div>
+                    }
+                }
+            }
+        }
+        else
+        {
+            <div class="item">
+                <a class="d-md-block d-none" href="#"><img src="~/images/slider-dekstop.png" class="img-fluid img-border" /></a>
+                <a class="d-md-none d-block" href="#"><img src="~/images/slider-mobile.png" class="img-fluid img-border" /></a>
+            </div>
+            <div class="item">
+                <a class="d-md-block d-none" href="#"><img src="~/images/slider-dekstop.png" class="img-fluid img-border" /></a>
+                <a class="d-md-none d-block" href="#"><img src="~/images/slider-mobile.png" class="img-fluid img-border" /></a>
+            </div>
+        }
+    </div>
+    <div class="slider-action">
+        <a asp-controller="Authentication" asp-action="Register" class="btn btn-primary shadow btn-slider op" tabindex="0">
+            <span><i class="la la-angle-double-right"></i></span>&nbsp&nbsp
+            <span> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BeTheFirstPerson")  </span>&nbsp&nbsp
+            <span><i class="la la-angle-double-left"></i></span>
+        </a>
     </div>
 </section>
 
@@ -18,7 +52,7 @@
     <div class="container mt-2 pb-2">
         <div class="row">
             <a asp-controller="Lottery" asp-action="Index" class="mr-lg-0 mx-auto">
-                <div class="card-kind-of-games black" style="background-image: url('../../images/homepage_lottery_game_card.png');">
+                <div class="card-kind-of-games black" style="background-image: url('../../images/homepage_lottery_game_card.gif');">
                     <div class="text-padding mx-auto text-center">
                         <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</span>
                     </div>
@@ -159,7 +193,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <a class="btn-sm btn-primary d-block" asp-controller="Authentication" asp-action="Register" >
+                                    <a class="btn-sm btn-primary d-block" asp-controller="Authentication" asp-action="Register">
                                         <span>
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "RegisterFor30Seconds")
                                         </span>
@@ -231,7 +265,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <a class="btn-sm btn-primary d-block" asp-controller="Info" asp-action="HowToPlay" >
+                                    <a class="btn-sm btn-primary d-block" asp-controller="Info" asp-action="HowToPlay">
                                         <span>
                                             @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlay")
                                         </span>
@@ -261,5 +295,6 @@
 </section>
 
 @section scripts{
+    <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.min.js"></script>
     <script src="~/js/dashboard/cpl.home.js" asp-append-version="true"></script>
 }
