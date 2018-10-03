@@ -24,7 +24,17 @@
     width: 120px;
     line-height: 25px;
 }
-
+#lottery-game {
+    border-color: #F0C401 !important;
+}
+#price-prediction-game {
+    border-color: #F63756 !important;
+}
+#lottery-ticket-amount {
+    background-color: #FFEA87;
+    border: none;
+    border-radius: unset;
+}
 @media (max-width: 768px) {
     .card-kind-of-games {
         width: 96.78px;

@@ -63,7 +63,7 @@
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalAmount")
                                                 </div>
                                                 <div class="col-md-6 col-12 text-md-right font-medium-5 font-weight-bold">
-                                                    <span id="total-amount">@Model.UnitPrice.ToString("N0")</span> CPL
+                                                    <span id="total-amount">@(Model.LotteryTicketAmount.HasValue ? (Model.LotteryTicketAmount.Value * Model.UnitPrice).ToString("N0") : Model.UnitPrice.ToString("N0"))</span> CPL
                                                 </div>
                                             </div>
                                             <div class="row mb-2">

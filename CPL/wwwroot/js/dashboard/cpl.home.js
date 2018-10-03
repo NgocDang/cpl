@@ -4,8 +4,8 @@
         Home.bindPredictPricePrediction();
     },
     bindLotteryPurchase: function () {
-        $("#lottery-game").on("click", "#lottery-purchase", function () {
-            window.location.href = "/Lottery/Detail/" + $("#lottery-id").val() + "?lottery-category-id=" + $("#lottery-category-id").val() + "&lotteryTicketAmount=" + $("#lottery-ticket-amount").val();
+        $("#lottery-game").on("click", "#btn-lottery-purchase", function () {
+            window.location.href = "/Lottery/Detail/" + $("#random-lottery-id").val() + "?lottery-category-id=" + $("#random-lottery-category-id").val() + "&lotteryTicketAmount=" + $("#lottery-ticket-amount").val();
         });
     },
     bindPredictPricePrediction: function () {

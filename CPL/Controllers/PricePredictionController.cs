@@ -84,8 +84,9 @@ namespace CPL.Controllers
 
             // Move first tab to the end of the array
             viewModel.PricePredictionTabs = Enumerable.Range(1, viewModel.PricePredictionTabs.Count).Select(i => viewModel.PricePredictionTabs[i % viewModel.PricePredictionTabs.Count]).ToList();
+            var pricePredictionActiveTab = viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now);
 
-            if(predictedTrend.HasValue)
+            if (predictedTrend.HasValue)
             {
                 if (viewModel.PricePredictionTabs.OrderBy(x => x.CloseBettingTime).FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now) != null)
                 {
@@ -95,7 +96,7 @@ namespace CPL.Controllers
             }
             else
             {
-                if (viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now) != null)
+                if (pricePredictionActiveTab != null)
                 {
                     viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).IsActive = true;
                     viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).PredictedTrend = predictedTrend;

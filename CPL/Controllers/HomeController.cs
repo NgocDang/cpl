@@ -28,7 +28,6 @@ namespace CPL.Controllers
         private readonly IDataContextAsync _context;
         private readonly IPricePredictionService _pricePredictionService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
-        private static Random _randomPicker = new Random();
 
         public HomeController(
             ILangService langService,
@@ -61,7 +60,7 @@ namespace CPL.Controllers
         [Permission(EnumRole.Guest)]
         public IActionResult Index()
         {
-            var acitveLotteries = _lotteryService.Queryable()
+            var activeLotteries = _lotteryService.Queryable()
                 .Where(x => !x.IsDeleted && x.Status == (int)EnumLotteryGameStatus.ACTIVE).ToList();
 
             var closestPricePrediction = _pricePredictionService.Query()
@@ -71,23 +70,23 @@ namespace CPL.Controllers
                 .OrderBy(x => x.CloseBettingTime)
                 .FirstOrDefault();
 
-            int randomIndex = _randomPicker.Next(acitveLotteries.Count);
+            int randomIndex = RandomPicker.Random.Next(activeLotteries.Count);
             var randomLottery = _lotteryService.Query().Include(x => x.LotteryCategory)
-                .FirstOrDefault(x => x.Id == acitveLotteries[randomIndex].Id);
+                .FirstOrDefault(x => x.Id == activeLotteries[randomIndex].Id);
 
             var viewModel = new HomeViewModel { RandomLotteryId = randomLottery?.Id,
-                                                RandomLotteryCategoryId = randomLottery?.LotteryCategoryId,
+                                                RandomLotteryCategoryId = randomLottery != null ? randomLottery.LotteryCategoryId : 0,
                                                 RandomLotteryTitle = randomLottery?.Title,
-                                                RandomLotteryDescription = randomLottery?.LotteryCategory?.Description,
+                                                RandomLotteryDescription = randomLottery?.LotteryCategory.Description,
                                                 ClosestPricePredictionId = closestPricePrediction?.Id,
                                                 ClosestPricePredictionTitle = closestPricePrediction
                                                     ?.PricePredictionSetting
-                                                    ?.PricePredictionSettingDetails
-                                                    ?.FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).Title,
+                                                    .PricePredictionSettingDetails
+                                                    .FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).Title,
                                                 ClosestPricePredictionDescription = closestPricePrediction
                                                     ?.PricePredictionSetting
-                                                    ?.PricePredictionSettingDetails
-                                                    ?.FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).ShortDescription };
+                                                    .PricePredictionSettingDetails
+                                                    .FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).ShortDescription };
             return View(viewModel);
         }
 
