@@ -1,11 +1,11 @@
-﻿using CPL.Common.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace CPL.Domain
+namespace CPL.Models
 {
-    public class PricePredictionSetting : Entity
+    public class PricePredictionSettingAdminViewModel
     {
         public int Id { get; set; }
         public TimeSpan OpenBettingTime { get; set; }
@@ -18,8 +18,7 @@ namespace CPL.Domain
 
         public int PricePredictionCategoryId { get; set; }
 
-        public virtual PricePredictionCategory PricePredictionCategory { get; set; }
-        public virtual ICollection<PricePrediction> PricePredictions { get; set; }
-        public virtual ICollection<PricePredictionSettingDetail> PricePredictionSettingDetails { get; set; }
+        public string BettingTimeInString { get; set; }
+        public List<PricePredictionSettingDetailAdminViewModel> PricePredictionSettingDetails { get; set; }
     }
 }
