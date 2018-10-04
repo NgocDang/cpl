@@ -73,10 +73,12 @@
                                 <hr />
                             }
                             <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="fas fa-tachometer-alt font-small-4"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
+                            <a class="dropdown-item" asp-controller="DepositAndWithdraw" asp-action="Index"><i class="la la-mail-forward"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</a>
+                            <a class="dropdown-item" asp-controller="History" asp-action="Game"><i class="la la-history"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "History")</a>
                             <a class="dropdown-item" asp-controller="Profile" asp-action="Security"><i class="la la-key"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Security")</a>
                             <a class="dropdown-item" asp-controller="Profile" asp-action="Index"><i class="la la-user"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Profile")</a>
                             <a class="dropdown-item" asp-controller="Profile" asp-action="KYC"><i class="la la-credit-card"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "KYC")</a>
-
+                            <a class="dropdown-item" asp-controller="Profile" asp-action="Affiliate"><i class="la la-users"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")</a>
                             <hr class="mb-0" />
                             <a class="dropdown-item" href="#" id="logout-confirmation"><i class="la la-power-off"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogOut")</a>
                         </div>
@@ -211,7 +213,7 @@
                             <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="fas fa-tachometer-alt font-small-4"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Dashboard")</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" asp-controller="DepositAndWithdraw" asp-action="Withdraw"><i class="la la-mail-forward"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</a>
+                            <a class="dropdown-item" asp-controller="DepositAndWithdraw" asp-action="Index"><i class="la la-mail-forward"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Deposit")/@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Withdraw")</a>
                         </li>
                         <li>
                             <a class="dropdown-item" asp-controller="History" asp-action="Game"><i class="la la-history"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "History")</a>
