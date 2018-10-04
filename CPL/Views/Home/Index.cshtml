@@ -295,8 +295,8 @@
                     @foreach(var faq in Model.FAQs.Take((Model.FAQs.Count() + 1) / 2))
                     {
                         <li class="px-1 mb-1 shadow-sm">
-                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq_@faq.Id">@faq.Question<i class="la la-minus"></i></a>
-                            <div id="faq_@faq.Id" class="collapse">
+                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq-@faq.Id">@faq.Question<i class="la la-minus"></i></a>
+                            <div id="faq-@faq.Id" class="collapse">
                                 <p class="font-small-3 mb-0 pt-05 pb-1 pr-2">
                                     @faq.Answer
                                 </p>
@@ -310,8 +310,8 @@
                     @foreach (var faq in Model.FAQs.Skip((Model.FAQs.Count() + 1) / 2))
                     {
                         <li class="px-1 mb-1 shadow-sm">
-                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq_@faq.Id">@faq.Question<i class="la la-minus"></i></a>
-                            <div id="faq_@faq.Id" class="collapse">
+                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq-@faq.Id">@faq.Question<i class="la la-minus"></i></a>
+                            <div id="faq-@faq.Id" class="collapse">
                                 <p class="font-small-3 mb-0 pt-05 pb-1 pr-2">
                                     @faq.Answer
                                 </p>

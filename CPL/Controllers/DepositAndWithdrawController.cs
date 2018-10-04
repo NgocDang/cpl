@@ -55,7 +55,9 @@ namespace CPL.Controllers
         [Permission(EnumRole.User)]
         public IActionResult Index()
         {
-            return View();
+            var viewModel = new DepositAndWithdrawIndexViewModel();
+            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
+            return View(viewModel);
         }
 
         [Permission(EnumRole.User)]

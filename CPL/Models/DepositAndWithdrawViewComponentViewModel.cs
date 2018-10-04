@@ -2,7 +2,7 @@
 
 namespace CPL.Models
 {
-    public class DepositAndWithdrawViewModel
+    public class DepositAndWithdrawViewComponentViewModel
     {
         public decimal BTCAmount { get; set; }
         public decimal ETHAmount { get; set; }

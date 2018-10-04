@@ -1,4 +1,5 @@
-﻿@{
+﻿@model DepositAndWithdrawIndexViewModel
+@{
     Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DepositAndWithdraw");
 }
@@ -36,6 +37,7 @@
             </div>
         </div>
     </div>
+    @await Component.InvokeAsync("TransactionHistory", new TransactionHistoryViewComponentViewModel { SysUserId = Model.SysUserId })
     @Html.Hidden("CopiedSuccessfully", @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CopiedSuccessfully"))
 </div>
 
@@ -44,7 +46,9 @@
     <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dashboard/cpl.dtlang.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
     <script src="~/js/dashboard/plugins/clipboard/clipboard.min.js"></script>
     <script src="~/js/dashboard/cpl.depositandwithdraw.viewcomponent.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.transactionhistory.viewcomponent.js" asp-append-version="true"></script>
 }
