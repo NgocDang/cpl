@@ -440,6 +440,7 @@
                     }
                     formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
                     formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].ShortDescription', $(e).find("#lottery-short-description").val());
                     formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                 });
 
@@ -533,6 +534,7 @@
                     }
                     formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
                     formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].ShortDescription', $(e).find("#lottery-short-description").val());
                     formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                 });
 
@@ -625,6 +627,7 @@
                     }
                     formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
                     formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].ShortDescription', $(e).find("#lottery-short-description").val());
                     formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                     formData.append('LotteryDetails[' + i + '].Id', parseInt($(e).find("#detail-id").val()));
                 });
@@ -719,6 +722,7 @@
                     }
                     formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
                     formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].ShortDescription', $(e).find("#lottery-short-description").val());
                     formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                     formData.append('LotteryDetails[' + i + '].Id', parseInt($(e).find("#detail-id").val()));
                 });

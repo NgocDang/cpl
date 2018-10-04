@@ -180,6 +180,24 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="row pt-1">
+                                                    <div class="col-12">
+                                                        <div class="form-group">
+                                                            <label for="ShortDescription"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescription")</span><span> ( @detail.Lang.Name )</span></label>
+                                                            @if (detail.ShortDescription != null)
+                                                            {
+                                                                <textarea class="form-control textarea-maxlength" id="lottery-short-description" rows="5" name="ShortDescription" required @(Model.Status == (int)EnumLotteryGameStatus.DEACTIVATED ? "disabled" : "")>@detail.ShortDescription</textarea>
+                                                            }
+                                                            else
+                                                            {
+                                                                <textarea class="form-control textarea-maxlength" id="lottery-short-description" rows="5" name="ShortDescription" required @(Model.Status == (int)EnumLotteryGameStatus.DEACTIVATED ? "disabled" : "")></textarea>
+                                                            }
+                                                            <div class="invalid-feedback">
+                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescriptionRequired")
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

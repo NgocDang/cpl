@@ -3239,6 +3239,7 @@ namespace CPL.Controllers
                     }
 
                     lotteryDetail.Description = detail.Description;
+                    lotteryDetail.ShortDescription = detail.ShortDescription;
 
                     _lotteryDetailService.Update(lotteryDetail);
                 }
@@ -3393,6 +3394,7 @@ namespace CPL.Controllers
                     lotteryDetail.LotteryId = lottery.Id;
                     lotteryDetail.LangId = detail.LangId;
                     lotteryDetail.Description = detail.Description;
+                    lotteryDetail.ShortDescription = detail.ShortDescription;
 
                     _lotteryDetailService.Insert(lotteryDetail);
                 }
