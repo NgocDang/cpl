@@ -122,3 +122,13 @@ INSERT INTO LangDetail VALUES (2, N'BeTheFirstPerson', N'はじめての方は�
 USE CPL;
 INSERT INTO LangDetail VALUES (1, N'NumberOfPrediction', N'Number Of Prediction');
 INSERT INTO LangDetail VALUES (2, N'NumberOfPrediction', N'予測数');
+
+INSERT INTO LangDetail VALUES (1, N'PricePredictionCategory', N'Price Prediction Category');
+INSERT INTO LangDetail VALUES (2, N'PricePredictionCategory', N'価格予測カテゴリ');
+
+INSERT INTO LangDetail VALUES (1, N'AddNewCategory', N'Add new category');
+INSERT INTO LangDetail VALUES (2, N'AddNewCategory', N'新しいカテゴリを追加');
+
+INSERT INTO LangDetail VALUES (1, N'PricePredictionCategoryNameRequired', N'Please fill in price prediction category name');
+INSERT INTO LangDetail VALUES (2, N'PricePredictionCategoryNameRequired', N'価格予測カテゴリ名を記入してください');
+

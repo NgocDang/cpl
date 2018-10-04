@@ -261,8 +261,8 @@
                                         <div class="card col-lg-4 col-12">
                                             <div class="card-body">
                                                 <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryCategory")</p>
-                                                <a asp-controller="Admin" asp-action="Lottery" class="btn btn-outline-secondary" style="margin:2px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a> 
-                                                <button class="btn btn-outline-secondary" id="btn-add-lottery-category" style="margin:2px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AddANewLotteryCategory")</button>
+                                                <a asp-controller="Admin" asp-action="Lottery" class="btn btn-outline-secondary" style="margin:2px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
+                                                <button class="btn btn-outline-secondary" id="btn-add-lottery-category" style="margin:2px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AddNewCategory")</button>
                                             </div>
                                         </div>
                                     </div>
@@ -410,7 +410,7 @@
                                             </div>
                                         }
                                     </div>
-                                    @*<div class="row row-separator">
+                                    <div class="row row-separator">
                                         <div class="col-12">&nbsp;</div>
                                     </div>
                                     <div class="row">
@@ -430,12 +430,16 @@
                                         </div>
                                         <div class="card col-lg-4 col-12">
                                             <div class="card-body">
-                                                <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryCategory")</p>
-                                                <a asp-controller="Admin" asp-action="Lottery" class="btn btn-outline-secondary" style="margin:2px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</a>
-                                                <button class="btn btn-outline-secondary" id="btn-add-lottery-category" style="margin:2px;">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AddANewLotteryCategory")</button>
+                                                <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionCategory")</p>
+                                                <a asp-controller="Admin" asp-action="PricePrediction" class="btn btn-outline-secondary">
+                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")
+                                                </a>
+                                                <button class="btn btn-outline-secondary" id="btn-add-price-prediction-category">
+                                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AddNewCategory")
+                                                </button>
                                             </div>
                                         </div>
-                                    </div>*@
+                                    </div>
                                 </div>
                             </div>
                         </div>
