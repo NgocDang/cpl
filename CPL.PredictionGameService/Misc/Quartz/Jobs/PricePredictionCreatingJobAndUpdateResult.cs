@@ -59,7 +59,6 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 
             var newPricePredictionRecord = new PricePrediction
             {
-                Name = String.Format("Price Prediction #{0}", localDateTime.ToString()),
                 Coinbase = EnumCurrencyPair.BTCUSDT.ToString(),
                 OpenBettingTime = localDateTime,
                 CloseBettingTime = localDateTime.AddHours(PricePredictionGameIntervalInHour - PricePredictionHoldingIntervalInHour).AddMinutes(-PricePredictionCompareIntervalInMinute),
@@ -194,11 +193,12 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 // update pricePrediction
                 pricePrediction.NumberOfPredictors = pricePredictionHistories.Count();
                 pricePrediction.Volume = pricePredictionHistories.Sum(x => x.Amount);
-                pricePrediction.Description += $" Game end at {DateTime.Now.ToString(CPLConstant.Format.DateTime)}";
                 resolver.PricePredictionService.Update(pricePrediction);
 
                 // save to DB
                 resolver.UnitOfWork.SaveChanges();
+
+                Utils.FileAppendThreadSafe(FileName, string.Format("3.1. PricePredictionId = {0} ends at: {1}{2}", pricePredictionId, DateTime.Now, Environment.NewLine));
             }
             catch (Exception ex)
             {
