@@ -48,6 +48,7 @@ namespace CPL.Controllers
         private readonly ILotteryDetailService _lotteryDetailService;
         private readonly IAnalyticService _analyticService;
         private readonly IIntroducedUsersService _introducedUsersService;
+        private readonly IPricePredictionSettingService _pricePredictionSettingService;
         private readonly IAgencyService _agencyService;
         private readonly IPaymentService _paymentService;
         private readonly IGroupService _groupService;
@@ -79,6 +80,7 @@ namespace CPL.Controllers
             IIntroducedUsersService introducedUsersService,
             IAgencyTokenService agencyTokenService,
             IAgencyService agencyService,
+            IPricePredictionSettingService pricePredictionSettingService,
             IPaymentService paymentService,
             IGroupService groupService,
             ISliderService sliderService,
@@ -112,6 +114,7 @@ namespace CPL.Controllers
             this._groupService = groupService;
             this._sliderService = sliderService;
             this._sliderDetailService = sliderDetailService;
+            this._pricePredictionSettingService = pricePredictionSettingService;
 			this._pricePredictionCategoryService = pricePredictionCategoryService;
             this._pricePredictionCategoryDetailService = pricePredictionCategoryDetailService;
             this._dataContextAsync = dataContextAsync;
@@ -3645,6 +3648,88 @@ namespace CPL.Controllers
         #endregion
 
         #region PricePrediction
+        [Permission(EnumRole.Admin)]
+        public IActionResult PricePredictionSetting()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult SearchPricePredictionSetting(DataTableAjaxPostModel viewModel)
+        {
+            // action inside a standard controller
+            int filteredResultsCount;
+            int totalResultsCount;
+            var res = SearchPricePredictionSettingFunc(viewModel, out filteredResultsCount, out totalResultsCount);
+            return Json(new
+            {
+                // this is what datatables wants sending back
+                draw = viewModel.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IList<PricePredictionSettingAdminViewModel> SearchPricePredictionSettingFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
+        {
+            var searchBy = (model.search != null) ? model.search.value : null;
+            var take = model.length;
+            var skip = model.start;
+
+            string sortBy = "";
+            bool sortDir = true;
+
+            if (model.order != null)
+            {
+                // in this example we just default sort on the 1st column
+                sortBy = model.columns[model.order[0].column].data;
+                sortDir = model.order[0].dir.ToLower() == "asc";
+            }
+
+            // search the dbase taking into consideration table sorting and paging
+            if (string.IsNullOrEmpty(searchBy))
+            {
+                filteredResultsCount =
+                    totalResultsCount =
+                        _pricePredictionSettingService.Queryable()
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
+                        .Count();
+
+                return _pricePredictionSettingService.Query()
+                            .Include(x => x.PricePredictionSettingDetails)
+                            .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
+                            .Select(x => Mapper.Map<PricePredictionSettingAdminViewModel>(x))
+                            .OrderBy(sortBy, sortDir)
+                            .Skip(skip)
+                            .Take(take)
+                            .ToList();
+            }
+            else
+            {
+                filteredResultsCount = _pricePredictionSettingService.Query()
+                        .Include(x => x.PricePredictionSettingDetails)
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE &&
+                                    (x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.PricePredictionSettingDetails.Any(y => y.Title.Contains(searchBy))))
+                        .Count();
+
+                totalResultsCount = _pricePredictionSettingService.Queryable()
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
+                        .Count();
+
+                return _pricePredictionSettingService.Query()
+                        .Include(x => x.PricePredictionSettingDetails)
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE &&
+                                    (x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.PricePredictionSettingDetails.Any(y => y.Title.Contains(searchBy))))
+                        .Select(x => Mapper.Map<PricePredictionSettingAdminViewModel>(x))
+                        .OrderBy(sortBy, sortDir)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToList();
+            }
+        }
         #endregion
 
         #region Setting

@@ -115,6 +115,9 @@
     <Content Update="Views\Admin\AffiliateApprove.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Admin\PricePredictionSetting.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Admin\Slider.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
