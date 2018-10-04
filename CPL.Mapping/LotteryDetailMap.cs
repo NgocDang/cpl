@@ -25,6 +25,7 @@ namespace CPL.Mapping
             builder.Property(t => t.MobileTopImage).HasColumnName("MobileTopImage");
             builder.Property(t => t.PrizeImage).HasColumnName("PrizeImage");
             builder.Property(t => t.Description).HasColumnName("Description");
+            builder.Property(t => t.ShortDescription).HasColumnName("ShortDescription");
 
             // Relationship
             builder.HasOne(x => x.Lottery)

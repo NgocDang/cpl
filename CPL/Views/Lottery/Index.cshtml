@@ -33,7 +33,16 @@
                     <div class="owl-item col-3">
                         <div class="card card-game">
                             <div class="card-header card-header-game font-weight-bold font-sm-size-15px">
-                                @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0"))
+                                <span class="pull-left">@string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0"))</span>
+                                <span class="pull-right">
+                                    @foreach (var detail in lottery.LotteryDetails)
+                                    {
+                                        @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
+                                        {
+                                            <i data-toggle="popover" data-placement="top" data-html="true"  data-container="body" data-content="@detail.ShortDescription" class="la la-info-circle font-medium-5 font-weight-bold"></i>
+                                        }
+                                    }
+                                </span>
                             </div>
                             @foreach (var detail in lottery.LotteryDetails)
                             {
@@ -43,7 +52,7 @@
                                 }
                             }
                             <div class="card-body">
-                                <a asp-controller="Lottery" asp-action="Detail" asp-route-id="@lottery.Id" asp-route-lottery-category-id="@lottery.LotteryCategory.Id" class="btn btn-primary btn-block font-sm-size-15px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</a>
+                                <a asp-controller="Lottery" asp-action="Detail" asp-route-id="@lottery.Id" asp-route-lottery-category-id="@lottery.LotteryCategory.Id" class="btn btn-primary btn-block font-sm-size-15px shadow-sm">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</a>
                             </div>
                         </div>
                     </div>
@@ -79,8 +88,11 @@
                         @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
                         {
                             <img class="card-img-top card-img-game img-fluid visible-mobile" src="~/images/lottery/@detail.MobileListingImage" />
-                            <a asp-controller="Lottery" asp-action="Detail" asp-route-id="@lottery.Id" class="btn btn-circle white"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</span></a>
-                            <p class="ticket-left-text text-dark">@string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0"))</p>
+                            <a asp-controller="Lottery" asp-action="Detail" asp-route-id="@lottery.Id" asp-route-lottery-category-id="@lottery.LotteryCategory.Id" class="btn btn-circle white"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</span></a>
+                            <p class="ticket-left-text text-dark">
+                                @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0")) &nbsp; 
+                                <i data-toggle="popover" data-placement="top" data-html="true" data-container="body" data-content="@detail.ShortDescription" class="la la-info-circle"></i>
+                            </p>
                         }
                     }
                 </div>
@@ -90,6 +102,7 @@
 </section>
 
 @section scripts{
+    <script src="~/js/dashboard/plugins/popover/popover.min.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.min.js"></script>
     <script src="~/js/dashboard/marquee.min.js"></script>
     <script src="~/js/dashboard/cpl.lottery.js" asp-append-version="true"></script>

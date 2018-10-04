@@ -77,13 +77,13 @@ namespace CPL.Controllers
                 .FirstOrDefault();
 
             int randomIndex = RandomPicker.Random.Next(activeLotteries.Count);
-            var randomLottery = _lotteryService.Query().Include(x => x.LotteryCategory)
+            var randomLottery = _lotteryService.Query().Include(x => x.LotteryDetails)
                 .FirstOrDefault(x => x.Id == activeLotteries[randomIndex].Id);
 
             var viewModel = new HomeViewModel { RandomLotteryId = randomLottery?.Id,
                                                 RandomLotteryCategoryId = randomLottery != null ? randomLottery.LotteryCategoryId : 0,
                                                 RandomLotteryTitle = randomLottery?.Title,
-                                                RandomLotteryDescription = randomLottery?.LotteryCategory.Description,
+                                                RandomLotteryDescription = randomLottery?.LotteryDetails.FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).ShortDescription,
                                                 ClosestPricePredictionId = closestPricePrediction?.Id,
                                                 ClosestPricePredictionTitle = closestPricePrediction
                                                     ?.PricePredictionSetting
