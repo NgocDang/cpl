@@ -21,36 +21,45 @@
                     @foreach (var detail in Model.PricePredictionCategoryDetailAdminViewModels)
                     {
                         <div role="tabpanel" class="tab-pane @(detail.LangId == Context.Session.GetInt32("LangId").Value ? "active" : "")" id="@detail.LangId-nav" aria-labelledby="@detail.LangId-nav-tab" aria-expanded="true">
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <fieldset class="form-group">
-                                            <label for="Name" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")<span> ( @detail.LangName )</span></label>
-                                            <input name="Name" id="name" type="text" class="form-control" required autofocus />
-                                            <div class="invalid-feedback">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionCategoryNameRequired")
+
+                            <div class="card ml-1 mr-1 mb-1">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="modal-body">
+                                            <div class="row pt-1">
+                                                <div class="col-12">
+                                                    <fieldset class="form-group">
+                                                        <label for="Name" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")<span> ( @detail.LangName )</span></label>
+                                                        <input name="Name" id="name" type="text" class="form-control" required autofocus />
+                                                        <div class="invalid-feedback">
+                                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionCategoryNameRequired")
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
                                             </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <fieldset class="form-group">
-                                            <label for="Description" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Description")<span> ( @detail.LangName )</span></label>
-                                            <input name="Description" id="description" type="text" class="form-control" />
-                                            <div class="invalid-feedback">
-                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DescriptionRequired")
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <fieldset class="form-group">
+                                                        <label for="Description" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Description")<span> ( @detail.LangName )</span></label>
+                                                        <input name="Description" id="description" type="text" class="form-control" />
+                                                        <div class="invalid-feedback">
+                                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DescriptionRequired")
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
                                             </div>
-                                        </fieldset>
+                                        </div>
+                                        <input type="hidden" value="@detail.LangId" id="lang-id" />
                                     </div>
+
                                 </div>
                             </div>
-                            <input type="hidden" value="@detail.LangId" id="lang-id" />
+
                         </div>
                     }
 
-                    <div class="modal-footer text-right">
-                        <button type="button" class="btn btn-primary btn-sm btn-do-add">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Submit") <i class="la la-plus font-size-15px"></i></button>
+                    <div class="modal-footer text-right pb-0">
+                        <button type="button" class="btn btn-primary btn-sm btn-do-add">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Submit")</button>
                         <button type="button" class="btn btn-secondary btn-sm btn-do-cancel" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
                     </div>
                 </div>
