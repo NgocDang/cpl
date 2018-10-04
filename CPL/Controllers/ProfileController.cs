@@ -133,7 +133,6 @@ namespace CPL.Controllers
                 user.LastName = viewModel.LastName;
                 user.Gender = viewModel.Gender;
                 user.DOB = viewModel.DOB;
-                user.PostalCode = viewModel.PostalCode;
                 user.Country = viewModel.Country;
                 user.City = viewModel.City;
                 user.StreetAddress = viewModel.StreetAddress;

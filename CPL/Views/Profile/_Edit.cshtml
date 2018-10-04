@@ -104,17 +104,9 @@
                         </div>
                     </div>
                     <div class="row mb-1">
-                        <div class="col-md-6 col-sm-12">
-                            <fieldset class="form-group">
-                                <label for="PostalCode">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PostalCode")</label>
-                                <input type="text" name="PostalCode" class="form-control" id="PostalCode" value="@Model.PostalCode" autofocus="">
-                            </fieldset>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
                         <div class="col-lg-4 col-md-6 col-sm-12">
                             <fieldset class="form-group">
-                                <label for="PostalCode">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Country")</label>
+                                <label for="Country">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Country")</label>
                                 <select data-value="@Model.Country" name="Country" id="Country" class="selectpicker" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                     <option value="Afghanistan">Afghanistan</option>
                                     <option value="Albania">Albania</option>
