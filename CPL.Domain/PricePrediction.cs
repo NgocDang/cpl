@@ -8,8 +8,6 @@ namespace CPL.Domain
     public class PricePrediction : Entity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
         public DateTime OpenBettingTime { get; set; }
         public DateTime CloseBettingTime { get; set; }
         public DateTime ResultTime { get; set; }

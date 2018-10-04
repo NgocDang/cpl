@@ -17,8 +17,6 @@ namespace CPL.Mapping
             // Table & Column Mappings
             builder.ToTable("PricePrediction");
             builder.Property(t => t.Id).HasColumnName("Id");
-            builder.Property(t => t.Name).HasColumnName("Name");
-            builder.Property(t => t.Description).HasColumnName("Description");
             builder.Property(t => t.OpenBettingTime).HasColumnName("OpenBettingTime");
             builder.Property(t => t.CloseBettingTime).HasColumnName("CloseBettingTime");
             builder.Property(t => t.ResultTime).HasColumnName("ResultTime");
