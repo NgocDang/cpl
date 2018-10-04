@@ -311,7 +311,6 @@ namespace CPL.Controllers
                             Balance = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
                                                     (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()) : 0,
                         })
-                        .AsQueryable()
                         .ToList();
 
                 var pricePredictionHistory = _pricePredictionHistoryService
@@ -358,7 +357,7 @@ namespace CPL.Controllers
                         _pricePredictionHistoryService.Queryable()
                         .Where(x => x.SysUserId == user.Id)
                         .Select(x => Mapper.Map<GameHistoryViewModel>(x))
-                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
+                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.Replace("_", " ").ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
                         .Count();
 
                 totalResultsCount = _lotteryHistoryService
@@ -396,14 +395,13 @@ namespace CPL.Controllers
                                                     (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()) : 0,
                         })
                         .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
-                        .AsQueryable()
                         .ToList();
 
                 var pricePredictionHistory = _pricePredictionHistoryService
                         .Queryable()
                         .Where(x => x.SysUserId == user.Id)
                         .Select(x => Mapper.Map<GameHistoryViewModel>(x))
-                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
+                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.Replace("_", " ").ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
                         .Select(x => Mapper.Map<GameHistoryViewModel>(x))
                         .ToList();
 
