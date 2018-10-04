@@ -15,9 +15,7 @@ namespace CPL.Misc.AutoMapper
         {
             CreateMap<PricePredictionSettingDetail, PricePredictionSettingDetailAdminViewModel>();
             CreateMap<PricePredictionSetting, PricePredictionSettingAdminViewModel>()
-               .ForMember(dest => dest.BettingTime, opt => opt.MapFrom(src => src.OpenBettingTime.ToString(Format.Time) + " - " + src.CloseBettingTime.ToString(Format.Time)))
-               .ForMember(dest => dest.HoldingTime, opt => opt.MapFrom(src => src.HoldingTimeInterval))
-               .ForMember(dest => dest.RaffleTime, opt => opt.MapFrom(src => src.ResultTimeInterval));
+               .ForMember(dest => dest.BettingTimeInString, opt => opt.MapFrom(src => src.OpenBettingTime.ToString(Format.Time) + " - " + src.CloseBettingTime.ToString(Format.Time)));
         }
     }
 }

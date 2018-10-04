@@ -45,21 +45,21 @@
                     }
                 },
                 {
-                    "data": "BettingTime",
+                    "data": "BettingTimeInString",
                     "render": function (data, type, full, meta) {
-                        return full.bettingTime;
+                        return full.bettingTimeInString;
                     }
                 },
                 {
-                    "data": "HoldingTime",
+                    "data": "HoldingTimeInterval",
                     "render": function (data, type, full, meta) {
-                        return full.holdingTime;
+                        return full.holdingTimeInterval;
                     }
                 },
                 {
-                    "data": "RaffleTime",
+                    "data": "ResultTimeInterval",
                     "render": function (data, type, full, meta) {
-                        return full.raffleTime;
+                        return full.resultTimeInterval;
                     }
                 },
                 {

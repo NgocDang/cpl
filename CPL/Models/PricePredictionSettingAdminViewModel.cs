@@ -18,9 +18,7 @@ namespace CPL.Models
 
         public int PricePredictionCategoryId { get; set; }
 
-        public string BettingTime { get; set; }
-        public int HoldingTime { get; set; }
-        public int RaffleTime { get; set; }
+        public string BettingTimeInString { get; set; }
         public List<PricePredictionSettingDetailAdminViewModel> PricePredictionSettingDetails { get; set; }
     }
 }

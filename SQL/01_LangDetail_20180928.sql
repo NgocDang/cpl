@@ -139,11 +139,11 @@ INSERT INTO LangDetail VALUES (2, N'PricePredictionSetting', N'価格予測設�
 INSERT INTO LangDetail VALUES (1, N'BettingTime', N'Betting Time');
 INSERT INTO LangDetail VALUES (2, N'BettingTime', N'ベットタイム');
 
-INSERT INTO LangDetail VALUES (1, N'HoldingTime', N'Holding Time');
-INSERT INTO LangDetail VALUES (2, N'HoldingTime', N'待ち時間');
+INSERT INTO LangDetail VALUES (1, N'HoldingTimeInterval', N'Holding Time Interval');
+INSERT INTO LangDetail VALUES (2, N'HoldingTimeInterval', N'待ち時間');
 
-INSERT INTO LangDetail VALUES (1, N'RaffleTime', N'Raffle Time');
-INSERT INTO LangDetail VALUES (2, N'RaffleTime', N'ラッフルの時間');
+INSERT INTO LangDetail VALUES (1, N'ResultTimeInterval', N'Result Time Interval');
+INSERT INTO LangDetail VALUES (2, N'ResultTimeInterval', N'ラッフルの時間');
 
 INSERT INTO LangDetail VALUES (1, N'DividendRate', N'Dividend Rate');
 INSERT INTO LangDetail VALUES (2, N'DividendRate', N'配当率');
