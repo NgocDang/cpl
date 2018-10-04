@@ -135,28 +135,26 @@
 </section>
 
 <section id="intro">
-    <div class="container pl-sm-5 pr-sm-5 mt-2">
-        <div class="ml-lg-5 mr-lg-5">
-            <div class="row text-center justify-content-center top-content">
-                <div class="col-lg-12 col-10">
-                    <img src="~/images/home/top.png" class="img-fluid" />
-                    <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoOdds")</p>
-                </div>
+    <div class="container mt-2">
+        <div class="row text-center justify-content-center top-content">
+            <div class="col-lg-12 col-10">
+                <img src="~/images/home/top.png" class="img-fluid" />
+                <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoOdds")</p>
             </div>
-            <div class="row border border-primary pt-3" id="what-is-crypto-odds-content">
-                <div class="text-center col-md-4 col-12 order-sm-1 order-2 mt-sm-0 mt-1">
-                    <img src="~/images/home/screens.png" class="img-fluid" />
-                </div>
-                <div class="col-md-8 col-12 order-sm-12 order-1">
-                    <p class="text-dark">
-                        @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoOdds"))
-                    </p>
-                </div>
+        </div>
+        <div class="row border border-primary pt-3" id="what-is-crypto-odds-content">
+            <div class="text-center col-md-4 col-12 order-sm-1 order-2 mt-sm-0 mt-1">
+                <img src="~/images/home/screens.png" class="img-fluid" />
             </div>
-            <div class="row text-center">
-                <div class="col-lg-12">
-                    <img src="~/images/home/bottom.png" class="img-fluid" />
-                </div>
+            <div class="col-md-8 col-12 order-sm-12 order-1">
+                <p class="text-dark">
+                    @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoOdds"))
+                </p>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-lg-12">
+                <img src="~/images/home/bottom.png" class="img-fluid" />
             </div>
         </div>
     </div>
@@ -173,8 +171,8 @@
                 <p class="font-large-1 mt-sm-2 mt-1 font-weight-bold text-dark">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Easy3Steps")</p>
             </div>
         </div>
-        <div class="row ml-sm-2">
-            <div class="col-sm-4 col-12 pl-0 pr-0 pr-sm-3">
+        <div class="row mx-n36">
+            <div class="col-sm-4 col-12 pl-0 px-2 pr-0">
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body text-center pt-0">
@@ -204,11 +202,10 @@
                         </div>
                     </div>
                 </div>
-                <i class="fas fa-caret-right font-large-4 text-primary next-arrow d-sm-block d-none"></i>
+                <span class="arrow"><i class="fas fa-caret-right font-large-4 text-primary next-arrow d-sm-block d-none"></i></span>
                 <i class="fas fa-caret-down font-large-4 text-primary down-arrow d-sm-none d-block"></i>
             </div>
-
-            <div class="col-sm-4 col-12 px-0 pr-sm-3 mt-sm-0 mt-2">
+            <div class="col-sm-4 col-12 px-2 mt-sm-0 mt-2">
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body text-center pt-0">
@@ -240,11 +237,10 @@
                         </div>
                     </div>
                 </div>
-                <i class="fas fa-caret-right font-large-4 text-primary next-arrow d-sm-block d-none"></i>
+                <span class="arrow"><i class="fas fa-caret-right font-large-4 text-primary next-arrow d-sm-block d-none"></i></span>
                 <i class="fas fa-caret-down font-large-4 text-primary down-arrow d-sm-none d-block"></i>
             </div>
-
-            <div class="col-sm-4 col-12 pl-0 pr-0 pr-sm-3 mt-sm-0 mt-2">
+            <div class="col-sm-4 col-12 pl-0 px-2 mt-sm-0 mt-2">
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body text-center pt-0">
@@ -290,9 +286,9 @@
             </div>
         </div>
         <div class="row my-2 pb-2">
-            <div class="col-lg-6 col-12">
+            <div class="col-lg-6 col-12 pl-0">
                 <ul>
-                    @foreach(var faq in Model.FAQs.Take((Model.FAQs.Count() + 1) / 2))
+                    @foreach (var faq in Model.FAQs.Take((Model.FAQs.Count() + 1) / 2))
                     {
                         <li class="px-1 mb-1 shadow-sm">
                             <a data-toggle="collapse" class="py-05 black collapsed" href="#faq_@faq.Id">@faq.Question<i class="la la-minus"></i></a>
@@ -305,7 +301,7 @@
                     }
                 </ul>
             </div>
-            <div class="col-lg-6 col-12">
+            <div class="col-lg-6 col-12 pr-0">
                 <ul>
                     @foreach (var faq in Model.FAQs.Skip((Model.FAQs.Count() + 1) / 2))
                     {
@@ -337,7 +333,7 @@
                 <div class="card">
                     <div class="card-content">
                         <form id="form-message" class="form-horizontal" action="">
-                            <div class="card-body">
+                            <div class="card-body px-05">
                                 <div class="row mt-1 mb-1">
                                     <div class="col-lg-4 col-12 px-05">
                                         <fieldset class="form-group">

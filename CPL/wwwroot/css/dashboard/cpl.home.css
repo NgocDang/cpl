@@ -552,4 +552,14 @@ section#contact div.card{
     box-shadow:none;
     background:transparent;
 }
-    
+
+section#steps div.mx-n36 {
+    margin-left: -36px !important;
+    margin-right: -36px !important;
+}
+
+section#steps span.arrow {
+    position: absolute;
+    width: calc(100%);
+    top: 35%;
+}

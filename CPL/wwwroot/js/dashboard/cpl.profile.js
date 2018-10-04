@@ -96,21 +96,6 @@
                 });
             }
         });
-
-        $("#PostalCode").on("blur", function () {
-            $.getJSON("https://maps.googleapis.com/maps/api/geocode/json?address=" + $("#PostalCode").val())
-                .done(function (data) {
-                    if (data.status == "OK") {
-                        var country = data.results[0].address_components[data.results[0].address_components.length - 1].short_name;
-                        $("#Country option").removeAttr("selected");
-                        $("#Country option[value=" + country + "]").attr("selected", "selected");
-                        $("#Country").selectpicker('refresh');
-
-                        var city = data.results[0].address_components[data.results[0].address_components.length - 2].long_name;
-                        $("#City").val(city);
-                    }
-                });
-        });
     },
     bindDoEdit: function () {
         $("#profile-edit").on("click", "#btn-do-edit-profile", function () {
@@ -152,7 +137,6 @@
                         LastName: $("#LastName").val(),
                         Gender: $('#Male').is(':checked'),
                         DOB: moment().date($("#Day").val()).month($("#Month").val() - 1).year($("#Year").val()).format("YYYY-MM-DD"),
-                        PostalCode: $("#PostalCode").val(),
                         Country: $("#Country").val(),
                         City: $("#City").val(),
                         StreetAddress: $("#StreetAddress").val(),
@@ -172,7 +156,6 @@
                             $("#last-name-detail").html($("#LastName").val());
                             $("#gender-detail").html(data.gender);
                             $("#dob-detail").html(moment().date($("#Day").val()).month($("#Month").val() - 1).year($("#Year").val()).format("YYYY/MM/DD"));
-                            $("#postal-code-detail").html($("#PostalCode").val());
                             $("#country-detail").html($("#Country").val());
                             $("#city-detail").html($("#City").val());
                             $("#street-address-detail").html($("#StreetAddress").val());

@@ -19,6 +19,8 @@ namespace CPL.Mapping
             builder.Property(t => t.HoldingTimeInterval).HasColumnName("HoldingTimeInterval");
             builder.Property(t => t.ResultTimeInterval).HasColumnName("ResultTimeInterval");
             builder.Property(t => t.PricePredictionCategoryId).HasColumnName("PricePredictionCategoryId");
+            builder.Property(t => t.DividendRate).HasColumnName("DividendRate");
+            builder.Property(t => t.Status).HasColumnName("Status");
 
             //Relationship
             builder.HasOne(x => x.PricePredictionCategory)
