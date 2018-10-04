@@ -19,6 +19,7 @@
                 </table>
                 @Html.Hidden("CurrencyId", Model.CurrencyId)
                 @Html.Hidden("SysUserId", Model.SysUserId)
+                <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View")" id="view" />
             </div>
         </div>
     </div>

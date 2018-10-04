@@ -12,7 +12,7 @@ namespace CPL.Misc.AutoMapper
     {
         public DepositAndWithdrawProfile()
         {
-            CreateMap<SysUser, DepositAndWithdrawViewModel>()
+            CreateMap<SysUser, DepositAndWithdrawViewComponentViewModel>()
                 .ForMember(dest => dest.BTCQrCodeImage, opt => opt.MapFrom(src => $"https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl={src.BTCHDWalletAddress}&choe=UTF-8"))
                 .ForMember(dest => dest.ETHQrCodeImage, opt => opt.MapFrom(src => $"https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl={src.ETHHDWalletAddress}&choe=UTF-8"));
         }

@@ -525,24 +525,7 @@ namespace CPL.Controllers
                                           .Query()
                                           .Include(x => x.Currency)
                                           .Where(x => x.SysUserId == user.Id && (_currencyId == 0 ? true : x.CurrencyId == _currencyId))
-                                          .Select(x => new CoinTransactionViewModel
-                                          {
-                                              Id = x.Id,
-                                              CreatedDate = x.CreatedDate,
-                                              CreatedDateInString = x.CreatedDate.ToString(Format.DateTime),
-                                              FromWalletAddress = x.FromWalletAddress,
-                                              ToWalletAddress = x.ToWalletAddress,
-                                              CoinAmount = x.CoinAmount,
-                                              CoinAmountInString = x.CoinAmount.ToString(Format.Amount),
-                                              CurrencyId = x.CurrencyId,
-                                              CurrencyInString = x.Currency.Name,
-                                              TypeInString = EnumHelper<EnumCoinTransactionType>.GetDisplayValue((EnumCoinTransactionType)x.Type),
-                                              StatusInEnum = x.Status.ToEnumCoinstransactionStatus(),
-                                              StatusInString = x.Status.ToEnumCoinstransactionStatus().ToString(),
-                                              Rate = x.Rate,
-                                              TxHashId = x.TxHashId,
-                                              TokenAmountInString = x.TokenAmount.GetValueOrDefault(0).ToString(Format.Amount)
-                                          });
+                                          .Select(x => Mapper.Map<CoinTransactionViewModel>(x));
 
             if (string.IsNullOrEmpty(searchBy))
             {
@@ -572,27 +555,7 @@ namespace CPL.Controllers
                                     .Query()
                                     .Include(x => x.Currency)
                                     .Where(x => /*x.SysUserId == sysUserId &&*/ x.Id == id)
-                                    .Select(x => new CoinTransactionViewModel
-                                    {
-                                        Id = x.Id,
-                                        CreatedDate = x.CreatedDate,
-                                        CreatedDateInString = x.CreatedDate.ToString(Format.DateTime),
-                                        FromWalletAddress = x.FromWalletAddress,
-                                        ToWalletAddress = x.ToWalletAddress,
-                                        CoinAmount = x.CoinAmount,
-                                        CoinAmountInString = x.CoinAmount.ToString(Format.Amount),
-                                        CurrencyId = x.CurrencyId,
-                                        CurrencyInEnum = (EnumCurrency)x.CurrencyId,
-                                        CurrencyInString = x.Currency.Name,
-                                        TypeInString = EnumHelper<EnumCoinTransactionType>.GetDisplayValue((EnumCoinTransactionType)x.Type),
-                                        StatusInEnum = x.Status.ToEnumCoinstransactionStatus(),
-                                        StatusInString = x.Status.ToEnumCoinstransactionStatus().ToString(),
-                                        Rate = x.Rate,
-                                        TxHashId = x.TxHashId,
-                                        TxHashReference = x.CurrencyId == 1 ? string.Format(CPLConstant.Etherscan, x.TxHashId) : x.CurrencyId == 2 ? string.Format(CPLConstant.BlockInfo, x.TxHashId) : "#",
-                                        TokenAmount = x.TokenAmount,
-                                        TokenAmountInString = x.TokenAmount.GetValueOrDefault(0).ToString(Format.Amount)
-                                    })
+                                    .Select(x => Mapper.Map<CoinTransactionViewModel>(x))
                                     .FirstOrDefault();
             return View(viewModel);
         }
