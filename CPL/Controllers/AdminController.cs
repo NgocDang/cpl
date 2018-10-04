@@ -2981,38 +2981,35 @@ namespace CPL.Controllers
             try
             {
                 // check exist
-                bool isExisted = false;
                 foreach (var detail in viewModel.PricePredictionCategoryDetailAdminViewModels)
                 {
                     if (_pricePredictionCategoryDetailService.Queryable().Any(x => x.LangId == detail.LangId && x.Name == detail.Name))
                     {
-                        isExisted = true;
-                        break;
+                        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExistingCategory") });
                     }
                 }
-                if (isExisted)
-                    return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExistingCategory") });
-                else
+
+                var pricePredictionCategory = new PricePredictionCategory();
+
+                _pricePredictionCategoryService.Insert(pricePredictionCategory);
+                _unitOfWork.SaveChanges();
+
+                foreach (var detail in viewModel.PricePredictionCategoryDetailAdminViewModels)
                 {
-                    var pricePredictionCategory = new PricePredictionCategory();
-
-                    _pricePredictionCategoryService.Insert(pricePredictionCategory);
-                    _unitOfWork.SaveChanges();
-
-                    foreach (var detail in viewModel.PricePredictionCategoryDetailAdminViewModels)
+                    _pricePredictionCategoryDetailService.Insert(new PricePredictionCategoryDetail
                     {
-                        _pricePredictionCategoryDetailService.Insert(new PricePredictionCategoryDetail
-                        {
-                            PricePredictionCategoryId = pricePredictionCategory.Id,
-                            LangId = detail.LangId,
-                            Name = detail.Name,
-                            Description = detail.Description,
-                        });
-                    }
-                    _unitOfWork.SaveChanges();
-                    return new JsonResult(new { success = true,
-                                                message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+                        PricePredictionCategoryId = pricePredictionCategory.Id,
+                        LangId = detail.LangId,
+                        Name = detail.Name,
+                        Description = detail.Description,
+                    });
                 }
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new
+                {
+                    success = true,
+                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully")
+                });
             }
             catch (Exception ex)
             {

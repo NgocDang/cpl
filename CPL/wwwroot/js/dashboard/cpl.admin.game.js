@@ -63,7 +63,7 @@
             var _this = this;
             if (isFormValid) {
                 var _postData = {};
-                $(_this).parents("#form-edit-price-prediction-category").find("div.tab-pane").each(function (i, e) {
+                $(_this).parent("#form-edit-price-prediction-category").find("div.tab-pane").each(function (i, e) {
                     _postData['PricePredictionCategoryDetailAdminViewModels[' + i + '].LangId'] = $(this).find("#lang-id").val();
                     _postData['PricePredictionCategoryDetailAdminViewModels[' + i + '].Name'] = $(this).find("#name").val();
                     _postData['PricePredictionCategoryDetailAdminViewModels[' + i + '].Description'] = $(this).find("#description").val();
