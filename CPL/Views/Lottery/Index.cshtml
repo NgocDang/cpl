@@ -39,7 +39,7 @@
                                     {
                                         @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
                                         {
-                                            <i data-toggle="popover" data-placement="top" data-html="true"  data-container="body" data-content="<b>More information</b><br/><p>Short description from NGOC</p>" class="la la-info-circle font-medium-5 font-weight-bold"></i>
+                                            <i data-toggle="popover" data-placement="top" data-html="true"  data-container="body" data-content="@detail.ShortDescription" class="la la-info-circle font-medium-5 font-weight-bold"></i>
                                         }
                                     }
                                 </span>
@@ -91,7 +91,7 @@
                             <a asp-controller="Lottery" asp-action="Detail" asp-route-id="@lottery.Id" asp-route-lottery-category-id="@lottery.LotteryCategory.Id" class="btn btn-circle white"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</span></a>
                             <p class="ticket-left-text text-dark">
                                 @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0")) &nbsp; 
-                                <i data-toggle="popover" data-placement="top" data-html="true" data-container="body" data-content="<b>More information</b><br/><p>Short description from NGOC</p>" class="la la-info-circle"></i>
+                                <i data-toggle="popover" data-placement="top" data-html="true" data-container="body" data-content="@detail.ShortDescription" class="la la-info-circle"></i>
                             </p>
                         }
                     }
