@@ -132,6 +132,10 @@ INSERT INTO LangDetail VALUES (2, N'AddNewCategory', N'新しいカテゴリを�
 INSERT INTO LangDetail VALUES (1, N'PricePredictionCategoryNameRequired', N'Please fill in price prediction category name');
 INSERT INTO LangDetail VALUES (2, N'PricePredictionCategoryNameRequired', N'価格予測カテゴリ名を記入してください');
 
+-- DamTran - PricePredictonSetting - 20181004
+INSERT INTO LangDetail VALUES (1, N'PricePredictionCategoryRequired', N'Please select price prediction category');
+INSERT INTO LangDetail VALUES (2, N'PricePredictionCategoryRequired', N'価格予測カテゴリを選択してください');
+
 --- Price Prediction Setting
 INSERT INTO LangDetail VALUES (1, N'PricePredictionSetting', N'Price Prediction Setting');
 INSERT INTO LangDetail VALUES (2, N'PricePredictionSetting', N'価格予測設定');
@@ -147,3 +151,4 @@ INSERT INTO LangDetail VALUES (2, N'ResultTimeInterval', N'ラッフルの時間
 
 INSERT INTO LangDetail VALUES (1, N'DividendRate', N'Dividend Rate');
 INSERT INTO LangDetail VALUES (2, N'DividendRate', N'配当率');
+

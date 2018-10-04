@@ -3011,7 +3011,9 @@ namespace CPL.Controllers
                 return new JsonResult(new
                 {
                     success = true,
-                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully")
+                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully"),
+                    id = pricePredictionCategory.Id,
+                    name = viewModel.PricePredictionCategoryDetailAdminViewModels.FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).Name
                 });
             }
             catch (Exception ex)
@@ -3651,6 +3653,41 @@ namespace CPL.Controllers
 
         #region PricePrediction
         [Permission(EnumRole.Admin)]
+        public IActionResult AddPricePredictionSetting()
+        {
+            var pricePredictionSetting = new PricePredictionSettingAdminViewModel();
+
+            var langs = _langService.Queryable()
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Name
+                })
+                .ToList();
+
+            foreach (var lang in langs)
+            {
+                pricePredictionSetting..Add(new PricePredictionSettingDetailAdminViewModel()
+                {
+                    LangId = lang.Id,
+                    LangName = lang.Name
+                });
+            }
+
+            pricePredictionSetting.PricePredictionCategoryAdminViewModels = _pricePredictionCategoryService
+                                                                            .Query()
+                                                                            .Include(x => x.PricePredictionCategoryDetails)
+                                                                            .Select(x => new PricePredictionCategoryAdminViewModel
+                                                                            {
+                                                                                Id = x.Id,
+                                                                                Name = x.PricePredictionCategoryDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Name,
+                                                                            })
+                                                                            .ToList();
+
+            return PartialView("_EditPricePredictionSetting", pricePredictionSetting);
+        }
+
+        [Permission(EnumRole.Admin)]
         public IActionResult PricePredictionSetting()
         {
             return View();
@@ -3732,6 +3769,7 @@ namespace CPL.Controllers
                         .ToList();
             }
         }
+
         #endregion
 
         #region Setting
