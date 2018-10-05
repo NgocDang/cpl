@@ -1999,5 +1999,16 @@ section#steps {
             transform: rotate(90deg);
         }
 }
-    
-        
+
+
+@media (max-width: 524px) {
+    section#faq {
+        margin-left: -0.25rem;
+        margin-right: -0.25rem;
+    }
+
+    section#faq ul{
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+    }
+}
