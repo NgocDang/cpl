@@ -263,7 +263,7 @@ namespace CPL.Controllers
             var skip = model.start;
 
             string sortBy = "";
-            string sortDir = "asc";
+            string sortDir = "desc";
 
             if (model.order != null)
             {
