@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using AutoMapper;
 using CPL.Common.CurrencyPairRateHelper;
 using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Domain;
+using CPL.Infrastructure.Interfaces;
 using CPL.Misc;
 using CPL.Misc.Enums;
 using CPL.Misc.Utils;
@@ -25,18 +28,21 @@ namespace CPL.Controllers
         private readonly IPricePredictionHistoryService _pricePredictionHistoryService;
         private readonly ISettingService _settingService;
         private readonly ICoinTransactionService _coinTransactionService;
+        private readonly IDataContextAsync _dataContextAsync;
 
         public HistoryController(
             ILotteryHistoryService lotteryHistoryService,
             ISysUserService sysUserService,
             ISettingService settingService,
             ICoinTransactionService coinTransactionService,
+            IDataContextAsync dataContextAsync,
             IPricePredictionHistoryService pricePredictionHistoryService)
         {
             this._lotteryHistoryService = lotteryHistoryService;
             this._sysUserService = sysUserService;
             this._pricePredictionHistoryService = pricePredictionHistoryService;
             this._settingService = settingService;
+            this._dataContextAsync = dataContextAsync;
             this._coinTransactionService = coinTransactionService;
         }
 
@@ -249,168 +255,43 @@ namespace CPL.Controllers
                 user = Mapper.Map<SysUserViewModel>(_sysUserService.Queryable().Where(x => x.Id == sysUserId).FirstOrDefault());
             else
                 user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            var searchBy = (model.search != null) ? model.search.value : null;
+            var searchBy = (model.search.value != null) ? model.search.value : "";
+            var pageSize = model.length;
+            var pageIndex = model.start + 1;
+
             var take = model.length;
             var skip = model.start;
 
             string sortBy = "";
-            bool sortDir = true;
+            string sortDir = "asc";
 
             if (model.order != null)
             {
                 // in this example we just default sort on the 1st column
                 sortBy = model.columns[model.order[0].column].data;
-                sortDir = model.order[0].dir.ToLower() == "desc";
+                sortDir = model.order[0].dir.ToLower();
             }
 
             // search the dbase taking into consideration table sorting and paging
-            if (string.IsNullOrEmpty(searchBy))
+            List<SqlParameter> storeParams = new List<SqlParameter>()
             {
-                filteredResultsCount = _lotteryHistoryService
-                        .Queryable()
-                        .Where(x => x.SysUserId == user.Id)
-                        .GroupBy(x => x.LotteryId)
-                        .Count()
-                        +
-                        _pricePredictionHistoryService
-                        .Queryable()
-                        .Where(x => x.SysUserId == user.Id)
-                        .Count();
+                new SqlParameter() {ParameterName = "@SysUserId", SqlDbType = SqlDbType.Int, Value= sysUserId},
+                new SqlParameter() {ParameterName = "@PageSize", SqlDbType = SqlDbType.Int, Value = pageSize},
+                new SqlParameter() {ParameterName = "@PageIndex", SqlDbType = SqlDbType.Int, Value = pageIndex},
+                new SqlParameter() {ParameterName = "@OrderColumn", SqlDbType = SqlDbType.NVarChar, Value = sortBy},
+                new SqlParameter() {ParameterName = "@OrderDirection", SqlDbType = SqlDbType.NVarChar, Value = sortDir},
+                new SqlParameter() {ParameterName = "@SearchValue", SqlDbType = SqlDbType.NVarChar, Value = searchBy},
+            };
 
-                totalResultsCount = _lotteryHistoryService
-                        .Queryable()
-                        .Where(x => x.SysUserId == user.Id)
-                        .GroupBy(x => x.LotteryId)
-                        .Count()
-                        +
-                        _pricePredictionHistoryService
-                        .Queryable()
-                        .Where(x => x.SysUserId == user.Id)
-                        .Count();
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure("[usp_GetGameHistory]", storeParams);
 
-                var lotteryHistory = _lotteryHistoryService.Query()
-                        .Include(x => x.Lottery)
-                        .Include(x => x.LotteryPrize)
-                        .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
-                        .GroupBy(x => x.LotteryId)
-                        .Select(y => new GameHistoryViewModel
-                        {
-                            CreatedDate = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault(),
-                            CreatedDateInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("yyyy/MM/dd"),
-                            CreatedTimeInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("HH:mm:ss"),
-                            GameType = EnumGameType.LOTTERY.ToString(),
-                            GameId = y.Select(x => x.LotteryId).FirstOrDefault(),
-                            Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : (y.Any(x => x.Result == EnumGameResult.LOSE.ToString()) ? EnumGameResult.LOSE.ToString() : string.Empty)),
-                            AmountInString = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("#,##0"),
-                            Amount = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()),
-                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)).ToString("#,##0"),
-                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)),
-                            BalanceInString = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("+#,##0;-#,##0") : string.Empty,
-                            Balance = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()) : 0,
-                        })
-                        .ToList();
+            DataTable table = dataSet.Tables[0];
+            var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
 
-                var pricePredictionHistory = _pricePredictionHistoryService
-                        .Queryable()
-                        .Where(x => x.SysUserId == user.Id)
-                        .Select(x => Mapper.Map<GameHistoryViewModel>(x))
-                        .ToList();
+            totalResultsCount = Convert.ToInt32((dataSet.Tables[1].Rows[0])["TotalCount"]);
+            filteredResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["FilteredCount"]);
 
-                return lotteryHistory.Concat(pricePredictionHistory).AsQueryable().OrderBy("CreatedDate", sortDir)
-                    .AsQueryable()
-                    .OrderBy(sortBy, sortDir)
-                    .Skip(skip)
-                    .Take(take)
-                    .ToList();
-            }
-            else
-            {
-                filteredResultsCount = _lotteryHistoryService.Query()
-                        .Include(x => x.Lottery)
-                        .Include(x => x.LotteryPrize)
-                        .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
-                        .GroupBy(x => x.LotteryId)
-                        .Select(y => new GameHistoryViewModel
-                        {
-                            CreatedDate = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault(),
-                            CreatedDateInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("yyyy/MM/dd"),
-                            CreatedTimeInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("HH:mm:ss"),
-                            GameType = EnumGameType.LOTTERY.ToString(),
-                            GameId = y.Select(x => x.LotteryId).FirstOrDefault(),
-                            Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : EnumGameResult.LOSE.ToString()),
-                            AmountInString = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("#,##0"),
-                            Amount = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()),
-                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)).ToString("#,##0"),
-                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)),
-                            BalanceInString = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("+#,##0;-#,##0") : string.Empty,
-                            Balance = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()) : 0,
-                        })
-                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
-                        .Count()
-                        +
-                        _pricePredictionHistoryService.Queryable()
-                        .Where(x => x.SysUserId == user.Id)
-                        .Select(x => Mapper.Map<GameHistoryViewModel>(x))
-                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.Replace("_", " ").ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
-                        .Count();
-
-                totalResultsCount = _lotteryHistoryService
-                        .Queryable()
-                        .Where(x => x.SysUserId == user.Id)
-                        .GroupBy(x => x.LotteryId)
-                        .Count()
-                        +
-                        _pricePredictionHistoryService
-                        .Queryable()
-                        .Where(x => x.SysUserId == user.Id)
-                        .Count();
-
-                var lotteryHistory = _lotteryHistoryService.Query()
-                        .Include(x => x.Lottery)
-                        .Include(x => x.LotteryPrize)
-                        .Where(x => x.SysUserId == user.Id)
-                        .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
-                        .GroupBy(x => x.LotteryId)
-                        .Select(y => new GameHistoryViewModel
-                        {
-                            CreatedDate = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault(),
-                            CreatedDateInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("yyyy/MM/dd"),
-                            CreatedTimeInString = y.Select(x => x.CreatedDate).OrderByDescending(x => x).FirstOrDefault().ToString("HH:mm:ss"),
-                            GameType = EnumGameType.LOTTERY.ToString(),
-                            GameId = y.Select(x => x.LotteryId).FirstOrDefault(),
-                            Result = y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true ? EnumGameResult.WIN.ToString() : (y.Any(x => x.Result == EnumGameResult.KYC_PENDING.ToString()) == true ? EnumGameResult.KYC_PENDING.ToString() : EnumGameResult.LOSE.ToString()),
-                            AmountInString = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("#,##0"),
-                            Amount = (y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()),
-                            AwardInString = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)).ToString("#,##0"),
-                            Award = (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString()).Sum(x => x.Value)),
-                            BalanceInString = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()).ToString("+#,##0;-#,##0") : string.Empty,
-                            Balance = (y.Any(x => x.Result == EnumGameResult.WIN.ToString()) == true || y.Any(x => x.Result == EnumGameResult.LOSE.ToString())) == true ?
-                                                    (y.Select(x => x).Where(x => x.Result == EnumGameResult.WIN.ToString() || x.Result == EnumGameResult.LOSE.ToString()).Sum(x => x.Value) - y.Select(x => x).Count() * y.Select(x => x.UnitPrice).FirstOrDefault()) : 0,
-                        })
-                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
-                        .ToList();
-
-                var pricePredictionHistory = _pricePredictionHistoryService
-                        .Queryable()
-                        .Where(x => x.SysUserId == user.Id)
-                        .Select(x => Mapper.Map<GameHistoryViewModel>(x))
-                        .Where(x => x.AmountInString.Contains(searchBy) || x.AwardInString.Contains(searchBy) || x.GameType.Replace("_", " ").ToLower().Contains(searchBy) || x.CreatedDateInString.Contains(searchBy) || x.Result.ToLower().Contains(searchBy) || x.Result.ToLower().Contains(searchBy))
-                        .Select(x => Mapper.Map<GameHistoryViewModel>(x))
-                        .ToList();
-
-                return lotteryHistory.Concat(pricePredictionHistory)
-                    .AsQueryable().OrderBy(sortBy, sortDir)
-                    .Skip(skip)
-                    .Take(take)
-                    .ToList();
-            }
+            return Mapper.Map<List<DataRow>, List<GameHistoryViewModel>>(rows);
         }
 
         [HttpPost]
