@@ -41,15 +41,15 @@
     </div>
     <div class="slider-action">
         <a asp-controller="Authentication" asp-action="Register" class="btn btn-primary shadow btn-slider op" tabindex="0">
-            <span><i class="la la-angle-double-right"></i></span>&nbsp&nbsp
-            <span> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BeTheFirstPerson")  </span>&nbsp&nbsp
-            <span><i class="la la-angle-double-left"></i></span>
+            <i class="la la-angle-double-right"></i>
+            <span> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BeTheFirstPerson")  </span>
+            <i class="la la-angle-double-left"></i>
         </a>
     </div>
 </section>
 
 <section id="type-of-games">
-    <div class="container mt-2 pb-2">
+    <div class="container py-lg-3 py-1">
         <div class="row">
             <a asp-controller="Lottery" asp-action="Index" class="mr-lg-0 mx-auto">
                 <div class="card-kind-of-games black" style="background-image: url('../../images/homepage_lottery_game_card.gif');">
@@ -77,16 +77,16 @@
 </section>
 
 <section id="random-games">
-    <div class="container mt-2">
+    <div class="container">
         <div class="row">
             @if (Model.RandomLotteryId.HasValue)
             {
-                <div class="col-lg-6 col-md-6 col-12 card card-random-games mx-0 px-0 border" id="lottery-game">
+                <div class="col-lg-6 col-md-6 col-12 card card-random-games mx-0 px-0 border mb-1" id="lottery-game">
                     <div class="card-content">
                         <img class="img-fluid" src="~/images/homepage_lottery_random_card.png" />
                         <div class="random-games-text-top-content text-dark">
-                            <p class="pl-5 text-center">@Html.Raw(Model.RandomLotteryTitle)</p>
-                            <p class="pl-3 text-center">@Html.Raw(Model.RandomLotteryDescription)</p>
+                            <p class="pl-3 text-center font-weight-bold">@Html.Raw(Model.RandomLotteryTitle)</p>
+                            <p class="pl-1 text-center">@Html.Raw(Model.RandomLotteryDescription)</p>
                         </div>
                     </div>
                     <div class="card-footer p-1">
@@ -106,12 +106,12 @@
             }
             @if (Model.ClosestPricePredictionId.HasValue)
             {
-                <div class="col-lg-6 col-md-6 col-12 card-random-games card mx-0 px-0 border" id="price-prediction-game">
+                <div class="col-lg-6 col-md-6 col-12 card-random-games card mx-0 px-0 border mb-1" id="price-prediction-game">
                     <div class="card-content">
                         <img class="img-fluid" src="~/images/homepage_price_prediction_random_card.png" />
                         <div class="random-games-text-top-content text-white">
-                            <p class="pl-5 text-center">@Html.Raw(Model.ClosestPricePredictionTitle)</p>
-                            <p class="pl-3 text-center">@Html.Raw(Model.ClosestPricePredictionDescription)</p>
+                            <p class="text-center font-weight-bold">@Html.Raw(Model.ClosestPricePredictionTitle)</p>
+                            <p class="text-center">@Html.Raw(Model.ClosestPricePredictionDescription)</p>
                         </div>
                     </div>
                     <div class="card-footer p-1">
@@ -171,8 +171,8 @@
                 <p class="font-large-1 mt-sm-2 mt-1 font-weight-bold text-dark">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Easy3Steps")</p>
             </div>
         </div>
-        <div class="row mx-n36">
-            <div class="col-sm-4 col-12 pl-0 px-2 pr-0">
+        <div class="row steps">
+            <div class="col-sm-3 col-12 px-0">
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body text-center pt-0">
@@ -192,20 +192,19 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <a class="btn-sm btn-primary d-block" asp-controller="Authentication" asp-action="Register">
-                                        <span>
-                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "RegisterFor30Seconds")
-                                        </span>
+                                    <a class="btn btn-primary d-block btn-step" asp-controller="Authentication" asp-action="Register">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "RegisterFor30Seconds")
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <span class="arrow"><i class="fas fa-caret-right font-large-4 text-primary next-arrow d-sm-block d-none"></i></span>
-                <i class="fas fa-caret-down font-large-4 text-primary down-arrow d-sm-none d-block"></i>
             </div>
-            <div class="col-sm-4 col-12 px-2 mt-sm-0 mt-2">
+            <div class="col-12">
+                <i class="fas fa-caret-right text-primary font-large-4"></i>
+            </div>
+            <div class="col-sm-3 col-12 px-0">
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body text-center pt-0">
@@ -227,20 +226,19 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <a class="btn-sm btn-primary d-block" asp-controller="Authentication" asp-action="Register">
-                                        <span>
-                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "RegisterFor30Seconds")
-                                        </span>
+                                    <a class="btn btn-primary d-block btn-step" asp-controller="Authentication" asp-action="Register">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "RegisterFor30Seconds")
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <span class="arrow"><i class="fas fa-caret-right font-large-4 text-primary next-arrow d-sm-block d-none"></i></span>
-                <i class="fas fa-caret-down font-large-4 text-primary down-arrow d-sm-none d-block"></i>
             </div>
-            <div class="col-sm-4 col-12 pl-0 px-2 mt-sm-0 mt-2">
+            <div class="col-12">
+                <i class="fas fa-caret-right text-primary font-large-4"></i>
+            </div>
+            <div class="col-sm-3 col-12 px-0">
                 <div class="card">
                     <div class="card-content">
                         <div class="card-body text-center pt-0">
@@ -262,10 +260,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <a class="btn-sm btn-primary d-block" asp-controller="Info" asp-action="HowToPlay">
-                                        <span>
-                                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlay")
-                                        </span>
+                                    <a class="btn btn-primary d-block btn-step" asp-controller="Info" asp-action="HowToPlay">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlay")
                                     </a>
                                 </div>
                             </div>
@@ -278,7 +274,7 @@
 </section>
 
 <section id="faq">
-    <div class="container mt-sm-5 mt-1">
+    <div class="container mt-2 mt-sm-4">
         <div class="row text-center justify-content-center top-content">
             <div class="col-lg-12 col-10">
                 <img src="~/images/home/top.png" class="img-fluid" />
@@ -286,31 +282,31 @@
             </div>
         </div>
         <div class="row my-2 pb-2">
-            <div class="col-lg-6 col-12 pl-0">
+            <div class="col-lg-6 col-12 pl-0 pr-0 pr-lg-1">
                 <ul>
                     @foreach (var faq in Model.FAQs.Take((Model.FAQs.Count() + 1) / 2))
                     {
                         <li class="px-1 mb-1 shadow-sm">
-                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq-@faq.Id">@faq.Question<i class="la la-minus"></i></a>
+                            <a data-toggle="collapse" class="py-05 pr-2 black collapsed" href="#faq-@faq.Id">@faq.Question<i class="la la-minus"></i></a>
                             <div id="faq-@faq.Id" class="collapse">
-                                <p class="font-small-3 mb-0 pt-05 pb-1 pr-2">
+                                <span class="font-small-3 pb-1 pr-2 d-block">
                                     @faq.Answer
-                                </p>
+                                </span>
                             </div>
                         </li>
                     }
                 </ul>
             </div>
-            <div class="col-lg-6 col-12 pr-0">
+            <div class="col-lg-6 col-12 pr-0 pl-0 pl-lg-1">
                 <ul>
                     @foreach (var faq in Model.FAQs.Skip((Model.FAQs.Count() + 1) / 2))
                     {
                         <li class="px-1 mb-1 shadow-sm">
-                            <a data-toggle="collapse" class="py-05 black collapsed" href="#faq-@faq.Id">@faq.Question<i class="la la-minus"></i></a>
+                            <a data-toggle="collapse" class="py-05 pr-2 black collapsed" href="#faq-@faq.Id">@faq.Question<i class="la la-minus"></i></a>
                             <div id="faq-@faq.Id" class="collapse">
-                                <p class="font-small-3 mb-0 pt-05 pb-1 pr-2">
+                                <span class="font-small-3 pb-1 pr-2 d-block">
                                     @faq.Answer
-                                </p>
+                                </span>
                             </div>
                         </li>
                     }
@@ -321,7 +317,7 @@
 </section>
 
 <section id="contact">
-    <div class="container mt-sm-4 mt-3">
+    <div class="container mt-2 mt-sm-4">
         <div class="row text-center">
             <div class="col-12">
                 <img src="~/images/home/top.png" class="img-fluid" />
@@ -333,9 +329,9 @@
                 <div class="card">
                     <div class="card-content">
                         <form id="form-message" class="form-horizontal" action="">
-                            <div class="card-body px-05">
-                                <div class="row mt-1 mb-1">
-                                    <div class="col-lg-4 col-12 px-05">
+                            <div class="card-body px-1">
+                                <div class="row">
+                                    <div class="col-lg-4 col-12 pr-lg-1 px-0">
                                         <fieldset class="form-group">
                                             <label class="font-weight-bold" for="Name">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</label>
                                             <input type="text" name="Name" class="form-control" maxlength="100" id="Subject" required>
@@ -344,7 +340,7 @@
                                             </div>
                                         </fieldset>
                                     </div>
-                                    <div class="col-lg-4 col-12 px-05">
+                                    <div class="col-lg-4 col-12 pr-lg-1 px-0">
                                         <fieldset class="form-group">
                                             <label class="font-weight-bold" for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
                                             <input type="email" name="Email" class="form-control" maxlength="50" id="Email" required>
@@ -353,7 +349,7 @@
                                             </div>
                                         </fieldset>
                                     </div>
-                                    <div class="col-lg-4 col-12 px-05">
+                                    <div class="col-lg-4 col-12 px-0">
                                         <fieldset class="form-group">
                                             <label class="font-weight-bold" for="PhoneNumber">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PhoneNumber")</label>
                                             <input type="text" name="PhoneNumber" class="form-control" maxlength="50" id="PhoneNumber" required>
@@ -364,7 +360,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12 px-05">
+                                    <div class="col-12 px-0">
                                         <fieldset class="form-group">
                                             <label class="font-weight-bold" for="Message">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Message")</label>
                                             <textarea name="Message" class="form-control" rows="7" id="Message" required></textarea>

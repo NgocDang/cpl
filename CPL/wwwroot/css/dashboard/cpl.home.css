@@ -64,8 +64,7 @@
         top: 30%;
         left: 50%;
         transform: translate(-50%, -30%);
-        font-size: 12px !important;
-        font-weight: bold;
+        font-size: 15px !important;
     }
 }
 
@@ -118,8 +117,7 @@
         top: 30%;
         left: 50%;
         transform: translate(-50%, -30%);
-        font-size: 10px !important;
-        font-weight: bold;
+        font-size: 12px !important;
     }
 }
 
@@ -193,6 +191,11 @@ input[type=number]::-webkit-outer-spin-button {
     left: 50%;
     transform: translate(-50%, 10%);
 }
+@media screen and (max-width: 320px) {
+    .down-arrow {
+        bottom: -8%;
+    }
+}
 
 .img-step {
     position: absolute;
@@ -222,12 +225,11 @@ input[type=number]::-webkit-outer-spin-button {
     left: 50%;
     transform: translate(-50%, -30%);
     font-size: 20px;
-    font-weight: bold;
 }
 
 #slide .slider-action {
     position: absolute;
-    width: 100%;
+    width: calc(100% - 0.5rem);
     z-index: 99;
 }
 
@@ -562,4 +564,80 @@ section#steps span.arrow {
     position: absolute;
     width: calc(100%);
     top: 35%;
+}
+
+.btn-step {
+    white-space:normal;
+}
+
+
+
+section#steps {
+}
+
+    section#steps .steps > div:nth-child(1), section#steps .steps > div:nth-child(3), section#steps .steps > div:nth-child(5) {
+        flex: 0 0 30%;
+        max-width: 30%;
+    }
+
+    section#steps .steps > div:nth-child(2), section#steps .steps > div:nth-child(4) {
+        flex: 0 0 5%;
+        max-width: 5%;
+    }
+
+        section#steps .steps > div:nth-child(2) > i::before, section#steps .steps > div:nth-child(4) > i::before {
+            top: 35%;
+            position: absolute;
+        }
+
+@media (max-width: 768px) {
+    section#steps .steps > div:nth-child(2) > i::before, section#steps .steps > div:nth-child(4) > i::before {
+        top: 35%;
+        left: 8px;
+        position: absolute;
+    }
+}
+
+@media (max-width: 320px) {
+    section#steps .steps > div:nth-child(2) > i::before, section#steps .steps > div:nth-child(4) > i::before {
+        top: -38px !important;
+    }
+}
+
+@media (max-width: 425px) {
+    section#steps .steps > div:nth-child(2) > i::before, section#steps .steps > div:nth-child(4) > i::before {
+        top: -38px !important;
+    }
+}
+
+@media (max-width: 524px) {
+    section#steps .steps > div:nth-child(1), section#steps .steps > div:nth-child(3), section#steps .steps > div:nth-child(5) {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    section#steps .steps > div:nth-child(2), section#steps .steps > div:nth-child(4) {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+        section#steps .steps > div:nth-child(2) > i::before, section#steps .steps > div:nth-child(4) > i::before {
+            top: -40px;
+            left: 48%;
+            position: absolute;
+            transform: rotate(90deg);
+        }
+}
+
+
+@media (max-width: 524px) {
+    section#faq {
+        margin-left: -0.25rem;
+        margin-right: -0.25rem;
+    }
+
+        section#faq ul {
+            margin-left: 0.25rem;
+            margin-right: 0.25rem;
+        }
 }
