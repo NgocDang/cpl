@@ -57,21 +57,27 @@
                 {
                     "data": "Award",
                     "render": function (data, type, full, meta) {
-                        return full.awardInString;
+                        if (full.result == "")
+                            return "";
+                        else 
+                            return full.awardInString;
                     }
                 },
                 {
                     "data": "Balance",
                     "render": function (data, type, full, meta) {
-                        return full.balanceInString;
+                        if (full.result == "")
+                            return "";
+                        else
+                            return full.balanceInString;
                     }
                 },
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        if (full.gameType == "LOTTERY")
+                        if (full.gameType == "Lottery")
                             return "<a href='/History/Lottery?createdDate=" + full.createdDate + "&lotteryId=" + full.gameId + "&sysUserId=" + $("#SysUserId").val() + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
-                        else if (full.gameType == "PRICE_PREDICTION")
+                        else if (full.gameType == "Price Prediction")
                             return "<a href='/History/PricePrediction?id=" + full.gameId + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
                     },
                     "orderable": false

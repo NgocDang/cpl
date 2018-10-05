@@ -18,7 +18,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-ALTER PROCEDURE [dbo].[usp_GetGameHistory] 
+CREATE PROCEDURE [dbo].[usp_GetGameHistory] 
 	-- Add the parameters for the stored procedure here
 	@SysUserId int,
 	@PageSize int,
@@ -97,14 +97,14 @@ WITH GameHistoryCTE AS
 		-------------
 		CASE WHEN SUM(CASE WHEN lh.Result is null THEN 1 ELSE 0 END) > 0
 			 THEN 0
-             ELSE SUM(lp.Value) - SUM(lot.UnitPrice)
+             ELSE SUM(ISNULL(lp.Value,0)) - SUM(lot.UnitPrice)
 		END AS Balance,
 
 		-----------
 		-- Award --
 		-----------
-		ISNULL(SUM(lp.Value), 0) AS Award,
-
+		SUM(ISNULL(lp.Value,0)) AS Award,
+		
 		--------------
 		-- GameType --
 		--------------
@@ -162,13 +162,13 @@ WITH GameHistoryCTE AS
 		-------------
 		CASE WHEN SUM(CASE WHEN pph.Result is null THEN 1 ELSE 0 END) > 0
 			 THEN 0
-             ELSE ISNULL(SUM(pph.TotalAward), 0) - SUM(pph.Amount)
+             ELSE SUM(ISNULL(pph.TotalAward,0)) - SUM(pph.Amount)
 		END AS Balance,
 
 		-----------
 		-- Award --
 		-----------
-		ISNULL(SUM(pph.TotalAward), 0) AS Award,
+		SUM(ISNULL(pph.TotalAward,0)) AS Award,
 
 		--------------
 		-- GameType --
