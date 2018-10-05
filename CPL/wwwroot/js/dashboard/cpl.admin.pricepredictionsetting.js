@@ -106,7 +106,7 @@
                     },
                     complete: function (data) {
                         $(_this).attr("disabled", false);
-                        $(_this).html($(_this).text() + " <i class='la la-plus font-size-15px'></i>");
+                        $(_this).html($(_this).text());
                     }
                 });
             };
@@ -114,7 +114,7 @@
         });
     },
     bindDoAddPricePredictionSetting: function () {
-        $('#modal').on('click', '.btn-do-add', function () {
+        $('#modal').on('click', '#edit-price-prediction .btn-do-add', function () {
             var _this = this;
 
             //Validate for category

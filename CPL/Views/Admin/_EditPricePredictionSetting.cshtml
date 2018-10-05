@@ -29,7 +29,9 @@
                     <div class="row">
                         <div class="col-lg-3 col-12 pt-1">
                             <fieldset class="form-group">
-                                <label for="@Html.DisplayNameFor(x => x.OpenBettingTime)" class="form-title">Open Betting Time</label>
+                                <label for="@Html.DisplayNameFor(x => x.OpenBettingTime)" class="form-title">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "OpenBettingTime")
+                                </label>
                                 <div class="input-group bootstrap-timepicker timepicker">
                                     <input id="openbettingtimepicker" type="text" class="form-control input-small" name="@Html.DisplayNameFor(x => x.OpenBettingTime)">
                                     <span class="input-group-prepend">
@@ -40,7 +42,9 @@
                         </div>
                         <div class="col-lg-3 col-12 pt-1">
                             <fieldset class="form-group">
-                                <label for="@Html.DisplayNameFor(x => x.CloseBettingTime)" class="form-title">Close Betting Time</label>
+                                <label for="@Html.DisplayNameFor(x => x.CloseBettingTime)" class="form-title">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CloseBettingTime")
+                                </label>
                                 <input id="closebettingtimepicker" type="text" class="form-control input-small" name="@Html.DisplayNameFor(x => x.CloseBettingTime)">
                             </fieldset>
                         </div>
@@ -49,7 +53,7 @@
                                 <label for="@Html.DisplayNameFor(x => x.HoldingTimeInterval)" class="form-title">Holding Time Interval</label>
                                 <input name="@Html.DisplayNameFor(x => x.HoldingTimeInterval)" id="holding-time-interval" type="number" min="1" value="@Model.HoldingTimeInterval" class="form-control" required autofocus />
                                 <div class="invalid-feedback">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketPriceRequired")
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HoldingTimeIntervalRequired")
                                 </div>
                             </fieldset>
                         </div>
@@ -57,19 +61,23 @@
                     <div class="row">
                         <div class="col-lg-6 col-12 pt-1">
                             <fieldset class="form-group">
-                                <label for="@Html.DisplayNameFor(x => x.ResultTimeInterval)" class="form-title">Result Time Interval</label>
+                                <label for="@Html.DisplayNameFor(x => x.ResultTimeInterval)" class="form-title">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTimeInterval")
+                                </label>
                                 <input name="@Html.DisplayNameFor(x => x.ResultTimeInterval)" id="result-time-interval" type="number" min="1" value="@Model.ResultTimeInterval" class="form-control" required autofocus />
                                 <div class="invalid-feedback">
-                                    Result Time Interval is Required
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTimeIntervalRequired")
                                 </div>
                             </fieldset>
                         </div>
                         <div class="col-lg-6 col-12 pt-1">
                             <fieldset class="form-group">
-                                <label for="@Html.DisplayNameFor(x => x.DividendRate)" class="form-title">Divided Rate</label>
+                                <label for="@Html.DisplayNameFor(x => x.DividendRate)" class="form-title">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DividendRate")
+                                </label>
                                 <input name="@Html.DisplayNameFor(x => x.DividendRate)" id="divided-rate" type="number" min="1" value="@Model.HoldingTimeInterval" class="form-control" required autofocus />
                                 <div class="invalid-feedback">
-                                    Divided Rate is required
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DividendRateRequired")
                                 </div>
                             </fieldset>
                         </div>
@@ -95,10 +103,10 @@
                                                     <input id="lang-id" type="hidden" value="@detail.LangId">
                                                     <div class="col-12">
                                                         <fieldset class="form-group">
-                                                            <label for="title" class="form-title">Title</label> <span> ( @detail.LangName )</span>
+                                                            <label for="title" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</label> <span> ( @detail.LangName )</span>
                                                             <input name="title" id="title" type="text" min="1" value="@detail.Title" class="form-control" required autofocus />
                                                             <div class="invalid-feedback">
-                                                                Title is required
+                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TitleRequired")
                                                             </div>
                                                         </fieldset>
                                                     </div>
