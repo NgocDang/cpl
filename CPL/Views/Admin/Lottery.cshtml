@@ -4,7 +4,6 @@
 }
 @section styles
     {
-<link href="~/css/dashboard/plugins/bootstrap-timepicker-gh-pages/bootstrap-timepicker.css" rel="stylesheet" />
     <link href="~/js/dashboard/plugins/lightbox/ekko-lightbox.css" rel="stylesheet" />
     <link href="~/css/dashboard/plugins/switchery/switchery.min.css" rel="stylesheet" />
     <link href="~/js/dashboard/plugins/intl-tel-input/css/intlTelInput.css" rel="stylesheet" />
@@ -57,7 +56,6 @@
                         </div>
                         <div class="card-footer text-right">
                             <button type="button" id="btn-add" class="btn btn-sm btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Add") <i class="la la-plus font-size-15px"></i></button>
-                            <button type="button" id="btn-add-pp" class="btn btn-sm btn-primary">Add Price Prediction <i class="la la-plus font-size-15px"></i></button>
                         </div>
                     </div>
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View")" id="view" />
@@ -78,7 +76,6 @@
 
 @section scripts
     {
-    <script src="~/js/dashboard/plugins/bootstrap-timepicker-gh-pages/bootstrap-timepicker.js"></script>
     <script src="~/js/dashboard/plugins/lightbox/ekko-lightbox.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/datatables.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
