@@ -3677,7 +3677,7 @@ namespace CPL.Controllers
                 });
             }
 
-            pricePredictionSetting.PricePredictionCategoryAdminViewModels = _pricePredictionCategoryService
+            pricePredictionSetting.PricePredictionCategories = _pricePredictionCategoryService
                                                                             .Query()
                                                                             .Include(x => x.PricePredictionCategoryDetails)
                                                                             .Select(x => new PricePredictionCategoryAdminViewModel

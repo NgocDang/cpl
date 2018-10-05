@@ -8,7 +8,7 @@ namespace CPL.Models
         public PricePredictionSettingAdminViewModel()
         {
             PricePredictionSettingDetails = new List<PricePredictionSettingDetailAdminViewModel>();
-            PricePredictionCategoryAdminViewModels = new List<PricePredictionCategoryAdminViewModel>();
+            PricePredictionCategories = new List<PricePredictionCategoryAdminViewModel>();
         }
 
         public int Id { get; set; }
@@ -26,6 +26,6 @@ namespace CPL.Models
         public string BettingTimeInString { get; set; }
 		
         public List<PricePredictionSettingDetailAdminViewModel> PricePredictionSettingDetails { get; set; }
-        public List<PricePredictionCategoryAdminViewModel> PricePredictionCategoryAdminViewModels { get; set; }
+        public List<PricePredictionCategoryAdminViewModel> PricePredictionCategories { get; set; }
     }
 }

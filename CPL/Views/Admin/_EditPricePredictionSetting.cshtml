@@ -1,11 +1,11 @@
 ﻿@model PricePredictionSettingAdminViewModel
 
-<div class="modal" tabindex="-1" role="dialog" id="edit-price-prediction" style="display: none;" aria-hidden="true">
+<div class="modal" tabindex="-1" role="dialog" id="edit-price-prediction-setting" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form id="form-edit-price-prediction" method="POST" action="#" class="needs-validation" novalidate="">
+            <form id="form-edit-price-prediction-setting" method="POST" action="#" class="needs-validation" novalidate="">
                 <div class="modal-header">
-                    <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</h5>
+                    <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionSetting")</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
                 </div>
                 <div class="modal-body">
@@ -15,7 +15,7 @@
                                 <label for="@Html.DisplayNameFor(x => x.PricePredictionCategoryId)" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionCategory")</label>
                                 <select data-value="@Model.PricePredictionCategoryId" name="@Html.DisplayNameFor(x => x.PricePredictionCategoryId)" id="price-prediction-category" class="selectpicker" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                     <option class="text-primary font-weight-bold" value="0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreateNewCategory")</option>
-                                    @foreach (var category in Model.PricePredictionCategoryAdminViewModels)
+                                    @foreach (var category in Model.PricePredictionCategories)
                                     {
                                         <option value="@category.Id">@category.Name</option>
                                     }
@@ -27,13 +27,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-3 col-12 pt-1">
+                        <div class="col-lg-3 col-12 pt-1 pr-0">
                             <fieldset class="form-group">
                                 <label for="@Html.DisplayNameFor(x => x.OpenBettingTime)" class="form-title">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "OpenBettingTime")
                                 </label>
                                 <div class="input-group bootstrap-timepicker timepicker">
-                                    <input id="openbettingtimepicker" type="text" class="form-control input-small" name="@Html.DisplayNameFor(x => x.OpenBettingTime)">
+                                    <input id="open-betting-time-picker" type="text" class="form-control input-small" name="@Html.DisplayNameFor(x => x.OpenBettingTime)">
                                     <span class="input-group-prepend">
                                         <i class="glyphicon glyphicon-time"></i>
                                     </span>
@@ -45,9 +45,22 @@
                                 <label for="@Html.DisplayNameFor(x => x.CloseBettingTime)" class="form-title">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CloseBettingTime")
                                 </label>
-                                <input id="closebettingtimepicker" type="text" class="form-control input-small" name="@Html.DisplayNameFor(x => x.CloseBettingTime)">
+                                <input id="close-betting-time-picker" type="text" class="form-control input-small" name="@Html.DisplayNameFor(x => x.CloseBettingTime)">
                             </fieldset>
                         </div>
+                        <div class="col-lg-6 col-12 pt-1">
+                            <fieldset class="form-group">
+                                <label for="@Html.DisplayNameFor(x => x.DividendRate)" class="form-title">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DividendRate")
+                                </label>
+                                <input name="@Html.DisplayNameFor(x => x.DividendRate)" id="divided-rate" type="number" min="1" max="100" value="@Model.DividendRate" class="form-control" required autofocus />
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DividendRateRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-6 col-12 pt-1">
                             <fieldset class="form-group">
                                 <label for="@Html.DisplayNameFor(x => x.HoldingTimeInterval)" class="form-title">Holding Time Interval</label>
@@ -57,8 +70,6 @@
                                 </div>
                             </fieldset>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-lg-6 col-12 pt-1">
                             <fieldset class="form-group">
                                 <label for="@Html.DisplayNameFor(x => x.ResultTimeInterval)" class="form-title">
@@ -70,19 +81,8 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <div class="col-lg-6 col-12 pt-1">
-                            <fieldset class="form-group">
-                                <label for="@Html.DisplayNameFor(x => x.DividendRate)" class="form-title">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DividendRate")
-                                </label>
-                                <input name="@Html.DisplayNameFor(x => x.DividendRate)" id="divided-rate" type="number" min="1" value="@Model.HoldingTimeInterval" class="form-control" required autofocus />
-                                <div class="invalid-feedback">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DividendRateRequired")
-                                </div>
-                            </fieldset>
-                        </div>
                     </div>
-                    <div id="price-prediction-multilanguage" class="tab-component">
+                    <div id="price-prediction-setting-multilanguage" class="tab-component">
                         <ul class="nav nav-tabs border-0">
                             @foreach (var detail in Model.PricePredictionSettingDetails)
                             {

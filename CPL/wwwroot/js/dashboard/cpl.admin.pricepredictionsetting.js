@@ -20,17 +20,17 @@
                 success: function (data) {
                     $("#modal").html(data);
                     $("#modal #price-prediction-category").selectpicker('refresh');
-                    $("#edit-price-prediction").modal("show");
+                    $("#edit-price-prediction-setting").modal("show");
                 },
                 complete: function (data) {
-                    $('#openbettingtimepicker').timepicker({
+                    $('#open-betting-time-picker').timepicker({
                         template: false,
                         showInputs: false,
                         minuteStep: 15,
                         showMeridian: false,
                         defaultTime: '00:00',
                     });
-                    $('#closebettingtimepicker').timepicker({
+                    $('#close-betting-time-picker').timepicker({
                         template: false,
                         showInputs: false,
                         minuteStep: 15,
@@ -56,7 +56,7 @@
                         $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
                     },
                     success: function (data) {
-                        $("#edit-price-prediction").modal("hide");
+                        $("#edit-price-prediction-setting").modal("hide");
                         $("#modal #modal-price-prediction-category").html(data);
                         $("#edit-price-prediction-category").modal("show");
                     },
@@ -96,7 +96,7 @@
                             toastr.success(data.message, 'Success!');
                             $("#edit-price-prediction-category").modal("hide");
                             $("#modal #modal-price-prediction-category").empty();
-                            $("#edit-price-prediction").modal("show");
+                            $("#edit-price-prediction-setting").modal("show");
                             $("#modal #price-prediction-category").append($("<option selected='selected'></option>").val(data.id).html(data.name));
                             $("#modal #price-prediction-category").selectpicker('refresh');
                         }
@@ -114,7 +114,7 @@
         });
     },
     bindDoAddPricePredictionSetting: function () {
-        $('#modal').on('click', '#edit-price-prediction .btn-do-add', function () {
+        $('#modal').on('click', '#edit-price-prediction-setting .btn-do-add', function () {
             var _this = this;
 
             //Validate for category
@@ -131,13 +131,13 @@
 
                 var _postData = {};
 
-                var _formData = $("#form-edit-price-prediction").serializeArray();
+                var _formData = $("#form-edit-price-prediction-setting").serializeArray();
                 _formData.forEach(function (element) {
                     if (element['name'] != 'Title') {
                         _postData[element['name']] = element['value'];
                     }
                 });
-                $("#price-prediction-multilanguage").find("div.tab-pane").each(function (i, e) {
+                $("#price-prediction-setting-multilanguage").find("div.tab-pane").each(function (i, e) {
                     _postData['PricePredictionSettingDetails[' + i + '].LangId'] = $(this).find("#lang-id").val();
                     _postData['PricePredictionSettingDetails[' + i + '].Title'] = $(this).find("#title").val();
                 });
@@ -152,7 +152,7 @@
                     data: _postData,
                     success: function (data) {
                         if (data.success) {
-                            $("#edit-price-prediction").modal("hide");
+                            $("#edit-price-prediction-setting").modal("hide");
                             toastr.success(data.message, 'Success!');
                             AdminPricePredictionSetting.PricePredictionSettingDataTable.ajax.reload();
                         } else {
