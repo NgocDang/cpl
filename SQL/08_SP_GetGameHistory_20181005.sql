@@ -18,7 +18,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].[usp_GetGameHistory] 
+ALTER PROCEDURE [dbo].[usp_GetGameHistory] 
 	-- Add the parameters for the stored procedure here
 	@SysUserId int,
 	@PageSize int,
@@ -112,7 +112,7 @@ WITH GameHistoryCTE AS
 
 	FROM LotteryHistory lh
 			join Lottery lot on lh.LotteryId = lot.Id
-			join LotteryPrize lp on lh.LotteryPrizeId = lp.Id
+			left join LotteryPrize lp on lh.LotteryPrizeId = lp.Id
 	WHERE lh.SysUserId = @SysUserId
 	GROUP BY lh.LotteryId
 
