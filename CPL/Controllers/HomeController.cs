@@ -72,7 +72,7 @@ namespace CPL.Controllers
             var closestPricePrediction = _pricePredictionService.Query()
                 .Include(x => x.PricePredictionSetting)
                     .ThenInclude(y => y.PricePredictionSettingDetails)
-                .Where(x => !x.UpdatedDate.HasValue && x.CloseBettingTime > DateTime.Now)
+                .Where(x => !x.PricePredictionSetting.IsDeleted && !x.UpdatedDate.HasValue && x.CloseBettingTime > DateTime.Now)
                 .OrderBy(x => x.CloseBettingTime)
                 .FirstOrDefault();
 

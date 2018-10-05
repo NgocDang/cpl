@@ -1,7 +1,40 @@
 ﻿var AdminPricePredictionSetting = {
-    PricePredictionSettingDataTable: null,
+    pricePredictionSettingDataTable: null,
     init: function () {
-        AdminPricePredictionSetting.PricePredictionSettingDataTable = AdminPricePredictionSetting.loadPricePredictionSettingDataTable();
+        AdminPricePredictionSetting.pricePredictionSettingDataTable = AdminPricePredictionSetting.loadPricePredictionSettingDataTable();
+        AdminPricePredictionSetting.bindDoDeletePricePredictionSetting();
+    },
+    bindDoDeletePricePredictionSetting: function () {
+        $("#dt-price-prediction-setting").on("click", ".btn-do-delete", function () {
+            var _this = this;
+            var result = confirm("Do you really want to delete this price prediction setting?");
+            if (result) {
+                $.ajax({
+                    url: "/Admin/DoDeletePricePredictionSetting/",
+                    type: "POST",
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
+                    },
+                    data: {
+                        id: $(_this).data().id
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            toastr.success(data.message, 'Success!');
+                            AdminPricePredictionSetting.pricePredictionSettingDataTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text());
+                    }
+                });
+            }
+            return false;
+        });
     },
     loadPricePredictionSettingDataTable: function () {
         return $('#dt-price-prediction-setting').DataTable({
@@ -72,7 +105,7 @@
                     "data": "Action",
                     "render": function (data, type, full, meta) {
                         var actions = " <button style='margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</button>";
-                        actions += "<button style='margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-delete'>" + $("#delete").val() + "</button>";
+                        actions += "<button style='margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-do-delete'>" + $("#delete").val() + "</button>";
                         return actions;
                     },
                     "orderable": false
