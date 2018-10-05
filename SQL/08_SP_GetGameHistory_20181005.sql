@@ -108,7 +108,7 @@ WITH GameHistoryCTE AS
 		--------------
 		-- GameType --
 		--------------
-		'LOTTERY' AS GameType
+		'Lottery' AS GameType
 
 	FROM LotteryHistory lh
 			join Lottery lot on lh.LotteryId = lot.Id
@@ -173,7 +173,7 @@ WITH GameHistoryCTE AS
 		--------------
 		-- GameType --
 		--------------
-		'PRICE_PREDICTION' AS GameType
+		'Price Prediction' AS GameType
 
 	FROM PricePredictionHistory pph
 	WHERE pph.SysUserId = @SysUserId
