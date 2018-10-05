@@ -49,7 +49,7 @@
 </section>
 
 <section id="type-of-games">
-    <div class="container mt-2 pb-2">
+    <div class="container py-lg-3 py-1">
         <div class="row">
             <a asp-controller="Lottery" asp-action="Index" class="mr-lg-0 mx-auto">
                 <div class="card-kind-of-games black" style="background-image: url('../../images/homepage_lottery_game_card.gif');">
@@ -77,11 +77,11 @@
 </section>
 
 <section id="random-games">
-    <div class="container mt-2">
+    <div class="container">
         <div class="row">
             @if (Model.RandomLotteryId.HasValue)
             {
-                <div class="col-lg-6 col-md-6 col-12 card card-random-games mx-0 px-0 border" id="lottery-game">
+                <div class="col-lg-6 col-md-6 col-12 card card-random-games mx-0 px-0 border mb-1" id="lottery-game">
                     <div class="card-content">
                         <img class="img-fluid" src="~/images/homepage_lottery_random_card.png" />
                         <div class="random-games-text-top-content text-dark">
@@ -106,7 +106,7 @@
             }
             @if (Model.ClosestPricePredictionId.HasValue)
             {
-                <div class="col-lg-6 col-md-6 col-12 card-random-games card mx-0 px-0 border" id="price-prediction-game">
+                <div class="col-lg-6 col-md-6 col-12 card-random-games card mx-0 px-0 border mb-1" id="price-prediction-game">
                     <div class="card-content">
                         <img class="img-fluid" src="~/images/homepage_price_prediction_random_card.png" />
                         <div class="random-games-text-top-content text-white">
@@ -274,7 +274,7 @@
 </section>
 
 <section id="faq">
-    <div class="container mt-3">
+    <div class="container mt-2 mt-sm-4">
         <div class="row text-center justify-content-center top-content">
             <div class="col-lg-12 col-10">
                 <img src="~/images/home/top.png" class="img-fluid" />
@@ -317,7 +317,7 @@
 </section>
 
 <section id="contact">
-    <div class="container mt-sm-4 mt-3">
+    <div class="container mt-2 mt-sm-4">
         <div class="row text-center">
             <div class="col-12">
                 <img src="~/images/home/top.png" class="img-fluid" />
