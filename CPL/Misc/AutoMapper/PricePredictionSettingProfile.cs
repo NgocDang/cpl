@@ -22,7 +22,7 @@ namespace CPL.Misc.AutoMapper
 
             CreateMap<PricePredictionSetting, PricePredictionSettingAdminViewModel>()
                 .ForMember(dest => dest.BettingTimeInString, opt => opt.MapFrom(src => src.OpenBettingTime.ToString(Format.Time) + " - " + src.CloseBettingTime.ToString(Format.Time)))
-                .ForMember(dest => dest.PricePredictionCategoryAdminViewModels, opt => opt.Ignore());
+                .ForMember(dest => dest.PricePredictionCategories, opt => opt.Ignore());
         }
     }
 }
