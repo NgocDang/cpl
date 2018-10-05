@@ -3740,7 +3740,7 @@ namespace CPL.Controllers
             return PartialView("_EditPricePredictionSetting", viewModel);
         }
 
-                [HttpPost]
+        [HttpPost]
         [Permission(EnumRole.Admin)]
         public JsonResult DoUpdatePricePredictionSetting(PricePredictionSettingAdminViewModel viewModel)
         {
