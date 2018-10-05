@@ -3727,7 +3727,7 @@ namespace CPL.Controllers
             var langs = _langService.Queryable().ToList();
             viewModel.PricePredictionSettingDetails.ForEach(x => x.LangName = langs.FirstOrDefault(y => y.Id == x.LangId).Name);
 
-            viewModel.PricePredictionCategoryAdminViewModels = _pricePredictionCategoryService
+            viewModel.PricePredictionCategories = _pricePredictionCategoryService
                                                                             .Query()
                                                                             .Include(x => x.PricePredictionCategoryDetails)
                                                                             .Select(x => new PricePredictionCategoryAdminViewModel

@@ -187,16 +187,15 @@
                     id: $(_this).data().id
                 },
                 success: function (data) {
-                    debugger;
                     $("#modal").html(data);
                     // Initiate price-prediction-category
                     if ($("#modal #price-prediction-category").data("value") != "") {
                         $("#modal #price-prediction-category option[value=" + $("#modal #price-prediction-category").data("value") + "]").attr("selected", "selected");
                     }
                     $("#modal #price-prediction-category").selectpicker('refresh');
-                    $("#edit-price-prediction").modal("show");
-                    $("#edit-price-prediction .btn-do-add").addClass("d-none");
-                    $("#edit-price-prediction .btn-do-edit").removeClass("d-none");
+                    $("#edit-price-prediction-setting").modal("show");
+                    $("#edit-price-prediction-setting .btn-do-add").addClass("d-none");
+                    $("#edit-price-prediction-setting .btn-do-edit").removeClass("d-none");
                 },
                 complete: function (data) {
                     AdminPricePredictionSetting.bindSettingTimePicker();
@@ -207,7 +206,7 @@
         });
     },
     bindDoUpdatePricePredictionSetting: function () {
-        $('#modal').on('click', '#edit-price-prediction .btn-do-edit', function () {
+        $('#modal').on('click', '#edit-price-prediction-setting .btn-do-edit', function () {
             var _this = this;
 
             //Validate for category
@@ -224,14 +223,13 @@
 
                 var _postData = {};
 
-                var _formData = $("#form-edit-price-prediction").serializeArray();
-                debugger;
+                var _formData = $("#form-edit-price-prediction-setting").serializeArray();
                 _formData.forEach(function (element) {
                     if (element['name'] != 'Title') {
                         _postData[element['name']] = element['value'];
                     }
                 });
-                $("#price-prediction-multilanguage").find("div.tab-pane").each(function (i, e) {
+                $("#price-prediction-setting-multilanguage").find("div.tab-pane").each(function (i, e) {
                     _postData['PricePredictionSettingDetails[' + i + '].LangId'] = $(this).find("#lang-id").val();
                     _postData['PricePredictionSettingDetails[' + i + '].Title'] = $(this).find("#title").val();
                 });
@@ -246,7 +244,7 @@
                     data: _postData,
                     success: function (data) {
                         if (data.success) {
-                            $("#edit-price-prediction").modal("hide");
+                            $("#edit-price-prediction-setting").modal("hide");
                             toastr.success(data.message, 'Success!');
                             AdminPricePredictionSetting.PricePredictionSettingDataTable.ajax.reload();
                         } else {
