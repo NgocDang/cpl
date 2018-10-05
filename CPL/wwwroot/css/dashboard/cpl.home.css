@@ -193,6 +193,11 @@ input[type=number]::-webkit-outer-spin-button {
     left: 50%;
     transform: translate(-50%, 10%);
 }
+@media screen and (max-width: 320px) {
+    .down-arrow {
+        bottom: -8%;
+    }
+}
 
 .img-step {
     position: absolute;
@@ -227,7 +232,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 #slide .slider-action {
     position: absolute;
-    width: 100%;
+    width: calc(100% - 0.5rem);
     z-index: 99;
 }
 
@@ -562,4 +567,8 @@ section#steps span.arrow {
     position: absolute;
     width: calc(100%);
     top: 35%;
+}
+
+.btn-step {
+    white-space:normal;
 }
