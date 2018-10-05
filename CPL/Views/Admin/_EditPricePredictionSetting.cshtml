@@ -1,0 +1,130 @@
+﻿@model PricePredictionSettingAdminViewModel
+
+<div class="modal" tabindex="-1" role="dialog" id="edit-price-prediction-setting" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="form-edit-price-prediction-setting" method="POST" action="#" class="needs-validation" novalidate="">
+                <div class="modal-header">
+                    <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionSetting")</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <fieldset class="form-group">
+                                <label for="@Html.DisplayNameFor(x => x.PricePredictionCategoryId)" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionCategory")</label>
+                                <select data-value="@Model.PricePredictionCategoryId" name="@Html.DisplayNameFor(x => x.PricePredictionCategoryId)" id="price-prediction-category" class="selectpicker" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                    <option class="text-primary font-weight-bold" value="0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreateNewCategory")</option>
+                                    @foreach (var category in Model.PricePredictionCategories)
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                </select>
+                                <div class="invalid-feedback" id="category-msg">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionCategoryRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-12 pt-1 pr-0">
+                            <fieldset class="form-group">
+                                <label for="@Html.DisplayNameFor(x => x.OpenBettingTime)" class="form-title">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "OpenBettingTime")
+                                </label>
+                                <div class="input-group bootstrap-timepicker timepicker">
+                                    <input id="open-betting-time-picker" type="text" class="form-control input-small" name="@Html.DisplayNameFor(x => x.OpenBettingTime)">
+                                    <span class="input-group-prepend">
+                                        <i class="glyphicon glyphicon-time"></i>
+                                    </span>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-3 col-12 pt-1">
+                            <fieldset class="form-group">
+                                <label for="@Html.DisplayNameFor(x => x.CloseBettingTime)" class="form-title">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CloseBettingTime")
+                                </label>
+                                <input id="close-betting-time-picker" type="text" class="form-control input-small" name="@Html.DisplayNameFor(x => x.CloseBettingTime)">
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-6 col-12 pt-1">
+                            <fieldset class="form-group">
+                                <label for="@Html.DisplayNameFor(x => x.DividendRate)" class="form-title">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DividendRate")
+                                </label>
+                                <input name="@Html.DisplayNameFor(x => x.DividendRate)" id="divided-rate" type="number" min="1" max="100" value="@Model.DividendRate" class="form-control" required autofocus />
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DividendRateRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-12 pt-1">
+                            <fieldset class="form-group">
+                                <label for="@Html.DisplayNameFor(x => x.HoldingTimeInterval)" class="form-title">Holding Time Interval</label>
+                                <input name="@Html.DisplayNameFor(x => x.HoldingTimeInterval)" id="holding-time-interval" type="number" min="1" value="@Model.HoldingTimeInterval" class="form-control" required autofocus />
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HoldingTimeIntervalRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-6 col-12 pt-1">
+                            <fieldset class="form-group">
+                                <label for="@Html.DisplayNameFor(x => x.ResultTimeInterval)" class="form-title">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTimeInterval")
+                                </label>
+                                <input name="@Html.DisplayNameFor(x => x.ResultTimeInterval)" id="result-time-interval" type="number" min="1" value="@Model.ResultTimeInterval" class="form-control" required autofocus />
+                                <div class="invalid-feedback">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTimeIntervalRequired")
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div id="price-prediction-setting-multilanguage" class="tab-component">
+                        <ul class="nav nav-tabs border-0">
+                            @foreach (var detail in Model.PricePredictionSettingDetails)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link font-medium-2 font-weight-bold px-2 border-0 @(detail.LangId == Context.Session.GetInt32("LangId").Value ? "active" : "" )" id="@detail.LangId-price-prediction-nav-tab" data-toggle="tab" href="#@detail.LangId-price-prediction-nav" aria-controls="@detail.LangId-price-prediction-nav" aria-expanded="true">@detail.LangName</a>
+                                </li>
+                            }
+
+                        </ul>
+                        <div class="tab-content mb-1">
+                            @foreach (var detail in Model.PricePredictionSettingDetails)
+                                {
+                                <div role="tabpanel" class="tab-pane @(detail.LangId == Context.Session.GetInt32("LangId").Value ? "active" : "" )" id="@detail.LangId-price-prediction-nav" aria-labelledby="@detail.LangId-price-prediction-nav-tab" aria-expanded="true">
+                                    <div class="card mb-1">
+                                        <div class="card-content">
+                                            <div class="card-body">
+                                                <div class="row pt-1">
+                                                    <input id="lang-id" type="hidden" value="@detail.LangId">
+                                                    <div class="col-12">
+                                                        <fieldset class="form-group">
+                                                            <label for="title" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</label> <span> ( @detail.LangName )</span>
+                                                            <input name="title" id="title" type="text" min="1" value="@detail.Title" class="form-control" required autofocus />
+                                                            <div class="invalid-feedback">
+                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TitleRequired")
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer text-right">
+                    <button type="button" class="btn btn-primary btn-sm btn-do-add">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Submit") <i class="la la-plus font-size-15px"></i></button>
+                    <button type="button" class="btn btn-secondary btn-sm btn-do-cancel" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="modal-price-prediction-category"></div>
