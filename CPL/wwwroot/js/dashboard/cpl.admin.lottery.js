@@ -44,7 +44,7 @@
                     $("#edit-price-prediction").modal("show");
                 },
                 complete: function (data) {
-                    $('#timepicker1').timepicker({
+                    $('#openbettingtimepicker').timepicker({
                         template: false,
                         showInputs: false,
                         minuteStep: 15,

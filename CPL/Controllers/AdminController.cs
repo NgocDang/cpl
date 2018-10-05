@@ -49,6 +49,7 @@ namespace CPL.Controllers
         private readonly IAnalyticService _analyticService;
         private readonly IIntroducedUsersService _introducedUsersService;
         private readonly IPricePredictionSettingService _pricePredictionSettingService;
+        private readonly IPricePredictionSettingDetailService _pricePredictionSettingDetailService;
         private readonly IAgencyService _agencyService;
         private readonly IPaymentService _paymentService;
         private readonly IGroupService _groupService;
@@ -81,6 +82,7 @@ namespace CPL.Controllers
             IAgencyTokenService agencyTokenService,
             IAgencyService agencyService,
             IPricePredictionSettingService pricePredictionSettingService,
+            IPricePredictionSettingDetailService pricePredictionSettingDetailService,
             IPaymentService paymentService,
             IGroupService groupService,
             ISliderService sliderService,
@@ -115,6 +117,7 @@ namespace CPL.Controllers
             this._sliderService = sliderService;
             this._sliderDetailService = sliderDetailService;
             this._pricePredictionSettingService = pricePredictionSettingService;
+            this._pricePredictionSettingDetailService = pricePredictionSettingDetailService;
 			this._pricePredictionCategoryService = pricePredictionCategoryService;
             this._pricePredictionCategoryDetailService = pricePredictionCategoryDetailService;
             this._dataContextAsync = dataContextAsync;
@@ -3667,7 +3670,7 @@ namespace CPL.Controllers
 
             foreach (var lang in langs)
             {
-                pricePredictionSetting..Add(new PricePredictionSettingDetailAdminViewModel()
+                pricePredictionSetting.PricePredictionSettingDetails.Add(new PricePredictionSettingDetailAdminViewModel()
                 {
                     LangId = lang.Id,
                     LangName = lang.Name
@@ -3685,6 +3688,30 @@ namespace CPL.Controllers
                                                                             .ToList();
 
             return PartialView("_EditPricePredictionSetting", pricePredictionSetting);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoAddPricePredictionSetting(PricePredictionSettingAdminViewModel viewModel)
+        {
+            try
+            {
+                var pricePredictionSetting = Mapper.Map<PricePredictionSetting>(viewModel);
+                pricePredictionSetting.CreatedDate = DateTime.Now;
+                _pricePredictionSettingService.Insert(pricePredictionSetting);
+                _unitOfWork.SaveChanges();
+
+                var pricePredictionSettingDetails = viewModel.PricePredictionSettingDetails.Select(x => Mapper.Map<PricePredictionSettingDetail>(x)).ToList();
+                pricePredictionSettingDetails.ForEach(x => x.PricePredictionSettingId = pricePredictionSetting.Id);
+                _pricePredictionSettingDetailService.InsertRange(pricePredictionSettingDetails);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
         }
 
         [Permission(EnumRole.Admin)]

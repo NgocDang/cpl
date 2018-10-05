@@ -6,9 +6,10 @@
         AdminPricePredictionSetting.bindAddPricePredictionSetting();
         AdminPricePredictionSetting.bindAddPricePredictionCategory();
         AdminPricePredictionSetting.bindDoAddPricePredictionCategory();
+        AdminPricePredictionSetting.bindDoAddPricePredictionSetting();
     },
     bindAddPricePredictionSetting: function () {
-        $("#lottery-game-management").on("click", "#btn-add-pp", function () {
+        $("#price-prediction-setting-game-management").on("click", "#btn-add", function () {
             var _this = this;
             $.ajax({
                 url: "/Admin/AddPricePredictionSetting",
@@ -22,17 +23,19 @@
                     $("#edit-price-prediction").modal("show");
                 },
                 complete: function (data) {
-                    $('#timepicker1').timepicker({
+                    $('#openbettingtimepicker').timepicker({
                         template: false,
                         showInputs: false,
                         minuteStep: 15,
                         showMeridian: false,
+                        defaultTime: '00:00',
                     });
-                    $('#timepicker2').timepicker({
+                    $('#closebettingtimepicker').timepicker({
                         template: false,
                         showInputs: false,
                         minuteStep: 15,
-                        showMeridian: false
+                        showMeridian: false,
+                        defaultTime: '00:00',
                     });
 
                     $(_this).attr("disabled", false);
@@ -110,6 +113,62 @@
             return false;
         });
     },
+    bindDoAddPricePredictionSetting: function () {
+        $('#modal').on('click', '.btn-do-add', function () {
+            var _this = this;
+
+            //Validate for category
+            var isCategoryValid = $("#price-prediction-category").val() != "";
+            if (isCategoryValid)
+                $("#category-msg").hide();
+            else
+                $("#category-msg").show();
+
+            var isFormValid = $(_this).parents("form")[0].checkValidity();
+            $(_this).parents("form").addClass('was-validated');
+
+            if (isFormValid && isCategoryValid) {
+
+                var _postData = {};
+
+                var _formData = $("#form-edit-price-prediction").serializeArray();
+                _formData.forEach(function (element) {
+                    if (element['name'] != 'Title') {
+                        _postData[element['name']] = element['value'];
+                    }
+                });
+                $("#price-prediction-multilanguage").find("div.tab-pane").each(function (i, e) {
+                    _postData['PricePredictionSettingDetails[' + i + '].LangId'] = $(this).find("#lang-id").val();
+                    _postData['PricePredictionSettingDetails[' + i + '].Title'] = $(this).find("#title").val();
+                });
+
+                $.ajax({
+                    url: "/Admin/DoAddPricePredictionSetting/",
+                    type: "POST",
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
+                    },
+                    data: _postData,
+                    success: function (data) {
+                        if (data.success) {
+                            $("#edit-price-prediction").modal("hide");
+                            toastr.success(data.message, 'Success!');
+                            AdminPricePredictionSetting.PricePredictionSettingDataTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text());
+                    }
+                });
+            }
+            return false;
+        });
+    },
+
     loadPricePredictionSettingDataTable: function () {
         return $('#dt-price-prediction-setting').DataTable({
             "processing": true,
