@@ -265,7 +265,6 @@
                     _postData['PricePredictionSettingDetails[' + i + '].LangId'] = $(this).find("#lang-id").val();
                     _postData['PricePredictionSettingDetails[' + i + '].Title'] = $(this).find("#title").val();
                 });
-
                 $.ajax({
                     url: "/Admin/DoUpdatePricePredictionSetting/",
                     type: "POST",
@@ -278,7 +277,7 @@
                         if (data.success) {
                             $("#edit-price-prediction-setting").modal("hide");
                             toastr.success(data.message, 'Success!');
-                            AdminPricePredictionSetting.PricePredictionSettingDataTable.ajax.reload();
+                            AdminPricePredictionSetting.pricePredictionSettingDataTable.ajax.reload();
                         } else {
                             toastr.error(data.message, 'Error!');
                         }
