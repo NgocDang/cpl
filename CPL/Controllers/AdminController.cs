@@ -49,6 +49,7 @@ namespace CPL.Controllers
         private readonly IAnalyticService _analyticService;
         private readonly IIntroducedUsersService _introducedUsersService;
         private readonly IPricePredictionSettingService _pricePredictionSettingService;
+        private readonly IPricePredictionSettingDetailService _pricePredictionSettingDetailService;
         private readonly IAgencyService _agencyService;
         private readonly IPaymentService _paymentService;
         private readonly IGroupService _groupService;
@@ -81,6 +82,7 @@ namespace CPL.Controllers
             IAgencyTokenService agencyTokenService,
             IAgencyService agencyService,
             IPricePredictionSettingService pricePredictionSettingService,
+            IPricePredictionSettingDetailService pricePredictionSettingDetailService,
             IPaymentService paymentService,
             IGroupService groupService,
             ISliderService sliderService,
@@ -115,6 +117,7 @@ namespace CPL.Controllers
             this._sliderService = sliderService;
             this._sliderDetailService = sliderDetailService;
             this._pricePredictionSettingService = pricePredictionSettingService;
+            this._pricePredictionSettingDetailService = pricePredictionSettingDetailService;
 			this._pricePredictionCategoryService = pricePredictionCategoryService;
             this._pricePredictionCategoryDetailService = pricePredictionCategoryDetailService;
             this._dataContextAsync = dataContextAsync;
@@ -3011,7 +3014,9 @@ namespace CPL.Controllers
                 return new JsonResult(new
                 {
                     success = true,
-                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully")
+                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully"),
+                    id = pricePredictionCategory.Id,
+                    name = viewModel.PricePredictionCategoryDetailAdminViewModels.FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).Name
                 });
             }
             catch (Exception ex)
@@ -3650,6 +3655,65 @@ namespace CPL.Controllers
         #endregion
 
         #region PricePrediction
+        [Permission(EnumRole.Admin)]
+        public IActionResult AddPricePredictionSetting()
+        {
+            var pricePredictionSetting = new PricePredictionSettingAdminViewModel();
+
+            var langs = _langService.Queryable()
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Name
+                })
+                .ToList();
+
+            foreach (var lang in langs)
+            {
+                pricePredictionSetting.PricePredictionSettingDetails.Add(new PricePredictionSettingDetailAdminViewModel()
+                {
+                    LangId = lang.Id,
+                    LangName = lang.Name
+                });
+            }
+
+            pricePredictionSetting.PricePredictionCategories = _pricePredictionCategoryService
+                                                                            .Query()
+                                                                            .Include(x => x.PricePredictionCategoryDetails)
+                                                                            .Select(x => new PricePredictionCategoryAdminViewModel
+                                                                            {
+                                                                                Id = x.Id,
+                                                                                Name = x.PricePredictionCategoryDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Name,
+                                                                            })
+                                                                            .ToList();
+
+            return PartialView("_EditPricePredictionSetting", pricePredictionSetting);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoAddPricePredictionSetting(PricePredictionSettingAdminViewModel viewModel)
+        {
+            try
+            {
+                var pricePredictionSetting = Mapper.Map<PricePredictionSetting>(viewModel);
+                pricePredictionSetting.CreatedDate = DateTime.Now;
+                _pricePredictionSettingService.Insert(pricePredictionSetting);
+                _unitOfWork.SaveChanges();
+
+                var pricePredictionSettingDetails = viewModel.PricePredictionSettingDetails.Select(x => Mapper.Map<PricePredictionSettingDetail>(x)).ToList();
+                pricePredictionSettingDetails.ForEach(x => x.PricePredictionSettingId = pricePredictionSetting.Id);
+                _pricePredictionSettingDetailService.InsertRange(pricePredictionSettingDetails);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
         [Permission(EnumRole.Admin)]
         public IActionResult PricePredictionSetting()
         {
