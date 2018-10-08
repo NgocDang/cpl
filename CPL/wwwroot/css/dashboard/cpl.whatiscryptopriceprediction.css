@@ -1,0 +1,25 @@
+﻿@font-face {
+    font-family: 'kozgopro-bold';
+    src: url('../fonts/kozuka/kozgopro-bold.otf') format('opentype');
+}
+
+card-header {
+    position: relative;
+    text-align: center;
+    color: white;
+    font-family: 'kozgopro-bold';
+}
+
+.centered {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.centered {
+    font-size: 15px;
+    font-weight: bold;
+    text-shadow: 2px 2px 10px black;
+}
