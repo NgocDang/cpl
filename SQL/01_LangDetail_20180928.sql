@@ -169,6 +169,9 @@ INSERT INTO LangDetail VALUES (1, N'OpenBettingTime', N'Open betting time');
 INSERT INTO LangDetail VALUES (2, N'OpenBettingTime', N'オープンベッティング時間');
 
 -- What is crypto lottery----
+INSERT INTO LangDetail VALUES (1, N'WhatIsCryptoLotteryMainTitle', N'What is crypto lottery?');
+INSERT INTO LangDetail VALUES (2, N'WhatIsCryptoLotteryMainTitle', N'仮想通貨宝クジとは？');
+
 INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryMainContent', N'<p>仮想通貨宝クジとは、<span class="text-warning">ブロックチェーン</span>とスマートコ<span class="text-warning">ントラク</span>ト技術が活用された宝くじプラットホームです。</p>
                                     <p>ブロックチェーン技術により全てのクジの履歴をトランザクションで確認する事が出来るようにし、透明性の高い宝くじを実現されております。</p>
                                     <p class="text-muted font-size-13px">＊お客様の名前などの個人情報は一切公開されませんのでご安心ください。</p>
