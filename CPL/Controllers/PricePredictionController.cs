@@ -18,6 +18,7 @@ using Quartz;
 using CPL.Misc.Quartz;
 using CPL.Misc.Quartz.Jobs;
 using CPL.Misc.Quartz.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace CPL.Controllers
 {
@@ -79,8 +80,17 @@ namespace CPL.Controllers
 
             viewModel.PricePredictionTabs = _pricePredictionService.Query()
                 .Include(x => x.PricePredictionSetting)
+                .Include(x => x.PricePredictionDetails)
                 .Where(x => !x.PricePredictionSetting.IsDeleted && x.ResultTime > DateTime.Now && x.PricePredictionSetting.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
-                .Select(x => Mapper.Map<PricePredictionTab>(x)).OrderBy(x => x.ResultTime.ToString("HH:mm"))
+                .OrderBy(x => x.ResultTime.ToString("HH:mm"))
+                .Select(x => new PricePredictionTab {
+                    Id = x.Id,
+                    ResultTime = x.ResultTime,
+                    ToBeComparedTime = x.ToBeComparedTime,
+                    CloseBettingTime = x.CloseBettingTime,
+                    IsDisabled = (x.CloseBettingTime < DateTime.Now),
+                    Title = x.PricePredictionDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Title
+                })
                 .ToList();
 
             // Move first tab to the end of the array

@@ -17,7 +17,9 @@ namespace CPL.PredictionGameService.Misc
         public IContainer Container { get; }
         public IUnitOfWorkAsync UnitOfWork { get; }
         public ISysUserService SysUserService { get; }
+        public ILangService LangService { get; }
         public IPricePredictionService PricePredictionService { get; }
+        public IPricePredictionDetailService PricePredictionDetailService { get; }
         public IPricePredictionHistoryService PricePredictionHistoryService { get; }
         public ICoinTransactionService CoinTransactionService { get; }
         public ISettingService SettingService { get; }
@@ -54,7 +56,9 @@ namespace CPL.PredictionGameService.Misc
             this.Container = builder.Build();
             this.UnitOfWork = this.Container.Resolve<IUnitOfWorkAsync>();
             this.SysUserService = this.Container.Resolve<ISysUserService>();
+            this.LangService = this.Container.Resolve<ILangService>();
             this.PricePredictionService = this.Container.Resolve<IPricePredictionService>();
+            this.PricePredictionDetailService = this.Container.Resolve<IPricePredictionDetailService>();
             this.PricePredictionHistoryService = this.Container.Resolve<IPricePredictionHistoryService>();
             this.CoinTransactionService = this.Container.Resolve<ICoinTransactionService>();
             this.SettingService = this.Container.Resolve<ISettingService>();
