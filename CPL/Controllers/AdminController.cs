@@ -3761,12 +3761,12 @@ namespace CPL.Controllers
                 filteredResultsCount =
                     totalResultsCount =
                         _pricePredictionSettingService.Queryable()
-                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted)
                         .Count();
 
                 return _pricePredictionSettingService.Query()
                             .Include(x => x.PricePredictionSettingDetails)
-                            .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
+                            .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted)
                             .Select(x => Mapper.Map<PricePredictionSettingAdminViewModel>(x))
                             .OrderBy(sortBy, sortDir)
                             .Skip(skip)
@@ -3777,17 +3777,17 @@ namespace CPL.Controllers
             {
                 filteredResultsCount = _pricePredictionSettingService.Query()
                         .Include(x => x.PricePredictionSettingDetails)
-                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE &&
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted &&
                                     (x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.PricePredictionSettingDetails.Any(y => y.Title.Contains(searchBy))))
                         .Count();
 
                 totalResultsCount = _pricePredictionSettingService.Queryable()
-                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted)
                         .Count();
 
                 return _pricePredictionSettingService.Query()
                         .Include(x => x.PricePredictionSettingDetails)
-                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE &&
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted && 
                                     (x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.PricePredictionSettingDetails.Any(y => y.Title.Contains(searchBy))))
                         .Select(x => Mapper.Map<PricePredictionSettingAdminViewModel>(x))
                         .OrderBy(sortBy, sortDir)
@@ -3797,6 +3797,25 @@ namespace CPL.Controllers
             }
         }
 
+        [Permission(EnumRole.Admin)]
+        [HttpPost]
+        public IActionResult DoDeletePricePredictionSetting(int id)
+        {
+            try
+            {
+                var pricePredictionSetting = _pricePredictionSettingService.Queryable()
+                    .FirstOrDefault(x => x.Id == id);
+
+                pricePredictionSetting.IsDeleted = true;
+                _pricePredictionSettingService.Update(pricePredictionSetting);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
         #endregion
 
         #region Setting

@@ -1,7 +1,7 @@
 ﻿var StandardAffiliate = {
-    Tier1StandardAffiliateDataTable: null,
-    Tier2StandardAffiliateDataTable: null,
-    Tier3StandardAffiliateDataTable: null,
+    tier1StandardAffiliateDataTable: null,
+    tier2StandardAffiliateDataTable: null,
+    tier3StandardAffiliateDataTable: null,
     init: function () {
         StandardAffiliate.bindCopy();
 
@@ -92,7 +92,7 @@
                 StandardAffiliate.loadStatistics($("#tier-1-nav"));
             }
             if ($("#tier-1-nav table tbody").length == 0) {
-                StandardAffiliate.Tier1StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
+                StandardAffiliate.tier1StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
             }
         });
     },
@@ -102,7 +102,7 @@
                 StandardAffiliate.loadStatistics($("#tier-2-nav"));
             }
             if ($("#tier-2-nav table tbody").length == 0) {
-                StandardAffiliate.Tier2StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
+                StandardAffiliate.tier2StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
             }
         });
     },
@@ -112,7 +112,7 @@
                 StandardAffiliate.loadStatistics($("#tier-3-nav"));
             }
             if ($("#tier-3-nav table tbody").length == 0) {
-                StandardAffiliate.Tier3StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
+                StandardAffiliate.tier3StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
             }
         });
     },
@@ -156,24 +156,24 @@
         $("#tier-1-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 StandardAffiliate.loadStatistics($("#tier-1-nav"));
-                StandardAffiliate.Tier1StandardAffiliateDataTable.destroy();
-                StandardAffiliate.Tier1StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
+                StandardAffiliate.tier1StandardAffiliateDataTable.destroy();
+                StandardAffiliate.tier1StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
             });
     },
     bindTier2TimeRangeChange: function () {
         $("#tier-2-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 StandardAffiliate.loadStatistics($("#tier-2-nav"));
-                StandardAffiliate.Tier2StandardAffiliateDataTable.destroy();
-                StandardAffiliate.Tier2StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
+                StandardAffiliate.tier2StandardAffiliateDataTable.destroy();
+                StandardAffiliate.tier2StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
             });
     },
     bindTier3TimeRangeChange: function () {
         $("#tier-3-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 StandardAffiliate.loadStatistics($("#tier-3-nav"));
-                StandardAffiliate.Tier3StandardAffiliateDataTable.destroy();
-                StandardAffiliate.Tier3StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
+                StandardAffiliate.tier3StandardAffiliateDataTable.destroy();
+                StandardAffiliate.tier3StandardAffiliateDataTable = StandardAffiliate.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
             });
     },
     loadTier1StatisticsChart: function (tabPaneElement) {
