@@ -34,7 +34,7 @@
         </div>
         <div class="content-body">
             <h6 class="my-2 text-uppercase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionHistory")</h6>
-            @await Component.InvokeAsync("PricePredictionHistory", new PricePredictionHistoryViewComponentViewModel { SysUserId = Model.SysUserId})
+            @await Component.InvokeAsync("PricePredictionHistory", new PricePredictionHistoryViewComponentViewModel { SysUserId = Model.SysUserId })
         </div>
     </div>
 </div>
@@ -46,5 +46,6 @@
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js"></script>
+    <script src="~/js/dashboard/cpl.utils.js"></script>
     <script src="~/js/dashboard/cpl.pricepredictionhistory.viewcomponent.js" asp-append-version="true"></script>
 }

@@ -8,15 +8,15 @@
             </div>
             <div class="col-lg-7 col-12">
                 <div class="row">
-                    <div class="col-lg-4 col-6 black">
+                    @*<div class="col-lg-4 col-6 black">
                         <p class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PartnerCompanies")</p>
                         <ul class="pl-0 partners text-left">
                             <li><a href="#" class="black">Company X </a></li>
                             <li><a href="#" class="black">Company Y </a></li>
                             <li><a href="#" class="black">Company Z </a></li>
                         </ul>
-                    </div>
-                    <div class="col-lg-8 col-6">
+                    </div>*@
+                    <div class="col-lg-12">
                         <div class="row">
                             <div class="col-lg-6 col-12 black">
                                 <p class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AboutUs")</p>
@@ -24,14 +24,13 @@
                                     <li><a href="#faq" class="black">FAQ </a></li>
                                     <li><a asp-controller="Info" asp-action="TermsOfService" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</a></li>
                                     <li><a asp-controller="Info" asp-action="PrivacyPolicy" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</a></li>
-                                    <li><a asp-controller="Info" asp-action="License" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "License")</a></li>
+                                    @*<li><a asp-controller="Info" asp-action="License" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "License")</a></li>*@
                                 </ul>
                             </div>
                             <div class="col-lg-6 col-12 black">
                                 <p class="d-lg-block d-none">&nbsp;</p>
                                 <ul class="pl-0 links text-left">
                                     <li><a asp-controller="Info" asp-action="Affiliate" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")</a></li>
-                                    <li><a asp-controller="Info" asp-action="WhatIsBitcoin" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsBitcoin")</a></li>
                                     <li><a asp-controller="Info" asp-action="PersonalInformationProtection" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PersonalInformationProtection")</a></li>
                                     <li><a asp-controller="Contact" asp-action="Index" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")</a></li>
                                 </ul>

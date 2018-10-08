@@ -157,22 +157,22 @@
                     <li>
                         <a class="dropdown-item" asp-controller="Info" asp-action="WhatIsCryptoPricePrediction"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction")</a>
                     </li>
-                    <li>
+                    @*<li>
                         <a class="dropdown-item" asp-controller="Info" asp-action="WhatIsCryptoCasino"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoCasino")</a>
-                    </li>
+                    </li>*@
                     <li>
                         <a class="dropdown-item" asp-controller="Info" asp-action="HowToPlay"><i class="font-small-3 la la-angle-right"></i>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlay")</a>
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
+            @*<li class="nav-item">
                 <a class="nav-link text-bold" asp-controller="Info" asp-action="Campaign">
                     <i class="la la la-bullhorn"></i>
                     <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Campaign")</span>
                 </a>
-            </li>
+            </li>*@
             <li class="nav-item">
-                <a class="nav-link" href="#faq">
+                <a class="nav-link" href="/Home/Index#faq">
                     <i class="la la-question"></i>
                     <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FAQ")</span>
                 </a>
