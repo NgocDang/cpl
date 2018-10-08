@@ -3869,6 +3869,7 @@ namespace CPL.Controllers
                     .FirstOrDefault(x => x.Id == id);
 
                 pricePredictionSetting.IsDeleted = true;
+                pricePredictionSetting.UpdatedDate = DateTime.Now;
                 _pricePredictionSettingService.Update(pricePredictionSetting);
                 _unitOfWork.SaveChanges();
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
