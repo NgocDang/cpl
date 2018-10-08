@@ -1,7 +1,10 @@
-﻿
-@{
+﻿@{
     Layout = "_Layout";
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoLottery");
+}
+
+@section styles {
+    <link href="~/css/dashboard/cpl.whatiscryptolottery.css" rel="stylesheet" />
 }
 
 <div class="app-content container center-layout mt-2 px-0">
@@ -27,7 +30,77 @@
             <div class="col-lg-12 col-md-12">
                 <div class="card">
                     <div class="card-content">
-                        <div class="card-body">
+                        <div class="card-header p-0">
+                            <img class="img-fluid" src="~/images/info/what_is_lottery_banner.png" />
+                            <div class="centered">仮想通貨宝クジとは？</div>
+                        </div>
+                        <div class="card-body p-0 py-05 px-05">
+                            <div class="row">
+                                <div class="col-12 py-3 black text-center">
+                                    <p>仮想通貨宝クジとは、<span class="text-warning">ブロックチェーン</span>とスマートコ<span class="text-warning">ントラク</span>ト技術が活用された宝くじプラットホームです。</p>
+                                    <p>ブロックチェーン技術により全てのクジの履歴をトランザクションで確認する事が出来るようにし、透明性の高い宝くじを実現されております。</p>
+                                    <p class="text-muted font-size-13px">＊お客様の名前などの個人情報は一切公開されませんのでご安心ください。</p>
+                                    <br />
+                                    <p>また、スマートコントラクトにより、クジの発行や管理に一切人間の手が加える事ができないので、不正や外的要因（ハッキングなど）からシステムを守り、公正で安全な宝くじゲームをユーザーの皆様に提供いたしております。</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-12">
+                                    <div class="card sub-card">
+                                        <div class="card-header">
+                                            <p class="up">
+                                                最高当選
+                                            </p>
+                                            <p class="down">
+                                                100BTC
+                                            </p>
+                                        </div>
+                                        <div class="card-body black">
+                                            <p>
+                                                0.0001BTCから購入ができ <br />
+                                                最高当選額は過去最高の１００ <br />
+                                                BTCをご用意しております。
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-12">
+                                    <div class="card sub-card">
+                                        <div class="card-header">
+                                            <p class="up">
+                                                最大還元率
+                                            </p>
+                                            <p class="down">
+                                                80％
+                                            </p>
+                                        </div>
+                                        <div class="card-body black">
+                                            <p>
+                                                人件費がかからないからこそ出来る <br />
+                                                業界NO.1の還元率！
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-12">
+                                    <div class="card sub-card">
+                                        <div class="card-header">
+                                            <p class="up">
+                                                業界トップクラスの
+                                            </p>
+                                            <p class="down">
+                                                安全性！
+                                            </p>
+                                        </div>
+                                        <div class="card-body black">
+                                            <p>
+                                                ブロックチェーンとスマートコントラクト技術で、不正とハッキングからシステムを守ります！
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

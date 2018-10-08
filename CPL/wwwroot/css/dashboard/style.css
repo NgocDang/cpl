@@ -1940,4 +1940,7 @@ table.dataTable td:first-child {
     background-color: #fffdf5;
 }
 
-
+.mx-02 {
+    margin-left: 2px;
+    margin-right: 2px;
+}
