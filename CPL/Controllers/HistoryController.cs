@@ -49,13 +49,15 @@ namespace CPL.Controllers
         #region Lottery History
 
         [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
-        public IActionResult Lottery(DateTime? createdDate, int? lotteryId, int sysUserId)
+        public IActionResult Lottery(DateTime? createdDate, int? lotteryId, int? sysUserId)
         {
+            var userid = (sysUserId == null) ? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id : sysUserId.Value;
+
             var viewModel = new LotteryHistoryIndexViewModel
             {
                 CreatedDate = createdDate,
                 LotteryId = lotteryId,
-                SysUserId = sysUserId
+                SysUserId = userid
             };
             return View(viewModel);
         }
@@ -445,20 +447,21 @@ namespace CPL.Controllers
         #region Price Prediction History
 
         [Permission(EnumRole.User)]
-        public IActionResult PricePrediction()
+        public IActionResult PricePrediction(int? sysUserId)
         {
-            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            var viewModel = new PricePredictionHistoryIndexViewModel { SysUserId = user.Id };
+            var userid = (sysUserId == null) ? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id : sysUserId.Value;
+
+            var viewModel = new PricePredictionHistoryIndexViewModel { SysUserId = userid };
             return View(viewModel);
         }
 
         [Permission(EnumRole.User, EnumEntity.PricePredictionHistory, EnumAction.Read)]
-        public JsonResult SearchPricePredictionHistory(DataTableAjaxPostModel viewModel, int? sysUserId)
+        public JsonResult SearchPricePredictionHistory(DataTableAjaxPostModel viewModel, int? sysUserId, int? pricePredictionId)
         {
             // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = SearchPricePredictionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, sysUserId);
+            var res = SearchPricePredictionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount, sysUserId, pricePredictionId);
             return Json(new
             {
                 // this is what datatables wants sending back
@@ -470,7 +473,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.User, EnumEntity.PricePredictionHistory, EnumAction.Read)]
-        public IList<PricePredictionHistoryViewModel> SearchPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? sysUserId)
+        public IList<PricePredictionHistoryViewModel> SearchPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? sysUserId, int? pricePredictionId)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == (sysUserId ?? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id));
             var searchBy = (model.search != null) ? model.search.value?.ToLower() : null;
@@ -490,34 +493,15 @@ namespace CPL.Controllers
             totalResultsCount = _pricePredictionHistoryService
                                  .Query()
                                  .Include(x => x.PricePrediction)
-                                 .Where(x => x.SysUserId == user.Id)
+                                 .Where(x => x.SysUserId == user.Id && (pricePredictionId == null ? true : x.PricePredictionId == pricePredictionId))
                                  .Count();
 
             // search the dbase taking into consideration table sorting and paging
             var pricePredictionHistory = _pricePredictionHistoryService
                                           .Query()
                                           .Include(x => x.PricePrediction)
-                                          .Where(x => x.SysUserId == user.Id)
-                                          .Select(x => new PricePredictionHistoryViewModel
-                                          {
-                                              ToBeComparedPrice = x.PricePrediction.ToBeComparedPrice,
-                                              ToBeComparedPriceInString = $"{x.PricePrediction.ToBeComparedPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
-                                              CurrencyPair = x.PricePrediction.Coinbase,
-                                              CurrencyPairInString = EnumHelper<EnumCurrencyPair>.GetDisplayValue((EnumCurrencyPair)Enum.Parse(typeof(EnumCurrencyPair), x.PricePrediction.Coinbase)),
-                                              ResultPrice = x.PricePrediction.ResultPrice,
-                                              ResultPriceInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
-                                              ResultTime = x.PricePrediction.ResultTime,
-                                              ResultTimeInString = x.PricePrediction.ResultTime.ToString("yyyy/MM/dd hh:mm:ss"),
-                                              Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
-                                              Status = x.UpdatedDate.HasValue == true ? EnumPricePredictionGameStatus.COMPLETED.ToString() : EnumPricePredictionGameStatus.ACTIVE.ToString(),
-                                              PurcharseTime = x.CreatedDate,
-                                              PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")}",
-                                              Bonus = x.Award.GetValueOrDefault(0),
-                                              BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
-                                              Amount = x.Amount,
-                                              AmountInString = $"{x.Amount.ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
-                                              Result = x.Result,
-                                          });
+                                          .Where(x => x.SysUserId == user.Id && (pricePredictionId == null ? true : x.PricePredictionId == pricePredictionId))
+                                          .Select(x => Mapper.Map<PricePredictionHistoryViewModel>(x));
 
             if (string.IsNullOrEmpty(searchBy))
             {

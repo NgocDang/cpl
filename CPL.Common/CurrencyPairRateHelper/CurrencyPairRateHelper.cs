@@ -26,7 +26,7 @@ namespace CPL.Common.CurrencyPairRateHelper
             if (response.Result.IsSuccessStatusCode)
             {
                 var jsonResponse = response.Result.Content.ReadAsStringAsync();
-                return new CurrencyPairRate { Value = (decimal)JObject.Parse(jsonResponse.Result)["price"] , Time = DateTime.Now };
+                return new CurrencyPairRate { Value = (decimal)JObject.Parse(jsonResponse.Result)["price"] , Time = DateTime.UtcNow };
             }
             return null;
         }
