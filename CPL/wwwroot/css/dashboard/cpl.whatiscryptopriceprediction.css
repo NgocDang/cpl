@@ -24,7 +24,67 @@
     text-shadow: 2px 2px 10px black;
 }
 
+.main-body {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
 
+.sub-card-24hour .card-header {
+    background-color: #768F99;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    color: white;
+}
+
+.sub-card-24hour .card-body {
+    background-color: #F2F6F8;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    color: #768F99;
+    height: 55px;
+}
+
+.sub-card-1hour .card-header {
+    background-color: #E4A426;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    color: white;
+}
+
+.sub-card-1hour .card-body {
+    background-color: #FAF7F2;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    color: #E4A426;
+    height: 55px;
+}
+
+.sub-card-15min .card-header {
+    background-color: #607BB8;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    color: white;
+}
+
+.sub-card-15min .card-body {
+    background-color: #F1F4FA;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    color: #607BB8;
+    height: 55px;
+}
+
+.explain-24hour {
+    color: #768F99;
+}
+
+.explain-1hour {
+    color: #E4A426;
+}
+
+.explain-15min {
+    color: #607BB8;
+}
 /*Responsive*/
 /*.center*/
 @media (min-width: 400px) {
@@ -60,5 +120,13 @@
 @media (min-width: 1400px) {
     .centered {
         font-size: 55px;
+    }
+}
+
+/*main-body*/
+@media (min-width: 768px) {
+    .main-body {
+        padding-left: 20%;
+        padding-right: 20%;
     }
 }
