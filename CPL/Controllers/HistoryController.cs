@@ -49,13 +49,15 @@ namespace CPL.Controllers
         #region Lottery History
 
         [Permission(EnumRole.User, EnumEntity.LotteryHistory, EnumAction.Read)]
-        public IActionResult Lottery(DateTime? createdDate, int? lotteryId, int sysUserId)
+        public IActionResult Lottery(DateTime? createdDate, int? lotteryId, int? sysUserId)
         {
+            var userid = (sysUserId == null) ? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id : sysUserId.Value;
+
             var viewModel = new LotteryHistoryIndexViewModel
             {
                 CreatedDate = createdDate,
                 LotteryId = lotteryId,
-                SysUserId = sysUserId
+                SysUserId = userid
             };
             return View(viewModel);
         }
@@ -445,10 +447,11 @@ namespace CPL.Controllers
         #region Price Prediction History
 
         [Permission(EnumRole.User)]
-        public IActionResult PricePrediction()
+        public IActionResult PricePrediction(int? sysUserId)
         {
-            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            var viewModel = new PricePredictionHistoryIndexViewModel { SysUserId = user.Id };
+            var userid = (sysUserId == null) ? HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id : sysUserId.Value;
+
+            var viewModel = new PricePredictionHistoryIndexViewModel { SysUserId = userid };
             return View(viewModel);
         }
 
