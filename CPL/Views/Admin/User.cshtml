@@ -133,7 +133,6 @@
                 </div>
             </div>
             @await Component.InvokeAsync("GameHistory", new GameHistoryViewComponentViewModel { SysUserId = Model.Id })
-            @Html.Hidden("SysUserId", Model.Id)
         </div>
         <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "View")" id="view" />
     </div>
