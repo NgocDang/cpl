@@ -47,8 +47,7 @@ DECLARE @TableGameHistory TABLE
 	Balance money,
 	Award money,
 	GameType nvarchar(50),
-	RowNum int,
-	TotalCount int
+	RowNum int
 );
 
 WITH GameHistoryCTE AS
@@ -179,17 +178,12 @@ WITH GameHistoryCTE AS
 	WHERE pph.SysUserId = @SysUserId
 	GROUP BY pph.PricePredictionId
 ),
-TotalCountCTE AS
-(
-SELECT COUNT(*) TotalCount FROM GameHistoryCTE
-),
 ------------------------------------------------------------------------------------------
 ---------------------------- 1.2 APPLY SORT / SEARCH / PAGING  --------------------------- 
 ------------------------------------------------------------------------------------------
 GameHistoryWithRowNumCTE AS
 (	
 	SELECT GameHistoryCTE.*,
-		TotalCountCTE.TotalCount,
 		RowNum = ROW_NUMBER() OVER (
 			ORDER BY -- ASC
 			CASE WHEN @OrderDirection = N'asc' THEN 0
@@ -248,8 +242,7 @@ GameHistoryWithRowNumCTE AS
 			CASE WHEN @OrderDirection = N'desc' THEN ''
 				 WHEN @OrderColumn = N'GameType' THEN GameType
 				 END ASC)
-	FROM GameHistoryCTE, TotalCountCTE
-
+	FROM GameHistoryCTE
 	WHERE(Result like '%' + @SearchValue + '%'
 		  OR 
 		  CONVERT(nvarchar(23), CreatedDate, 0) like ('%' + @SearchValue + '%')
@@ -258,7 +251,7 @@ GameHistoryWithRowNumCTE AS
 )
 
 INSERT INTO @TableGameHistory
-SELECT GameId, CreatedDate, CreatedDateInString, CreatedTimeInString, Amount, Result, Balance, Award, GameType, RowNum, TotalCount
+SELECT GameId, CreatedDate, CreatedDateInString, CreatedTimeInString, Amount, Result, Balance, Award, GameType, RowNum
 FROM GameHistoryWithRowNumCTE;
 
 SELECT GameId, CreatedDate, CreatedDateInString, CreatedTimeInString, GameType, Amount, Result, Award, Balance
@@ -269,8 +262,18 @@ WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @Page
 --////////////////////////////// DATATABLE #2 - Total Count /////////////////////////////--
 --///////////////////////////////////////////////////////////////////////////////////////--
 
- SELECT ISNULL((SELECT TOP 1 TotalCount
-FROM @TableGameHistory), 0) AS TotalCount;
+-------LAN: WILL BE CHECKED TO VERIFY PERFORMANCE + MEMORY ON LARGE SCALE OF DATA ---------
+--///////////////////////////////////////////////////////////////////////////////////////--
+
+
+SELECT SUM(tc.VALUE) AS TotalCount
+FROM ((SELECT COUNT(DISTINCT lh.LotteryId) AS VALUE
+	FROM LotteryHistory lh
+	WHERE lh.SysUserId = 1) 
+	UNION ALL
+	(SELECT COUNT(DISTINCT pph.PricePredictionId) AS VALUE
+	FROM PricePredictionHistory pph
+	WHERE pph.SysUserId = 1)) As tc
 
 
 --///////////////////////////////////////////////////////////////////////////////////////--
