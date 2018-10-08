@@ -255,3 +255,8 @@ INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryLeadingClassContent', 
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryLeadingClassContent', N'<p>
                                                 ブロックチェーンとスマートコントラクト技術で、不正とハッキングからシステムを守ります！
                                             </p>');
+
+
+-- What is crypto price prediction----
+INSERT INTO LangDetail VALUES (1, N'WhatIsCryptoPricePredictionMainTitle', N'What is crypto price prediction?');
+INSERT INTO LangDetail VALUES (2, N'WhatIsCryptoPricePredictionMainTitle', N'クリプトバイナリーは？');
