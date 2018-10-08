@@ -78,10 +78,8 @@ namespace CPL.Controllers
             if (viewModel.SysUserId.HasValue)
                 viewModel.TokenAmount = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).TokenAmount;
 
-            viewModel.PricePredictionTabs = _pricePredictionService.Query()
-                .Include(x => x.PricePredictionSetting)
-                .Include(x => x.PricePredictionDetails)
-                .Where(x => !x.PricePredictionSetting.IsDeleted && x.ResultTime > DateTime.Now && x.PricePredictionSetting.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
+            viewModel.PricePredictionTabs = _pricePredictionService.Queryable()
+                .Where(x => x.ResultTime > DateTime.Now)
                 .OrderBy(x => x.ResultTime.ToString("HH:mm"))
                 .Select(x => new PricePredictionTab {
                     Id = x.Id,
