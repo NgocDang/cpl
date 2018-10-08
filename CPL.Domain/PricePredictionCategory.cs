@@ -10,6 +10,7 @@ namespace CPL.Domain
         public int Id { get; set; }
 
         public virtual ICollection<PricePredictionSetting> PricePredictionSettings { get; set; }
+        public virtual ICollection<PricePrediction> PricePredictions { get; set; }
         public virtual ICollection<PricePredictionCategoryDetail> PricePredictionCategoryDetails { get; set; }
     }
 }

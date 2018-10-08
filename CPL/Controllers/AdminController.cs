@@ -2676,15 +2676,13 @@ namespace CPL.Controllers
             // 1.STATISTICAL INFORMATION - TOTAL REVENUE
             viewModel.TotalRevenue = Convert.ToInt32(_pricePredictionHistoryService.Query()
                 .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .Sum(x => x.Amount - x.TotalAward.GetValueOrDefault(0)));
 
             // 1.STATISTICAL INFORMATION - TOTAL SALE
             viewModel.TotalSale = Convert.ToInt32(_pricePredictionHistoryService.Query()
                  .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .Sum(x => x.Amount));
 
             // 1.STATISTICAL INFORMATION - PAGE VIEWS
@@ -2695,8 +2693,7 @@ namespace CPL.Controllers
             // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
             viewModel.TotalPlayers = _pricePredictionHistoryService.Query()
                 .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .Select(x => x.SysUserId)
                 .Distinct()
                 .Count();
@@ -2704,8 +2701,7 @@ namespace CPL.Controllers
             // 1.STATISTICAL INFORMATION - TODAY PLAYERS
             viewModel.TodayPlayers = _pricePredictionHistoryService.Query()
                  .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.CreatedDate.Date == DateTime.Now.Date && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .GroupBy(x => x.SysUserId)
                 .Count();
 
@@ -2714,8 +2710,7 @@ namespace CPL.Controllers
             var pricePredictionSale = _pricePredictionHistoryService
                         .Query()
                         .Include(x => x.PricePrediction)
-                            .ThenInclude(x => x.PricePredictionSetting)
-                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange
                         {
@@ -2737,8 +2732,7 @@ namespace CPL.Controllers
             var pricePredictionUses = _pricePredictionHistoryService
                 .Query()
                 .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .GroupBy(x => x.CreatedDate.Date)
                 .Select(y => new SummaryChange
                 {
@@ -2750,8 +2744,7 @@ namespace CPL.Controllers
             var pricePredictionAwards = _pricePredictionHistoryService
                 .Query()
                 .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .GroupBy(x => x.UpdatedDate.GetValueOrDefault().Date)
                 .Select(y => new SummaryChange
                 {
@@ -2787,8 +2780,7 @@ namespace CPL.Controllers
             var pricePredictionPlayers = _pricePredictionHistoryService
                 .Query()
                 .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => (periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => (periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now) && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .GroupBy(x => x.CreatedDate.Date)
                 .Select(y => new PlayersChange
                 {
@@ -2848,8 +2840,7 @@ namespace CPL.Controllers
             var purchasedPricePredictionHistory = _pricePredictionHistoryService
                     .Query()
                     .Include(x => x.PricePrediction)
-                        .ThenInclude(x => x.PricePredictionSetting)
-                    .Where(x => !pricePredictionCategoryId.HasValue || x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                    .Where(x => !pricePredictionCategoryId.HasValue || x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                     .GroupBy(x => new { x.CreatedDate.Date, x.PricePredictionId, x.SysUserId });
 
             var purchasedPricePredictionHistoryView = purchasedPricePredictionHistory
@@ -2910,13 +2901,11 @@ namespace CPL.Controllers
             {
                 var totalSalePricePrediction = _pricePredictionHistoryService.Query()
                                     .Include(x => x.PricePrediction)
-                                        .ThenInclude(x => x.PricePredictionSetting)
-                                    .Where(x => x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategories[i].Id)
+                                    .Where(x => x.PricePrediction.PricePredictionCategoryId == pricePredictionCategories[i].Id)
                                     .Sum(x => x.Amount);
                 var totalAwardPricePrediction = _pricePredictionHistoryService.Query()
                                                .Include(x => x.PricePrediction)
-                                                    .ThenInclude(x => x.PricePredictionSetting)
-                                                .Where(x => x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategories[i].Id)
+                                                .Where(x => x.PricePrediction.PricePredictionCategoryId == pricePredictionCategories[i].Id)
                                                 .Sum(x => x.TotalAward);
                 var revenueInPricePredictionGame = Convert.ToInt32(totalSalePricePrediction - totalAwardPricePrediction);
 

@@ -24,7 +24,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold px-2 border-0 @(Model.PricePredictionTabs[i].IsDisabled ? "disabled" : "") @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id" data-id="@Model.PricePredictionTabs[i].Id"
                                        data-toggle="tab" href="#price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-controls="price-prediction-nav-@Model.PricePredictionTabs[i].Id">
-                                        @(Model.PricePredictionTabs[i].CloseBettingTime.ToString("HH:mm") == "00:00" ? "24:00" : Model.PricePredictionTabs[i].CloseBettingTime.ToString("HH:mm"))
+                                        @Model.PricePredictionTabs[i].Title
                                     </a>
                                 </li>
                             }
