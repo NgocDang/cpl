@@ -37,7 +37,9 @@ namespace CPL.PredictionGameService.Misc
             });
 
             builder.RegisterType<SysUserService>().As<ISysUserService>().InstancePerDependency();
+            builder.RegisterType<LangService>().As<ILangService>().InstancePerDependency();
             builder.RegisterType<PricePredictionService>().As<IPricePredictionService>().InstancePerDependency();
+            builder.RegisterType<PricePredictionDetailService>().As<IPricePredictionDetailService>().InstancePerDependency();
             builder.RegisterType<PricePredictionHistoryService>().As<IPricePredictionHistoryService>().InstancePerDependency();
             builder.RegisterType<CoinTransactionService>().As<ICoinTransactionService>().InstancePerDependency();
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerDependency();
@@ -47,7 +49,9 @@ namespace CPL.PredictionGameService.Misc
             builder.RegisterType<CPLContext>().As<IDataContextAsync>().InstancePerLifetimeScope();
 
             builder.RegisterType<Repository<SysUser>>().As<IRepositoryAsync<SysUser>>().InstancePerLifetimeScope();
+            builder.RegisterType<Repository<Lang>>().As<IRepositoryAsync<Lang>>().InstancePerLifetimeScope();
             builder.RegisterType<Repository<PricePrediction>>().As<IRepositoryAsync<PricePrediction>>().InstancePerLifetimeScope();
+            builder.RegisterType<Repository<PricePredictionDetail>>().As<IRepositoryAsync<PricePredictionDetail>>().InstancePerLifetimeScope();
             builder.RegisterType<Repository<PricePredictionHistory>>().As<IRepositoryAsync<PricePredictionHistory>>().InstancePerLifetimeScope();
             builder.RegisterType<Repository<CoinTransaction>>().As<IRepositoryAsync<CoinTransaction>>().InstancePerLifetimeScope();
             builder.RegisterType<Repository<Setting>>().As<IRepositoryAsync<Setting>>().InstancePerLifetimeScope();
