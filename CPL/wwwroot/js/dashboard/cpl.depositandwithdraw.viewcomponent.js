@@ -1,9 +1,15 @@
 ﻿var DepositAndWithdrawViewComponent = {
     init: function () {
+        DepositAndWithdrawViewComponent.bindPreciseAmountInput();
         DepositAndWithdrawViewComponent.bindCopy();
         DepositAndWithdrawViewComponent.bindMax();
         DepositAndWithdrawViewComponent.bindDoWithdraw();
         DepositAndWithdrawViewComponent.bindDoReadQrCode();
+    },
+    bindPreciseAmountInput: function () {
+        $("input[name='btc-amount']").on("input", function (e) {
+            this.value = Number(this.value).toFixed(8);
+        });
     },
     bindCopy: function () {
         if ($(".btn-copy").length > 0) {
