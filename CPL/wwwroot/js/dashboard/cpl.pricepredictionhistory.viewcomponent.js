@@ -24,7 +24,6 @@
     loadPricePredictionHistoryDataTable: function () {
         if ($("#price-prediction-history-view-component").hasClass("d-none"))
             return false;
-        var _this = this;
         return $("#dt-price-prediction-history").DataTable({
             "processing": true,
             "serverSide": true,
@@ -33,7 +32,8 @@
                 url: "/History/SearchPricePredictionHistory",
                 type: 'POST',
                 data: {
-                    sysUserId: $("#price-prediction-history-view-component #SysUserId").val()
+                    sysUserId: $("#price-prediction-history-view-component #SysUserId").val(),
+                    pricePredictionId: Utils.getJsonFromUrl().pricePredictionId
                 }
             },
             "order": [[8, "asc"]],
