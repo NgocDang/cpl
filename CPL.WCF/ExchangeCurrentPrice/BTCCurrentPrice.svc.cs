@@ -27,7 +27,7 @@ namespace CPL.WCF.ExchangeCurrentPrice
                 {
                     Status = new Status { Code = Status.OkCode, Text = Status.OkText },
                     Price = CPL.WCF.Misc.BTCCurrentPrice.Price,
-                    DateTime = ((DateTimeOffset)CPL.WCF.Misc.BTCCurrentPrice.Time).ToUnixTimeSeconds()
+                    DateTime = CPL.WCF.Misc.BTCCurrentPrice.Time.ToUnixTimeInSeconds()
                 };
             }
             catch(Exception ex)
@@ -52,7 +52,7 @@ namespace CPL.WCF.ExchangeCurrentPrice
                 {
                     Status = new Status { Code = Status.OkCode, Text = Status.OkText },
                     Price = CPL.WCF.Misc.BTCCurrentPrice.Price,
-                    DateTime = ((DateTimeOffset)CPL.WCF.Misc.BTCCurrentPrice.Time).ToUnixTimeSeconds()
+                    DateTime = CPL.WCF.Misc.BTCCurrentPrice.Time.ToUnixTimeInSeconds()
                 };
             }
             catch (Exception ex)
