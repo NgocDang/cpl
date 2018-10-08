@@ -34,7 +34,7 @@
                             <img class="img-fluid" src="~/images/info/what_is_lottery_banner.png" />
                             <div class="centered">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoLotteryMainTitle")</div>
                         </div>
-                        <div class="card-body p-0 py-05 px-05">
+                        <div class="card-body px-05">
                             <div class="row">
                                 <div class="col-12 py-3 black text-center">
                                     @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoLotteryMainContent"))
