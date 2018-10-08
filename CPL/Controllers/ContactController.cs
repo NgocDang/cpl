@@ -47,7 +47,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Guest)]
-        public IActionResult DoSend(ContactIndexViewModel viewModel)
+        public IActionResult DoSend(ContactIndexViewModel viewModel, MobileModel mobileModel)
         {
             // Ensure we have a valid viewModel to work with
             if (ModelState.IsValid)
@@ -77,13 +77,39 @@ namespace CPL.Controllers
                     template.Body = _viewRenderService.RenderToStringAsync("/Views/Contact/_ContactEmailTemplate.cshtml", contactEmailTemplateViewModel).Result;
                     template.Subject = string.Format(template.Subject, contact.Id);
                     EmailHelper.Send(Mapper.Map<TemplateViewModel>(template), CPLConstant.SMTP.Contact);
+
+                    if (mobileModel.IsMobile)
+                    {
+                        return new JsonResult(new
+                        {
+                            code = EnumResponseStatus.SUCCESS,
+                            success_message_key = CPLConstant.MobileAppConstant.ContactScreenEmailSentSuccessfully
+                        });
+                    }
                     return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "MessageSentSuccessfully") });
                 }
                 catch (Exception ex)
                 {
+                    if (mobileModel.IsMobile)
+                    {
+                        return new JsonResult(new
+                        {
+                            code = EnumResponseStatus.ERROR,
+                            error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs,
+                            error_message = ex.Message
+                        });
+                    }
                     return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
                 }
+            }
 
+            if (mobileModel.IsMobile)
+            {
+                return new JsonResult(new
+                {
+                    code = EnumResponseStatus.ERROR,
+                    error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs
+                });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
         }
