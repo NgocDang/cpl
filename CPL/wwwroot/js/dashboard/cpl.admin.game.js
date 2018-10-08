@@ -1,33 +1,33 @@
 ﻿var AdminGameManagement = {
     init: function () {
         // Summary Tab
-        AdminGameManagement.bindSummaryTab();
-        AdminGameManagement.bindSummaryTimeRangeChange();
+        //AdminGameManagement.bindSummaryTab();
+        //AdminGameManagement.bindSummaryTimeRangeChange();
 
-        // Lottery Tab
-        AdminGameManagement.bindLotteryTab();
-        AdminGameManagement.bindAddLotteryCategory();
-        AdminGameManagement.bindDoAddLotteryCategory();
+        //// Lottery Tab
+        //AdminGameManagement.bindLotteryTab();
+        //AdminGameManagement.bindAddLotteryCategory();
+        //AdminGameManagement.bindDoAddLotteryCategory();
 
-        // Lottery Tab - Lottery Summary Tab
-        AdminGameManagement.bindLotterySummaryTab();
-        AdminGameManagement.bindLotterySummaryTimeRangeChange();
+        //// Lottery Tab - Lottery Summary Tab
+        //AdminGameManagement.bindLotterySummaryTab();
+        //AdminGameManagement.bindLotterySummaryTimeRangeChange();
 
-        // Lottery Tab - Lottery Category Tab
-        AdminGameManagement.bindLotteryCategoryTabs();
-        AdminGameManagement.bindLotteryCategoryTimeRangeChange();
+        //// Lottery Tab - Lottery Category Tab
+        //AdminGameManagement.bindLotteryCategoryTabs();
+        //AdminGameManagement.bindLotteryCategoryTimeRangeChange();
 
-        // Price Prediction Tab - Price Prediction Summary Tab
-        AdminGameManagement.bindAddPricePredictionCategory();
-        AdminGameManagement.bindDoAddPricePredictionCategory();
+        //// Price Prediction Tab - Price Prediction Summary Tab
+        //AdminGameManagement.bindAddPricePredictionCategory();
+        //AdminGameManagement.bindDoAddPricePredictionCategory();
 
         AdminGameManagement.bindPricePredictionTab();
         AdminGameManagement.bindPricePredictionSummaryTab();
-        AdminGameManagement.bindPricePredictionSummaryTimeRangeChange();
+        //AdminGameManagement.bindPricePredictionSummaryTimeRangeChange();
 
-        //  Price Prediction Tab -  Price Prediction Category Tab
-        AdminGameManagement.bindPricePredictionCategoryTabs();
-        AdminGameManagement.bindPricePredictionCategoryTimeRangeChange();
+        ////  Price Prediction Tab -  Price Prediction Category Tab
+        //AdminGameManagement.bindPricePredictionCategoryTabs();
+        //AdminGameManagement.bindPricePredictionCategoryTimeRangeChange();
 
         // Show tab base on URL tab parameter
         var tab = $("#tab").val();
@@ -449,17 +449,8 @@
                 {
                     "data": "StatusInString",
                     "render": function (data, type, full, meta) {
-                        if (full.status == 1) {
-                            return "<p class='text-sm-center'><span class='badge badge-info'>" + $("#pending").val() + "</span></p>";
-                        }
-                        else if (full.status == 2) {
+                        if (full.status == 0) {
                             return "<p class='text-sm-center'><span class='badge badge-success'>" + $("#active").val() + "</span></p>";
-                        }
-                        else if (full.status == 3) {
-                            return "<p class='text-sm-center'><span class='badge badge-secondary'>" + $("#completed").val() + "</span></p>";
-                        }
-                        else if (full.status == 4) {
-                            return "<p class='text-sm-center'><span class='badge badge-warning'>" + $("#deactivated").val() + "</span></p>";
                         }
                         else {
                             return "";

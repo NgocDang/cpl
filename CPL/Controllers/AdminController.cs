@@ -2840,6 +2840,7 @@ namespace CPL.Controllers
             var purchasedPricePredictionHistory = _pricePredictionHistoryService
                     .Query()
                     .Include(x => x.PricePrediction)
+                        .ThenInclude(x => x.PricePredictionDetails)
                     .Where(x => !pricePredictionCategoryId.HasValue || x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                     .GroupBy(x => new { x.CreatedDate.Date, x.PricePredictionId, x.SysUserId });
 
@@ -2848,13 +2849,13 @@ namespace CPL.Controllers
                     {
                         SysUserId = y.Key.SysUserId,
                         Email = y.FirstOrDefault().SysUser.Email,
-                        //Status = y.FirstOrDefault().Lottery.Status, // TODO
+                        Status = 1,
+                        // Status = y.FirstOrDefault().PricePrediction.Status, // TODO 
                         NumberOfPrediction = y.Count(),
                         TotalPurchasePrice = y.Sum(x => x.Amount),
-                        //Title = y.FirstOrDefault().PricePrediction.PricePredictionSetting, // TODO
                         PurchaseDateTime = y.Key.Date,
+                        Title = y.FirstOrDefault().PricePrediction.PricePredictionDetails.FirstOrDefault(z => z.LangId == HttpContext.Session.GetInt32("LangId").Value).Title
                     });
-
             filteredResultsCount = totalResultsCount = purchasedPricePredictionHistory.Count();
 
             // search the dbase taking into consideration table sorting and paging
@@ -2864,7 +2865,7 @@ namespace CPL.Controllers
 
                 purchasedPricePredictionHistoryView = purchasedPricePredictionHistoryView
                                         .Where(x => x.Email.ToLower().Contains(searchBy) 
-                                                    //|| x.StatusInString.ToLower().Contains(searchBy) 
+                                                    || x.StatusInString.ToLower().Contains(searchBy) 
                                                     || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
                                                     || x.NumberOfPredictionInString.ToLower().Contains(searchBy)
                                                     || x.Title.ToLower().Contains(searchBy))
@@ -2873,6 +2874,7 @@ namespace CPL.Controllers
                 filteredResultsCount = purchasedPricePredictionHistoryView
                                        .Count();
             }
+
 
             return purchasedPricePredictionHistoryView
                   .AsQueryable()

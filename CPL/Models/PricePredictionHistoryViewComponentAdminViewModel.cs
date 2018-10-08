@@ -32,13 +32,12 @@ namespace CPL.Models
             }
         }
 
-        // TODO
-        //public string StatusInString
-        //{
-        //    get
-        //    {
-        //        return ((EnumLotteryGameStatus)(Status)).ToString();
-        //    }
-        //}
+        public string StatusInString
+        {
+            get
+            {
+                return ((EnumPricePredictionGameStatus)(Status)).ToString();
+            }
+        }
     }
 }
