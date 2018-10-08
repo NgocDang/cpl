@@ -98,8 +98,8 @@ N'お好みのゲームを選択して <br />思う存分クリプトオッズ�
 INSERT INTO LangDetail VALUES (1, N'Url', N'Url');
 INSERT INTO LangDetail VALUES (2, N'Url', N'Url');
 
-INSERT INTO LangDetail VALUES (1, N'NameRequired', N'Please fill in name of slider!');
-INSERT INTO LangDetail VALUES (2, N'NameRequired', N'スライダーの名前を記入してください！');
+INSERT INTO LangDetail VALUES (1, N'NameRequired', N'Please fill in name!');
+INSERT INTO LangDetail VALUES (2, N'NameRequired', N'名前を記入してください!');
 
 INSERT INTO LangDetail VALUES (1, N'DesktopImageRequired', N'Please fill in image for desktop!');
 INSERT INTO LangDetail VALUES (2, N'DesktopImageRequired', N'デスクトップ用の画像を入力してください！');
