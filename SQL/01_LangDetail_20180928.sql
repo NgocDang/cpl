@@ -156,10 +156,10 @@ INSERT INTO LangDetail VALUES (2, N'DividendRate', N'配当率');
 INSERT INTO LangDetail VALUES (1, N'HoldingTimeIntervalRequired', N'Please fill in holding time interval!');
 INSERT INTO LangDetail VALUES (2, N'HoldingTimeIntervalRequired', N'保有期間を記入してください!');
 
-INSERT INTO LangDetail VALUES (1, N'ResultTimeIntervalRequired', N'Please fill in result time interval required!');
+INSERT INTO LangDetail VALUES (1, N'ResultTimeIntervalRequired', N'Please fill in result time interval!');
 INSERT INTO LangDetail VALUES (2, N'ResultTimeIntervalRequired', N'結果の時間間隔を記入してください!');
 
-INSERT INTO LangDetail VALUES (1, N'DividendRateRequired', N'Please fill in dividend rate required!');
+INSERT INTO LangDetail VALUES (1, N'DividendRateRequired', N'Please fill in dividend rate!');
 INSERT INTO LangDetail VALUES (2, N'DividendRateRequired', N'必要な配当率を記入してください!');
 
 INSERT INTO LangDetail VALUES (1, N'CloseBettingTime', N'Close betting time');
