@@ -3,7 +3,7 @@
     src: url('../fonts/kozuka/kozgopro-bold.otf') format('opentype');
 }
 
-card-header {
+.card-header {
     position: relative;
     text-align: center;
     color: white;
@@ -22,4 +22,43 @@ card-header {
     font-size: 15px;
     font-weight: bold;
     text-shadow: 2px 2px 10px black;
+}
+
+
+/*Responsive*/
+/*.center*/
+@media (min-width: 400px) {
+    .centered {
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 544px) {
+    .centered {
+        font-size: 25px;
+    }
+}
+
+@media (min-width: 768px) {
+    .centered {
+        font-size: 35px;
+    }
+}
+
+@media (min-width: 992px) {
+    .centered {
+        font-size: 40px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .centered {
+        font-size: 50px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .centered {
+        font-size: 55px;
+    }
 }
