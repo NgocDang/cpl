@@ -1,4 +1,4 @@
-INSERT INTO MobileLangDetail VALUES (1, N'MoreScreen_Button_Ok', N'OK');
+﻿INSERT INTO MobileLangDetail VALUES (1, N'MoreScreen_Button_Ok', N'OK');
 INSERT INTO MobileLangDetail VALUES (2, N'MoreScreen_Button_Ok', N'はい');
 
 
@@ -335,37 +335,60 @@ INSERT INTO MobileLangDetail VALUES (2, N'EditProfileScreen_Dialog_Success', N'�
 INSERT INTO MobileLangDetail VALUES (1, N'EditProfileScreen_Dialog_Error', N'Edit profile fail!');
 INSERT INTO MobileLangDetail VALUES (2, N'EditProfileScreen_Dialog_Error', N'プロフィールを編集できません！');
 
+INSERT INTO MobileLangDetail VALUES (1, N'EditPasswordScreen_Input_Current_Placeholder', N'Current password');
+INSERT INTO MobileLangDetail VALUES (2, N'EditPasswordScreen_Input_Current_Placeholder', N'現在のパスワード');
 
+INSERT INTO MobileLangDetail VALUES (1, N'EditPasswordScreen_Validate_Current_Not_Match', N'Password current not match');
+INSERT INTO MobileLangDetail VALUES (2, N'EditPasswordScreen_Validate_Current_Not_Match', N'現在のパスワードと一致しないパスワード');
 
+INSERT INTO MobileLangDetail VALUES (1, N'EditPasswordScreen_Input_Confirm_Placeholder', N'Confirm password');
+INSERT INTO MobileLangDetail VALUES (2, N'EditPasswordScreen_Input_Confirm_Placeholder', N'パスワードを認証する');
 
+INSERT INTO MobileLangDetail VALUES (1, N'EditPasswordScreen_Validate_Confirm_Not_Match', N'Password not match');
+INSERT INTO MobileLangDetail VALUES (2, N'EditPasswordScreen_Validate_Confirm_Not_Match', N'パスワードが一致しません');
 
+INSERT INTO MobileLangDetail VALUES (1, N'PurchraseScreen_Validate_Min', N'The volume of CPL minimum is 1');
+INSERT INTO MobileLangDetail VALUES (2, N'PurchraseScreen_Validate_Min', N'CPLの最小量は1です');
 
+INSERT INTO MobileLangDetail VALUES (1, N'PurchraseScreen_Validate_Max', N'The volume of CPL maximum is');
+INSERT INTO MobileLangDetail VALUES (2, N'PurchraseScreen_Validate_Max', N'CPLの最大量は');
 
+INSERT INTO MobileLangDetail VALUES (1, N'PurchraseScreen_Validate_Null', N'Please input number ticket');
+INSERT INTO MobileLangDetail VALUES (2, N'PurchraseScreen_Validate_Null', N'番号票を入力してください');
 
+INSERT INTO MobileLangDetail VALUES (1, N'ContactScreen_Input_Category_Placeholder', N'Category');
+INSERT INTO MobileLangDetail VALUES (2, N'ContactScreen_Input_Category_Placeholder', N'カテゴリー');
 
+INSERT INTO MobileLangDetail VALUES (1, N'ContactScreen_Dialog_Deposit_Title', N'Deposit');
+INSERT INTO MobileLangDetail VALUES (2, N'ContactScreen_Dialog_Deposit_Title', N'保証金');
 
+INSERT INTO MobileLangDetail VALUES (1, N'ContactScreen_Dialog_Withdraw_Title', N'Withdraw');
+INSERT INTO MobileLangDetail VALUES (2, N'ContactScreen_Dialog_Withdraw_Title', N'撤退');
 
+INSERT INTO MobileLangDetail VALUES (1, N'ContactScreen_Dialog_KYC_Title', N'KYC');
+INSERT INTO MobileLangDetail VALUES (2, N'ContactScreen_Dialog_KYC_Title', N'KYC');
 
+INSERT INTO MobileLangDetail VALUES (1, N'ContactScreen_Dialog_Lottery_Title', N'Lottery');
+INSERT INTO MobileLangDetail VALUES (2, N'ContactScreen_Dialog_Lottery_Title', N'宝くじ');
 
+INSERT INTO MobileLangDetail VALUES (1, N'ContactScreen_Dialog_Other_Title', N'Other');
+INSERT INTO MobileLangDetail VALUES (2, N'ContactScreen_Dialog_Other_Title', N'その他');
 
+INSERT INTO MobileLangDetail VALUES (1, N'UserAccountScreen_Title', N'User Account');
+INSERT INTO MobileLangDetail VALUES (2, N'UserAccountScreen_Title', N'ユーザーアカウント');
 
+INSERT INTO MobileLangDetail VALUES (1, N'UserAccountScreen_Button_Security', N'Security');
+INSERT INTO MobileLangDetail VALUES (2, N'UserAccountScreen_Button_Security', N'セキュリティ');
 
+INSERT INTO MobileLangDetail VALUES (1, N'UserAccountScreen_Button_Profile', N'Profile');
+INSERT INTO MobileLangDetail VALUES (2, N'UserAccountScreen_Button_Profile', N'プロフィール');
 
+INSERT INTO MobileLangDetail VALUES (1, N'EditProfileScreen_Input_Number_Phone_Placeholder', N'Phone number');
+INSERT INTO MobileLangDetail VALUES (2, N'EditProfileScreen_Input_Number_Phone_Placeholder', N'電話番号');
 
+INSERT INTO MobileLangDetail VALUES (1, N'EditProfileScreen_Validate_Number_Phone', N'Please input phone number');
+INSERT INTO MobileLangDetail VALUES (2, N'EditProfileScreen_Validate_Number_Phone', N'電話番号を入力してください');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+INSERT INTO MobileLangDetail VALUES (1, N'ContactScreen_Email_Sent_Successfully', N'Email is sent successfully');
+INSERT INTO MobileLangDetail VALUES (2, N'ContactScreen_Email_Sent_Successfully', N'電子メールが正常に送信されました');
 

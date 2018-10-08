@@ -185,9 +185,9 @@ namespace CPL.Common.Enums
 
             public static string LotteryDetailNoTicketsLeft = "LotteryDetail_No_Tickets_Left";
             public static string LotteryDetailNotEnoughCPL = "LotteryDetail_Not_Enough_CPL";
-            
 
 
+            public static string ContactScreenEmailSentSuccessfully = "ContactScreen_Email_Sent_Successfully";
             public static string CommonErrorOccurs = "Common_ErrorOccurs";
         }
 
