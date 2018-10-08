@@ -79,7 +79,7 @@ namespace CPL.Controllers
 
             viewModel.PricePredictionTabs = _pricePredictionService.Query()
                 .Include(x => x.PricePredictionSetting)
-                .Where(x => x.ResultTime > DateTime.Now && x.PricePredictionSetting.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
+                .Where(x => !x.PricePredictionSetting.IsDeleted && x.ResultTime > DateTime.Now && x.PricePredictionSetting.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
                 .Select(x => Mapper.Map<PricePredictionTab>(x)).OrderBy(x => x.ResultTime.ToString("HH:mm"))
                 .ToList();
 
