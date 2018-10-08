@@ -22,5 +22,6 @@ namespace CPL.Domain
 
         public virtual PricePredictionSetting PricePredictionSetting { get; set; }
         public virtual ICollection<PricePredictionHistory> PricePredictionHistories { get; set; }
+        public virtual ICollection<PricePredictionDetail> PricePredictionDetails { get; set; }
     }
 }
