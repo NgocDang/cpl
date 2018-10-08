@@ -157,6 +157,15 @@
     <Content Update="Views\Home\_MessageEmailTemplate.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Info\WhatIsCryptoPricePrediction.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Info\WhatIsCryptoCasino.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Info\WhatIsCryptoLottery.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Lottery\Detail.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
