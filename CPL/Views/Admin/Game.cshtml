@@ -431,7 +431,7 @@
                                         <div class="card col-lg-4 col-12">
                                             <div class="card-body">
                                                 <p>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePredictionCategory")</p>
-                                                <a asp-controller="Admin" asp-action="PricePrediction" class="btn btn-outline-secondary">
+                                                <a asp-controller="Admin" asp-action="PricePredictionSetting" class="btn btn-outline-secondary">
                                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")
                                                 </a>
                                                 <button class="btn btn-outline-secondary" id="btn-add-price-prediction-category">

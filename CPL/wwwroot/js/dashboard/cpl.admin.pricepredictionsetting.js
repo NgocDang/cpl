@@ -8,6 +8,25 @@
         AdminPricePredictionSetting.bindDoAddPricePredictionCategory();
         AdminPricePredictionSetting.bindDoAddPricePredictionSetting();
         AdminPricePredictionSetting.bindDoDeletePricePredictionSetting();
+        AdminPricePredictionSetting.bindEditPricePredictionSetting();
+        AdminPricePredictionSetting.bindDoUpdatePricePredictionSetting();
+    },
+    bindSettingTimePicker: function ()
+    {
+        $('#open-betting-time-picker').timepicker({
+            template: false,
+            showInputs: false,
+            minuteStep: 15,
+            showMeridian: false,
+            defaultTime: '00:00',
+        });
+        $('#close-betting-time-picker').timepicker({
+            template: false,
+            showInputs: false,
+            minuteStep: 15,
+            showMeridian: false,
+            defaultTime: '00:00',
+        });
     },
     bindAddPricePredictionSetting: function () {
         $("#price-prediction-setting-game-management").on("click", "#btn-add", function () {
@@ -24,21 +43,7 @@
                     $("#edit-price-prediction-setting").modal("show");
                 },
                 complete: function (data) {
-                    $('#open-betting-time-picker').timepicker({
-                        template: false,
-                        showInputs: false,
-                        minuteStep: 15,
-                        showMeridian: false,
-                        defaultTime: '00:00',
-                    });
-                    $('#close-betting-time-picker').timepicker({
-                        template: false,
-                        showInputs: false,
-                        minuteStep: 15,
-                        showMeridian: false,
-                        defaultTime: '00:00',
-                    });
-
+                    AdminPricePredictionSetting.bindSettingTimePicker();
                     $(_this).attr("disabled", false);
                 }
             });
@@ -176,6 +181,92 @@
 
                 $.ajax({
                     url: "/Admin/DoAddPricePredictionSetting/",
+                    type: "POST",
+                    beforeSend: function () {
+                        $(_this).attr("disabled", true);
+                        $(_this).html("<i class='fa fa-spinner fa-spin'></i> " + $(_this).text());
+                    },
+                    data: _postData,
+                    success: function (data) {
+                        if (data.success) {
+                            $("#edit-price-prediction-setting").modal("hide");
+                            toastr.success(data.message, 'Success!');
+                            AdminPricePredictionSetting.pricePredictionSettingDataTable.ajax.reload();
+                        } else {
+                            toastr.error(data.message, 'Error!');
+                        }
+                    },
+                    complete: function (data) {
+                        $(_this).attr("disabled", false);
+                        $(_this).html($(_this).text());
+                    }
+                });
+            }
+            return false;
+        });
+    },
+
+    bindEditPricePredictionSetting: function () {
+        $("#dt-price-prediction-setting").on("click", ".btn-edit", function () {
+            var _this = this;
+            $.ajax({
+                url: "/Admin/EditPricePredictionSetting",
+                type: "GET",
+                beforeSend: function () {
+                    $(_this).attr("disabled", true);
+                },
+                data: {
+                    id: $(_this).data().id
+                },
+                success: function (data) {
+                    $("#modal").html(data);
+                    // Initiate price-prediction-category
+                    if ($("#modal #price-prediction-category").data("value") != "") {
+                        $("#modal #price-prediction-category option[value=" + $("#modal #price-prediction-category").data("value") + "]").attr("selected", "selected");
+                    }
+                    $("#modal #price-prediction-category").selectpicker('refresh');
+                    $("#edit-price-prediction-setting").modal("show");
+                    $("#edit-price-prediction-setting .btn-do-add").addClass("d-none");
+                    $("#edit-price-prediction-setting .btn-do-edit").removeClass("d-none");
+                },
+                complete: function (data) {
+                    AdminPricePredictionSetting.bindSettingTimePicker();
+                    $(_this).attr("disabled", false);
+                }
+            });
+            return false;
+        });
+    },
+    bindDoUpdatePricePredictionSetting: function () {
+        $('#modal').on('click', '#edit-price-prediction-setting .btn-do-edit', function () {
+            var _this = this;
+
+            //Validate for category
+            var isCategoryValid = $("#price-prediction-category").val() != "";
+            if (isCategoryValid)
+                $("#category-msg").hide();
+            else
+                $("#category-msg").show();
+
+            var isFormValid = $(_this).parents("form")[0].checkValidity();
+            $(_this).parents("form").addClass('was-validated');
+
+            if (isFormValid && isCategoryValid) {
+
+                var _postData = {};
+
+                var _formData = $("#form-edit-price-prediction-setting").serializeArray();
+                _formData.forEach(function (element) {
+                    if (element['name'] != 'Title') {
+                        _postData[element['name']] = element['value'];
+                    }
+                });
+                $("#price-prediction-setting-multilanguage").find("div.tab-pane").each(function (i, e) {
+                    _postData['PricePredictionSettingDetails[' + i + '].LangId'] = $(this).find("#lang-id").val();
+                    _postData['PricePredictionSettingDetails[' + i + '].Title'] = $(this).find("#title").val();
+                });
+                $.ajax({
+                    url: "/Admin/DoUpdatePricePredictionSetting/",
                     type: "POST",
                     beforeSend: function () {
                         $(_this).attr("disabled", true);

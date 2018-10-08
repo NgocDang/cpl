@@ -3715,6 +3715,68 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Admin)]
+        public IActionResult EditPricePredictionSetting(int id)
+        {
+            var pricePredictionSetting = _pricePredictionSettingService
+                                            .Query()
+                                            .Include(x => x.PricePredictionSettingDetails)
+                                            .FirstOrDefault(x => x.Id == id);
+
+            var viewModel = Mapper.Map<PricePredictionSettingAdminViewModel>(pricePredictionSetting);
+
+            var langs = _langService.Queryable().ToList();
+            viewModel.PricePredictionSettingDetails.ForEach(x => x.LangName = langs.FirstOrDefault(y => y.Id == x.LangId).Name);
+
+            viewModel.PricePredictionCategories = _pricePredictionCategoryService
+                                                                            .Query()
+                                                                            .Include(x => x.PricePredictionCategoryDetails)
+                                                                            .Select(x => new PricePredictionCategoryAdminViewModel
+                                                                            {
+                                                                                Id = x.Id,
+                                                                                Name = x.PricePredictionCategoryDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Name,
+                                                                            })
+                                                                            .ToList();
+
+            return PartialView("_EditPricePredictionSetting", viewModel);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoUpdatePricePredictionSetting(PricePredictionSettingAdminViewModel viewModel)
+        {
+            try
+            {
+                var pricePredictionSetting = _pricePredictionSettingService
+                                                .Query()
+                                                .Include(x => x.PricePredictionSettingDetails)
+                                                .FirstOrDefault(x => x.Id == viewModel.Id);
+                pricePredictionSetting.PricePredictionCategoryId = viewModel.PricePredictionCategoryId;
+                pricePredictionSetting.OpenBettingTime = viewModel.OpenBettingTime;
+                pricePredictionSetting.CloseBettingTime = viewModel.CloseBettingTime;
+                pricePredictionSetting.HoldingTimeInterval = viewModel.HoldingTimeInterval;
+                pricePredictionSetting.ResultTimeInterval = viewModel.ResultTimeInterval;
+                pricePredictionSetting.DividendRate = viewModel.DividendRate;
+                pricePredictionSetting.UpdatedDate = DateTime.Now;
+
+                _pricePredictionSettingService.Update(pricePredictionSetting);
+
+                foreach (var detail in pricePredictionSetting.PricePredictionSettingDetails)
+                {
+                    detail.Title = viewModel.PricePredictionSettingDetails.FirstOrDefault(x => x.LangId == detail.LangId).Title;
+                    _pricePredictionSettingDetailService.Update(detail);
+                }
+
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [Permission(EnumRole.Admin)]
         public IActionResult PricePredictionSetting()
         {
             return View();
