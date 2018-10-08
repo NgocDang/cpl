@@ -168,3 +168,90 @@ INSERT INTO LangDetail VALUES (2, N'CloseBettingTime', N'賭け時間を閉じ�
 INSERT INTO LangDetail VALUES (1, N'OpenBettingTime', N'Open betting time');
 INSERT INTO LangDetail VALUES (2, N'OpenBettingTime', N'オープンベッティング時間');
 
+-- What is crypto lottery----
+INSERT INTO LangDetail VALUES (1, N'WhatIsCryptoLotteryMainTitle', N'What is crypto lottery?');
+INSERT INTO LangDetail VALUES (2, N'WhatIsCryptoLotteryMainTitle', N'仮想通貨宝クジとは？');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryMainContent', N'<p>仮想通貨宝クジとは、<span class="text-warning">ブロックチェーン</span>とスマートコ<span class="text-warning">ントラク</span>ト技術が活用された宝くじプラットホームです。</p>
+                                    <p>ブロックチェーン技術により全てのクジの履歴をトランザクションで確認する事が出来るようにし、透明性の高い宝くじを実現されております。</p>
+                                    <p class="text-muted font-size-13px">＊お客様の名前などの個人情報は一切公開されませんのでご安心ください。</p>
+                                    <br />
+                                    <p>また、スマートコントラクトにより、クジの発行や管理に一切人間の手が加える事ができないので、不正や外的要因（ハッキングなど）からシステムを守り、公正で安全な宝くじゲームをユーザーの皆様に提供いたしております。</p>');
+
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryMainContent', N'<p>仮想通貨宝クジとは、<span class="text-warning">ブロックチェーン</span>とスマートコ<span class="text-warning">ントラク</span>ト技術が活用された宝くじプラットホームです。</p>
+                                    <p>ブロックチェーン技術により全てのクジの履歴をトランザクションで確認する事が出来るようにし、透明性の高い宝くじを実現されております。</p>
+                                    <p class="text-muted font-size-13px">＊お客様の名前などの個人情報は一切公開されませんのでご安心ください。</p>
+                                    <br />
+                                    <p>また、スマートコントラクトにより、クジの発行や管理に一切人間の手が加える事ができないので、不正や外的要因（ハッキングなど）からシステムを守り、公正で安全な宝くじゲームをユーザーの皆様に提供いたしております。</p>');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryHighestAwardTitle', N'<p class="up">
+                                                最高当選
+                                            </p>
+                                            <p class="down">
+                                                100BTC
+                                            </p>');
+
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryHighestAwardTitle', N'<p class="up">
+                                                最高当選
+                                            </p>
+                                            <p class="down">
+                                                100BTC
+                                            </p>');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryMaximumRateTitle', N' <p class="up">
+                                                最大還元率
+                                            </p>
+                                            <p class="down">
+                                                80％
+                                            </p>');
+
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryMaximumRateTitle', N' <p class="up">
+                                                最大還元率
+                                            </p>
+                                            <p class="down">
+                                                80％
+                                            </p>');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryLeadingClassTitle', N'<p class="up">
+                                                業界トップクラスの
+                                            </p>
+                                            <p class="down">
+                                                安全性！
+                                            </p>');
+
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryLeadingClassTitle', N'<p class="up">
+                                                業界トップクラスの
+                                            </p>
+                                            <p class="down">
+                                                安全性！
+                                            </p>');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryHighestAwardContent', N'<p>
+                                                0.0001BTCから購入ができ <br />
+                                                最高当選額は過去最高の１００ <br />
+                                                BTCをご用意しております。
+                                            </p>');
+
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryHighestAwardContent', N'<p>
+                                                0.0001BTCから購入ができ <br />
+                                                最高当選額は過去最高の１００ <br />
+                                                BTCをご用意しております。
+                                            </p>');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryMaximumRateContent', N'<p>
+                                                人件費がかからないからこそ出来る <br />
+                                                業界NO.1の還元率！
+                                            </p>');
+
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryMaximumRateContent', N'<p>
+                                                人件費がかからないからこそ出来る <br />
+                                                業界NO.1の還元率！
+                                            </p>');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryLeadingClassContent', N'<p>
+                                                ブロックチェーンとスマートコントラクト技術で、不正とハッキングからシステムを守ります！
+                                            </p>');
+
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryLeadingClassContent', N'<p>
+                                                ブロックチェーンとスマートコントラクト技術で、不正とハッキングからシステムを守ります！
+                                            </p>');
