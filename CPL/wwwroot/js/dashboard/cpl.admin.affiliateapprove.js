@@ -99,7 +99,7 @@
                     "render": function (data, type, full, meta) {
                         if (!full.kycVerified && full.affiliateId == 0) {
                             return "<div>" +
-                                "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-do-approve-affiliate-application'>" + $("#approve").val()+"</button> " +
+                                "<a data-id='" + full.id + "' href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-do-approve-affiliate-application'>" + $("#approve").val()+"</a> " +
                                 "</div>";
                         }
                         return "";

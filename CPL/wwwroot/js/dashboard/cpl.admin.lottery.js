@@ -100,20 +100,20 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        var html = "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</button>  <br />";
+                        var html = "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
                         if (full.status == 1) { // pendding
-                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</button>"
-                                + "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val();
+                            html += "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</a>"
+                                + "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val() + "</a>";
                         }
                         else if (full.status == 2) { // active
-                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-deactivate'>" + $("#deactivate").val() + "</button>";
+                            html += "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-deactivate'>" + $("#deactivate").val() + "</a>";
                         }
                         else if (full.status == 4) { // deactivate
-                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val()
-                                + "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val() + "</button>";
+                            html += "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</a>"
+                                + "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val() + "</a>";
                         }
                         if (full.status != 3) { // !completed
-                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-delete'>" + $("#delete").val() + "</button>";
+                            html += "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-delete'>" + $("#delete").val() + "</a>";
                         }
                         return html;
                     },
@@ -159,7 +159,7 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a class='btn btn-sm btn-outline-secondary btn-view' target='_blank' href='/history/lottery?sysUserId=" + (full.id) + "'" + ">" + $("#view").val() + "</a>";
+                        return "<a class='btn btn-sm btn-outline-secondary btn-view' target='_blank' href='/History/Lottery?sysUserId=" + full.id + "'" + ">" + $("#view").val() + "</a>";
                     },
                     "orderable": false
                 }

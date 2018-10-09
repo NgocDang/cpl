@@ -4,7 +4,7 @@
 }
 
 @section styles {
-    <link href="~/css/dashboard/cpl.whatiscryptopriceprediction.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/css/dashboard/cpl.whatiscryptopriceprediction.css" rel="stylesheet" asp-append-version="true" />
 }
 
 <div class="app-content container center-layout mt-2 px-0">
@@ -34,7 +34,75 @@
                             <img class="img-fluid" src="~/images/info/what_is_priceprediction_banner.png" />
                             <div class="centered">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePredictionMainTitle")</div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body main-body">
+                            <div class="row">
+                                <div class="col-12 py-2 text-center black">
+                                    @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePredictionMainContent"))
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row text-center font-weight-bold">
+                                        <div class="col-5 px-01">
+                                            <div class="card sub-card-24hour">
+                                                <div class="card-header px-01">
+                                                    @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction24HourTitle"))
+                                                </div>
+                                                <div class="card-body py-05 px-01">
+                                                    @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction24HourContent"))
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 px-01">
+                                            <div class="card sub-card-1hour">
+                                                <div class="card-header px-01">
+                                                    @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction1HourTitle"))
+                                                </div>
+                                                <div class="card-body py-05 px-01">
+                                                    @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction1HourContent"))
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3 px-01">
+                                            <div class="card sub-card-15min">
+                                                <div class="card-header px-01">
+                                                    @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction15MinTitle"))
+                                                </div>
+                                                <div class="card-body py-05 px-01">
+                                                    @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction15MinContent"))
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 px-05">
+                                    <dl class="row text-md-left text-center">
+                                        <dt class="col-sm-4 explain-24hour pb-1">
+                                            @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction24HourExplain"))
+                                        </dt>
+                                        <dd class="col-sm-8 black">
+                                            @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction24HourExplainContent"))
+                                        </dd>
+
+                                        <dt class="col-sm-4 explain-1hour pb-1">
+                                            @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction1HourExplain"))
+                                        </dt>
+                                        <dd class="col-sm-8 black">
+                                            @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction1HourExplainContent"))
+                                        </dd>
+
+                                        <dt class="col-sm-4 explain-15min pb-1">
+                                            @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction15MinExplain"))
+                                        </dt>
+                                        <dd class="col-sm-8 black">
+                                            @Html.Raw(@LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoPricePrediction15MinExplainContent"))
+                                            
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

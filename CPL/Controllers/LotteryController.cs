@@ -250,10 +250,7 @@ namespace CPL.Controllers
                             {
                                 return new JsonResult(new
                                 {
-                                    code = EnumResponseStatus.SUCCESS,
-                                    token = userEntity.TokenAmount.ToString("N0"),
-                                    hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful),
-                                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully")
+                                    code = EnumResponseStatus.SUCCESS
                                 });
                             }
 
