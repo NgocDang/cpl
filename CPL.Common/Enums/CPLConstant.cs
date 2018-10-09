@@ -188,6 +188,15 @@ namespace CPL.Common.Enums
 
 
             public static string ContactScreenEmailSentSuccessfully = "ContactScreen_Email_Sent_Successfully";
+
+            public static string EditPasswordScreenPasswordUpdatedSuccessfully = "EditPasswordScreen_Password_Updated_Successfully";
+            public static string EditPasswordScreenInvalidCurrentPassword = "EditPasswordScreen_Invalid_Current_Password";
+            public static string EditPasswordScreenNonExistingAccount = "EditPasswordScreen_NonExisting_Account";
+
+            public static string EditEmailScreenEmailUpdatedSuccessfully = "EditEmailScreen_Email_Updated_Successfully";
+            public static string EditEmailScreenNonExistingAccount = "EditEmailScreen_NonExisting_Account";
+            public static string EditEmailScreenExistingEmail = "EditEmailScreen_Existing_Email";
+
             public static string CommonErrorOccurs = "Common_ErrorOccurs";
         }
 
