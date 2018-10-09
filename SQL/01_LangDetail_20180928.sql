@@ -317,6 +317,6 @@ INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction15MinExplainCo
 											
 -- DamTran - 20181009 - Update Lang Detail FOR Slider
 UPDATE LangDetail 
-SET [Name] = N'編集'
+SET [Value] = N'編集'
 WHERE [Name] = N'Edit'
 AND LangId = 2;
