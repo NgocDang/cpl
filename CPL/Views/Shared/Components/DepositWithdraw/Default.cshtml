@@ -126,7 +126,7 @@
                                                 </div>
                                             </fieldset>
                                             <button type="button" class="btn btn-sm mr-1 mt-1 btn-qrcode"><i class="fas fa-qrcode"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "QRCode")</button>
-                                            <input type="file" class="file-qrcode" hidden />
+                                            <input type="file" class="file-qrcode" accept="image/*" hidden />
                                         </div>
                                         <div class="col-md-3 col-12">
                                             <fieldset class="form-group mb-0 text-sm-center text-right">
