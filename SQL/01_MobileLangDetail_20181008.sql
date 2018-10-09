@@ -401,3 +401,21 @@ INSERT INTO MobileLangDetail VALUES (2, N'EditPasswordScreen_Invalid_Current_Pas
 INSERT INTO MobileLangDetail VALUES (1, N'EditPasswordScreen_NonExisting_Account', N'Account is not existing');
 INSERT INTO MobileLangDetail VALUES (2, N'EditPasswordScreen_NonExisting_Account', N'アカウントは存在しません');
 
+INSERT INTO MobileLangDetail VALUES (1, N'DepositAndWithdrawScreen_Invalid_Withdraw_Amount', N'Invalid withdraw amount');
+INSERT INTO MobileLangDetail VALUES (2, N'DepositAndWithdrawScreen_Invalid_Withdraw_Amount', N'引き出し金額が無効です');
+
+INSERT INTO MobileLangDetail VALUES (1, N'DepositAndWithdrawScreen_Insufficient_Funds', N'Insufficient funds');
+INSERT INTO MobileLangDetail VALUES (2, N'DepositAndWithdrawScreen_Insufficient_Funds', N'残高不足');
+
+INSERT INTO MobileLangDetail VALUES (1, N'DepositAndWithdrawScreen_Invalid_BTCAddress', N'Invalid BTC address');
+INSERT INTO MobileLangDetail VALUES (2, N'DepositAndWithdrawScreen_Invalid_BTCAddress', N'無効なBTCアドレス');
+
+INSERT INTO MobileLangDetail VALUES (1, N'DepositAndWithdrawScreen_Withdrawed_Successfully', N'Withdrawed successfully');
+INSERT INTO MobileLangDetail VALUES (2, N'DepositAndWithdrawScreen_Withdrawed_Successfully', N'撤収に成功しました');
+
+INSERT INTO MobileLangDetail VALUES (1, N'ProfileEditUserScreen_Updated_Successfully', N'Personal info updated successfully');
+INSERT INTO MobileLangDetail VALUES (2, N'ProfileEditUserScreen_Updated_Successfully', N'個人情報が正常に更新されました');
+
+INSERT INTO MobileLangDetail VALUES (1, N'ProfileEditUserScreen_NonExisting_Account', N'Account is not existing');
+INSERT INTO MobileLangDetail VALUES (2, N'ProfileEditUserScreen_NonExisting_Account', N'アカウントは存在しません');
+
