@@ -18,9 +18,11 @@ namespace CPL.Domain
         public decimal? Volume { get; set; }
         public string Coinbase { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public int PricePredictionSettingId { get; set; }
+        public int PricePredictionCategoryId { get; set; }
         public bool IsCreatedByAdmin { get; set; }
-        public virtual PricePredictionSetting PricePredictionSetting { get; set; }
+
+        public virtual PricePredictionCategory PricePredictionCategory { get; set; }
         public virtual ICollection<PricePredictionHistory> PricePredictionHistories { get; set; }
+        public virtual ICollection<PricePredictionDetail> PricePredictionDetails { get; set; }
     }
 }

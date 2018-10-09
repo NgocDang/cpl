@@ -1940,64 +1940,7 @@ table.dataTable td:first-child {
     background-color: #fffdf5;
 }
 
-
-
-
-section#steps {
-
+.mx-02 {
+    margin-left: 2px;
+    margin-right: 2px;
 }
-    section#steps .steps > div:nth-child(1), section#steps .steps > div:nth-child(3), section#steps .steps > div:nth-child(5) {
-        flex: 0 0 30%;
-        max-width: 30%;
-    }
-
-    section#steps .steps > div:nth-child(2), section#steps .steps > div:nth-child(4){
-        flex: 0 0 5%;
-        max-width: 5%;
-    }
-
-        section#steps .steps > div:nth-child(2) > i::before, section#steps .steps > div:nth-child(4) > i::before {
-            top: 35%;
-            position:absolute;
-        }
-       
-        @media (max-width: 768px) {
-            section#steps .steps > div:nth-child(2) > i::before, section#steps .steps > div:nth-child(4) > i::before {
-                top: 35%;
-                left:8px;
-                position: absolute;
-            }
-        }
-
-@media (max-width: 320px) {
-    section#steps .steps > div:nth-child(2) > i::before, section#steps .steps > div:nth-child(4) > i::before {
-        top: -38px !important;
-    }
-}
-
-@media (max-width: 425px) {
-    section#steps .steps > div:nth-child(2) > i::before, section#steps .steps > div:nth-child(4) > i::before {
-        top: -38px !important;
-    }
-}
-
-@media (max-width: 524px) {
-    section#steps .steps > div:nth-child(1), section#steps .steps > div:nth-child(3), section#steps .steps > div:nth-child(5) {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-
-    section#steps .steps > div:nth-child(2), section#steps .steps > div:nth-child(4) {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-
-        section#steps .steps > div:nth-child(2) > i::before, section#steps .steps > div:nth-child(4) > i::before {
-            top: -40px;
-            left: 48%;
-            position: absolute;
-            transform: rotate(90deg);
-        }
-}
-    
-        

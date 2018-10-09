@@ -18,6 +18,7 @@ using Quartz;
 using CPL.Misc.Quartz;
 using CPL.Misc.Quartz.Jobs;
 using CPL.Misc.Quartz.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace CPL.Controllers
 {
@@ -77,10 +78,17 @@ namespace CPL.Controllers
             if (viewModel.SysUserId.HasValue)
                 viewModel.TokenAmount = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).TokenAmount;
 
-            viewModel.PricePredictionTabs = _pricePredictionService.Query()
-                .Include(x => x.PricePredictionSetting)
-                .Where(x => x.ResultTime > DateTime.Now && x.PricePredictionSetting.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
-                .Select(x => Mapper.Map<PricePredictionTab>(x)).OrderBy(x => x.ResultTime.ToString("HH:mm"))
+            viewModel.PricePredictionTabs = _pricePredictionService.Queryable()
+                .Where(x => x.ResultTime > DateTime.Now)
+                .OrderBy(x => x.ResultTime.ToString("HH:mm"))
+                .Select(x => new PricePredictionTab {
+                    Id = x.Id,
+                    ResultTime = x.ResultTime,
+                    ToBeComparedTime = x.ToBeComparedTime,
+                    CloseBettingTime = x.CloseBettingTime,
+                    IsDisabled = (x.CloseBettingTime < DateTime.Now),
+                    Title = x.PricePredictionDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Title
+                })
                 .ToList();
 
             // Move first tab to the end of the array
@@ -124,90 +132,6 @@ namespace CPL.Controllers
             {
                 throw new InvalidOperationException(ex.Message);
             }
-        }
-
-        public JsonResult SearchPricePredictionHistory(DataTableAjaxPostModel viewModel)
-        {
-            // action inside a standard controller
-            int filteredResultsCount;
-            int totalResultsCount;
-            var res = SearchPricePredictionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount);
-            return Json(new
-            {
-                // this is what datatables wants sending back
-                draw = viewModel.draw,
-                recordsTotal = totalResultsCount,
-                recordsFiltered = filteredResultsCount,
-                data = res
-            });
-        }
-
-        public IList<PricePredictionHistoryViewModel> SearchPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
-        {
-            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            var searchBy = (model.search != null) ? model.search.value?.ToLower() : null;
-            var take = model.length;
-            var skip = model.start;
-
-            string sortBy = "";
-            bool sortDir = true;
-
-            if (model.order != null)
-            {
-                // in this example we just default sort on the 1st column
-                sortBy = model.columns[model.order[0].column].data;
-                sortDir = model.order[0].dir.ToLower() == "desc";
-            }
-
-            totalResultsCount = _pricePredictionHistoryService
-                                 .Query()
-                                 .Include(x => x.PricePrediction)
-                                 .Where(x => x.SysUserId == user.Id)
-                                 .Count();
-
-            // search the dbase taking into consideration table sorting and paging
-            var pricePredictionHistory = _pricePredictionHistoryService
-                                          .Query()
-                                          .Include(x => x.PricePrediction)
-                                          .Where(x => x.SysUserId == user.Id)
-                                          .Select(x => new PricePredictionHistoryViewModel
-                                          {
-                                              ToBeComparedPrice = x.PricePrediction.ToBeComparedPrice,
-                                              ToBeComparedPriceInString = x.PricePrediction.ToBeComparedPrice.GetValueOrDefault(0).ToString("#,##0.##"),
-                                              ResultPrice = x.PricePrediction.ResultPrice,
-                                              ResultPriceInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
-                                              ResultTime = x.PricePrediction.ResultTime,
-                                              ResultTimeInString = x.PricePrediction.ResultTime.ToString(),
-                                              Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
-                                              Status = x.UpdatedDate.HasValue == true ? EnumLotteryGameStatus.COMPLETED.ToString() : EnumLotteryGameStatus.ACTIVE.ToString(),
-                                              PurcharseTime = x.CreatedDate,
-                                              PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")}",
-                                              Bonus = x.Award.GetValueOrDefault(0),
-                                              BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
-                                              Amount = x.Amount,
-                                              AmountInString = $"{x.Amount.ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
-                                          });
-
-            if (string.IsNullOrEmpty(searchBy))
-            {
-                filteredResultsCount = totalResultsCount;
-            }
-            else
-            {
-                pricePredictionHistory = pricePredictionHistory
-                                        .Where(x => x.PurcharseTimeInString.ToLower().Contains(searchBy)
-                                                    || x.Bet.ToLower().Contains(searchBy)
-                                                    || x.ToBeComparedPriceInString.ToLower().Contains(searchBy)
-                                                    || x.Status.ToLower().Contains(searchBy)
-                                                    || x.AmountInString.ToLower().Contains(searchBy)
-                                                    || x.BonusInString.ToLower().Contains(searchBy)
-                                                    || x.ResultPriceInString.ToLower().Contains(searchBy)
-                                                    || x.ResultTimeInString.ToLower().Contains(searchBy));
-
-                filteredResultsCount = pricePredictionHistory.Count();
-            }
-
-            return pricePredictionHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
         }
 
         [HttpPost]

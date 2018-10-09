@@ -16,11 +16,11 @@ namespace CPL.Domain
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public bool IsDeleted { get; set; }
 
         public int PricePredictionCategoryId { get; set; }
 
         public virtual PricePredictionCategory PricePredictionCategory { get; set; }
-        public virtual ICollection<PricePrediction> PricePredictions { get; set; }
         public virtual ICollection<PricePredictionSettingDetail> PricePredictionSettingDetails { get; set; }
     }
 }

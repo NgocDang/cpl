@@ -49,6 +49,7 @@ namespace CPL.Controllers
         private readonly IAnalyticService _analyticService;
         private readonly IIntroducedUsersService _introducedUsersService;
         private readonly IPricePredictionSettingService _pricePredictionSettingService;
+        private readonly IPricePredictionSettingDetailService _pricePredictionSettingDetailService;
         private readonly IAgencyService _agencyService;
         private readonly IPaymentService _paymentService;
         private readonly IGroupService _groupService;
@@ -81,6 +82,7 @@ namespace CPL.Controllers
             IAgencyTokenService agencyTokenService,
             IAgencyService agencyService,
             IPricePredictionSettingService pricePredictionSettingService,
+            IPricePredictionSettingDetailService pricePredictionSettingDetailService,
             IPaymentService paymentService,
             IGroupService groupService,
             ISliderService sliderService,
@@ -115,6 +117,7 @@ namespace CPL.Controllers
             this._sliderService = sliderService;
             this._sliderDetailService = sliderDetailService;
             this._pricePredictionSettingService = pricePredictionSettingService;
+            this._pricePredictionSettingDetailService = pricePredictionSettingDetailService;
 			this._pricePredictionCategoryService = pricePredictionCategoryService;
             this._pricePredictionCategoryDetailService = pricePredictionCategoryDetailService;
             this._dataContextAsync = dataContextAsync;
@@ -2673,15 +2676,13 @@ namespace CPL.Controllers
             // 1.STATISTICAL INFORMATION - TOTAL REVENUE
             viewModel.TotalRevenue = Convert.ToInt32(_pricePredictionHistoryService.Query()
                 .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .Sum(x => x.Amount - x.TotalAward.GetValueOrDefault(0)));
 
             // 1.STATISTICAL INFORMATION - TOTAL SALE
             viewModel.TotalSale = Convert.ToInt32(_pricePredictionHistoryService.Query()
                  .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .Sum(x => x.Amount));
 
             // 1.STATISTICAL INFORMATION - PAGE VIEWS
@@ -2692,8 +2693,7 @@ namespace CPL.Controllers
             // 1.STATISTICAL INFORMATION - TOTAL PLAYERS
             viewModel.TotalPlayers = _pricePredictionHistoryService.Query()
                 .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .Select(x => x.SysUserId)
                 .Distinct()
                 .Count();
@@ -2701,8 +2701,7 @@ namespace CPL.Controllers
             // 1.STATISTICAL INFORMATION - TODAY PLAYERS
             viewModel.TodayPlayers = _pricePredictionHistoryService.Query()
                  .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.CreatedDate.Date == DateTime.Now.Date && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.CreatedDate.Date == DateTime.Now.Date && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .GroupBy(x => x.SysUserId)
                 .Count();
 
@@ -2711,8 +2710,7 @@ namespace CPL.Controllers
             var pricePredictionSale = _pricePredictionHistoryService
                         .Query()
                         .Include(x => x.PricePrediction)
-                            .ThenInclude(x => x.PricePredictionSetting)
-                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                        .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                         .GroupBy(x => x.CreatedDate.Date)
                         .Select(y => new SummaryChange
                         {
@@ -2734,8 +2732,7 @@ namespace CPL.Controllers
             var pricePredictionUses = _pricePredictionHistoryService
                 .Query()
                 .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .GroupBy(x => x.CreatedDate.Date)
                 .Select(y => new SummaryChange
                 {
@@ -2747,8 +2744,7 @@ namespace CPL.Controllers
             var pricePredictionAwards = _pricePredictionHistoryService
                 .Query()
                 .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .GroupBy(x => x.UpdatedDate.GetValueOrDefault().Date)
                 .Select(y => new SummaryChange
                 {
@@ -2784,8 +2780,7 @@ namespace CPL.Controllers
             var pricePredictionPlayers = _pricePredictionHistoryService
                 .Query()
                 .Include(x => x.PricePrediction)
-                    .ThenInclude(x => x.PricePredictionSetting)
-                .Where(x => (periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now) && x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Where(x => (periodInDay > 0 ? x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) : x.CreatedDate <= DateTime.Now) && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                 .GroupBy(x => x.CreatedDate.Date)
                 .Select(y => new PlayersChange
                 {
@@ -2845,8 +2840,7 @@ namespace CPL.Controllers
             var purchasedPricePredictionHistory = _pricePredictionHistoryService
                     .Query()
                     .Include(x => x.PricePrediction)
-                        .ThenInclude(x => x.PricePredictionSetting)
-                    .Where(x => !pricePredictionCategoryId.HasValue || x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategoryId)
+                    .Where(x => !pricePredictionCategoryId.HasValue || x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
                     .GroupBy(x => new { x.CreatedDate.Date, x.PricePredictionId, x.SysUserId });
 
             var purchasedPricePredictionHistoryView = purchasedPricePredictionHistory
@@ -2907,13 +2901,11 @@ namespace CPL.Controllers
             {
                 var totalSalePricePrediction = _pricePredictionHistoryService.Query()
                                     .Include(x => x.PricePrediction)
-                                        .ThenInclude(x => x.PricePredictionSetting)
-                                    .Where(x => x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategories[i].Id)
+                                    .Where(x => x.PricePrediction.PricePredictionCategoryId == pricePredictionCategories[i].Id)
                                     .Sum(x => x.Amount);
                 var totalAwardPricePrediction = _pricePredictionHistoryService.Query()
                                                .Include(x => x.PricePrediction)
-                                                    .ThenInclude(x => x.PricePredictionSetting)
-                                                .Where(x => x.PricePrediction.PricePredictionSetting.PricePredictionCategoryId == pricePredictionCategories[i].Id)
+                                                .Where(x => x.PricePrediction.PricePredictionCategoryId == pricePredictionCategories[i].Id)
                                                 .Sum(x => x.TotalAward);
                 var revenueInPricePredictionGame = Convert.ToInt32(totalSalePricePrediction - totalAwardPricePrediction);
 
@@ -3011,7 +3003,9 @@ namespace CPL.Controllers
                 return new JsonResult(new
                 {
                     success = true,
-                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully")
+                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully"),
+                    id = pricePredictionCategory.Id,
+                    name = viewModel.PricePredictionCategoryDetailAdminViewModels.FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).Name
                 });
             }
             catch (Exception ex)
@@ -3651,6 +3645,127 @@ namespace CPL.Controllers
 
         #region PricePrediction
         [Permission(EnumRole.Admin)]
+        public IActionResult AddPricePredictionSetting()
+        {
+            var pricePredictionSetting = new PricePredictionSettingAdminViewModel();
+
+            var langs = _langService.Queryable()
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Name
+                })
+                .ToList();
+
+            foreach (var lang in langs)
+            {
+                pricePredictionSetting.PricePredictionSettingDetails.Add(new PricePredictionSettingDetailAdminViewModel()
+                {
+                    LangId = lang.Id,
+                    LangName = lang.Name
+                });
+            }
+
+            pricePredictionSetting.PricePredictionCategories = _pricePredictionCategoryService
+                                                                            .Query()
+                                                                            .Include(x => x.PricePredictionCategoryDetails)
+                                                                            .Select(x => new PricePredictionCategoryAdminViewModel
+                                                                            {
+                                                                                Id = x.Id,
+                                                                                Name = x.PricePredictionCategoryDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Name,
+                                                                            })
+                                                                            .ToList();
+
+            return PartialView("_EditPricePredictionSetting", pricePredictionSetting);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoAddPricePredictionSetting(PricePredictionSettingAdminViewModel viewModel)
+        {
+            try
+            {
+                var pricePredictionSetting = Mapper.Map<PricePredictionSetting>(viewModel);
+                pricePredictionSetting.CreatedDate = DateTime.Now;
+                _pricePredictionSettingService.Insert(pricePredictionSetting);
+                _unitOfWork.SaveChanges();
+
+                var pricePredictionSettingDetails = viewModel.PricePredictionSettingDetails.Select(x => Mapper.Map<PricePredictionSettingDetail>(x)).ToList();
+                pricePredictionSettingDetails.ForEach(x => x.PricePredictionSettingId = pricePredictionSetting.Id);
+                _pricePredictionSettingDetailService.InsertRange(pricePredictionSettingDetails);
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "AddSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [Permission(EnumRole.Admin)]
+        public IActionResult EditPricePredictionSetting(int id)
+        {
+            var pricePredictionSetting = _pricePredictionSettingService
+                                            .Query()
+                                            .Include(x => x.PricePredictionSettingDetails)
+                                            .FirstOrDefault(x => x.Id == id);
+
+            var viewModel = Mapper.Map<PricePredictionSettingAdminViewModel>(pricePredictionSetting);
+
+            var langs = _langService.Queryable().ToList();
+            viewModel.PricePredictionSettingDetails.ForEach(x => x.LangName = langs.FirstOrDefault(y => y.Id == x.LangId).Name);
+
+            viewModel.PricePredictionCategories = _pricePredictionCategoryService
+                                                                            .Query()
+                                                                            .Include(x => x.PricePredictionCategoryDetails)
+                                                                            .Select(x => new PricePredictionCategoryAdminViewModel
+                                                                            {
+                                                                                Id = x.Id,
+                                                                                Name = x.PricePredictionCategoryDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Name,
+                                                                            })
+                                                                            .ToList();
+
+            return PartialView("_EditPricePredictionSetting", viewModel);
+        }
+
+        [HttpPost]
+        [Permission(EnumRole.Admin)]
+        public JsonResult DoUpdatePricePredictionSetting(PricePredictionSettingAdminViewModel viewModel)
+        {
+            try
+            {
+                var pricePredictionSetting = _pricePredictionSettingService
+                                                .Query()
+                                                .Include(x => x.PricePredictionSettingDetails)
+                                                .FirstOrDefault(x => x.Id == viewModel.Id);
+                pricePredictionSetting.PricePredictionCategoryId = viewModel.PricePredictionCategoryId;
+                pricePredictionSetting.OpenBettingTime = viewModel.OpenBettingTime;
+                pricePredictionSetting.CloseBettingTime = viewModel.CloseBettingTime;
+                pricePredictionSetting.HoldingTimeInterval = viewModel.HoldingTimeInterval;
+                pricePredictionSetting.ResultTimeInterval = viewModel.ResultTimeInterval;
+                pricePredictionSetting.DividendRate = viewModel.DividendRate;
+                pricePredictionSetting.UpdatedDate = DateTime.Now;
+
+                _pricePredictionSettingService.Update(pricePredictionSetting);
+
+                foreach (var detail in pricePredictionSetting.PricePredictionSettingDetails)
+                {
+                    detail.Title = viewModel.PricePredictionSettingDetails.FirstOrDefault(x => x.LangId == detail.LangId).Title;
+                    _pricePredictionSettingDetailService.Update(detail);
+                }
+
+                _unitOfWork.SaveChanges();
+
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "UpdateSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
+            }
+        }
+
+        [Permission(EnumRole.Admin)]
         public IActionResult PricePredictionSetting()
         {
             return View();
@@ -3697,12 +3812,12 @@ namespace CPL.Controllers
                 filteredResultsCount =
                     totalResultsCount =
                         _pricePredictionSettingService.Queryable()
-                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted)
                         .Count();
 
                 return _pricePredictionSettingService.Query()
                             .Include(x => x.PricePredictionSettingDetails)
-                            .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
+                            .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted)
                             .Select(x => Mapper.Map<PricePredictionSettingAdminViewModel>(x))
                             .OrderBy(sortBy, sortDir)
                             .Skip(skip)
@@ -3713,23 +3828,44 @@ namespace CPL.Controllers
             {
                 filteredResultsCount = _pricePredictionSettingService.Query()
                         .Include(x => x.PricePredictionSettingDetails)
-                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE &&
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted &&
                                     (x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.PricePredictionSettingDetails.Any(y => y.Title.Contains(searchBy))))
                         .Count();
 
                 totalResultsCount = _pricePredictionSettingService.Queryable()
-                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE)
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted)
                         .Count();
 
                 return _pricePredictionSettingService.Query()
                         .Include(x => x.PricePredictionSettingDetails)
-                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE &&
+                        .Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted && 
                                     (x.CreatedDate.ToString("yyyy/MM/dd HH:mm:ss").Contains(searchBy) || x.PricePredictionSettingDetails.Any(y => y.Title.Contains(searchBy))))
                         .Select(x => Mapper.Map<PricePredictionSettingAdminViewModel>(x))
                         .OrderBy(sortBy, sortDir)
                         .Skip(skip)
                         .Take(take)
                         .ToList();
+            }
+        }
+
+        [Permission(EnumRole.Admin)]
+        [HttpPost]
+        public IActionResult DoDeletePricePredictionSetting(int id)
+        {
+            try
+            {
+                var pricePredictionSetting = _pricePredictionSettingService.Queryable()
+                    .FirstOrDefault(x => x.Id == id);
+
+                pricePredictionSetting.IsDeleted = true;
+                pricePredictionSetting.UpdatedDate = DateTime.Now;
+                _pricePredictionSettingService.Update(pricePredictionSetting);
+                _unitOfWork.SaveChanges();
+                return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "DeleteSuccessfully") });
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
             }
         }
         #endregion

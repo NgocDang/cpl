@@ -29,6 +29,7 @@ namespace CPL.Infrastructure
         public DbSet<PricePredictionSetting> PricePredictionSetting { get; set; }
         public DbSet<PricePredictionSettingDetail> PricePredictionSettingDetail { get; set; }
         public DbSet<PricePrediction> PricePrediction { get; set; }
+        public DbSet<PricePredictionDetail> PredictionDetail { get; set; }
         public DbSet<PricePredictionHistory> PricePredictionHistory { get; set; }
         public DbSet<Lottery> Lottery { get; set; }
         public DbSet<LotteryHistory> LotteryHistory { get; set; }
@@ -70,6 +71,7 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new PricePredictionSettingMap());
             modelBuilder.ApplyConfiguration(new PricePredictionSettingDetailMap());
             modelBuilder.ApplyConfiguration(new PricePredictionMap());
+            modelBuilder.ApplyConfiguration(new PricePredictionDetailMap());
             modelBuilder.ApplyConfiguration(new PricePredictionHistoryMap());
 
             modelBuilder.ApplyConfiguration(new LotteryMap());

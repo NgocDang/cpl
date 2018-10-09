@@ -27,12 +27,13 @@ namespace CPL.Mapping
             builder.Property(t => t.Volume).HasColumnName("Volume");
             builder.Property(t => t.Coinbase).HasColumnName("Coinbase");
             builder.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
+            builder.Property(t => t.PricePredictionCategoryId).HasColumnName("PricePredictionCategoryId");
             builder.Property(t => t.IsCreatedByAdmin).HasColumnName("IsCreatedByAdmin");
 
             //Relationship
-            builder.HasOne(x => x.PricePredictionSetting)
+            builder.HasOne(x => x.PricePredictionCategory)
                 .WithMany(x => x.PricePredictions)
-                .HasForeignKey(x => x.PricePredictionSettingId);
+                .HasForeignKey(x => x.PricePredictionCategoryId);
         }
     }
 }

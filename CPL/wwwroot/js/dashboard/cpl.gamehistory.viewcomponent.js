@@ -32,10 +32,7 @@
                 {
                     "data": "GameType",
                     "render": function (data, type, full, meta) {
-                        if (full.gameType == "LOTTERY")
-                            return "Lottery";
-                        else if (full.gameType == "PRICE_PREDICTION")
-                            return "Price Prediction"
+                        return full.gameType;
                     }
                 },
                 {
@@ -51,8 +48,6 @@
                             return "<div class='badge badge-success'>Win</div>";
                         else if (full.result == "LOSE")
                             return "<div class='badge badge-danger'>Lose</div>";
-                        else if (full.result == "KYC_PENDING")
-                            return "<div class='badge badge-info'>KYC Pending</div>";
                         else if (full.result == "REFUND")
                             return "<div class='badge badge-info'>Refund</div>";
                         else
@@ -62,22 +57,28 @@
                 {
                     "data": "Award",
                     "render": function (data, type, full, meta) {
-                        return full.awardInString;
+                        if (full.result == "")
+                            return "";
+                        else 
+                            return full.awardInString;
                     }
                 },
                 {
                     "data": "Balance",
                     "render": function (data, type, full, meta) {
-                        return full.balanceInString;
+                        if (full.result == "")
+                            return "";
+                        else
+                            return full.balanceInString;
                     }
                 },
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        if (full.gameType == "LOTTERY")
+                        if (full.gameType == "Lottery")
                             return "<a href='/History/Lottery?createdDate=" + full.createdDate + "&lotteryId=" + full.gameId + "&sysUserId=" + $("#SysUserId").val() + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
-                        else if (full.gameType == "PRICE_PREDICTION")
-                            return "<a href='/History/PricePrediction?id=" + full.gameId + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() +"</a>";
+                        else if (full.gameType == "Price Prediction")
+                            return "<a href='/History/PricePrediction?pricePredictionId=" + full.gameId + "&sysUserId=" + $("#game-history-view-component #SysUserId").val() + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
                     },
                     "orderable": false
                 }

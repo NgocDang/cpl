@@ -1,11 +1,11 @@
 ﻿var AllTopAgencyAffiliate = {
-    AllTopAgencyAffiliateDataTable: null,
+    allTopAgencyAffiliateDataTable: null,
     init: function () {
-        AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable = AllTopAgencyAffiliate.loadAllTopAgencyAffiliateDataTable();
+        AllTopAgencyAffiliate.allTopAgencyAffiliateDataTable = AllTopAgencyAffiliate.loadAllTopAgencyAffiliateDataTable();
         AllTopAgencyAffiliate.initAllTopAgencyAffiliateDataTable();
     },
     initAllTopAgencyAffiliateDataTable: function () {
-        AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+        AllTopAgencyAffiliate.allTopAgencyAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
             AllTopAgencyAffiliate.loadEditable();
         });
     },
@@ -25,7 +25,7 @@
                 },
                 complete: function (data) {
                     AllTopAgencyAffiliate.loadEditable();
-                    var table = AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable;
+                    var table = AllTopAgencyAffiliate.allTopAgencyAffiliateDataTable;
                 }
             },
             'deferRender': true,

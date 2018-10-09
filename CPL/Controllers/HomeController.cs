@@ -70,9 +70,8 @@ namespace CPL.Controllers
                 .Where(x => !x.IsDeleted && x.Status == (int)EnumLotteryGameStatus.ACTIVE).ToList();
 
             var closestPricePrediction = _pricePredictionService.Query()
-                .Include(x => x.PricePredictionSetting)
-                    .ThenInclude(y => y.PricePredictionSettingDetails)
-                .Where(x => !x.UpdatedDate.HasValue && x.CloseBettingTime > DateTime.Now)
+                .Include(x => x.PricePredictionDetails)
+                .Where(x =>!x.UpdatedDate.HasValue && x.CloseBettingTime > DateTime.Now) // Should add IsDeleted to priceprediction ?
                 .OrderBy(x => x.CloseBettingTime)
                 .FirstOrDefault();
 
@@ -85,14 +84,10 @@ namespace CPL.Controllers
                                                 RandomLotteryTitle = randomLottery?.Title,
                                                 RandomLotteryDescription = randomLottery?.LotteryDetails.FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).ShortDescription,
                                                 ClosestPricePredictionId = closestPricePrediction?.Id,
-                                                ClosestPricePredictionTitle = closestPricePrediction
-                                                    ?.PricePredictionSetting
-                                                    .PricePredictionSettingDetails
-                                                    .FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).Title,
-                                                ClosestPricePredictionDescription = closestPricePrediction
-                                                    ?.PricePredictionSetting
-                                                    .PricePredictionSettingDetails
-                                                    .FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).ShortDescription };
+                                                ClosestPricePredictionTitle = closestPricePrediction?.PricePredictionDetails
+                                                                                                     .FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).Title,
+                                                ClosestPricePredictionDescription = closestPricePrediction?.PricePredictionDetails
+                                                                                                           .FirstOrDefault(x => x.LangId == HttpContext.Session.GetInt32("LangId").Value).ShortDescription };
 
             viewModel.Sliders = _sliderService.Queryable()
                                 .Include(x => x.Group)
