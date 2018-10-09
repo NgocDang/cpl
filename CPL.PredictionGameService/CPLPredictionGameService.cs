@@ -29,7 +29,7 @@ namespace CPL.PredictionGameService
         private static int SystemPricePredictionHoldingIntervalInHour;        // 1h
         private static int SystemPricePredictionCompareIntervalInMinute;      // 15m
 
-        public static BasePricePredictionFunctions basePricePredictionFunctions = new BasePricePredictionFunctions();
+        public BasePricePredictionFunctions basePricePredictionFunctions = new BasePricePredictionFunctions();
 
         public int RunningIntervalInMilliseconds { get; set; }
 
@@ -55,11 +55,9 @@ namespace CPL.PredictionGameService
 
             Tasks.Add(Task.Run(async () =>
             {
+                // SYSTEM PRICE PREDICTION CREATING JOB
                 var systemStartHour = SystemPricePredictionHoldingIntervalInHour;       // 1h
                 var systemStartMinute = SystemPricePredictionCompareIntervalInMinute;   // 15m
-
-                var adminStartHour = int.Parse(SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.AdminPricePredictionDailyJobStartHour).Value);   // 0h
-                var adminStartMinute = int.Parse(SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.AdminPricePredictionDailyJobStartMinute).Value);  // 0m
 
                 IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
                 await scheduler.Start();
@@ -78,33 +76,38 @@ namespace CPL.PredictionGameService
                 ITrigger systemPricePredictionCreatingTrigger = TriggerBuilder.Create()
                     .WithIdentity(new TriggerKey("SystemPricePredictionCreatingJob", "QuartzGroup"))
                     .WithDescription("Job to create new System PricePredictions daily automatically")
-                                        .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(SystemPricePredictionBettingIntervalInHour)
-                                                                                .OnEveryDay()
-                                                                                .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(systemStartHour, systemStartMinute)))
+                    .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(SystemPricePredictionBettingIntervalInHour)
+                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(systemStartHour, systemStartMinute)))
                     .Build();
                 await scheduler.ScheduleJob(systemPricePredictionCreatingJob, systemPricePredictionCreatingTrigger);
+
+
+                // ADMIN PRICE PREDICTION CREATING JOB
+                var adminStartHour = int.Parse(SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.AdminPricePredictionDailyJobStartHour).Value);   // 0h
+                var adminStartMinute = int.Parse(SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.AdminPricePredictionDailyJobStartMinute).Value);  // 0m
 
                 var adminJobData = new JobDataMap
                 {
                     ["Resolver"] = AdminResolver,
                 };
 
-                // Admin's PricePredictions
                 IJobDetail adminPricePredictionCreatingJob = JobBuilder.Create<AdminPricePredictionJob>()
                     .UsingJobData(adminJobData)
                     .WithIdentity(new JobKey("AdminPricePredictionCreatingJob", "QuartzGroup"))
-                    .WithDescription("Job to create new admin'sPricePredictions daily automatically")
+                    .WithDescription("Job to create new admin's PricePredictions daily automatically")
                     .Build();
 
                 ITrigger adminPricePredictionCreatingTrigger = TriggerBuilder.Create()
                     .WithIdentity(new TriggerKey("AdminPricePredictionCreatingJob", "QuartzGroup"))
                     .WithDescription("Job to create new admin's PricePredictions daily automatically")
-                                        .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PredictionGameServiceConstant.DailyIntervalInHours)
-                                                                                .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(adminStartHour, adminStartMinute)))
+                    .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PredictionGameServiceConstant.DailyIntervalInHours)
+                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(adminStartHour, adminStartMinute)))
                     .Build();
+
                 await scheduler.ScheduleJob(adminPricePredictionCreatingJob, adminPricePredictionCreatingTrigger);
 
                 // Admin's PricePredictions check result job
+                // TODO: use Status column instead of checking ResultPrice.HasValue
                 var activeAdminPricePredictions = SystemResolver.PricePredictionService.Queryable().Where(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && x.IsCreatedByAdmin && x.ResultTime > DateTime.Now).ToList();
                 foreach (var activeAdminPricePrediction in activeAdminPricePredictions)
                 {
@@ -116,16 +119,16 @@ namespace CPL.PredictionGameService
 
                     IJobDetail adminPricePredictionCheckResultJob = JobBuilder.Create<AdminPricePredictionCheckResultJob>()
                         .UsingJobData(adminJobData)
-                        .WithIdentity(new JobKey(string.Format("AdminPricePredictionId{0}CheckResultJob", activeAdminPricePrediction.Id.ToString()), "QuartzGroup"))
-                        .WithDescription("Job to check admin'sPricePredictions result")
+                        .WithIdentity(new JobKey(string.Format("AdminPricePredictionId{0}CheckResultJob", activeAdminPricePrediction.Id), "QuartzGroup"))
+                        .WithDescription("Job to check admin's PricePredictions result")
                         .Build();
 
                     ITrigger adminPricePredictionCheckResultTrigger = TriggerBuilder.Create()
-                        .WithIdentity(new TriggerKey(string.Format("AdminPricePredictionId{0}CheckResultJob", activeAdminPricePrediction.Id.ToString()), "QuartzGroup"))
-                        .WithDescription("Job to check admin'sPricePredictions result")
-                                            .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PredictionGameServiceConstant.DailyIntervalInHours)
-                                                                                    .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(activeAdminPricePrediction.ResultTime.Hour, activeAdminPricePrediction.ResultTime.Minute))
-                                                                                    .WithRepeatCount(0))
+                        .WithIdentity(new TriggerKey(string.Format("AdminPricePredictionId{0}CheckResultJob", activeAdminPricePrediction.Id), "QuartzGroup"))
+                        .WithDescription("Job to check admin's PricePredictions result")
+                        .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PredictionGameServiceConstant.DailyIntervalInHours) // If not doing this, job will be triggered with 1 min interval
+                            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(activeAdminPricePrediction.ResultTime.Hour, activeAdminPricePrediction.ResultTime.Minute))
+                            .WithRepeatCount(0))
                         .Build();
                     await scheduler.ScheduleJob(adminPricePredictionCheckResultJob, adminPricePredictionCheckResultTrigger);
                 }

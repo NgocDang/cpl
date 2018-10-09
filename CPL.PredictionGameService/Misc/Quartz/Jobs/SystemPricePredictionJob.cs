@@ -70,14 +70,14 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             // udpate DB
             resolver.UnitOfWork.SaveChanges();
 
-            var LangIds = resolver.LangService.Queryable().Select(x => x.Id).ToList();
+            var langIds = resolver.LangService.Queryable().Select(x => x.Id).ToList();
             var title = newPricePredictionRecord.CloseBettingTime.ToString("HH:mm") == "00:00" ? "24:00" : newPricePredictionRecord.CloseBettingTime.ToString("HH:mm");
-            foreach (var id in LangIds)
+            foreach (var id in langIds)
             {
                 resolver.PricePredictionDetailService.Insert(new PricePredictionDetail
                 {
                     LangId = id,
-                    Title = title, // title will be shown as named of tab in priceprediction screen
+                    Title = title, // title will be shown as tab name in priceprediction screen
                     PricePredictionId = newPricePredictionRecord.Id,
                 });
             }
