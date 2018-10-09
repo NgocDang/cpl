@@ -14,11 +14,6 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 {
     internal class AdminPricePredictionJob : IJob
     {
-        //public AdminPricePredictionJob()
-        //{
-        //    Console.ReadLine();
-        //}
-
         public Task Execute(IJobExecutionContext context)
         {
             Utils.FileAppendThreadSafe(CPLPredictionGameService.basePricePredictionFunctions.FileName, string.Format("{0}Execute AdminPricePredictionCreatingJob {1}: {2}", Environment.NewLine, DateTime.Now, Environment.NewLine));
@@ -56,10 +51,27 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                     CloseBettingTime = closeBettingTime,
                     ToBeComparedTime = toBeComparedTime,
                     ResultTime = resultTime,
-                    IsCreatedByAdmin = true
+                    IsCreatedByAdmin = true,
+                    PricePredictionCategoryId = 2 // default standard priceprediction category
                 };
 
                 resolver.PricePredictionService.Insert(newPricePredictionRecord);
+                resolver.UnitOfWork.SaveChanges();
+
+                var LangIds = resolver.LangService.Queryable().Select(x => x.Id).ToList();
+                //var title = newPricePredictionRecord.CloseBettingTime.ToString("HH:mm") == "00:00" ? "24:00" : newPricePredictionRecord.CloseBettingTime.ToString("HH:mm");
+                var title = resolver.PricePredictionSettingDetailService.Queryable().FirstOrDefault(x => x.PricePredictionSettingId == activePricePredictionSetting.Id).Title;
+                foreach (var id in LangIds)
+                {
+                    resolver.PricePredictionDetailService.Insert(new PricePredictionDetail
+                    {
+                        LangId = id,
+                        Title = title, // title will be shown as named of tab in priceprediction screen
+                        PricePredictionId = newPricePredictionRecord.Id,
+                    });
+                }
+
+                // udpate DB
                 resolver.UnitOfWork.SaveChanges();
 
                 var jobData = new JobDataMap

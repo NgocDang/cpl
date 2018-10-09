@@ -69,21 +69,21 @@ namespace CPL.PredictionGameService
                     ["Resolver"] = SystemResolver,
                 };
 
-                //System PricePredictions
-                //IJobDetail systemPricePredictionCreatingJob = JobBuilder.Create<SystemPricePredictionJob>()
-                //    .UsingJobData(systemJobData)
-                //    .WithIdentity(new JobKey("SystemPricePredictionCreatingJob", "QuartzGroup"))
-                //    .WithDescription("Job to create new System PricePredictions daily automatically")
-                //    .Build();
+                System PricePredictions
+                IJobDetail systemPricePredictionCreatingJob = JobBuilder.Create<SystemPricePredictionJob>()
+                    .UsingJobData(systemJobData)
+                    .WithIdentity(new JobKey("SystemPricePredictionCreatingJob", "QuartzGroup"))
+                    .WithDescription("Job to create new System PricePredictions daily automatically")
+                    .Build();
 
-                //ITrigger systemPricePredictionCreatingTrigger = TriggerBuilder.Create()
-                //    .WithIdentity(new TriggerKey("SystemPricePredictionCreatingJob", "QuartzGroup"))
-                //    .WithDescription("Job to create new System PricePredictions daily automatically")
-                //                        .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(SystemPricePredictionBettingIntervalInHour)
-                //                                                                .OnEveryDay()
-                //                                                                .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(systemStartHour, systemStartMinute)))
-                //    .Build();
-                //await scheduler.ScheduleJob(systemPricePredictionCreatingJob, systemPricePredictionCreatingTrigger);
+                ITrigger systemPricePredictionCreatingTrigger = TriggerBuilder.Create()
+                    .WithIdentity(new TriggerKey("SystemPricePredictionCreatingJob", "QuartzGroup"))
+                    .WithDescription("Job to create new System PricePredictions daily automatically")
+                                        .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(SystemPricePredictionBettingIntervalInHour)
+                                                                                .OnEveryDay()
+                                                                                .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(systemStartHour, systemStartMinute)))
+                    .Build();
+                await scheduler.ScheduleJob(systemPricePredictionCreatingJob, systemPricePredictionCreatingTrigger);
 
                 var adminJobData = new JobDataMap
                 {
