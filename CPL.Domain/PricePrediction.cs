@@ -19,7 +19,7 @@ namespace CPL.Domain
         public string Coinbase { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int PricePredictionSettingId { get; set; }
-
+        public bool IsCreatedByAdmin { get; set; }
         public virtual PricePredictionSetting PricePredictionSetting { get; set; }
         public virtual ICollection<PricePredictionHistory> PricePredictionHistories { get; set; }
     }

@@ -15,6 +15,7 @@ namespace CPL.Domain
         public int DividendRate { get; set; }
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
         public int PricePredictionCategoryId { get; set; }
 

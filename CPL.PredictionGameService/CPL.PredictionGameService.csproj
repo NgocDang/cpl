@@ -22,6 +22,7 @@
     <ProjectReference Include="..\CPL.Core\CPL.Core.csproj" />
     <ProjectReference Include="..\CPL.Domain\CPL.Domain.csproj" />
     <ProjectReference Include="..\CPL.Infrastructure\CPL.Infrastructure.csproj" />
+    <ProjectReference Include="..\CPL\CPL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
