@@ -260,3 +260,57 @@ INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryLeadingClassContent', 
 -- What is crypto price prediction----
 INSERT INTO LangDetail VALUES (1, N'WhatIsCryptoPricePredictionMainTitle', N'What is crypto price prediction?');
 INSERT INTO LangDetail VALUES (2, N'WhatIsCryptoPricePredictionMainTitle', N'クリプトバイナリーは？');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePredictionMainContent', N'<p>
+                                        クリプトバイナリーとは、BTCの価格が上がるか下がるかを当てるゲームです。
+                                    </p>
+                                    <p>
+                                        一回のゲームはエントリータイム・ホールドタイム・抽選タイムに分れています。
+                                    </p>');
+
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePredictionMainContent', N'<p>
+                                        クリプトバイナリーとは、BTCの価格が上がるか下がるかを当てるゲームです。
+                                    </p>
+                                    <p>
+                                        一回のゲームはエントリータイム・ホールドタイム・抽選タイムに分れています。
+                                    </p>');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction24HourTitle', N'24 hours');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction24HourTitle', N'２４時間');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction24HourContent', N'Entry time');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction24HourContent', N'エントリータイム');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourTitle', N'1 hours');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction1HourTitle', N'１時間');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourContent', N'Holding time');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction1HourContent', N'ホールドタイム');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinTitle', N'15 mins');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction15MinTitle', N'15分');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinContent', N'Lottery <br /> Time');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction15MinContent', N'抽選 <br /> タイム');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction24HourExplain', N'※  エントリータイム   :');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction24HourExplain', N'※  エントリータイム   :');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourExplain', N'※   ホールドタイム   :');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction1HourExplain', N'※   ホールドタイム   :');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinExplain', N'※   抽選タイム   :');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction15MinExplain', N'※   抽選タイム   :');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction24HourExplainContent', N'<p>HighかLowにエントリー出来る時間です。</p>
+                                            <p>24 時間のエントリータイムを設けております。</p>');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction24HourExplainContent', N'<p>HighかLowにエントリー出来る時間です。</p>
+                                            <p>24 時間のエントリータイムを設けております。</p>');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourExplainContent', N'<p>エントリーされた合計が集計され、倍率の最終決定がされます。</p>');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction1HourExplainContent', N'<p>エントリーされた合計が集計され、倍率の最終決定がされます。</p>');
+
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinExplainContent', N'<p>指定された15分間の始まりの価格と終わりの価格で</p>
+                                            <p>HIGHかLOWの抽選が行われます。</p>');
+INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction15MinExplainContent', N'<p>指定された15分間の始まりの価格と終わりの価格で</p>
+                                            <p>HIGHかLOWの抽選が行われます。</p>');
