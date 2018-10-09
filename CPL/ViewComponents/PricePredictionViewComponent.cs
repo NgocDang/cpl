@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.Core.Interfaces;
 using CPL.Domain;
 using CPL.Misc;
@@ -75,7 +76,7 @@ namespace CPL.ViewComponents
 
             // Get btc previous rates 12h before until now
             var btcPriceInUTC = _btcPriceService.Queryable()
-                .Where(x => x.Time >= ((DateTimeOffset)viewModel.OpenBettingTime.AddHours(-CPLConstant.HourBeforeInChart)).ToUnixTimeSeconds())
+                .Where(x => x.Time >= viewModel.OpenBettingTime.AddHours(-CPLConstant.HourBeforeInChart).ToUTCUnixTimeInSeconds())
                 .ToList();
             var lowestRate = btcPriceInUTC.Min(x => x.Price) - CPLConstant.LowestRateBTCInterval;
             if (lowestRate < 0)
