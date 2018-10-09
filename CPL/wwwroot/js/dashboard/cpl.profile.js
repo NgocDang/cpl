@@ -126,7 +126,7 @@
             if (isFormValid && isMobileValid && isDOBValid && isCountryValid) {
                 var returnUrl = Profile.getUrlParameter("returnUrl");
                 $.ajax({
-                    url: "/Profile/Update/",
+                    url: "/Profile/DoEdit/",
                     type: "POST",
                     beforeSend: function () {
                         $("#btn-do-edit-profile").attr("disabled", true);

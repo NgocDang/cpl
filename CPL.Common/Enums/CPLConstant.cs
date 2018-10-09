@@ -188,9 +188,24 @@ namespace CPL.Common.Enums
 
 
             public static string ContactScreenEmailSentSuccessfully = "ContactScreen_Email_Sent_Successfully";
+
+            public static string EditPasswordScreenPasswordUpdatedSuccessfully = "EditPasswordScreen_Password_Updated_Successfully";
+            public static string EditPasswordScreenInvalidCurrentPassword = "EditPasswordScreen_Invalid_Current_Password";
+            public static string EditPasswordScreenNonExistingAccount = "EditPasswordScreen_NonExisting_Account";
+
+            public static string EditEmailScreenEmailUpdatedSuccessfully = "EditEmailScreen_Email_Updated_Successfully";
+            public static string EditEmailScreenNonExistingAccount = "EditEmailScreen_NonExisting_Account";
+            public static string EditEmailScreenExistingEmail = "EditEmailScreen_Existing_Email";
+
+            public static string DepositAndWithdrawScreenInvalidWithdrawAmount = "DepositAndWithdrawScreen_Invalid_Withdraw_Amount";
+            public static string DepositAndWithdrawScreenInsufficientFunds = "DepositAndWithdrawScreen_Insufficient_Funds";
+            public static string DepositAndWithdrawScreenInvalidBTCAddress = "DepositAndWithdrawScreen_Invalid_BTCAddress";
+            public static string DepositAndWithdrawScreenWithdrawedSuccessfully = "DepositAndWithdrawScreen_Withdrawed_Successfully";
+
+            public static string ProfileEditUserScreenUpdatedSuccessfully = "ProfileEditUserScreen_Updated_Successfully";
+            public static string ProfileEditUserScreenNonExistingAccount = "ProfileEditUserScreen_NonExisting_Account";
+
             public static string CommonErrorOccurs = "Common_ErrorOccurs";
         }
-
-
     }
 }

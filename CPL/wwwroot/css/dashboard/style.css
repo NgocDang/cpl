@@ -1944,3 +1944,7 @@ table.dataTable td:first-child {
     margin-left: 2px;
     margin-right: 2px;
 }
+
+table.dataTable td a.btn {
+    margin: 2px
+}

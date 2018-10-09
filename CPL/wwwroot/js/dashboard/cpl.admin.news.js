@@ -204,7 +204,7 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a style='margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</a> <button style='line-height:12px;margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-do-delete'>" + $("#delete").val() +"</button>";
+                        return "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</a> <a data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-do-delete'>" + $("#delete").val() +"</a>";
                     },
                     "orderable": false
                 }
