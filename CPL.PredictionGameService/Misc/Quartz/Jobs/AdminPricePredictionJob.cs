@@ -33,7 +33,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
         {
             Utils.FileAppendThreadSafe(CPLPredictionGameService.basePricePredictionFunctions.FileName, string.Format("1. DoCreateAdminPricePrediction: {0}{1}", DateTime.Now, Environment.NewLine));
 
-            var activePricePredictionSettings = resolver.PricePredictionSettingService.Queryable().Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE).ToList();
+            var activePricePredictionSettings = resolver.PricePredictionSettingService.Queryable().Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted).ToList();
 
             IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
 
