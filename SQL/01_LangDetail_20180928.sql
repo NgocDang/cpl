@@ -314,3 +314,9 @@ INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinExplainCo
                                             <p>HIGHかLOWの抽選が行われます。</p>');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction15MinExplainContent', N'<p>指定された15分間の始まりの価格と終わりの価格で</p>
                                             <p>HIGHかLOWの抽選が行われます。</p>');
+											
+-- DamTran - 20181009 - Update Lang Detail FOR Slider
+UPDATE LangDetail 
+SET [Name] = N'編集'
+WHERE [Name] = N'Edit'
+AND LangId = 2;
