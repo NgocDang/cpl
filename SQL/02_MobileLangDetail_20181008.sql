@@ -2,7 +2,6 @@
 INSERT INTO MobileLangDetail VALUES (2, N'MoreScreen_Button_Ok', N'はい');
 
 
-
 INSERT INTO MobileLangDetail VALUES (1, N'ContactScreen_Title', N'Contact');
 INSERT INTO MobileLangDetail VALUES (2, N'ContactScreen_Title', N'接触');
 
