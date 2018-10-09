@@ -358,8 +358,8 @@
             {
                 "data": "Action",
                 "render": function (data, type, full, meta) {
-                    var actions = " <button style='margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</button>";
-                    actions += "<button style='margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-do-delete'>" + $("#delete").val() + "</button>";
+                    var actions = " <a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</a>";
+                    actions += "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-do-delete'>" + $("#delete").val() + "</a>";
                     return actions;
                 },
                 "orderable": false
