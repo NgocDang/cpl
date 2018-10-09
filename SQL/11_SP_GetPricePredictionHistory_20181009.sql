@@ -7,7 +7,7 @@ GO
 -- Create date: 20181009
 -- Description:	Get PricePrediction history to show in admin view
 -- =============================================
-CREATE PROCEDURE [dbo].[usp_GetPricePredictionHistory] 
+ALTER PROCEDURE [dbo].[usp_GetPricePredictionHistory] 
 	-- Add the parameters for the stored procedure here
 	@PricePredictionCategoryId int,
 	@LangId int,
@@ -31,14 +31,12 @@ DECLARE @TablePricePredictionHistory TABLE
 (
 	SysUserId int, 
 	Email nvarchar(50),
-	--[Status] int,
+	[Status] int,
+	StatusInString nvarchar(20),
 	NumberOfPrediction int,
 	TotalPurchasePrice money,
 	Title nvarchar(200),
 	PurchaseDateTime date,
-	--PurchaseDateTimeInString nvarchar(20),
-	--NumberOfPredictionInString nvarchar(10),
-	--StatusInString nvarchar(20),
 	RowNum int
 );
 
@@ -60,13 +58,18 @@ DECLARE @TablePricePredictionHistory TABLE
 	(
 		SELECT cte.*,
 			   su.Email,
-			   ppdt.Title
-		--ppt.status // todo
+			   ppdt.Title,
+			   pp.[Status],
+			   CASE WHEN pp.[Status]= 1
+					THEN 'ACTIVE'
+					WHEN pp.[Status] = 2
+					THEN 'COMPLETED'
+					ELSE ''
+				END AS StatusInString
 		FROM PricePrediction pp
 		JOIN PricePredictionHistoryCTE cte	on pp.Id = cte.PricePredictionId
 		JOIN PricePredictionDetail ppdt		on pp.Id = ppdt.PricePredictionId 
-											--and ppdt.[LangId] = @LangId
-											and ppdt.[LangId] = 1
+											and ppdt.[LangId] = @LangId
 		JOIN SysUser su						on cte.SysUserId = su.Id
 		WHERE pp.PricePredictionCategoryId = 
 				CASE
@@ -89,9 +92,9 @@ DECLARE @TablePricePredictionHistory TABLE
 				CASE WHEN @OrderDirection = N'asc' THEN ''
 					 WHEN @OrderColumn = N'Email' THEN Email
 					 END DESC,
-				--CASE WHEN @OrderDirection = N'asc' THEN ''
-				--	 WHEN @OrderColumn = N'Status' THEN [Status]
-				--	 END DESC,
+				CASE WHEN @OrderDirection = N'asc' THEN ''
+					 WHEN @OrderColumn = N'Status' THEN [Status]
+					 END DESC,
 				CASE WHEN @OrderDirection = N'asc' THEN 0
 					 WHEN @OrderColumn = N'NumberOfPrediction' THEN NumberOfPrediction
 					 END DESC,
@@ -104,15 +107,9 @@ DECLARE @TablePricePredictionHistory TABLE
 				CASE WHEN @OrderDirection = N'asc' THEN cast (null as date)
 					 WHEN @OrderColumn = N'PurchaseDateTime ' THEN PurchaseDateTime 
 					 END DESC,
-				--CASE WHEN @OrderDirection = N'asc' THEN cast (null as datetime)
-				--	 WHEN @OrderColumn = N'PurchaseDateTimeInString' THEN PurchaseDateTime 
-				--	 END DESC,
-				--CASE WHEN @OrderDirection = N'asc' THEN ''
-				--	 WHEN @OrderColumn = N'NumberOfPredictionInString' THEN NumberOfPrediction 
-				--	 END DESC,
-				--CASE WHEN @OrderDirection = N'asc' THEN ''
-				--	 WHEN @OrderColumn = N'StatusInString' THEN [Status] 
-				--	 END DESC,
+				CASE WHEN @OrderDirection = N'asc' THEN ''
+					 WHEN @OrderColumn = N'StatusInString' THEN [Status] 
+					 END DESC,
 	
 				-- DESC
 				CASE WHEN @OrderDirection = N'desc' THEN 0
@@ -120,31 +117,25 @@ DECLARE @TablePricePredictionHistory TABLE
 					 END ASC,
 				CASE WHEN @OrderDirection = N'desc' THEN ''
 					 WHEN @OrderColumn = N'Email' THEN Email
-					 END DESC,
-				--CASE WHEN @OrderDirection = N'desc' THEN ''
-				--	 WHEN @OrderColumn = N'Status' THEN [Status]
-				--	 END DESC,
+					 END ASC,
+				CASE WHEN @OrderDirection = N'desc' THEN ''
+					 WHEN @OrderColumn = N'Status' THEN [Status]
+					 END ASC,
 				CASE WHEN @OrderDirection = N'desc' THEN 0
 					 WHEN @OrderColumn = N'NumberOfPrediction' THEN NumberOfPrediction
-					 END DESC,
+					 END ASC,
 				CASE WHEN @OrderDirection = N'desc' THEN cast(null as money)
 					 WHEN @OrderColumn = N'TotalPurchasePrice' THEN TotalPurchasePrice
-					 END DESC,
+					 END ASC,
 				CASE WHEN @OrderDirection = N'desc' THEN ''
 					 WHEN @OrderColumn = N'Title ' THEN Title 
-					 END DESC,
+					 END ASC,
 				CASE WHEN @OrderDirection = N'desc' THEN cast (null as date)
 					 WHEN @OrderColumn = N'PurchaseDateTime ' THEN PurchaseDateTime 
-					 END DESC--,
-				--CASE WHEN @OrderDirection = N'desc' THEN cast (null as datetime)
-				--	 WHEN @OrderColumn = N'PurchaseDateTimeInString' THEN PurchaseDateTime 
-				--	 END DESC,
-				--CASE WHEN @OrderDirection = N'desc' THEN ''
-				--	 WHEN @OrderColumn = N'NumberOfPredictionInString' THEN NumberOfPrediction 
-				--	 END DESC,
-				--CASE WHEN @OrderDirection = N'desc' THEN ''
-				--	 WHEN @OrderColumn = N'StatusInString' THEN [Status] 
-				--	 END DESC
+					 END ASC,
+				CASE WHEN @OrderDirection = N'desc' THEN ''
+					 WHEN @OrderColumn = N'StatusInString' THEN [Status] 
+					 END ASC
 	)
 		FROM PricePredictionHistoryResultCTE
 		WHERE(Email like '%' + @SearchValue + '%'
@@ -152,13 +143,12 @@ DECLARE @TablePricePredictionHistory TABLE
 			  CONVERT(nvarchar(23), PurchaseDateTime, 0) like ('%' + @SearchValue + '%')
 			  OR 
 			  Title like ('%' + @SearchValue + '%')
-			  --OR
-			  --[Status] = @SearchValue 
-			  )
+			  OR
+			  StatusInString like ('%' + @SearchValue + '%'))
 	)
 
 INSERT INTO @TablePricePredictionHistory
-SELECT SysUserId, Email, NumberOfPrediction, TotalPurchasePrice, Title, PurchaseDateTime, RowNum
+SELECT SysUserId, Email, [Status], StatusInString, NumberOfPrediction, TotalPurchasePrice, Title, PurchaseDateTime, RowNum
 FROM PricePredictionHistoryWithRowNumCTE;
 
 SELECT *
@@ -179,4 +169,5 @@ GROUP BY CAST(pph.CreatedDate as date),
 SELECT COUNT(*) as FilteredCount
 FROM @TablePricePredictionHistory
 END
+
 

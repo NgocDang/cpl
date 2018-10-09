@@ -449,8 +449,11 @@
                 {
                     "data": "StatusInString",
                     "render": function (data, type, full, meta) {
-                        if (full.status == 0) {
+                        if (full.status == 1) {
                             return "<p class='text-sm-center'><span class='badge badge-success'>" + $("#active").val() + "</span></p>";
+                        }
+                        if (full.status == 2) {
+                            return "<p class='text-sm-center'><span class='badge badge-secondary'>" + $("#completed").val() + "</span></p>";
                         }
                         else {
                             return "";
@@ -458,7 +461,7 @@
                     }
                 },
                 {
-                    "data": "NumberOfPredictionInString",
+                    "data": "NumberOfPrediction",
                     "render": function (data, type, full, meta) {
                         return full.numberOfPrediction;
                     }
@@ -476,7 +479,7 @@
                     }
                 },
                 {
-                    "data": "PurchaseDateTimeInString",
+                    "data": "PurchaseDateTime",
                     "render": function (data, type, full, meta) {
                         return full.purchaseDateTimeInString;
                     }

@@ -21,7 +21,7 @@ namespace CPL.Models
         {
             get
             {
-                return PurchaseDateTime.ToString(Format.DateTime);
+                return PurchaseDateTime.ToString(Format.Date);
             }
         }
         public string NumberOfPredictionInString
