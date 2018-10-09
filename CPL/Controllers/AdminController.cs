@@ -2480,6 +2480,7 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IList<LotteryHistoryViewComponentAdminViewModel> SearchPurchasedLotteryHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? lotteryCategoryId)
         {
+            // TODO: Should be used sp like SearchPurchasedPricePredictionHistoryFunc
             var searchBy = (model.search != null) ? model.search?.value : null;
             var take = model.length;
             var skip = model.start;
@@ -2823,65 +2824,46 @@ namespace CPL.Controllers
         [Permission(EnumRole.Admin)]
         public IList<PricePredictionHistoryViewComponentAdminViewModel> SearchPurchasedPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount, int? pricePredictionCategoryId)
         {
-            var searchBy = (model.search != null) ? model.search?.value : null;
+            var searchBy = (model.search.value != null) ? model.search.value : "";
+            var pageSize = model.length;
+            var pageIndex = model.start + 1;
+
             var take = model.length;
             var skip = model.start;
 
             string sortBy = "";
-            bool sortDir = true;
+            string sortDir = "desc";
 
             if (model.order != null)
             {
                 // in this example we just default sort on the 1st column
                 sortBy = model.columns[model.order[0].column].data;
-                sortDir = model.order[0].dir.ToLower() == "asc";
+                sortDir = model.order[0].dir.ToLower();
             }
-
-            var purchasedPricePredictionHistory = _pricePredictionHistoryService
-                    .Query()
-                    .Include(x => x.PricePrediction)
-                        .ThenInclude(x => x.PricePredictionDetails)
-                    .Where(x => !pricePredictionCategoryId.HasValue || x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
-                    .GroupBy(x => new { x.CreatedDate.Date, x.PricePredictionId, x.SysUserId });
-
-            var purchasedPricePredictionHistoryView = purchasedPricePredictionHistory
-                    .Select(y => new PricePredictionHistoryViewComponentAdminViewModel
-                    {
-                        SysUserId = y.Key.SysUserId,
-                        Email = y.FirstOrDefault().SysUser.Email,
-                        Status = 1,
-                        // Status = y.FirstOrDefault().PricePrediction.Status, // TODO 
-                        NumberOfPrediction = y.Count(),
-                        TotalPurchasePrice = y.Sum(x => x.Amount),
-                        PurchaseDateTime = y.Key.Date,
-                        Title = y.FirstOrDefault().PricePrediction.PricePredictionDetails.FirstOrDefault(z => z.LangId == HttpContext.Session.GetInt32("LangId").Value).Title
-                    });
-            filteredResultsCount = totalResultsCount = purchasedPricePredictionHistory.Count();
 
             // search the dbase taking into consideration table sorting and paging
-            if (!string.IsNullOrEmpty(searchBy))
+            List<SqlParameter> storeParams = new List<SqlParameter>()
             {
-                searchBy = searchBy.ToLower();
+                new SqlParameter() {ParameterName = "@PricePredictionCategoryId", SqlDbType = SqlDbType.Int, Value= pricePredictionCategoryId ?? 0},
+                new SqlParameter() {ParameterName = "@LangId", SqlDbType = SqlDbType.Int, Value= HttpContext.Session.GetInt32("LangId").Value},
+                new SqlParameter() {ParameterName = "@PageSize", SqlDbType = SqlDbType.Int, Value = pageSize},
+                new SqlParameter() {ParameterName = "@PageIndex", SqlDbType = SqlDbType.Int, Value = pageIndex},
+                new SqlParameter() {ParameterName = "@OrderColumn", SqlDbType = SqlDbType.NVarChar, Value = sortBy},
+                new SqlParameter() {ParameterName = "@OrderDirection", SqlDbType = SqlDbType.NVarChar, Value = sortDir},
+                new SqlParameter() {ParameterName = "@SearchValue", SqlDbType = SqlDbType.NVarChar, Value = searchBy},
+            };
 
-                purchasedPricePredictionHistoryView = purchasedPricePredictionHistoryView
-                                        .Where(x => x.Email.ToLower().Contains(searchBy) 
-                                                    || x.StatusInString.ToLower().Contains(searchBy) 
-                                                    || x.PurchaseDateTimeInString.ToLower().Contains(searchBy)
-                                                    || x.NumberOfPredictionInString.ToLower().Contains(searchBy)
-                                                    || x.Title.ToLower().Contains(searchBy))
-                                        .AsQueryable();
+            var dataSet = _dataContextAsync.ExecuteStoredProcedure("[usp_GetPricePredictionHistory]", storeParams);
 
-                filteredResultsCount = purchasedPricePredictionHistoryView
-                                       .Count();
-            }
+            DataTable table = dataSet.Tables[0];
+            var rows = new List<DataRow>(table.Rows.OfType<DataRow>()); //  the Rows property of the DataTable object is a collection that implements IEnumerable but not IEnumerable<T>
 
+            totalResultsCount = Convert.ToInt32((dataSet.Tables[1].Rows[0])["TotalCount"]);
+            filteredResultsCount = Convert.ToInt32((dataSet.Tables[2].Rows[0])["FilteredCount"]);
 
-            return purchasedPricePredictionHistoryView
-                  .AsQueryable()
-                  .OrderBy(sortBy, sortDir)
-                  .Skip(skip)
-                  .Take(take)
-                  .ToList();
+            var result = Mapper.Map<List<DataRow>, List<PricePredictionHistoryViewComponentAdminViewModel>>(rows);
+
+            return result;
         }
 
         [HttpGet]

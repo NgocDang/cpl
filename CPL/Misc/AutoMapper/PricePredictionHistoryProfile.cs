@@ -5,6 +5,7 @@ using CPL.Misc.Utils;
 using CPL.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using static CPL.Common.Enums.CPLConstant;
@@ -47,6 +48,18 @@ namespace CPL.Misc.AutoMapper
                 .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.TotalAward.HasValue ? (src.TotalAward.Value - src.Amount) : 0))
                 .ForMember(dest => dest.BalanceInString, opt => opt.MapFrom(src => src.TotalAward.HasValue ? (src.TotalAward.Value - src.Amount).ToString("+#,##0;-#,##0") : string.Empty));
             CreateMap<GameHistoryViewModel, PricePredictionHistory>();
+            CreateMap<DataRow, PricePredictionHistoryViewComponentAdminViewModel>()
+                .ForMember(dest => dest.SysUserId, opt => opt.MapFrom(src => Convert.ToInt32(src["SysUserId"])))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => Convert.ToString(src["Email"])))
+                //.ForMember(dest => dest.Status, opt => opt.MapFrom(src => Convert.ToInt32(src["Status"])))
+                .ForMember(dest => dest.NumberOfPrediction, opt => opt.MapFrom(src => Convert.ToInt32(src["NumberOfPrediction"])))
+                .ForMember(dest => dest.TotalPurchasePrice, opt => opt.MapFrom(src => Convert.ToDecimal(src["TotalPurchasePrice"])))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => Convert.ToString(src["Title"])))
+                .ForMember(dest => dest.PurchaseDateTime, opt => opt.MapFrom(src => Convert.ToDateTime(src["PurchaseDateTime"])))
+                //.ForMember(dest => dest.PurchaseDateTimeInString, opt => opt.MapFrom(src => Convert.ToDateTime(src["PurchaseDateTimeInString"]).ToString(Format.DateTime)))
+                //.ForMember(dest => dest.NumberOfPredictionInString, opt => opt.MapFrom(src => Convert.ToInt32(src["NumberOfPredictionInString"])))
+                //.ForMember(dest => dest.StatusInString, opt => opt.MapFrom(src => Convert.ToString(src["StatusInString"])))
+                ;
         }
     }
 }
