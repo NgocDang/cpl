@@ -76,7 +76,6 @@
     </Compile>
     <Compile Include="ExchangeCurrentPrice\ExchangeCurrentPriceResult.cs" />
     <Compile Include="ExchangeCurrentPrice\IBTCCurrentPrice.cs" />
-    <Compile Include="Misc\DateTimeExtension.cs" />
     <Compile Include="Misc\Status.cs" />
     <Compile Include="Misc\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

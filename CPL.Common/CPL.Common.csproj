@@ -64,6 +64,7 @@
     <Compile Include="Enums\ObjectState.cs" />
     <Compile Include="CurrencyPairRateHelper\CurrencyPairRateHelper.cs" />
     <Compile Include="Interfaces\IObjectState.cs" />
+    <Compile Include="Misc\DateTimeExtension.cs" />
     <Compile Include="Misc\Utils.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

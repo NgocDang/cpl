@@ -25,11 +25,11 @@ namespace CPL.PredictionGameService.Misc
             {
                 var pricePrediction = resolver.PricePredictionService.Queryable().FirstOrDefault(x => x.Id == pricePredictionId);
 
-                // result time and price
+                // result time and price in utc
                 var resultTime = ((DateTimeOffset)pricePrediction.ResultTime).ToUnixTimeSeconds();
                 var resultPrice = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => resultTime >= x.Time).Price;
 
-                // the time to be compared time and price
+                // the time to be compared time and price in utc
                 var toBeComparedTime = ((DateTimeOffset)pricePrediction.ToBeComparedTime).ToUnixTimeSeconds();
                 var toBeComparedPrice = resolver.BTCPriceService.Queryable().OrderByDescending(x => x.Time).FirstOrDefault(x => toBeComparedTime >= x.Time).Price;
 

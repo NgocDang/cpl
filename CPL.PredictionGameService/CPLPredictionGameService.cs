@@ -69,7 +69,6 @@ namespace CPL.PredictionGameService
                     ["Resolver"] = SystemResolver,
                 };
 
-                System PricePredictions
                 IJobDetail systemPricePredictionCreatingJob = JobBuilder.Create<SystemPricePredictionJob>()
                     .UsingJobData(systemJobData)
                     .WithIdentity(new JobKey("SystemPricePredictionCreatingJob", "QuartzGroup"))
