@@ -211,11 +211,21 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.User)]
-        public IActionResult DoEditEmail(EditEmailViewModel viewModel)
+        public IActionResult DoEditEmail(EditEmailViewModel viewModel, MobileModel mobileModel)
         {
             var isEmailExisting = _sysUserService.Queryable().Any(x => x.Email == viewModel.NewEmail && x.IsDeleted == false);
             if (isEmailExisting)
+            {
+                if (mobileModel.IsMobile)
+                    return new JsonResult(new
+                    {
+                        code = EnumResponseStatus.WARNING,
+                        name = "new-email",
+                        error_message_key = CPLConstant.MobileAppConstant.EditEmailScreenExistingEmail
+                    });
+
                 return new JsonResult(new { success = false, name = "new-email", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ExistingEmail") });
+            }
 
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
@@ -225,28 +235,63 @@ namespace CPL.Controllers
                 _sysUserService.Update(user);
                 _unitOfWork.SaveChanges();
 
+                if (mobileModel.IsMobile)
+                    return new JsonResult(new
+                    {
+                        code = EnumResponseStatus.SUCCESS,
+                        success_message_key = CPLConstant.MobileAppConstant.EditEmailScreenEmailUpdatedSuccessfully
+                    });
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "EmailUpdated") });
             }
+
+            if (mobileModel.IsMobile)
+                return new JsonResult(new
+                {
+                    code = EnumResponseStatus.WARNING,
+                    error_message_key = CPLConstant.MobileAppConstant.EditEmailScreenNonExistingAccount
+                });
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
 
         [HttpPost]
         [Permission(EnumRole.User)]
-        public IActionResult DoEditPassword(EditPasswordViewModel viewModel)
+        public IActionResult DoEditPassword(EditPasswordViewModel viewModel, MobileModel mobileModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
             {
                 if (!BCrypt.Net.BCrypt.Verify(viewModel.CurrentPassword, user.Password))
+                {
+                    if (mobileModel.IsMobile)
+                        return new JsonResult(new
+                        {
+                            code = EnumResponseStatus.WARNING,
+                            error_message_key = CPLConstant.MobileAppConstant.EditPasswordScreenInvalidCurrentPassword
+                        });
                     return new JsonResult(new { success = false, name = "current-password", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidCurrentPassword") });
+                }
+                    
 
                 user.Password = viewModel.NewPassword.ToBCrypt();
                 HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
                 _sysUserService.Update(user);
                 _unitOfWork.SaveChanges();
 
+                if (mobileModel.IsMobile)
+                    return new JsonResult(new
+                    {
+                        code = EnumResponseStatus.SUCCESS,
+                        success_message_key = CPLConstant.MobileAppConstant.EditPasswordScreenPasswordUpdatedSuccessfully
+                    });
                 return new JsonResult(new { success = true, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PasswordUpdated") });
             }
+
+            if (mobileModel.IsMobile)
+                return new JsonResult(new
+                {
+                    code = EnumResponseStatus.WARNING,
+                    error_message_key = CPLConstant.MobileAppConstant.EditPasswordScreenNonExistingAccount
+                });
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
         }
 

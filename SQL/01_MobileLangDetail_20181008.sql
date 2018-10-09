@@ -392,3 +392,12 @@ INSERT INTO MobileLangDetail VALUES (2, N'EditProfileScreen_Validate_Number_Phon
 INSERT INTO MobileLangDetail VALUES (1, N'ContactScreen_Email_Sent_Successfully', N'Email is sent successfully');
 INSERT INTO MobileLangDetail VALUES (2, N'ContactScreen_Email_Sent_Successfully', N'電子メールが正常に送信されました');
 
+INSERT INTO MobileLangDetail VALUES (1, N'EditPasswordScreen_Password_Updated_Successfully', N'Password is updated successfully');
+INSERT INTO MobileLangDetail VALUES (2, N'EditPasswordScreen_Password_Updated_Successfully', N'パスワードが正常に更新されました');
+
+INSERT INTO MobileLangDetail VALUES (1, N'EditPasswordScreen_Invalid_Current_Password', N'Invalid current password');
+INSERT INTO MobileLangDetail VALUES (2, N'EditPasswordScreen_Invalid_Current_Password', N'現在のパスワードが無効です');
+
+INSERT INTO MobileLangDetail VALUES (1, N'EditPasswordScreen_NonExisting_Account', N'Account is not existing');
+INSERT INTO MobileLangDetail VALUES (2, N'EditPasswordScreen_NonExisting_Account', N'アカウントは存在しません');
+
