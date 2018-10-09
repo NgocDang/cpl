@@ -152,12 +152,4 @@ namespace CPL.PredictionGameService.Misc
             }
         }
     }
-
-    public static class EnumBooleanExtension
-    {
-        public static bool ToBoolean(this EnumPricePredictionStatus value)
-        {
-            return value == EnumPricePredictionStatus.UP;
-        }
-    }
 }

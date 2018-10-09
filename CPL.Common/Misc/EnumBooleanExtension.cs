@@ -1,6 +1,6 @@
 ﻿using CPL.Common.Enums;
 
-namespace CPL.Misc.Utils
+namespace CPL.Common.Misc
 {
     public static class EnumBooleanExtension
     {
