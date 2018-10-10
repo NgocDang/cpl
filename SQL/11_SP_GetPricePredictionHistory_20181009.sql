@@ -158,7 +158,7 @@ WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @Page
 
 
 --////////////////////////////// DATATABLE #2 - Total Count /////////////////////////////--
-SELECT COUNT(*)
+SELECT COUNT(*) as TotalCount
 FROM (
 		SELECT		COUNT(pph.PricePredictionId) as TotalCount
 		FROM		PricePredictionHistory pph
