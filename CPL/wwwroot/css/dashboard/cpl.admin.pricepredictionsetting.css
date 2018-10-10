@@ -1,3 +1,8 @@
 ﻿html body {
     background: #F4F5FA !important;
 }
+
+#price-prediction-setting-multilanguage .nav-tabs .nav-item,
+#form-edit-price-prediction-category .nav-tabs .nav-item {
+    z-index: 9;
+}
