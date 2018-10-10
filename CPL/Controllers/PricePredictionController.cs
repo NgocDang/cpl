@@ -79,17 +79,33 @@ namespace CPL.Controllers
             if (viewModel.SysUserId.HasValue)
                 viewModel.TokenAmount = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).TokenAmount;
 
-            viewModel.PricePredictionTabs = _pricePredictionService.Queryable()
-                .Where(x => x.OpenBettingTime < DateTime.Now && x.ResultTime > DateTime.Now && x.Status == (int)EnumPricePredictionGameStatus.ACTIVE )
-                .OrderBy(x => x.ResultTime.ToString("HH:mm"))
-                .Select(x => new PricePredictionTab {
+            var adminPricePredictionTabs = _pricePredictionService.Queryable()
+                .Where(x => x.ResultTime.Date == DateTime.Now.Date && x.IsCreatedByAdmin)
+                .Select(x => new PricePredictionTab
+                {
+                    Id = x.Id,
+                    ResultTime = x.ResultTime,
+                    ToBeComparedTime = x.ToBeComparedTime,
+                    CloseBettingTime = x.CloseBettingTime,
+                    IsDisabled = (x.OpenBettingTime > DateTime.Now || x.CloseBettingTime < DateTime.Now),
+                    Title = x.PricePredictionDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Title
+                });
+
+            var systemPricePredictionTabs = _pricePredictionService.Queryable()
+                .Where(x => x.ResultTime > DateTime.Now && !x.IsCreatedByAdmin)
+                .Select(x => new PricePredictionTab
+                {
                     Id = x.Id,
                     ResultTime = x.ResultTime,
                     ToBeComparedTime = x.ToBeComparedTime,
                     CloseBettingTime = x.CloseBettingTime,
                     IsDisabled = (x.CloseBettingTime < DateTime.Now),
                     Title = x.PricePredictionDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Title
-                })
+                });
+
+
+            viewModel.PricePredictionTabs = adminPricePredictionTabs.Concat(systemPricePredictionTabs)
+                .OrderBy(x => x.ResultTime.ToString("HH:mm"))
                 .ToList();
 
             // Move first tab to the end of the array
