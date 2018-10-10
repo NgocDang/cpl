@@ -21,7 +21,7 @@
                             <div class="col-lg-6 col-12 black">
                                 <p class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AboutUs")</p>
                                 <ul class="pl-0 links text-left mb-0">
-                                    <li><a href="#faq" class="black">FAQ </a></li>
+                                    <li><a href="/Home/Index#faq" class="black">FAQ </a></li>
                                     <li><a asp-controller="Info" asp-action="TermsOfService" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</a></li>
                                     <li><a asp-controller="Info" asp-action="PrivacyPolicy" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</a></li>
                                     @*<li><a asp-controller="Info" asp-action="License" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "License")</a></li>*@
