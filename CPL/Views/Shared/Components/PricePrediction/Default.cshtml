@@ -57,17 +57,17 @@
                         </div>
                         <div class="row" style="margin-top:10px;">
                             <div class="btn-group col-12 btn-up-down-group" role="group">
-                                <button type="button" data-value="true" class="btn col-6 btn-up @(Model.IsDisabled ? "btn-secondary" : "btn-outline-success")  @(Model.PredictedTrend.HasValue && Model.PredictedTrend.Value ? "active" : "")" @(Model.IsDisabled ? "disabled" : "")>
+                                <button type="button" data-value="true" class="btn col-6 btn-up btn-outline-success  @(Model.PredictedTrend.HasValue && Model.PredictedTrend.Value ? "active" : "")" @(Model.IsDisabled ? "disabled" : "")>
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "High")
                                 </button>
-                                <button type="button" data-value="false" class="btn col-6 btn-down @(Model.IsDisabled ? "btn-secondary" : "btn-outline-danger") @(Model.PredictedTrend.HasValue && !Model.PredictedTrend.Value ? "active" : "")" @(Model.IsDisabled ? "disabled" : "")>
+                                <button type="button" data-value="false" class="btn col-6 btn-down btn-outline-danger @(Model.PredictedTrend.HasValue && !Model.PredictedTrend.Value ? "active" : "")" @(Model.IsDisabled ? "disabled" : "")>
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Low")
                                 </button>
                             </div>
                         </div>
                         <div class="row" style="margin-top:10px;">
                             <div class="col-12">
-                                <button type="button" class="btn btn-block font-weight-bold btn-confirm-bet @(Model.IsDisabled ? "btn-secondary" : "btn-yellow")" @(Model.IsDisabled ? "disabled" : "")>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bet")</button>
+                                <button type="button" class="btn btn-block font-weight-bold btn-confirm-bet btn-yellow" @(Model.IsDisabled ? "disabled" : "")>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bet")</button>
                             </div>
                         </div>
                         <div class="row mt-2">

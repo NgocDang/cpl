@@ -7,13 +7,13 @@
         PricePredictionViewComponent.bindLoadPredictionResult();
         PricePredictionViewComponent.bindCountDownTick();
         PricePredictionViewComponent.loadBTCPriceChart();
-        
+
         PricePredictionViewComponent.bindLoadBTCCurrentRate();
         PricePredictionViewComponent.bindBet();
         PricePredictionViewComponent.bindConfirmBet();
         PricePredictionViewComponent.bindBack();
         PricePredictionViewComponent.bindDoBet();
-        
+
     },
     bindLoadPredictionResult: function () {
         var progressConnection = new signalR.HubConnection("/predictedUserProgress");
@@ -34,21 +34,18 @@
             data: {},
             success: function (data) {
                 if (data.success) {
-                    $(".btc-rate").each(function (index, element) {
-                        if ($(element).closest(".tab-pane").data().isDisable == "False") {
-                            if ($(element).val() < data.value) { // Up
-                                $(element).removeClass("text-danger");
-                                $(element).addClass("text-success");
-                            }
-                            else if ($(element).val() > data.value) { //Down
-                                $(element).removeClass("text-success");
-                                $(element).addClass("text-danger");
-                            }
-
-                            $(element).val(data.value);
-                            $(element).html(data.valueInString.split(";")[0]); // Assign data to get current rate
+                    $(".tab-pane[isDisabled == 'False'] .btc-rate").each(function (index, element) {
+                        if ($(element).val() < data.value) { // Up
+                            $(element).removeClass("text-danger");
+                            $(element).addClass("text-success");
                         }
-                        
+                        else if ($(element).val() > data.value) { //Down
+                            $(element).removeClass("text-success");
+                            $(element).addClass("text-danger");
+                        }
+
+                        $(element).val(data.value);
+                        $(element).html(data.valueInString.split(";")[0]); // Assign data to get current rate
                     });
                     // Get data to show in to the chart
                     PricePredictionViewComponent.btcCurrentRate = data.valueInString;
@@ -72,7 +69,7 @@
     },
     loadBTCPriceChart: function () {
         $(".tab-pane.active .btc-price-chart").each(function (index, element) {
-            if ($(element).closest(".tab-pane").data().isDisable == "False") {
+            if ($(element).closest(".tab-pane").data().isDisabled == "False") {
                 var openTime = moment(parseInt($(element).closest(".tab-pane").find("#OpenBettingTime").val()));
                 var closeTime = moment(parseInt($(element).closest(".tab-pane").find("#CloseBettingTime").val()));
                 var resultTime = moment(parseInt($(element).closest(".tab-pane").find("#ResultTime").val()));
@@ -285,7 +282,7 @@
                     }
                 });
             }
-            
+
         });
     },
     bindBet: function () {
