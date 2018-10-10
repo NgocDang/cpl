@@ -11,7 +11,7 @@
                     type: "POST",
                     data: {
                         id: $(_this).data().id,
-                        isDisabled: $(_this).data().isDisable,
+                        isDisabled: $(_this).data().isDisabled,
                     },
                     success: function (data) {
                         $("#price-prediction-nav-" + $(_this).data().id).html(data);
