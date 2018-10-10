@@ -172,11 +172,11 @@ INSERT INTO LangDetail VALUES (2, N'OpenBettingTime', N'オープンベッティ
 INSERT INTO LangDetail VALUES (1, N'WhatIsCryptoLotteryMainTitle', N'What is crypto lottery?');
 INSERT INTO LangDetail VALUES (2, N'WhatIsCryptoLotteryMainTitle', N'仮想通貨宝クジとは？');
 
-INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryMainContent', N'<p>仮想通貨宝クジとは、<span class="text-warning">ブロックチェーン</span>とスマートコ<span class="text-warning">ントラク</span>ト技術が活用された宝くじプラットホームです。</p>
-                                    <p>ブロックチェーン技術により全てのクジの履歴をトランザクションで確認する事が出来るようにし、透明性の高い宝くじを実現されております。</p>
-                                    <p class="text-muted font-size-13px">＊お客様の名前などの個人情報は一切公開されませんのでご安心ください。</p>
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryMainContent', N'<p>Cryptocurrency lottery game is a lottery platform that combines <span class="text-warning">blockchain </span>and <span class="text-warning">smart contract </span>technology.</p>
+                                    <p>It is possible to confirm the transaction history of all tickets by blockchain technology, easy to check the lottery with high transperancy</p>
+                                    <p class="text-muted font-size-13px">＊ Please do not worry because personal information such as customer''s name is not disclosed at all.</p>
                                     <br />
-                                    <p>また、スマートコントラクトにより、クジの発行や管理に一切人間の手が加える事ができないので、不正や外的要因（ハッキングなど）からシステムを守り、公正で安全な宝くじゲームをユーザーの皆様に提供いたしております。</p>');
+                                    <p>Also, because we use smartcontract so it is impossible for people to add or manage tickets, we will protect the system against fraud and external factors (such as hacking) and will provide fair and secure lottery games to users.</p>');
 
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryMainContent', N'<p>仮想通貨宝クジとは、<span class="text-warning">ブロックチェーン</span>とスマートコ<span class="text-warning">ントラク</span>ト技術が活用された宝くじプラットホームです。</p>
                                     <p>ブロックチェーン技術により全てのクジの履歴をトランザクションで確認する事が出来るようにし、透明性の高い宝くじを実現されております。</p>
@@ -185,7 +185,7 @@ INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryMainContent', N'<p>仮
                                     <p>また、スマートコントラクトにより、クジの発行や管理に一切人間の手が加える事ができないので、不正や外的要因（ハッキングなど）からシステムを守り、公正で安全な宝くじゲームをユーザーの皆様に提供いたしております。</p>');
 
 INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryHighestAwardTitle', N'<p class="up">
-                                                最高当選
+                                                Highest prize
                                             </p>
                                             <p class="down">
                                                 100BTC
@@ -199,7 +199,7 @@ INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryHighestAwardTitle', N'
                                             </p>');
 
 INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryMaximumRateTitle', N' <p class="up">
-                                                最大還元率
+                                                Maximum reduction rate
                                             </p>
                                             <p class="down">
                                                 80％
@@ -213,10 +213,10 @@ INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryMaximumRateTitle', N' 
                                             </p>');
 
 INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryLeadingClassTitle', N'<p class="up">
-                                                業界トップクラスの
+                                                Industry-leading
                                             </p>
                                             <p class="down">
-                                                安全性！
+                                                Safety!
                                             </p>');
 
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryLeadingClassTitle', N'<p class="up">
@@ -227,9 +227,9 @@ INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryLeadingClassTitle', N'
                                             </p>');
 
 INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryHighestAwardContent', N'<p>
-                                                0.0001BTCから購入ができ <br />
-                                                最高当選額は過去最高の１００ <br />
-                                                BTCをご用意しております。
+                                                You can purchase from 0.0001 BTC <br />
+                                                We offer 100 BTC prize, <br />
+                                                the highest ever winning record ever.
                                             </p>');
 
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryHighestAwardContent', N'<p>
@@ -239,8 +239,8 @@ INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryHighestAwardContent', 
                                             </p>');
 
 INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryMaximumRateContent', N'<p>
-                                                人件費がかからないからこそ出来る <br />
-                                                業界NO.1の還元率！
+                                                There is NO labor cost so it is possible <br />
+                                                Reduction rate No. 1 In Industry !
                                             </p>');
 
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryMaximumRateContent', N'<p>
@@ -249,7 +249,7 @@ INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryMaximumRateContent', N
                                             </p>');
 
 INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoLotteryLeadingClassContent', N'<p>
-                                                ブロックチェーンとスマートコントラクト技術で、不正とハッキングからシステムを守ります！
+                                                Blockchain and smart contract technology will protect the system from corruption and hacking!
                                             </p>');
 
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoLotteryLeadingClassContent', N'<p>
@@ -262,10 +262,10 @@ INSERT INTO LangDetail VALUES (1, N'WhatIsCryptoPricePredictionMainTitle', N'Wha
 INSERT INTO LangDetail VALUES (2, N'WhatIsCryptoPricePredictionMainTitle', N'クリプトバイナリーは？');
 
 INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePredictionMainContent', N'<p>
-                                        クリプトバイナリーとは、BTCの価格が上がるか下がるかを当てるゲームです。
+                                        Crypto binary is a game that user can predict whether the BTC price  goes up or down.
                                     </p>
                                     <p>
-                                        一回のゲームはエントリータイム・ホールドタイム・抽選タイムに分れています。
+                                        One game is divided into entry time, hold time, lottery time.
                                     </p>');
 
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePredictionMainContent', N'<p>
@@ -281,37 +281,36 @@ INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction24HourTitle', 
 INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction24HourContent', N'Entry time');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction24HourContent', N'エントリータイム');
 
-INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourTitle', N'1 hours');
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourTitle', N'1 hour');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction1HourTitle', N'１時間');
 
-INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourContent', N'Holding time');
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourContent', N'Hold time');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction1HourContent', N'ホールドタイム');
 
-INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinTitle', N'15 mins');
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinTitle', N'15 minutes');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction15MinTitle', N'15分');
 
 INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinContent', N'Lottery <br /> Time');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction15MinContent', N'抽選 <br /> タイム');
 
-INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction24HourExplain', N'※  エントリータイム   :');
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction24HourExplain', N'※  Entry time   :');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction24HourExplain', N'※  エントリータイム   :');
 
-INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourExplain', N'※   ホールドタイム   :');
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourExplain', N'※   Hold time   :');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction1HourExplain', N'※   ホールドタイム   :');
 
-INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinExplain', N'※   抽選タイム   :');
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinExplain', N'※   Lottery Time   :');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction15MinExplain', N'※   抽選タイム   :');
 
-INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction24HourExplainContent', N'<p>HighかLowにエントリー出来る時間です。</p>
-                                            <p>24 時間のエントリータイムを設けております。</p>');
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction24HourExplainContent', N'<p>It is time to choose High or Low.</p>
+                                            <p>We have a 24 hours of entry time.</p>');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction24HourExplainContent', N'<p>HighかLowにエントリー出来る時間です。</p>
                                             <p>24 時間のエントリータイムを設けております。</p>');
 
-INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourExplainContent', N'<p>エントリーされた合計が集計され、倍率の最終決定がされます。</p>');
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction1HourExplainContent', N'<p>Total entries are summarized and the final decision is made.</p>');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction1HourExplainContent', N'<p>エントリーされた合計が集計され、倍率の最終決定がされます。</p>');
 
-INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinExplainContent', N'<p>指定された15分間の始まりの価格と終わりの価格で</p>
-                                            <p>HIGHかLOWの抽選が行われます。</p>');
+INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinExplainContent', N'<p>HIGH or LOW lottery will be held in 15 minutes between the starting price and ending price.</p>');
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction15MinExplainContent', N'<p>指定された15分間の始まりの価格と終わりの価格で</p>
                                             <p>HIGHかLOWの抽選が行われます。</p>');
 											
