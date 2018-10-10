@@ -34,7 +34,7 @@
             data: {},
             success: function (data) {
                 if (data.success) {
-                    $(".tab-pane[isDisabled == 'False'] .btc-rate").each(function (index, element) {
+                    $(".tab-pane[data-is-disabled = 'False'] .btc-rate").each(function (index, element) {
                         if ($(element).val() < data.value) { // Up
                             $(element).removeClass("text-danger");
                             $(element).addClass("text-success");
@@ -262,7 +262,7 @@
                         data: []
                     }],
                     lang: {
-                        noData: $("#waitToNextGame").val()
+                        noData: $("#waitForNextGame").val()
                     },
                     yAxis: {
                         title: null
