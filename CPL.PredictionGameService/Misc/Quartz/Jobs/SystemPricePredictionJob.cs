@@ -24,11 +24,13 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
-            Utils.FileAppendThreadSafe(CPLPredictionGameService.basePricePredictionFunctions.FileName, string.Format("{0}Execute SystemPricePredictionCreatingJob {1}: {2}", Environment.NewLine, DateTime.Now, Environment.NewLine));
-
             JobDataMap dataMap = context.JobDetail.JobDataMap;
             Resolver resolver = (Resolver)dataMap["Resolver"];
+            string fileName = (string)dataMap["AdminLogFileName"];
+            BasePricePredictionFunctions systemBasePricePredictionFunctions = (BasePricePredictionFunctions)dataMap["SystemBasePricePredictionFunctions"];
 
+            Utils.FileAppendThreadSafe(fileName, string.Format("{0}Execute SystemPricePredictionCreatingJob {1}: {2}", Environment.NewLine, DateTime.Now, Environment.NewLine));
+                        
             PricePredictionBettingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionBettingIntervalInHour).Value);
             PricePredictionHoldingIntervalInHour = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionHoldingIntervalInHour).Value);
             PricePredictionCompareIntervalInMinute = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionCompareIntervalInMinute).Value);
@@ -37,22 +39,22 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             DateTime localDateTime = context.FireTimeUtc.LocalDateTime;
 
             // Create new price prediction game
-            DoCreatePricePrediction(ref resolver, localDateTime);
+            DoCreatePricePrediction(ref resolver, localDateTime, fileName);
 
             // Update result game
             var pricePrediction = resolver.PricePredictionService.Queryable().FirstOrDefault(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && localDateTime.ToString("dd-MM-yyyy HH:mm") == x.ResultTime.ToString("dd-MM-yyyy HH:mm") && !x.IsCreatedByAdmin);
             if (pricePrediction != null)
             {
-                CPLPredictionGameService.basePricePredictionFunctions.DoGetBTCPrice(ref resolver, pricePrediction.Id);
-                CPLPredictionGameService.basePricePredictionFunctions.DoUpdateWinner(ref resolver, pricePrediction.Id);
+                systemBasePricePredictionFunctions.DoGetBTCPrice(ref resolver, pricePrediction.Id, fileName);
+                systemBasePricePredictionFunctions.DoUpdateWinner(ref resolver, pricePrediction.Id, fileName);
             }
 
             return Task.FromResult(0);
         }
 
-        public void DoCreatePricePrediction(ref Resolver resolver, DateTime localDateTime)
+        public void DoCreatePricePrediction(ref Resolver resolver, DateTime localDateTime, string fileName)
         {
-            Utils.FileAppendThreadSafe(CPLPredictionGameService.basePricePredictionFunctions.FileName, string.Format("1. DoCreateSystemPricePrediction--OpenBettingTime is {0}: {1}{2}", localDateTime, DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(fileName, string.Format("1. DoCreateSystemPricePrediction--OpenBettingTime is {0}: {1}{2}", localDateTime, DateTime.Now, Environment.NewLine));
 
             var newPricePredictionRecord = new PricePrediction
             {
@@ -62,7 +64,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 ToBeComparedTime = localDateTime.AddHours(PricePredictionGameIntervalInHour).AddMinutes(-PricePredictionCompareIntervalInMinute),
                 ResultTime = localDateTime.AddHours(PricePredictionGameIntervalInHour),
                 IsCreatedByAdmin = false,
-                PricePredictionCategoryId = 1 // default standard priceprediction category
+                PricePredictionCategoryId = (int)EnumPricePredictionCategory.SYSTEM // default sysem priceprediction category
             };
 
             resolver.PricePredictionService.Insert(newPricePredictionRecord);

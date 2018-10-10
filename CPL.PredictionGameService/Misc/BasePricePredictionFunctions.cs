@@ -11,16 +11,9 @@ namespace CPL.PredictionGameService.Misc
 {
     public class BasePricePredictionFunctions
     {
-        public string FileName { get; set; }
-
-        public BasePricePredictionFunctions()
+        public void DoGetBTCPrice(ref Resolver resolver, int pricePredictionId, string logFileName)
         {
-            FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
-        }
-
-        public void DoGetBTCPrice(ref Resolver resolver, int pricePredictionId)
-        {
-            Utils.FileAppendThreadSafe(FileName, string.Format("2. DoGetBTCPrice at: {0}{1}", DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(logFileName, string.Format("2. DoGetBTCPrice at: {0}{1}", DateTime.Now, Environment.NewLine));
             try
             {
                 var pricePrediction = resolver.PricePredictionService.Queryable().FirstOrDefault(x => x.Id == pricePredictionId);
@@ -46,15 +39,15 @@ namespace CPL.PredictionGameService.Misc
             catch (Exception ex)
             {
                 if (ex.InnerException?.Message != null)
-                    Utils.FileAppendThreadSafe(FileName, string.Format("  + DoGetBTCPrice -- Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(logFileName, string.Format("  + DoGetBTCPrice -- Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                 else
-                    Utils.FileAppendThreadSafe(FileName, string.Format("  + DoGetBTCPrice -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(logFileName, string.Format("  + DoGetBTCPrice -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
             }
         }
 
-        public void DoUpdateWinner(ref Resolver resolver, int pricePredictionId)
+        public void DoUpdateWinner(ref Resolver resolver, int pricePredictionId, string logFileName)
         {
-            Utils.FileAppendThreadSafe(FileName, string.Format("3. DoUpdateWinner--PricePredictionId = {0} at: {1}{2}", pricePredictionId, DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(logFileName, string.Format("3. DoUpdateWinner--PricePredictionId = {0} at: {1}{2}", pricePredictionId, DateTime.Now, Environment.NewLine));
             try
             {
                 var pricePrediction = resolver.PricePredictionService
@@ -141,14 +134,14 @@ namespace CPL.PredictionGameService.Misc
                 // save to DB
                 resolver.UnitOfWork.SaveChanges();
 
-                Utils.FileAppendThreadSafe(FileName, string.Format("3.1. PricePredictionId = {0} ends at: {1}{2}", pricePredictionId, DateTime.Now, Environment.NewLine));
+                Utils.FileAppendThreadSafe(logFileName, string.Format("3.1. PricePredictionId = {0} ends at: {1}{2}", pricePredictionId, DateTime.Now, Environment.NewLine));
             }
             catch (Exception ex)
             {
                 if (ex.InnerException?.Message != null)
-                    Utils.FileAppendThreadSafe(FileName, string.Format("  + DoUpdateWinnerPricePrediction -- Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(logFileName, string.Format("  + DoUpdateWinnerPricePrediction -- Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                 else
-                    Utils.FileAppendThreadSafe(FileName, string.Format("  + DoUpdateWinnerPricePrediction -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+                    Utils.FileAppendThreadSafe(logFileName, string.Format("  + DoUpdateWinnerPricePrediction -- Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
             }
         }
     }

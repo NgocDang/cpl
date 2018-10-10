@@ -29,12 +29,16 @@ namespace CPL.PredictionGameService
         private static int SystemPricePredictionHoldingIntervalInHour;        // 1h
         private static int SystemPricePredictionCompareIntervalInMinute;      // 15m
 
-        public BasePricePredictionFunctions basePricePredictionFunctions = new BasePricePredictionFunctions();
-
         public int RunningIntervalInMilliseconds { get; set; }
 
-        Resolver SystemResolver { get; set; }
-        Resolver AdminResolver { get; set; }
+        public string GeneralLogFileName { get; set; }
+        public string SystemLogFileName { get; set; }
+        public string AdminLogFileName { get; set; }
+
+        public Resolver SystemResolver { get; set; }
+        public Resolver AdminResolver { get; set; }
+        public BasePricePredictionFunctions SystemBasePricePredictionFunctions { get; set; }
+        public BasePricePredictionFunctions AdminBasePricePredictionFunctions { get; set; }
 
         public void Start()
         {
@@ -45,7 +49,7 @@ namespace CPL.PredictionGameService
             Initialize();
 
             // write log
-            Utils.FileAppendThreadSafe(basePricePredictionFunctions.FileName, String.Format("{0} started at {1}{2}", PredictionGameServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(GeneralLogFileName, String.Format("{0} started at {1}{2}", PredictionGameServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
 
             //Init setting
             IsCPLPredictionGameServiceRunning = true;
@@ -65,6 +69,8 @@ namespace CPL.PredictionGameService
                 var systemJobData = new JobDataMap
                 {
                     ["Resolver"] = SystemResolver,
+                    ["SystemBasePricePredictionFunctions"] = SystemBasePricePredictionFunctions,
+                    ["SystemLogFileName"] = SystemLogFileName
                 };
 
                 IJobDetail systemPricePredictionCreatingJob = JobBuilder.Create<SystemPricePredictionJob>()
@@ -89,6 +95,8 @@ namespace CPL.PredictionGameService
                 var adminJobData = new JobDataMap
                 {
                     ["Resolver"] = AdminResolver,
+                    ["AdminBasePricePredictionFunctions"] = AdminBasePricePredictionFunctions,
+                    ["AdminLogFileName"] = AdminLogFileName
                 };
 
                 IJobDetail adminPricePredictionCreatingJob = JobBuilder.Create<AdminPricePredictionJob>()
@@ -114,7 +122,9 @@ namespace CPL.PredictionGameService
                     adminJobData = new JobDataMap
                     {
                         ["Resolver"] = AdminResolver,
-                        ["PricePredictionId"] = activeAdminPricePrediction.Id
+                        ["PricePredictionId"] = activeAdminPricePrediction.Id,
+                        ["AdminBasePricePredictionFunctions"] = AdminBasePricePredictionFunctions,
+                        ["AdminLogFileName"] = AdminLogFileName
                     };
 
                     IJobDetail adminPricePredictionCheckResultJob = JobBuilder.Create<AdminPricePredictionCheckResultJob>()
@@ -139,11 +149,11 @@ namespace CPL.PredictionGameService
         public async void Stop()
         {
             IsCPLPredictionGameServiceRunning = false;
-            Utils.FileAppendThreadSafe(basePricePredictionFunctions.FileName, string.Format("Stop main thread at : {0}{1}{2}", DateTime.Now, Environment.NewLine, Environment.NewLine));
+            Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Stop main thread at : {0}{1}{2}", DateTime.Now, Environment.NewLine, Environment.NewLine));
 
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             await scheduler.Shutdown();
-            Utils.FileAppendThreadSafe(basePricePredictionFunctions.FileName, string.Format("Scheduler shutdown ({0}) at : {1}{2}{3}", scheduler.IsShutdown, DateTime.Now, Environment.NewLine, Environment.NewLine));
+            Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Scheduler shutdown ({0}) at : {1}{2}{3}", scheduler.IsShutdown, DateTime.Now, Environment.NewLine, Environment.NewLine));
 
             Task.WaitAll(Tasks.ToArray());
         }
@@ -153,7 +163,7 @@ namespace CPL.PredictionGameService
         {
             var resolver = new Resolver();
 
-            Utils.FileAppendThreadSafe(basePricePredictionFunctions.FileName, string.Format("Get current BTC thread on CPL window service STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Get current BTC thread on CPL window service STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
             while (IsCPLPredictionGameServiceRunning)
             {
                 try
@@ -163,7 +173,7 @@ namespace CPL.PredictionGameService
 
                     if (btcCurrentPriceResult.Result.Status.Code != 0)
                     {
-                        Utils.FileAppendThreadSafe(basePricePredictionFunctions.FileName, string.Format("Get current BTC failed. Reason: {0}{1}", btcCurrentPriceResult.Result.Status.Text, Environment.NewLine));
+                        Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Get current BTC failed. Reason: {0}{1}", btcCurrentPriceResult.Result.Status.Text, Environment.NewLine));
                         return;
                     }
 
@@ -181,12 +191,12 @@ namespace CPL.PredictionGameService
                 catch (Exception ex)
                 {
                     if (ex.InnerException?.Message != null)
-                        Utils.FileAppendThreadSafe(basePricePredictionFunctions.FileName, string.Format("Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                        Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                     else
-                        Utils.FileAppendThreadSafe(basePricePredictionFunctions.FileName, string.Format("Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+                        Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
                 }
             }
-            Utils.FileAppendThreadSafe(basePricePredictionFunctions.FileName, string.Format("Get current BTC thread on CPL window service STOPPED at {0}{1}", DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Get current BTC thread on CPL window service STOPPED at {0}{1}", DateTime.Now, Environment.NewLine));
         }
 
         // ConfigurationBuilder
@@ -204,6 +214,13 @@ namespace CPL.PredictionGameService
         {
             SystemResolver = new Resolver();
             AdminResolver = new Resolver();
+            SystemBasePricePredictionFunctions = new BasePricePredictionFunctions();
+            AdminBasePricePredictionFunctions = new BasePricePredictionFunctions();
+
+            GeneralLogFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
+            SystemLogFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "systemLog.txt");
+            AdminLogFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "adminLog.txt");
+
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
             var cplServiceEndpoint = SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
             SystemPricePredictionBettingIntervalInHour = int.Parse(SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionBettingIntervalInHour).Value);

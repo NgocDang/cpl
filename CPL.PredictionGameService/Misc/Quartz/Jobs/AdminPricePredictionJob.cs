@@ -4,11 +4,10 @@ using CPL.Domain;
 using Quartz;
 using System;
 using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using CPL.Misc.Enums;
 using Quartz.Impl;
+using System.IO;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace CPL.PredictionGameService.Misc.Quartz.Jobs
 {
@@ -16,22 +15,23 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
     {
         public Task Execute(IJobExecutionContext context)
         {
-            Utils.FileAppendThreadSafe(CPLPredictionGameService.basePricePredictionFunctions.FileName, string.Format("{0}Execute AdminPricePredictionCreatingJob {1}: {2}", Environment.NewLine, DateTime.Now, Environment.NewLine));
-
             JobDataMap dataMap = context.JobDetail.JobDataMap;
             Resolver resolver = (Resolver)dataMap["Resolver"];
-
+            BasePricePredictionFunctions AdminBasePricePredictionFunctions = (BasePricePredictionFunctions)dataMap["AdminBasePricePredictionFunctions"];
             DateTime localDateTime = context.FireTimeUtc.LocalDateTime;
+            string fileName = (string)dataMap["AdminLogFileName"];
+
+            Utils.FileAppendThreadSafe(fileName, string.Format("{0}Execute AdminPricePredictionCreatingJob {1}: {2}", Environment.NewLine, DateTime.Now, Environment.NewLine));
 
             // Create new price prediction game
-            DoCreatePricePrediction(ref resolver, localDateTime);
+            DoCreatePricePrediction(ref resolver, localDateTime, fileName);
 
             return Task.FromResult(0);
         }
 
-        public void DoCreatePricePrediction(ref Resolver resolver, DateTime localDateTime)
+        public void DoCreatePricePrediction(ref Resolver resolver, DateTime localDateTime, string logFileName)
         {
-            Utils.FileAppendThreadSafe(CPLPredictionGameService.basePricePredictionFunctions.FileName, string.Format("1. DoCreateAdminPricePrediction: {0}{1}", DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(logFileName, string.Format("1. DoCreateAdminPricePrediction: {0}{1}", DateTime.Now, Environment.NewLine));
 
             var activePricePredictionSettings = resolver.PricePredictionSettingService.Queryable().Where(x => x.Status == (int)EnumPricePredictionSettingStatus.ACTIVE && !x.IsDeleted).ToList();
 
@@ -52,7 +52,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                     ToBeComparedTime = toBeComparedTime,
                     ResultTime = resultTime,
                     IsCreatedByAdmin = true,
-                    PricePredictionCategoryId = 2 // default standard priceprediction category
+                    PricePredictionCategoryId = (int)EnumPricePredictionCategory.ADMIN // default admin priceprediction category
                 };
 
                 resolver.PricePredictionService.Insert(newPricePredictionRecord);
