@@ -11,7 +11,7 @@
                     }
                     <div class="btc-price-chart">
                     </div>
-                    @Html.Hidden("waitToNextGame", LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WaitToNextGame"))
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WaitToNextGame")" id="waitToNextGame" />
                 </div>
                 <div class="col-lg-3 col-12 bet">
                     <div class="row">
