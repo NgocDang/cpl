@@ -25,14 +25,20 @@ namespace CPL.PredictionGameService
         public static BTCCurrentPriceClient BTCCurrentPriceClient = new BTCCurrentPriceClient();
         public static bool IsCPLPredictionGameServiceRunning = false;
         public static List<Task> Tasks = new List<Task>();
-        private static int PricePredictionBettingIntervalInHour;        // 8h
-        private static int PricePredictionHoldingIntervalInHour;        // 1h
-        private static int PricePredictionCompareIntervalInMinute;      // 15m
+        private static int SystemPricePredictionBettingIntervalInHour;        // 8h
+        private static int SystemPricePredictionHoldingIntervalInHour;        // 1h
+        private static int SystemPricePredictionCompareIntervalInMinute;      // 15m
 
-        public string FileName { get; set; }
         public int RunningIntervalInMilliseconds { get; set; }
 
-        Resolver Resolver { get; set; }
+        public string GeneralLogFileName { get; set; }
+        public string SystemLogFileName { get; set; }
+        public string AdminLogFileName { get; set; }
+
+        public Resolver SystemResolver { get; set; }
+        public Resolver AdminResolver { get; set; }
+        public BasePricePredictionFunctions SystemBasePricePredictionFunctions { get; set; }
+        public BasePricePredictionFunctions AdminBasePricePredictionFunctions { get; set; }
 
         public void Start()
         {
@@ -43,7 +49,7 @@ namespace CPL.PredictionGameService
             Initialize();
 
             // write log
-            Utils.FileAppendThreadSafe(FileName, String.Format("{0} started at {1}{2}", PredictionGameServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(GeneralLogFileName, String.Format("{0} started at {1}{2}", PredictionGameServiceConstant.ServiceName, DateTime.Now, Environment.NewLine));
 
             //Init setting
             IsCPLPredictionGameServiceRunning = true;
@@ -53,42 +59,101 @@ namespace CPL.PredictionGameService
 
             Tasks.Add(Task.Run(async () =>
             {
-                var startHour = PricePredictionHoldingIntervalInHour;       // 1h
-                var startMinute = PricePredictionCompareIntervalInMinute;   // 15m
+                // SYSTEM PRICE PREDICTION CREATING JOB
+                var systemStartHour = SystemPricePredictionHoldingIntervalInHour;       // 1h
+                var systemStartMinute = SystemPricePredictionCompareIntervalInMinute;   // 15m
 
                 IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
                 await scheduler.Start();
 
-                var jobData = new JobDataMap
+                var systemJobData = new JobDataMap
                 {
-                    ["Resolver"] = Resolver,
+                    ["Resolver"] = SystemResolver,
+                    ["SystemBasePricePredictionFunctions"] = SystemBasePricePredictionFunctions,
+                    ["SystemLogFileName"] = SystemLogFileName
                 };
 
-                IJobDetail job = JobBuilder.Create<PricePredictionCreatingJobAndUpdateResult>()
-                    .UsingJobData(jobData)
-                    .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
-                    .WithDescription("Job to create new PricePredictions daily automatically")
+                IJobDetail systemPricePredictionCreatingJob = JobBuilder.Create<SystemPricePredictionJob>()
+                    .UsingJobData(systemJobData)
+                    .WithIdentity(new JobKey("SystemPricePredictionCreatingJob", "QuartzGroup"))
+                    .WithDescription("Job to create new System PricePredictions daily automatically")
                     .Build();
 
-                ITrigger trigger = TriggerBuilder.Create()
-                    .WithIdentity("PricePredictionCreatingJob", "QuartzGroup")
-                    .WithDescription("Job to create new PricePredictions daily automatically")
-                                        .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PricePredictionBettingIntervalInHour)
-                                                                             .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(startHour, startMinute)))
+                ITrigger systemPricePredictionCreatingTrigger = TriggerBuilder.Create()
+                    .WithIdentity(new TriggerKey("SystemPricePredictionCreatingJob", "QuartzGroup"))
+                    .WithDescription("Job to create new System PricePredictions daily automatically")
+                    .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(SystemPricePredictionBettingIntervalInHour)
+                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(systemStartHour, systemStartMinute)))
+                    .Build();
+                await scheduler.ScheduleJob(systemPricePredictionCreatingJob, systemPricePredictionCreatingTrigger);
+
+
+                // ADMIN PRICE PREDICTION CREATING JOB
+                var adminStartHour = int.Parse(SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.AdminPricePredictionDailyJobStartHour).Value);   // 0h
+                var adminStartMinute = int.Parse(SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.AdminPricePredictionDailyJobStartMinute).Value);  // 0m
+
+                var adminJobData = new JobDataMap
+                {
+                    ["Resolver"] = AdminResolver,
+                    ["AdminBasePricePredictionFunctions"] = AdminBasePricePredictionFunctions,
+                    ["AdminLogFileName"] = AdminLogFileName
+                };
+
+                IJobDetail adminPricePredictionCreatingJob = JobBuilder.Create<AdminPricePredictionJob>()
+                    .UsingJobData(adminJobData)
+                    .WithIdentity(new JobKey("AdminPricePredictionCreatingJob", "QuartzGroup"))
+                    .WithDescription("Job to create new admin's PricePredictions daily automatically")
                     .Build();
 
-                await scheduler.ScheduleJob(job, trigger);
+                ITrigger adminPricePredictionCreatingTrigger = TriggerBuilder.Create()
+                    .WithIdentity(new TriggerKey("AdminPricePredictionCreatingJob", "QuartzGroup"))
+                    .WithDescription("Job to create new admin's PricePredictions daily automatically")
+                    .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PredictionGameServiceConstant.DailyIntervalInHours)
+                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(adminStartHour, adminStartMinute)))
+                    .Build();
+
+                await scheduler.ScheduleJob(adminPricePredictionCreatingJob, adminPricePredictionCreatingTrigger);
+
+                // ADMIN PRICE PREDICTION CHECK RESULT JOB
+                // TODO: use Status column instead of checking ResultPrice.HasValue
+                var activeAdminPricePredictions = SystemResolver.PricePredictionService.Queryable().Where(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && x.IsCreatedByAdmin && x.ResultTime > DateTime.Now).ToList();
+                foreach (var activeAdminPricePrediction in activeAdminPricePredictions)
+                {
+                    adminJobData = new JobDataMap
+                    {
+                        ["Resolver"] = AdminResolver,
+                        ["PricePredictionId"] = activeAdminPricePrediction.Id,
+                        ["AdminBasePricePredictionFunctions"] = AdminBasePricePredictionFunctions,
+                        ["AdminLogFileName"] = AdminLogFileName
+                    };
+
+                    IJobDetail adminPricePredictionCheckResultJob = JobBuilder.Create<AdminPricePredictionCheckResultJob>()
+                        .UsingJobData(adminJobData)
+                        .WithIdentity(new JobKey(string.Format("AdminPricePredictionId{0}CheckResultJob", activeAdminPricePrediction.Id), "QuartzGroup"))
+                        .WithDescription("Job to check admin's PricePredictions result")
+                        .Build();
+
+                    ITrigger adminPricePredictionCheckResultTrigger = TriggerBuilder.Create()
+                        .WithIdentity(new TriggerKey(string.Format("AdminPricePredictionId{0}CheckResultJob", activeAdminPricePrediction.Id), "QuartzGroup"))
+                        .WithDescription("Job to check admin's PricePredictions result")
+                        .WithDailyTimeIntervalSchedule(x => x.WithIntervalInHours(PredictionGameServiceConstant.DailyIntervalInHours) // If not doing this, job will be triggered with 1 min interval
+                            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(activeAdminPricePrediction.ResultTime.Hour, activeAdminPricePrediction.ResultTime.Minute))
+                            .WithRepeatCount(0))
+                        .Build();
+                    await scheduler.ScheduleJob(adminPricePredictionCheckResultJob, adminPricePredictionCheckResultTrigger);
+                }
+
             }));
         }
 
         public async void Stop()
         {
             IsCPLPredictionGameServiceRunning = false;
-            Utils.FileAppendThreadSafe(FileName, string.Format("Stop main thread at : {0}{1}{2}", DateTime.Now, Environment.NewLine, Environment.NewLine));
+            Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Stop main thread at : {0}{1}{2}", DateTime.Now, Environment.NewLine, Environment.NewLine));
 
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             await scheduler.Shutdown();
-            Utils.FileAppendThreadSafe(FileName, string.Format("Scheduler shutdown ({0}) at : {1}{2}{3}", scheduler.IsShutdown, DateTime.Now, Environment.NewLine, Environment.NewLine));
+            Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Scheduler shutdown ({0}) at : {1}{2}{3}", scheduler.IsShutdown, DateTime.Now, Environment.NewLine, Environment.NewLine));
 
             Task.WaitAll(Tasks.ToArray());
         }
@@ -98,7 +163,7 @@ namespace CPL.PredictionGameService
         {
             var resolver = new Resolver();
 
-            Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC thread on CPL window service STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Get current BTC thread on CPL window service STARTED on {0}{1}", DateTime.Now, Environment.NewLine));
             while (IsCPLPredictionGameServiceRunning)
             {
                 try
@@ -108,7 +173,7 @@ namespace CPL.PredictionGameService
 
                     if (btcCurrentPriceResult.Result.Status.Code != 0)
                     {
-                        Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC failed. Reason: {0}{1}", btcCurrentPriceResult.Result.Status.Text, Environment.NewLine));
+                        Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Get current BTC failed. Reason: {0}{1}", btcCurrentPriceResult.Result.Status.Text, Environment.NewLine));
                         return;
                     }
 
@@ -126,12 +191,12 @@ namespace CPL.PredictionGameService
                 catch (Exception ex)
                 {
                     if (ex.InnerException?.Message != null)
-                        Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
+                        Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Exception {0} at {1}{2}", ex.InnerException.Message, DateTime.Now, Environment.NewLine));
                     else
-                        Utils.FileAppendThreadSafe(FileName, string.Format("Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
+                        Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Exception {0} at {1}{2}", ex.Message, DateTime.Now, Environment.NewLine));
                 }
             }
-            Utils.FileAppendThreadSafe(FileName, string.Format("Get current BTC thread on CPL window service STOPPED at {0}{1}", DateTime.Now, Environment.NewLine));
+            Utils.FileAppendThreadSafe(GeneralLogFileName, string.Format("Get current BTC thread on CPL window service STOPPED at {0}{1}", DateTime.Now, Environment.NewLine));
         }
 
         // ConfigurationBuilder
@@ -147,14 +212,20 @@ namespace CPL.PredictionGameService
         // Initialize
         private void Initialize()
         {
-            Resolver = new Resolver();
+            SystemResolver = new Resolver();
+            AdminResolver = new Resolver();
+            SystemBasePricePredictionFunctions = new BasePricePredictionFunctions();
+            AdminBasePricePredictionFunctions = new BasePricePredictionFunctions();
 
-            FileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
+            GeneralLogFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "log.txt");
+            SystemLogFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "systemLog.txt");
+            AdminLogFileName = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "adminLog.txt");
+
             RunningIntervalInMilliseconds = int.Parse(Configuration["RunningIntervalInMilliseconds"]);
-            var cplServiceEndpoint = Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
-            PricePredictionBettingIntervalInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionBettingIntervalInHour).Value);
-            PricePredictionHoldingIntervalInHour = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionHoldingIntervalInHour).Value);
-            PricePredictionCompareIntervalInMinute = int.Parse(Resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionCompareIntervalInMinute).Value);
+            var cplServiceEndpoint = SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.CPLServiceEndpoint).Value;
+            SystemPricePredictionBettingIntervalInHour = int.Parse(SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionBettingIntervalInHour).Value);
+            SystemPricePredictionHoldingIntervalInHour = int.Parse(SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionHoldingIntervalInHour).Value);
+            SystemPricePredictionCompareIntervalInMinute = int.Parse(SystemResolver.SettingService.Queryable().FirstOrDefault(x => x.Name == PredictionGameServiceConstant.PricePredictionCompareIntervalInMinute).Value);
             BTCCurrentPriceClient.Endpoint.Address = new EndpointAddress(new Uri(cplServiceEndpoint + CPLConstant.BTCCurrentPriceServiceEndpoint));
         }
     }

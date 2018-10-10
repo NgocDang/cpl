@@ -1,4 +1,5 @@
-﻿@model PricePredictionViewComponentViewModel
+﻿@using  CPL.Common.Misc
+@model PricePredictionViewComponentViewModel
 
 <div class="card mb-1">
     <div class="card-content">
@@ -79,9 +80,9 @@
                         </div>
                         @Html.HiddenFor(x => x.PreviousBtcRate)
                         @Html.HiddenFor(x => x.LowestBtcRate)
-                        @Html.Hidden("OpenBettingTime", ((DateTimeOffset)Model.OpenBettingTime).ToUnixTimeMilliseconds())
-                        @Html.Hidden("CloseBettingTime", ((DateTimeOffset)Model.CloseBettingTime).ToUnixTimeMilliseconds())
-                        @Html.Hidden("ResultTime", ((DateTimeOffset)Model.ResultTime).ToUnixTimeMilliseconds())
+                        @Html.Hidden("OpenBettingTime", Model.OpenBettingTime.ToUTCUnixTimeInMilliseconds())
+                        @Html.Hidden("CloseBettingTime", Model.CloseBettingTime.ToUTCUnixTimeInMilliseconds())
+                        @Html.Hidden("ResultTime", Model.ResultTime.ToUTCUnixTimeInMilliseconds())
                     </form>
                 </div>
                 <div class="card col-md-3 col-sm-12 bet-confirm mb-0" style="display:none">
