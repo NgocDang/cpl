@@ -58,7 +58,10 @@ namespace CPL.WCF.ExchangeCurrentPrice
             }
             catch (Exception ex)
             {
-                return new SetBTCCurrentPriceResult { Status = new Status { Code = Status.ExceptionCode, Text = ex.Message } };
+                if (ex.InnerException?.Message != null)
+                    return new SetBTCCurrentPriceResult { Status = new Status { Code = Status.ExceptionCode, Text = ex.InnerException.Message } };
+                else
+                    return new SetBTCCurrentPriceResult { Status = new Status { Code = Status.ExceptionCode, Text = ex.Message } };
             }
         }
     }
