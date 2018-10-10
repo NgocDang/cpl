@@ -61,10 +61,11 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Guest)]
-        public IActionResult GetPricePredictionViewComponent(int id)
+        public IActionResult GetPricePredictionViewComponent(int id, bool isDisabled)
         {
             var viewModel = new PricePredictionViewComponentViewModel();
             viewModel.Id = id;
+            viewModel.IsDisabled = isDisabled;
             viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
             if (viewModel.SysUserId.HasValue)
             {

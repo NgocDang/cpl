@@ -36,11 +36,13 @@ namespace CPL.ViewComponents
         {
             var tokenAmount = viewModel.TokenAmount;
             var predictedTrend = viewModel.PredictedTrend;
+            var isDisabled = viewModel.IsDisabled;
 
             viewModel = _pricePredictionService.Queryable().Where(x => x.Id == viewModel.Id)
                 .Select(x => Mapper.Map<PricePredictionViewComponentViewModel>(x)).FirstOrDefault();
             viewModel.TokenAmount = tokenAmount;
             viewModel.PredictedTrend = predictedTrend;
+            viewModel.IsDisabled = isDisabled;
 
             //Calculate percentage
             decimal upPrediction = _pricePredictionHistoryService
@@ -65,23 +67,23 @@ namespace CPL.ViewComponents
             }
             //////////////////////////
 
-            var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
-            btcCurrentPriceResult.Wait();
-            if (btcCurrentPriceResult.Result.Status.Code == 0)
-            {
-                viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
-                viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
-            }
+            //var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
+            //btcCurrentPriceResult.Wait();
+            //if (btcCurrentPriceResult.Result.Status.Code == 0)
+            //{
+            //    viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
+            //    viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
+            //}
 
-            // Get btc previous rates 12h before until now
-            var btcPriceInUTC = _btcPriceService.Queryable()
-                .Where(x => x.Time >= ((DateTimeOffset)viewModel.OpenBettingTime.AddHours(-CPLConstant.HourBeforeInChart)).ToUnixTimeSeconds())
-                .ToList();
-            var lowestRate = btcPriceInUTC.Min(x => x.Price) - CPLConstant.LowestRateBTCInterval;
-            if (lowestRate < 0)
-                lowestRate = 0;
-            viewModel.PreviousBtcRate = JsonConvert.SerializeObject(btcPriceInUTC);
-            viewModel.LowestBtcRate = lowestRate;
+            //// Get btc previous rates 12h before until now
+            //var btcPriceInUTC = _btcPriceService.Queryable()
+            //    .Where(x => x.Time >= ((DateTimeOffset)viewModel.OpenBettingTime.AddHours(-CPLConstant.HourBeforeInChart)).ToUnixTimeSeconds())
+            //    .ToList();
+            //var lowestRate = btcPriceInUTC.Min(x => x.Price) - CPLConstant.LowestRateBTCInterval;
+            //if (lowestRate < 0)
+            //    lowestRate = 0;
+            //viewModel.PreviousBtcRate = JsonConvert.SerializeObject(btcPriceInUTC);
+            //viewModel.LowestBtcRate = lowestRate;
             return View(viewModel);
         }
     }

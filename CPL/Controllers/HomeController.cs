@@ -71,7 +71,7 @@ namespace CPL.Controllers
 
             var closestPricePrediction = _pricePredictionService.Query()
                 .Include(x => x.PricePredictionDetails)
-                .Where(x =>!x.UpdatedDate.HasValue && x.CloseBettingTime > DateTime.Now) // Should add IsDeleted to priceprediction ?
+                .Where(x =>!x.UpdatedDate.HasValue && x.CloseBettingTime > DateTime.Now && x.Status == (int)EnumPricePredictionGameStatus.ACTIVE) // Should add IsDeleted to priceprediction ?
                 .OrderBy(x => x.CloseBettingTime)
                 .FirstOrDefault();
 

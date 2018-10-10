@@ -31,7 +31,7 @@ namespace CPL.Models
         public decimal LowestBtcRate { get; set; }
 
         public bool? PredictedTrend { get; set; }
-
+        public bool IsDisabled { get; set; }
         public List<PricePredictionHistoryViewModel> PricePredictionHistories { get; set; }
     }
 }
