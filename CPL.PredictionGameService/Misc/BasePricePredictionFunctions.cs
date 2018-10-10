@@ -108,7 +108,7 @@ namespace CPL.PredictionGameService.Misc
                     {
                         if (pricePredictionHistory.Prediction != gameResult)
                         {
-                            // update result of PrdictionHistory
+                            // update result of PricePredictionHistory
                             pricePredictionHistory.Result = EnumGameResult.LOSE.ToString();
                             pricePredictionHistory.Award = 0.0m;
                             pricePredictionHistory.TotalAward = 0.0m;
