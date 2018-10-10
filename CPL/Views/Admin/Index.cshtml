@@ -121,8 +121,8 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</strong></p>
-                                        <h1>@Model.TotalLotteryGame.ToString("N0")</h1>
-                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
+                                        <h1>@Model.TotalSaleInLotteryGame.ToString("N0")</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")</p>
                                     </div>
                                 </div>
                             </div>
@@ -139,8 +139,8 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</strong></p>
-                                        <h1>@Model.TotalPricePredictionGame.ToString("N0")</h1>
-                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
+                                        <h1>@Model.TotalSaleInPricePredictionGame.ToString("N0")</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")</p>
                                     </div>
                                 </div>
                             </div>

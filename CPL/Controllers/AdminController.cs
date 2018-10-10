@@ -144,12 +144,12 @@ namespace CPL.Controllers
 
             // Game management
             var lotteryGames = _lotteryService.Queryable().Where(x => !x.IsDeleted);
-            var pricePredictioNGames = _pricePredictionService.Queryable();
+            var pricePredictionStandardGames = _pricePredictionService.Queryable();
             var lotteryHistories = _lotteryHistoryService.Queryable();
             var pricePredictionHistories = _pricePredictionHistoryService.Queryable();
 
             // lottery game
-            viewModel.TotalLotteryGame = lotteryGames.Count();
+            var totalLotteryGame = lotteryGames.Count();
             var totalSaleInLotteryGame = _lotteryHistoryService.Query()
                                         .Include(x => x.Lottery)
                                         .Select(x => x.Lottery.UnitPrice).Sum();
@@ -162,8 +162,10 @@ namespace CPL.Controllers
                                         .Include(x => x.Lottery)
                                         .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.AddDays(-1).Date))
                                         .Sum(x => x.Lottery.UnitPrice);
+            viewModel.TotalSaleInLotteryGame = totalSaleInLotteryGame;
+
             // price prediction game
-            viewModel.TotalPricePredictionGame = pricePredictioNGames.Count();
+            var totalPricePredictionGame = pricePredictionStandardGames.Count();
             var totalSaleIPricePredictionGame = _pricePredictionHistoryService.Queryable()
                                             .Sum(x => x.Amount);
             var totalSaleIPricePredictionGameToday = _pricePredictionHistoryService.Queryable()
@@ -172,8 +174,10 @@ namespace CPL.Controllers
             var totalSaleIPricePredictionGameYesterday = _pricePredictionHistoryService.Queryable()
                                             .Where(x => x.CreatedDate.Date.Equals(DateTime.Now.AddDays(-1).Date))
                                             .Sum(x => x.Amount);
+            viewModel.TotalSaleInPricePredictionGame = (int)totalSaleIPricePredictionGame;
+
             // all game
-            viewModel.TotalGame = viewModel.TotalLotteryGame + viewModel.TotalPricePredictionGame;
+            viewModel.TotalGame = totalLotteryGame + totalPricePredictionGame;
             viewModel.TotalSaleInGame = totalSaleInLotteryGame + (int)totalSaleIPricePredictionGame;
             viewModel.TotalSaleInGameToday = totalSaleInLotteryGameToday + (int)totalSaleIPricePredictionGameToday;
             viewModel.TotalSaleInGameYesterday = totalSaleInLotteryGameYesterday + (int)totalSaleIPricePredictionGameYesterday;
