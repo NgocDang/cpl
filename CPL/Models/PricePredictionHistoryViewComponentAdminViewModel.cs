@@ -21,7 +21,7 @@ namespace CPL.Models
         {
             get
             {
-                return PurchaseDateTime.ToString(Format.DateTime);
+                return PurchaseDateTime.ToString(Format.Date);
             }
         }
         public string NumberOfPredictionInString
@@ -32,13 +32,12 @@ namespace CPL.Models
             }
         }
 
-        // TODO
-        //public string StatusInString
-        //{
-        //    get
-        //    {
-        //        return ((EnumLotteryGameStatus)(Status)).ToString();
-        //    }
-        //}
+        public string StatusInString
+        {
+            get
+            {
+                return ((EnumPricePredictionGameStatus)(Status)).ToString();
+            }
+        }
     }
 }
