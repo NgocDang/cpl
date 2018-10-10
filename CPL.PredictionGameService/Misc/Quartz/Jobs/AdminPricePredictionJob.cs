@@ -52,7 +52,8 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                     ToBeComparedTime = toBeComparedTime,
                     ResultTime = resultTime,
                     IsCreatedByAdmin = true,
-                    PricePredictionCategoryId = (int)EnumPricePredictionCategory.ADMIN // default admin priceprediction category
+                    PricePredictionCategoryId = (int)EnumPricePredictionCategory.ADMIN, // default admin priceprediction category
+                    DividendRate = activePricePredictionSetting.DividendRate
                 };
 
                 resolver.PricePredictionService.Insert(newPricePredictionRecord);

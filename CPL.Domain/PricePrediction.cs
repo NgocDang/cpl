@@ -20,6 +20,7 @@ namespace CPL.Domain
         public DateTime? UpdatedDate { get; set; }
         public int PricePredictionCategoryId { get; set; }
         public bool IsCreatedByAdmin { get; set; }
+        public int DividendRate { get; set; }
 
         public virtual PricePredictionCategory PricePredictionCategory { get; set; }
         public virtual ICollection<PricePredictionHistory> PricePredictionHistories { get; set; }

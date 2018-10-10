@@ -64,7 +64,8 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 ToBeComparedTime = localDateTime.AddHours(PricePredictionGameIntervalInHour).AddMinutes(-PricePredictionCompareIntervalInMinute),
                 ResultTime = localDateTime.AddHours(PricePredictionGameIntervalInHour),
                 IsCreatedByAdmin = false,
-                PricePredictionCategoryId = (int)EnumPricePredictionCategory.SYSTEM // default sysem priceprediction category
+                PricePredictionCategoryId = (int)EnumPricePredictionCategory.SYSTEM, // default sysem priceprediction category
+                DividendRate = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.PricePredictionTotalAwardPercentage).Value)
             };
 
             resolver.PricePredictionService.Insert(newPricePredictionRecord);

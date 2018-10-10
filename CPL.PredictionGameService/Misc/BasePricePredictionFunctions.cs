@@ -71,16 +71,16 @@ namespace CPL.PredictionGameService.Misc
                 }
 
                 // calculate the prize
-                decimal totalAmountOfLosers = 0.0m;
-                decimal totalAmountToBeAwarded = 0.0m;
-                decimal totalAmountOfWinners = 0.0m;
+                decimal totalCPlAmountOfLosers = 0.0m;
+                decimal totalCPLAmountToBeAwarded = 0.0m;
+                decimal totalCPLAmountOfWinners = 0.0m;
 
                 if (gameResult.HasValue)
                 {
                     // calculate the prize
-                    totalAmountOfLosers = pricePredictionHistories.Where(x => x.Prediction != gameResult).Sum(x => x.Amount);
-                    totalAmountToBeAwarded = totalAmountOfLosers * CPLConstant.PricePredictionTotalAwardPercentage; // Distribute 80% of the loser's BET quantity to the winners.
-                    totalAmountOfWinners = pricePredictionHistories.Where(x => x.Prediction == gameResult).Sum(x => x.Amount);
+                    totalCPlAmountOfLosers = pricePredictionHistories.Where(x => x.Prediction != gameResult).Sum(x => x.Amount);
+                    totalCPLAmountOfWinners = pricePredictionHistories.Where(x => x.Prediction == gameResult).Sum(x => x.Amount);
+                    totalCPLAmountToBeAwarded = totalCPlAmountOfLosers * pricePrediction.DividendRate / 100; // Distribute 80% of the loser's BET quantity to the winners.
                 }
 
                 // calculate the award
@@ -109,7 +109,7 @@ namespace CPL.PredictionGameService.Misc
                         else
                         {
                             // the amount will be awarded
-                            var amountToBeAwarded = (pricePredictionHistory.Amount / totalAmountOfWinners) * totalAmountToBeAwarded; // The prize money is distributed at an equal rate according to the amount of bet.​
+                            var amountToBeAwarded = (pricePredictionHistory.Amount / totalCPLAmountOfWinners) * totalCPLAmountToBeAwarded; // The prize money is distributed at an equal rate according to the amount of bet.​
                             pricePredictionHistory.Result = EnumGameResult.WIN.ToString();
                             pricePredictionHistory.Award = amountToBeAwarded;
                             pricePredictionHistory.TotalAward = amountToBeAwarded + pricePredictionHistory.Amount;
