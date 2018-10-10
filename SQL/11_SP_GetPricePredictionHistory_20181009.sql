@@ -158,16 +158,25 @@ WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @Page
 
 
 --////////////////////////////// DATATABLE #2 - Total Count /////////////////////////////--
-SELECT		COUNT(pph.PricePredictionId) as TotalCount
-FROM		PricePredictionHistory pph
-GROUP BY	CAST(pph.CreatedDate as date),
-			 pph.PricePredictionId,
-			 pph.SysUserId
+SELECT COUNT(*)
+FROM (
+		SELECT		COUNT(pph.PricePredictionId) as TotalCount
+		FROM		PricePredictionHistory pph
+		JOIN		PricePrediction pp
+		on		pph.PricePredictionId = pp.Id
+		WHERE		pp.PricePredictionCategoryId = 
+						CASE
+						WHEN  @PricePredictionCategoryId > 0 THEN @PricePredictionCategoryId
+						ELSE 
+							pp.PricePredictionCategoryId
+						END
+		GROUP BY	CAST(pph.CreatedDate as date),
+					 pph.PricePredictionId,
+					 pph.SysUserId) As Result
+
 
 
 --////////////////////////////// DATATABLE #3 - Filtered Count //////////////////////////--
 SELECT COUNT(*) as FilteredCount
 FROM @TablePricePredictionHistory
 END
-
-
