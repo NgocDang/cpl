@@ -1876,15 +1876,27 @@ namespace CPL.Controllers
 
             // 1.STATISTICAL INFORMATION 
             // 1.STATISTICAL INFORMATION - TOTAL REVENUE
-            var lotteryTotalRevenue = _lotteryHistoryService.Query()
+            var lotteryTotalUses = _lotteryHistoryService.Query()
                 .Include(x => x.Lottery)
-                .Include(x => x.LotteryPrize)
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
-                .Sum(x => x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0));
+                .Sum(x => x.Lottery.UnitPrice);
 
-            var pricePredictionTotalRevenue = _pricePredictionHistoryService.Queryable()
+            var lotteryTotalAward = _lotteryHistoryService.Query()
+                .Include(x => x.LotteryPrize)
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0));
+
+            var lotteryTotalRevenue = lotteryTotalUses - lotteryTotalAward;
+
+            var pricePredictionTotalUse = _pricePredictionHistoryService.Queryable()
                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
-                .Sum(x => x.Amount - x.TotalAward.GetValueOrDefault(0));
+                .Sum(x => x.Amount);
+
+            var pricePredictionTotalAward = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.TotalAward.GetValueOrDefault(0));
+
+            var pricePredictionTotalRevenue = pricePredictionTotalUse - pricePredictionTotalAward;
 
             viewModel.TotalRevenue = Convert.ToInt32(lotteryTotalRevenue + pricePredictionTotalRevenue);
 
