@@ -6,14 +6,25 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-9 col-12 px-sm-1 px-0">
-                    <div class="panel panel-primary text-white bg-primary top-right p-1 countdown-clock" style="display:none"></div>
+                    @if (!Model.IsDisabled)
+                    {
+                        <div class="panel panel-primary text-white bg-primary top-right p-1 countdown-clock" style="display:none"></div>
+                    }
                     <div class="btc-price-chart">
                     </div>
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WaitForNextGame")" id="waitForNextGame" />
                 </div>
                 <div class="col-lg-3 col-12 bet">
                     <div class="row">
                         <div class="col-12">
-                            <span class="font-medium-4">BTC/USDT</span> <span class="font-large-1 font-weight-bold btc-rate" value="@Model.CurrentBTCRate">@Model.CurrentBTCRateInString</span>
+                            @if (Model.IsDisabled)
+                            {
+                                <span class="font-medium-4">BTC/USDT</span>
+                            }
+                            else
+                            {
+                                <span class="font-medium-4">BTC/USDT</span> <span class="font-large-1 font-weight-bold btc-rate" value="@Model.CurrentBTCRate">@Model.CurrentBTCRateInString</span>
+                            }
                         </div>
                     </div>
                     <form class="form-bet">
@@ -24,14 +35,14 @@
                                     <div class="input-group">
                                         @if (Model.TokenAmount.HasValue)
                                         {
-                                            <input type="number" name="Amount" class="form-control bet-amount" min="1" max="@Model.TokenAmount.Value" value="0" required autofocus="">
+                                            <input type="number" name="Amount" class="form-control bet-amount" min="1" max="@Model.TokenAmount.Value" value="0" required autofocus="" @(Model.IsDisabled ? "disabled" : "")>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">CPL</span>
                                             </div>
                                         }
                                         else
                                         {
-                                            <input type="number" name="Amount" class="form-control bet-amount" min="1" value="0" required autofocus="">
+                                            <input type="number" name="Amount" class="form-control bet-amount" min="1" value="0" required autofocus="" @(Model.IsDisabled ? "disabled" : "")>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">CPL</span>
                                             </div>
@@ -42,28 +53,28 @@
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                <button type="button" data-value="1000" class="btn btn-bet btn-gray btn-block font-weight-bold px-0">1,000</button>
+                                <button type="button" data-value="1000" class="btn btn-bet btn-gray btn-block font-weight-bold px-0" @(Model.IsDisabled ? "disabled" : "")>1,000</button>
                             </div>
                             <div class="col-4">
-                                <button type="button" data-value="5000" class="btn btn-bet btn-gray btn-block font-weight-bold px-0">5,000</button>
+                                <button type="button" data-value="5000" class="btn btn-bet btn-gray btn-block font-weight-bold px-0" @(Model.IsDisabled ? "disabled" : "")>5,000</button>
                             </div>
                             <div class="col-4">
-                                <button type="button" data-value="10000" class="btn btn-bet btn-gray btn-block font-weight-bold px-0">10,000</button>
+                                <button type="button" data-value="10000" class="btn btn-bet btn-gray btn-block font-weight-bold px-0" @(Model.IsDisabled ? "disabled" : "")>10,000</button>
                             </div>
                         </div>
                         <div class="row" style="margin-top:10px;">
                             <div class="btn-group col-12 btn-up-down-group" role="group">
-                                <button type="button" data-value="true" class="btn btn-outline-success col-6 btn-up @(Model.PredictedTrend.HasValue && Model.PredictedTrend.Value ? "active" : "")">
+                                <button type="button" data-value="true" class="btn col-6 btn-up btn-outline-success  @(Model.PredictedTrend.HasValue && Model.PredictedTrend.Value ? "active" : "")" @(Model.IsDisabled ? "disabled" : "")>
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "High")
                                 </button>
-                                <button type="button" data-value="false" class="btn btn-outline-danger col-6 btn-down @(Model.PredictedTrend.HasValue && !Model.PredictedTrend.Value ? "active" : "")">
+                                <button type="button" data-value="false" class="btn col-6 btn-down btn-outline-danger @(Model.PredictedTrend.HasValue && !Model.PredictedTrend.Value ? "active" : "")" @(Model.IsDisabled ? "disabled" : "")>
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Low")
                                 </button>
                             </div>
                         </div>
                         <div class="row" style="margin-top:10px;">
                             <div class="col-12">
-                                <button type="button" class="btn btn-yellow btn-block font-weight-bold btn-confirm-bet">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bet")</button>
+                                <button type="button" class="btn btn-block font-weight-bold btn-confirm-bet btn-yellow" @(Model.IsDisabled ? "disabled" : "")>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Bet")</button>
                             </div>
                         </div>
                         <div class="row mt-2">

@@ -1948,3 +1948,7 @@ table.dataTable td:first-child {
 table.dataTable td a.btn {
     margin: 2px
 }
+
+i.la-info-circle {
+    cursor: pointer;
+}

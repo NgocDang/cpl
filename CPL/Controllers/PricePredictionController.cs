@@ -80,7 +80,7 @@ namespace CPL.Controllers
                 viewModel.TokenAmount = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).TokenAmount;
 
             viewModel.PricePredictionTabs = _pricePredictionService.Queryable()
-                .Where(x => x.ResultTime > DateTime.Now)
+                .Where(x => x.OpenBettingTime < DateTime.Now && x.ResultTime > DateTime.Now && x.Status == (int)EnumPricePredictionGameStatus.ACTIVE )
                 .OrderBy(x => x.ResultTime.ToString("HH:mm"))
                 .Select(x => new PricePredictionTab {
                     Id = x.Id,
@@ -94,6 +94,7 @@ namespace CPL.Controllers
 
             // Move first tab to the end of the array
             viewModel.PricePredictionTabs = Enumerable.Range(1, viewModel.PricePredictionTabs.Count).Select(i => viewModel.PricePredictionTabs[i % viewModel.PricePredictionTabs.Count]).ToList();
+
             var pricePredictionActiveTab = viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now);
 
             if (predictedTrend.HasValue)
