@@ -245,7 +245,7 @@ GameHistoryWithRowNumCTE AS
 	FROM GameHistoryCTE
 	WHERE(Result like '%' + @SearchValue + '%'
 		  OR 
-		  CONVERT(nvarchar(23), CreatedDate, 0) like ('%' + @SearchValue + '%')
+		  (CONVERT(varchar, CreatedDate, 111) + ' ' + CONVERT(varchar, CreatedDate, 8)) like ('%' + @SearchValue + '%')
 		  OR
 		  GameType like '%' + @SearchValue + '%')
 )

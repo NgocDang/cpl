@@ -38,8 +38,8 @@ INSERT INTO MobileLangDetail VALUES (2, N'ContactScreen_Dialog_Success_Descripti
 INSERT INTO MobileLangDetail VALUES (1, N'DepositWithdrawScreen_Button_Deposit', N'Deposit');
 INSERT INTO MobileLangDetail VALUES (2, N'DepositWithdrawScreen_Button_Deposit', N'保証金');
 
-INSERT INTO MobileLangDetail VALUES (1, N'DepositWithdrawScreen_Button_Deposit', N'Withdraw');
-INSERT INTO MobileLangDetail VALUES (2, N'DepositWithdrawScreen_Button_Deposit', N'撤退');
+INSERT INTO MobileLangDetail VALUES (1, N'DepositWithdrawScreen_Button_Withdraw', N'Withdraw');
+INSERT INTO MobileLangDetail VALUES (2, N'DepositWithdrawScreen_Button_Withdraw', N'撤退');
 
 INSERT INTO MobileLangDetail VALUES (1, N'DepositWithdrawScreen_Title', N'Deposit/ Withdraw');
 INSERT INTO MobileLangDetail VALUES (2, N'DepositWithdrawScreen_Title', N'入金/払い戻し');

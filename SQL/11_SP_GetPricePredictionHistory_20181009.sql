@@ -7,7 +7,7 @@ GO
 -- Create date: 20181009
 -- Description:	Get PricePrediction history to show in admin view
 -- =============================================
-ALTER PROCEDURE [dbo].[usp_GetPricePredictionHistory] 
+CREATE PROCEDURE [dbo].[usp_GetPricePredictionHistory] 
 	-- Add the parameters for the stored procedure here
 	@PricePredictionCategoryId int,
 	@LangId int,
@@ -43,7 +43,7 @@ DECLARE @TablePricePredictionHistory TABLE
 	WITH PricePredictionHistoryCTE AS
 	(
 		SELECT  SUM(ISNULL(pph.Amount,0)) as TotalPurchasePrice,
-			    COUNT(ISNULL(pph.Prediction,0)) as NumberOfPrediction, 
+			    COUNT(pph.Prediction) as NumberOfPrediction, 
 				CAST(pph.CreatedDate AS DATE) as PurchaseDateTime,
 				PricePredictionId,
 				SysUserId
@@ -71,7 +71,7 @@ DECLARE @TablePricePredictionHistory TABLE
 		JOIN PricePredictionDetail ppdt		on pp.Id = ppdt.PricePredictionId 
 											and ppdt.[LangId] = @LangId
 		JOIN SysUser su						on cte.SysUserId = su.Id
-		WHERE pp.PricePredictionCategoryId = 
+		WHERE   pp.PricePredictionCategoryId = 
 				CASE
 				WHEN  @PricePredictionCategoryId > 0 THEN @PricePredictionCategoryId
 				ELSE 
@@ -140,7 +140,7 @@ DECLARE @TablePricePredictionHistory TABLE
 		FROM PricePredictionHistoryResultCTE
 		WHERE(Email like '%' + @SearchValue + '%'
 			  OR 
-			  CONVERT(nvarchar(23), PurchaseDateTime, 0) like ('%' + @SearchValue + '%')
+			  (CONVERT(varchar, PurchaseDateTime, 111) + ' ' + CONVERT(varchar, PurchaseDateTime, 8))  like ('%' + @SearchValue + '%')
 			  OR 
 			  Title like ('%' + @SearchValue + '%')
 			  OR
@@ -158,9 +158,9 @@ WHERE RowNum  BETWEEN ((@PageIndex - 1) * @PageSize + 1) AND (@PageIndex * @Page
 
 
 --////////////////////////////// DATATABLE #2 - Total Count /////////////////////////////--
-SELECT COUNT(ISNULL(pph.PricePredictionId,0)) as TotalCount
-FROM PricePredictionHistory pph
-GROUP BY CAST(pph.CreatedDate as date),
+SELECT		COUNT(pph.PricePredictionId) as TotalCount
+FROM		PricePredictionHistory pph
+GROUP BY	CAST(pph.CreatedDate as date),
 			 pph.PricePredictionId,
 			 pph.SysUserId
 
