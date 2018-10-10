@@ -30,6 +30,7 @@ namespace CPL.Mapping
             builder.Property(t => t.PricePredictionCategoryId).HasColumnName("PricePredictionCategoryId");
             builder.Property(t => t.IsCreatedByAdmin).HasColumnName("IsCreatedByAdmin");
             builder.Property(t => t.Status).HasColumnName("Status");
+            builder.Property(t => t.DividendRate).HasColumnName("DividendRate");
 
             //Relationship
             builder.HasOne(x => x.PricePredictionCategory)
