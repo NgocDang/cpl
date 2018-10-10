@@ -1,33 +1,33 @@
 ﻿var AdminGameManagement = {
     init: function () {
         // Summary Tab
-        //AdminGameManagement.bindSummaryTab();
-        //AdminGameManagement.bindSummaryTimeRangeChange();
+        AdminGameManagement.bindSummaryTab();
+        AdminGameManagement.bindSummaryTimeRangeChange();
 
         //// Lottery Tab
-        //AdminGameManagement.bindLotteryTab();
-        //AdminGameManagement.bindAddLotteryCategory();
-        //AdminGameManagement.bindDoAddLotteryCategory();
+        AdminGameManagement.bindLotteryTab();
+        AdminGameManagement.bindAddLotteryCategory();
+        AdminGameManagement.bindDoAddLotteryCategory();
 
         //// Lottery Tab - Lottery Summary Tab
-        //AdminGameManagement.bindLotterySummaryTab();
-        //AdminGameManagement.bindLotterySummaryTimeRangeChange();
+        AdminGameManagement.bindLotterySummaryTab();
+        AdminGameManagement.bindLotterySummaryTimeRangeChange();
 
         //// Lottery Tab - Lottery Category Tab
-        //AdminGameManagement.bindLotteryCategoryTabs();
-        //AdminGameManagement.bindLotteryCategoryTimeRangeChange();
+        AdminGameManagement.bindLotteryCategoryTabs();
+        AdminGameManagement.bindLotteryCategoryTimeRangeChange();
 
         //// Price Prediction Tab - Price Prediction Summary Tab
-        //AdminGameManagement.bindAddPricePredictionCategory();
-        //AdminGameManagement.bindDoAddPricePredictionCategory();
+        AdminGameManagement.bindAddPricePredictionCategory();
+        AdminGameManagement.bindDoAddPricePredictionCategory();
 
         AdminGameManagement.bindPricePredictionTab();
         AdminGameManagement.bindPricePredictionSummaryTab();
-        //AdminGameManagement.bindPricePredictionSummaryTimeRangeChange();
+        AdminGameManagement.bindPricePredictionSummaryTimeRangeChange();
 
         ////  Price Prediction Tab -  Price Prediction Category Tab
-        //AdminGameManagement.bindPricePredictionCategoryTabs();
-        //AdminGameManagement.bindPricePredictionCategoryTimeRangeChange();
+        AdminGameManagement.bindPricePredictionCategoryTabs();
+        AdminGameManagement.bindPricePredictionCategoryTimeRangeChange();
 
         // Show tab base on URL tab parameter
         var tab = $("#tab").val();
