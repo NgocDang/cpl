@@ -172,8 +172,7 @@ namespace CPL.Common.Enums
 
         public static string NumberOfAgencyAffiliateExpiredDays = "NumberOfAgencyAffiliateExpiredDays";
         public static decimal LotteryTotalRevenuePercentage = 0.2m;
-        public static decimal PricePredictionTotalRevenuePercentage = 0.2m;
-        public static decimal PricePredictionTotalAwardPercentage = 0.8m;
+        public static string PricePredictionTotalAwardPercentage = "PricePredictionTotalAwardPercentage";
         public static DateTime FirstDeploymentDate = new DateTime(2018, 8, 28);
 
         public struct MobileAppConstant
