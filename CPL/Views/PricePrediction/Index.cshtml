@@ -33,7 +33,7 @@
                         @for (var i = 0; i < Model.PricePredictionTabs.Count; i++)
                         {
                             <div role="tabpanel" class="tab-pane @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-labelledby="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id"
-                                   data-is-disabled="@Model.PricePredictionTabs[i].IsDisabled">
+                                 data-is-disabled="@Model.PricePredictionTabs[i].IsDisabled">
                                 @if (Model.PricePredictionTabs[i].IsActive)
                                 {
                                     @await Component.InvokeAsync("PricePrediction", new PricePredictionViewComponentViewModel { Id = Model.PricePredictionTabs[i].Id, TokenAmount = Model.TokenAmount, PredictedTrend = Model.PricePredictionTabs[i].PredictedTrend, IsDisabled = Model.PricePredictionTabs[i].IsDisabled })
@@ -67,6 +67,7 @@
     <script src="~/js/dashboard/plugins/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/dashboard/plugins/datatables/Responsive-2.2.1/js/dataTables.responsive.min.js"></script>
     <script src="~/js/dashboard/cpl.dtlang.js" asp-append-version="true"></script>
+    <script src="~/js/dashboard/cpl.utils.js"></script>
     <script src="~/js/dashboard/cpl.priceprediction.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.priceprediction.viewcomponent.js" asp-append-version="true"></script>
     <script src="~/js/dashboard/cpl.pricepredictionhistory.viewcomponent.js" asp-append-version="true"></script>
