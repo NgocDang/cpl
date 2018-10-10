@@ -17,7 +17,14 @@
                 <div class="col-lg-3 col-12 bet">
                     <div class="row">
                         <div class="col-12">
-                            <span class="font-medium-4">BTC/USDT</span> <span class="font-large-1 font-weight-bold btc-rate" value="@Model.CurrentBTCRate">@Model.CurrentBTCRateInString</span>
+                            @if (Model.IsDisabled)
+                            {
+                                <span class="font-medium-4">BTC/USDT</span>
+                            }
+                            else
+                            {
+                                <span class="font-medium-4">BTC/USDT</span> <span class="font-large-1 font-weight-bold btc-rate" value="@Model.CurrentBTCRate">@Model.CurrentBTCRateInString</span>
+                            }
                         </div>
                     </div>
                     <form class="form-bet">
