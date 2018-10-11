@@ -13,6 +13,12 @@
                     <div class="btc-price-chart">
                     </div>
                     <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WaitForNextGame")" id="waitForNextGame" />
+                    <input type="hidden" value="@Model.BTCPricePredictionChartTitle" id="btcPricePredictionChartTitle" />
+                    <input type="hidden" value="@Model.BTCPricePredictionSeriesName" id="btcPricePredictionSeriesName" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")" id="result" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Price")" id="price" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Open")" id="open" />
+                    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Close")" id="close" />
                 </div>
                 <div class="col-lg-3 col-12 bet">
                     <div class="row">

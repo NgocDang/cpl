@@ -6,7 +6,7 @@
     init: function () {
         PricePredictionViewComponent.bindLoadPredictionResult();
         PricePredictionViewComponent.bindCountDownTick();
-        PricePredictionViewComponent.loadBTCPriceChart();
+        //PricePredictionViewComponent.loadBTCPriceChart();
 
         PricePredictionViewComponent.bindLoadBTCCurrentRate();
         PricePredictionViewComponent.bindBet();
@@ -150,7 +150,7 @@
                         }
                     },
                     title: {
-                        text: $("#btcPricePredictionChartTitle").val(),
+                        text: $(element).closest(".tab-pane").find("#btcPricePredictionChartTitle").val(),
                         align: 'left'
                     },
                     xAxis: {
@@ -161,7 +161,7 @@
                         tickPixelInterval: 150,
                         plotLines: [{
                             label: {
-                                text: $("#open").val() + ' (' + openTime.format("HH:mm") + ')',
+                                text: $(element).closest(".tab-pane").find("#open").val() + ' (' + openTime.format("HH:mm") + ')',
                                 //rotation: 0,
                                 zIndex: 4
                             },
@@ -173,7 +173,7 @@
                         },
                         {
                             label: {
-                                text: $("#close").val() + ' (' + closeTime.format("HH:mm") + ')',
+                                text: $(element).closest(".tab-pane").find("#close").val() + ' (' + closeTime.format("HH:mm") + ')',
                                 //rotation: 0,
                                 //x: -90,
                                 zIndex: 4
@@ -186,7 +186,7 @@
                         },
                         {
                             label: {
-                                text: $("#result").val() + ' (' + resultTime.format("HH:mm") + ')',
+                                text: $(element).closest(".tab-pane").find("#result").val() + ' (' + resultTime.format("HH:mm") + ')',
                                 //rotation: 0,
                                 zIndex: 4
                             },
@@ -219,7 +219,7 @@
                         enabled: false
                     },
                     series: [{
-                        name: $("#btcPricePredictionSeriesName").val(),
+                        name: $(element).closest(".tab-pane").find("#btcPricePredictionSeriesName").val(),
                         fillOpacity: 1,
                         states: { hover: { enabled: false } },
                         dataGrouping: { enabled: false },
@@ -254,7 +254,7 @@
             else {
                 $(element).highcharts({
                     title: {
-                        text: $("#btcPricePredictionChartTitle").val(),
+                        text: $(element).closest(".tab-pane").find("#btcPricePredictionChartTitle").val(),
                         align: 'left'
                     },
                     series: [{
@@ -262,7 +262,7 @@
                         data: []
                     }],
                     lang: {
-                        noData: $("#waitForNextGame").val()
+                        noData: $(element).closest(".tab-pane").find("#waitForNextGame").val()
                     },
                     yAxis: {
                         title: null

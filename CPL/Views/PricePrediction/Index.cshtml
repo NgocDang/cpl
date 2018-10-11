@@ -23,7 +23,8 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link mobile-tab-name font-medium-2 font-weight-bold px-2 border-0 @(Model.PricePredictionTabs[i].IsActive ? "active" : "")" id="price-prediction-nav-tab-@Model.PricePredictionTabs[i].Id" data-id="@Model.PricePredictionTabs[i].Id"
-                                   data-toggle="tab" href="#price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-controls="price-prediction-nav-@Model.PricePredictionTabs[i].Id" data-is-disabled="@Model.PricePredictionTabs[i].IsDisabled">
+                                   data-toggle="tab" href="#price-prediction-nav-@Model.PricePredictionTabs[i].Id" aria-controls="price-prediction-nav-@Model.PricePredictionTabs[i].Id" data-is-disabled="@Model.PricePredictionTabs[i].IsDisabled"
+                                   data-coin-base="@Model.PricePredictionTabs[i].CoinBase">
                                     @Model.PricePredictionTabs[i].Title
                                 </a>
                             </li>
@@ -36,7 +37,7 @@
                                  data-is-disabled="@Model.PricePredictionTabs[i].IsDisabled">
                                 @if (Model.PricePredictionTabs[i].IsActive)
                                 {
-                                    @await Component.InvokeAsync("PricePrediction", new PricePredictionViewComponentViewModel { Id = Model.PricePredictionTabs[i].Id, TokenAmount = Model.TokenAmount, PredictedTrend = Model.PricePredictionTabs[i].PredictedTrend, IsDisabled = Model.PricePredictionTabs[i].IsDisabled })
+                                    @await Component.InvokeAsync("PricePrediction", new PricePredictionViewComponentViewModel { Id = Model.PricePredictionTabs[i].Id, TokenAmount = Model.TokenAmount, PredictedTrend = Model.PricePredictionTabs[i].PredictedTrend, IsDisabled = Model.PricePredictionTabs[i].IsDisabled, Coinbase = Model.PricePredictionTabs[i].CoinBase })
                                 }
                             </div>
                         }
@@ -44,15 +45,8 @@
                 }
             </div>
             @await Component.InvokeAsync("PricePredictionHistory", new PricePredictionHistoryViewComponentViewModel { SysUserId = Model.SysUserId })
-
         </div>
     </div>
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Result")" id="result" />
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Price")" id="price" />
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Open")" id="open" />
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Close")" id="close" />
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCPricePredictionChartTitle")" id="btcPricePredictionChartTitle" />
-    <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCPricePredictionSeriesName")" id="btcPricePredictionSeriesName" />
 </div>
 
 @section scripts

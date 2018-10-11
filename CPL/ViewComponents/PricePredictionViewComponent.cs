@@ -6,12 +6,14 @@ using CPL.Domain;
 using CPL.Misc;
 using CPL.Misc.Utils;
 using CPL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace CPL.ViewComponents
 {
@@ -38,12 +40,15 @@ namespace CPL.ViewComponents
             var tokenAmount = viewModel.TokenAmount;
             var predictedTrend = viewModel.PredictedTrend;
             var isDisabled = viewModel.IsDisabled;
+            var coinBase = viewModel.Coinbase;
 
             viewModel = _pricePredictionService.Queryable().Where(x => x.Id == viewModel.Id)
                 .Select(x => Mapper.Map<PricePredictionViewComponentViewModel>(x)).FirstOrDefault();
             viewModel.TokenAmount = tokenAmount;
             viewModel.PredictedTrend = predictedTrend;
             viewModel.IsDisabled = isDisabled;
+            viewModel.BTCPricePredictionChartTitle = ((EnumCurrencyPair)Enum.Parse(typeof(EnumCurrencyPair), coinBase)) == EnumCurrencyPair.BTCUSDT ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "BTCPricePredictionChartTitle") : ""; // TODO: Add more chart title if there are more coinbases
+            viewModel.BTCPricePredictionSeriesName = ((EnumCurrencyPair)Enum.Parse(typeof(EnumCurrencyPair), coinBase)) == EnumCurrencyPair.BTCUSDT ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "BTCPricePredictionSeriesName") : ""; // TODO: Add more chart title if there are more coinbases
 
             //Calculate percentage
             decimal upPrediction = _pricePredictionHistoryService
@@ -68,23 +73,23 @@ namespace CPL.ViewComponents
             }
             //////////////////////////
 
-            var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
-            btcCurrentPriceResult.Wait();
-            if (btcCurrentPriceResult.Result.Status.Code == 0)
-            {
-                viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
-                viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
-            }
+            //var btcCurrentPriceResult = ServiceClient.BTCCurrentPriceClient.GetBTCCurrentPriceAsync();
+            //btcCurrentPriceResult.Wait();
+            //if (btcCurrentPriceResult.Result.Status.Code == 0)
+            //{
+            //    viewModel.CurrentBTCRate = btcCurrentPriceResult.Result.Price;
+            //    viewModel.CurrentBTCRateInString = btcCurrentPriceResult.Result.Price.ToString("#,##0.00");
+            //}
 
-            // Get btc previous rates 12h before until now
-            var btcPriceInUTC = _btcPriceService.Queryable()
-                .Where(x => x.Time >= viewModel.OpenBettingTime.AddHours(-CPLConstant.HourBeforeInChart).ToUTCUnixTimeInSeconds())
-                .ToList();
-            var lowestRate = btcPriceInUTC.Min(x => x.Price) - CPLConstant.LowestRateBTCInterval;
-            if (lowestRate < 0)
-                lowestRate = 0;
-            viewModel.PreviousBtcRate = JsonConvert.SerializeObject(btcPriceInUTC);
-            viewModel.LowestBtcRate = lowestRate;
+            //// Get btc previous rates 12h before until now
+            //var btcPriceInUTC = _btcPriceService.Queryable()
+            //    .Where(x => x.Time >= viewModel.OpenBettingTime.AddHours(-CPLConstant.HourBeforeInChart).ToUTCUnixTimeInSeconds())
+            //    .ToList();
+            //var lowestRate = btcPriceInUTC.Min(x => x.Price) - CPLConstant.LowestRateBTCInterval;
+            //if (lowestRate < 0)
+            //    lowestRate = 0;
+            //viewModel.PreviousBtcRate = JsonConvert.SerializeObject(btcPriceInUTC);
+            //viewModel.LowestBtcRate = lowestRate;
             return View(viewModel);
         }
     }

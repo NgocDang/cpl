@@ -88,7 +88,8 @@ namespace CPL.Controllers
                     ToBeComparedTime = x.ToBeComparedTime,
                     CloseBettingTime = x.CloseBettingTime,
                     IsDisabled = (x.OpenBettingTime > DateTime.Now || x.CloseBettingTime < DateTime.Now),
-                    Title = x.PricePredictionDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Title
+                    Title = x.PricePredictionDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Title,
+                    CoinBase = x.Coinbase
                 });
 
             var systemPricePredictionTabs = _pricePredictionService.Queryable()
@@ -100,8 +101,9 @@ namespace CPL.Controllers
                     ToBeComparedTime = x.ToBeComparedTime,
                     CloseBettingTime = x.CloseBettingTime,
                     IsDisabled = (x.CloseBettingTime < DateTime.Now),
-                    Title = x.PricePredictionDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Title
-                });
+                    Title = x.PricePredictionDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Title,
+                    CoinBase = x.Coinbase
+                });         
 
 
             viewModel.PricePredictionTabs = adminPricePredictionTabs.Concat(systemPricePredictionTabs)
