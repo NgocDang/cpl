@@ -48,7 +48,7 @@
                                                         <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopImage")</span> <span> ( @detail.Lang.Name )</span>
                                                     </p>
                                                     <p>
-                                                        <a data-toggle="lightbox" data-gallery="document-view-@detail.Id" href="/images/slider/@detail.DesktopImage"><img src="/images/slider/@detail.DesktopImage" class="img-thumbnail img-fluid border-0" alt="document-view-@detail.DesktopImage"></a>
+                                                        <a data-toggle="lightbox" data-gallery="document-view-@detail.Lang.Id-@detail.Id" href="/images/slider/@detail.DesktopImage"><img src="/images/slider/@detail.DesktopImage" class="img-thumbnail img-fluid border-0" alt="document-view-@detail.Lang.Id-@detail.DesktopImage"></a>
                                                     </p>
                                                 </div>
                                                 <div class="col-12">
@@ -56,7 +56,7 @@
                                                         <label for="mobile-image"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileImage")</span><span> ( @detail.Lang.Name )</span></label>
                                                     </p>
                                                     <p>
-                                                        <a data-toggle="lightbox" data-gallery="document-view-@detail.Id" href="/images/slider/@detail.MobileImage"><img src="/images/slider/@detail.MobileImage" class="img-thumbnail img-fluid border-0" alt="document-view-@detail?.MobileImage"></a>
+                                                        <a data-toggle="lightbox" data-gallery="document-view-@detail.Lang.Id-@detail.Id" href="/images/slider/@detail.MobileImage"><img src="/images/slider/@detail.MobileImage" class="img-thumbnail img-fluid border-0" alt="document-view-@detail.Lang.Id-@detail.MobileImage"></a>
                                                     </p>
                                                 </div>
                                             </div>
