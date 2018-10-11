@@ -140,7 +140,7 @@ DECLARE @TablePricePredictionHistory TABLE
 		FROM PricePredictionHistoryResultCTE
 		WHERE(Email like '%' + @SearchValue + '%'
 			  OR 
-			  (CONVERT(varchar, PurchaseDateTime, 111) + ' ' + CONVERT(varchar, PurchaseDateTime, 8))  like ('%' + @SearchValue + '%')
+			  (CONVERT(varchar, PurchaseDateTime, 111)) like ('%' + @SearchValue + '%')
 			  OR 
 			  Title like ('%' + @SearchValue + '%')
 			  OR
