@@ -2225,11 +2225,17 @@ namespace CPL.Controllers
 
             // 1.STATISTICAL INFORMATION 
             // 1.STATISTICAL INFORMATION - TOTAL REVENUE
-            viewModel.TotalRevenue = Convert.ToInt32(_lotteryHistoryService.Query()
-                .Include(x => x.Lottery)
+            var lotteryTotalUses = _lotteryHistoryService.Query()
+                 .Include(x => x.Lottery)
+                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                 .Sum(x => x.Lottery.UnitPrice);
+
+            var lotteryTotalAward = _lotteryHistoryService.Query()
                 .Include(x => x.LotteryPrize)
-                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
-                .Sum(x => x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)));
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0));
+
+            viewModel.TotalRevenue = lotteryTotalUses - Convert.ToInt32(lotteryTotalAward);
 
             // 1.STATISTICAL INFORMATION - TOTAL SALE
             viewModel.TotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery)
@@ -2354,11 +2360,19 @@ namespace CPL.Controllers
 
             // 1.STATISTICAL INFORMATION 
             // 1.STATISTICAL INFORMATION - TOTAL REVENUE
-            viewModel.TotalRevenue = Convert.ToInt32(_lotteryHistoryService.Query()
+            var lotteryTotalUses = _lotteryHistoryService.Query()
+                 .Include(x => x.Lottery)
+                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Lottery.LotteryCategoryId == lotteryCategoryId)
+                 .Sum(x => x.Lottery.UnitPrice);
+
+            var lotteryTotalAward = _lotteryHistoryService.Query()
                 .Include(x => x.Lottery)
                 .Include(x => x.LotteryPrize)
-                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.Lottery.LotteryCategoryId == lotteryCategoryId)
-                .Sum(x => x.Lottery.UnitPrice - (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0)));
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) 
+                            && x.Result != EnumGameResult.REFUND.ToString() && x.Lottery.LotteryCategoryId == lotteryCategoryId)
+                .Sum(x => (x.LotteryPrizeId.HasValue ? x.LotteryPrize.Value : 0));
+
+            viewModel.TotalRevenue = lotteryTotalUses - Convert.ToInt32(lotteryTotalAward);
 
             // 1.STATISTICAL INFORMATION - TOTAL SALE
             viewModel.TotalSale = _lotteryHistoryService.Query().Include(x => x.Lottery)
@@ -2565,9 +2579,15 @@ namespace CPL.Controllers
 
             // 1.STATISTICAL INFORMATION 
             // 1.STATISTICAL INFORMATION - TOTAL REVENUE
-            viewModel.TotalRevenue = Convert.ToInt32(_pricePredictionHistoryService.Queryable()
-                 .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
-                 .Sum(x => x.Amount - x.TotalAward.GetValueOrDefault(0)));
+            var pricePredictionTotalUse = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.Amount);
+
+            var pricePredictionTotalAward = _pricePredictionHistoryService.Queryable()
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString())
+                .Sum(x => x.TotalAward.GetValueOrDefault(0));
+
+            viewModel.TotalRevenue = Convert.ToInt32(pricePredictionTotalUse - pricePredictionTotalAward);
 
             // 1.STATISTICAL INFORMATION - TOTAL SALE
             viewModel.TotalSale = Convert.ToInt32(_pricePredictionHistoryService.Queryable()
@@ -2691,10 +2711,19 @@ namespace CPL.Controllers
 
             // 1.STATISTICAL INFORMATION 
             // 1.STATISTICAL INFORMATION - TOTAL REVENUE
-            viewModel.TotalRevenue = Convert.ToInt32(_pricePredictionHistoryService.Query()
+            var pricePredictionTotalUse = _pricePredictionHistoryService.Query()
                 .Include(x => x.PricePrediction)
-                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
-                .Sum(x => x.Amount - x.TotalAward.GetValueOrDefault(0)));
+                .Where(x => x.CreatedDate.Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString() 
+                         && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Sum(x => x.Amount);
+
+            var pricePredictionTotalAward = _pricePredictionHistoryService.Query()
+                .Include(x => x.PricePrediction)
+                .Where(x => x.UpdatedDate.HasValue && x.UpdatedDate.GetValueOrDefault().Date >= DateTime.Now.Date.AddDays(-periodInDay) && x.Result != EnumGameResult.REFUND.ToString()
+                         && x.PricePrediction.PricePredictionCategoryId == pricePredictionCategoryId)
+                .Sum(x => x.TotalAward.GetValueOrDefault(0));
+
+            viewModel.TotalRevenue = Convert.ToInt32(pricePredictionTotalUse - pricePredictionTotalAward);
 
             // 1.STATISTICAL INFORMATION - TOTAL SALE
             viewModel.TotalSale = Convert.ToInt32(_pricePredictionHistoryService.Query()
