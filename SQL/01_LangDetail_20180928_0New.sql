@@ -1,5 +1,5 @@
 ﻿--- LAN - Home rebuild - 2018/09/28
-use CPL;
+Use CPL;
 
 insert into LangDetail values (1, N'PartnerCompanies', N'Partner games companies');
 insert into LangDetail values (2, N'PartnerCompanies', N'提携ゲーム会社');
@@ -12,12 +12,6 @@ insert into LangDetail values (2, N'WhatIsBitcoin', N'ビットコインとは')
 
 insert into LangDetail values (1, N'PersonalInformationProtection', N'Personal information protection');
 insert into LangDetail values (2, N'PersonalInformationProtection', N'個人情報保護について');
-
-update LangDetail set Name = N'AboutCPO', Value = N'About CPO' where Name = N'AboutCPL' and LangId = 1;
-update LangDetail set Name = N'AboutCPO', Value = N'CPOについて' where Name = N'AboutCPL' and LangId = 2;
-
-delete LangDetail where Name = 'WhatIsCPL';
-delete LangMsgDetail where Name = 'WhatIsCPL';
 
 insert into LangDetail values (1, N'WhatIsCryptoLottery', N'What is Crypto Lottery?');
 insert into LangDetail values (2, N'WhatIsCryptoLottery', N'暗号宝くじとは?');
@@ -44,8 +38,6 @@ insert into LangDetail values (1, N'MessageRequired', N'Please fill in message')
 insert into LangDetail values (2, N'MessageRequired', N'メッセージを記入してください');
 
 --- DamTran - What is Crypto Odds - 2018/10/01
-USE CPL;
-
 INSERT INTO LangDetail VALUES (1, N'WhatIsCryptoOdds', N'What is Crypto Odds');
 INSERT INTO LangDetail VALUES (2, N'WhatIsCryptoOdds', N'クリプトオッズとは');
 
@@ -59,7 +51,6 @@ N'クリプトオッズはオランダ領キュラソー政府発行のオンラ
 コンテンツにはスマートコントラクト技術やランダムナンバージェネレーター(RNG)と呼ばれる数字をランダムに生成するシステムを使用しており、不正を排除したシステムで安全・安心なゲーミングを提供しています。');
 
 -- DamTran - Easy 3 steps - 2018/10/01
-USE CPL
 INSERT INTO LangDetail VALUES (1, N'ForEnjoyingCryptOdds', N'To enjoy Crypto Odds');
 INSERT INTO LangDetail VALUES (2, N'ForEnjoyingCryptOdds', N'クリプトオッズを楽しむ為の');
 
@@ -119,7 +110,6 @@ INSERT INTO LangDetail VALUES (2, N'Group', N'グループ');
 INSERT INTO LangDetail VALUES (1, N'BeTheFirstPerson', N'Be the first');
 INSERT INTO LangDetail VALUES (2, N'BeTheFirstPerson', N'はじめての方はこちら');
 -- DamTran - PricePredictonStatisticsChart
-USE CPL;
 INSERT INTO LangDetail VALUES (1, N'NumberOfPrediction', N'Number Of Prediction');
 INSERT INTO LangDetail VALUES (2, N'NumberOfPrediction', N'予測数');
 
@@ -314,8 +304,3 @@ INSERT INTO LangMsgDetail VALUES (1, N'WhatIsCryptoPricePrediction15MinExplainCo
 INSERT INTO LangMsgDetail VALUES (2, N'WhatIsCryptoPricePrediction15MinExplainContent', N'<p>指定された15分間の始まりの価格と終わりの価格で</p>
                                             <p>HIGHかLOWの抽選が行われます。</p>');
 											
--- DamTran - 20181009 - Update Lang Detail FOR Slider
-UPDATE LangDetail 
-SET [Value] = N'編集'
-WHERE [Name] = N'Edit'
-AND LangId = 2;
