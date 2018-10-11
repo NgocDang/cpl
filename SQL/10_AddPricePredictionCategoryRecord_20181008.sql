@@ -1,4 +1,4 @@
-USE CPL;
+﻿USE CPL;
 
 GO
 SET IDENTITY_INSERT [dbo].[PricePredictionCategory] ON 
