@@ -233,21 +233,21 @@
                         <div class="row ml-0 mr-0 mt-1">
                             <div class="col-12 pl-0">
                                 <a class="btn btn-primary mr-1 p-10px" href="/Admin/News"><i class="la la-newspaper-o font-large-1"></i></a>
-                                <a href="/Admin/News">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</a>
+                                <a asp-controller="Admin" asp-action="News">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</a>
                                 <hr class="mt-1 mb-0">
                             </div>
                         </div>
                         <div class="row ml-0 mr-0 mt-1">
                             <div class="col-12 pl-0">
                                 <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-file-o font-large-1"></i></a>
-                                <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</a>
+                                <a asp-controller="Info" asp-action="TermsOfService">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</a>
                                 <hr class="mt-1 mb-0">
                             </div>
                         </div>
                         <div class="row ml-0 mr-0 mt-1">
                             <div class="col-12 pl-0">
                                 <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-file-o font-large-1"></i></a>
-                                <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</a>
+                                <a asp-controller="Info" asp-action="PrivacyPolicy">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</a>
                             </div>
                         </div>
                     </div>
