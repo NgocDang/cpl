@@ -54,7 +54,7 @@
                         <div class="col-lg-6 col-12 pt-1">
                             <fieldset class="form-group">
                                 <label for="DividendRate" class="form-title">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DividendRate")
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DividendRate") (%)
                                 </label>
                                 <input name="DividendRate" id="divided-rate" type="number" min="1" max="100" value="@Model.DividendRate" class="form-control" required autofocus />
                                 <div class="invalid-feedback">
@@ -66,7 +66,9 @@
                     <div class="row">
                         <div class="col-lg-6 col-12 pt-1">
                             <fieldset class="form-group">
-                                <label for="HoldingTimeInterval" class="form-title">Holding Time Interval</label>
+                                <label for="HoldingTimeInterval" class="form-title">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HoldingTimeInterval") (@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Hour"))
+                                </label>
                                 <input name="HoldingTimeInterval" id="holding-time-interval" type="number" min="1" value="@Model.HoldingTimeInterval" class="form-control" required autofocus />
                                 <div class="invalid-feedback">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HoldingTimeIntervalRequired")
@@ -76,7 +78,7 @@
                         <div class="col-lg-6 col-12 pt-1">
                             <fieldset class="form-group">
                                 <label for="ResultTimeInterval" class="form-title">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTimeInterval")
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ResultTimeInterval") (@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Min"))
                                 </label>
                                 <input name="ResultTimeInterval" id="result-time-interval" type="number" min="1" value="@Model.ResultTimeInterval" class="form-control" required autofocus />
                                 <div class="invalid-feedback">
