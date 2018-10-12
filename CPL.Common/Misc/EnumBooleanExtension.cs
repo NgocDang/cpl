@@ -6,7 +6,7 @@ namespace CPL.Common.Misc
     {
         public static bool ToBoolean(this EnumPricePredictionStatus value)
         {
-            return value == EnumPricePredictionStatus.UP;
+            return value == EnumPricePredictionStatus.HIGH;
         }
 
         public static bool? ToBoolean(this EnumCoinTransactionStatus value)

@@ -25,7 +25,7 @@ namespace CPL.Misc.AutoMapper
                 .ForMember(dest => dest.ResultPriceInString, opt => opt.MapFrom(src => $"{src.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString(Format.Amount)} {EnumCurrency.USDT.ToString()}"))
                 .ForMember(dest => dest.ResultTime, opt => opt.MapFrom(src => src.PricePrediction.ResultTime))
                 .ForMember(dest => dest.ResultTimeInString, opt => opt.MapFrom(src => src.PricePrediction.ResultTime.ToString(Format.DateTime)))
-                .ForMember(dest => dest.Bet, opt => opt.MapFrom(src => src.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString()))
+                .ForMember(dest => dest.Bet, opt => opt.MapFrom(src => src.Prediction == true ? EnumPricePredictionStatus.HIGH.ToString() : EnumPricePredictionStatus.LOW.ToString()))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => ((EnumPricePredictionGameStatus)src.PricePrediction.Status).ToString()))
                 .ForMember(dest => dest.PurcharseTime, opt => opt.MapFrom(src => src.CreatedDate))
                 .ForMember(dest => dest.PurcharseTimeInString, opt => opt.MapFrom(src => $"{src.CreatedDate.ToString(Format.DateTime)}"))
