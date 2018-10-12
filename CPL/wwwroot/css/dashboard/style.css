@@ -806,16 +806,7 @@ select.bs-select-hidden {
     }
 
     .mobile-user-menu .dropdown-toggle::after {
-        font-size: .8rem;
-        font-family: LineAwesome;
-        content: '\f110' !important;
-        border: none !important;
-        position: relative;
-        top: 0;
-        right: 0;
-        padding: 0 2px 0 6px;
-        margin: 0 .3em 0 0;
-        vertical-align: 0;
+        content:'' !important;
     }
 
     .bootstrap-select .dropdown-menu.inner li a, .dropdown-menu .dropdown-item {
@@ -1960,4 +1951,17 @@ table.dataTable td a.btn {
 
 i.la-info-circle {
     cursor: pointer;
+}
+
+span.user-token-amount::after {
+    font-size: .8rem;
+    font-family: LineAwesome;
+    content: '\f110' !important;
+    border: none !important;
+    position: relative;
+    top: 0;
+    right: 0;
+    padding: 0 2px 0 6px;
+    margin: 0 .3em 0 0;
+    vertical-align: 0;
 }

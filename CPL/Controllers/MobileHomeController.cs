@@ -6,6 +6,7 @@ using CPL.Misc.Enums;
 using CPL.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -197,6 +198,7 @@ namespace CPL.Controllers
         {
             var lotteries = _lotteryService.Query()
                                 .Include(x => x.LotteryHistories)
+                                .Include(x => x.LotteryDetails)
                                 .Where(x => !x.IsDeleted
                                         && (x.LotteryHistories.Count() < x.Volume
                                         && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
