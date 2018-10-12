@@ -76,7 +76,7 @@
                     "data": "Action",
                     "render": function (data, type, full, meta) {
                         if (full.gameType == "Lottery")
-                            return "<a href='/History/Lottery?createdDate=" + full.createdDate + "&lotteryId=" + full.gameId + "&sysUserId=" + $("#SysUserId").val() + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#game-history-view-component #view").val() + "</a>";
+                            return "<a href='/History/Lottery?createdDate=" + full.createdDate + "&lotteryId=" + full.gameId + "&sysUserId=" + $("#game-history-view-component #SysUserId").val() + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#game-history-view-component #view").val() + "</a>";
                         else if (full.gameType == "Price Prediction")
                             return "<a href='/History/PricePrediction?pricePredictionId=" + full.gameId + "&sysUserId=" + $("#game-history-view-component #SysUserId").val() + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#game-history-view-component #view").val() + "</a>";
                     },

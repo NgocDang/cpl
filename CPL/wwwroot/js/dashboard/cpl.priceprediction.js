@@ -5,7 +5,6 @@
     bindNavbar: function () {
         $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
             var _this = this;
-            debugger;
             if ($("#price-prediction-nav-" + $(_this).data().id).html().trim().length == 0) {
                 $.ajax({
                     url: '/ViewComponent/GetPricePredictionViewComponent',

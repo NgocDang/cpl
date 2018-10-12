@@ -6,7 +6,7 @@
     init: function () {
         PricePredictionViewComponent.bindLoadPredictionResult();
         PricePredictionViewComponent.bindCountDownTick();
-        //PricePredictionViewComponent.loadBTCPriceChart();
+        PricePredictionViewComponent.loadBTCPriceChart();
 
         PricePredictionViewComponent.bindLoadBTCCurrentRate();
         PricePredictionViewComponent.bindBet();
