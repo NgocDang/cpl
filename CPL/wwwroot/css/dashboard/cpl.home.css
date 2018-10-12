@@ -121,6 +121,12 @@
     }
 }
 
+@media (min-width: 769px) and (max-width: 991px) {
+    .card-random-games p {
+        font-size: 15px;
+    }
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     background: url('../../images/homepage_number_spin.jpg') no-repeat #FFEA87;
