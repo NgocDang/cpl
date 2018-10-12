@@ -69,11 +69,11 @@
                             </div>
                         </div>
                         <div class="row" style="margin-top:10px;">
-                            <div class="btn-group col-12 btn-up-down-group" role="group">
-                                <button type="button" data-value="true" class="btn col-6 btn-up btn-outline-success  @(Model.PredictedTrend.HasValue && Model.PredictedTrend.Value ? "active" : "")" @(Model.IsDisabled ? "disabled" : "")>
+                            <div class="btn-group col-12 btn-high-low-group" role="group">
+                                <button type="button" data-value="true" class="btn col-6 btn-high btn-outline-success  @(Model.PredictedTrend.HasValue && Model.PredictedTrend.Value ? "active" : "")" @(Model.IsDisabled ? "disabled" : "")>
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "High")
                                 </button>
-                                <button type="button" data-value="false" class="btn col-6 btn-down btn-outline-danger @(Model.PredictedTrend.HasValue && !Model.PredictedTrend.Value ? "active" : "")" @(Model.IsDisabled ? "disabled" : "")>
+                                <button type="button" data-value="false" class="btn col-6 btn-low btn-outline-danger @(Model.PredictedTrend.HasValue && !Model.PredictedTrend.Value ? "active" : "")" @(Model.IsDisabled ? "disabled" : "")>
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Low")
                                 </button>
                             </div>
@@ -86,12 +86,12 @@
                         <div class="row mt-2">
                             <div class="col-12">
                                 <div class="row">
-                                    <div class="col-6 text-left text-success" id="up-bar-value">@Model.HighPercentage %</div>
-                                    <div class="col-6 text-right text-danger" id="down-bar-value">@Model.LowPercentage %</div>
+                                    <div class="col-6 text-left text-success" id="high-bar-value">@Model.HighPercentage %</div>
+                                    <div class="col-6 text-right text-danger" id="low-bar-value">@Model.LowPercentage %</div>
                                 </div>
                                 <div class="progress progress-cus">
-                                    <div id="up-bar" class="progress-bar bg-success progress-bar-cus" role="progressbar" style="width: @Model.HighPercentage%;" aria-valuenow="@Model.HighPercentage" aria-valuemin="0" aria-valuemax="100"></div>
-                                    <div id="down-bar" class="progress-bar bg-danger progress-bar-cus" role="progressbar" style="width: @Model.LowPercentage%;" aria-valuenow="@Model.LowPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div id="high-bar" class="progress-bar bg-success progress-bar-cus" role="progressbar" style="width: @Model.HighPercentage%;" aria-valuenow="@Model.HighPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div id="low-bar" class="progress-bar bg-danger progress-bar-cus" role="progressbar" style="width: @Model.LowPercentage%;" aria-valuenow="@Model.LowPercentage" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
                         </div>
