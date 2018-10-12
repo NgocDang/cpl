@@ -61,12 +61,15 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Guest)]
-        public IActionResult GetPricePredictionViewComponent(int id, bool isDisabled)
+        public IActionResult GetPricePredictionViewComponent(int id, bool isDisabled, string coinBase)
         {
             var viewModel = new PricePredictionViewComponentViewModel();
             viewModel.Id = id;
             viewModel.IsDisabled = isDisabled;
             viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser")?.Id;
+            viewModel.Coinbase = coinBase;
+            viewModel.BTCPricePredictionChartTitle = ((EnumCurrencyPair)Enum.Parse(typeof(EnumCurrencyPair), coinBase)) == EnumCurrencyPair.BTCUSDT ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "BTCPricePredictionChartTitle") : ""; // TODO: Add more chart title if there are more coinbases
+            viewModel.BTCPricePredictionSeriesName = ((EnumCurrencyPair)Enum.Parse(typeof(EnumCurrencyPair), coinBase)) == EnumCurrencyPair.BTCUSDT ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "BTCPricePredictionSeriesName") : ""; // TODO: Add more chart title if there are more coinbases
             if (viewModel.SysUserId.HasValue)
             {
                 viewModel.TokenAmount = _sysUserService.Queryable().FirstOrDefault(x => x.Id == viewModel.SysUserId).TokenAmount;

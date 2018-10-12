@@ -22,5 +22,6 @@ namespace CPL.Models
         public bool IsDisabled { get; set; }
         public bool? PredictedTrend { get; set; }
         public string Title { get; set; }
+        public string CoinBase { get; set; }
     }
 }
