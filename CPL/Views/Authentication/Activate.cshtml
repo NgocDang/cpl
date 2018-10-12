@@ -11,8 +11,14 @@
                 <div class="card-body">
                     <p class="text-center h5 text-capitalize txt-welcome mb-1">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Welcome")</p>
                     <p class="text-muted">@Html.Raw(Model.Message)</p>
+                    @Html.HiddenFor(x => x.IsActivated, new { @id = "is-activated" })
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section scripts
+    {
+    <script src="~/js/dashboard/cpl.activate.js" asp-append-version="true"></script>
+}

@@ -76,6 +76,7 @@ namespace CPL.Models
         [EmailAddress]
         public string Email { get; set; }
         public string Message { get; set; }
+        public bool IsActivated { get; set; }
     }
 
     public class AccountResendModel
