@@ -22,9 +22,9 @@
             .catch(() => {
                 console.log("Error while establishing connection");
             });
-        progressConnection.on("predictedUserProgress", (up, down, pricePredictionId) => {
-            if (up !== undefined && down !== undefined && pricePredictionId !== undefined)
-                this.setUserProgress(up, down, pricePredictionId);
+        progressConnection.on("predictedUserProgress", (high, low, pricePredictionId) => {
+            if (high !== undefined && low !== undefined && pricePredictionId !== undefined)
+                this.setUserProgress(high, low, pricePredictionId);
         });
     },
     bindLoadBTCCurrentRate: function () {
@@ -56,16 +56,16 @@
             }
         });
     },
-    setUserProgress: function (up, down, pricePredictionId) {
-        // Reset up-bar setting
-        $("#price-prediction-nav-" + pricePredictionId + " #up-bar").css({ "width": up + "%" })
-            .attr("aria-valuenow", up)
-        $("#price-prediction-nav-" + pricePredictionId + " #up-bar-value").html(up + "%");
+    setUserProgress: function (high, low, pricePredictionId) {
+        // Reset high-bar setting
+        $("#price-prediction-nav-" + pricePredictionId + " #high-bar").css({ "width": high + "%" })
+            .attr("aria-valuenow", high)
+        $("#price-prediction-nav-" + pricePredictionId + " #high-bar-value").html(high + "%");
 
-        // Reset down-bar setting
-        $("#price-prediction-nav-" + pricePredictionId + " #down-bar").css({ "width": down + "%" })
-            .attr("aria-valuenow", down)
-        $("#price-prediction-nav-" + pricePredictionId + " #down-bar-value").html(down + "%");
+        // Reset low-bar setting
+        $("#price-prediction-nav-" + pricePredictionId + " #low-bar").css({ "width": low + "%" })
+            .attr("aria-valuenow", low)
+        $("#price-prediction-nav-" + pricePredictionId + " #low-bar-value").html(low + "%");
     },
     loadBTCPriceChart: function () {
         $(".tab-pane.active .btc-price-chart").each(function (index, element) {
@@ -296,10 +296,10 @@
             $(_this).addClass("btn-secondary");
         });
 
-        $(".tab-pane").on("click", ".btn-up-down-group > .btn", function () {
+        $(".tab-pane").on("click", ".btn-high-low-group > .btn", function () {
             var _this = this;
             var tabPane = $(_this).closest(".tab-pane");
-            tabPane.find(".btn-up-down-group > .btn").removeClass("active");
+            tabPane.find(".btn-high-low-group > .btn").removeClass("active");
             $(_this).addClass("active");
             return false;
         });
@@ -311,9 +311,9 @@
             if (tabPane.find(".bet-amount").val() <= 0) {
                 toastr.error("Incorrect amount!");
             } else {
-                if (tabPane.find(".btn-up").hasClass("active") || tabPane.find(".btn-down").hasClass("active")) {
-                    tabPane.find(".predicted-trend-confirm").html(tabPane.find(".btn-up").hasClass("active") ? "High" : "Low");
-                    if (tabPane.find(".btn-up").hasClass("active")) {
+                if (tabPane.find(".btn-high").hasClass("active") || tabPane.find(".btn-low").hasClass("active")) {
+                    tabPane.find(".predicted-trend-confirm").html(tabPane.find(".btn-high").hasClass("active") ? "High" : "Low");
+                    if (tabPane.find(".btn-high").hasClass("active")) {
                         tabPane.find(".predicted-trend-confirm").removeClass("danger").addClass("success");
                         tabPane.find(".bet-amount-confirm").removeClass("danger").addClass("success");
                     } else {
@@ -347,7 +347,7 @@
                 data: {
                     pricePredictionId: $(_this).data().id,
                     betAmount: tabPane.find(".bet-amount").val(),
-                    predictedTrend: tabPane.find(".btn-up-down-group > .btn.active").data().value,
+                    predictedTrend: tabPane.find(".btn-high-low-group > .btn.active").data().value,
                 },
                 success: function (data) {
                     if (data.success) {
