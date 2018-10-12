@@ -97,7 +97,7 @@
                             }
 
                         </ul>
-                        <div class="tab-content mb-1">
+                        <div id="price-prediction-setting-multilanguage" class="tab-content mb-1">
                             @foreach (var detail in Model.PricePredictionSettingDetails)
                             {
                                 <div role="tabpanel" class="tab-pane @(detail.LangId == Context.Session.GetInt32("LangId").Value ? "active" : "" )" id="@detail.LangId-price-prediction-nav" aria-labelledby="@detail.LangId-price-prediction-nav-tab" aria-expanded="true">
@@ -119,17 +119,17 @@
                                                 <div class="row pt-1">
                                                     <div class="col-12">
                                                         <div class="form-group" id="tinymce-pps-short-description-@detail.LangId">
-                                                            <label for="ShortDescription"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescription")</span><span> ( @detail.Lang.Name )</span></label>
+                                                            <label for="ShortDescription"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescription")</span><span> ( @detail.LangName )</span></label>
                                                             @if (detail.ShortDescription != null)
                                                             {
-                                                                <textarea class="tinymce" id="pps-short-description-@detail.Lang.Id" data-max-length="50" name="ShortDescription">@detail.ShortDescription</textarea>
+                                                                <textarea class="tinymce" id="pps-short-description-@detail.LangId" data-max-length="50" name="ShortDescription">@detail.ShortDescription</textarea>
                                                             }
                                                             else
                                                             {
-                                                                <textarea class="tinymce" id="pps-short-description-@detail.Lang.Id" name="ShortDescription"></textarea>
+                                                                <textarea class="tinymce" id="pps-short-description-@detail.LangId" data-max-length="50" name="ShortDescription"></textarea>
                                                             }
                                                             <div class="invalid-feedback">
-                                                                @string.format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescriptionMaxLengthLimit"), 50)
+                                                                @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescriptionMaxLengthLimit"), 50)
                                                             </div>
                                                         </div>
                                                     </div>

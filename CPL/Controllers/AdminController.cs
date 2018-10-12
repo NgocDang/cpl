@@ -3793,7 +3793,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.Admin)]
-        public JsonResult DoUpdatePricePredictionSetting(PricePredictionSettingAdminViewModel viewModel)
+        public JsonResult DoEditPricePredictionSetting(PricePredictionSettingAdminViewModel viewModel)
         {
             try
             {
@@ -3814,6 +3814,7 @@ namespace CPL.Controllers
                 foreach (var detail in pricePredictionSetting.PricePredictionSettingDetails)
                 {
                     detail.Title = viewModel.PricePredictionSettingDetails.FirstOrDefault(x => x.LangId == detail.LangId).Title;
+                    detail.ShortDescription = viewModel.PricePredictionSettingDetails.FirstOrDefault(x => x.LangId == detail.LangId).ShortDescription;
                     _pricePredictionSettingDetailService.Update(detail);
                 }
 

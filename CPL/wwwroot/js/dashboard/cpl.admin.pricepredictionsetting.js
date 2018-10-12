@@ -9,7 +9,7 @@
         AdminPricePredictionSetting.bindDoAddPricePredictionSetting();
         AdminPricePredictionSetting.bindDoDeletePricePredictionSetting();
         AdminPricePredictionSetting.bindEditPricePredictionSetting();
-        AdminPricePredictionSetting.bindDoUpdatePricePredictionSetting();
+        AdminPricePredictionSetting.bindDoEditPricePredictionSetting();
     },
     bindSettingTimePicker: function ()
     {
@@ -40,6 +40,8 @@
                 success: function (data) {
                     $("#modal").html(data);
                     $("#modal #price-prediction-category").selectpicker('refresh');
+                    tinymce.remove();
+                    AdminPricePredictionSetting.initTinyMCE();
                     $("#edit-price-prediction-setting").modal("show");
                 },
                 complete: function (data) {
@@ -168,10 +170,20 @@
                 $("#betting-time-msg").show();
             }
 
+            var isShortDescriptionValid = true;
+            $(_this).parents("#form-edit-price-prediction-setting").find("#price-prediction-setting-multilanguage div.tab-pane").each(function (i, e) {
+                if (tinyMCE.get("pps-short-description-" + $(e).find("#lang-id").val()).getContent({ format: 'text' }).length > $("#pps-short-description-" + $(e).find("#lang-id").val()).data().maxLength) {
+                    $(e).find("#tinymce-pps-short-description-" + $(e).find("#lang-id").val()).find(".invalid-feedback").show();
+                    isShortDescriptionValid = false;
+                } else {
+                    $(e).find("#tinymce-pps-short-description-" + $(e).find("#lang-id").val()).find(".invalid-feedback").hide();
+                }
+            });
+
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
 
-            if (isFormValid && isCategoryValid && isBettingTimeValid) {
+            if (isFormValid && isCategoryValid && isBettingTimeValid && isShortDescriptionValid) {
 
                 var _postData = {};
 
@@ -181,9 +193,11 @@
                         _postData[element['name']] = element['value'];
                     }
                 });
+
                 $("#price-prediction-setting-multilanguage").find("div.tab-pane").each(function (i, e) {
                     _postData['PricePredictionSettingDetails[' + i + '].LangId'] = $(this).find("#lang-id").val();
                     _postData['PricePredictionSettingDetails[' + i + '].Title'] = $(this).find("#title").val();
+                    _postData['PricePredictionSettingDetails[' + i + '].ShortDescription'] = tinyMCE.get("pps-short-description-" + parseInt($(e).find("#lang-id").val())).getContent();
                 });
 
                 $.ajax({
@@ -232,6 +246,8 @@
                         $("#modal #price-prediction-category option[value=" + $("#modal #price-prediction-category").data("value") + "]").attr("selected", "selected");
                     }
                     $("#modal #price-prediction-category").selectpicker('refresh');
+                    tinyMCE.remove();
+                    AdminPricePredictionSetting.initTinyMCE();
                     $("#edit-price-prediction-setting").modal("show");
                     $("#edit-price-prediction-setting .btn-do-add").addClass("d-none");
                     $("#edit-price-prediction-setting .btn-do-edit").removeClass("d-none");
@@ -244,7 +260,7 @@
             return false;
         });
     },
-    bindDoUpdatePricePredictionSetting: function () {
+    bindDoEditPricePredictionSetting: function () {
         $('#modal').on('click', '#edit-price-prediction-setting .btn-do-edit', function () {
             var _this = this;
 
@@ -263,10 +279,20 @@
                 $("#betting-time-msg").show();
             }
 
+            var isShortDescriptionValid = true;
+            $(_this).parents("#form-edit-price-prediction-setting").find("#price-prediction-setting-multilanguage div.tab-pane").each(function (i, e) {
+                if (tinyMCE.get("pps-short-description-" + $(e).find("#lang-id").val()).getContent({ format: 'text' }).length > $("#pps-short-description-" + $(e).find("#lang-id").val()).data().maxLength) {
+                    $(e).find("#tinymce-pps-short-description-" + $(e).find("#lang-id").val()).find(".invalid-feedback").show();
+                    isShortDescriptionValid = false;
+                } else {
+                    $(e).find("#tinymce-pps-short-description-" + $(e).find("#lang-id").val()).find(".invalid-feedback").hide();
+                }
+            });
+
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
 
-            if (isFormValid && isCategoryValid && isBettingTimeValid) {
+            if (isFormValid && isCategoryValid && isBettingTimeValid && isShortDescriptionValid) {
 
                 var _postData = {};
 
@@ -279,9 +305,10 @@
                 $("#price-prediction-setting-multilanguage").find("div.tab-pane").each(function (i, e) {
                     _postData['PricePredictionSettingDetails[' + i + '].LangId'] = $(this).find("#lang-id").val();
                     _postData['PricePredictionSettingDetails[' + i + '].Title'] = $(this).find("#title").val();
+                    _postData['PricePredictionSettingDetails[' + i + '].ShortDescription'] = tinyMCE.get("pps-short-description-" + parseInt($(e).find("#lang-id").val())).getContent();
                 });
                 $.ajax({
-                    url: "/Admin/DoUpdatePricePredictionSetting/",
+                    url: "/Admin/DoEditPricePredictionSetting/",
                     type: "POST",
                     beforeSend: function () {
                         $(_this).attr("disabled", true);
@@ -382,7 +409,23 @@
             }
             ],
         });
-    }
+    },
+    initTinyMCE: function () {
+        tinymce.init({
+            selector: 'textarea',
+            height: 150,
+            menubar: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor textcolor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code help wordcount'
+            ],
+            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css']
+        });
+    },
 };
 
 $(document).ready(function () {
