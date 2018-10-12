@@ -42,7 +42,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
             DoCreatePricePrediction(ref resolver, localDateTime, fileName);
 
             // Update result game
-            var pricePrediction = resolver.PricePredictionService.Queryable().FirstOrDefault(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && localDateTime.ToString("dd-MM-yyyy HH:mm") == x.ResultTime.ToString("dd-MM-yyyy HH:mm") && !x.IsCreatedByAdmin);
+            var pricePrediction = resolver.PricePredictionService.Queryable().FirstOrDefault(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && localDateTime.ToString("dd-MM-yyyy HH:mm") == x.ResultTime.ToString("dd-MM-yyyy HH:mm") && x.PricePredictionCategoryId == (int)EnumPricePredictionCategory.SYSTEM);
             if (pricePrediction != null)
             {
                 systemBasePricePredictionFunctions.DoGetBTCPrice(ref resolver, pricePrediction.Id, fileName);
@@ -63,8 +63,7 @@ namespace CPL.PredictionGameService.Misc.Quartz.Jobs
                 CloseBettingTime = localDateTime.AddHours(PricePredictionGameIntervalInHour - PricePredictionHoldingIntervalInHour).AddMinutes(-PricePredictionCompareIntervalInMinute),
                 ToBeComparedTime = localDateTime.AddHours(PricePredictionGameIntervalInHour).AddMinutes(-PricePredictionCompareIntervalInMinute),
                 ResultTime = localDateTime.AddHours(PricePredictionGameIntervalInHour),
-                IsCreatedByAdmin = false,
-                PricePredictionCategoryId = (int)EnumPricePredictionCategory.SYSTEM, // default sysem priceprediction category
+                PricePredictionCategoryId = (int)EnumPricePredictionCategory.SYSTEM,
                 DividendRate = int.Parse(resolver.SettingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.PricePredictionTotalAwardPercentage).Value)
             };
 
