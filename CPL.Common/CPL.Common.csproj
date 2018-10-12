@@ -60,6 +60,8 @@
     <Compile Include="Enums\EnumGame.cs" />
     <Compile Include="Enums\EnumKindOfTier.cs" />
     <Compile Include="Enums\EnumLangContentFieldName.cs" />
+    <Compile Include="Enums\EnumPricePredictionCategory.cs" />
+    <Compile Include="Enums\EnumPricePredictionSettingStatus.cs" />
     <Compile Include="Enums\EnumSliderStatus.cs" />
     <Compile Include="Enums\ObjectState.cs" />
     <Compile Include="CurrencyPairRateHelper\CurrencyPairRateHelper.cs" />
