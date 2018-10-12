@@ -161,10 +161,17 @@
             else
                 $("#category-msg").show();
 
+            var isBettingTimeValid = $("#close-betting-time-picker").val() > $("#open-betting-time-picker").val();
+            if (isBettingTimeValid)
+                $("#betting-time-msg").hide();
+            else {
+                $("#betting-time-msg").show();
+            }
+
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
 
-            if (isFormValid && isCategoryValid) {
+            if (isFormValid && isCategoryValid && isBettingTimeValid) {
 
                 var _postData = {};
 
@@ -245,13 +252,21 @@
             var isCategoryValid = $("#price-prediction-category").val() != "";
             if (isCategoryValid)
                 $("#category-msg").hide();
-            else
+            else {
                 $("#category-msg").show();
+            }
+
+            var isBettingTimeValid = $("#close-betting-time-picker").val() > $("#open-betting-time-picker").val();
+            if (isBettingTimeValid)
+                $("#betting-time-msg").hide();
+            else {
+                $("#betting-time-msg").show();
+            }
 
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
 
-            if (isFormValid && isCategoryValid) {
+            if (isFormValid && isCategoryValid && isBettingTimeValid) {
 
                 var _postData = {};
 
