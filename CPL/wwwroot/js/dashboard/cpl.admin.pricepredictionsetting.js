@@ -298,6 +298,7 @@
             "serverSide": true,
             "autoWidth": false,
             "stateSave": true,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Admin/SearchPricePredictionSetting",
                 type: 'POST'

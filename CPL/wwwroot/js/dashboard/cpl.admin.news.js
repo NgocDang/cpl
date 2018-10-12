@@ -174,6 +174,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Admin/SearchNews",
                 type: 'POST',
