@@ -306,7 +306,7 @@
             "columns": [{
                 "data": "CreatedDate",
                 "render": function (data, type, full, meta) {
-                    return full.createdDate;
+                    return full.createDateInString;
                 }
             },
             {

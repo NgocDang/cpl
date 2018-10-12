@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static CPL.Common.Enums.CPLConstant;
 
 namespace CPL.Models
 {
@@ -27,5 +28,13 @@ namespace CPL.Models
 		
         public List<PricePredictionSettingDetailAdminViewModel> PricePredictionSettingDetails { get; set; }
         public List<PricePredictionCategoryAdminViewModel> PricePredictionCategories { get; set; }
+
+        public string CreateDateInString
+        {
+            get
+            {
+                return CreatedDate.ToString(Format.DateTime);
+            }
+        }
     }
 }
