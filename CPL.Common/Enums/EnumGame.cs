@@ -14,8 +14,8 @@ namespace CPL.Common.Enums
 
     public enum EnumPricePredictionStatus
     {
-        UP,     // true
-        DOWN    // false
+        HIGH,     // true
+        LOW    // false
     }
 
     public enum EnumGameType

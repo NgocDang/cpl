@@ -63,11 +63,11 @@ namespace CPL.PredictionGameService.Misc
                 bool? gameResult = null; // Assumption: ResultPrice = ToBeComparedPrice
                 if (pricePrediction.ResultPrice > pricePrediction.ToBeComparedPrice)
                 {
-                    gameResult = EnumPricePredictionStatus.UP.ToBoolean();
+                    gameResult = EnumPricePredictionStatus.HIGH.ToBoolean();
                 }
                 else if (pricePrediction.ResultPrice < pricePrediction.ToBeComparedPrice)
                 {
-                    gameResult = EnumPricePredictionStatus.DOWN.ToBoolean();
+                    gameResult = EnumPricePredictionStatus.LOW.ToBoolean();
                 }
 
                 // calculate the prize
