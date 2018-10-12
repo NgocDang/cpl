@@ -45,7 +45,10 @@
                                 <label for="CloseBettingTime" class="form-title">
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CloseBettingTime")
                                 </label>
-                                <input id="close-betting-time-picker" type="text" value="@Model.CloseBettingTime"  class="form-control input-small" name="CloseBettingTime">
+                                <input id="close-betting-time-picker" type="text" value="@Model.CloseBettingTime" class="form-control input-small " name="CloseBettingTime">
+                                <div class="invalid-feedback" id="betting-time-msg">
+                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CloseTimeMustBeGreaterThanOpenTime")
+                                </div>
                             </fieldset>
                         </div>
                         <div class="col-lg-6 col-12 pt-1">

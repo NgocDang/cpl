@@ -32,6 +32,9 @@ namespace CPL.Models
 
         public bool? PredictedTrend { get; set; }
         public bool IsDisabled { get; set; }
+
+        public string BTCPricePredictionChartTitle { get; set; }
+        public string BTCPricePredictionSeriesName { get; set; }
         public List<PricePredictionHistoryViewModel> PricePredictionHistories { get; set; }
     }
 }

@@ -120,6 +120,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "stateSave": (Utils.getJsonFromUrl().search == null) ? true : false,
             "ajax": {
                 url: "/Admin/SearchAllUser",

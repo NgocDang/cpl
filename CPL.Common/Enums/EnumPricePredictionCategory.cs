@@ -8,7 +8,6 @@ namespace CPL.Common.Enums
 {
     public enum EnumPricePredictionCategory
     {
-        SYSTEM = 1,
-        ADMIN = 2
+        SYSTEM = 1
     }
 }

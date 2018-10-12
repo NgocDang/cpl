@@ -19,7 +19,6 @@ namespace CPL.Domain
         public string Coinbase { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public int PricePredictionCategoryId { get; set; }
-        public bool IsCreatedByAdmin { get; set; }
         public int Status { get; set; }
         public int DividendRate { get; set; }
 

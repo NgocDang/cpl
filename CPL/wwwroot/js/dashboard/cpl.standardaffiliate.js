@@ -32,6 +32,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Profile/SearchStandardAffiliateIntroducedUsers",
                 type: 'POST',

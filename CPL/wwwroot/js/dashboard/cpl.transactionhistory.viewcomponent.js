@@ -8,6 +8,7 @@ var TransactionHistoryViewComponent = {
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/History/SearchTransactionHistory",
                 type: 'POST',
