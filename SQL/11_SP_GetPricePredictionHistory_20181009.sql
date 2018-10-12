@@ -48,6 +48,7 @@ DECLARE @TablePricePredictionHistory TABLE
 				PricePredictionId,
 				SysUserId
 		FROM PricePredictionHistory pph
+		WHERE pph.Result <> 'REFUND'
 		GROUP BY CAST(pph.CreatedDate as date),
 				 pph.PricePredictionId,
 				 pph.SysUserId

@@ -51,25 +51,25 @@ namespace CPL.ViewComponents
             viewModel.BTCPricePredictionSeriesName = ((EnumCurrencyPair)Enum.Parse(typeof(EnumCurrencyPair), coinBase)) == EnumCurrencyPair.BTCUSDT ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "BTCPricePredictionSeriesName") : ""; // TODO: Add more chart title if there are more coinbases
 
             //Calculate percentage
-            decimal upPrediction = _pricePredictionHistoryService
+            decimal highPrediction = _pricePredictionHistoryService
                 .Queryable()
-                .Where(x => x.PricePredictionId == viewModel.Id && x.Prediction == EnumPricePredictionStatus.HIGH.ToBoolean())
+                .Where(x => x.PricePredictionId == viewModel.Id && x.Prediction == EnumPricePredictionStatus.HIGH.ToBoolean() && x.Result != EnumGameResult.REFUND.ToString())
                 .Count();
 
-            decimal downPrediction = _pricePredictionHistoryService
+            decimal lowPrediction = _pricePredictionHistoryService
                 .Queryable()
-                .Where(x => x.PricePredictionId == viewModel.Id && x.Prediction == EnumPricePredictionStatus.LOW.ToBoolean())
+                .Where(x => x.PricePredictionId == viewModel.Id && x.Prediction == EnumPricePredictionStatus.LOW.ToBoolean() && x.Result != EnumGameResult.REFUND.ToString())
                 .Count();
 
 
-            if (upPrediction + downPrediction == 0)
+            if (highPrediction + lowPrediction == 0)
             {
-                viewModel.UpPercentage = viewModel.DownPercentage = 50;
+                viewModel.HighPercentage = viewModel.LowPercentage = 50;
             }
             else
             {
-                viewModel.UpPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
-                viewModel.DownPercentage = 100 - viewModel.UpPercentage;
+                viewModel.HighPercentage = Math.Round((highPrediction / (highPrediction + lowPrediction) * 100), 2);
+                viewModel.LowPercentage = 100 - viewModel.HighPercentage;
             }
             //////////////////////////
 

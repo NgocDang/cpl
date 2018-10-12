@@ -21,8 +21,8 @@ namespace CPL.Models
         public string Coinbase { get; set; }
         public DateTime? UpdatedDate { get; set; }
 
-        public decimal UpPercentage { get; set; }
-        public decimal DownPercentage { get; set; }
+        public decimal HighPercentage { get; set; }
+        public decimal LowPercentage { get; set; }
         public decimal CurrentBTCRate { get; set; }
         public string CurrentBTCRateInString { get; set; }
         public int? SysUserId { get; set; }
