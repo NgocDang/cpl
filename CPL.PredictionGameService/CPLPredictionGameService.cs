@@ -116,7 +116,7 @@ namespace CPL.PredictionGameService
 
                 // ADMIN PRICE PREDICTION CHECK RESULT JOB
                 // TODO: use Status column instead of checking ResultPrice.HasValue
-                var activeAdminPricePredictions = SystemResolver.PricePredictionService.Queryable().Where(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && x.IsCreatedByAdmin && x.ResultTime > DateTime.Now).ToList();
+                var activeAdminPricePredictions = SystemResolver.PricePredictionService.Queryable().Where(x => !x.ResultPrice.HasValue && !x.ToBeComparedPrice.HasValue && x.PricePredictionCategoryId != (int)EnumPricePredictionCategory.SYSTEM && x.ResultTime > DateTime.Now).ToList();
                 foreach (var activeAdminPricePrediction in activeAdminPricePredictions)
                 {
                     adminJobData = new JobDataMap

@@ -80,7 +80,7 @@ namespace CPL.Controllers
                 viewModel.TokenAmount = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).TokenAmount;
 
             var adminPricePredictionTabs = _pricePredictionService.Queryable()
-                .Where(x => x.ResultTime.Date == DateTime.Now.Date && x.IsCreatedByAdmin)
+                .Where(x => x.ResultTime.Date == DateTime.Now.Date && x.PricePredictionCategoryId != (int)EnumPricePredictionCategory.SYSTEM)
                 .Select(x => new PricePredictionTab
                 {
                     Id = x.Id,
@@ -93,7 +93,7 @@ namespace CPL.Controllers
                 });
 
             var systemPricePredictionTabs = _pricePredictionService.Queryable()
-                .Where(x => x.ResultTime > DateTime.Now && !x.IsCreatedByAdmin)
+                .Where(x => x.ResultTime > DateTime.Now && x.PricePredictionCategoryId == (int)EnumPricePredictionCategory.SYSTEM)
                 .Select(x => new PricePredictionTab
                 {
                     Id = x.Id,
