@@ -35,17 +35,20 @@
             success: function (data) {
                 if (data.success) {
                     $(".btc-rate").each(function (index, element) {
-                        if ($(element).val() < data.value) { // Up
-                            $(element).removeClass("text-danger");
-                            $(element).addClass("text-success");
-                        }
-                        else if ($(element).val() > data.value) { //Down
-                            $(element).removeClass("text-success");
-                            $(element).addClass("text-danger");
-                        }
+                        if ($(element).closest(".tab-pane").data().isDisable == "False") {
+                            if ($(element).val() < data.value) { // Up
+                                $(element).removeClass("text-danger");
+                                $(element).addClass("text-success");
+                            }
+                            else if ($(element).val() > data.value) { //Down
+                                $(element).removeClass("text-success");
+                                $(element).addClass("text-danger");
+                            }
 
-                        $(element).val(data.value);
-                        $(element).html(data.valueInString.split(";")[0]); // Assign data to get current rate
+                            $(element).val(data.value);
+                            $(element).html(data.valueInString.split(";")[0]); // Assign data to get current rate
+                        }
+                        
                     });
                     // Get data to show in to the chart
                     PricePredictionViewComponent.btcCurrentRate = data.valueInString;
