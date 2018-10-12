@@ -97,7 +97,7 @@ namespace CPL.Controllers
 
             if(lotteryTicketAmount.HasValue)
             {
-                var lotteryTicketsLeft = lottery.Volume - _lotteryHistoryService.Queryable().Count(x => x.LotteryId == lottery.Id);
+                var lotteryTicketsLeft = lottery.Volume - _lotteryHistoryService.Queryable().Count(x => x.LotteryId == lottery.Id && x.Result != EnumGameResult.REFUND.ToString());
                 if (lotteryTicketAmount > lotteryTicketsLeft)
                     viewModel.LotteryTicketAmount = lotteryTicketsLeft;
                 else
@@ -176,11 +176,11 @@ namespace CPL.Controllers
                     
                     var lotteryId = viewModel.LotteryId;
 
-                    var lotteryRecordList = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).ToList();
+                    var lotteryRecordList = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value && x.Result != EnumGameResult.REFUND.ToString()).ToList();
                     var lastTicketIndex = 0;
 
                     if (lotteryRecordList.Count > 0)
-                        lastTicketIndex = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).Max(x => x.TicketIndex);
+                        lastTicketIndex = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value && x.Result != EnumGameResult.REFUND.ToString()).Max(x => x.TicketIndex);
 
                     var unitPrice = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == lotteryId.Value).UnitPrice;
 

@@ -112,7 +112,7 @@ WITH GameHistoryCTE AS
 	FROM LotteryHistory lh
 			join Lottery lot on lh.LotteryId = lot.Id
 			left join LotteryPrize lp on lh.LotteryPrizeId = lp.Id
-	WHERE lh.SysUserId = @SysUserId
+	WHERE lh.SysUserId = @SysUserId and lh.Result <> 'REFUND'
 	GROUP BY lh.LotteryId
 
 	UNION ALL
@@ -175,7 +175,7 @@ WITH GameHistoryCTE AS
 		'Price Prediction' AS GameType
 
 	FROM PricePredictionHistory pph
-	WHERE pph.SysUserId = @SysUserId
+	WHERE pph.SysUserId = @SysUserId and pph.Result <> 'REFUND'
 	GROUP BY pph.PricePredictionId
 ),
 ------------------------------------------------------------------------------------------

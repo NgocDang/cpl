@@ -107,25 +107,25 @@ namespace CPL.Controllers
                 if (createdDate.HasValue)
                 {
                     totalResultsCount = _lotteryHistoryService.Queryable()
-                                 .Where(x => x.CreatedDate.Date == createdDate.Value.Date && x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value)
+                                 .Where(x => x.CreatedDate.Date == createdDate.Value.Date && x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && x.Result != EnumGameResult.REFUND.ToString())
                                  .Count();
                     lotteryHistory = _lotteryHistoryService
                                               .Query()
                                               .Include(x => x.Lottery)
                                               .Include(x => x.LotteryPrize)
-                                              .Where(x => x.CreatedDate.Date == createdDate.Value.Date && x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value);
+                                              .Where(x => x.CreatedDate.Date == createdDate.Value.Date && x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && x.Result != EnumGameResult.REFUND.ToString());
                 }
                 else
                 {
                     totalResultsCount = _lotteryHistoryService.Queryable()
-                                 .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value)
+                                 .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && x.Result != EnumGameResult.REFUND.ToString())
                                  .Count();
 
                     lotteryHistory = _lotteryHistoryService
                                               .Query()
                                               .Include(x => x.Lottery)
                                               .Include(x => x.LotteryPrize)
-                                              .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value);
+                                              .Where(x => x.SysUserId == sysUserId && x.LotteryId == lotteryId.Value && x.Result != EnumGameResult.REFUND.ToString());
                 }
 
 
@@ -175,7 +175,7 @@ namespace CPL.Controllers
                                  .Query()
                                  .Include(x => x.Lottery)
                                  .Include(x => x.LotteryPrize)
-                                 .Where(x => x.SysUserId == sysUserId)
+                                 .Where(x => x.SysUserId == sysUserId && x.Result != EnumGameResult.REFUND.ToString())
                                  .Count();
 
                 // search the dbase taking into consideration table sorting and paging
@@ -183,7 +183,7 @@ namespace CPL.Controllers
                                               .Query()
                                               .Include(x => x.Lottery)
                                               .Include(x => x.LotteryPrize)
-                                              .Where(x => x.SysUserId == sysUserId)
+                                              .Where(x => x.SysUserId == sysUserId && x.Result != EnumGameResult.REFUND.ToString())
                                               .Select(x => new LotteryHistoryViewModel
                                               {
                                                   CreatedDate = x.CreatedDate,
@@ -306,7 +306,7 @@ namespace CPL.Controllers
             var lotteryHistory = _lotteryHistoryService.Query()
                         .Include(x => x.Lottery)
                         .Include(x => x.LotteryPrize)
-                        .Where(x => x.SysUserId == user.Id)
+                        .Where(x => x.SysUserId == user.Id && x.Result != EnumGameResult.REFUND.ToString())
                         .Select(x => new { x.LotteryId, x.CreatedDate, x.Result, x.Lottery.UnitPrice, Value = (x.LotteryPrize != null) ? x.LotteryPrize.Value : 0 })
                         .GroupBy(x => x.LotteryId)
                         .Select(y => new GameHistoryViewModel
@@ -320,7 +320,7 @@ namespace CPL.Controllers
 
             var pricePredictionHistory = _pricePredictionHistoryService
                     .Queryable()
-                    .Where(x => x.SysUserId == user.Id)
+                    .Where(x => x.SysUserId == user.Id && x.Result != EnumGameResult.REFUND.ToString())
                     .Select(x => Mapper.Map<GameHistoryViewModel>(x))
                     .ToList();
 
@@ -493,14 +493,16 @@ namespace CPL.Controllers
             totalResultsCount = _pricePredictionHistoryService
                                  .Query()
                                  .Include(x => x.PricePrediction)
-                                 .Where(x => x.SysUserId == user.Id && (pricePredictionId == null ? true : x.PricePredictionId == pricePredictionId))
+                                 .Where(x => x.SysUserId == user.Id && (pricePredictionId == null ? true : x.PricePredictionId == pricePredictionId)
+                                                                    && x.Result != EnumGameResult.REFUND.ToString())
                                  .Count();
 
             // search the dbase taking into consideration table sorting and paging
             var pricePredictionHistory = _pricePredictionHistoryService
                                           .Query()
                                           .Include(x => x.PricePrediction)
-                                          .Where(x => x.SysUserId == user.Id && (pricePredictionId == null ? true : x.PricePredictionId == pricePredictionId))
+                                          .Where(x => x.SysUserId == user.Id && (pricePredictionId == null ? true : x.PricePredictionId == pricePredictionId)
+                                                                             && x.Result != EnumGameResult.REFUND.ToString())
                                           .Select(x => Mapper.Map<PricePredictionHistoryViewModel>(x));
 
             if (string.IsNullOrEmpty(searchBy))
