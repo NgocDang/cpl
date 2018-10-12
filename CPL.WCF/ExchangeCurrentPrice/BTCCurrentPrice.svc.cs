@@ -1,5 +1,6 @@
 ﻿using CPL.Common.CurrencyPairRateHelper;
 using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.WCF.Misc;
 using System;
 using System.Collections.Generic;

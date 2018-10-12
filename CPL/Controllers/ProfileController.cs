@@ -124,7 +124,7 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.User)]
-        public IActionResult Update(ProfileViewModel viewModel)
+        public IActionResult DoEdit(ProfileViewModel viewModel, MobileModel mobileModel)
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
             if (user != null)
@@ -138,39 +138,16 @@ namespace CPL.Controllers
                 user.StreetAddress = viewModel.StreetAddress;
                 user.Mobile = viewModel.Mobile;
 
-                // KYC
-                if (viewModel.FrontSideImage != null && viewModel.BackSideImage != null)
-                {
-                    user.KYCCreatedDate = DateTime.Now;
-                    user.KYCVerified = false;
-                    var kyc = Path.Combine(_hostingEnvironment.WebRootPath, @"images\kyc");
-                    string timestamp = DateTime.Now.ToString("yyyyMMddhhmmss");
-
-                    // Front Size
-                    var frontSide = $"{viewModel.Id.ToString()}_FS_{timestamp}_{viewModel.FrontSideImage.FileName}";
-                    var frontSidePath = Path.Combine(kyc, frontSide);
-                    viewModel.FrontSideImage.CopyTo(new FileStream(frontSidePath, FileMode.Create));
-                    user.FrontSide = frontSide;
-
-                    // Back Size
-                    var backSide = $"{viewModel.Id.ToString()}_BS_{timestamp}_{viewModel.BackSideImage.FileName}";
-                    var backSidePath = Path.Combine(kyc, backSide);
-                    viewModel.BackSideImage.CopyTo(new FileStream(backSidePath, FileMode.Create));
-                    user.BackSide = backSide;
-                }
-
                 HttpContext.Session.SetObjectAsJson("CurrentUser", Mapper.Map<SysUserViewModel>(user));
                 _sysUserService.Update(user);
                 _unitOfWork.SaveChanges();
 
-                if (viewModel.FrontSideImage != null && viewModel.BackSideImage != null)
+                if (mobileModel.IsMobile)
                 {
                     return new JsonResult(new
                     {
-                        success = true,
-                        message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated"),
-                        kycconfirm = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "KYCReceived"),
-                        kycverify = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Pending")
+                        code = EnumResponseStatus.SUCCESS,
+                        success_message_error = CPLConstant.MobileAppConstant.ProfileEditUserScreenUpdatedSuccessfully
                     });
                 }
 
@@ -179,6 +156,15 @@ namespace CPL.Controllers
                     success = true,
                     message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PersonalInfoUpdated"),
                     gender = viewModel.Gender == true ? LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Male") : LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "Female")
+                });
+            }
+
+            if (mobileModel.IsMobile)
+            {
+                return new JsonResult(new
+                {
+                    code = EnumResponseStatus.ERROR,
+                    error_message_error = CPLConstant.MobileAppConstant.ProfileEditUserScreenNonExistingAccount
                 });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });

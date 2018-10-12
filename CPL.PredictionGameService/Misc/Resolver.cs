@@ -21,6 +21,8 @@ namespace CPL.PredictionGameService.Misc
         public IPricePredictionService PricePredictionService { get; }
         public IPricePredictionDetailService PricePredictionDetailService { get; }
         public IPricePredictionHistoryService PricePredictionHistoryService { get; }
+        public IPricePredictionSettingService PricePredictionSettingService { get; }
+        public IPricePredictionSettingDetailService PricePredictionSettingDetailService { get; }
         public ICoinTransactionService CoinTransactionService { get; }
         public ISettingService SettingService { get; }
         public IBTCPriceService BTCPriceService { get; }
@@ -41,6 +43,8 @@ namespace CPL.PredictionGameService.Misc
             builder.RegisterType<PricePredictionService>().As<IPricePredictionService>().InstancePerDependency();
             builder.RegisterType<PricePredictionDetailService>().As<IPricePredictionDetailService>().InstancePerDependency();
             builder.RegisterType<PricePredictionHistoryService>().As<IPricePredictionHistoryService>().InstancePerDependency();
+            builder.RegisterType<PricePredictionSettingService>().As<IPricePredictionSettingService>().InstancePerDependency();
+            builder.RegisterType<PricePredictionSettingDetailService>().As<IPricePredictionSettingDetailService>().InstancePerDependency();
             builder.RegisterType<CoinTransactionService>().As<ICoinTransactionService>().InstancePerDependency();
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerDependency();
             builder.RegisterType<BTCPriceService>().As<IBTCPriceService>().InstancePerDependency();
@@ -53,6 +57,8 @@ namespace CPL.PredictionGameService.Misc
             builder.RegisterType<Repository<PricePrediction>>().As<IRepositoryAsync<PricePrediction>>().InstancePerLifetimeScope();
             builder.RegisterType<Repository<PricePredictionDetail>>().As<IRepositoryAsync<PricePredictionDetail>>().InstancePerLifetimeScope();
             builder.RegisterType<Repository<PricePredictionHistory>>().As<IRepositoryAsync<PricePredictionHistory>>().InstancePerLifetimeScope();
+            builder.RegisterType<Repository<PricePredictionSetting>>().As<IRepositoryAsync<PricePredictionSetting>>().InstancePerLifetimeScope();
+            builder.RegisterType<Repository<PricePredictionSettingDetail>>().As<IRepositoryAsync<PricePredictionSettingDetail>>().InstancePerLifetimeScope();
             builder.RegisterType<Repository<CoinTransaction>>().As<IRepositoryAsync<CoinTransaction>>().InstancePerLifetimeScope();
             builder.RegisterType<Repository<Setting>>().As<IRepositoryAsync<Setting>>().InstancePerLifetimeScope();
             builder.RegisterType<Repository<BTCPrice>>().As<IRepositoryAsync<BTCPrice>>().InstancePerLifetimeScope();
@@ -64,6 +70,8 @@ namespace CPL.PredictionGameService.Misc
             this.PricePredictionService = this.Container.Resolve<IPricePredictionService>();
             this.PricePredictionDetailService = this.Container.Resolve<IPricePredictionDetailService>();
             this.PricePredictionHistoryService = this.Container.Resolve<IPricePredictionHistoryService>();
+            this.PricePredictionSettingService = this.Container.Resolve<IPricePredictionSettingService>();
+            this.PricePredictionSettingDetailService = this.Container.Resolve<IPricePredictionSettingDetailService>();
             this.CoinTransactionService = this.Container.Resolve<ICoinTransactionService>();
             this.SettingService = this.Container.Resolve<ISettingService>();
             this.BTCPriceService = this.Container.Resolve<IBTCPriceService>();
