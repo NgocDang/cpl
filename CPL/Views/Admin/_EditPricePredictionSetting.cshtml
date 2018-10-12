@@ -104,8 +104,8 @@
                                     <div class="card mb-1">
                                         <div class="card-content">
                                             <div class="card-body">
+                                                <input id="lang-id" type="hidden" value="@detail.LangId">
                                                 <div class="row pt-1">
-                                                    <input id="lang-id" type="hidden" value="@detail.LangId">
                                                     <div class="col-12">
                                                         <fieldset class="form-group">
                                                             <label for="title" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</label> <span> ( @detail.LangName )</span>
@@ -114,6 +114,24 @@
                                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TitleRequired")
                                                             </div>
                                                         </fieldset>
+                                                    </div>
+                                                </div>
+                                                <div class="row pt-1">
+                                                    <div class="col-12">
+                                                        <div class="form-group" id="tinymce-pps-short-description-@detail.LangId">
+                                                            <label for="ShortDescription"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescription")</span><span> ( @detail.Lang.Name )</span></label>
+                                                            @if (detail.ShortDescription != null)
+                                                            {
+                                                                <textarea class="tinymce" id="pps-short-description-@detail.Lang.Id" data-max-length="50" name="ShortDescription">@detail.ShortDescription</textarea>
+                                                            }
+                                                            else
+                                                            {
+                                                                <textarea class="tinymce" id="pps-short-description-@detail.Lang.Id" name="ShortDescription"></textarea>
+                                                            }
+                                                            <div class="invalid-feedback">
+                                                                @string.format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescriptionMaxLengthLimit"), 50)
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
