@@ -178,33 +178,33 @@ namespace CPL.Controllers
 
                         _unitOfWork.SaveChanges();
 
-                        decimal upPercentage;
-                        decimal downPercentage;
+                        decimal highPercentage;
+                        decimal lowPercentage;
                         //Calculate percentage
-                        decimal upPrediction = _pricePredictionHistoryService
+                        decimal highPrediction = _pricePredictionHistoryService
                             .Queryable()
                             .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.HIGH.ToBoolean() && x.Result != EnumGameResult.REFUND.ToString())
                             .Count();
 
-                        decimal downPrediction = _pricePredictionHistoryService
+                        decimal lowPrediction = _pricePredictionHistoryService
                             .Queryable()
                             .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.LOW.ToBoolean() && x.Result != EnumGameResult.REFUND.ToString())
                             .Count();
 
 
-                        if (upPrediction + downPrediction == 0)
+                        if (highPrediction + lowPrediction == 0)
                         {
-                            upPercentage = downPercentage = 50;
+                            highPercentage = lowPercentage = 50;
                         }
                         else
                         {
-                            upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
-                            downPercentage = 100 - upPercentage;
+                            highPercentage = Math.Round((highPrediction / (highPrediction + lowPrediction) * 100), 2);
+                            lowPercentage = 100 - highPercentage;
                         }
                         //////////////////////////
 
 
-                        _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage, pricePredictionId);
+                        _progressHubContext.Clients.All.SendAsync("predictedUserProgress", highPercentage, lowPercentage, pricePredictionId);
 
 
                         return new JsonResult(new { success = true, token = currentUser.TokenAmount.ToString("N0"), message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "BettingSuccessfully") });
