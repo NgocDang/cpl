@@ -183,12 +183,12 @@ namespace CPL.Controllers
                         //Calculate percentage
                         decimal upPrediction = _pricePredictionHistoryService
                             .Queryable()
-                            .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.HIGH.ToBoolean())
+                            .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.HIGH.ToBoolean() && x.Result != EnumGameResult.REFUND.ToString())
                             .Count();
 
                         decimal downPrediction = _pricePredictionHistoryService
                             .Queryable()
-                            .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.LOW.ToBoolean())
+                            .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.LOW.ToBoolean() && x.Result != EnumGameResult.REFUND.ToString())
                             .Count();
 
 

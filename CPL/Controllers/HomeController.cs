@@ -77,7 +77,7 @@ namespace CPL.Controllers
 
             int randomIndex = RandomPicker.Random.Next(activeLotteries.Count);
             var randomLottery = _lotteryService.Query().Include(x => x.LotteryDetails)
-                .FirstOrDefault(x => x.Id == activeLotteries[randomIndex].Id);
+                .FirstOrDefault(x => x.Id == activeLotteries[randomIndex].Id && !x.IsDeleted);
 
             var viewModel = new HomeViewModel { RandomLotteryId = randomLottery?.Id,
                                                 RandomLotteryCategoryId = randomLottery != null ? randomLottery.LotteryCategoryId : 0,
