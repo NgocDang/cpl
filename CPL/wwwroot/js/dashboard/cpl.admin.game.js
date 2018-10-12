@@ -431,6 +431,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Admin/SearchPurchasedPricePredictionHistory",
                 type: 'POST',
@@ -1051,6 +1052,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Admin/SearchPurchasedLotteryHistory",
                 type: 'POST',

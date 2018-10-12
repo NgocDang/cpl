@@ -27,6 +27,7 @@
             "serverSide": true,
             "autoWidth": false,
             "stateSave": true,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Admin/SearchLottery",
                 type: 'POST',
@@ -130,6 +131,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Admin/SearchUserLotteryPrize",
                 type: 'POST',
