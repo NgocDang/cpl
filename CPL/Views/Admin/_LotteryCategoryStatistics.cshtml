@@ -33,7 +33,7 @@
         </div>
         @Html.HiddenFor(x => x.TotalRevenueChangesInJson, new { @class = "total-revenue-changes" })
         @Html.HiddenFor(x => x.TotalSaleChangesInJson, new { @class = "total-sale-changes" })
-        @Html.HiddenFor(x => x.TotalPlayersChangesInJson, new { @class = "page-view-changes" })
+        @Html.HiddenFor(x => x.PageViewChangesInJson, new { @class = "page-view-changes" })
         @Html.HiddenFor(x => x.TotalPlayersChangesInJson, new { @class = "total-players-changes" })
         <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalRevenue")" class="total-revenue" />
         <input type="hidden" value="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")" class="total-sale" />

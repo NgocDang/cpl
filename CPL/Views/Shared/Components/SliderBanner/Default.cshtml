@@ -1,4 +1,4 @@
-﻿@model HomeViewModel
+﻿@model LotteryIndexViewModel
 <section id="slider-banner">
     <div class="owl-carousel owl-theme owl-loaded mt-sm-1 mt-0">
         <div class="owl-stage-outer">
@@ -43,7 +43,7 @@
                         @foreach (var lottery in Model.Lotteries)
                         {
                             <span class="d-md-inline-block pr-4">
-                                <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id">@lottery.Title, @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase") @lottery.Phase</a> -
+                                <a asp-controller="Lottery" asp-action="Detail" asp-route-id="@lottery.Id">@lottery.Title, @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Phase") @lottery.Phase</a> -
                                 @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0"))
                             </span>
                         }

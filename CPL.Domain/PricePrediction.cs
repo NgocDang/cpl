@@ -8,8 +8,6 @@ namespace CPL.Domain
     public class PricePrediction : Entity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
         public DateTime OpenBettingTime { get; set; }
         public DateTime CloseBettingTime { get; set; }
         public DateTime ResultTime { get; set; }
@@ -20,7 +18,12 @@ namespace CPL.Domain
         public decimal? Volume { get; set; }
         public string Coinbase { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public int PricePredictionCategoryId { get; set; }
+        public int Status { get; set; }
+        public int DividendRate { get; set; }
 
+        public virtual PricePredictionCategory PricePredictionCategory { get; set; }
         public virtual ICollection<PricePredictionHistory> PricePredictionHistories { get; set; }
+        public virtual ICollection<PricePredictionDetail> PricePredictionDetails { get; set; }
     }
 }

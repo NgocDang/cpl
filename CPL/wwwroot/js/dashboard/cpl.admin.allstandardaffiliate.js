@@ -18,6 +18,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "stateSave": (Utils.getJsonFromUrl().search == null) ? true : false,
             "ajax": {
                 url: "/Admin/SearchAllStandardAffiliate",
@@ -135,15 +136,15 @@
                     "render": function (data, type, full, meta) {
                         var html = "";
                         if (full.isLocked === false)
-                            html += "<div style='margin: 2px'>" +
-                                "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#lock").val() + "</button> " +
+                            html += "<div>" +
+                                "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#lock").val() + "</a> " +
                                 "</div>";
                         else
                             html += "<div>" +
-                                "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#unlock").val() + "</button> " +
+                                "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-lock'>" + $("#unlock").val() + "</a> " +
                                 "</div>";
-                        html += "<a style='margin: 2px' href='/Admin/StandardAffiliate/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#Affiliate").val() + "</a>";
-                        html += "<a style='margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#View").val() + "</a>";
+                        html += "<a href='/Admin/StandardAffiliate/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#Affiliate").val() + "</a>";
+                        html += "<a href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#View").val() + "</a>";
 
                         return html;
                     },

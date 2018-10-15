@@ -17,8 +17,6 @@ namespace CPL.Mapping
             // Table & Column Mappings
             builder.ToTable("PricePrediction");
             builder.Property(t => t.Id).HasColumnName("Id");
-            builder.Property(t => t.Name).HasColumnName("Name");
-            builder.Property(t => t.Description).HasColumnName("Description");
             builder.Property(t => t.OpenBettingTime).HasColumnName("OpenBettingTime");
             builder.Property(t => t.CloseBettingTime).HasColumnName("CloseBettingTime");
             builder.Property(t => t.ResultTime).HasColumnName("ResultTime");
@@ -29,6 +27,14 @@ namespace CPL.Mapping
             builder.Property(t => t.Volume).HasColumnName("Volume");
             builder.Property(t => t.Coinbase).HasColumnName("Coinbase");
             builder.Property(t => t.UpdatedDate).HasColumnName("UpdatedDate");
+            builder.Property(t => t.PricePredictionCategoryId).HasColumnName("PricePredictionCategoryId");
+            builder.Property(t => t.Status).HasColumnName("Status");
+            builder.Property(t => t.DividendRate).HasColumnName("DividendRate");
+
+            //Relationship
+            builder.HasOne(x => x.PricePredictionCategory)
+                .WithMany(x => x.PricePredictions)
+                .HasForeignKey(x => x.PricePredictionCategoryId);
         }
     }
 }

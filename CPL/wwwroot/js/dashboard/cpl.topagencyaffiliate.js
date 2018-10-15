@@ -1,7 +1,7 @@
 ﻿var TopAgencyAffiliate = {
-    TopAgencyAffiliateDataTable: null,
-    Tier2AffiliateDataTable: null,
-    Tier3AffiliateDataTable: null,
+    topAgencyAffiliateDataTable: null,
+    tier2AffiliateDataTable: null,
+    tier3AffiliateDataTable: null,
     init: function () {
         TopAgencyAffiliate.bindCopy();
 
@@ -32,6 +32,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Profile/SearchTopAgencyAffiliate",
                 type: 'POST',
@@ -92,7 +93,7 @@
             }
 
             if ($("#top-agency-nav table tbody").length == 0) {
-                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#top-agency-nav"));
+                TopAgencyAffiliate.topAgencyAffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#top-agency-nav"));
             }
 
         })
@@ -104,7 +105,7 @@
             }
 
             if ($("#tier-2-nav table tbody").length == 0) {
-                TopAgencyAffiliate.Tier2AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-2-nav"));
+                TopAgencyAffiliate.tier2AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-2-nav"));
             }
         })
     },
@@ -115,7 +116,7 @@
             }
 
             if ($("#tier-3-nav table tbody").length == 0) {
-                TopAgencyAffiliate.Tier3AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-3-nav"));
+                TopAgencyAffiliate.tier3AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-3-nav"));
             }
         })
     },
@@ -159,24 +160,24 @@
         $("#top-agency-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 TopAgencyAffiliate.loadStatistics($("#top-agency-nav"));
-                TopAgencyAffiliate.TopAgencyAffiliateDataTable.destroy();
-                TopAgencyAffiliate.TopAgencyAffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#top-agency-nav"));
+                TopAgencyAffiliate.topAgencyAffiliateDataTable.destroy();
+                TopAgencyAffiliate.topAgencyAffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#top-agency-nav"));
             });
     },
     bindTier2TimeRangeChange: function () {
         $("#tier-2-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 TopAgencyAffiliate.loadStatistics($("#tier-2-nav"));
-                TopAgencyAffiliate.Tier2AffiliateDataTable.destroy();
-                TopAgencyAffiliate.Tier2AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-2-nav"));
+                TopAgencyAffiliate.tier2AffiliateDataTable.destroy();
+                TopAgencyAffiliate.tier2AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-2-nav"));
             });
     },
     bindTier3TimeRangeChange: function () {
         $("#tier-3-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 TopAgencyAffiliate.loadStatistics($("#tier-3-nav"));
-                TopAgencyAffiliate.Tier3AffiliateDataTable.destroy();
-                TopAgencyAffiliate.Tier3AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-3-nav"));
+                TopAgencyAffiliate.tier3AffiliateDataTable.destroy();
+                TopAgencyAffiliate.tier3AffiliateDataTable = TopAgencyAffiliate.loadAffiliateDataTable($("#tier-3-nav"));
             });
     },
     loadTopAgencyStatisticsChart: function (tabPaneElement) {

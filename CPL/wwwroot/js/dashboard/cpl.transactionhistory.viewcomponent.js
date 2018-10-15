@@ -8,6 +8,7 @@ var TransactionHistoryViewComponent = {
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/History/SearchTransactionHistory",
                 type: 'POST',
@@ -72,7 +73,7 @@ var TransactionHistoryViewComponent = {
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a href='/History/TransactionDetail/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() +"</a>";
+                        return "<a href='/History/TransactionDetail/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#transaction-history-view-component #view").val() +"</a>";
                     },
                     "orderable": false
                 }

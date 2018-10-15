@@ -26,6 +26,7 @@ namespace CPL.Controllers
         private readonly ITemplateService _templateService;
         private readonly ISysUserService _sysUserService;
         private readonly ILotteryService _lotteryService;
+        private readonly INewsService _newsService;
         private readonly ILotteryPrizeService _lotteryPrizeService;
         private readonly ILotteryHistoryService _lotteryHistoryService;
 
@@ -38,6 +39,7 @@ namespace CPL.Controllers
             ITemplateService templateService,
             ISysUserService sysUserService,
             ILotteryService lotteryService,
+            INewsService newsService,
             ILotteryPrizeService lotteryPrizeService,
             ILotteryHistoryService lotteryHistoryService)
         {
@@ -48,52 +50,61 @@ namespace CPL.Controllers
             this._unitOfWork = unitOfWork;
             this._templateService = templateService;
             this._sysUserService = sysUserService;
+            this._newsService = newsService;
             this._lotteryService = lotteryService;
             this._lotteryPrizeService = lotteryPrizeService;
             this._lotteryHistoryService = lotteryHistoryService;
         }
 
         [Permission(EnumRole.Guest)]
-        public IActionResult Index(int? id)
+        public IActionResult Index()
         {
-            if (id.HasValue)
+            var lotteries = _lotteryService.Query()
+                .Include(x => x.LotteryCategory)
+                .Include(x => x.LotteryDetails)
+                .Include(x => x.LotteryHistories)
+                .Where(x => !x.IsDeleted && (x.LotteryHistories.Count() < x.Volume && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED)))
+                .OrderByDescending(x => x.CreatedDate);
+
+            var viewModel = new LotteryIndexViewModel();
+            viewModel.Lotteries = lotteries
+                .Select(x => Mapper.Map<LotteryIndexLotteryViewModel>(x))
+                .ToList();
+
+            var lastNews = _newsService.Queryable().LastOrDefault();
+            viewModel.News = Mapper.Map<NewsViewModel>(lastNews);
+
+            return View(viewModel);
+        }
+
+        [Permission(EnumRole.Guest)]
+        public IActionResult Detail(int id, int? lotteryTicketAmount)
+        {
+            var lottery = _lotteryService.Query()
+                            .Include(x => x.LotteryDetails)
+                            .Include(x => x.LotteryHistories)
+                            .FirstOrDefault(x => x.Id == id && !x.IsDeleted && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED));
+            if (lottery == null)
+                return RedirectToAction("Index");
+
+            var viewModel = Mapper.Map<LotteryViewModel>(lottery);
+            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
+            if (user != null)
+                viewModel.SysUserId = user.Id;
+
+            if (viewModel.Volume > 0)
+                viewModel.PercentageOfPurchasedTickets = ((decimal)viewModel.LotteryHistories.Count() / (decimal)viewModel.Volume * 100m).ToString();
+
+            if(lotteryTicketAmount.HasValue)
             {
-                var lottery = _lotteryService.Query()
-                                .Include(x => x.LotteryDetails)
-                                .Include(x => x.LotteryHistories)
-                                //.Include(x => x.LotteryPrizes)
-                                .FirstOrDefault(x => x.Id == id && !x.IsDeleted && (x.Status == (int)EnumLotteryGameStatus.ACTIVE || x.Status == (int)EnumLotteryGameStatus.DEACTIVATED));
-                if (lottery == null)
-                    return RedirectToAction("Index", "Home");
-
-                var viewModel = Mapper.Map<LotteryIndexViewModel>(lottery);
-                var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-                if (user != null)
-                    viewModel.SysUserId = user.Id;
-
-                // DO NOT DELETE! THIS BLOCK OF CODE TO CALCULATE THE WINNING POSSIBILITY
-                //foreach (var lottery in viewModel.Lotteries)
-                //{
-                //    var numberOfGroup = lottery.Volume / CPLConstant.LotteryGroupSize;
-                //    var groups = Enumerable.Repeat(0, numberOfGroup).ToArray();
-                //    var groupSize = CPLConstant.LotteryGroupSize;
-
-                //    for (var i = lottery.LotteryPrizes.Count - 1; i >= 0; i--)
-                //    {
-                //        lottery.LotteryPrizes[i].Probability = Math.Round(((decimal)lottery.LotteryPrizes[i].Volume / (decimal)numberOfGroup) * (1m / (decimal)groupSize) * 100m, 4);
-                //        ProbabilityCalculate(ref groups, ref numberOfGroup, ref groupSize, lottery.LotteryPrizes[i].Volume);
-                //    }
-                //}
-
-                if (viewModel.Volume > 0)
-                    viewModel.PrecentOfPerchasedTickets = ((decimal)viewModel.LotteryHistories.Count() / (decimal)viewModel.Volume * 100m).ToString();
-
-                return View(viewModel);
+                var lotteryTicketsLeft = lottery.Volume - _lotteryHistoryService.Queryable().Count(x => x.LotteryId == lottery.Id && x.Result != EnumGameResult.REFUND.ToString());
+                if (lotteryTicketAmount > lotteryTicketsLeft)
+                    viewModel.LotteryTicketAmount = lotteryTicketsLeft;
+                else
+                    viewModel.LotteryTicketAmount = lotteryTicketAmount.Value;
             }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+
+            return View(viewModel);
         }
 
         private void ProbabilityCalculate(ref int[] groups, ref int numberOfGroup, ref int groupSize, int numberOfGroupWasRemoved)
@@ -161,15 +172,15 @@ namespace CPL.Controllers
                         userId = user.Id;
                     }
 
-                    var currentUser = _sysUserService.Queryable().Where(x => x.Id == userId).FirstOrDefault();
+                    var userEntity = _sysUserService.Queryable().FirstOrDefault(x => x.Id == userId);
                     
                     var lotteryId = viewModel.LotteryId;
 
-                    var lotteryRecordList = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).ToList();
+                    var lotteryRecordList = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value && x.Result != EnumGameResult.REFUND.ToString()).ToList();
                     var lastTicketIndex = 0;
 
                     if (lotteryRecordList.Count > 0)
-                        lastTicketIndex = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value).Max(x => x.TicketIndex);
+                        lastTicketIndex = _lotteryHistoryService.Queryable().Where(x => x.LotteryId == lotteryId.Value && x.Result != EnumGameResult.REFUND.ToString()).Max(x => x.TicketIndex);
 
                     var unitPrice = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == lotteryId.Value).UnitPrice;
 
@@ -179,10 +190,10 @@ namespace CPL.Controllers
 
                     if (viewModel.TotalTickets <= currentLottery.Volume - lotteryRecordList.Count())
                     {
-                        if (totalPriceOfTickets <= currentUser.TokenAmount)
+                        if (totalPriceOfTickets <= userEntity.TokenAmount)
                         {
                             /// Example paramsInJson: {"1":{"uint32":"4"},"2":{"address":"0xB43eA1802458754A122d02418Fe71326030C6412"}, "3": {"uint32[]":"[1, 2, 3]"}}
-                            var userAddress = user.ETHHDWalletAddress;
+                            var userAddress = userEntity.ETHHDWalletAddress;
                             var ticketIndexList = new List<int>[viewModel.TotalTickets / 10 + 1];
                             var lotteryPhase = _lotteryService.Queryable().FirstOrDefault(x => !x.IsDeleted && x.Id == lotteryId).Phase;
 
@@ -220,7 +231,7 @@ namespace CPL.Controllers
                                         {
                                             CreatedDate = buyTime,
                                             LotteryId = lotteryId.Value,
-                                            SysUserId = user.Id,
+                                            SysUserId = userEntity.Id,
                                             TicketIndex = ticket[i],
                                             TxHashId = ticketGenResult.Result.TxId
                                         };
@@ -230,8 +241,8 @@ namespace CPL.Controllers
                                     }
                                 }
                             }
-                            currentUser.TokenAmount -= totalOfTicketSuccessful * unitPrice;
-                            _sysUserService.Update(currentUser);
+                            userEntity.TokenAmount -= totalOfTicketSuccessful * unitPrice;
+                            _sysUserService.Update(userEntity);
 
                             _unitOfWork.SaveChanges();
 
@@ -239,15 +250,12 @@ namespace CPL.Controllers
                             {
                                 return new JsonResult(new
                                 {
-                                    code = EnumResponseStatus.SUCCESS,
-                                    token = currentUser.TokenAmount.ToString("N0"),
-                                    hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful),
-                                    message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully")
+                                    code = EnumResponseStatus.SUCCESS
                                 });
                             }
 
                             return new JsonResult(new { success = true,
-                                                        token = currentUser.TokenAmount.ToString("N0"),
+                                                        token = userEntity.TokenAmount.ToString("N0"),
                                                         hintThankyou = string.Format(LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "HintThankYouLottery1"), totalOfTicketSuccessful),
                                                         message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "PurchaseSuccessfully") });
                         }

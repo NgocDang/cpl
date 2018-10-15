@@ -1,4 +1,4 @@
-﻿@model LotteryCategoryViewModel
+﻿@model LotteryCategoryAdminViewModel
 
 <div class="modal" tabindex="-1" role="dialog" id="edit-lottery-category" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <div class="modal-footer text-right">
-                    <button type="button" class="btn btn-primary btn-sm btn-do-add">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Submit") <i class="la la-plus font-size-15px"></i></button>
+                    <button type="button" class="btn btn-primary btn-sm btn-do-add">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Submit")</button>
                     <button type="button" class="btn btn-secondary btn-sm btn-do-cancel" data-dismiss="modal">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Cancel")</button>
                 </div>
                 <input type="hidden" value="@Model.Id" id="lottery-id" />

@@ -55,7 +55,12 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<Notification>, Repository<Notification>>()
                 .AddScoped<IRepositoryAsync<LangMsgDetail>, Repository<LangMsgDetail>>()
                 .AddScoped<IRepositoryAsync<CoinTransaction>, Repository<CoinTransaction>>()
+                .AddScoped<IRepositoryAsync<PricePredictionCategory>, Repository<PricePredictionCategory>>()
+                .AddScoped<IRepositoryAsync<PricePredictionCategoryDetail>, Repository<PricePredictionCategoryDetail>>()
+                .AddScoped<IRepositoryAsync<PricePredictionSetting>, Repository<PricePredictionSetting>>()
+                .AddScoped<IRepositoryAsync<PricePredictionSettingDetail>, Repository<PricePredictionSettingDetail>>()
                 .AddScoped<IRepositoryAsync<PricePrediction>, Repository<PricePrediction>>()
+                .AddScoped<IRepositoryAsync<PricePredictionDetail>, Repository<PricePredictionDetail>>()
                 .AddScoped<IRepositoryAsync<PricePredictionHistory>, Repository<PricePredictionHistory>>()
                 .AddScoped<IRepositoryAsync<Lottery>, Repository<Lottery>>()
                 .AddScoped<IRepositoryAsync<LotteryHistory>, Repository<LotteryHistory>>()
@@ -71,6 +76,10 @@ namespace CPL
                 .AddScoped<IRepositoryAsync<LotteryCategory>, Repository<LotteryCategory>>()
                 .AddScoped<IRepositoryAsync<LotteryDetail>, Repository<LotteryDetail>>()
                 .AddScoped<IRepositoryAsync<IntroducedUsers>, Repository<IntroducedUsers>>()
+                .AddScoped<IRepositoryAsync<Group>, Repository<Group>>()
+                .AddScoped<IRepositoryAsync<Slider>, Repository<Slider>>()
+                .AddScoped<IRepositoryAsync<SliderDetail>, Repository<SliderDetail>>()
+                .AddScoped<IRepositoryAsync<FAQ>, Repository<FAQ>>()
                 .AddScoped<IUnitOfWorkAsync, UnitOfWork>()
                 .AddScoped<IDataContextAsync, CPLContext>();
 
@@ -99,7 +108,12 @@ namespace CPL
                 .AddTransient<IViewRenderService, ViewRenderService>()
                 .AddTransient<IAnalyticService, AnalyticService>()
                 .AddTransient<ICoinTransactionService, CoinTransactionService>()
+                .AddTransient<IPricePredictionCategoryService, PricePredictionCategoryService>()
+                .AddTransient<IPricePredictionCategoryDetailService, PricePredictionCategoryDetailService>()
+                .AddTransient<IPricePredictionSettingService, PricePredictionSettingService>()
+                .AddTransient<IPricePredictionSettingDetailService, PricePredictionSettingDetailService>()
                 .AddTransient<IPricePredictionService, PricePredictionService>()
+                .AddTransient<IPricePredictionDetailService, PricePredictionDetailService>()
                 .AddTransient<IPricePredictionHistoryService, PricePredictionHistoryService>()
                 .AddTransient<ILotteryService, LotteryService>()
                 .AddTransient<ILotteryHistoryService, LotteryHistoryService>()
@@ -116,6 +130,10 @@ namespace CPL
                 .AddTransient<IContactService, ContactService>()
                 .AddTransient<ILotteryCategoryService, LotteryCategoryService>()
                 .AddTransient<ILotteryDetailService, LotteryDetailService>()
+                .AddTransient<IGroupService, GroupService>()
+                .AddTransient<ISliderService, SliderService>()
+                .AddTransient<ISliderDetailService, SliderDetailService>()
+                .AddTransient<IFAQService, FAQService>()
                 .AddTransient<IIntroducedUsersService, IntroducedUsersService>();
 
             services.AddSignalR();
@@ -155,6 +173,8 @@ namespace CPL
                 routes.MapHub<UserPredictionProgressHub>("/predictedUserProgress");
             });
             app.UseMvcWithDefaultRoute();
+
+            RandomPicker.Random = new Random();
         }
 
         private void LoadWCF(IServiceProvider serviceProvider)

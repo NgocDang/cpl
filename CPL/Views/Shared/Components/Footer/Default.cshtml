@@ -1,10 +1,66 @@
 ﻿@model FooterViewModel
-<footer class="footer footer-transparent navbar-shadow">
-    <p class="clearfix darken-2 text-sm-center mb-0 px-2 container center-layout">
-        <span class="d-block d-md-inline-block"><a asp-controller="Info" asp-action="TermsOfService" target="_blank">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</a> - <a asp-controller="Info" asp-action="PrivacyPolicy" target="_blank">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</a></span>
-    </p>
 
-    <p class="clearfix darken-2 text-sm-center mb-0 px-2 container center-layout">
-        <span class="d-block d-md-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copyright") @DateTime.Now.Year <a asp-controller="Home" asp-action="Index" target="_blank">CPL</a>, @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllRightReserved")</span>
-    </p>
+<footer>
+    <div class="info-bar">
+        <div class="row px-0 pt-2 pb-1 container mx-auto">
+            <div class="col-lg-3 col-12 text-lg-left text-center mb-2 mb-lg-0">
+                <img class="brand-logo" alt="CPL" src="/images/logo.png">
+            </div>
+            <div class="col-lg-7 col-12">
+                <div class="row">
+                    @*<div class="col-lg-4 col-6 black">
+                        <p class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PartnerCompanies")</p>
+                        <ul class="pl-0 partners text-left">
+                            <li><a href="#" class="black">Company X </a></li>
+                            <li><a href="#" class="black">Company Y </a></li>
+                            <li><a href="#" class="black">Company Z </a></li>
+                        </ul>
+                    </div>*@
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-6 col-12 black">
+                                <p class="font-weight-bold">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AboutUs")</p>
+                                <ul class="pl-0 links text-left mb-0">
+                                    <li><a href="/Home/Index#faq" class="black">FAQ </a></li>
+                                    <li><a asp-controller="Info" asp-action="TermsOfService" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</a></li>
+                                    <li><a asp-controller="Info" asp-action="PrivacyPolicy" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</a></li>
+                                    @*<li><a asp-controller="Info" asp-action="License" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "License")</a></li>*@
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 col-12 black">
+                                <p class="d-lg-block d-none">&nbsp;</p>
+                                <ul class="pl-0 links text-left">
+                                    <li><a href="#"class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Affiliate")</a></li>
+                                    <li><a href="#" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PersonalInformationProtection")</a></li>
+                                    <li><a asp-controller="Contact" asp-action="Index" class="black">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-12 text-center">
+                <ul class="pl-0 d-inline-block">
+                    <li class="dropup dropdown-language nav-item">
+                        <a class="nav-link pr-0 pb-1 black" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="shadow-sm flag-icon @Model.Lang.Image"></i>
+                            <span class="font-small-3 selected-language">@Model.Lang.Name</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-flag">
+                            @foreach (var lang in Model.Langs)
+                            {
+                                <a data-id="@lang.Id" class="dropdown-item lang-item" href="#"><i class="flag-icon @lang.Image"></i> @lang.Name</a>
+                            }
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tos-pp footer footer-transparent navbar-shadow text-white">
+        <p class="clearfix text-sm-center mb-0 px-2 container center-layout">
+            <span class="d-block d-md-inline-block">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Copyright") @DateTime.Now.Year <a asp-controller="Home" asp-action="Index" class="text-white" target="_blank">CPL</a>, @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "AllRightReserved")</span>
+        </p>
+    </div>
 </footer>

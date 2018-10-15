@@ -24,16 +24,17 @@
     loadPricePredictionHistoryDataTable: function () {
         if ($("#price-prediction-history-view-component").hasClass("d-none"))
             return false;
-        var _this = this;
         return $("#dt-price-prediction-history").DataTable({
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/History/SearchPricePredictionHistory",
                 type: 'POST',
                 data: {
-                    sysUserId: $("#price-prediction-history-view-component #SysUserId").val()
+                    sysUserId: $("#price-prediction-history-view-component #SysUserId").val(),
+                    pricePredictionId: Utils.getJsonFromUrl().pricePredictionId
                 }
             },
             "order": [[8, "asc"]],
@@ -89,8 +90,6 @@
                             return "<div class='badge badge-success'>Win</div>";
                         else if (full.result == "LOSE")
                             return "<div class='badge badge-danger'>Lose</div>";
-                        else if (full.result == "KYC_PENDING")
-                            return "<div class='badge badge-info'>KYC Pending</div>";
                         else if (full.result == "REFUND")
                             return "<div class='badge badge-info'>Refund</div>";
                         else

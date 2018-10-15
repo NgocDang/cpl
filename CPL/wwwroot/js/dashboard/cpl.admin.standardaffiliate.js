@@ -1,7 +1,7 @@
 ﻿var StandardAffiliateAdmin = {
-    Tier1StandardAffiliateDataTable: null,
-    Tier2StandardAffiliateDataTable: null,
-    Tier3StandardAffiliateDataTable: null,
+    tier1StandardAffiliateDataTable: null,
+    tier2StandardAffiliateDataTable: null,
+    tier3StandardAffiliateDataTable: null,
     init: function () {
         StandardAffiliateAdmin.bindCopy();
         StandardAffiliateAdmin.bindSwitchery();
@@ -34,15 +34,15 @@
     },
     initStandardAffiliateIntroducedUsersDataTable: function (tabPaneElement) {
         if (tabPaneElement.data().kindOfTier == 1)
-            StandardAffiliateAdmin.Tier1StandardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+            StandardAffiliateAdmin.tier1StandardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
                 StandardAffiliateAdmin.loadEditable(tabPaneElement);
             });
         else if (tabPaneElement.data().kindOfTier == 2)
-            StandardAffiliateAdmin.Tier2StandardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+            StandardAffiliateAdmin.tier2StandardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
                 StandardAffiliateAdmin.loadEditable(tabPaneElement);
             });
         else // (tabPaneElement.data().kindOfTier == 3)
-            StandardAffiliateAdmin.Tier3StandardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+            StandardAffiliateAdmin.tier3StandardAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
                 StandardAffiliateAdmin.loadEditable(tabPaneElement);
             });
     },
@@ -51,6 +51,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Admin/SearchStandardAffiliateIntroducedUsers",
                 type: 'POST',
@@ -136,7 +137,7 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        var html = "<a style='margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#View").val() + "</a>";
+                        var html = "<a href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#View").val() + "</a>";
                         return html;
 
                     },
@@ -157,7 +158,7 @@
                 StandardAffiliateAdmin.loadStatistics($("#tier-1-nav"));
             }
             if ($("#tier-1-nav table tbody").length == 0) {
-                StandardAffiliateAdmin.Tier1StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
+                StandardAffiliateAdmin.tier1StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
                 StandardAffiliateAdmin.initStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
             }
         });
@@ -168,7 +169,7 @@
                 StandardAffiliateAdmin.loadStatistics($("#tier-2-nav"));
             }
             if ($("#tier-2-nav table tbody").length == 0) {
-                StandardAffiliateAdmin.Tier2StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
+                StandardAffiliateAdmin.tier2StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
                 StandardAffiliateAdmin.initStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
             }
         });
@@ -179,7 +180,7 @@
                 StandardAffiliateAdmin.loadStatistics($("#tier-3-nav"));
             }
             if ($("#tier-3-nav table tbody").length == 0) {
-                StandardAffiliateAdmin.Tier3StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
+                StandardAffiliateAdmin.tier3StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
                 StandardAffiliateAdmin.initStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
             }
         });
@@ -224,24 +225,24 @@
         $("#tier-1-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 StandardAffiliateAdmin.loadStatistics($("#tier-1-nav"));
-                StandardAffiliateAdmin.Tier1StandardAffiliateDataTable.destroy();
-                StandardAffiliateAdmin.Tier1StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
+                StandardAffiliateAdmin.tier1StandardAffiliateDataTable.destroy();
+                StandardAffiliateAdmin.tier1StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-1-nav"));
             });
     },
     bindTier2TimeRangeChange: function () {
         $("#tier-2-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 StandardAffiliateAdmin.loadStatistics($("#tier-2-nav"));
-                StandardAffiliateAdmin.Tier2StandardAffiliateDataTable.destroy();
-                StandardAffiliateAdmin.Tier2StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
+                StandardAffiliateAdmin.tier2StandardAffiliateDataTable.destroy();
+                StandardAffiliateAdmin.tier2StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-2-nav"));
             });
     },
     bindTier3TimeRangeChange: function () {
         $("#tier-3-nav select.time-range").on("changed.bs.select",
             function (e, clickedIndex, newValue, oldValue) {
                 StandardAffiliateAdmin.loadStatistics($("#tier-3-nav"));
-                StandardAffiliateAdmin.Tier3StandardAffiliateDataTable.destroy();
-                StandardAffiliateAdmin.Tier3StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
+                StandardAffiliateAdmin.tier3StandardAffiliateDataTable.destroy();
+                StandardAffiliateAdmin.tier3StandardAffiliateDataTable = StandardAffiliateAdmin.loadStandardAffiliateIntroducedUsersDataTable($("#tier-3-nav"));
             });
     },
     loadTier1StatisticsChart: function (tabPaneElement) {

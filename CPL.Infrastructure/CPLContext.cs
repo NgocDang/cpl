@@ -24,7 +24,12 @@ namespace CPL.Infrastructure
         public DbSet<LangMsgDetail> LangMsgDetail { get; set; }
         public DbSet<Notification> Notification { get; set; }
         public DbSet<CoinTransaction> CoinTransaction { get; set; }
+        public DbSet<PricePredictionCategory> PricePredictionCategory { get; set; }
+        public DbSet<PricePredictionCategoryDetail> PricePredictionCategoryDetail { get; set; }
+        public DbSet<PricePredictionSetting> PricePredictionSetting { get; set; }
+        public DbSet<PricePredictionSettingDetail> PricePredictionSettingDetail { get; set; }
         public DbSet<PricePrediction> PricePrediction { get; set; }
+        public DbSet<PricePredictionDetail> PredictionDetail { get; set; }
         public DbSet<PricePredictionHistory> PricePredictionHistory { get; set; }
         public DbSet<Lottery> Lottery { get; set; }
         public DbSet<LotteryHistory> LotteryHistory { get; set; }
@@ -42,6 +47,10 @@ namespace CPL.Infrastructure
         public DbSet<Payment> Payment { get; set; }
         public DbSet<LotteryDetail> LotteryDetail { get; set; }
         public DbSet<IntroducedUsers> IntroducedUsers { get; set; }
+        public DbSet<Group>  Groups { get; set; }
+        public DbSet<Slider> Slider { get; set; }
+        public DbSet<SliderDetail> SliderDetail { get; set; }
+        public DbSet<FAQ> FAQ { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -57,7 +66,12 @@ namespace CPL.Infrastructure
 
             modelBuilder.ApplyConfiguration(new CoinTransactionMap());
 
+            modelBuilder.ApplyConfiguration(new PricePredictionCategoryMap());
+            modelBuilder.ApplyConfiguration(new PricePredictionCategoryDetailMap());
+            modelBuilder.ApplyConfiguration(new PricePredictionSettingMap());
+            modelBuilder.ApplyConfiguration(new PricePredictionSettingDetailMap());
             modelBuilder.ApplyConfiguration(new PricePredictionMap());
+            modelBuilder.ApplyConfiguration(new PricePredictionDetailMap());
             modelBuilder.ApplyConfiguration(new PricePredictionHistoryMap());
 
             modelBuilder.ApplyConfiguration(new LotteryMap());
@@ -80,6 +94,12 @@ namespace CPL.Infrastructure
             modelBuilder.ApplyConfiguration(new ETHTransactionMap());
 
             modelBuilder.ApplyConfiguration(new IntroducedUsersMap());
+
+            modelBuilder.ApplyConfiguration(new GroupMap());
+            modelBuilder.ApplyConfiguration(new SliderMap());
+            modelBuilder.ApplyConfiguration(new SliderDetailMap());
+
+            modelBuilder.ApplyConfiguration(new FAQMap());
 
             base.OnModelCreating(modelBuilder);
         }

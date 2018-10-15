@@ -9,12 +9,6 @@
             var isFormValid = $("#form-log-in")[0].checkValidity();
             $("#form-log-in").addClass('was-validated');
 
-            if (!checkValidReCaptchaV2()) {
-                $("#login-error").html($('#captchaMessage').val());
-                $("#login-error").show();
-                return false;
-            }
-
             if (isFormValid) {
                 $("#login-error").hide();
                 $.ajax({
@@ -55,16 +49,6 @@
             }
             return false;
         });
-        var checkValidReCaptchaV2 = function () {
-            var v = grecaptcha.getResponse();
-            if (v === '') {
-                return false;
-            }
-            else {
-                return true;
-            }
-            return true;
-        };
     },
     bindDoVerifyPIN: function () {
         $("form-two-factor").validate();

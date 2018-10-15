@@ -11,6 +11,8 @@
                     type: "POST",
                     data: {
                         id: $(_this).data().id,
+                        isDisabled: $(_this).data().isDisabled,
+                        coinBase: $(_this).data().coinBase
                     },
                     success: function (data) {
                         $("#price-prediction-nav-" + $(_this).data().id).html(data);

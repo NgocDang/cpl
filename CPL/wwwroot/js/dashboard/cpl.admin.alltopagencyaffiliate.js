@@ -1,11 +1,11 @@
 ﻿var AllTopAgencyAffiliate = {
-    AllTopAgencyAffiliateDataTable: null,
+    allTopAgencyAffiliateDataTable: null,
     init: function () {
-        AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable = AllTopAgencyAffiliate.loadAllTopAgencyAffiliateDataTable();
+        AllTopAgencyAffiliate.allTopAgencyAffiliateDataTable = AllTopAgencyAffiliate.loadAllTopAgencyAffiliateDataTable();
         AllTopAgencyAffiliate.initAllTopAgencyAffiliateDataTable();
     },
     initAllTopAgencyAffiliateDataTable: function () {
-        AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
+        AllTopAgencyAffiliate.allTopAgencyAffiliateDataTable.on('responsive-display', function (e, datatable, row, showHide, update) {
             AllTopAgencyAffiliate.loadEditable();
         });
     },
@@ -14,6 +14,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "stateSave": (Utils.getJsonFromUrl().search == null) ? true : false,
             "ajax": {
                 url: "/Admin/SearchAllTopAgencyAffiliate",
@@ -25,7 +26,7 @@
                 },
                 complete: function (data) {
                     AllTopAgencyAffiliate.loadEditable();
-                    var table = AllTopAgencyAffiliate.AllTopAgencyAffiliateDataTable;
+                    var table = AllTopAgencyAffiliate.allTopAgencyAffiliateDataTable;
                 }
             },
             'deferRender': true,
@@ -134,8 +135,8 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        var html = "<a style='margin: 2px' href='/Admin/TopAgencyAffiliate/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#Affiliate").val() + "</a>";
-                        html += "<a style='margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#View").val() + "</a>";
+                        var html = "<a href='/Admin/TopAgencyAffiliate/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#Affiliate").val() + "</a>";
+                        html += "<a href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary'>" + $("#View").val() + "</a>";
 
                         return html;
 

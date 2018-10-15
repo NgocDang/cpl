@@ -7,7 +7,7 @@ namespace CPL.Common.Enums
     public class CPLConstant
     {
         //Change this environment setting will affect CPL globally including Web & Services!!!
-        public static EnumEnvironment Environment = EnumEnvironment.MAINNET;
+        public static EnumEnvironment Environment = EnumEnvironment.TESTNET;
 
         //Authentication
         public static string ActivateExpiredInDays = "ActivateExpiredInDays";
@@ -81,7 +81,7 @@ namespace CPL.Common.Enums
             public static string PricePredictionViewId = "PricePredictionViewId";
 
             public static string LotteryCategoryViewName = "LotteryCategory_";
-            public static string LotteryCategoryFilterExpression = @"/Lottery/Index/[0-9]+\?lottery-category-id=";
+            public static string LotteryCategoryFilterExpression = @"/Lottery/Detail/[0-9]+\?lottery-category-id=";
         }
 
         //BWallet
@@ -166,12 +166,13 @@ namespace CPL.Common.Enums
             public static string Amount = "#,##0.########";
             public static string Number = "N0";
             public static string DateTime = "yyyy/MM/dd HH:mm:ss";
+            public static string Date = "yyyy/MM/dd";
+            public static string Time = @"hh\:mm\:ss";
         }
 
         public static string NumberOfAgencyAffiliateExpiredDays = "NumberOfAgencyAffiliateExpiredDays";
         public static decimal LotteryTotalRevenuePercentage = 0.2m;
-        public static decimal PricePredictionTotalRevenuePercentage = 0.2m;
-        public static decimal PricePredictionTotalAwardPercentage = 0.8m;
+        public static string PricePredictionTotalAwardPercentage = "PricePredictionTotalAwardPercentage";
         public static DateTime FirstDeploymentDate = new DateTime(2018, 8, 28);
 
         public struct MobileAppConstant
@@ -184,12 +185,27 @@ namespace CPL.Common.Enums
 
             public static string LotteryDetailNoTicketsLeft = "LotteryDetail_No_Tickets_Left";
             public static string LotteryDetailNotEnoughCPL = "LotteryDetail_Not_Enough_CPL";
-            
 
+
+            public static string ContactScreenEmailSentSuccessfully = "ContactScreen_Email_Sent_Successfully";
+
+            public static string EditPasswordScreenPasswordUpdatedSuccessfully = "EditPasswordScreen_Password_Updated_Successfully";
+            public static string EditPasswordScreenInvalidCurrentPassword = "EditPasswordScreen_Invalid_Current_Password";
+            public static string EditPasswordScreenNonExistingAccount = "EditPasswordScreen_NonExisting_Account";
+
+            public static string EditEmailScreenEmailUpdatedSuccessfully = "EditEmailScreen_Email_Updated_Successfully";
+            public static string EditEmailScreenNonExistingAccount = "EditEmailScreen_NonExisting_Account";
+            public static string EditEmailScreenExistingEmail = "EditEmailScreen_Existing_Email";
+
+            public static string DepositAndWithdrawScreenInvalidWithdrawAmount = "DepositAndWithdrawScreen_Invalid_Withdraw_Amount";
+            public static string DepositAndWithdrawScreenInsufficientFunds = "DepositAndWithdrawScreen_Insufficient_Funds";
+            public static string DepositAndWithdrawScreenInvalidBTCAddress = "DepositAndWithdrawScreen_Invalid_BTCAddress";
+            public static string DepositAndWithdrawScreenWithdrawedSuccessfully = "DepositAndWithdrawScreen_Withdrawed_Successfully";
+
+            public static string ProfileEditUserScreenUpdatedSuccessfully = "ProfileEditUserScreen_Updated_Successfully";
+            public static string ProfileEditUserScreenNonExistingAccount = "ProfileEditUserScreen_NonExisting_Account";
 
             public static string CommonErrorOccurs = "Common_ErrorOccurs";
         }
-
-
     }
 }

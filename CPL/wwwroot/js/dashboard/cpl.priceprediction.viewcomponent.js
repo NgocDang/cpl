@@ -7,13 +7,13 @@
         PricePredictionViewComponent.bindLoadPredictionResult();
         PricePredictionViewComponent.bindCountDownTick();
         PricePredictionViewComponent.loadBTCPriceChart();
-        
+
         PricePredictionViewComponent.bindLoadBTCCurrentRate();
         PricePredictionViewComponent.bindBet();
         PricePredictionViewComponent.bindConfirmBet();
         PricePredictionViewComponent.bindBack();
         PricePredictionViewComponent.bindDoBet();
-        
+
     },
     bindLoadPredictionResult: function () {
         var progressConnection = new signalR.HubConnection("/predictedUserProgress");
@@ -22,9 +22,9 @@
             .catch(() => {
                 console.log("Error while establishing connection");
             });
-        progressConnection.on("predictedUserProgress", (up, down, pricePredictionId) => {
-            if (up !== undefined && down !== undefined && pricePredictionId !== undefined)
-                this.setUserProgress(up, down, pricePredictionId);
+        progressConnection.on("predictedUserProgress", (high, low, pricePredictionId) => {
+            if (high !== undefined && low !== undefined && pricePredictionId !== undefined)
+                this.setUserProgress(high, low, pricePredictionId);
         });
     },
     bindLoadBTCCurrentRate: function () {
@@ -34,7 +34,7 @@
             data: {},
             success: function (data) {
                 if (data.success) {
-                    $(".btc-rate").each(function (index, element) {
+                    $(".tab-pane[data-is-disabled = 'False'] .btc-rate").each(function (index, element) {
                         if ($(element).val() < data.value) { // Up
                             $(element).removeClass("text-danger");
                             $(element).addClass("text-success");
@@ -56,270 +56,233 @@
             }
         });
     },
-    setUserProgress: function (up, down, pricePredictionId) {
-        // Reset up-bar setting
-        $("#price-prediction-nav-" + pricePredictionId + " #up-bar").css({ "width": up + "%" })
-            .attr("aria-valuenow", up)
-        $("#price-prediction-nav-" + pricePredictionId + " #up-bar-value").html(up + "%");
+    setUserProgress: function (high, low, pricePredictionId) {
+        // Reset high-bar setting
+        $("#price-prediction-nav-" + pricePredictionId + " #high-bar").css({ "width": high + "%" })
+            .attr("aria-valuenow", high)
+        $("#price-prediction-nav-" + pricePredictionId + " #high-bar-value").html(high + "%");
 
-        // Reset down-bar setting
-        $("#price-prediction-nav-" + pricePredictionId + " #down-bar").css({ "width": down + "%" })
-            .attr("aria-valuenow", down)
-        $("#price-prediction-nav-" + pricePredictionId + " #down-bar-value").html(down + "%");
+        // Reset low-bar setting
+        $("#price-prediction-nav-" + pricePredictionId + " #low-bar").css({ "width": low + "%" })
+            .attr("aria-valuenow", low)
+        $("#price-prediction-nav-" + pricePredictionId + " #low-bar-value").html(low + "%");
     },
     loadBTCPriceChart: function () {
         $(".tab-pane.active .btc-price-chart").each(function (index, element) {
-            var openTime = moment(parseInt($(element).closest(".tab-pane").find("#OpenBettingTime").val()));
-            var closeTime = moment(parseInt($(element).closest(".tab-pane").find("#CloseBettingTime").val()));
-            var resultTime = moment(parseInt($(element).closest(".tab-pane").find("#ResultTime").val()));
-            Highcharts.setOptions({
-                global: {
-                    useUTC: false
-                },
-                lang: DTLang.getHighChartLang()
-            });
+            if ($(element).closest(".tab-pane").data().isDisabled == "False") {
+                var openTime = moment(parseInt($(element).closest(".tab-pane").find("#OpenBettingTime").val()));
+                var closeTime = moment(parseInt($(element).closest(".tab-pane").find("#CloseBettingTime").val()));
+                var resultTime = moment(parseInt($(element).closest(".tab-pane").find("#ResultTime").val()));
+                Highcharts.setOptions({
+                    global: {
+                        useUTC: false
+                    },
+                    lang: DTLang.getHighChartLang()
+                });
 
-            $(element).highcharts({
-                chart: {
-                    type: 'area',
-                    zoomType: 'x',
-                    panning: true,
-                    panKey: 'shift',
-                    events: {
-                        load: function () {
-                            // set up the updating of the chart each second
-                            PricePredictionViewComponent.charts.push($(element).highcharts());
+                $(element).highcharts({
+                    chart: {
+                        type: 'area',
+                        zoomType: 'x',
+                        panning: true,
+                        panKey: 'shift',
+                        events: {
+                            load: function () {
+                                // set up the updating of the chart each second
+                                PricePredictionViewComponent.charts.push($(element).highcharts());
 
-                            if (PricePredictionViewComponent.realtimeInterval != null) {
-                                clearInterval(PricePredictionViewComponent.realtimeInterval)
-                            }
+                                if (PricePredictionViewComponent.realtimeInterval != null) {
+                                    clearInterval(PricePredictionViewComponent.realtimeInterval)
+                                }
 
-                            PricePredictionViewComponent.realtimeInterval = setInterval(function () {
-                                PricePredictionViewComponent.bindLoadBTCCurrentRate();
+                                PricePredictionViewComponent.realtimeInterval = setInterval(function () {
+                                    PricePredictionViewComponent.bindLoadBTCCurrentRate();
 
-                                for (var i = 0; i < PricePredictionViewComponent.charts.length; i++) {
-                                    var series = PricePredictionViewComponent.charts[i].series[0], x, y,
-                                        chart = PricePredictionViewComponent.charts[i],
-                                        yAxis = chart.yAxis[0];
+                                    for (var i = 0; i < PricePredictionViewComponent.charts.length; i++) {
+                                        var series = PricePredictionViewComponent.charts[i].series[0], x, y,
+                                            chart = PricePredictionViewComponent.charts[i],
+                                            yAxis = chart.yAxis[0];
 
-                                    // Load gap between real time and real time data
-                                    var previousX = x;
-                                    if (x !== undefined) {
-                                        var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-                                        previousX = x / 1000;
-                                        var count = currentTime - previousX;
-                                        if (count > 0) {
-                                            for (var i = 0; i < count; i++) {
-                                                series.addPoint([x + i * 1000, y], true, true);
+                                        // Load gap between real time and real time data
+                                        var previousX = x;
+                                        if (x !== undefined) {
+                                            var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                                            previousX = x / 1000;
+                                            var count = currentTime - previousX;
+                                            if (count > 0) {
+                                                for (var i = 0; i < count; i++) {
+                                                    series.addPoint([x + i * 1000, y], true, true);
+                                                }
                                             }
+                                        }
+
+                                        if (PricePredictionViewComponent.btcCurrentRate !== undefined && PricePredictionViewComponent.btcCurrentRate !== null) {
+                                            x = parseFloat(PricePredictionViewComponent.btcCurrentRate.split(";")[2]) * 1000; // current time from wcf
+                                            y = parseFloat(PricePredictionViewComponent.btcCurrentRate.split(";")[1]);
+                                            series.addPoint([x, y], true, true);
+                                            yAxis.plotLinesAndBands[0].options.label.text = y.toString();
+                                            yAxis.plotLinesAndBands[0].options.label.align = 'right';
+                                            yAxis.plotLinesAndBands[0].options.label.x = -80;
+                                            yAxis.plotLinesAndBands[0].options.value = y;
+                                            yAxis.plotLinesAndBands[0].options.zIndex = 4;
+                                            yAxis.update();
                                         }
                                     }
 
-                                    if (PricePredictionViewComponent.btcCurrentRate !== undefined && PricePredictionViewComponent.btcCurrentRate !== null) {
-                                        x = parseFloat(PricePredictionViewComponent.btcCurrentRate.split(";")[2]) * 1000; // current time from wcf
-                                        y = parseFloat(PricePredictionViewComponent.btcCurrentRate.split(";")[1]);
-                                        series.addPoint([x, y], true, true);
-                                        yAxis.plotLinesAndBands[0].options.label.text = y.toString();
-                                        yAxis.plotLinesAndBands[0].options.label.align = 'right';
-                                        yAxis.plotLinesAndBands[0].options.label.x = -80;
-                                        yAxis.plotLinesAndBands[0].options.value = y;
-                                        yAxis.plotLinesAndBands[0].options.zIndex = 4;
-                                        yAxis.update();
-                                    }
-                                }
+                                    console.log(PricePredictionViewComponent.btcCurrentRate);
 
-                                console.log(PricePredictionViewComponent.btcCurrentRate);
+                                }, 1000);
 
-                            }, 1000);
-
-                        }
-                    }
-                },
-                plotOptions: {
-                    area: {
-                        marker: {
-                            enabled: false
+                            }
                         }
                     },
-                    series: {
-                        shadow: false,
-                        lineWidth: 0.01,
-                        turboThreshold: 200000,
-                        color: '#ffc111',
-                    }
-                },
-                title: {
-                    text: $("#btcPricePredictionChartTitle").val(),
-                    align: 'left'
-                },
-                xAxis: {
-                    type: 'datetime',
-                    dateTimeLabelFormats: {
-                        day: '%b/%e'
-                    },
-                    tickPixelInterval: 150,
-                    plotLines: [{
-                        label: {
-                            text: $("#open").val() + ' (' + openTime.format("HH:mm") + ')',
-                            //rotation: 0,
-                            zIndex: 4
+                    plotOptions: {
+                        area: {
+                            marker: {
+                                enabled: false
+                            }
                         },
-                        color: '#000', // Color value
-                        value: (openTime.valueOf()), // Value of where the line will appear
-                        zIndex: 4,
-                        dashStyle: 'dash',
-                        width: 1 // Width of the line   
+                        series: {
+                            shadow: false,
+                            lineWidth: 0.01,
+                            turboThreshold: 200000,
+                            color: '#ffc111',
+                        }
                     },
-                    {
-                        label: {
-                            text: $("#close").val() + ' (' + closeTime.format("HH:mm") + ')',
-                            //rotation: 0,
-                            //x: -90,
-                            zIndex: 4
-                        },
-                        color: '#000', // Color value
-                        value: (closeTime.valueOf()), // Value of where the line will appear
-                        zIndex: 4,
-                        dashStyle: 'dash',
-                        width: 1 // Width of the line    
+                    title: {
+                        text: $(element).closest(".tab-pane").find("#btcPricePredictionChartTitle").val(),
+                        align: 'left'
                     },
-                    {
-                        label: {
-                            text: $("#result").val() + ' (' + resultTime.format("HH:mm") + ')',
-                            //rotation: 0,
-                            zIndex: 4
+                    xAxis: {
+                        type: 'datetime',
+                        dateTimeLabelFormats: {
+                            day: '%b/%e'
                         },
-                        color: '#000', // Color value
-                        value: (resultTime.valueOf()), // Value of where the line will appear
-                        zIndex: 4,
-                        dashStyle: 'dash',
-                        width: 1 // Width of the line    
+                        tickPixelInterval: 150,
+                        plotLines: [{
+                            label: {
+                                text: $(element).closest(".tab-pane").find("#open").val() + ' (' + openTime.format("HH:mm") + ')',
+                                //rotation: 0,
+                                zIndex: 4
+                            },
+                            color: '#000', // Color value
+                            value: (openTime.valueOf()), // Value of where the line will appear
+                            zIndex: 4,
+                            dashStyle: 'dash',
+                            width: 1 // Width of the line   
+                        },
+                        {
+                            label: {
+                                text: $(element).closest(".tab-pane").find("#close").val() + ' (' + closeTime.format("HH:mm") + ')',
+                                //rotation: 0,
+                                //x: -90,
+                                zIndex: 4
+                            },
+                            color: '#000', // Color value
+                            value: (closeTime.valueOf()), // Value of where the line will appear
+                            zIndex: 4,
+                            dashStyle: 'dash',
+                            width: 1 // Width of the line    
+                        },
+                        {
+                            label: {
+                                text: $(element).closest(".tab-pane").find("#result").val() + ' (' + resultTime.format("HH:mm") + ')',
+                                //rotation: 0,
+                                zIndex: 4
+                            },
+                            color: '#000', // Color value
+                            value: (resultTime.valueOf()), // Value of where the line will appear
+                            zIndex: 4,
+                            dashStyle: 'dash',
+                            width: 1 // Width of the line    
+                        }]
+                    },
+                    yAxis: {
+                        title: null,
+                        plotLines: [{
+                            label: {
+                                text: "",
+                            },
+                            color: 'red', // Color value
+                            value: 0, // Value of where the line will appear
+                            width: 1 // Width of the line    
+                        }],
+                        min: $("#LowestBtcRate").val(),
+                    },
+                    tooltip: {
+                        crosshairs: [true, true]
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    exporting: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: $(element).closest(".tab-pane").find("#btcPricePredictionSeriesName").val(),
+                        fillOpacity: 1,
+                        states: { hover: { enabled: false } },
+                        dataGrouping: { enabled: false },
+                        connectNulls: true,
+                        zIndex: 1,
+                        data: (function () {
+                            // generate an array of random data
+                            var data = [];
+                            var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                            var btcPrices = JSON.parse($("#price-prediction-nav-bar").parent().find(".tab-pane.active #PreviousBtcRate").val());
+                            for (i = 0; i < btcPrices.length; i++) {
+                                data.push({
+                                    x: moment(btcPrices[i].Time * 1000).valueOf(), // Convert to milisecond
+                                    y: parseFloat(btcPrices[i].Price)
+                                });
+                            }
+
+                            PricePredictionViewComponent.bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
+                            var resultTimeInSeconds = moment(parseInt($(".tab-pane.active").find("#ResultTime").val())).valueOf() / 1000;
+                            for (i = currentTime; i <= resultTimeInSeconds + 3600; i++) { // After result time 2 hours
+                                data.push({
+                                    x: moment(i * 1000).valueOf(),
+                                    y: null
+                                });
+                            }
+
+                            return data;
+                        }())
                     }]
-                },
-                yAxis: {
-                    title: null,
-                    plotLines: [{
-                        label: {
-                            text: "",
-                        },
-                        color: 'red', // Color value
-                        value: 0, // Value of where the line will appear
-                        width: 1 // Width of the line    
+                });
+            }
+            else {
+                $(element).highcharts({
+                    title: {
+                        text: $(element).closest(".tab-pane").find("#btcPricePredictionChartTitle").val(),
+                        align: 'left'
+                    },
+                    series: [{
+                        type: 'area',
+                        data: []
                     }],
-                    min: $("#LowestBtcRate").val(),
-                },
-                tooltip: {
-                    crosshairs: [true, true]
-                },
-                legend: {
-                    enabled: false
-                },
-                exporting: {
-                    enabled: false
-                },
-                series: [{
-                    name: $("#btcPricePredictionSeriesName").val(),
-                    fillOpacity: 1,
-                    states: { hover: { enabled: false } },
-                    dataGrouping: { enabled: false },
-                    connectNulls: true,
-                    zIndex: 1,
-                    data: (function () {
-                        // generate an array of random data
-                        var data = [];
-                        var currentTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-                        var btcPrices = JSON.parse($("#price-prediction-nav-bar").parent().find(".tab-pane.active #PreviousBtcRate").val());
-                        for (i = 0; i < btcPrices.length; i++) {
-                            data.push({
-                                x: moment(btcPrices[i].Time * 1000).valueOf(), // Convert to milisecond
-                                y: parseFloat(btcPrices[i].Price)
-                            });
+                    lang: {
+                        noData: $(element).closest(".tab-pane").find("#waitForNextGame").val()
+                    },
+                    yAxis: {
+                        title: null
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    exporting: {
+                        enabled: false
+                    },
+                    noData: {
+                        style: {
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            color: '#303030'
                         }
+                    }
+                });
+            }
 
-                        PricePredictionViewComponent.bctDelayTime = parseInt(((new Date()).getTime() / 1000).toFixed());
-                        var resultTimeInSeconds = moment(parseInt($(".tab-pane.active").find("#ResultTime").val())).valueOf() / 1000;
-                        for (i = currentTime; i <= resultTimeInSeconds + 3600; i++) { // After result time 2 hours
-                            data.push({
-                                x: moment(i * 1000).valueOf(),
-                                y: null
-                            });
-                        }
-
-                        return data;
-                    }())
-                }]
-            });
-        });
-    },
-    loadPricePredictionHistoryDatatable: function () {
-        if ($("#SysUserId").val() === undefined)
-            return false;
-
-        return $('#dt-prediction-history').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "autoWidth": false,
-            "ajax": {
-                url: "/PricePrediction/SearchPricePredictionHistory",
-                type: 'POST'
-            },
-            "language": DTLang.getLang(),
-            "columns": [
-                {
-                    "data": "PurcharseTime",
-                    "render": function (data, type, full, meta) {
-                        return full.purcharseTimeInString;
-                    }
-                },
-                {
-                    "data": "Bet",
-                    "className": "text-center",
-                    "render": function (data, type, full, meta) {
-                        return full.bet;
-                    }
-                },
-                {
-                    "data": "StartRate",
-                    "render": function (data, type, full, meta) {
-                        return full.startRateInString;
-                    }
-                },
-                {
-                    "data": "Amount",
-                    "render": function (data, type, full, meta) {
-                        return full.amountInString;
-                    }
-                },
-                {
-                    "data": "Bonus",
-                    "render": function (data, type, full, meta) {
-                        return full.bonusInString;
-                    }
-                },
-                {
-                    "data": "Status",
-                    "render": function (data, type, full, meta) {
-                        if (full.status === "ACTIVE") {
-                            return "<i class='fas fa-circle text-success fa-circle-active'></i> " + full.status;
-                        }
-                        else {
-                            return "<i class='fas fa-circle text-danger fa-circle-inactive'></i> " + full.status;
-                        }
-                    }
-                },
-                {
-                    "data": "ResultRate",
-                    "render": function (data, type, full, meta) {
-                        return full.resultRateInString;
-                    }
-                },
-                {
-                    "data": "ResultTime",
-                    "render": function (data, type, full, meta) {
-                        return full.resultTimeInString;
-                    }
-                }
-            ]
         });
     },
     bindBet: function () {
@@ -333,10 +296,10 @@
             $(_this).addClass("btn-secondary");
         });
 
-        $(".tab-pane").on("click", ".btn-up-down-group > .btn", function () {
+        $(".tab-pane").on("click", ".btn-high-low-group > .btn", function () {
             var _this = this;
             var tabPane = $(_this).closest(".tab-pane");
-            tabPane.find(".btn-up-down-group > .btn").removeClass("active");
+            tabPane.find(".btn-high-low-group > .btn").removeClass("active");
             $(_this).addClass("active");
             return false;
         });
@@ -348,9 +311,9 @@
             if (tabPane.find(".bet-amount").val() <= 0) {
                 toastr.error("Incorrect amount!");
             } else {
-                if (tabPane.find(".btn-up").hasClass("active") || tabPane.find(".btn-down").hasClass("active")) {
-                    tabPane.find(".predicted-trend-confirm").html(tabPane.find(".btn-up").hasClass("active") ? "High" : "Low");
-                    if (tabPane.find(".btn-up").hasClass("active")) {
+                if (tabPane.find(".btn-high").hasClass("active") || tabPane.find(".btn-low").hasClass("active")) {
+                    tabPane.find(".predicted-trend-confirm").html(tabPane.find(".btn-high").hasClass("active") ? "High" : "Low");
+                    if (tabPane.find(".btn-high").hasClass("active")) {
                         tabPane.find(".predicted-trend-confirm").removeClass("danger").addClass("success");
                         tabPane.find(".bet-amount-confirm").removeClass("danger").addClass("success");
                     } else {
@@ -384,7 +347,7 @@
                 data: {
                     pricePredictionId: $(_this).data().id,
                     betAmount: tabPane.find(".bet-amount").val(),
-                    predictedTrend: tabPane.find(".btn-up-down-group > .btn.active").data().value,
+                    predictedTrend: tabPane.find(".btn-high-low-group > .btn.active").data().value,
                 },
                 success: function (data) {
                     if (data.success) {

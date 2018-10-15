@@ -4,7 +4,7 @@
     ViewData["Title"] = @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn");
 }
 
-<div class="content-wrapper mt-2 mb-2">
+<div class="content-wrapper mt-3 mb-2">
     <div class="content-body">
         <div class="col-xl-3 col-lg-4 col-sm-5 col-12 p-0 mx-auto">
             <div class="card border-grey border-lighten-3 m-0 box-shadow-0">
@@ -27,20 +27,12 @@
                                     @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PasswordRequired")
                                 </div>
                             </fieldset>
-                            <div class="form-group mb-0">
-                                <label for="captcha" class="d-block">
-                                    @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Captcha")
-                                </label>
-                                <div class="box-captcha">
-                                    <div class="g-recaptcha" data-tabindex="3" data-sitekey="@Model.GCaptchaKey"></div>
-                                </div>
-                            </div>
                             <div class="invalid-feedback" id="login-error">
                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "InvalidEmailPassword")
                             </div>
                             <button type="submit" id="btn-log-in" class="btn btn-primary btn-block my-1"><i class="fas fa-sign-in-alt"></i> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LogIn")</button>
                             <p class="text-center">@Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ClickHereToRequestNewActivateToken"))</p>
-                            <p class="text-center"><a asp-controller="Authentication" asp-action="Register" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</a></p>
+                            <p class="text-center"><a asp-controller="Authentication" asp-action="Register" class="btn btn-sm round btn-warning">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Register")</a></p>
                             <p class="text-center"><a asp-controller="Authentication" asp-action="ForgotPassword" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ForgotPassword")</a></p>
                         </form>
                     </div>

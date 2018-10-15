@@ -18,6 +18,8 @@ using Quartz;
 using CPL.Misc.Quartz;
 using CPL.Misc.Quartz.Jobs;
 using CPL.Misc.Quartz.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using CPL.Common.Misc;
 
 namespace CPL.Controllers
 {
@@ -65,7 +67,7 @@ namespace CPL.Controllers
         }
 
         [Permission(EnumRole.Guest)]
-        public IActionResult Index()
+        public IActionResult Index(bool? predictedTrend)
         {
             //Test quartz job price prediction update result
             // Cmt out because of new PricePrediction logic
@@ -77,16 +79,58 @@ namespace CPL.Controllers
             if (viewModel.SysUserId.HasValue)
                 viewModel.TokenAmount = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id).TokenAmount;
 
-            viewModel.PricePredictionTabs = _pricePredictionService.Queryable()
-                .Where(x => x.ResultTime > DateTime.Now)
-                .Select(x => Mapper.Map<PricePredictionTab>(x)).OrderBy(x => x.ResultTime.ToString("HH:mm"))
+            var adminPricePredictionTabs = _pricePredictionService.Queryable()
+                .Where(x => x.ResultTime.Date == DateTime.Now.Date && x.PricePredictionCategoryId != (int)EnumPricePredictionCategory.SYSTEM)
+                .Select(x => new PricePredictionTab
+                {
+                    Id = x.Id,
+                    ResultTime = x.ResultTime,
+                    ToBeComparedTime = x.ToBeComparedTime,
+                    CloseBettingTime = x.CloseBettingTime,
+                    IsDisabled = (x.OpenBettingTime > DateTime.Now || x.CloseBettingTime < DateTime.Now),
+                    Title = x.PricePredictionDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Title,
+                    CoinBase = x.Coinbase
+                });
+
+            var systemPricePredictionTabs = _pricePredictionService.Queryable()
+                .Where(x => x.ResultTime > DateTime.Now && x.PricePredictionCategoryId == (int)EnumPricePredictionCategory.SYSTEM)
+                .Select(x => new PricePredictionTab
+                {
+                    Id = x.Id,
+                    ResultTime = x.ResultTime,
+                    ToBeComparedTime = x.ToBeComparedTime,
+                    CloseBettingTime = x.CloseBettingTime,
+                    IsDisabled = (x.CloseBettingTime < DateTime.Now),
+                    Title = x.PricePredictionDetails.FirstOrDefault(y => y.LangId == HttpContext.Session.GetInt32("LangId").Value).Title,
+                    CoinBase = x.Coinbase
+                });         
+
+
+            viewModel.PricePredictionTabs = adminPricePredictionTabs.Concat(systemPricePredictionTabs)
+                .OrderBy(x => x.ResultTime.ToString("HH:mm"))
                 .ToList();
 
             // Move first tab to the end of the array
             viewModel.PricePredictionTabs = Enumerable.Range(1, viewModel.PricePredictionTabs.Count).Select(i => viewModel.PricePredictionTabs[i % viewModel.PricePredictionTabs.Count]).ToList();
 
-            if (viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now) != null)
-                viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).IsActive = true;
+            var pricePredictionActiveTab = viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now);
+
+            if (predictedTrend.HasValue)
+            {
+                if (viewModel.PricePredictionTabs.OrderBy(x => x.CloseBettingTime).FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now) != null)
+                {
+                    viewModel.PricePredictionTabs.OrderBy(x => x.CloseBettingTime).FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).IsActive = true;
+                    viewModel.PricePredictionTabs.OrderBy(x => x.CloseBettingTime).FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).PredictedTrend = predictedTrend;
+                }
+            }
+            else
+            {
+                if (pricePredictionActiveTab != null)
+                {
+                    viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).IsActive = true;
+                    viewModel.PricePredictionTabs.FirstOrDefault(x => x.CloseBettingTime >= DateTime.Now).PredictedTrend = predictedTrend;
+                }
+            }
 
             return View(viewModel);
         }
@@ -108,90 +152,6 @@ namespace CPL.Controllers
             {
                 throw new InvalidOperationException(ex.Message);
             }
-        }
-
-        public JsonResult SearchPricePredictionHistory(DataTableAjaxPostModel viewModel)
-        {
-            // action inside a standard controller
-            int filteredResultsCount;
-            int totalResultsCount;
-            var res = SearchPricePredictionHistoryFunc(viewModel, out filteredResultsCount, out totalResultsCount);
-            return Json(new
-            {
-                // this is what datatables wants sending back
-                draw = viewModel.draw,
-                recordsTotal = totalResultsCount,
-                recordsFiltered = filteredResultsCount,
-                data = res
-            });
-        }
-
-        public IList<PricePredictionHistoryViewModel> SearchPricePredictionHistoryFunc(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
-        {
-            var user = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser");
-            var searchBy = (model.search != null) ? model.search.value?.ToLower() : null;
-            var take = model.length;
-            var skip = model.start;
-
-            string sortBy = "";
-            bool sortDir = true;
-
-            if (model.order != null)
-            {
-                // in this example we just default sort on the 1st column
-                sortBy = model.columns[model.order[0].column].data;
-                sortDir = model.order[0].dir.ToLower() == "desc";
-            }
-
-            totalResultsCount = _pricePredictionHistoryService
-                                 .Query()
-                                 .Include(x => x.PricePrediction)
-                                 .Where(x => x.SysUserId == user.Id)
-                                 .Count();
-
-            // search the dbase taking into consideration table sorting and paging
-            var pricePredictionHistory = _pricePredictionHistoryService
-                                          .Query()
-                                          .Include(x => x.PricePrediction)
-                                          .Where(x => x.SysUserId == user.Id)
-                                          .Select(x => new PricePredictionHistoryViewModel
-                                          {
-                                              ToBeComparedPrice = x.PricePrediction.ToBeComparedPrice,
-                                              ToBeComparedPriceInString = x.PricePrediction.ToBeComparedPrice.GetValueOrDefault(0).ToString("#,##0.##"),
-                                              ResultPrice = x.PricePrediction.ResultPrice,
-                                              ResultPriceInString = $"{x.PricePrediction.ResultPrice.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.USDT.ToString()}",
-                                              ResultTime = x.PricePrediction.ResultTime,
-                                              ResultTimeInString = x.PricePrediction.ResultTime.ToString(),
-                                              Bet = x.Prediction == true ? EnumPricePredictionStatus.UP.ToString() : EnumPricePredictionStatus.DOWN.ToString(),
-                                              Status = x.UpdatedDate.HasValue == true ? EnumLotteryGameStatus.COMPLETED.ToString() : EnumLotteryGameStatus.ACTIVE.ToString(),
-                                              PurcharseTime = x.CreatedDate,
-                                              PurcharseTimeInString = $"{x.CreatedDate.ToString("yyyy/MM/dd hh:mm:ss")}",
-                                              Bonus = x.Award.GetValueOrDefault(0),
-                                              BonusInString = $"{x.Award.GetValueOrDefault(0).ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
-                                              Amount = x.Amount,
-                                              AmountInString = $"{x.Amount.ToString("#,##0.##")} {EnumCurrency.CPL.ToString()}",
-                                          });
-
-            if (string.IsNullOrEmpty(searchBy))
-            {
-                filteredResultsCount = totalResultsCount;
-            }
-            else
-            {
-                pricePredictionHistory = pricePredictionHistory
-                                        .Where(x => x.PurcharseTimeInString.ToLower().Contains(searchBy)
-                                                    || x.Bet.ToLower().Contains(searchBy)
-                                                    || x.ToBeComparedPriceInString.ToLower().Contains(searchBy)
-                                                    || x.Status.ToLower().Contains(searchBy)
-                                                    || x.AmountInString.ToLower().Contains(searchBy)
-                                                    || x.BonusInString.ToLower().Contains(searchBy)
-                                                    || x.ResultPriceInString.ToLower().Contains(searchBy)
-                                                    || x.ResultTimeInString.ToLower().Contains(searchBy));
-
-                filteredResultsCount = pricePredictionHistory.Count();
-            }
-
-            return pricePredictionHistory.AsQueryable().OrderBy(sortBy, sortDir).Skip(skip).Take(take).ToList();
         }
 
         [HttpPost]
@@ -218,33 +178,33 @@ namespace CPL.Controllers
 
                         _unitOfWork.SaveChanges();
 
-                        decimal upPercentage;
-                        decimal downPercentage;
+                        decimal highPercentage;
+                        decimal lowPercentage;
                         //Calculate percentage
-                        decimal upPrediction = _pricePredictionHistoryService
+                        decimal highPrediction = _pricePredictionHistoryService
                             .Queryable()
-                            .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.UP.ToBoolean())
+                            .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.HIGH.ToBoolean() && x.Result != EnumGameResult.REFUND.ToString())
                             .Count();
 
-                        decimal downPrediction = _pricePredictionHistoryService
+                        decimal lowPrediction = _pricePredictionHistoryService
                             .Queryable()
-                            .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.DOWN.ToBoolean())
+                            .Where(x => x.PricePredictionId == pricePredictionId && x.Prediction == EnumPricePredictionStatus.LOW.ToBoolean() && x.Result != EnumGameResult.REFUND.ToString())
                             .Count();
 
 
-                        if (upPrediction + downPrediction == 0)
+                        if (highPrediction + lowPrediction == 0)
                         {
-                            upPercentage = downPercentage = 50;
+                            highPercentage = lowPercentage = 50;
                         }
                         else
                         {
-                            upPercentage = Math.Round((upPrediction / (upPrediction + downPrediction) * 100), 2);
-                            downPercentage = 100 - upPercentage;
+                            highPercentage = Math.Round((highPrediction / (highPrediction + lowPrediction) * 100), 2);
+                            lowPercentage = 100 - highPercentage;
                         }
                         //////////////////////////
 
 
-                        _progressHubContext.Clients.All.SendAsync("predictedUserProgress", upPercentage, downPercentage, pricePredictionId);
+                        _progressHubContext.Clients.All.SendAsync("predictedUserProgress", highPercentage, lowPercentage, pricePredictionId);
 
 
                         return new JsonResult(new { success = true, token = currentUser.TokenAmount.ToString("N0"), message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "BettingSuccessfully") });

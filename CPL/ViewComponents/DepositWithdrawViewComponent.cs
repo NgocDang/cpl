@@ -27,7 +27,7 @@ namespace CPL.ViewComponents
         public IViewComponentResult Invoke()
         {
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
-            var viewModel = Mapper.Map<DepositAndWithdrawViewModel>(user);
+            var viewModel = Mapper.Map<DepositAndWithdrawViewComponentViewModel>(user);
             viewModel.BTCAvailable = viewModel.TokenAmount / decimal.Parse(_settingService.Queryable().FirstOrDefault(x => x.Name == CPLConstant.BTCToTokenRate).Value);
             return View(viewModel);
         }

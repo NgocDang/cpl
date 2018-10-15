@@ -27,6 +27,7 @@
             "serverSide": true,
             "autoWidth": false,
             "stateSave": true,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Admin/SearchLottery",
                 type: 'POST',
@@ -100,20 +101,20 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        var html = "<button data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</button>  <br />";
+                        var html = "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
                         if (full.status == 1) { // pendding
-                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</button>"
-                                + "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val();
+                            html += "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</a>"
+                                + "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val() + "</a>";
                         }
                         else if (full.status == 2) { // active
-                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-deactivate'>" + $("#deactivate").val() + "</button>";
+                            html += "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-deactivate'>" + $("#deactivate").val() + "</a>";
                         }
                         else if (full.status == 4) { // deactivate
-                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val()
-                                + "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val() + "</button>";
+                            html += "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</a>"
+                                + "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-activate'>" + $("#activate").val() + "</a>";
                         }
                         if (full.status != 3) { // !completed
-                            html += "<button style='margin: 2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-delete'>" + $("#delete").val() + "</button>";
+                            html += "<a data-id='" + full.id + "'  href='#'  target='_blank' class='btn btn-sm btn-outline-secondary btn-delete'>" + $("#delete").val() + "</a>";
                         }
                         return html;
                     },
@@ -130,6 +131,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Admin/SearchUserLotteryPrize",
                 type: 'POST',
@@ -159,7 +161,7 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        return "<a class='btn btn-sm btn-outline-secondary btn-view' target='_blank' href='/history/lottery?sysUserId=" + (full.id) + "'" + ">" + $("#view").val() + "</a>";
+                        return "<a class='btn btn-sm btn-outline-secondary btn-view' target='_blank' href='/History/Lottery?sysUserId=" + full.id + "'" + ">" + $("#view").val() + "</a>";
                     },
                     "orderable": false
                 }
@@ -202,6 +204,8 @@
                         .map(function () {
                             $(this).find("#prize-title").html("#" + $(this).find("#prize-title-id").val());
                         });
+                    tinymce.remove();
+                    AdminLottery.initTinyMCE();
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
@@ -313,6 +317,8 @@
                             $(this).find("#prize-title").html("#" + $(this).find("#prize-title-id").val());
                         });
                     $($("#prize-lottery").find("div.row.row-prize").last().prev()).find(".btn-remove-prize").removeClass("d-none");
+                    tinymce.remove();
+                    AdminLottery.initTinyMCE();
                 },
                 complete: function (data) {
                     $(_this).attr("disabled", false);
@@ -402,6 +408,25 @@
 
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
+
+            var isTinyMCEFormValid = true;
+
+            $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                //if (tinyMCE.get($(e).find("#lottery-description-" + parseInt($(e).find("#lang-id").val()))[0].id).getContent().length == 0) {
+                if (tinyMCE.get("lottery-description-" + parseInt($(e).find("#lang-id").val())).getContent().length == 0) {
+                    $(e).find("#tinymce-lottery-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").show();
+                    isTinyMCEFormValid = false;
+                } else {
+                    $(e).find("#tinymce-lottery-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").hide();
+                }
+                if (tinyMCE.get("lottery-short-description-" + parseInt($(e).find("#lang-id").val())).getContent().length == 0) {
+                    $(e).find("#tinymce-lottery-short-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").show();
+                    isTinyMCEFormValid = false;
+                } else {
+                    $(e).find("#tinymce-lottery-short-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").hide();
+                }
+            });
+
             var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
             if (prizeCounter <= 1) {
                 $("#prize-required").addClass("d-block");
@@ -411,7 +436,7 @@
                 $("#prize-required").removeClass("d-block");
             }
 
-            if (isFormValid && isCategoryValid) {
+            if (isFormValid && isCategoryValid && isTinyMCEFormValid) {
                 var formData = new FormData();
                 $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
                     var desktopTopImage = $(e).find("#desktop-top-image").get(0);
@@ -439,7 +464,8 @@
                         formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
                     }
                     formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
-                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].Description', tinyMCE.get("lottery-description-" + parseInt($(e).find("#lang-id").val())).getContent());
+                    formData.append('LotteryDetails[' + i + '].ShortDescription', tinyMCE.get("lottery-short-description-" + parseInt($(e).find("#lang-id").val())).getContent());
                     formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                 });
 
@@ -495,6 +521,25 @@
                 $("#category-msg").show();
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
+
+            var isTinyMCEFormValid = true;
+
+            $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                //if (tinyMCE.get($(e).find("#lottery-description-" + parseInt($(e).find("#lang-id").val()))[0].id).getContent().length == 0) {
+                if (tinyMCE.get("lottery-description-" + parseInt($(e).find("#lang-id").val())).getContent().length == 0) {
+                    $(e).find("#tinymce-lottery-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").show();
+                    isTinyMCEFormValid = false;
+                } else {
+                    $(e).find("#tinymce-lottery-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").hide();
+                }
+                if (tinyMCE.get("lottery-short-description-" + parseInt($(e).find("#lang-id").val())).getContent().length == 0) {
+                    $(e).find("#tinymce-lottery-short-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").show();
+                    isTinyMCEFormValid = false;
+                } else {
+                    $(e).find("#tinymce-lottery-short-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").hide();
+                }
+            });
+
             var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
             if (prizeCounter <= 1) {
                 $("#prize-required").addClass("d-block");
@@ -503,7 +548,7 @@
             else {
                 $("#prize-required").removeClass("d-block");
             }
-            if (isFormValid) {
+            if (isFormValid && isTinyMCEFormValid) {
                 var formData = new FormData();
 
                 $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
@@ -532,7 +577,8 @@
                         formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
                     }
                     formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
-                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].Description', tinyMCE.get("lottery-description-" + parseInt($(e).find("#lang-id").val())).getContent());
+                    formData.append('LotteryDetails[' + i + '].ShortDescription', tinyMCE.get("lottery-short-description-" + parseInt($(e).find("#lang-id").val())).getContent());
                     formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                 });
 
@@ -587,6 +633,25 @@
                 $("#category-msg").show();
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
+
+            var isTinyMCEFormValid = true;
+
+            $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                //if (tinyMCE.get($(e).find("#lottery-description-" + parseInt($(e).find("#lang-id").val()))[0].id).getContent().length == 0) {
+                if (tinyMCE.get("lottery-description-" + parseInt($(e).find("#lang-id").val())).getContent().length == 0) {
+                    $(e).find("#tinymce-lottery-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").show();
+                    isTinyMCEFormValid = false;
+                } else {
+                    $(e).find("#tinymce-lottery-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").hide();
+                }
+                if (tinyMCE.get("lottery-short-description-" + parseInt($(e).find("#lang-id").val())).getContent().length == 0) {
+                    $(e).find("#tinymce-lottery-short-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").show();
+                    isTinyMCEFormValid = false;
+                } else {
+                    $(e).find("#tinymce-lottery-short-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").hide();
+                }
+            });
+
             var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
             if (prizeCounter <= 1) {
                 $("#prize-required").addClass("d-block");
@@ -595,7 +660,7 @@
             else {
                 $("#prize-required").removeClass("d-block");
             }
-            if (isFormValid) {
+            if (isFormValid && isTinyMCEFormValid) {
                 var formData = new FormData();
 
                 $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
@@ -624,7 +689,8 @@
                         formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
                     }
                     formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
-                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].Description', tinyMCE.get("lottery-description-" + parseInt($(e).find("#lang-id").val())).getContent());
+                    formData.append('LotteryDetails[' + i + '].ShortDescription', tinyMCE.get("lottery-short-description-" + parseInt($(e).find("#lang-id").val())).getContent());
                     formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                     formData.append('LotteryDetails[' + i + '].Id', parseInt($(e).find("#detail-id").val()));
                 });
@@ -681,6 +747,25 @@
                 $("#category-msg").show();
             var isFormValid = $(_this).parents("form")[0].checkValidity();
             $(_this).parents("form").addClass('was-validated');
+
+            var isTinyMCEFormValid = true;
+
+            $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
+                //if (tinyMCE.get($(e).find("#lottery-description-" + parseInt($(e).find("#lang-id").val()))[0].id).getContent().length == 0) {
+                if (tinyMCE.get("lottery-description-" + parseInt($(e).find("#lang-id").val())).getContent().length == 0) {
+                    $(e).find("#tinymce-lottery-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").show();
+                    isTinyMCEFormValid = false;
+                } else {
+                    $(e).find("#tinymce-lottery-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").hide();
+                }
+                if (tinyMCE.get("lottery-short-description-" + parseInt($(e).find("#lang-id").val())).getContent().length == 0) {
+                    $(e).find("#tinymce-lottery-short-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").show();
+                    isTinyMCEFormValid = false;
+                } else {
+                    $(e).find("#tinymce-lottery-short-description-" + parseInt($(e).find("#lang-id").val())).find(".invalid-feedback").hide();
+                }
+            });
+
             var prizeCounter = $(_this).parents("#form-edit-lottery").find("#prize-lottery div.row.row-prize").length;
             if (prizeCounter <= 1) {
                 $("#prize-required").addClass("d-block");
@@ -689,7 +774,7 @@
             else {
                 $("#prize-required").removeClass("d-block");
             }
-            if (isFormValid) {
+            if (isFormValid && isTinyMCEFormValid) {
                 var formData = new FormData();
 
                 $(_this).parents("#form-edit-lottery").find("#lottery-multilanguage div.tab-pane").each(function (i, e) {
@@ -718,7 +803,8 @@
                         formData.append('LotteryDetails[' + i + '].PrizeImageFile', prizeImage.files[0]);
                     }
                     formData.append('LotteryDetails[' + i + '].LangId', parseInt($(e).find("#lang-id").val()));
-                    formData.append('LotteryDetails[' + i + '].Description', $(e).find("#lottery-description").val());
+                    formData.append('LotteryDetails[' + i + '].Description', tinyMCE.get("lottery-description-" + parseInt($(e).find("#lang-id").val())).getContent());
+                    formData.append('LotteryDetails[' + i + '].ShortDescription', tinyMCE.get("lottery-short-description-" + parseInt($(e).find("#lang-id").val())).getContent());
                     formData.append('LotteryDetails[' + i + '].LotteryId', $(_this).parents("#form-edit-lottery").find("#lottery-id").val());
                     formData.append('LotteryDetails[' + i + '].Id', parseInt($(e).find("#detail-id").val()));
                 });
@@ -939,6 +1025,23 @@
                 });
             };
             return false;
+        });
+    },
+
+    initTinyMCE: function () {
+        tinymce.init({
+            selector: 'textarea',
+            height: 150,
+            menubar: false,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor textcolor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code help wordcount'
+            ],
+            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css']
         });
     },
 };

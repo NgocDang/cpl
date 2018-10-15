@@ -16,6 +16,7 @@ namespace CPL.Domain
         public string MobileTopImage { get; set; }
         public string PrizeImage { get; set; }
         public string Description { get; set; }
+        public string ShortDescription { get; set; }
 
         public virtual Lottery Lottery { get; set; }
         public virtual Lang Lang { get; set; }

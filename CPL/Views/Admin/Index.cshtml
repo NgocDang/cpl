@@ -121,8 +121,8 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</strong></p>
-                                        <h1>@Model.TotalLotteryGame.ToString("N0")</h1>
-                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
+                                        <h1>@Model.TotalSaleInLotteryGame.ToString("N0")</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")</p>
                                     </div>
                                 </div>
                             </div>
@@ -139,14 +139,14 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <p><strong>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</strong></p>
-                                        <h1>@Model.TotalPricePredictionGame.ToString("N0")</h1>
-                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Total")</p>
+                                        <h1>@Model.TotalSaleInPricePredictionGame.ToString("N0")</h1>
+                                        <p class="mb-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TotalSale")</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer border-top-blue-grey border-top-lighten-5 text-muted">
-                            @*<span class="float-left"><a asp-controller="Admin" asp-action="Game" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ViewMore") <i class="fa fa-angle-right"></i></a></span>*@
+                            <span class="float-left"><a asp-controller="Admin" asp-action="PricePredictionSetting" class="card-link">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ViewMore") <i class="fa fa-angle-right"></i></a></span>
                         </div>
                     </div>
                 </div>
@@ -225,29 +225,29 @@
                     <div class="card-body pb-3">
                         <div class="row ml-0 mr-0 mt-1">
                             <div class="col-12 pl-0">
-                                <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-image font-large-1 font-large-1"></i></a>
-                                <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slider")</a>
+                                <a class="btn btn-primary mr-1 p-10px" asp-controller="Admin" asp-action="Slider"><i class="la la-image font-large-1 font-large-1"></i></a>
+                                <a asp-controller="Admin" asp-action="Slider">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slider")</a>
                                 <hr class="mt-1 mb-0">
                             </div>
                         </div>
                         <div class="row ml-0 mr-0 mt-1">
                             <div class="col-12 pl-0">
                                 <a class="btn btn-primary mr-1 p-10px" href="/Admin/News"><i class="la la-newspaper-o font-large-1"></i></a>
-                                <a href="/Admin/News">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</a>
+                                <a asp-controller="Admin" asp-action="News">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")</a>
                                 <hr class="mt-1 mb-0">
                             </div>
                         </div>
                         <div class="row ml-0 mr-0 mt-1">
                             <div class="col-12 pl-0">
                                 <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-file-o font-large-1"></i></a>
-                                <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</a>
+                                <a asp-controller="Info" asp-action="TermsOfService">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TermsOfService")</a>
                                 <hr class="mt-1 mb-0">
                             </div>
                         </div>
                         <div class="row ml-0 mr-0 mt-1">
                             <div class="col-12 pl-0">
                                 <a class="btn btn-primary mr-1 p-10px" href="#"><i class="la la-file-o font-large-1"></i></a>
-                                <a href="#">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</a>
+                                <a asp-controller="Info" asp-action="PrivacyPolicy">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PrivacyPolicy")</a>
                             </div>
                         </div>
                     </div>

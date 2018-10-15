@@ -120,6 +120,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "stateSave": (Utils.getJsonFromUrl().search == null) ? true : false,
             "ajax": {
                 url: "/Admin/SearchAllUser",
@@ -191,9 +192,9 @@
                 {
                     "data": "Action",
                     "render": function (data, type, full, meta) {
-                        var actions = "<a style='line-height:12px;margin:2px' href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
+                        var actions = "<a href='/Admin/User/" + full.id + "' target='_blank'  data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-view'>" + $("#view").val() + "</a>";
                         if (!full.isDeleted) {
-                            actions += " <button style='line-height:12px;margin:2px' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</button>";
+                            actions += " <a href='#' data-id='" + full.id + "' target='_blank' class='btn btn-sm btn-outline-secondary btn-edit'>" + $("#edit").val() + "</a>";
                         }
                         return actions;
                     },

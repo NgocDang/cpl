@@ -74,6 +74,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "searchDelay": 350,
             "ajax": {
                 url: "/Admin/SearchKYCVerify",
                 type: 'POST'
@@ -155,8 +156,8 @@
                     "render": function (data, type, full, meta) {
                         if (!full.kycVerified) {
                             return "<div class='kyc-action-" + full.id + "'>" +
-                                "<button style='line-height:12px;margin: 2px ' data-id='" + full.id + "' class='btn btn-sm btn-outline-secondary btn-do-accept-kyc-verify'>" + $("#accept").val()+"</button> " +
-                                "<button style='line-height:12px;margin: 2px ' data-id='" + full.id + "' class='btn btn-sm btn-outline-danger btn-do-cancel-kyc-verify'>" + $("#cancel").val() +"</button>" +
+                                "<a data-id='" + full.id + "' target='_blank' href='#' class='btn btn-sm btn-outline-secondary btn-do-accept-kyc-verify'>" + $("#accept").val()+"</a> " +
+                                "<a data-id='" + full.id + "' target='_blank' href='#' class='btn btn-sm btn-outline-danger btn-do-cancel-kyc-verify'>" + $("#cancel").val() +"</a>" +
                                 "</div>";
                         }
                         return "";

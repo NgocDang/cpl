@@ -1,4 +1,4 @@
-﻿@model LotteryViewModel
+﻿@model LotteryAdminViewModel
 
 <div class="modal" tabindex="-1" role="dialog" id="edit-lottery" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -14,7 +14,7 @@
                             <div class="col-lg-6 col-12">
                                 <fieldset class="form-group">
                                     <label for="lottery-category" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "LotteryCategory")</label>
-                                <select data-value="@Model.LotteryCategoryId" name="lottery-category" id="lottery-category" class="selectpicker" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
+                                    <select data-value="@Model.LotteryCategoryId" name="lottery-category" id="lottery-category" class="selectpicker" required data-style="btn" title="@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PleaseSelect")">
                                         <option class="text-primary font-weight-bold" value="0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "CreateNewCategory")</option>
                                         @foreach (var category in Model.LotteryCategories)
                                         {
@@ -29,7 +29,7 @@
                             <div class="col-lg-6 col-12">
                                 <fieldset class="form-group">
                                     <label for="title" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Title")</label>
-                                <input name="title" id="title" type="text" value="@Model.Title" class="form-control" required autofocus />
+                                    <input name="title" id="title" type="text" value="@Model.Title" class="form-control" required autofocus />
                                     <div class="invalid-feedback">
                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TitleRequired")
                                     </div>
@@ -40,7 +40,7 @@
                             <div class="col-lg-6 col-12 pt-1">
                                 <fieldset class="form-group">
                                     <label for="volume" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfLotteryTicket")</label>
-                                <input name="volume" id="volume" type="number" min="1" value="@Model.Volume" class="form-control" required autofocus />
+                                    <input name="volume" id="volume" type="number" min="1" value="@Model.Volume" class="form-control" required autofocus />
                                     <div class="invalid-feedback">
                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NumberOfLotteryTicketRequired")
                                     </div>
@@ -49,7 +49,7 @@
                             <div class="col-lg-6 col-12 pt-1">
                                 <fieldset class="form-group">
                                     <label for="ticket-price" class="form-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketPrice")</label>
-                                <input name="ticket-price" id="ticket-price" type="number" min="1" value="@Model.UnitPrice" class="form-control" required autofocus />
+                                    <input name="ticket-price" id="ticket-price" type="number" min="1" value="@Model.UnitPrice" class="form-control" required autofocus />
                                     <div class="invalid-feedback">
                                         @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketPriceRequired")
                                     </div>
@@ -164,18 +164,36 @@
                                                 </div>
                                                 <div class="row pt-1">
                                                     <div class="col-12">
-                                                        <div class="form-group">
+                                                        <div class="form-group" id="tinymce-lottery-description-@detail.LangId">
                                                             <label for="Description"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Description")</span><span> ( @detail.Lang.Name )</span></label>
                                                             @if (detail.Description != null)
                                                             {
-                                                                <textarea class="form-control textarea-maxlength" id="lottery-description" rows="5" name="Description" required @(Model.Status == (int)EnumLotteryGameStatus.DEACTIVATED ? "disabled" : "")>@detail.Description</textarea>
+                                                                <textarea class="tinymce" id="lottery-description-@detail.Lang.Id" name="Description" @(Model.Status == (int)EnumLotteryGameStatus.DEACTIVATED ? "disabled" : "")>@detail.Description</textarea>
                                                             }
                                                             else
                                                             {
-                                                                <textarea class="form-control textarea-maxlength" id="lottery-description" rows="5" name="Description" required @(Model.Status == (int)EnumLotteryGameStatus.DEACTIVATED ? "disabled" : "")></textarea>
+                                                                <textarea class="tinymce" id="lottery-description-@detail.Lang.Id" name="Description" @(Model.Status == (int)EnumLotteryGameStatus.DEACTIVATED ? "disabled" : "")></textarea>
                                                             }
                                                             <div class="invalid-feedback">
                                                                 @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DescriptionRequired")
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row pt-1">
+                                                    <div class="col-12">
+                                                        <div class="form-group" id="tinymce-lottery-short-description-@detail.LangId">
+                                                            <label for="ShortDescription"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescription")</span><span> ( @detail.Lang.Name )</span></label>
+                                                            @if (detail.Description != null)
+                                                            {
+                                                                <textarea class="tinymce" id="lottery-short-description-@detail.Lang.Id" name="ShortDescription" @(Model.Status == (int)EnumLotteryGameStatus.DEACTIVATED ? "disabled" : "")>@detail.ShortDescription</textarea>
+                                                            }
+                                                            else
+                                                            {
+                                                                <textarea class="tinymce" id="lottery-short-description-@detail.Lang.Id" name="ShortDescription" @(Model.Status == (int)EnumLotteryGameStatus.DEACTIVATED ? "disabled" : "")></textarea>
+                                                            }
+                                                            <div class="invalid-feedback">
+                                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ShortDescriptionRequired")
                                                             </div>
                                                         </div>
                                                     </div>

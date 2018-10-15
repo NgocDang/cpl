@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CPL.Common.Enums;
 using CPL.Core.Interfaces;
 using CPL.Misc.Utils;
 using CPL.Models;
@@ -41,7 +42,7 @@ namespace CPL.ViewComponents
                     .Query()
                     .Include(x => x.Lottery)
                     .Include(x => x.LotteryPrize)
-                    .Where(x => x.SysUserId == user.Id && x.Lottery.UpdatedDate.HasValue)
+                    .Where(x => x.SysUserId == user.Id && x.Lottery.UpdatedDate.HasValue && x.Result != EnumGameResult.REFUND.ToString())
                     .OrderByDescending(x => x.Lottery.UpdatedDate)
                     .ThenByDescending(x => x.LotteryPrize.Value)
                     .FirstOrDefault()?.Lottery;
@@ -55,7 +56,7 @@ namespace CPL.ViewComponents
                         var lotteryHistory = _lotteryHistoryService
                             .Query()
                             .Include(x => x.LotteryPrize)
-                            .Where(x => x.SysUserId == user.Id && x.LotteryPrizeId.HasValue && x.LotteryId == lastestLottery.Id)
+                            .Where(x => x.SysUserId == user.Id && x.LotteryPrizeId.HasValue && x.LotteryId == lastestLottery.Id && x.Result != EnumGameResult.REFUND.ToString())
                             .OrderByDescending(x => x.LotteryPrize.Value)
                             .FirstOrDefault();
 

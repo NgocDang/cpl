@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.Core.Interfaces;
 using CPL.Domain;
 using CPL.Infrastructure.Interfaces;
@@ -55,7 +56,9 @@ namespace CPL.Controllers
         [Permission(EnumRole.User)]
         public IActionResult Index()
         {
-            return View();
+            var viewModel = new DepositAndWithdrawIndexViewModel();
+            viewModel.SysUserId = HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id;
+            return View(viewModel);
         }
 
         [Permission(EnumRole.User)]
@@ -72,10 +75,21 @@ namespace CPL.Controllers
 
         [HttpPost]
         [Permission(EnumRole.User)]
-        public IActionResult DoWithdraw(WithdrawViewModel viewModel)
+        public IActionResult DoWithdraw(WithdrawViewModel viewModel, MobileModel mobileModel)
         {
             if (viewModel.Amount <= 0)
+            {
+                if (mobileModel.IsMobile)
+                {
+                    return new JsonResult(new
+                    {
+                        code = EnumResponseStatus.WARNING,
+                        name = "amount",
+                        error_message_key = CPLConstant.MobileAppConstant.DepositAndWithdrawScreenInvalidWithdrawAmount
+                    });
+                }
                 return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidWithdrawAmount") });
+            }
 
             var user = _sysUserService.Queryable().FirstOrDefault(x => x.Id == HttpContext.Session.GetObjectFromJson<SysUserViewModel>("CurrentUser").Id && x.IsDeleted == false);
 
@@ -84,18 +98,42 @@ namespace CPL.Controllers
             if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName)
                 || !user.DOB.HasValue || string.IsNullOrEmpty(user.Country) || string.IsNullOrEmpty(user.City) || string.IsNullOrEmpty(user.StreetAddress)
                 || string.IsNullOrEmpty(user.Mobile))
+
+            {
+                if (mobileModel.IsMobile)
+                {
+                    return new JsonResult(new
+                    {
+                        code = EnumResponseStatus.WARNING,
+                        require_profile = true
+                    });
+                }
+
                 return new JsonResult(new
                 {
                     success = false,
                     requireProfile = false
                 });
+            }
+                
 
             if (user.KYCVerified == null || !user.KYCVerified.Value)
+            {
+                if (mobileModel.IsMobile)
+                {
+                    return new JsonResult(new
+                    {
+                        code = EnumResponseStatus.WARNING,
+                        require_kyc = true
+                    });
+                }
+
                 return new JsonResult(new
                 {
                     success = false,
                     requireKyc = false
                 });
+            }
 
             if (viewModel.Currency == EnumCurrency.BTC.ToString())
             {
@@ -106,11 +144,33 @@ namespace CPL.Controllers
                     var availableBTCAmount = user.TokenAmount / btcToTokenRate;
 
                     if (viewModel.Amount > availableBTCAmount)
+                    {
+                        if (mobileModel.IsMobile)
+                        {
+                            return new JsonResult(new
+                            {
+                                code = EnumResponseStatus.WARNING,
+                                name = "amount",
+                                error_message_key = CPLConstant.MobileAppConstant.DepositAndWithdrawScreenInsufficientFunds
+                            });
+                        }
                         return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
+                    }
 
                     //Validate BTC wallet address
                     if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidBTCAddress(viewModel.Address)))
+                    {
+                        if (mobileModel.IsMobile)
+                        {
+                            return new JsonResult(new
+                            {
+                                code = EnumResponseStatus.WARNING,
+                                name = "wallet",
+                                error_message_key = CPLConstant.MobileAppConstant.DepositAndWithdrawScreenInvalidBTCAddress
+                            });
+                        }
                         return new JsonResult(new { success = false, name = "wallet", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidBTCAddress") });
+                    }
 
                     // Transfer
                     var txHashIdTask = ServiceClient.BAccountClient.TransferAsync(Authentication.Token, CPLConstant.BTCWithdrawPrivateKey, viewModel.Address, viewModel.Amount);
@@ -140,62 +200,43 @@ namespace CPL.Controllers
                     }
                     else
                     {
+                        if (mobileModel.IsMobile)
+                        {
+                            return new JsonResult(new
+                            {
+                                code = EnumResponseStatus.WARNING,
+                                error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs
+                            });
+                        }
+
                         return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
                     }
                 }
                 catch (Exception ex)
                 {
+                    if (mobileModel.IsMobile)
+                    {
+                        return new JsonResult(new
+                        {
+                            code = EnumResponseStatus.WARNING,
+                            error_message_key = CPLConstant.MobileAppConstant.CommonErrorOccurs
+                        });
+                    }
                     return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
                 }
             }
-            //else if (viewModel.Currency == EnumCurrency.ETH.ToString())
-            //{
-            //    try
-            //    {
-            //        // Validate max ETH Amount
-            //        if (viewModel.Amount > user.ETHAmount)
-            //            return new JsonResult(new { success = false, name = "amount", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InsufficientFunds") });
 
-            //        //Validate ETH wallet address
-            //        if (string.IsNullOrEmpty(viewModel.Address) || (!string.IsNullOrEmpty(viewModel.Address) && !ValidateAddressHelper.IsValidETHAddress(viewModel.Address)))
-            //            return new JsonResult(new { success = false, name = "wallet", message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "InvalidETHAddress") });
-
-            //        // Transfer
-            //        var txHashIdTask = ServiceClient.EAccountClient.TransferByPrivateKeyAsync(Authentication.Token, CPLConstant.ETHWithdrawPrivateKey, viewModel.Address, viewModel.Amount, CPLConstant.DurationInSecond);
-            //        txHashIdTask.Wait();
-            //        txHashId = txHashIdTask.Result.TxId;
-
-            //        // Save to DB
-            //        if (txHashId != null)
-            //        {
-            //            _coinTransactionService.Insert(new CoinTransaction()
-            //            {
-            //                SysUserId = user.Id,
-            //                FromWalletAddress = CPLConstant.ETHWithdrawAddress,
-            //                ToWalletAddress = viewModel.Address,
-            //                CoinAmount = viewModel.Amount,
-            //                CreatedDate = DateTime.Now,
-            //                CurrencyId = (int)EnumCurrency.ETH,
-            //                Status = EnumCoinTransactionStatus.PENDING.ToBoolean(),
-            //                TxHashId = txHashId,
-            //                Type = (int)EnumCoinTransactionType.WITHDRAW_ETH
-            //            });
-
-            //            user.ETHAmount -= viewModel.Amount;
-            //            _sysUserService.Update(user);
-            //            _unitOfWork.SaveChanges();
-            //        }
-            //        else
-            //        {
-            //            return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "ErrorOccurs") });
-            //    }
-            //}
-
+            if (mobileModel.IsMobile)
+            {
+                return new JsonResult(new
+                {
+                    code = EnumResponseStatus.SUCCESS,
+                    success_message_key = CPLConstant.MobileAppConstant.DepositAndWithdrawScreenWithdrawedSuccessfully,
+                    token = user.TokenAmount,
+                    profile_kyc = true,
+                    txhashid = txHashId
+                });
+            }
             return new JsonResult(new { success = true, token = user.TokenAmount.ToString("N0"), profileKyc = true, txhashid = txHashId, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "WithdrawedSuccessfully") });
         }
 

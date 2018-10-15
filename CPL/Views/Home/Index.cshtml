@@ -7,96 +7,380 @@
     <link href="~/css/dashboard/plugins/owl-carousel/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/css/dashboard/plugins/owl-carousel/owl.theme.default.min.css" rel="stylesheet" />
     <link href="~/css/dashboard/cpl.home.css" rel="stylesheet" asp-append-version="true" />
-    <link href="~/css/dashboard/cpl.sliderbanner.css" rel="stylesheet" asp-append-version="true" />
 }
 
-@if (Model.News != null)
-{
-    <div class="container mt-md-1 mb-md-0 mb-1">
-        <a class="hidden-sm text-primary font-medium-3 font-weight-bold" asp-controller="News" asp-action="Index">
-            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "News")
-        </a>
-        <span class="black"> | </span>
-        <a asp-controller="News" asp-action="Detail" asp-route-id="@Model.News.Id" class=" black news-link">@Model.News.CreatedDate.ToString("yyyy/MM/dd") @Model.News.Title</a>
-    </div>
-}
-
-@await Component.InvokeAsync("SliderBanner")
-
-<section id="lottery-game">
-    <div class="container d-md-block d-none mt-1">
-        <div class="row">
-            @if (Model.Lotteries != null)
+<section id="slide">
+    <div class="owl-carousel owl-theme mt-0">
+        @if (Model.Sliders.Count != 0)
+        {
+            @foreach (var slide in Model.Sliders)
             {
-                @foreach (var lottery in Model.Lotteries)
+                @foreach (var detail in slide.SliderDetails)
                 {
-                    <div class="owl-item col-3">
-                        <div class="card card-game">
-                            <div class="card-header card-header-game font-weight-bold font-sm-size-15px">
-                                @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0"))
-                            </div>
-                            <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id" asp-route-lottery-category-id="@lottery.LotteryCategory.Id">
-                                @foreach (var detail in lottery.LotteryDetails)
-                                {
-                                    @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
-                                    {
-                                        <img class="card-img-top card-img-game img-fluid" src="~/images/lottery/@detail.DesktopListingImage" />
-                                    }
-                                }
-                            </a>
-                            <div class="card-body">
-                                <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id" asp-route-lottery-category-id="@lottery.LotteryCategory.Id" class="btn btn-primary btn-block font-sm-size-15px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Buy")</a>
-                            </div>
-                        </div>
-                    </div>
-                }
-                if (Model.Lotteries.Count % CPLConstant.LotteryGamePerRow != 0)
-                {
-                    @for (int i = 0; i < (CPLConstant.LotteryGamePerRow - (Model.Lotteries.Count % CPLConstant.LotteryGamePerRow)); i++)
+                    @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
                     {
-                        <div class="owl-item col-3">
-                            <div class="card card-game">
-                                <div class="card-header card-header-game font-weight-bold bg-secondary disabled text-white-50 font-sm-size-15px">
-                                    @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @"0")
-                                </div>
-                                <img class="card-img-top card-img-game img-fluid" src="~/images/lottery/coming_soon_lottery.jpg" />
-                                <div class="card-body">
-                                    <span class="btn disabled bg-secondary text-white-50 btn-block font-sm-size-15px">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ComingSoon")</span>
-                                </div>
-                            </div>
+                        <div class="item">
+                            <a class="d-md-block d-none" href="@slide.Url"><img src="~/images/slider/@detail.DesktopImage" class="img-fluid img-border" /></a>
+                            <a class="d-md-none d-block" href="@slide.Url"><img src="~/images/slider/@detail.MobileImage" class="img-fluid img-border" /></a>
                         </div>
                     }
                 }
             }
+        }
+        else
+        {
+            <div class="item">
+                <a class="d-md-block d-none" href="#"><img src="~/images/slider-dekstop.png" class="img-fluid img-border" /></a>
+                <a class="d-md-none d-block" href="#"><img src="~/images/slider-mobile.png" class="img-fluid img-border" /></a>
+            </div>
+        }
+    </div>
+    <div class="slider-action">
+        <a asp-controller="Authentication" asp-action="Register" class="btn btn-primary shadow btn-slider op" tabindex="0">
+            <i class="la la-angle-double-right"></i>
+            <span> @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BeTheFirstPerson")  </span>
+            <i class="la la-angle-double-left"></i>
+        </a>
+    </div>
+</section>
+
+<section id="type-of-games">
+    <div class="container py-lg-3 py-1">
+        <div class="row">
+            <a asp-controller="Lottery" asp-action="Index" class="mr-lg-0 mx-auto">
+                <div class="card-kind-of-games black" style="background-image: url('../../images/homepage_lottery_game_card.gif');">
+                    <div class="text-padding mx-auto text-center">
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Lottery")</span>
+                    </div>
+                </div>
+            </a>
+            <a asp-controller="PricePrediction" asp-action="Index" class="mx-lg-4 mx-auto">
+                <div class="card-kind-of-games black" style="background-image: url('../../images/homepage_price_prediction_game_card.gif');">
+                    <div class="text-padding mx-auto text-center">
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PricePrediction")</span>
+                    </div>
+                </div>
+            </a>
+            <a asp-controller="Slot" asp-action="Index" class="ml-lg-0 mx-auto">
+                <div class="card-kind-of-games black" style="background-image: url('../../images/homepage_slot_game_card.gif');">
+                    <div class="text-padding mx-auto text-center">
+                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slot")</span>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
-    <div class="d-md-none d-block mb-05">
-        @if (Model.Lotteries != null)
-        {
-            @foreach (var lottery in Model.Lotteries)
+</section>
+
+<section id="random-games">
+    <div class="container">
+        <div class="row">
+            @if (Model.RandomLotteryId.HasValue)
             {
-                <div class="card card-game mt-05 mb-0">
-                    <a asp-controller="Lottery" asp-action="Index" asp-route-id="@lottery.Id">
-                        @foreach (var detail in lottery.LotteryDetails)
-                        {
-                            @if (detail.LangId == Context.Session.GetInt32("LangId").Value)
-                            {
-                                <img class="card-img-top card-img-game img-fluid visible-mobile" src="~/images/lottery/@detail.MobileListingImage" />
-                            }
-                        }
-                    </a>
-                    <div class="card-header card-header-game-mobile font-weight-bold">
-                        @string.Format(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "TicketsLeft"), @lottery.NumberOfTicketLeft.ToString("N0"))
+                <div class="col-lg-6 col-md-6 col-12 card card-random-games mx-0 px-0 border mb-1" id="lottery-game">
+                    <div class="card-content">
+                        <img class="img-fluid" src="~/images/homepage_lottery_random_card.png" />
+                        <div class="random-games-text-top-content text-dark">
+                            <p class="pl-3 text-center font-weight-bold">@Html.Raw(Model.RandomLotteryTitle)</p>
+                            <p class="pl-1 text-center">@Html.Raw(Model.RandomLotteryDescription)</p>
+                        </div>
+                    </div>
+                    <div class="card-footer p-1">
+                        <div class="row">
+                            <div class="col-3 black card-random-games-footer text-center">
+                                <p class="my-0">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Amount")</p>
+                            </div>
+                            <div class="col-lg-6 col-5 px-lg-1 px-0">
+                                <input type="number" id="lottery-ticket-amount" value="1" min="1" class="form-control">
+                            </div>
+                            <div class="col-lg-3 col-4 mt-sm-0">
+                                <button type="button" class="btn btn-primary mt-sm-0 w-100 px-0" id="btn-lottery-purchase">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Purchase")</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             }
-        }
+            @if (Model.ClosestPricePredictionId.HasValue)
+            {
+                <div class="col-lg-6 col-md-6 col-12 card-random-games card mx-0 px-0 border mb-1" id="price-prediction-game">
+                    <div class="card-content">
+                        <img class="img-fluid" src="~/images/homepage_price_prediction_random_card.png" />
+                        <div class="random-games-text-top-content text-white">
+                            <p class="text-center font-weight-bold">@Html.Raw(Model.ClosestPricePredictionTitle)</p>
+                            <p class="text-center">@Html.Raw(Model.ClosestPricePredictionDescription)</p>
+                        </div>
+                    </div>
+                    <div class="card-footer p-1">
+                        <div class="col-lg-11 col-12 mx-auto">
+                            <div class="row">
+                                <div class="col-6 pl-0 pr-2">
+                                    <button type="button" data-predicted-trend="true" class="btn btn-md btn-success mt-sm-0 w-100">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "High")</button>
+                                </div>
+                                <div class="col-6 pr-0 pl-2">
+                                    <button type="button" data-predicted-trend="false" class="btn btn-md btn-danger mt-sm-0 w-100">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Low")</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        @Html.HiddenFor(x => x.RandomLotteryId, new { @id = "random-lottery-id" })
+        @Html.HiddenFor(x => x.RandomLotteryCategoryId, new { @id = "random-lottery-category-id" })
+    </div>
+</section>
+
+<section id="intro">
+    <div class="container mt-2">
+        <div class="row text-center justify-content-center top-content">
+            <div class="col-lg-12 col-10">
+                <img src="~/images/home/top.png" class="img-fluid" />
+                <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoOdds")</p>
+            </div>
+        </div>
+        <div class="row border border-primary pt-3" id="what-is-crypto-odds-content">
+            <div class="text-center col-md-4 col-12 order-sm-1 order-2 mt-sm-0 mt-1">
+                <img src="~/images/home/screens.png" class="img-fluid" />
+            </div>
+            <div class="col-md-8 col-12 order-sm-12 order-1">
+                <p class="text-dark">
+                    @Html.Raw(LangMsgDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "WhatIsCryptoOdds"))
+                </p>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-lg-12">
+                <img src="~/images/home/bottom.png" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="steps">
+    <div class="container mt-sm-3 mt-2">
+        <div class="row text-center">
+            <div class="col-12">
+                <img src="~/images/home/top.png" class="img-fluid" />
+                <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "ForEnjoyingCryptOdds")</p>
+            </div>
+            <div class="col-12">
+                <p class="font-large-1 mt-sm-2 mt-1 font-weight-bold text-dark">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Easy3Steps")</p>
+            </div>
+        </div>
+        <div class="row steps">
+            <div class="col-sm-3 col-12 px-0">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body text-center pt-0">
+                            <div class="row">
+                                <div class="col-sm-4 col-3 order-sm-1 order-1 p-0">
+                                    <img src="~/images/home/step1.png" class="img-fluid img-step" />
+                                </div>
+                                <div class="col-sm-4 col-2 order-sm-2 order-3 text-sm-center mt-1 p-0">
+                                    <img src="~/images/home/step1_img.png" class="img-fluid float-sm-none float-right" />
+                                </div>
+                                <div class="col-sm-12 col-7 order-sm-2 order-2 text-center text-dark pt-1 height-text-step">
+                                    <p class="text-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EasyRegistration")</p>
+                                    <p>
+                                        @Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EasyRegistrationDetail"))
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <a class="btn btn-primary d-block btn-step" asp-controller="Authentication" asp-action="Register">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "RegisterFor30Seconds")
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <i class="fas fa-caret-right text-primary font-large-4"></i>
+            </div>
+            <div class="col-sm-3 col-12 px-0">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body text-center pt-0">
+                            <div class="row">
+                                <div class="col-sm-4 col-3 order-sm-1 order-1 p-0">
+                                    <img src="~/images/home/step2.png" class="img-fluid img-step" />
+                                </div>
+                                <div class="col-sm-4 col-2 order-sm-2 order-3 text-sm-center mt-1 p-0">
+                                    <img src="~/images/home/step2_img.png" class="img-fluid float-sm-none float-right" />
+                                </div>
+                                <div class="col-sm-12 col-7 order-sm-2 order-2 text-center text-dark pt-1 height-text-step">
+                                    <p class="text-primary">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCDeposit")
+                                    </p>
+                                    <p>
+                                        @Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "BTCDepositDetail"))
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <a class="btn btn-primary d-block btn-step" asp-controller="Authentication" asp-action="Register">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "RegisterFor30Seconds")
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <i class="fas fa-caret-right text-primary font-large-4"></i>
+            </div>
+            <div class="col-sm-3 col-12 px-0">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body text-center pt-0">
+                            <div class="row">
+                                <div class="col-sm-4 col-3 order-sm-1 order-1 p-0">
+                                    <img src="~/images/home/step3.png" class="img-fluid img-step" />
+                                </div>
+                                <div class="col-sm-4 col-2 order-sm-2 order-3 text-sm-center mt-1 p-0">
+                                    <img src="~/images/home/step3_img.png" class="img-fluid float-sm-none float-right" />
+                                </div>
+                                <div class="col-sm-12 col-7 order-sm-2 order-2 text-center text-dark pt-1 height-text-step">
+                                    <p class="text-primary">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PlayGame")
+                                    </p>
+                                    <p>
+                                        @Html.Raw(@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PlayGameDetail"))
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <a class="btn btn-primary d-block btn-step" asp-controller="Info" asp-action="HowToPlay">
+                                        @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "HowToPlay")
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="faq" style="display:none;">
+    <div class="container mt-2 mt-sm-4">
+        <div class="row text-center justify-content-center top-content">
+            <div class="col-lg-12 col-10">
+                <img src="~/images/home/top.png" class="img-fluid" />
+                <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "FAQ")</p>
+            </div>
+        </div>
+        <div class="row my-2 pb-2">
+            <div class="col-lg-6 col-12 pl-0 pr-0 pr-lg-1">
+                <ul>
+                    @foreach (var faq in Model.FAQs.Take((Model.FAQs.Count() + 1) / 2))
+                    {
+                        <li class="px-1 mb-1 shadow-sm">
+                            <a data-toggle="collapse" class="py-05 pr-2 black collapsed" href="#faq-@faq.Id">@faq.Question<i class="la la-minus"></i></a>
+                            <div id="faq-@faq.Id" class="collapse">
+                                <span class="font-small-3 pb-1 pr-2 d-block">
+                                    @faq.Answer
+                                </span>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="col-lg-6 col-12 pr-0 pl-0 pl-lg-1">
+                <ul>
+                    @foreach (var faq in Model.FAQs.Skip((Model.FAQs.Count() + 1) / 2))
+                    {
+                        <li class="px-1 mb-1 shadow-sm">
+                            <a data-toggle="collapse" class="py-05 pr-2 black collapsed" href="#faq-@faq.Id">@faq.Question<i class="la la-minus"></i></a>
+                            <div id="faq-@faq.Id" class="collapse">
+                                <span class="font-small-3 pb-1 pr-2 d-block">
+                                    @faq.Answer
+                                </span>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="container mt-2 mt-sm-4">
+        <div class="row text-center">
+            <div class="col-12">
+                <img src="~/images/home/top.png" class="img-fluid" />
+                <p class="text-top-content">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Contact")</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 px-0">
+                <div class="card">
+                    <div class="card-content">
+                        <form id="form-message" class="form-horizontal" action="">
+                            <div class="card-body px-1">
+                                <div class="row">
+                                    <div class="col-lg-4 col-12 pr-lg-1 px-0">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="Name">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")</label>
+                                            <input type="text" name="Name" class="form-control" maxlength="100" id="Name" required>
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "NameRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-4 col-12 pr-lg-1 px-0">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="Email">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Email")</label>
+                                            <input type="email" name="Email" class="form-control" maxlength="50" id="Email" required>
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "EmailRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-4 col-12 px-0">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="PhoneNumber">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PhoneNumber")</label>
+                                            <input type="text" name="PhoneNumber" class="form-control" maxlength="50" id="PhoneNumber" required>
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "PhoneNumberRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 px-0">
+                                        <fieldset class="form-group">
+                                            <label class="font-weight-bold" for="Message">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Message")</label>
+                                            <textarea name="Message" class="form-control" rows="7" id="Message" required></textarea>
+                                            <div class="invalid-feedback">
+                                                @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MessageRequired")
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" id="btn-do-send" class="btn btn-primary">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Send")</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
 @section scripts{
     <script src="~/js/dashboard/plugins/owl-carousel/owl.carousel.min.js"></script>
-    <script src="~/js/dashboard/marquee.min.js"></script>
     <script src="~/js/dashboard/cpl.home.js" asp-append-version="true"></script>
-    <script src="~/js/dashboard/cpl.sliderbanner.js" asp-append-version="true"></script>
 }

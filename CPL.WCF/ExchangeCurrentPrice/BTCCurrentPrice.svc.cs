@@ -1,5 +1,6 @@
 ﻿using CPL.Common.CurrencyPairRateHelper;
 using CPL.Common.Enums;
+using CPL.Common.Misc;
 using CPL.WCF.Misc;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace CPL.WCF.ExchangeCurrentPrice
                 {
                     Status = new Status { Code = Status.OkCode, Text = Status.OkText },
                     Price = CPL.WCF.Misc.BTCCurrentPrice.Price,
-                    DateTime = ((DateTimeOffset)CPL.WCF.Misc.BTCCurrentPrice.Time).ToUnixTimeSeconds()
+                    DateTime = CPL.WCF.Misc.BTCCurrentPrice.Time.ToUnixTimeInSeconds()
                 };
             }
             catch(Exception ex)
@@ -52,12 +53,15 @@ namespace CPL.WCF.ExchangeCurrentPrice
                 {
                     Status = new Status { Code = Status.OkCode, Text = Status.OkText },
                     Price = CPL.WCF.Misc.BTCCurrentPrice.Price,
-                    DateTime = ((DateTimeOffset)CPL.WCF.Misc.BTCCurrentPrice.Time).ToUnixTimeSeconds()
+                    DateTime = CPL.WCF.Misc.BTCCurrentPrice.Time.ToUnixTimeInSeconds()
                 };
             }
             catch (Exception ex)
             {
-                return new SetBTCCurrentPriceResult { Status = new Status { Code = Status.ExceptionCode, Text = ex.Message } };
+                if (ex.InnerException?.Message != null)
+                    return new SetBTCCurrentPriceResult { Status = new Status { Code = Status.ExceptionCode, Text = ex.InnerException.Message } };
+                else
+                    return new SetBTCCurrentPriceResult { Status = new Status { Code = Status.ExceptionCode, Text = ex.Message } };
             }
         }
     }

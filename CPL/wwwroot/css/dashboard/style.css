@@ -47,6 +47,12 @@ html body {
     box-shadow: 0px 5px 10px rgba(0,0,0,.1);
 }
 
+.mobile-logo {
+    height: 30px;
+    width: 30px;
+    display:inline-block;
+}
+
 @media (max-width: 767.98px) {
     .wrapper {
         margin: 0 0.25rem;
@@ -58,11 +64,14 @@ html body {
     }
 
     .main-menu.menu-fixed {
-        top: 4.1rem;
-        height: calc(100% - 4.1rem);
+        top: 7.55rem;
+        height: calc(100% - 7.55rem);
     }
 }
-
+.nav-menu-main {
+    height:35px;
+    width:35px;
+}
 @media screen and (max-width: 768px) {
     .g-recaptcha {
         transform: scale(0.9);
@@ -779,18 +788,34 @@ select.bs-select-hidden {
     border-left: .4em solid transparent
 }
 
-.dropdown-menu.dropdown-menu-right {
-    right: 0 !important;
-    left: auto !important
+.mobile-language {
+    position: fixed !important;
+    right: 5px;
+    top: 20px;
+    text-align: right;
+    z-index:10;
 }
 
-.bootstrap-select .dropdown-menu.inner li a, .dropdown-menu .dropdown-item {
-    font-size: .8571em;
-    padding-top: .6rem;
-    padding-bottom: .6rem;
-    margin-top: 5px;
-    transition: all .15s linear
+.mobile-user-menu {
+    right: 15px;
+    position: fixed !important;
 }
+
+    .mobile-user-menu .dropdown-menu.dropdown-menu-right {
+        margin-top: 50px !important;
+    }
+
+    .mobile-user-menu .dropdown-toggle::after {
+        content:'' !important;
+    }
+
+    .bootstrap-select .dropdown-menu.inner li a, .dropdown-menu .dropdown-item {
+        font-size: .8571em;
+        padding-top: .6rem;
+        padding-bottom: .6rem;
+        margin-top: 5px;
+        transition: all .15s linear
+    }
 
     .bootstrap-select .dropdown-menu.inner li a:focus, .bootstrap-select .dropdown-menu.inner li a:hover, .dropdown-menu .dropdown-item:focus, .dropdown-menu .dropdown-item:hover {
         background-color: hsla(0,0%,87%,.3)
@@ -1328,9 +1353,66 @@ select.bs-select-hidden {
 }
 
 footer {
+    background: #f93147;
+}
+
+.info-bar {
     background: #ffd300;
 }
 
+.info-bar ul {
+    list-style: none;
+}
+
+.info-bar ul.big {
+    list-style: none;
+    font-size: 300%
+}
+
+    .info-bar ul.partners {
+        border-right: 1px solid #464855;
+    }
+
+        .info-bar ul.partners li a, .info-bar ul.links li a {
+            
+        }
+
+        .info-bar ul.partners li::after, .info-bar ul.links li::after {
+            position: relative;
+            content: "";
+            display: inline-block;
+            width: 0.6em;
+            height: 0.6em;
+            border-right: 0.1em solid black;
+            border-top: 0.1em solid black;
+            transform: rotate(45deg);
+            margin-right: 0.5em;
+            float: right;
+            top: 7px;
+            right: 10px;
+        }
+
+/* Change color */
+        .info-bar ul.partners li a.black:hover, .info-bar ul.links li a.black:hover {
+            color: #f93147 !important; /* For the text */
+        }
+
+        .info-bar ul.partners li:hover::after, .info-bar ul.links li:hover::after {
+            border-color: #f93147; /* For the arrow (which is a border) */
+        }
+
+.selected-language:after {
+    font-size: .8rem;
+    font-family: LineAwesome;
+    content: '\f110' !important;
+    border: none !important;
+    position: relative;
+    top: 0;
+    right: 0;
+    padding: 0 2px 0 6px;
+    margin: 0 .3em 0 0;
+    vertical-align: 0;
+}
 .header-navbar .navbar-header .navbar-brand .brand-logo {
     width: 60px;
 }
@@ -1620,6 +1702,11 @@ footer {
     flex-shrink: 0;
 }
 
+.footer {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
 @media (max-width: 489px) {
     #logout .btn-mobile-version {
         height: 40px;
@@ -1637,13 +1724,14 @@ input[type=number]::-webkit-inner-spin-button {
     position: relative;
 }
 
-input[type=number]:hover::-webkit-inner-spin-button {
+input[type=number]::-webkit-inner-spin-button {
     background: #eee url('../../images/number_spin.png') no-repeat 50% 50%;
     width: 30px;
     height: 42px;
     padding: 0px;
     position: relative;
     right: -1rem;
+    opacity: 1;
 }
 
 .header-navbar .navbar-container ul.nav li > a.user-menu {
@@ -1780,11 +1868,6 @@ button#btn-dropdown-item:focus {
     position: relative;
 }
 
-.mobile-menu {
-    position:absolute !important;
-    right:10px !important;
-}
-
 @media (min-width: 1140px) {
     .nav-language {
         position: absolute !important;
@@ -1810,7 +1893,24 @@ button#btn-dropdown-item:focus {
     top: 30%;
     right:0;
 }
+.my-05 {
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.5rem !important;
+}
 
+.pt-05 {
+    padding-top: 0.5rem !important;
+}
+
+.py-05 {
+    padding-bottom: 0.5rem !important;
+    padding-top: 0.5rem !important;
+}
+
+.px-05 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+}
 .py-01 {
     padding-bottom: 0.1rem !important;
     padding-top: 0.1rem !important;
@@ -1833,4 +1933,35 @@ table.dataTable td:first-child {
     background: #F4F5FA;
     margin-left: -21px; 
     margin-right: -21px;
+}
+
+.popover {
+    border: 1px solid #f3efdd;
+    background-color: #fffdf5;
+}
+
+.mx-02 {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+table.dataTable td a.btn {
+    margin: 2px
+}
+
+i.la-info-circle {
+    cursor: pointer;
+}
+
+span.user-token-amount::after {
+    font-size: .8rem;
+    font-family: LineAwesome;
+    content: '\f110' !important;
+    border: none !important;
+    position: relative;
+    top: 0;
+    right: 0;
+    padding: 0 2px 0 6px;
+    margin: 0 .3em 0 0;
+    vertical-align: 0;
 }

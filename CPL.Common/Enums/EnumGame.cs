@@ -8,14 +8,14 @@ namespace CPL.Common.Enums
     {
         WIN = 1,
         LOSE = 2,
-        KYC_PENDING = 3,
+        KYC_PENDING = 3, // not used
         REFUND = 4
     }
 
     public enum EnumPricePredictionStatus
     {
-        UP,     // true
-        DOWN    // false
+        HIGH,     // true
+        LOW    // false
     }
 
     public enum EnumGameType

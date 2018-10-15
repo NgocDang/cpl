@@ -47,6 +47,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\css\dashboard\plugins\high-charts\" />
     <Folder Include="wwwroot\css\dashboard\plugins\img\" />
+    <Folder Include="wwwroot\images\slider\" />
     <Folder Include="wwwroot\images\news\" />
     <Folder Include="wwwroot\flags\" />
   </ItemGroup>
@@ -114,6 +115,12 @@
     <Content Update="Views\Admin\AffiliateApprove.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Admin\PricePredictionSetting.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Admin\Slider.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Admin\Setting.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -132,13 +139,34 @@
     <Content Update="Views\Admin\_EditLotteryCategory.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Admin\_EditSlider.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Admin\_LotteryCategoryStatistics.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Admin\_ViewSlider.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Contact\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\DepositAndWithdraw\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Home\_MessageEmailTemplate.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Info\WhatIsCryptoPricePrediction.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Info\WhatIsCryptoCasino.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Info\WhatIsCryptoLottery.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Lottery\Detail.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\PricePrediction\Index.cshtml">

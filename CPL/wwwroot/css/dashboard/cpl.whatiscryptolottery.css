@@ -1,0 +1,160 @@
+﻿.card-header {
+    position: relative;
+    text-align: center;
+    color: white;
+    font-family: 'kozgopro-bold';
+}
+
+.centered {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.centered {
+    font-size: 15px;
+    font-weight: bold;
+    text-shadow: 2px 2px 10px black;
+}
+
+@font-face {
+    font-family: 'kozgopro-bold';
+    src: url('../fonts/kozuka/kozgopro-bold.otf') format('opentype');
+}
+
+.sub-card {
+    border: 1px solid #ffd300;
+}
+
+    .sub-card .card-header {
+        background-color: #ffd300;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+
+        .sub-card .card-header p {
+            font-weight: bolder;
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
+
+            .sub-card .card-header p.up {
+                color: black;
+                font-size: 20px;
+            }
+
+            .sub-card .card-header p.down {
+                color: white;
+                font-size: 25px;
+            }
+
+    .sub-card .card-body {
+        height: 131px;
+    }
+
+        .sub-card .card-body p {
+            line-height: 25px;
+            text-align: center;
+        }
+
+/*Responsive*/
+/*.center*/
+@media (min-width: 400px) {
+    .centered {
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 544px) {
+    .centered {
+        font-size: 25px;
+    }
+}
+
+@media (min-width: 768px) {
+    .centered {
+        font-size: 35px;
+    }
+}
+
+@media (min-width: 992px) {
+    .centered {
+        font-size: 40px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .centered {
+        font-size: 50px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .centered {
+        font-size: 55px;
+    }
+}
+
+/*sub-card*/
+
+@media (min-width: 400px) {
+    .sub-card .card-header p.up {
+        font-size: 25px;
+    }
+
+    .sub-card .card-header p.down {
+        font-size: 30px;
+    }
+}
+
+@media (min-width: 544px) {
+    .sub-card .card-header p.up {
+        font-size: 25px;
+    }
+
+    .sub-card .card-header p.down {
+        font-size: 30px;
+    }
+}
+
+@media (min-width: 768px) {
+    .sub-card .card-header p.up {
+        font-size: 30px;
+    }
+
+    .sub-card .card-header p.down {
+        font-size: 35px;
+    }
+}
+
+@media (min-width: 992px) {
+    .sub-card .card-header p.up {
+        font-size: 20px;
+    }
+
+    .sub-card .card-header p.down {
+        font-size: 25px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .sub-card .card-header p.up {
+        font-size: 25px;
+    }
+
+    .sub-card .card-header p.down {
+        font-size: 30px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .sub-card .card-header p.up {
+        font-size: 25px;
+    }
+
+    .sub-card .card-header p.down {
+        font-size: 30px;
+    }
+}

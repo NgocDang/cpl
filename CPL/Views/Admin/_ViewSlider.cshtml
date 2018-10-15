@@ -1,0 +1,75 @@
+﻿@model SliderAdminViewModel
+
+<div class="modal" tabindex="-1" id="view-slider" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Slider")</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="text-muted mb-3px font-size-13px">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Name")
+                        </p>
+                        <p>
+                            <strong>@Model.Name</strong>
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <p class="text-muted mb-3px font-size-13px">
+                            @LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "Url")
+                        </p>
+                        <p>
+                            <a href="@Model.Url">@Model.Url</a>
+                        </p>
+                    </div>
+                    <div id="slider-multilanguage" class="tab-component col-12">
+                        <ul class="nav nav-tabs border-0">
+                            @foreach (var detail in Model.SliderDetails)
+                            {
+                            <li class="nav-item">
+                                <a class="nav-link font-medium-2 font-weight-bold px-2 border-0 @(detail.Lang.Id == Context.Session.GetInt32("LangId").Value ? "active" : "")" id="@detail.Lang.Id-nav-tab" data-toggle="tab" href="#@detail.Lang.Id-nav" aria-controls="@detail.Lang.Id-nav" aria-expanded="true">@detail.Lang.Name</a>
+                            </li>
+                            }
+
+                        </ul>
+                        <div class="tab-content mb-1">
+                            @foreach (var detail in Model.SliderDetails)
+                            {
+                            <div role="tabpanel" class="tab-pane @(detail.Lang.Id == Context.Session.GetInt32("LangId").Value ? "active" : "")" id="@detail.Lang.Id-nav" aria-labelledby="@detail.Lang.Id-nav-tab" aria-expanded="true">
+                                <div class="card mb-1">
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <p class="text-muted mb-3px font-size-13px">
+                                                        <span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "DesktopImage")</span> <span> ( @detail.Lang.Name )</span>
+                                                    </p>
+                                                    <p>
+                                                        <a data-toggle="lightbox" data-gallery="document-view-@detail.Lang.Id-@detail.Id" href="/images/slider/@detail.DesktopImage"><img src="/images/slider/@detail.DesktopImage" class="img-thumbnail img-fluid border-0" alt="document-view-@detail.Lang.Id-@detail.DesktopImage"></a>
+                                                    </p>
+                                                </div>
+                                                <div class="col-12">
+                                                    <p class="text-muted mb-3px font-size-13px">
+                                                        <label for="mobile-image"><span>@LangDetailHelper.Get(Context.Session.GetInt32("LangId").Value, "MobileImage")</span><span> ( @detail.Lang.Name )</span></label>
+                                                    </p>
+                                                    <p>
+                                                        <a data-toggle="lightbox" data-gallery="document-view-@detail.Lang.Id-@detail.Id" href="/images/slider/@detail.MobileImage"><img src="/images/slider/@detail.MobileImage" class="img-thumbnail img-fluid border-0" alt="document-view-@detail.Lang.Id-@detail.MobileImage"></a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

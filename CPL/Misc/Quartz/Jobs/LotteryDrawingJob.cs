@@ -39,7 +39,7 @@ namespace CPL.Misc.Quartz.Jobs
                     .Where(x => x.Status.Equals((int)EnumLotteryGameStatus.ACTIVE)
                                 && x.Volume.Equals(x.LotteryHistories.Count)
                                 && !x.LotteryHistories.Any(y => string.Equals(y.CreatedDate.Date, DateTime.Now.Date)))
-                    .Select(x => Mapper.Map<LotteryViewModel>(x));
+                    .Select(x => Mapper.Map<LotteryAdminViewModel>(x));
 
 
             var listOfSysUser = sysUserService.Queryable()
@@ -86,7 +86,7 @@ namespace CPL.Misc.Quartz.Jobs
             }
         }
 
-        private List<LotteryHistoryViewModel> PickWinner(List<SysUser> listOfSysUser, LotteryViewModel lottery)
+        private List<LotteryHistoryViewModel> PickWinner(List<SysUser> listOfSysUser, LotteryAdminViewModel lottery)
         {
             var lastPrize = lottery.LotteryPrizes.LastOrDefault();
 

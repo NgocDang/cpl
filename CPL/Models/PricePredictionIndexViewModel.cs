@@ -20,5 +20,8 @@ namespace CPL.Models
         public DateTime CloseBettingTime { get; set; }
         public bool IsActive { get; set; }
         public bool IsDisabled { get; set; }
+        public bool? PredictedTrend { get; set; }
+        public string Title { get; set; }
+        public string CoinBase { get; set; }
     }
 }
