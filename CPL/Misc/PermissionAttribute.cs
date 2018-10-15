@@ -49,12 +49,12 @@ namespace CPL.Misc
                 if (mobileModel.MobileLangId.HasValue)
                     context.HttpContext.Session.SetInt32("LangId", mobileModel.MobileLangId.Value);
                 else
-                    context.HttpContext.Session.SetInt32("LangId", (int)EnumLang.JAPANESE);
+                    context.HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
             }   
             else
             {
                 if (context.HttpContext.Session.GetInt32("LangId") == null)
-                    context.HttpContext.Session.SetInt32("LangId", (int)EnumLang.JAPANESE);
+                    context.HttpContext.Session.SetInt32("LangId", (int)EnumLang.ENGLISH);
             }
 
             if ((context.RouteData.Values["action"].ToString() == "Maintenance") && (context.RouteData.Values["controller"].ToString() == "Home"))
