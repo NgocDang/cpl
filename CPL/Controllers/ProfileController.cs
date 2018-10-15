@@ -147,7 +147,7 @@ namespace CPL.Controllers
                     return new JsonResult(new
                     {
                         code = EnumResponseStatus.SUCCESS,
-                        success_message_error = CPLConstant.MobileAppConstant.ProfileEditUserScreenUpdatedSuccessfully
+                        success_message_key = CPLConstant.MobileAppConstant.ProfileEditUserScreenUpdatedSuccessfully
                     });
                 }
 
@@ -164,7 +164,7 @@ namespace CPL.Controllers
                 return new JsonResult(new
                 {
                     code = EnumResponseStatus.ERROR,
-                    error_message_error = CPLConstant.MobileAppConstant.ProfileEditUserScreenNonExistingAccount
+                    error_message_key = CPLConstant.MobileAppConstant.ProfileEditUserScreenNonExistingAccount
                 });
             }
             return new JsonResult(new { success = false, message = LangDetailHelper.Get(HttpContext.Session.GetInt32("LangId").Value, "NonExistingAccount") });
