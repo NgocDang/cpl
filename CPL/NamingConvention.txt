@@ -14,3 +14,5 @@ lotteryhistorydetail.cshtml
 
 _EditUser.cshtml
 _Edit.cshtml
+
+#testing
